@@ -8,6 +8,20 @@
     <version>1.0-SNAPSHOT</version>
     <name>SpringAtom</name>
 
+    <developers>
+        <developer>
+            <id>kornicameister</id>
+            <email>kornicameister@gmail.com</email>
+            <name>Tomasz Trębski</name>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:kornicameister/SpringAtom.git</connection>
+        <url>scm:git:git@github.com:kornicameister/SpringAtom.git</url>
+        <developerConnection>scm:git:git@github.com:kornicameister/SpringAtom.git</developerConnection>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>3.2.2.RELEASE</spring.version>
@@ -20,6 +34,9 @@
         <slf4j-log4j12.version>1.7.5</slf4j-log4j12.version>
         <mysql-connector-java.version>5.1.24</mysql-connector-java.version>
         <hibernate.version>4.2.0.Final</hibernate.version>
+        <tomcat-servlet-api.version>7.0.21</tomcat-servlet-api.version>
+        <guava-gwt.version>14.0.1</guava-gwt.version>
+        <tomcat.maven.version>2.0</tomcat.maven.version>
     </properties>
 
     <dependencies>
@@ -79,6 +96,7 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j-log4j12.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <!-- log4j -->
 
@@ -98,6 +116,28 @@
         </dependency>
         <!-- hibernate -->
 
+        <!-- tomcat -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-servlet-api</artifactId>
+            <version>${tomcat-servlet-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- tomcat -->
+
+        <!-- guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava-gwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava-gwt</artifactId>
+            <version>${guava-gwt.version}</version>
+        </dependency>
+        <!-- guava -->
+
         <!-- test -->
         <dependency>
             <groupId>junit</groupId>
@@ -116,6 +156,8 @@
                 <configuration>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <optimize>true</optimize>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>

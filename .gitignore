@@ -1,4 +1,7 @@
 *.class
+target/*
+logs/*
+
 
 # Package Files #
 *.jar
@@ -8,4 +11,6 @@
 # idea
 .idea/*
 *.iml
-.target/*
+
+# db
+*.mbw.bak
