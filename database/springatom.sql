@@ -18,7 +18,7 @@ CREATE  TABLE IF NOT EXISTS `springatom`.`SUser` (
   PRIMARY KEY (`idSUser`) ,
   UNIQUE INDEX `login_UNIQUE` (`login` ASC) ,
   UNIQUE INDEX `secPass_UNIQUE` (`secPass` ASC) )
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -36,12 +36,12 @@ CREATE  TABLE IF NOT EXISTS `springatom`.`SMechanic` (
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
   INDEX `fk_SMechanic_1` (`idSMechanic` ASC) ,
   CONSTRAINT `fk_SMechanic_1`
-    FOREIGN KEY (`idSMechanic` )
-    REFERENCES `springatom`.`SUser` (`idSUser` )
+  FOREIGN KEY (`idSMechanic` )
+  REFERENCES `springatom`.`SUser` (`idSUser` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -59,11 +59,11 @@ CREATE  TABLE IF NOT EXISTS `springatom`.`SClient` (
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
   INDEX `fk_SClient_1` (`idSClient` ASC) ,
   CONSTRAINT `fk_SClient_1`
-    FOREIGN KEY (`idSClient` )
-    REFERENCES `springatom`.`SUser` (`idSUser` )
+  FOREIGN KEY (`idSClient` )
+  REFERENCES `springatom`.`SUser` (`idSUser` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -74,7 +74,7 @@ DROP TABLE IF EXISTS `springatom`.`SContactDataType` ;
 CREATE  TABLE IF NOT EXISTS `springatom`.`SContactDataType` (
   `type` VARCHAR(20) NOT NULL ,
   PRIMARY KEY (`type`) )
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -91,16 +91,16 @@ CREATE  TABLE IF NOT EXISTS `springatom`.`SClientContactData` (
   INDEX `fk_SClientContactData_1` (`type` ASC) ,
   INDEX `fk_SClientContactData_2` (`client` ASC) ,
   CONSTRAINT `fk_SClientContactData_1`
-    FOREIGN KEY (`type` )
-    REFERENCES `springatom`.`SContactDataType` (`type` )
+  FOREIGN KEY (`type` )
+  REFERENCES `springatom`.`SContactDataType` (`type` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_SClientContactData_2`
-    FOREIGN KEY (`client` )
-    REFERENCES `springatom`.`SClient` (`idSClient` )
+  FOREIGN KEY (`client` )
+  REFERENCES `springatom`.`SClient` (`idSClient` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -111,7 +111,7 @@ DROP TABLE IF EXISTS `springatom`.`SClientProblemReportType` ;
 CREATE  TABLE IF NOT EXISTS `springatom`.`SClientProblemReportType` (
   `type` VARCHAR(20) NOT NULL ,
   PRIMARY KEY (`type`) )
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -129,7 +129,7 @@ CREATE  TABLE IF NOT EXISTS `springatom`.`SCarMaster` (
   PRIMARY KEY (`idSCarMaster`) ,
   INDEX `sCarMasterBrandIndex` USING BTREE (`brand` ASC) ,
   INDEX `sCarMasterModelIndex` (`model` ASC) )
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -149,16 +149,16 @@ CREATE  TABLE IF NOT EXISTS `springatom`.`SCar` (
   INDEX `fk_SCar_1` (`carMaster` ASC) ,
   INDEX `fk_SCar_2` (`client` ASC) ,
   CONSTRAINT `fk_SCar_1`
-    FOREIGN KEY (`carMaster` )
-    REFERENCES `springatom`.`SCarMaster` (`idSCarMaster` )
+  FOREIGN KEY (`carMaster` )
+  REFERENCES `springatom`.`SCarMaster` (`idSCarMaster` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_SCar_2`
-    FOREIGN KEY (`client` )
-    REFERENCES `springatom`.`SClient` (`idSClient` )
+  FOREIGN KEY (`client` )
+  REFERENCES `springatom`.`SClient` (`idSClient` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -176,11 +176,11 @@ CREATE  TABLE IF NOT EXISTS `springatom`.`SAppointment` (
   PRIMARY KEY (`idSAppointment`) ,
   INDEX `fk_SAppointment_1` (`car` ASC) ,
   CONSTRAINT `fk_SAppointment_1`
-    FOREIGN KEY (`car` )
-    REFERENCES `springatom`.`SCar` (`idSCar` )
+  FOREIGN KEY (`car` )
+  REFERENCES `springatom`.`SCar` (`idSCar` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -200,21 +200,21 @@ CREATE  TABLE IF NOT EXISTS `springatom`.`SClientProblemReport` (
   INDEX `fk_SClientProblemReport_2` (`type` ASC) ,
   INDEX `fk_SClientProblemReport_3` (`appointment` ASC) ,
   CONSTRAINT `fk_SClientProblemReport_1`
-    FOREIGN KEY (`client` )
-    REFERENCES `springatom`.`SClient` (`idSClient` )
+  FOREIGN KEY (`client` )
+  REFERENCES `springatom`.`SClient` (`idSClient` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_SClientProblemReport_2`
-    FOREIGN KEY (`type` )
-    REFERENCES `springatom`.`SClientProblemReportType` (`type` )
+  FOREIGN KEY (`type` )
+  REFERENCES `springatom`.`SClientProblemReportType` (`type` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_SClientProblemReport_3`
-    FOREIGN KEY (`appointment` )
-    REFERENCES `springatom`.`SAppointment` (`idSAppointment` )
+  FOREIGN KEY (`appointment` )
+  REFERENCES `springatom`.`SAppointment` (`idSAppointment` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -225,7 +225,7 @@ DROP TABLE IF EXISTS `springatom`.`SRole` ;
 CREATE  TABLE IF NOT EXISTS `springatom`.`SRole` (
   `role` VARCHAR(20) NOT NULL ,
   PRIMARY KEY (`role`) )
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -240,16 +240,16 @@ CREATE  TABLE IF NOT EXISTS `springatom`.`SUserToRole` (
   INDEX `fk_SUserToRole_1` (`idSUser` ASC) ,
   INDEX `fk_SUserToRole_2` (`idSRole` ASC) ,
   CONSTRAINT `fk_SUserToRole_1`
-    FOREIGN KEY (`idSUser` )
-    REFERENCES `springatom`.`SUser` (`idSUser` )
+  FOREIGN KEY (`idSUser` )
+  REFERENCES `springatom`.`SUser` (`idSUser` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_SUserToRole_2`
-    FOREIGN KEY (`idSRole` )
-    REFERENCES `springatom`.`SRole` (`role` )
+  FOREIGN KEY (`idSRole` )
+  REFERENCES `springatom`.`SRole` (`role` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -260,7 +260,7 @@ DROP TABLE IF EXISTS `springatom`.`SAppointmentTaskType` ;
 CREATE  TABLE IF NOT EXISTS `springatom`.`SAppointmentTaskType` (
   `type` VARCHAR(15) NOT NULL ,
   PRIMARY KEY (`type`) )
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -277,16 +277,16 @@ CREATE  TABLE IF NOT EXISTS `springatom`.`SAppointmentTask` (
   INDEX `fk_SAppointmentTask_1` (`appointment` ASC) ,
   INDEX `fk_SAppointmentTask_2` (`type` ASC) ,
   CONSTRAINT `fk_SAppointmentTask_1`
-    FOREIGN KEY (`appointment` )
-    REFERENCES `springatom`.`SAppointment` (`idSAppointment` )
+  FOREIGN KEY (`appointment` )
+  REFERENCES `springatom`.`SAppointment` (`idSAppointment` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_SAppointmentTask_2`
-    FOREIGN KEY (`type` )
-    REFERENCES `springatom`.`SAppointmentTaskType` (`type` )
+  FOREIGN KEY (`type` )
+  REFERENCES `springatom`.`SAppointmentTaskType` (`type` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -305,21 +305,21 @@ CREATE  TABLE IF NOT EXISTS `springatom`.`SAppointmentWorkerLink` (
   INDEX `fk_SAppointmentWorkerLink_2` (`reporter` ASC) ,
   INDEX `fk_SAppointmentWorkerLink_3` (`appointment` ASC) ,
   CONSTRAINT `fk_SAppointmentWorkerLink_1`
-    FOREIGN KEY (`assignee` )
-    REFERENCES `springatom`.`SMechanic` (`idSMechanic` )
+  FOREIGN KEY (`assignee` )
+  REFERENCES `springatom`.`SMechanic` (`idSMechanic` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_SAppointmentWorkerLink_2`
-    FOREIGN KEY (`reporter` )
-    REFERENCES `springatom`.`SMechanic` (`idSMechanic` )
+  FOREIGN KEY (`reporter` )
+  REFERENCES `springatom`.`SMechanic` (`idSMechanic` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_SAppointmentWorkerLink_3`
-    FOREIGN KEY (`appointment` )
-    REFERENCES `springatom`.`SAppointment` (`idSAppointment` )
+  FOREIGN KEY (`appointment` )
+  REFERENCES `springatom`.`SAppointment` (`idSAppointment` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -330,7 +330,7 @@ DROP TABLE IF EXISTS `springatom`.`SNotificationType` ;
 CREATE  TABLE IF NOT EXISTS `springatom`.`SNotificationType` (
   `type` VARCHAR(15) NOT NULL ,
   PRIMARY KEY (`type`) )
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -346,11 +346,11 @@ CREATE  TABLE IF NOT EXISTS `springatom`.`SNotification` (
   PRIMARY KEY (`idNotification`) ,
   INDEX `fk_SClientNotification_2` (`type` ASC) ,
   CONSTRAINT `fk_SClientNotification_2`
-    FOREIGN KEY (`type` )
-    REFERENCES `springatom`.`SNotificationType` (`type` )
+  FOREIGN KEY (`type` )
+  REFERENCES `springatom`.`SNotificationType` (`type` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -370,24 +370,51 @@ CREATE  TABLE IF NOT EXISTS `springatom`.`SNotificationLink` (
   INDEX `fk_SNotificationMechanicLink_2` (`notification` ASC) ,
   INDEX `fk_SNotificationLink_1` (`client` ASC) ,
   CONSTRAINT `fk_SNotificationMechanicLink_1`
-    FOREIGN KEY (`mechanic` )
-    REFERENCES `springatom`.`SMechanic` (`idSMechanic` )
+  FOREIGN KEY (`mechanic` )
+  REFERENCES `springatom`.`SMechanic` (`idSMechanic` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_SNotificationMechanicLink_2`
-    FOREIGN KEY (`notification` )
-    REFERENCES `springatom`.`SNotification` (`idNotification` )
+  FOREIGN KEY (`notification` )
+  REFERENCES `springatom`.`SNotification` (`idNotification` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_SNotificationLink_1`
-    FOREIGN KEY (`client` )
-    REFERENCES `springatom`.`SClient` (`idSClient` )
+  FOREIGN KEY (`client` )
+  REFERENCES `springatom`.`SClient` (`idSClient` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+  ENGINE = InnoDB;
 
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `springatom`.`SUser`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `springatom`;
+INSERT INTO `springatom`.`SUser` (`idSUser`, `login`, `secPass`) VALUES (0, 'sadmin', '145da22749d83456741059ec66d92af3');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `springatom`.`SRole`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `springatom`;
+INSERT INTO `springatom`.`SRole` (`role`) VALUES ('admin');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `springatom`.`SUserToRole`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `springatom`;
+INSERT INTO `springatom`.`SUserToRole` (`idSUser`, `idSRole`) VALUES (0, 'admin');
+
+COMMIT;
