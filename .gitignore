@@ -7,11 +7,10 @@ logs/*
 *.jar
 *.war
 *.ear
-<<<<<<< HEAD
 
 # idea
 .idea/*
 *.iml
 
 # db
-database/*.mbw.bak
+database/**.mwb.bak
