@@ -37,6 +37,7 @@
         <tomcat-servlet-api.version>7.0.21</tomcat-servlet-api.version>
         <guava-gwt.version>14.0.1</guava-gwt.version>
         <tomcat.maven.version>2.0</tomcat.maven.version>
+        <lombok.version>0.11.6</lombok.version>
     </properties>
 
     <dependencies>
@@ -137,6 +138,14 @@
             <version>${guava-gwt.version}</version>
         </dependency>
         <!-- guava -->
+
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+        <!-- lombok -->
 
         <!-- test -->
         <dependency>
