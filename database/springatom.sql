@@ -1,6 +1,6 @@
 SET @OLD_UNIQUE_CHECKS = @@UNIQUE_CHECKS, UNIQUE_CHECKS = 0;
 SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0;
-SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'TRADITIONAL';
+SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'TRADITIONAL,ALLOW_INVALID_DATES';
 
 DROP SCHEMA IF EXISTS `springatom`;
 CREATE SCHEMA IF NOT EXISTS `springatom`
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SMechanic` (
   `disabled`    TINYINT(1)  NOT NULL,
   PRIMARY KEY (`idSMechanic`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
-  INDEX `fk_SMechanic_1` (`idSMechanic` ASC),
+  INDEX `fk_SMechanic_1_idx` (`idSMechanic` ASC),
   CONSTRAINT `fk_SMechanic_1`
   FOREIGN KEY (`idSMechanic`)
   REFERENCES `springatom`.`SUser` (`idSUser`)
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SClient` (
   `disabled`  TINYINT(1)  NOT NULL DEFAULT 0,
   PRIMARY KEY (`idSClient`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
-  INDEX `fk_SClient_1` (`idSClient` ASC),
+  INDEX `fk_SClient_1_idx` (`idSClient` ASC),
   CONSTRAINT `fk_SClient_1`
   FOREIGN KEY (`idSClient`)
   REFERENCES `springatom`.`SUser` (`idSUser`)
@@ -92,8 +92,8 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SClientContactData` (
   `value`            VARCHAR(45) NOT NULL,
   `type`             INT         NOT NULL,
   PRIMARY KEY (`idSClientDetails`),
-  INDEX `fk_SClientContactData_1` (`type` ASC),
-  INDEX `fk_SClientContactData_2` (`client` ASC),
+  INDEX `fk_SClientContactData_1_idx` (`type` ASC),
+  INDEX `fk_SClientContactData_2_idx` (`client` ASC),
   CONSTRAINT `fk_SClientContactData_1`
   FOREIGN KEY (`type`)
   REFERENCES `springatom`.`SContactDataType` (`idSContactDataType`)
@@ -146,24 +146,17 @@ DROP TABLE IF EXISTS `springatom`.`SCar`;
 CREATE TABLE IF NOT EXISTS `springatom`.`SCar` (
   `idSCar`             INT         NOT NULL AUTO_INCREMENT,
   `carMaster`          INT         NOT NULL,
-  `client`             INT         NOT NULL,
   `registrationNumber` VARCHAR(45) NOT NULL,
   `vinNumber`          VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idSCar`),
   UNIQUE INDEX `registrationNumber_UNIQUE` (`registrationNumber` ASC),
   UNIQUE INDEX `vinNumber_UNIQUE` (`vinNumber` ASC),
-  INDEX `fk_SCar_1` (`carMaster` ASC),
-  INDEX `fk_SCar_2` (`client` ASC),
+  INDEX `fk_SCar_1_idx` (`carMaster` ASC),
   CONSTRAINT `fk_SCar_1`
   FOREIGN KEY (`carMaster`)
   REFERENCES `springatom`.`SCarMaster` (`idSCarMaster`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_SCar_2`
-  FOREIGN KEY (`client`)
-  REFERENCES `springatom`.`SClient` (`idSClient`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON UPDATE NO ACTION)
   ENGINE = InnoDB;
 
 
@@ -180,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SAppointment` (
   `startTime`      TIME      NOT NULL,
   `endTime`        TIME      NOT NULL,
   PRIMARY KEY (`idSAppointment`),
-  INDEX `fk_SAppointment_1` (`car` ASC),
+  INDEX `fk_SAppointment_1_idx` (`car` ASC),
   CONSTRAINT `fk_SAppointment_1`
   FOREIGN KEY (`car`)
   REFERENCES `springatom`.`SCar` (`idSCar`)
@@ -202,9 +195,9 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SClientProblemReport` (
   `value`                  VARCHAR(45) NULL,
   `assigned`               TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idSClientProblemReport`),
-  INDEX `fk_SClientProblemReport_1` (`client` ASC),
-  INDEX `fk_SClientProblemReport_2` (`type` ASC),
-  INDEX `fk_SClientProblemReport_3` (`appointment` ASC),
+  INDEX `fk_SClientProblemReport_1_idx` (`client` ASC),
+  INDEX `fk_SClientProblemReport_2_idx` (`type` ASC),
+  INDEX `fk_SClientProblemReport_3_idx` (`appointment` ASC),
   CONSTRAINT `fk_SClientProblemReport_1`
   FOREIGN KEY (`client`)
   REFERENCES `springatom`.`SClient` (`idSClient`)
@@ -243,8 +236,8 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SUserToRole` (
   `idSUser` INT         NOT NULL,
   `idSRole` VARCHAR(20) NOT NULL,
   PRIMARY KEY (`idSUser`, `idSRole`),
-  INDEX `fk_SUserToRole_1` (`idSUser` ASC),
-  INDEX `fk_SUserToRole_2` (`idSRole` ASC),
+  INDEX `fk_SUserToRole_1_idx` (`idSUser` ASC),
+  INDEX `fk_SUserToRole_2_idx` (`idSRole` ASC),
   CONSTRAINT `fk_SUserToRole_1`
   FOREIGN KEY (`idSUser`)
   REFERENCES `springatom`.`SUser` (`idSUser`)
@@ -281,8 +274,8 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SAppointmentTask` (
   `type`               INT         NOT NULL,
   `task`               VARCHAR(45) NULL,
   PRIMARY KEY (`idSAppointmentTask`),
-  INDEX `fk_SAppointmentTask_1` (`appointment` ASC),
-  INDEX `fk_SAppointmentTask_2` (`type` ASC),
+  INDEX `fk_SAppointmentTask_1_idx` (`appointment` ASC),
+  INDEX `fk_SAppointmentTask_2_idx` (`type` ASC),
   CONSTRAINT `fk_SAppointmentTask_1`
   FOREIGN KEY (`appointment`)
   REFERENCES `springatom`.`SAppointment` (`idSAppointment`)
@@ -308,9 +301,9 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SAppointmentWorkerLink` (
   `assignee`                 INT       NOT NULL,
   `reporter`                 INT       NOT NULL,
   PRIMARY KEY (`idSAppointmentWorkerLink`),
-  INDEX `fk_SAppointmentWorkerLink_1` (`assignee` ASC),
-  INDEX `fk_SAppointmentWorkerLink_2` (`reporter` ASC),
-  INDEX `fk_SAppointmentWorkerLink_3` (`appointment` ASC),
+  INDEX `fk_SAppointmentWorkerLink_1_idx` (`assignee` ASC),
+  INDEX `fk_SAppointmentWorkerLink_2_idx` (`reporter` ASC),
+  INDEX `fk_SAppointmentWorkerLink_3_idx` (`appointment` ASC),
   CONSTRAINT `fk_SAppointmentWorkerLink_1`
   FOREIGN KEY (`assignee`)
   REFERENCES `springatom`.`SMechanic` (`idSMechanic`)
@@ -353,7 +346,7 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SNotification` (
   `notification`   VARCHAR(1000) NULL,
   `sent`           TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idNotification`),
-  INDEX `fk_SClientNotification_2` (`type` ASC),
+  INDEX `fk_SClientNotification_2_idx` (`type` ASC),
   CONSTRAINT `fk_SClientNotification_2`
   FOREIGN KEY (`type`)
   REFERENCES `springatom`.`SNotificationType` (`idSNotificationType`)
@@ -375,9 +368,9 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SNotificationLink` (
   `discriminator`   TINYINT    NOT NULL,
   `read`            TINYINT(1) NULL,
   PRIMARY KEY (`idSNotification`),
-  INDEX `fk_SNotificationMechanicLink_1` (`mechanic` ASC),
-  INDEX `fk_SNotificationMechanicLink_2` (`notification` ASC),
-  INDEX `fk_SNotificationLink_1` (`client` ASC),
+  INDEX `fk_SNotificationMechanicLink_1_idx` (`mechanic` ASC),
+  INDEX `fk_SNotificationMechanicLink_2_idx` (`notification` ASC),
+  INDEX `fk_SNotificationLink_1_idx` (`client` ASC),
   CONSTRAINT `fk_SNotificationMechanicLink_1`
   FOREIGN KEY (`mechanic`)
   REFERENCES `springatom`.`SMechanic` (`idSMechanic`)
@@ -394,6 +387,34 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SNotificationLink` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
   ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `springatom`.`SCarClientLink`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `springatom`.`SCarClientLink`;
+
+CREATE TABLE IF NOT EXISTS `springatom`.`SCarClientLink` (
+  `idSCarClientLink` INT        NOT NULL AUTO_INCREMENT,
+  `car`              INT        NOT NULL,
+  `client`           INT        NOT NULL,
+  `active`           TINYINT(1) NOT NULL DEFAULT TRUE,
+  PRIMARY KEY (`idSCarClientLink`),
+  INDEX `fk_SCarClientLink_1_idx` (`car` ASC),
+  INDEX `fk_SCarClientLnk_2_idx` (`client` ASC),
+  CONSTRAINT `fk_SCarClientLink_1`
+  FOREIGN KEY (`car`)
+  REFERENCES `springatom`.`SCar` (`idSCar`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_SCarClientLink_2`
+  FOREIGN KEY (`client`)
+  REFERENCES `springatom`.`SClient` (`idSClient`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+USE `springatom`;
 
 
 SET SQL_MODE = @OLD_SQL_MODE;
