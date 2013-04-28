@@ -21,17 +21,17 @@ public class STypeDataBoImpl implements STypeDataBo {
     STypeDataDao typeDataDao;
 
     @Override
-    public Set<STypeData> getAll(@NotNull final Class<? extends STypeData> clazz) {
+    public Set<STypeData> getAll(@NotNull final Class clazz) {
         return this.typeDataDao.getAll(clazz);
     }
 
     @Override
-    public STypeData getById(@NotNull final Long id, @NotNull final Class<? extends STypeData> clazz) {
+    public STypeData getById(@NotNull final Long id, @NotNull final Class clazz) {
         return this.typeDataDao.getById(id, clazz);
     }
 
     @Override
-    public STypeData getByType(@NotNull final String type, @NotNull final Class<? extends STypeData> clazz) {
+    public STypeData getByType(@NotNull final String type, @NotNull final Class clazz) {
         return this.typeDataDao.getByType(type, clazz);
     }
 }
