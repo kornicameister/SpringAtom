@@ -29,7 +29,7 @@ public class STypeDataDaoImpl extends DaoSupport implements STypeDataDao {
     private static final String TYPE = "type";
 
     @Override
-    public Set<STypeData> getAll(@NotNull final Class clazz) {
+    public Set<STypeData> getAll(@NotNull final Class<? extends STypeData> clazz) {
         if (this.getSession() == null) {
             LOGGER.warn(INACTIVE_SESSION);
             return null;
@@ -51,12 +51,12 @@ public class STypeDataDaoImpl extends DaoSupport implements STypeDataDao {
     }
 
     @Override
-    public STypeData getById(@NotNull final Long id, @NotNull final Class clazz) {
+    public STypeData getById(@NotNull final Long id, @NotNull final Class<? extends STypeData> clazz) {
         return (STypeData) this.getSession().get(clazz, id);
     }
 
     @Override
-    public STypeData getByType(@NotNull final String type, @NotNull final Class clazz) {
+    public STypeData getByType(@NotNull final String type, @NotNull final Class<? extends STypeData> clazz) {
         return (STypeData) this.getSession().byNaturalId(clazz).using(TYPE, type).load();
     }
 }
