@@ -11,9 +11,9 @@ import java.util.Set;
  * @since 0.0.1
  */
 public interface STypeDataDao {
-    Set<STypeData> getAll(@NotNull final Class<? extends STypeData> clazz);
+    Set<STypeData> getAll(@NotNull final Class clazz);
 
-    STypeData getById(@NotNull final Long id, @NotNull final Class<? extends STypeData> clazz);
+    STypeData getById(@NotNull final Long id, @NotNull final Class clazz);
 
-    STypeData getByType(@NotNull final String type, @NotNull final Class<? extends STypeData> clazz);
+    STypeData getByType(@NotNull final String type, @NotNull final Class clazz);
 }
