@@ -1,0 +1,44 @@
+<ehcache
+        updateCheck="true"
+        monitoring="autodetect"
+        dynamicConfig="true">
+
+    <diskStore path="java.io.tmpdir/springatom"/>
+
+    <defaultCache
+            maxElementsInMemory="5000"
+            eternal="true"
+            overflowToDisk="false"
+            diskSpoolBufferSizeMB="30"
+            maxElementsOnDisk="1000000"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"
+            />
+    <cache
+            name="org.hibernate.cache.internal.StandardQueryCache"
+            maxElementsInMemory="500"
+            eternal="false"
+            timeToLiveSeconds="120"
+            overflowToDisk="true"/>
+    <cache
+            name="org.hibernate.cache.spi.UpdateTimestampsCache"
+            maxElementsInMemory="500"
+            eternal="false"
+            timeToLiveSeconds="120"
+            overflowToDisk="true"/>
+    <cache
+            name="org.hibernate.cache.StandardQueryCache"
+            maxElementsInMemory="500"
+            eternal="false"
+            timeToLiveSeconds="120"
+            overflowToDisk="true"/>
+
+    <!-- idle and live silently ignored-->
+    <cache name="typedata"
+           eternal="false"
+           timeToLiveSeconds="120"
+           overflowToDisk="true"
+            />
+
+</ehcache>

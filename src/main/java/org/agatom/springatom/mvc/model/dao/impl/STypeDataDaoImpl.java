@@ -4,7 +4,9 @@ import org.agatom.springatom.model.meta.STypeData;
 import org.agatom.springatom.mvc.model.dao.DaoSupport;
 import org.agatom.springatom.mvc.model.dao.STypeDataDao;
 import org.apache.log4j.Logger;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
@@ -23,12 +25,13 @@ import static org.agatom.springatom.util.QueryConstants.QueryTrace.READ_ENTITY_F
  * @since 0.0.1
  */
 @Repository(value = "STypeDataDao")
-@Transactional(readOnly = true)
+@Transactional(readOnly = true, propagation = Propagation.REQUIRED)
 public class STypeDataDaoImpl extends DaoSupport implements STypeDataDao {
     private static final Logger LOGGER = Logger.getLogger(STypeDataDaoImpl.class);
     private static final String TYPE = "type";
 
     @Override
+    @Cacheable(value = "typedata")
     public Set<STypeData> getAll(@NotNull final Class<? extends STypeData> clazz) {
         if (this.getSession() == null) {
             LOGGER.warn(INACTIVE_SESSION);
@@ -51,11 +54,13 @@ public class STypeDataDaoImpl extends DaoSupport implements STypeDataDao {
     }
 
     @Override
+    @Cacheable(value = "typedata", key = "#id")
     public STypeData getById(@NotNull final Long id, @NotNull final Class<? extends STypeData> clazz) {
-        return (STypeData) this.getSession().get(clazz, id);
+        return (STypeData) this.getSession().load(clazz, id);
     }
 
     @Override
+    @Cacheable(value = "typedata", key = "#type")
     public STypeData getByType(@NotNull final String type, @NotNull final Class<? extends STypeData> clazz) {
         return (STypeData) this.getSession().byNaturalId(clazz).using(TYPE, type).load();
     }

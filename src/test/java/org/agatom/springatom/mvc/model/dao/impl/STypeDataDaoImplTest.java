@@ -54,13 +54,21 @@ public class STypeDataDaoImplTest extends ReflectionTestUtils {
 
     @Test
     public void testGetById() throws Exception {
-        STypeData typeData = typeDataBo.getById((long) 3, SNotificationType.class);
-        Assert.assertNotNull("TypeData is null", typeData);
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 3, SNotificationType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 1, SNotificationType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 3, SClientProblemReportType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 2, SNotificationType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 1, SClientProblemReportType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 1, SClientProblemReportType.class));
     }
 
     @Test
     public void testGetByType() throws Exception {
-        STypeData typeData = typeDataBo.getByType("app_done", SNotificationType.class);
-        Assert.assertNotNull("TypeData is null", typeData);
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("app_done", SNotificationType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("fake_id", SClientProblemReportType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("app_done", SNotificationType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("fake_id", SClientProblemReportType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("fake_id", SClientProblemReportType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("missed_app", SClientProblemReportType.class));
     }
 }

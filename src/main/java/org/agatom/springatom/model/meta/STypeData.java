@@ -1,11 +1,8 @@
 package org.agatom.springatom.model.meta;
 
 import org.agatom.springatom.model.PersistentObject;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
@@ -15,16 +12,6 @@ import javax.persistence.MappedSuperclass;
  * @since 0.0.1
  */
 @MappedSuperclass
-@org.hibernate.annotations.Cache(
-        region = "invoiceproduct_cache",
-        usage = CacheConcurrencyStrategy.READ_ONLY
-)
-@Cacheable(
-        value = true
-)
-@BatchSize(
-        size = 20
-)
 abstract public class STypeData extends PersistentObject {
 
     @NaturalId

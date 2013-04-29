@@ -29,4 +29,8 @@ abstract public class DaoSupport {
         }
         return this.sessionFactory.getCurrentSession();
     }
+
+    public SessionFactory getSessionFactory() {
+        return this.sessionFactory;
+    }
 }
