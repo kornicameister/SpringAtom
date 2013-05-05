@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SClient` (
 
 
 -- -----------------------------------------------------
--- Table `springatom`.`SContactDataType`
+-- Table `springatom`.`SContactType`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `springatom`.`SContactDataType`;
 
@@ -213,8 +213,6 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SCarMaster` (
   `idSCarMaster`  INT          NOT NULL,
   `brand`         VARCHAR(45)  NOT NULL,
   `model`         VARCHAR(45)  NOT NULL,
-  `width`         FLOAT        NULL DEFAULT 0,
-  `height`        FLOAT        NULL DEFAULT 0,
   `thumbnailPath` VARCHAR(100) NULL DEFAULT '/dummy/path/to/thumbnail',
   PRIMARY KEY (`idSCarMaster`),
   INDEX `sCarMasterBrandIndex` USING BTREE (`brand` ASC),
@@ -230,12 +228,10 @@ DROP TABLE IF EXISTS `springatom`.`SCar`;
 CREATE TABLE IF NOT EXISTS `springatom`.`SCar` (
   `idSCar`             INT         NOT NULL AUTO_INCREMENT,
   `carMaster`          INT         NOT NULL,
-  `revision`           INT         NOT NULL DEFAULT 0,
   `registrationNumber` VARCHAR(45) NOT NULL,
   `vinNumber`          VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idSCar`),
   INDEX `fk_SCar_1_idx` (`carMaster` ASC),
-  UNIQUE INDEX `revision_UNIQUE` (`revision` ASC),
   CONSTRAINT `fk_SCar_1`
   FOREIGN KEY (`carMaster`)
   REFERENCES `springatom`.`SCarMaster` (`idSCarMaster`)
@@ -383,33 +379,44 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SNotificationLink` (
 
 
 -- -----------------------------------------------------
+-- Table `springatom`.`SCarRevision`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `springatom`.`SCarRevision`;
+
+CREATE TABLE IF NOT EXISTS `springatom`.`SCarRevision` (
+  `idSCarRevision` INT NOT NULL,
+  `car`            INT NOT NULL,
+  `revision`       INT NOT NULL,
+  PRIMARY KEY (`idSCarRevision`),
+  INDEX `fk_SCarRevision_1_idx` (`car` ASC),
+  CONSTRAINT `fk_SCarRevision_1`
+  FOREIGN KEY (`car`)
+  REFERENCES `springatom`.`SCar` (`idSCar`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `springatom`.`SCarClientLink`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `springatom`.`SCarClientLink`;
 
 CREATE TABLE IF NOT EXISTS `springatom`.`SCarClientLink` (
   `idSCarClientLink` INT NOT NULL AUTO_INCREMENT,
-  `car`              INT NOT NULL,
-  `car_rev`          INT NOT NULL,
   `client`           INT NOT NULL,
+  `carRevision`      INT NOT NULL,
   PRIMARY KEY (`idSCarClientLink`),
-  INDEX `fk_SCarClientLink_1_idx` (`car` ASC),
   INDEX `fk_SCarClientLnk_2_idx` (`client` ASC),
-  INDEX `fk_SCarClientLink_3_idx` (`car_rev` ASC),
-  UNIQUE INDEX `car_rev_UNIQUE` (`car_rev` ASC),
+  INDEX `fk_SCarClientLink_2_idx` (`carRevision` ASC),
   CONSTRAINT `fk_SCarClientLink_1`
-  FOREIGN KEY (`car`)
-  REFERENCES `springatom`.`SCar` (`idSCar`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_SCarClientLink_3`
   FOREIGN KEY (`client`)
   REFERENCES `springatom`.`SClient` (`idSClient`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_SCarClientLink_2`
-  FOREIGN KEY (`car_rev`)
-  REFERENCES `springatom`.`SCar` (`revision`)
+  FOREIGN KEY (`carRevision`)
+  REFERENCES `springatom`.`SCarRevision` (`idSCarRevision`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
   ENGINE = InnoDB;
@@ -422,27 +429,19 @@ DROP TABLE IF EXISTS `springatom`.`SCarAppointmentLink`;
 
 CREATE TABLE IF NOT EXISTS `springatom`.`SCarAppointmentLink` (
   `idSCarAppointmentLink` INT NOT NULL AUTO_INCREMENT,
-  `car`                   INT NOT NULL,
-  `cer_rev`               INT NOT NULL,
   `appointment`           INT NOT NULL,
+  `carRevision`           INT NOT NULL,
   PRIMARY KEY (`idSCarAppointmentLink`),
-  INDEX `fk_SCarAppointmentLink_1_idx` (`car` ASC),
   INDEX `fk_SCarAppointmentLink_2_idx` (`appointment` ASC),
-  INDEX `fk_SCarAppointmentLink_2_idx1` (`cer_rev` ASC),
-  UNIQUE INDEX `cer_rev_UNIQUE` (`cer_rev` ASC),
+  INDEX `fk_SCarAppointmentLink_2_idx1` (`carRevision` ASC),
   CONSTRAINT `fk_SCarAppointmentLink_1`
-  FOREIGN KEY (`car`)
-  REFERENCES `springatom`.`SCar` (`idSCar`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_SCarAppointmentLink_3`
   FOREIGN KEY (`appointment`)
   REFERENCES `springatom`.`SAppointment` (`idSAppointment`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_SCarAppointmentLink_2`
-  FOREIGN KEY (`cer_rev`)
-  REFERENCES `springatom`.`SCar` (`idSCar`)
+  FOREIGN KEY (`carRevision`)
+  REFERENCES `springatom`.`SCarRevision` (`idSCarRevision`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
   ENGINE = InnoDB;
