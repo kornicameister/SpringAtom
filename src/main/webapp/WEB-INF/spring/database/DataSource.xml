@@ -24,6 +24,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
         <property name="acquireIncrement" value="1"/>
         <property name="maxStatements" value="50"/>
         <property name="numHelperThreads" value="3"/>
+        <property name="maxIdleTime" value="1000"/>
         <!-- connection pool -->
 
     </bean>

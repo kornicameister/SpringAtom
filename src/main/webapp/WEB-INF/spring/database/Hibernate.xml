@@ -20,10 +20,13 @@
                 <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
                 <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.format_sql">true</prop>
-                <!--<prop key="hibernate.hbm2ddl.auto">update</prop>-->
-                <prop key="hibernate.ejb.event.pre-collection-update">
-                    org.hibernate.envers.event.AuditEventListener
-                </prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
+                <prop key="hibernate.transaction.flush_before_completion">true</prop>
+                <prop key="hibernate.transaction.auto_close_session">true</prop>
+                <prop key="org.hibernate.envers.revision_field_name">revision</prop>
+                <prop key="org.hibernate.envers.revision_type_field_name">revisionType</prop>
+                <prop key="org.hibernate.envers.audit_table_suffix">_history</prop>
             </props>
         </property>
         <property name="packagesToScan" value="org.agatom.springatom.model"/>
