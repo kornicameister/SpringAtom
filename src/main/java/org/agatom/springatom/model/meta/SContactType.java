@@ -9,14 +9,14 @@ import javax.persistence.Entity;
  * @since 0.0.1
  */
 @Entity
-@DiscriminatorValue(value = "SNT")
-public class SNotificationType extends SMetaData {
+@DiscriminatorValue(value = "SCT")
+public class SContactType extends SMetaData {
 
-    public SNotificationType() {
+    public SContactType() {
         super();
     }
 
-    public SNotificationType(final String type) {
+    public SContactType(final String type) {
         super(type);
     }
 }

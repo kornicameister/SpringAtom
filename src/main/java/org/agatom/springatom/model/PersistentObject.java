@@ -1,5 +1,6 @@
 package org.agatom.springatom.model;
 
+import com.google.common.base.Objects;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.GeneratedValue;
@@ -22,20 +23,20 @@ public abstract class PersistentObject implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "increment", strategy = "increment")
+    @GenericGenerator(name = "increment", strategy = "hilo")
     private Long id = null;
 
     public PersistentObject() {
         super();
     }
 
-    public Long getId() {
+    public final Long getId() {
         return id;
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return this.id.hashCode();
     }
 
     @Override
@@ -45,17 +46,13 @@ public abstract class PersistentObject implements Serializable {
 
         PersistentObject that = (PersistentObject) o;
 
-        return id.equals(that.id);
+        return this.id.equals(that.id);
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("PersistentObject");
-        sb.append("{super =").append(super.toString());
-        sb.append("},");
-        sb.append("{id=").append(id);
-        sb.append('}');
-        return sb.toString();
+        return Objects.toStringHelper(this)
+                .add("id", id)
+                .toString();
     }
 }
