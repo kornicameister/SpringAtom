@@ -1,6 +1,6 @@
 package org.agatom.springatom.mvc.model.bo.impl;
 
-import org.agatom.springatom.model.meta.STypeData;
+import org.agatom.springatom.model.meta.SMetaData;
 import org.agatom.springatom.mvc.model.bo.STypeDataBo;
 import org.agatom.springatom.mvc.model.dao.STypeDataDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +21,17 @@ public class STypeDataBoImpl implements STypeDataBo {
     STypeDataDao typeDataDao;
 
     @Override
-    public Set<STypeData> getAll(@NotNull final Class<? extends STypeData> clazz) {
+    public Set<SMetaData> getAll(@NotNull final Class<? extends SMetaData> clazz) {
         return this.typeDataDao.getAll(clazz);
     }
 
     @Override
-    public STypeData getById(@NotNull final Long id, @NotNull final Class<? extends STypeData> clazz) {
+    public SMetaData getById(@NotNull final Long id, @NotNull final Class<? extends SMetaData> clazz) {
         return this.typeDataDao.getById(id, clazz);
     }
 
     @Override
-    public STypeData getByType(@NotNull final String type, @NotNull final Class<? extends STypeData> clazz) {
+    public SMetaData getByType(@NotNull final String type, @NotNull final Class<? extends SMetaData> clazz) {
         return this.typeDataDao.getByType(type, clazz);
     }
 }

@@ -21,14 +21,15 @@ import java.util.Set;
 public class STypeDataDaoImplTest extends ReflectionTestUtils {
     @Autowired
     STypeDataBo typeDataBo;
-    private List<Class<? extends STypeData>> clazzList;
+
+    private List<Class<? extends SMetaData>> clazzList;
 
     @Before
     public void setUp() throws Exception {
-        List<Class<? extends STypeData>> classList = new ArrayList<>();
+        List<Class<? extends SMetaData>> classList = new ArrayList<>();
 
         classList.add(SNotificationType.class);
-        classList.add(SContactDataType.class);
+        classList.add(SContactType.class);
         classList.add(SAppointmentTaskType.class);
         classList.add(SClientProblemReportType.class);
 
@@ -44,9 +45,9 @@ public class STypeDataDaoImplTest extends ReflectionTestUtils {
     @Test
     public void testGetAll() throws Exception {
         for (Class clazz : this.clazzList) {
-            Set<STypeData> dataSet = typeDataBo.getAll(clazz);
+            Set<SMetaData> dataSet = typeDataBo.getAll(clazz);
             Assert.assertNotSame(String.format("Data set is empty for %s", clazz.getSimpleName()), 0, dataSet.size());
-            for (STypeData typeData : dataSet) {
+            for (SMetaData typeData : dataSet) {
                 Assert.assertNotNull("TypeData is null", typeData);
             }
         }
@@ -54,12 +55,12 @@ public class STypeDataDaoImplTest extends ReflectionTestUtils {
 
     @Test
     public void testGetById() throws Exception {
-        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 3, SNotificationType.class));
-        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 1, SNotificationType.class));
-        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 3, SClientProblemReportType.class));
-        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 2, SNotificationType.class));
-        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 1, SClientProblemReportType.class));
-        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 1, SClientProblemReportType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 13, SNotificationType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 14, SNotificationType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 5, SClientProblemReportType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 13, SNotificationType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 8, SClientProblemReportType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 5, SClientProblemReportType.class));
     }
 
     @Test

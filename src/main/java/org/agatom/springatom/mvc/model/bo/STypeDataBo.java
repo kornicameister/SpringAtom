@@ -1,6 +1,6 @@
 package org.agatom.springatom.mvc.model.bo;
 
-import org.agatom.springatom.model.meta.STypeData;
+import org.agatom.springatom.model.meta.SMetaData;
 
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -11,9 +11,9 @@ import java.util.Set;
  * @since 0.0.1
  */
 public interface STypeDataBo {
-    Set<STypeData> getAll(@NotNull final Class<? extends STypeData> clazz);
+    Set<SMetaData> getAll(@NotNull final Class<? extends SMetaData> clazz);
 
-    STypeData getById(@NotNull final Long id, @NotNull final Class<? extends STypeData> clazz);
+    SMetaData getById(@NotNull final Long id, @NotNull final Class<? extends SMetaData> clazz);
 
-    STypeData getByType(@NotNull final String type, @NotNull final Class<? extends STypeData> clazz);
+    SMetaData getByType(@NotNull final String type, @NotNull final Class<? extends SMetaData> clazz);
 }
