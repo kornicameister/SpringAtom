@@ -10,7 +10,7 @@ import java.util.Set;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface STypeDataDao {
+public interface SMetaDataDao {
     Set<SMetaData> getAll(@NotNull final Class<? extends SMetaData> clazz);
 
     SMetaData getById(@NotNull final Long id, @NotNull final Class<? extends SMetaData> clazz);

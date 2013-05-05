@@ -1,8 +1,8 @@
 package org.agatom.springatom.mvc.model.bo.impl;
 
 import org.agatom.springatom.model.meta.SMetaData;
-import org.agatom.springatom.mvc.model.bo.STypeDataBo;
-import org.agatom.springatom.mvc.model.dao.STypeDataDao;
+import org.agatom.springatom.mvc.model.bo.SMetaDataBo;
+import org.agatom.springatom.mvc.model.dao.SMetaDataDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +15,10 @@ import java.util.Set;
  * @since 0.0.1
  */
 @Service(value = "STypeDataBo")
-public class STypeDataBoImpl implements STypeDataBo {
+public class SMetaDataBoImpl implements SMetaDataBo {
 
     @Autowired
-    STypeDataDao typeDataDao;
+    SMetaDataDao typeDataDao;
 
     @Override
     public Set<SMetaData> getAll(@NotNull final Class<? extends SMetaData> clazz) {

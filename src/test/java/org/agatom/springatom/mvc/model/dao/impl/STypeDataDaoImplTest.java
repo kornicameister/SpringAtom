@@ -1,7 +1,7 @@
 package org.agatom.springatom.mvc.model.dao.impl;
 
 import org.agatom.springatom.model.meta.*;
-import org.agatom.springatom.mvc.model.bo.STypeDataBo;
+import org.agatom.springatom.mvc.model.bo.SMetaDataBo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import java.util.Set;
         "file:src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml")
 public class STypeDataDaoImplTest extends ReflectionTestUtils {
     @Autowired
-    STypeDataBo typeDataBo;
+    SMetaDataBo typeDataBo;
 
     private List<Class<? extends SMetaData>> clazzList;
 
