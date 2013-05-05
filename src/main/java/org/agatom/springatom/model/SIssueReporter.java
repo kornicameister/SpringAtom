@@ -16,7 +16,7 @@ import java.util.Date;
 public class SIssueReporter {
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "reporter", referencedColumnName = "idSPerson", updatable = false)
+    @JoinColumn(name = "reporter", referencedColumnName = "idSMechanic", updatable = false)
     private SMechanic mechanic;
 
     @Type(type = "timestamp")

@@ -27,21 +27,19 @@ public class SCar extends PersistentVersionedObject {
     @JoinColumn(name = "carMaster", referencedColumnName = "idSCarMaster", updatable = true)
     private SCarMaster carMaster;
 
+    @Audited
+    @NaturalId(mutable = true)
     @Column(nullable = false,
             length = 45,
-            name = "registrationNumber")
-    private String registrationNumber;
-
-    @Column(nullable = false,
-            length = 45,
-            name = "vinNumber")
-    private String vinNumber;
+            name = "licencePlate")
+    private String licencePlate;
 
     @Audited
     @NaturalId(mutable = true)
     @Column(nullable = false,
-            name = "revision")
-    private Integer revision;
+            length = 45,
+            name = "vinNumber")
+    private String vinNumber;
 
     public SCarMaster getCarMaster() {
         return carMaster;
@@ -51,12 +49,12 @@ public class SCar extends PersistentVersionedObject {
         this.carMaster = carMaster;
     }
 
-    public String getRegistrationNumber() {
-        return registrationNumber;
+    public String getLicencePlate() {
+        return licencePlate;
     }
 
-    public void setRegistrationNumber(final String registrationNumber) {
-        this.registrationNumber = registrationNumber;
+    public void setLicencePlate(final String registrationNumber) {
+        this.licencePlate = registrationNumber;
     }
 
     public String getVinNumber() {
@@ -67,16 +65,11 @@ public class SCar extends PersistentVersionedObject {
         this.vinNumber = vinNumber;
     }
 
-    public Integer getRevision() {
-        return revision;
-    }
-
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (registrationNumber != null ? registrationNumber.hashCode() : 0);
+        result = 31 * result + (licencePlate != null ? licencePlate.hashCode() : 0);
         result = 31 * result + (vinNumber != null ? vinNumber.hashCode() : 0);
-        result = 31 * result + (revision != null ? revision.hashCode() : 0);
         return result;
     }
 
@@ -88,17 +81,15 @@ public class SCar extends PersistentVersionedObject {
 
         SCar sCar = (SCar) o;
 
-        return !(registrationNumber != null ? !registrationNumber.equals(sCar.registrationNumber) : sCar.registrationNumber != null)
-                && !(vinNumber != null ? !vinNumber.equals(sCar.vinNumber) : sCar.vinNumber != null)
-                && !(revision != null ? !revision.equals(sCar.revision) : sCar.revision != null);
+        return !(licencePlate != null ? !licencePlate.equals(sCar.licencePlate) : sCar.licencePlate != null)
+                && !(vinNumber != null ? !vinNumber.equals(sCar.vinNumber) : sCar.vinNumber != null);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
                 .add("carMaster", carMaster)
-                .add("revision", revision)
-                .add("registrationNumber", registrationNumber)
+                .add("registrationNumber", licencePlate)
                 .add("vinNumber", vinNumber)
                 .toString();
     }

@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import org.agatom.springatom.model.PersistentVersionedObject;
 import org.agatom.springatom.model.SPerson;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -29,6 +30,7 @@ public class SUser extends PersistentVersionedObject {
     @Column(name = "login", length = 45, unique = true, nullable = false)
     private String login;
 
+    @Audited
     @Column(name = "secPass", length = 66, nullable = false)
     private String password;
 

@@ -4,10 +4,7 @@ import com.google.common.base.Objects;
 import org.agatom.springatom.model.SPerson;
 import org.hibernate.annotations.BatchSize;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 /**
@@ -16,7 +13,8 @@ import java.util.Set;
  * @since 0.0.1
  */
 @Entity(name = "SClient")
-@DiscriminatorValue(value = "SC")
+@Table(name = "SClient")
+@PrimaryKeyJoinColumn(name = "idSClient")
 public class SClient extends SPerson {
 
     @BatchSize(size = 10)

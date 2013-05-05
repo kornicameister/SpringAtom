@@ -1,10 +1,11 @@
 package org.agatom.springatom.model.links;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.model.PersistentObject;
+import org.agatom.springatom.model.PersistentVersionedObject;
 import org.agatom.springatom.model.SIssueReporter;
 import org.agatom.springatom.model.appointment.SAppointment;
 import org.agatom.springatom.model.mechanic.SMechanic;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 
@@ -22,14 +23,15 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
-public class SAppointmentWorkerLink extends PersistentObject {
+public class SAppointmentWorkerLink extends PersistentVersionedObject {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment", updatable = false)
     private SAppointment appointment;
 
+    @Audited
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "assignee", referencedColumnName = "idSPerson")
+    @JoinColumn(name = "assignee", referencedColumnName = "idSMechanic")
     private SMechanic assignee;
 
     @Embedded

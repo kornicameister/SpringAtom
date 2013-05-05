@@ -3,6 +3,8 @@ package org.agatom.springatom.model;
 import com.google.common.base.Objects;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -22,12 +24,9 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(
-        name = "who",
-        discriminatorType = DiscriminatorType.STRING
-)
-abstract public class SPerson extends PersistentObject {
+@Inheritance(strategy = InheritanceType.JOINED)
+@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+abstract public class SPerson extends PersistentVersionedObject {
 
     @Column(name = "fName", length = 45, nullable = false)
     private String firstName;
@@ -36,10 +35,12 @@ abstract public class SPerson extends PersistentObject {
     private String lastName;
 
     @Email
+    @Audited
     @NaturalId
     @Column(name = "email", length = 45, nullable = false, unique = true)
     private String email;
 
+    @Audited
     @Type(type = "boolean")
     @Column(name = "disabled")
     private Boolean disabled;

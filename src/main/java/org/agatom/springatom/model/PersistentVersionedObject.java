@@ -1,10 +1,12 @@
 package org.agatom.springatom.model;
 
 import com.google.common.base.Objects;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.envers.RevisionNumber;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.MappedSuperclass;
 
 /**
  * @author kornicamaister
@@ -14,26 +16,18 @@ import java.util.Date;
 @MappedSuperclass
 abstract public class PersistentVersionedObject extends PersistentObject {
 
-    @Version
-    @Column(name = "version")
+    @NaturalId
+    @RevisionNumber
+    @GeneratedValue
+    @Column(name = "version", nullable = false)
     private Long version;
-
-    @Type(type = "timestamp")
-    @Column(name = "updatedOn")
-    @Temporal(value = TemporalType.TIMESTAMP)
-    private Date updatedOn;
 
     protected PersistentVersionedObject() {
         super();
-        this.updatedOn = new Date();
     }
 
     public Long getVersion() {
         return version;
-    }
-
-    public Date getUpdatedOn() {
-        return updatedOn;
     }
 
     @Override
@@ -58,7 +52,6 @@ abstract public class PersistentVersionedObject extends PersistentObject {
     public String toString() {
         return Objects.toStringHelper(this)
                 .add("version", version)
-                .add("updatedOn", updatedOn)
                 .toString();
     }
 }

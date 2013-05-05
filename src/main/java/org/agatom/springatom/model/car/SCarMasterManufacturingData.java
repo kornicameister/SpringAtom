@@ -23,7 +23,6 @@ public class SCarMasterManufacturingData implements Serializable {
             name = "brand")
     private String brand;
 
-    @NaturalId
     @Column(nullable = false,
             length = 45,
             updatable = true,
