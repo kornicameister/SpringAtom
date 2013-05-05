@@ -20,6 +20,10 @@
                 <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
                 <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.format_sql">true</prop>
+                <!--<prop key="hibernate.hbm2ddl.auto">update</prop>-->
+                <prop key="hibernate.ejb.event.pre-collection-update">
+                    org.hibernate.envers.event.AuditEventListener
+                </prop>
             </props>
         </property>
         <property name="packagesToScan" value="org.agatom.springatom.model"/>

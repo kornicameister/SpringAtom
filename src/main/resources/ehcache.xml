@@ -36,8 +36,9 @@
 
     <!-- idle and live silently ignored-->
     <cache name="typedata"
-           eternal="false"
-           timeToLiveSeconds="120"
+           eternal="true"
+           timeToLiveSeconds="0"
+           maxElementsInMemory="10"
            overflowToDisk="true"
             />
 
