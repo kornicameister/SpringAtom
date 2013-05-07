@@ -1,7 +1,7 @@
 package org.agatom.springatom.mvc.model.provider.impl;
 
 import org.agatom.springatom.model.meta.*;
-import org.agatom.springatom.mvc.model.service.SMetaDataBo;
+import org.agatom.springatom.mvc.model.service.SMetaDataService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +18,9 @@ import java.util.Set;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
         "file:src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml")
-public class STypeDataDaoImplTest extends ReflectionTestUtils {
+public class SMetaDataProviderTest extends ReflectionTestUtils {
     @Autowired
-    SMetaDataBo typeDataBo;
+    SMetaDataService typeDataBo;
 
     private List<Class<? extends SMetaData>> clazzList;
 

@@ -2,7 +2,7 @@ package org.agatom.springatom.mvc.model.service.impl;
 
 import org.agatom.springatom.model.meta.SMetaData;
 import org.agatom.springatom.mvc.model.provider.SMetaDataProvider;
-import org.agatom.springatom.mvc.model.service.SMetaDataBo;
+import org.agatom.springatom.mvc.model.service.SMetaDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import java.util.Set;
  * @since 0.0.1
  */
 @Service(value = "STypeDataBo")
-public class SMetaDataBoImpl implements SMetaDataBo {
+public class SMetaDataServiceImpl implements SMetaDataService {
 
     @Autowired
     SMetaDataProvider typeDataDao;
