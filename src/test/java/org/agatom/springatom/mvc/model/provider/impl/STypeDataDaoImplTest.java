@@ -1,7 +1,7 @@
-package org.agatom.springatom.mvc.model.dao.impl;
+package org.agatom.springatom.mvc.model.provider.impl;
 
 import org.agatom.springatom.model.meta.*;
-import org.agatom.springatom.mvc.model.bo.SMetaDataBo;
+import org.agatom.springatom.mvc.model.service.SMetaDataBo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package org.agatom.springatom.mvc.model.dao;
+package org.agatom.springatom.mvc.model.provider;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -10,8 +10,9 @@ import javax.annotation.Resource;
 
 
 @Repository(value = "DaoSupport")
-abstract public class DaoSupport {
-    private static final Logger LOGGER = Logger.getLogger(DaoSupport.class);
+abstract public class DataProvider {
+    private static final Logger LOGGER = Logger.getLogger(DataProvider.class);
+
     @Resource
     SessionFactory sessionFactory;
 

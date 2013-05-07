@@ -1,8 +1,8 @@
-package org.agatom.springatom.mvc.model.dao.impl;
+package org.agatom.springatom.mvc.model.provider.impl;
 
 import org.agatom.springatom.model.meta.SMetaData;
-import org.agatom.springatom.mvc.model.dao.DaoSupport;
-import org.agatom.springatom.mvc.model.dao.SMetaDataDao;
+import org.agatom.springatom.mvc.model.provider.DataProvider;
+import org.agatom.springatom.mvc.model.provider.SMetaDataProvider;
 import org.apache.log4j.Logger;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
@@ -26,8 +26,8 @@ import static org.agatom.springatom.util.QueryConstants.QueryTrace.READ_ENTITY_F
  */
 @Repository(value = "STypeDataDao")
 @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
-public class SMetaDataDaoImpl extends DaoSupport implements SMetaDataDao {
-    private static final Logger LOGGER = Logger.getLogger(SMetaDataDaoImpl.class);
+public class SMetaDataProviderImpl extends DataProvider implements SMetaDataProvider {
+    private static final Logger LOGGER = Logger.getLogger(SMetaDataProviderImpl.class);
 
     private static final String TYPE = "type";
 

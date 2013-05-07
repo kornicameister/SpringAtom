@@ -1,8 +1,8 @@
-package org.agatom.springatom.mvc.model.bo.impl;
+package org.agatom.springatom.mvc.model.service.impl;
 
 import org.agatom.springatom.model.meta.SMetaData;
-import org.agatom.springatom.mvc.model.bo.SMetaDataBo;
-import org.agatom.springatom.mvc.model.dao.SMetaDataDao;
+import org.agatom.springatom.mvc.model.provider.SMetaDataProvider;
+import org.agatom.springatom.mvc.model.service.SMetaDataBo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.Set;
 public class SMetaDataBoImpl implements SMetaDataBo {
 
     @Autowired
-    SMetaDataDao typeDataDao;
+    SMetaDataProvider typeDataDao;
 
     @Override
     public Set<SMetaData> getAll(@NotNull final Class<? extends SMetaData> clazz) {
