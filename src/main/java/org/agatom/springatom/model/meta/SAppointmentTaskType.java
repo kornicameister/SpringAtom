@@ -20,4 +20,9 @@ public class SAppointmentTaskType extends SMetaData {
     public SAppointmentTaskType(final String type) {
         super(type);
     }
+
+    @Override
+    public String getEntityName() {
+        return this.getClass().getSimpleName();
+    }
 }

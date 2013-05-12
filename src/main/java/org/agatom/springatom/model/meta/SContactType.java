@@ -20,4 +20,9 @@ public class SContactType extends SMetaData {
     public SContactType(final String type) {
         super(type);
     }
+
+    @Override
+    public String getEntityName() {
+        return this.getClass().getSimpleName();
+    }
 }

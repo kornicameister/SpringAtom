@@ -13,6 +13,10 @@ abstract class Persistent implements Persistable {
 
     @Override
     public String getEntityName() {
-        return this.getClass().getAnnotation(Table.class).name();
+        Table annotation = this.getClass().getAnnotation(Table.class);
+        if (annotation == null) {
+            annotation = this.getClass().getSuperclass().getAnnotation(Table.class);
+        }
+        return annotation.name();
     }
 }

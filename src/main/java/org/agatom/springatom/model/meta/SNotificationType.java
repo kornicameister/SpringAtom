@@ -20,4 +20,9 @@ public class SNotificationType extends SMetaData {
     public SNotificationType(final String type) {
         super(type);
     }
+
+    @Override
+    public String getEntityName() {
+        return this.getClass().getSimpleName();
+    }
 }

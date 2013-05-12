@@ -20,4 +20,9 @@ public class SClientProblemReportType extends SMetaData {
     public SClientProblemReportType(final String type) {
         super(type);
     }
+
+    @Override
+    public String getEntityName() {
+        return this.getClass().getSimpleName();
+    }
 }
