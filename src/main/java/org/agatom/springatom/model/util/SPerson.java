@@ -1,6 +1,7 @@
-package org.agatom.springatom.model;
+package org.agatom.springatom.model.util;
 
 import com.google.common.base.Objects;
+import org.agatom.springatom.model.PersistentVersionedObject;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
@@ -17,13 +18,22 @@ import javax.persistence.*;
 
 @Entity(name = "SPerson")
 @Table(name = "SPerson")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSPerson",
-                updatable = false,
-                nullable = false)
-)
+@AttributeOverrides(value = {
+        @AttributeOverride(
+                name = "pk.id",
+                column = @Column(
+                        name = "idSPerson",
+                        updatable = false,
+                        nullable = false)
+        ),
+        @AttributeOverride(
+                name = "pk.version",
+                column = @Column(
+                        name = "version",
+                        updatable = false,
+                        nullable = false)
+        )
+})
 @Inheritance(strategy = InheritanceType.JOINED)
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 abstract public class SPerson extends PersistentVersionedObject {

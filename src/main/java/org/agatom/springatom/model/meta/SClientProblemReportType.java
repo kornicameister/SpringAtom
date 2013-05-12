@@ -9,8 +9,9 @@ import javax.persistence.Entity;
  * @since 0.0.1
  */
 @Entity
-@DiscriminatorValue(value = "SCPR")
+@DiscriminatorValue(value = SClientProblemReportType.SHORT_NAME)
 public class SClientProblemReportType extends SMetaData {
+    protected static final String SHORT_NAME = "SCPR";
 
     public SClientProblemReportType() {
         super();

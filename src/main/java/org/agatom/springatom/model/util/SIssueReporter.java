@@ -1,4 +1,4 @@
-package org.agatom.springatom.model;
+package org.agatom.springatom.model.util;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.model.mechanic.SMechanic;
@@ -16,7 +16,10 @@ import java.util.Date;
 public class SIssueReporter {
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "reporter", referencedColumnName = "idSMechanic", updatable = false)
+    @JoinColumns(value = {
+            @JoinColumn(name = "mechanic", referencedColumnName = "idSMechanic", updatable = false),
+            @JoinColumn(name = "mechanicVersion", referencedColumnName = "version", updatable = false)
+    })
     private SMechanic mechanic;
 
     @Type(type = "timestamp")

@@ -1,10 +1,10 @@
 package org.agatom.springatom.model.links;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.model.PersistentVersionedObject;
+import org.agatom.springatom.model.PersistentObject;
 import org.agatom.springatom.model.car.SCar;
 import org.agatom.springatom.model.client.SClient;
-import org.hibernate.envers.Audited;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -22,15 +22,21 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
-public class SCarClientLink extends PersistentVersionedObject {
+public class SCarClientLink extends PersistentObject {
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "client", referencedColumnName = "idSClient", updatable = false)
+    @JoinColumns(value = {
+            @JoinColumn(name = "client", referencedColumnName = "idSClient", updatable = false),
+            @JoinColumn(name = "clientVersion", referencedColumnName = "version", updatable = false)
+    })
     private SClient client;
 
-    @Audited
     @ManyToOne(optional = false)
-    @JoinColumn(name = "car", referencedColumnName = "idScar")
+    @JoinColumns(value = {
+            @JoinColumn(name = "car", referencedColumnName = "idScar"),
+            @JoinColumn(name = "carVersion", referencedColumnName = "version")
+    })
+    @Where(clause = "car.pk.version=carRevision")
     private SCar car;
 
     public SClient getClient() {
@@ -65,7 +71,8 @@ public class SCarClientLink extends PersistentVersionedObject {
 
         SCarClientLink that = (SCarClientLink) o;
 
-        return car.equals(that.car) && client.equals(that.client);
+        return car.equals(that.car) &&
+                client.equals(that.client);
     }
 
     @Override

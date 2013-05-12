@@ -1,11 +1,12 @@
 package org.agatom.springatom.model.mechanic;
 
-import org.agatom.springatom.model.SPerson;
+import org.agatom.springatom.model.util.SPerson;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.PrimaryKeyJoinColumns;
 import javax.persistence.Table;
 
 /**
@@ -15,7 +16,10 @@ import javax.persistence.Table;
  */
 @Entity(name = "SMechanic")
 @Table(name = "SMechanic")
-@PrimaryKeyJoinColumn(name = "idSMechanic")
+@PrimaryKeyJoinColumns(value = {
+        @PrimaryKeyJoinColumn(name = "idSMechanic"),
+        @PrimaryKeyJoinColumn(name = "version")
+})
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class SMechanic extends SPerson {
 }

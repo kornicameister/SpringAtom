@@ -1,11 +1,9 @@
 package org.agatom.springatom.model;
 
 import com.google.common.base.Objects;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.envers.RevisionNumber;
+import org.agatom.springatom.model.util.VersionedId;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
+import javax.persistence.EmbeddedId;
 import javax.persistence.MappedSuperclass;
 
 /**
@@ -14,44 +12,48 @@ import javax.persistence.MappedSuperclass;
  * @since 0.0.1
  */
 @MappedSuperclass
-abstract public class PersistentVersionedObject extends PersistentObject {
+abstract public class PersistentVersionedObject extends Persistent {
 
-    @NaturalId
-    @RevisionNumber
-    @GeneratedValue
-    @Column(name = "version", nullable = false)
-    private Long version;
+    @EmbeddedId
+    private VersionedId pk;
 
-    protected PersistentVersionedObject() {
+    public PersistentVersionedObject() {
         super();
+        this.pk = new VersionedId();
     }
 
     public Long getVersion() {
-        return version;
+        return this.pk.getVersion();
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (version != null ? version.hashCode() : 0);
-        return result;
+        return pk.hashCode();
     }
 
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (!(o instanceof PersistentVersionedObject)) return false;
-        if (!super.equals(o)) return false;
 
         PersistentVersionedObject that = (PersistentVersionedObject) o;
 
-        return !(version != null ? !version.equals(that.version) : that.version != null);
+        return pk.equals(that.pk);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("version", version)
+                .add("pk", pk)
                 .toString();
+    }
+
+    @Override
+    public int compareTo(final Persistable o) {
+        return this.getId().compareTo(o.getId());
+    }
+
+    public Long getId() {
+        return this.pk.getId();
     }
 }

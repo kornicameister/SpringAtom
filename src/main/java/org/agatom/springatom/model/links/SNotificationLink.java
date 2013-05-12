@@ -1,7 +1,7 @@
 package org.agatom.springatom.model.links;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.model.PersistentVersionedObject;
+import org.agatom.springatom.model.PersistentObject;
 import org.agatom.springatom.model.client.SClient;
 import org.agatom.springatom.model.notification.SNotification;
 import org.hibernate.annotations.Type;
@@ -27,14 +27,17 @@ import javax.persistence.*;
         name = "type",
         discriminatorType = DiscriminatorType.STRING
 )
-public class SNotificationLink extends PersistentVersionedObject {
+public class SNotificationLink extends PersistentObject {
 
     @OneToOne(optional = false)
     @JoinColumn(name = "notification", referencedColumnName = "idSNotification", updatable = false)
     private SNotification notification;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "client", referencedColumnName = "idSClient", updatable = false)
+    @JoinColumns(value = {
+            @JoinColumn(name = "client", referencedColumnName = "idSClient", updatable = false),
+            @JoinColumn(name = "clientVersion", referencedColumnName = "version", updatable = false)
+    })
     private SClient client;
 
     @Type(type = "boolean")

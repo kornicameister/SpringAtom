@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
 
 /**
  * MappedSuperclass for entities, aggregates all shared properties
@@ -19,7 +18,7 @@ import java.io.Serializable;
  */
 
 @MappedSuperclass
-public abstract class PersistentObject implements Serializable {
+abstract public class PersistentObject extends Persistent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +29,12 @@ public abstract class PersistentObject implements Serializable {
         super();
     }
 
+    @Override
+    public int compareTo(final Persistable o) {
+        return this.getId().compareTo(o.getId());
+    }
+
+    @Override
     public final Long getId() {
         return id;
     }

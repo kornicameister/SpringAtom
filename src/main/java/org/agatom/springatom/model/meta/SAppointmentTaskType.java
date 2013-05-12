@@ -9,8 +9,9 @@ import javax.persistence.Entity;
  * @since 0.0.1
  */
 @Entity
-@DiscriminatorValue(value = "SAT")
+@DiscriminatorValue(value = SAppointmentTaskType.SHORT_NAME)
 public class SAppointmentTaskType extends SMetaData {
+    protected static final String SHORT_NAME = "SAT";
 
     public SAppointmentTaskType() {
         super();

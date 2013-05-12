@@ -24,7 +24,10 @@ import javax.persistence.*;
 public class SClientContact extends PersistentObject {
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "client", referencedColumnName = "idSClient", updatable = true)
+    @JoinColumns(value = {
+            @JoinColumn(name = "client", referencedColumnName = "idSClient", updatable = true),
+            @JoinColumn(name = "clientVersion", referencedColumnName = "version", updatable = true)
+    })
     private SClient client;
 
     @NaturalId(mutable = true)

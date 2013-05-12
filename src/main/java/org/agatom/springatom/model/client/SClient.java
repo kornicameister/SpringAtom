@@ -1,7 +1,7 @@
 package org.agatom.springatom.model.client;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.model.SPerson;
+import org.agatom.springatom.model.util.SPerson;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
@@ -14,7 +14,10 @@ import java.util.Set;
  */
 @Entity(name = "SClient")
 @Table(name = "SClient")
-@PrimaryKeyJoinColumn(name = "idSClient")
+@PrimaryKeyJoinColumns(value = {
+        @PrimaryKeyJoinColumn(name = "idSClient"),
+        @PrimaryKeyJoinColumn(name = "version")
+})
 public class SClient extends SPerson {
 
     @BatchSize(size = 10)

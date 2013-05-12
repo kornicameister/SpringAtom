@@ -4,7 +4,6 @@ import com.google.common.base.Objects;
 import org.agatom.springatom.model.PersistentObject;
 import org.agatom.springatom.model.appointment.SAppointment;
 import org.agatom.springatom.model.car.SCar;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -25,12 +24,11 @@ import javax.persistence.*;
 public class SCarAppointmentLink extends PersistentObject {
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "car", referencedColumnName = "idScar")
-    @Where(clause = "version=carRevision")
+    @JoinColumns(value = {
+            @JoinColumn(name = "car", referencedColumnName = "idScar"),
+            @JoinColumn(name = "carVersion", referencedColumnName = "version")
+    })
     private SCar car;
-
-    @Column(name = "carRevision", updatable = false)
-    private Long carRevision;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment")
@@ -42,7 +40,6 @@ public class SCarAppointmentLink extends PersistentObject {
 
     public void setCar(final SCar car) {
         this.car = car;
-        this.carRevision = car.getVersion();
     }
 
     public SAppointment getAppointment() {
@@ -51,10 +48,6 @@ public class SCarAppointmentLink extends PersistentObject {
 
     public void setAppointment(final SAppointment appointment) {
         this.appointment = appointment;
-    }
-
-    public Long getCarRevision() {
-        return carRevision;
     }
 
     @Override

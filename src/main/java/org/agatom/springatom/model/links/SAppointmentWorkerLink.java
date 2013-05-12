@@ -2,9 +2,9 @@ package org.agatom.springatom.model.links;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.model.PersistentVersionedObject;
-import org.agatom.springatom.model.SIssueReporter;
 import org.agatom.springatom.model.appointment.SAppointment;
 import org.agatom.springatom.model.mechanic.SMechanic;
+import org.agatom.springatom.model.util.SIssueReporter;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -16,13 +16,22 @@ import javax.persistence.*;
  */
 @Entity(name = "SAppointmentWorkerLink")
 @Table(name = "SAppointmentWorkerLink")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSAppointmentWorkerLink",
-                updatable = false,
-                nullable = false)
-)
+@AttributeOverrides(value = {
+        @AttributeOverride(
+                name = "pk.id",
+                column = @Column(
+                        name = "idSAppointmentWorkerLink",
+                        updatable = false,
+                        nullable = false)
+        ),
+        @AttributeOverride(
+                name = "pk.version",
+                column = @Column(
+                        name = "version",
+                        updatable = false,
+                        nullable = false)
+        )
+})
 public class SAppointmentWorkerLink extends PersistentVersionedObject {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -31,7 +40,10 @@ public class SAppointmentWorkerLink extends PersistentVersionedObject {
 
     @Audited
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "assignee", referencedColumnName = "idSMechanic")
+    @JoinColumns(value = {
+            @JoinColumn(name = "assignee", referencedColumnName = "idSMechanic"),
+            @JoinColumn(name = "assigneeVersion", referencedColumnName = "version")
+    })
     private SMechanic assignee;
 
     @Embedded

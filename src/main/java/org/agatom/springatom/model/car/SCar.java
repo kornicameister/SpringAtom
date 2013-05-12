@@ -14,13 +14,22 @@ import javax.persistence.*;
  */
 @Entity(name = "SCar")
 @Table(name = "SCar")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSCar",
-                updatable = false,
-                nullable = false)
-)
+@AttributeOverrides(value = {
+        @AttributeOverride(
+                name = "pk.id",
+                column = @Column(
+                        name = "idSCar",
+                        updatable = false,
+                        nullable = false)
+        ),
+        @AttributeOverride(
+                name = "pk.version",
+                column = @Column(
+                        name = "version",
+                        updatable = false,
+                        nullable = false)
+        )
+})
 public class SCar extends PersistentVersionedObject {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

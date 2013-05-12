@@ -9,8 +9,9 @@ import javax.persistence.Entity;
  * @since 0.0.1
  */
 @Entity
-@DiscriminatorValue(value = "SCT")
+@DiscriminatorValue(value = SContactType.SHORT_NAME)
 public class SContactType extends SMetaData {
+    protected static final String SHORT_NAME = "SCT";
 
     public SContactType() {
         super();

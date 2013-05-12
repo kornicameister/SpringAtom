@@ -2,9 +2,9 @@ package org.agatom.springatom.model.client;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.model.PersistentObject;
-import org.agatom.springatom.model.SIssueReporter;
 import org.agatom.springatom.model.appointment.SAppointment;
 import org.agatom.springatom.model.meta.SClientProblemReportType;
+import org.agatom.springatom.model.util.SIssueReporter;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -26,7 +26,10 @@ import javax.persistence.*;
 public class SClientProblemReport extends PersistentObject {
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "client", referencedColumnName = "idSClient", updatable = false)
+    @JoinColumns(value = {
+            @JoinColumn(name = "client", referencedColumnName = "idSClient", updatable = true),
+            @JoinColumn(name = "clientVersion", referencedColumnName = "version", updatable = true)
+    })
     private SClient client;
 
     @NaturalId

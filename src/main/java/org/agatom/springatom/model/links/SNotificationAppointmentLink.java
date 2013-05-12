@@ -19,7 +19,10 @@ public class SNotificationAppointmentLink extends SNotificationLink {
     private SAppointment appointment;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "workerLink", referencedColumnName = "idSAppointmentWorkerLink", updatable = false)
+    @JoinColumns(value = {
+            @JoinColumn(name = "workerLink", referencedColumnName = "idSAppointmentWorkerLink", updatable = false),
+            @JoinColumn(name = "workerLinkVersion", referencedColumnName = "version", updatable = false),
+    })
     private SAppointmentWorkerLink workerLink;
 
     public SAppointment getAppointment() {

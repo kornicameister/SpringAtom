@@ -2,12 +2,13 @@ package org.agatom.springatom.model.user;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.model.PersistentVersionedObject;
-import org.agatom.springatom.model.SPerson;
+import org.agatom.springatom.model.util.SPerson;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -18,13 +19,22 @@ import java.util.Set;
 
 @Entity(name = "SUser")
 @Table(name = "SUser")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSUser",
-                updatable = false,
-                nullable = false)
-)
+@AttributeOverrides(value = {
+        @AttributeOverride(
+                name = "pk.id",
+                column = @Column(
+                        name = "idSUser",
+                        updatable = false,
+                        nullable = false)
+        ),
+        @AttributeOverride(
+                name = "pk.version",
+                column = @Column(
+                        name = "version",
+                        updatable = false,
+                        nullable = false)
+        )
+})
 public class SUser extends PersistentVersionedObject {
     @NaturalId
     @Column(name = "login", length = 45, unique = true, nullable = false)
@@ -35,14 +45,14 @@ public class SUser extends PersistentVersionedObject {
     private String password;
 
     @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "person", referencedColumnName = "idSPerson", updatable = false, nullable = false)
+    @JoinColumns(value = {
+            @JoinColumn(name = "person", referencedColumnName = "idSPerson"),
+            @JoinColumn(name = "personVersion", referencedColumnName = "version")
+    })
     private SPerson person;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "SUserToRole",
-            joinColumns = @JoinColumn(name = "user", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "role", nullable = false))
-    private Set<SRole> roles;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.user")
+    private Set<SUserToRole> roles;
 
     public String getLogin() {
         return login;
@@ -69,27 +79,49 @@ public class SUser extends PersistentVersionedObject {
     }
 
     public Set<SRole> getRoles() {
+        Set<SRole> roles = new HashSet<>();
+        for (SUserToRole userToRole : this.roles) {
+            roles.add(userToRole.getRole());
+        }
         return roles;
     }
 
     public void setRoles(final Set<SRole> roles) {
-        this.roles = roles;
+        if (this.roles == null) {
+            this.roles = new HashSet<>();
+        }
+        for (SRole role : roles) {
+            this.roles.add(new SUserToRole(this, role));
+        }
     }
 
-    public boolean addRole(final SRole sRole) {
-        return roles.add(sRole);
+    public boolean addRole(final SRole role) {
+        return roles.add(new SUserToRole(this, role));
     }
 
     public boolean removeRole(final SRole role) {
-        return roles.remove(role);
-    }
-
-    public boolean containsRoles(final Collection<SRole> roles) {
-        return this.roles.containsAll(roles);
+        SUserToRole toDelete = null;
+        for (SUserToRole userToRole : this.roles) {
+            if (userToRole.getRole().equals(role)) {
+                toDelete = userToRole;
+                break;
+            }
+        }
+        return toDelete != null && this.roles.remove(toDelete);
     }
 
     public boolean containsRole(final SRole role) {
-        return roles.contains(role);
+        Set<SRole> rolesOut = new HashSet<>();
+        rolesOut.add(role);
+        return this.containsRoles(rolesOut);
+    }
+
+    public boolean containsRoles(final Collection<SRole> roles) {
+        Set<SRole> rolesIn = new HashSet<>();
+        for (SUserToRole userToRole : this.roles) {
+            rolesIn.add(userToRole.getRole());
+        }
+        return rolesIn.containsAll(roles);
     }
 
     @Override
