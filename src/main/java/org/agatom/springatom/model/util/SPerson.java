@@ -38,11 +38,8 @@ import javax.persistence.*;
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 abstract public class SPerson extends PersistentVersionedObject {
 
-    @Column(name = "fName", length = 45, nullable = false)
-    private String firstName;
-
-    @Column(name = "lName", length = 45, nullable = false)
-    private String lastName;
+    @Embedded
+    private SPersonalInformation information;
 
     @Email
     @Audited
@@ -55,20 +52,12 @@ abstract public class SPerson extends PersistentVersionedObject {
     @Column(name = "disabled")
     private Boolean disabled;
 
-    public String getFirstName() {
-        return firstName;
+    public SPersonalInformation getInformation() {
+        return information;
     }
 
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(final String lastName) {
-        this.lastName = lastName;
+    public void setInformation(final SPersonalInformation information) {
+        this.information = information;
     }
 
     public String getEmail() {
@@ -90,8 +79,7 @@ abstract public class SPerson extends PersistentVersionedObject {
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("firstName", firstName)
-                .add("lastName", lastName)
+                .add("personal", information)
                 .add("email", email)
                 .add("disabled", disabled)
                 .toString();
