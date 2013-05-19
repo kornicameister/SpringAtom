@@ -28,6 +28,11 @@ public class SClient extends SPerson {
         super();
     }
 
+    @Override
+    public String getIdColumnName() {
+        return "idSClient";
+    }
+
     public Set<SClientProblemReport> getProblemReportSet() {
         return problemReportSet;
     }

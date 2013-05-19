@@ -3,8 +3,8 @@ package org.agatom.springatom.model;
 import com.google.common.base.Objects;
 import org.agatom.springatom.model.util.VersionedId;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
+import java.lang.annotation.Annotation;
 
 /**
  * @author kornicamaister
@@ -20,6 +20,29 @@ abstract public class PersistentVersionedObject extends Persistent {
     public PersistentVersionedObject() {
         super();
         this.pk = new VersionedId();
+    }
+
+    @Override
+    protected void resolveIdColumnName() {
+        for (Annotation annotation : this.getClass().getAnnotations()) {
+            if (annotation instanceof AttributeOverride) {
+                AttributeOverride attributeOverride = (AttributeOverride) annotation;
+                if (attributeOverride.name().equals("pk.id")) {
+                    Column column = attributeOverride.column();
+                    this.idColumnName = column.name();
+                    break;
+                }
+            } else if (annotation instanceof AttributeOverrides) {
+                AttributeOverrides attributeOverrides = (AttributeOverrides) annotation;
+                for (AttributeOverride attributeOverride : attributeOverrides.value()) {
+                    if (attributeOverride.name().equals("pk.id")) {
+                        Column column = attributeOverride.column();
+                        this.idColumnName = column.name();
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public Long getVersion() {

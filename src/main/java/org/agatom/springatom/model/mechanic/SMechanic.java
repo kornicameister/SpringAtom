@@ -22,4 +22,8 @@ import javax.persistence.Table;
 })
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class SMechanic extends SPerson {
+    @Override
+    public String getIdColumnName() {
+        return "idSMechanic";
+    }
 }

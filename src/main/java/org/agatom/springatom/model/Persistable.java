@@ -11,4 +11,6 @@ public interface Persistable extends Serializable, Comparable<Persistable> {
     Long getId();
 
     String getEntityName();
+
+    String getIdColumnName();
 }

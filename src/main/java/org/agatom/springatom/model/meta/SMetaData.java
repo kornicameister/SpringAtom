@@ -51,6 +51,11 @@ abstract public class SMetaData extends PersistentObject {
     }
 
     @Override
+    protected void resolveIdColumnName() {
+        this.idColumnName = "idSMetaData";
+    }
+
+    @Override
     public String toString() {
         return Objects.toStringHelper(this)
                 .add("type", type)

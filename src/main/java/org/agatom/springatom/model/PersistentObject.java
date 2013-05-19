@@ -3,10 +3,8 @@ package org.agatom.springatom.model;
 import com.google.common.base.Objects;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
+import java.lang.annotation.Annotation;
 
 /**
  * MappedSuperclass for entities, aggregates all shared properties
@@ -30,8 +28,31 @@ abstract public class PersistentObject extends Persistent {
     }
 
     @Override
-    public int compareTo(final Persistable o) {
-        return this.getId().compareTo(o.getId());
+    protected void resolveIdColumnName() {
+        for (Annotation annotation : this.getClass().getAnnotations()) {
+            if (annotation instanceof AttributeOverride) {
+                AttributeOverride attributeOverride = (AttributeOverride) annotation;
+                if (attributeOverride.name().equals("id")) {
+                    Column column = attributeOverride.column();
+                    this.idColumnName = column.name();
+                    break;
+                }
+            } else if (annotation instanceof AttributeOverrides) {
+                AttributeOverrides attributeOverrides = (AttributeOverrides) annotation;
+                for (AttributeOverride attributeOverride : attributeOverrides.value()) {
+                    if (attributeOverride.name().equals("id")) {
+                        Column column = attributeOverride.column();
+                        this.idColumnName = column.name();
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public int compareTo(final Persistable object) {
+        return this.getId().compareTo(object.getId());
     }
 
     @Override
