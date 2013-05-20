@@ -1,3 +1,20 @@
+/**************************************************************************************************
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ *                                                                                                *
+ * [SpringAtom] is free software: you can redistribute it and/or modify                           *
+ * it under the terms of the GNU General Public License as published by                           *
+ * the Free Software Foundation, either version 3 of the License, or                              *
+ * (at your option) any later version.                                                            *
+ *                                                                                                *
+ * [SpringAtom] is distributed in the hope that it will be useful,                                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
+ * GNU General Public License for more details.                                                   *
+ *                                                                                                *
+ * You should have received a copy of the GNU General Public License                              *
+ * along with SpringAtom.  If not, see <http://www.gnu.org/licenses/gpl.html>.                    *
+ **************************************************************************************************/
+
 package org.agatom.springatom.model.user;
 
 import com.google.common.base.Objects;
@@ -19,22 +36,13 @@ import java.util.Set;
 
 @Entity(name = "SUser")
 @Table(name = "SUser")
-@AttributeOverrides(value = {
-        @AttributeOverride(
-                name = "pk.id",
-                column = @Column(
-                        name = "idSUser",
-                        updatable = false,
-                        nullable = false)
-        ),
-        @AttributeOverride(
-                name = "pk.version",
-                column = @Column(
-                        name = "version",
-                        updatable = false,
-                        nullable = false)
-        )
-})
+@AttributeOverride(
+        name = "id",
+        column = @Column(
+                name = "idSUser",
+                updatable = false,
+                nullable = false)
+)
 public class SUser extends PersistentVersionedObject {
     @NaturalId
     @Column(name = "login", length = 45, unique = true, nullable = false)
@@ -45,10 +53,7 @@ public class SUser extends PersistentVersionedObject {
     private String password;
 
     @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumns(value = {
-            @JoinColumn(name = "person", referencedColumnName = "idSPerson"),
-            @JoinColumn(name = "personVersion", referencedColumnName = "version")
-    })
+    @JoinColumn(name = "person", referencedColumnName = "idSPerson")
     private SPerson person;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.user")

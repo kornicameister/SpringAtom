@@ -15,31 +15,25 @@
  * along with SpringAtom.  If not, see <http://www.gnu.org/licenses/gpl.html>.                    *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.meta;
+package org.agatom.springatom.model.listener;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import org.agatom.springatom.model.PersistentVersionedObject;
+import org.hibernate.envers.RevisionListener;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
 /**
- * @author kornicameister
+ * @author Tomasz
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity
-@DiscriminatorValue(value = SClientProblemReportType.SHORT_NAME)
-public class SClientProblemReportType extends SMetaData {
-    protected static final String SHORT_NAME = "SCPR";
 
-    public SClientProblemReportType() {
-        super();
-    }
-
-    public SClientProblemReportType(final String type) {
-        super(type);
-    }
-
+public class VersionedObjectListener implements RevisionListener {
     @Override
-    public String getEntityName() {
-        return this.getClass().getSimpleName();
+    public void newRevision(final Object revisionEntity) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        PersistentVersionedObject versionedObject = (PersistentVersionedObject) revisionEntity;
+
+        versionedObject.setUpdatedBy(user.getUsername());
     }
 }

@@ -1,10 +1,32 @@
+/**************************************************************************************************
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ *                                                                                                *
+ * [SpringAtom] is free software: you can redistribute it and/or modify                           *
+ * it under the terms of the GNU General Public License as published by                           *
+ * the Free Software Foundation, either version 3 of the License, or                              *
+ * (at your option) any later version.                                                            *
+ *                                                                                                *
+ * [SpringAtom] is distributed in the hope that it will be useful,                                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
+ * GNU General Public License for more details.                                                   *
+ *                                                                                                *
+ * You should have received a copy of the GNU General Public License                              *
+ * along with SpringAtom.  If not, see <http://www.gnu.org/licenses/gpl.html>.                    *
+ **************************************************************************************************/
+
 package org.agatom.springatom.model;
 
-import com.google.common.base.Objects;
-import org.agatom.springatom.model.util.VersionedId;
+import org.agatom.springatom.model.listener.VersionedObjectListener;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.hibernate.envers.RevisionEntity;
+import org.hibernate.envers.RevisionNumber;
+import org.hibernate.envers.RevisionTimestamp;
 
 import javax.persistence.*;
 import java.lang.annotation.Annotation;
+import java.util.Date;
 
 /**
  * @author kornicamaister
@@ -12,14 +34,32 @@ import java.lang.annotation.Annotation;
  * @since 0.0.1
  */
 @MappedSuperclass
+@RevisionEntity(VersionedObjectListener.class)
 abstract public class PersistentVersionedObject extends Persistent {
 
-    @EmbeddedId
-    private VersionedId pk;
+    @Id
+    @RevisionNumber
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "increment", strategy = "hilo")
+    private Long id = null;
+
+    @RevisionTimestamp
+    @Type(type = "timestamp")
+    private Date revisionTimeStamp;
+
+    @Column(name = "updatedBy")
+    private String updatedBy;
 
     public PersistentVersionedObject() {
         super();
-        this.pk = new VersionedId();
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(final String updateBy) {
+        this.updatedBy = updateBy;
     }
 
     @Override
@@ -45,38 +85,15 @@ abstract public class PersistentVersionedObject extends Persistent {
         }
     }
 
-    public Long getVersion() {
-        return this.pk.getVersion();
-    }
-
-    @Override
-    public int hashCode() {
-        return pk.hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PersistentVersionedObject)) return false;
-
-        PersistentVersionedObject that = (PersistentVersionedObject) o;
-
-        return pk.equals(that.pk);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("pk", pk)
-                .toString();
-    }
-
     @Override
     public int compareTo(final Persistable o) {
         return this.getId().compareTo(o.getId());
     }
 
+    @Override
     public Long getId() {
-        return this.pk.getId();
+        return id;
     }
+
+
 }

@@ -1,3 +1,20 @@
+/**************************************************************************************************
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ *                                                                                                *
+ * [SpringAtom] is free software: you can redistribute it and/or modify                           *
+ * it under the terms of the GNU General Public License as published by                           *
+ * the Free Software Foundation, either version 3 of the License, or                              *
+ * (at your option) any later version.                                                            *
+ *                                                                                                *
+ * [SpringAtom] is distributed in the hope that it will be useful,                                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
+ * GNU General Public License for more details.                                                   *
+ *                                                                                                *
+ * You should have received a copy of the GNU General Public License                              *
+ * along with SpringAtom.  If not, see <http://www.gnu.org/licenses/gpl.html>.                    *
+ **************************************************************************************************/
+
 package org.agatom.springatom.model.links;
 
 import com.google.common.base.Objects;
@@ -16,22 +33,13 @@ import javax.persistence.*;
  */
 @Entity(name = "SAppointmentWorkerLink")
 @Table(name = "SAppointmentWorkerLink")
-@AttributeOverrides(value = {
-        @AttributeOverride(
-                name = "pk.id",
-                column = @Column(
-                        name = "idSAppointmentWorkerLink",
-                        updatable = false,
-                        nullable = false)
-        ),
-        @AttributeOverride(
-                name = "pk.version",
-                column = @Column(
-                        name = "version",
-                        updatable = false,
-                        nullable = false)
-        )
-})
+@AttributeOverride(
+        name = "id",
+        column = @Column(
+                name = "idSAppointmentWorkerLink",
+                updatable = false,
+                nullable = false)
+)
 public class SAppointmentWorkerLink extends PersistentVersionedObject {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -40,10 +48,7 @@ public class SAppointmentWorkerLink extends PersistentVersionedObject {
 
     @Audited
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumns(value = {
-            @JoinColumn(name = "assignee", referencedColumnName = "idSMechanic"),
-            @JoinColumn(name = "assigneeVersion", referencedColumnName = "version")
-    })
+    @JoinColumn(name = "assignee", referencedColumnName = "idSMechanic")
     private SMechanic assignee;
 
     @Embedded

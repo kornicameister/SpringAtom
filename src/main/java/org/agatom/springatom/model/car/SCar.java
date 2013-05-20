@@ -1,3 +1,20 @@
+/**************************************************************************************************
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ *                                                                                                *
+ * [SpringAtom] is free software: you can redistribute it and/or modify                           *
+ * it under the terms of the GNU General Public License as published by                           *
+ * the Free Software Foundation, either version 3 of the License, or                              *
+ * (at your option) any later version.                                                            *
+ *                                                                                                *
+ * [SpringAtom] is distributed in the hope that it will be useful,                                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
+ * GNU General Public License for more details.                                                   *
+ *                                                                                                *
+ * You should have received a copy of the GNU General Public License                              *
+ * along with SpringAtom.  If not, see <http://www.gnu.org/licenses/gpl.html>.                    *
+ **************************************************************************************************/
+
 package org.agatom.springatom.model.car;
 
 import com.google.common.base.Objects;
@@ -14,22 +31,13 @@ import javax.persistence.*;
  */
 @Entity(name = "SCar")
 @Table(name = "SCar")
-@AttributeOverrides(value = {
-        @AttributeOverride(
-                name = "pk.id",
-                column = @Column(
-                        name = "idSCar",
-                        updatable = false,
-                        nullable = false)
-        ),
-        @AttributeOverride(
-                name = "pk.version",
-                column = @Column(
-                        name = "version",
-                        updatable = false,
-                        nullable = false)
-        )
-})
+@AttributeOverride(
+        name = "id",
+        column = @Column(
+                name = "idSCar",
+                updatable = false,
+                nullable = false)
+)
 public class SCar extends PersistentVersionedObject {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
