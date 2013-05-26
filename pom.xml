@@ -1,3 +1,20 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is free software: you can redistribute it and/or modify                          ~
+  ~ it under the terms of the GNU General Public License as published by                          ~
+  ~ the Free Software Foundation, either version 3 of the License, or                             ~
+  ~ (at your option) any later version.                                                           ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is distributed in the hope that it will be useful,                               ~
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of                                ~
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                 ~
+  ~ GNU General Public License for more details.                                                  ~
+  ~                                                                                               ~
+  ~ You should have received a copy of the GNU General Public License                             ~
+  ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -43,6 +60,8 @@
         <hibernate-annotations.version>3.5.6-Final</hibernate-annotations.version>
         <spring-data-commons.version>1.5.1.RELEASE</spring-data-commons.version>
         <spring-security.version>3.1.4.RELEASE</spring-security.version>
+        <castor.version>1.2</castor.version>
+        <xercesImpl.version>2.8.1</xercesImpl.version>
     </properties>
 
     <dependencies>
@@ -108,7 +127,27 @@
             <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- spring oxm -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-oxm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!-- spring oxm -->
         <!-- spring -->
+
+        <!-- castor -->
+        <dependency>
+            <groupId>org.codehaus.castor</groupId>
+            <artifactId>castor</artifactId>
+            <version>${castor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>${xercesImpl.version}</version>
+        </dependency>
+        <!-- castor -->
 
         <!-- jsp -->
         <dependency>
@@ -251,7 +290,27 @@
         <finalName>SpringAtom</finalName>
         <plugins>
             <plugin>
+                <groupId>org.bsc.maven</groupId>
+                <artifactId>maven-processor-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>process</id>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <processors>
+                                <processor>org.agatom.springatom.annotations.processors.CacheGeneratorProcessor
+                                </processor>
+                            </processors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
                 <configuration>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>

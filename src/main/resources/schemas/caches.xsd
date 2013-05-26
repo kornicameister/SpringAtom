@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is free software: you can redistribute it and/or modify                          ~
+  ~ it under the terms of the GNU General Public License as published by                          ~
+  ~ the Free Software Foundation, either version 3 of the License, or                             ~
+  ~ (at your option) any later version.                                                           ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is distributed in the hope that it will be useful,                               ~
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of                                ~
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                 ~
+  ~ GNU General Public License for more details.                                                  ~
+  ~                                                                                               ~
+  ~ You should have received a copy of the GNU General Public License                             ~
+  ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           targetNamespace="http://www.example.org/SpringAtom" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="caches">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="definition">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="class" maxOccurs="unbounded" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="impl">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="cache" maxOccurs="unbounded" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:simpleContent>
+                                                                <xs:extension base="xs:string">
+                                                                    <xs:attribute type="xs:string" name="name"
+                                                                                  use="required"/>
+                                                                    <xs:attribute type="xs:string" name="method"
+                                                                                  use="required"/>
+                                                                    <xs:attribute type="xs:string" name="key"
+                                                                                  use="optional"/>
+                                                                </xs:extension>
+                                                            </xs:simpleContent>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute type="xs:string" name="class" use="required"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute type="xs:string" name="dao" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
