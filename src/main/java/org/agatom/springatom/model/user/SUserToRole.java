@@ -12,7 +12,7 @@
  * GNU General Public License for more details.                                                   *
  *                                                                                                *
  * You should have received a copy of the GNU General Public License                              *
- * along with SpringAtom.  If not, see <http://www.gnu.org/licenses/gpl.html>.                    *
+ * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
 package org.agatom.springatom.model.user;
@@ -30,7 +30,7 @@ import java.io.Serializable;
 @Entity(name = "SUserToRole")
 @Table(name = "SUserToRole")
 @AssociationOverrides({
-        @AssociationOverride(name = "pk.user.id", joinColumns = @JoinColumn(name = "userId")),
+        @AssociationOverride(name = "pk.user", joinColumns = @JoinColumn(name = "user")),
         @AssociationOverride(name = "pk.role", joinColumns = @JoinColumn(name = "role"))
 })
 public class SUserToRole implements Serializable {

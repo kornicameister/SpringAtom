@@ -12,7 +12,7 @@
  * GNU General Public License for more details.                                                   *
  *                                                                                                *
  * You should have received a copy of the GNU General Public License                              *
- * along with SpringAtom.  If not, see <http://www.gnu.org/licenses/gpl.html>.                    *
+ * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
 package org.agatom.springatom.model.util;
@@ -37,10 +37,18 @@ public class SIssueReporter {
             referencedColumnName = "idSMechanic",
             updatable = false)
     private SMechanic mechanic;
-
     @Type(type = "timestamp")
     @Column(name = "assigned")
     private Date assigned;
+
+    public SIssueReporter() {
+        this.assigned = new Date();
+    }
+
+    public SIssueReporter(final SMechanic mechanic) {
+        this();
+        this.mechanic = mechanic;
+    }
 
     public SMechanic getMechanic() {
         return mechanic;
