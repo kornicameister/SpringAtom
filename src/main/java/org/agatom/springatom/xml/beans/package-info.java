@@ -15,21 +15,12 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.annotations;
+@javax.xml.bind.annotation.XmlSchema(
+        namespace = "http://www.example.org/SpringAtom",
+        xmlns = {
+                @XmlNs(prefix = "sa", namespaceURI = "http://www.example.org/SpringAtom")
+        },
+        elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED
+) package org.agatom.springatom.xml.beans;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-/**
- * @author kornicameister
- * @version 0.0.1
- * @since 0.0.1
- */
-
-@Target(value = ElementType.TYPE)
-@Retention(value = RetentionPolicy.SOURCE)
-public @interface GenCache {
-    String daoName();
-}
+import javax.xml.bind.annotation.XmlNs;

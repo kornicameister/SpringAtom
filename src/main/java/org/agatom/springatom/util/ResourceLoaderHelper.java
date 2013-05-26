@@ -15,12 +15,14 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.annotations;
+package org.agatom.springatom.util;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.google.common.base.Objects;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Component;
 
 /**
  * @author kornicameister
@@ -28,8 +30,24 @@ import java.lang.annotation.Target;
  * @since 0.0.1
  */
 
-@Target(value = ElementType.TYPE)
-@Retention(value = RetentionPolicy.SOURCE)
-public @interface GenCache {
-    String daoName();
+@Component(value = "ResourceLoaderHelper")
+public class ResourceLoaderHelper implements ResourceLoaderAware {
+    @javax.annotation.Resource(shareable = true)
+    private ResourceLoader resourceLoader;
+
+    @Autowired
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
+
+    public Resource getResource(String location) {
+        return resourceLoader.getResource(location);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("resourceLoader", resourceLoader)
+                .toString();
+    }
 }
