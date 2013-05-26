@@ -12,7 +12,7 @@
   ~ GNU General Public License for more details.                                                  ~
   ~                                                                                               ~
   ~ You should have received a copy of the GNU General Public License                             ~
-  ~ along with SpringAtom.  If not, see <http://www.gnu.org/licenses/gpl.html>.                   ~
+  ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -23,7 +23,7 @@
      http://www.springframework.org/schema/context
      http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
-    <context:component-scan base-package="org.agatom.springatom.mvc"/>
+    <context:component-scan base-package="org.agatom.springatom.**"/>
     <import resource="application-context.xml"/>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

@@ -1,3 +1,4 @@
+<?xml version="1.0" standalone="yes"?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
   ~                                                                                               ~
@@ -15,23 +16,21 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<web-app version="2.4"
-         xmlns="http://java.sun.com/xml/ns/j2ee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
-	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-
-    <display-name>Spring MVC Application</display-name>
-
-    <servlet>
-        <display-name>MVC-Dispatcher</display-name>
-        <servlet-name>springatom-mvc-dispatcher</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>springatom-mvc-dispatcher</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
-</web-app>
+<sa:caches xmlns:sa="http://www.example.org/SpringAtom"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.example.org/SpringAtom schemas/caches.xsd">
+    <sa:definition>
+        <sa:class dao="org.agatom.springatom.mvc.model.dao.SMetaDataDAO">
+            <sa:impl class="org.agatom.springatom.mvc.model.dao.impl.SMetaDataDAOImpl">
+                <sa:cache name="typedata" method="findAll"/>
+                <sa:cache name="typedata" method="findOne" key="#id"/>
+                <sa:cache name="typedata" method="findByType" key="#type"/>
+            </sa:impl>
+        </sa:class>
+        <sa:class dao="org.agatom.springatom.mvc.model.dao.SMechanicDAO">
+            <sa:impl class="org.agatom.springatom.mvc.model.dao.impl.SMechanicDAOImpl">
+                <sa:cache name="appointment" method="findByAppointment" key="#appointment.id"/>
+            </sa:impl>
+        </sa:class>
+    </sa:definition>
+</sa:caches>

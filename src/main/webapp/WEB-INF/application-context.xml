@@ -12,7 +12,7 @@
   ~ GNU General Public License for more details.                                                  ~
   ~                                                                                               ~
   ~ You should have received a copy of the GNU General Public License                             ~
-  ~ along with SpringAtom.  If not, see <http://www.gnu.org/licenses/gpl.html>.                   ~
+  ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -22,6 +22,33 @@
 
     <bean id="autoWirer"
           class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+    <!--jaxb-->
+    <bean id="jaxbXMLHelper"
+          class="org.agatom.springatom.xml.OXMHelper">
+        <property name="marshaller" ref="jaxb2Marshaller"/>
+        <property name="unmarshaller" ref="jaxb2Marshaller"/>
+    </bean>
+    <bean id="jaxb2Marshaller"
+          class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="packagesToScan" value="org.agatom.springatom.xml.beans"/>
+    </bean>
+    <!--jaxb-->
+
+    <bean id="resourceLoaderHelper"
+          scope="prototype"
+          class="org.agatom.springatom.util.ResourceLoaderHelper"/>
+
+    <bean id="cacheHolderHelper"
+          factory-method="newInstance"
+          scope="singleton"
+          depends-on="resourceLoaderHelper,jaxbXMLHelper"
+          class="org.agatom.springatom.cache.CacheResolverHelper">
+        <constructor-arg type="org.agatom.springatom.util.ResourceLoaderHelper" ref="resourceLoaderHelper"/>
+        <constructor-arg type="org.agatom.springatom.xml.OXMHelper" ref="jaxbXMLHelper"/>
+        <constructor-arg type="java.lang.String" value="classpath:caches.xml"/>
+    </bean>
+
     <import resource="spring/database/DataSource.xml"/>
     <import resource="spring/database/Ehcache.xml"/>
     <import resource="spring/database/Hibernate.xml"/>
