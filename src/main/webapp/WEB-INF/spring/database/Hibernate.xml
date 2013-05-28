@@ -13,7 +13,7 @@
   ~ GNU General Public License for more details.                                                  ~
   ~                                                                                               ~
   ~ You should have received a copy of the GNU General Public License                             ~
-  ~ along with SpringAtom.  If not, see <http://www.gnu.org/licenses/gpl.html>.                   ~
+  ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -37,13 +37,19 @@
                 <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
                 <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.use_sql_comments">true</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
                 <prop key="hibernate.transaction.flush_before_completion">true</prop>
                 <prop key="hibernate.transaction.auto_close_session">true</prop>
+                <prop key="hibernate.cache.use_minimal_puts">true</prop>
+                <prop key="order_updates">true</prop>
+                <prop key="hibernate.connection.autocommit">true</prop>
                 <prop key="org.hibernate.envers.revision_field_name">revision</prop>
                 <prop key="org.hibernate.envers.revision_type_field_name">revisionType</prop>
                 <prop key="org.hibernate.envers.audit_table_suffix">_history</prop>
+                <prop key="hibernate.validator.apply_to_ddl">"true</prop>
+                <prop key="hibernate.validator.autoregister_listeners">"true</prop>
             </props>
         </property>
         <property name="packagesToScan" value="org.agatom.springatom.model"/>

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
   ~                                                                                               ~
@@ -17,44 +18,28 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-     http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-     http://www.springframework.org/schema/context
-     http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <context:component-scan base-package="org.agatom.springatom.mvc"/>
-    <bean id="autoWirer"
-          class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
-
-    <!--jaxb-->
-    <bean id="jaxbXMLHelper"
-          class="org.agatom.springatom.xml.OXMHelper">
-        <property name="marshaller" ref="jaxb2Marshaller"/>
-        <property name="unmarshaller" ref="jaxb2Marshaller"/>
-    </bean>
-    <bean id="jaxb2Marshaller"
-          class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-        <property name="packagesToScan" value="org.agatom.springatom.xml.beans"/>
-    </bean>
-    <!--jaxb-->
-
-    <bean id="resourceLoaderHelper"
-          scope="prototype"
-          class="org.agatom.springatom.util.ResourceLoaderHelper"/>
-
-    <bean id="cacheHolderHelper"
-          factory-method="newInstance"
-          scope="singleton"
-          depends-on="resourceLoaderHelper,jaxbXMLHelper"
-          class="org.agatom.springatom.cache.CacheResolverHelper">
-        <constructor-arg type="org.agatom.springatom.util.ResourceLoaderHelper" ref="resourceLoaderHelper"/>
-        <constructor-arg type="org.agatom.springatom.xml.OXMHelper" ref="jaxbXMLHelper"/>
-        <constructor-arg type="java.lang.String" value="classpath:caches.xml"/>
+    <bean
+            class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:database.properties"/>
     </bean>
 
-    <import resource="spring/database/DataSource.xml"/>
-    <import resource="spring/database/Ehcache.xml"/>
-    <import resource="spring/database/Hibernate.xml"/>
-    <import resource="spring/database/DBPopulator.xml"/>
+    <bean id="dataSourceInitializer"
+          class="org.springframework.jdbc.datasource.init.DataSourceInitializer">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="databasePopulator" ref="resourceDBPopulate"/>
+        <property name="enabled" value="${jdbc.populate}"/>
+    </bean>
+
+    <bean id="resourceDBPopulate"
+          class="org.springframework.jdbc.datasource.init.ResourceDatabasePopulator">
+        <property name="scripts">
+            <array>
+                <value>classpath:data/smetadata.sql</value>
+            </array>
+        </property>
+    </bean>
+
 </beans>
