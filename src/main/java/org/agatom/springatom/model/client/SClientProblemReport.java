@@ -22,7 +22,8 @@ import org.agatom.springatom.model.PersistentObject;
 import org.agatom.springatom.model.appointment.SAppointment;
 import org.agatom.springatom.model.meta.SClientProblemReportType;
 import org.agatom.springatom.model.util.SIssueReporter;
-import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -42,29 +43,28 @@ import javax.persistence.*;
 )
 public class SClientProblemReport extends PersistentObject {
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "client",
             referencedColumnName = "idSClient",
             updatable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private SClient client;
-
-    @NaturalId
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = {
+            CascadeType.REFRESH
+    })
     @JoinColumn(name = "type",
             referencedColumnName = "idSMetaData")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private SClientProblemReportType type;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "appointment",
             referencedColumnName = "idSAppointment",
             updatable = false)
     private SAppointment appointment;
-
     @Column(name = "problem",
             nullable = false,
             length = 444)
     private String problem;
-
     @Embedded
     private SIssueReporter reporter;
 
@@ -132,7 +132,6 @@ public class SClientProblemReport extends PersistentObject {
                 !(reporter != null ? !reporter.equals(that.reporter) : that.reporter != null) &&
                 type.equals(that.type);
     }
-
 
     @Override
     public String toString() {

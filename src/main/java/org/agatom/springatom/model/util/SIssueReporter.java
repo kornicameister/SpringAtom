@@ -19,6 +19,8 @@ package org.agatom.springatom.model.util;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.model.mechanic.SMechanic;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -36,6 +38,7 @@ public class SIssueReporter {
     @JoinColumn(name = "mechanic",
             referencedColumnName = "idSMechanic",
             updatable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private SMechanic mechanic;
     @Type(type = "timestamp")
     @Column(name = "assigned")

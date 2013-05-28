@@ -42,7 +42,8 @@ import javax.persistence.*;
         column = @Column(
                 name = "idSPerson",
                 updatable = false,
-                nullable = false)
+                nullable = false
+        )
 )
 @Inheritance(strategy = InheritanceType.JOINED)
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)

@@ -20,6 +20,8 @@ package org.agatom.springatom.model.client;
 import com.google.common.base.Objects;
 import org.agatom.springatom.model.util.SPerson;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -36,7 +38,14 @@ import java.util.Set;
 public class SClient extends SPerson {
 
     @BatchSize(size = 10)
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "client",
+            cascade = {
+                    CascadeType.REMOVE,
+                    CascadeType.PERSIST
+            }
+    )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<SClientProblemReport> problemReportSet = new HashSet<>();
 
     public SClient() {
