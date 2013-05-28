@@ -1,26 +1,38 @@
-package org.agatom.springatom.mvc.model.provider.impl;
+/**************************************************************************************************
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ *                                                                                                *
+ * [SpringAtom] is free software: you can redistribute it and/or modify                           *
+ * it under the terms of the GNU General Public License as published by                           *
+ * the Free Software Foundation, either version 3 of the License, or                              *
+ * (at your option) any later version.                                                            *
+ *                                                                                                *
+ * [SpringAtom] is distributed in the hope that it will be useful,                                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
+ * GNU General Public License for more details.                                                   *
+ *                                                                                                *
+ * You should have received a copy of the GNU General Public License                              *
+ * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
+ **************************************************************************************************/
 
+package org.agatom.springatom.mvc.model.dao.impl;
+
+import org.agatom.springatom.AbstractSpringTestCase;
 import org.agatom.springatom.model.meta.*;
-import org.agatom.springatom.mvc.model.service.SMetaDataService;
+import org.agatom.springatom.mvc.model.bo.SMetaDataBO;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(
-        "file:src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml")
-public class SMetaDataProviderTest extends ReflectionTestUtils {
+
+public class SMetaDataDAOTest extends AbstractSpringTestCase {
     @Autowired
-    SMetaDataService typeDataBo;
+    SMetaDataBO typeDataBo;
 
     private List<Class<? extends SMetaData>> clazzList;
 
@@ -45,7 +57,7 @@ public class SMetaDataProviderTest extends ReflectionTestUtils {
     @Test
     public void testGetAll() throws Exception {
         for (Class clazz : this.clazzList) {
-            Set<SMetaData> dataSet = typeDataBo.getAll(clazz);
+            Set<SMetaData> dataSet = (Set<SMetaData>) typeDataBo.findAll(clazz);
             Assert.assertNotSame(String.format("Data set is empty for %s", clazz.getSimpleName()), 0, dataSet.size());
             for (SMetaData typeData : dataSet) {
                 Assert.assertNotNull("TypeData is null", typeData);
