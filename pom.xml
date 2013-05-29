@@ -39,6 +39,11 @@
         <developerConnection>scm:git:git@github.com:kornicameister/SpringAtom.git</developerConnection>
     </scm>
 
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/kornicameister/SpringAtom/issues</url>
+    </issueManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>3.2.2.RELEASE</spring.version>
@@ -298,29 +303,8 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <optimize>true</optimize>
                     <showDeprecation>true</showDeprecation>
-                    <!--<compilerArgument>-proc:none</compilerArgument>-->
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-            <!--<groupId>org.bsc.maven</groupId>-->
-            <!--<artifactId>maven-processor-plugin</artifactId>-->
-            <!--<version>2.0.5</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>process</id>-->
-            <!--<goals>-->
-            <!--<goal>process</goal>-->
-            <!--</goals>-->
-            <!--<phase>generate-sources</phase>-->
-            <!--<configuration>-->
-            <!--<processors>-->
-            <!--<processor>org.agatom.springatom.annotations.processors.CacheGeneratorProcessor-->
-            <!--</processor>-->
-            <!--</processors>-->
-            <!--</configuration>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.14.1</version>
@@ -329,11 +313,6 @@
                         <include>**/*Test*.java</include>
                     </includes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.14.1</version>
             </plugin>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
@@ -387,6 +366,31 @@
                         </reports>
                     </reportSet>
                 </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <outputName>SpringAtomTestReport</outputName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <version>2.9</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>github-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.0.1</version>
             </plugin>
         </plugins>
     </reporting>
