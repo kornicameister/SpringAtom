@@ -17,8 +17,8 @@
 
 package org.agatom.springatom.mvc.model.dao;
 
-import org.agatom.springatom.model.client.SClient;
-import org.agatom.springatom.model.client.SClientProblemReport;
+import org.agatom.springatom.model.beans.client.SClient;
+import org.agatom.springatom.model.beans.client.SClientProblemReport;
 
 import javax.validation.constraints.NotNull;
 

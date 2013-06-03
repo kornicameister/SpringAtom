@@ -18,8 +18,8 @@
 package org.agatom.springatom.mvc.model.dao.impl;
 
 import org.agatom.springatom.annotations.GenCache;
-import org.agatom.springatom.model.Persistable;
-import org.agatom.springatom.model.meta.SMetaData;
+import org.agatom.springatom.model.beans.Persistable;
+import org.agatom.springatom.model.beans.meta.SMetaData;
 import org.agatom.springatom.mvc.model.dao.SMetaDataDAO;
 import org.agatom.springatom.mvc.model.dao.abstracts.DefaultDAO;
 import org.springframework.cache.annotation.Cacheable;
@@ -55,10 +55,9 @@ public class SMetaDataDAOImpl extends DefaultDAO<SMetaData, Long>
     }
 
     @Override
-    @Cacheable(value = CACHE_NAME, key = "#type")
     public SMetaData findByType(@NotNull final String type, @NotNull final Class<? extends SMetaData> clazz) {
         this.target = clazz;
-        return (SMetaData) this.getSession().byNaturalId(clazz).using(TYPE, type).load();
+        return this.findByNaturalId(TYPE, type);
     }
 
     @Override

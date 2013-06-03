@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.mvc.model.bo.impl;
 
-import org.agatom.springatom.model.mechanic.SMechanic;
+import org.agatom.springatom.model.beans.mechanic.SMechanic;
 import org.agatom.springatom.mvc.model.bo.SMechanicBO;
 import org.agatom.springatom.mvc.model.dao.SMechanicDAO;
 import org.springframework.beans.factory.annotation.Autowired;

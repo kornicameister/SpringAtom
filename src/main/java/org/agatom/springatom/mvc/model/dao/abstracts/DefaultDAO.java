@@ -17,15 +17,16 @@
 
 package org.agatom.springatom.mvc.model.dao.abstracts;
 
-import org.agatom.springatom.model.Persistable;
+import org.agatom.springatom.model.beans.Persistable;
+import org.agatom.springatom.mvc.model.dao.DAORepository;
 import org.agatom.springatom.util.QueryConstants;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -45,19 +46,15 @@ import static org.agatom.springatom.util.QueryConstants.QueryTrace.READ_ENTITY_F
 @Repository(value = "DefaultCRUDRepository")
 @Transactional
 abstract public class DefaultDAO<T, ID extends Serializable> extends _DefaultDao
-        implements CrudRepository<T, ID> {
+        implements DAORepository<T, ID> {
     private static final Logger LOGGER = Logger.getLogger(DefaultDAO.class);
+
     @Resource
     SessionFactory sessionFactory;
 
     public DefaultDAO() {
         super();
         this.target = this.getTargetClazz();
-    }
-
-    @Override
-    public void setTarget(final Class<? extends Persistable> target) {
-        this.target = target;
     }
 
     @Autowired(required = true)
@@ -68,10 +65,9 @@ abstract public class DefaultDAO<T, ID extends Serializable> extends _DefaultDao
         }
     }
 
-    public void update(final Object obj) {
-        if (this.isQueryPossible(String.format(UPDATE_METHOD, obj))) {
-            this.getSession().update(obj);
-        }
+    @Override
+    public void setTarget(final Class<? extends Persistable> target) {
+        this.target = target;
     }
 
     @Override
@@ -83,7 +79,47 @@ abstract public class DefaultDAO<T, ID extends Serializable> extends _DefaultDao
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
+    public T findByNaturalId(final String fieldName, Serializable serializable) {
+        if (!this.isQueryPossible(String.format(FIND_BY_NATURAL_ID_METHOD, serializable))) {
+            return null;
+        }
+
+        return (T) this.getSession()
+                .byNaturalId(this.target)
+                .using(fieldName, serializable)
+                .getReference();
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public T load(T t) {
+        Persistable persistable = (Persistable) t;
+        if (this.isQueryPossible(String.format(LOAD_METHOD, persistable.getId()))) {
+            return (T) this.getSession().get(this.target, persistable.getId());
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public T load(final Serializable serializable) {
+        if (this.isQueryPossible(String.format(LOAD_METHOD, serializable))) {
+            return (T) this.getSession().get(this.target, serializable);
+        }
+        return null;
+    }
+
+    @Override
+    public T update(final T obj) {
+        if (this.isQueryPossible(String.format(UPDATE_METHOD, obj))) {
+            this.getSession().update(obj);
+            return obj;
+        }
+        return null;
+    }
+
+    @Override
     public <S extends T> S save(final S s) {
         if (!this.isQueryPossible(String.format(CREATE_METHOD, s.getClass()))) {
             return null;
@@ -98,7 +134,6 @@ abstract public class DefaultDAO<T, ID extends Serializable> extends _DefaultDao
     }
 
     @Override
-    @Transactional
     public Iterable save(final Iterable iterable) {
         if (!this.isQueryPossible(String.format(CREATE_METHOD, iterable))) {
             return null;
@@ -140,7 +175,6 @@ abstract public class DefaultDAO<T, ID extends Serializable> extends _DefaultDao
                 this.getSession().byId(this.target).getReference(serializable) != null;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
     public Iterable findAll() {
@@ -150,7 +184,7 @@ abstract public class DefaultDAO<T, ID extends Serializable> extends _DefaultDao
         List<?> dataList = this.getSession()
                 .createQuery(String.format(FROM_TABLE_BY_TABLE_NAME, this.target.getSimpleName()))
                 .list();
-        HashSet<T> dataSet = new HashSet<>();
+        Set<T> dataSet = new HashSet<>();
         for (Object entity : dataList) {
             if (LOGGER.isTraceEnabled()) {
                 LOGGER.trace(String.format(READ_ENTITY_FROM_TABLE, entity, this.target.getSimpleName()));
@@ -182,7 +216,6 @@ abstract public class DefaultDAO<T, ID extends Serializable> extends _DefaultDao
     }
 
     @Override
-    @Transactional
     public void delete(final Serializable serializable) {
         if (this.isQueryPossible(String.format(DELETE_METHOD, serializable))) {
             this.delete(this.load(serializable));
@@ -190,7 +223,6 @@ abstract public class DefaultDAO<T, ID extends Serializable> extends _DefaultDao
     }
 
     @Override
-    @Transactional
     public void delete(final T t) {
         if (this.isQueryPossible(String.format(DELETE_METHOD, t))) {
             final T load = this.load(t);
@@ -201,7 +233,6 @@ abstract public class DefaultDAO<T, ID extends Serializable> extends _DefaultDao
     }
 
     @Override
-    @Transactional
     public void delete(final Iterable iterable) {
         if (this.isQueryPossible(String.format(DELETE_METHOD, iterable))) {
             int deleted = 0;
@@ -210,13 +241,13 @@ abstract public class DefaultDAO<T, ID extends Serializable> extends _DefaultDao
                 deleted++;
             }
             if (LOGGER.isTraceEnabled()) {
-                LOGGER.trace(String.format(QueryConstants.QueryResult.DELETED_N_OBJECTS_TO_TABLE, deleted, this.target.getName()));
+                LOGGER.trace(String
+                        .format(QueryConstants.QueryResult.DELETED_N_OBJECTS_TO_TABLE, deleted, this.target.getName()));
             }
         }
     }
 
     @Override
-    @Transactional
     public void deleteAll() {
         if (this.isQueryPossible(String.format(DELETE_METHOD, "all"))) {
 
@@ -228,24 +259,11 @@ abstract public class DefaultDAO<T, ID extends Serializable> extends _DefaultDao
             }
 
             if (LOGGER.isTraceEnabled()) {
-                LOGGER.trace(String.format(QueryConstants.QueryResult.DELETED_N_OBJECTS_TO_TABLE, deletedBeans, this.target.getName()));
+                LOGGER.trace(String
+                        .format(QueryConstants.QueryResult.DELETED_N_OBJECTS_TO_TABLE, deletedBeans, this.target
+                                .getName()));
             }
         }
-    }
-
-    protected T load(T t) {
-        Persistable persistable = (Persistable) t;
-        if (this.isQueryPossible(String.format(LOAD_METHOD, persistable.getId()))) {
-            return (T) this.getSession().load(this.target, persistable.getId());
-        }
-        return null;
-    }
-
-    protected T load(final Serializable serializable) {
-        if (this.isQueryPossible(String.format(LOAD_METHOD, serializable))) {
-            return (T) this.getSession().load(this.target, serializable);
-        }
-        return null;
     }
 
 }

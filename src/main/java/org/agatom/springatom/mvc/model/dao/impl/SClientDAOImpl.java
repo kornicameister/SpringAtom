@@ -17,9 +17,9 @@
 
 package org.agatom.springatom.mvc.model.dao.impl;
 
-import org.agatom.springatom.model.Persistable;
-import org.agatom.springatom.model.client.SClient;
-import org.agatom.springatom.model.client.SClientProblemReport;
+import org.agatom.springatom.model.beans.Persistable;
+import org.agatom.springatom.model.beans.client.SClient;
+import org.agatom.springatom.model.beans.client.SClientProblemReport;
 import org.agatom.springatom.mvc.model.dao.SClientDAO;
 import org.agatom.springatom.mvc.model.dao.abstracts.SPersonDefaultDAO;
 import org.springframework.stereotype.Repository;

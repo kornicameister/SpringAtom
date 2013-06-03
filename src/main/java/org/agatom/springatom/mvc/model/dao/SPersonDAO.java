@@ -17,9 +17,8 @@
 
 package org.agatom.springatom.mvc.model.dao;
 
-import org.agatom.springatom.model.util.SPerson;
-import org.agatom.springatom.model.util.SPersonalInformation;
-import org.springframework.data.repository.CrudRepository;
+import org.agatom.springatom.model.beans.util.SPerson;
+import org.agatom.springatom.model.beans.util.SPersonalInformation;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -30,7 +29,7 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 public interface SPersonDAO<T extends SPerson, ID extends Serializable>
-        extends CrudRepository<T, ID> {
+        extends DAORepository<T, ID> {
     Iterable findByPersonalInformation(@NotNull final SPersonalInformation information);
 
     Iterable findByFirstName(@NotNull final String firstName);

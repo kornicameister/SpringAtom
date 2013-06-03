@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.mvc.model.dao.abstracts;
 
-import org.agatom.springatom.model.Persistable;
+import org.agatom.springatom.model.beans.Persistable;
 import org.agatom.springatom.util.QueryConstants;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -33,19 +33,27 @@ import static org.agatom.springatom.util.QueryConstants.Error.INACTIVE_SESSION;
  */
 
 public abstract class _DefaultDao {
-    protected static final String DELETE_METHOD = "delete(%s)";
-    protected static final String CREATE_METHOD = "create(%s)";
-    protected static final String UPDATE_METHOD = "update(%s)";
-    protected static final String LOAD_METHOD = "load(%s)";
-    protected static final String FIND_METHOD = "find(%s)";
-    protected static final String EXISTS_METHOD = "exists(%s)";
-    protected static final String COUNT_METHOD = "count";
-    private static final Logger LOGGER = Logger.getLogger(_DefaultDao.class);
+    protected static final String DELETE_METHOD             = "delete(%s)";
+
+    protected static final String CREATE_METHOD             = "create(%s)";
+
+    protected static final String UPDATE_METHOD             = "update(%s)";
+
+    protected static final String LOAD_METHOD               = "load(%s)";
+
+    protected static final String FIND_METHOD               = "find(%s)";
+
+    protected static final String FIND_BY_NATURAL_ID_METHOD = "find_by_natural_id(%s)";
+
+    protected static final String EXISTS_METHOD             = "exists(%s)";
+
+    protected static final String COUNT_METHOD              = "count";
+
+    private static final   Logger LOGGER                    = Logger.getLogger(_DefaultDao.class);
+
     protected Class<? extends Persistable> target;
 
     protected abstract Class<? extends Persistable> getTargetClazz();
-
-    protected abstract Session getSession();
 
     public abstract void setTarget(final Class<? extends Persistable> target);
 
@@ -70,4 +78,6 @@ public abstract class _DefaultDao {
         }
         return status;
     }
+
+    protected abstract Session getSession();
 }

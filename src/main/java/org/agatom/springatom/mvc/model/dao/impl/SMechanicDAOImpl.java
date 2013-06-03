@@ -17,8 +17,8 @@
 
 package org.agatom.springatom.mvc.model.dao.impl;
 
-import org.agatom.springatom.model.appointment.SAppointment;
-import org.agatom.springatom.model.mechanic.SMechanic;
+import org.agatom.springatom.model.beans.appointment.SAppointment;
+import org.agatom.springatom.model.beans.mechanic.SMechanic;
 import org.agatom.springatom.mvc.model.dao.SMechanicDAO;
 import org.agatom.springatom.mvc.model.dao.abstracts.SPersonDefaultDAO;
 import org.springframework.cache.annotation.Cacheable;

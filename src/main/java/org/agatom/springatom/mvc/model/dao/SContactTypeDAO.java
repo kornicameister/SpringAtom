@@ -15,9 +15,9 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo;
+package org.agatom.springatom.mvc.model.dao;
 
-import org.agatom.springatom.model.beans.client.SClientProblemReport;
+import org.agatom.springatom.model.beans.meta.SContactType;
 
 /**
  * @author kornicameister
@@ -25,5 +25,27 @@ import org.agatom.springatom.model.beans.client.SClientProblemReport;
  * @since 0.0.1
  */
 
-public interface SClientProblemReportBO extends GenericBO<SClientProblemReport> {
+public interface SContactTypeDAO
+        extends DAORepository<SContactType, Long> {
+
+    SContactType findByType(final ContactType type);
+
+    public static enum ContactType {
+        FAX_TYPE("fax"),
+        CELL_PHONE_TYPE("cellPhone"),
+        MAIL_TYPE("mail"),
+        PHONE_TYPE("phone");
+
+        private final String type;
+
+        ContactType(final String type) {
+            this.type = type;
+        }
+
+        @Override
+        public String toString() {
+            return this.type;
+        }
+    }
+
 }

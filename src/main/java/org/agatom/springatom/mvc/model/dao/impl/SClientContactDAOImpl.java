@@ -15,15 +15,51 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo;
+package org.agatom.springatom.mvc.model.dao.impl;
 
-import org.agatom.springatom.model.beans.client.SClientProblemReport;
+import org.agatom.springatom.model.beans.Persistable;
+import org.agatom.springatom.model.beans.client.SClientContact;
+import org.agatom.springatom.mvc.model.dao.SClientContactDAO;
+import org.agatom.springatom.mvc.model.dao.abstracts.DefaultDAO;
+import org.springframework.stereotype.Repository;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+@Repository(value = "SClientContactDAO")
+public class SClientContactDAOImpl extends DefaultDAO<SClientContact, Long>
+        implements SClientContactDAO {
+    private static final String FROM_CLIENT_CONTACT_BY_CLIENT_ID = "fromClientContactByClientId";
 
-public interface SClientProblemReportBO extends GenericBO<SClientProblemReport> {
+    private static final String CLIENT_ID                        = "clientId";
+
+    @Override
+    public Set<SClientContact> findByClient(final Long id) {
+        if (!this.isQueryPossible(String.format(FIND_METHOD, String.format("byClient=%d", id)))) {
+            return null;
+        }
+        List<?> data = this.getSession()
+                .getNamedQuery(FROM_CLIENT_CONTACT_BY_CLIENT_ID)
+                .setLong(CLIENT_ID, id)
+                .list();
+        Set<SClientContact> clientContacts = new HashSet<>();
+        for (Object object : data) {
+            if (object instanceof SClientContact) {
+                clientContacts.add((SClientContact) object);
+            }
+        }
+        return clientContacts;
+    }
+
+    @Override
+    protected Class<? extends Persistable> getTargetClazz() {
+        return SClientContact.class;
+    }
 }

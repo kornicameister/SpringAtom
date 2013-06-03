@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.mvc.model.bo;
 
-import org.agatom.springatom.model.Persistable;
+import org.agatom.springatom.model.beans.Persistable;
 
 import javax.validation.constraints.NotNull;
 

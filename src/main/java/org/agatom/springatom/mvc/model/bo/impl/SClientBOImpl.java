@@ -17,19 +17,20 @@
 
 package org.agatom.springatom.mvc.model.bo.impl;
 
-import org.agatom.springatom.model.client.SClient;
-import org.agatom.springatom.model.client.SClientProblemReport;
-import org.agatom.springatom.model.mechanic.SMechanic;
-import org.agatom.springatom.model.meta.SClientProblemReportType;
-import org.agatom.springatom.model.util.SIssueReporter;
+import org.agatom.springatom.model.beans.client.SClient;
+import org.agatom.springatom.model.beans.client.SClientContact;
+import org.agatom.springatom.model.beans.client.SClientProblemReport;
+import org.agatom.springatom.model.beans.mechanic.SMechanic;
+import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
+import org.agatom.springatom.model.beans.meta.SContactType;
+import org.agatom.springatom.model.beans.util.SIssueReporter;
 import org.agatom.springatom.mvc.model.bo.SClientBO;
-import org.agatom.springatom.mvc.model.dao.SClientDAO;
-import org.agatom.springatom.mvc.model.dao.SClientProblemReportDAO;
-import org.agatom.springatom.mvc.model.dao.SMetaDataDAO;
+import org.agatom.springatom.mvc.model.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 /**
  * @author Tomasz
@@ -41,17 +42,16 @@ public class SClientBOImpl implements SClientBO {
 
     @Autowired
     SClientDAO sClientDAO;
-
     @Autowired
     SClientProblemReportDAO sClientProblemReportDAO;
-
     @Autowired
     SMetaDataDAO sMetaDataDAO;
 
-    @Override
-    public Iterable<SClient> findAll() {
-        return this.sClientDAO.findAll();
-    }
+    @Autowired
+    SClientContactDAO sClientContactDAO;
+
+    @Autowired
+    SContactTypeDAO   sContactTypeDAO;
 
     @Override
     public SClient disable(@NotNull final SClient client) {
@@ -72,13 +72,64 @@ public class SClientBOImpl implements SClientBO {
         problemReport.setClient(client);
         problemReport.setReporter(new SIssueReporter(mechanic));
         problemReport.setProblem(problem);
-        problemReport.setType((SClientProblemReportType) this.sMetaDataDAO.findOne(problemReportType.getId(), SClientProblemReportType.class));
+        problemReport.setType((SClientProblemReportType) this
+                .sMetaDataDAO.findOne(problemReportType.getId(), SClientProblemReportType.class));
         this.sClientProblemReportDAO.save(problemReport);
+    }
+
+    @Override
+    public SClientContact newPhone(@NotNull final String contact,
+                                   @NotNull final SClient client) {
+        final SContactType contactType = this.sContactTypeDAO
+                .findByType(SContactTypeDAO.ContactType.PHONE_TYPE);
+        return this.newContactData(contact, client, contactType);
+    }
+
+    private SClientContact newContactData(@NotNull final String contact,
+                                          @NotNull final SClient client,
+                                          @NotNull final SContactType type) {
+        final SClientContact clientContact = new SClientContact();
+        clientContact.setClient(client);
+        clientContact.setContact(contact);
+        clientContact.setType(type);
+        return this.sClientContactDAO.save(clientContact);
+    }
+
+    @Override
+    public SClientContact newEmail(@NotNull final String contact,
+                                   @NotNull final SClient client) {
+        final SContactType contactType = this.sContactTypeDAO
+                .findByType(SContactTypeDAO.ContactType.MAIL_TYPE);
+        return this.newContactData(contact, client, contactType);
+    }
+
+    @Override
+    public SClientContact newCellPhone(@NotNull final String contact, @NotNull final SClient client) {
+        final SContactType contactType = this.sContactTypeDAO
+                .findByType(SContactTypeDAO.ContactType.CELL_PHONE_TYPE);
+        return this.newContactData(contact, client, contactType);
+    }
+
+    @Override
+    public SClientContact newFax(@NotNull final String contact, @NotNull final SClient client) {
+        final SContactType contactType = this.sContactTypeDAO
+                .findByType(SContactTypeDAO.ContactType.FAX_TYPE);
+        return this.newContactData(contact, client, contactType);
+    }
+
+    @Override
+    public Set<SClientContact> findAllContacts(final Long idClient) {
+        return this.sClientContactDAO.findByClient(idClient);
     }
 
     @Override
     public SClient findOne(@NotNull final Long id) {
         return this.sClientDAO.findOne(id);
+    }
+
+    @Override
+    public Iterable<SClient> findAll() {
+        return this.sClientDAO.findAll();
     }
 
     @Override

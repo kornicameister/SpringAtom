@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.mvc.model.bo.impl;
 
-import org.agatom.springatom.model.meta.SMetaData;
+import org.agatom.springatom.model.beans.meta.SMetaData;
 import org.agatom.springatom.mvc.model.bo.SMetaDataBO;
 import org.agatom.springatom.mvc.model.dao.SMetaDataDAO;
 import org.springframework.beans.factory.annotation.Autowired;

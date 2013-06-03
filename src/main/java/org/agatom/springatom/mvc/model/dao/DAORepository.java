@@ -15,9 +15,11 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo;
+package org.agatom.springatom.mvc.model.dao;
 
-import org.agatom.springatom.model.beans.client.SClientProblemReport;
+import org.springframework.data.repository.CrudRepository;
+
+import java.io.Serializable;
 
 /**
  * @author kornicameister
@@ -25,5 +27,12 @@ import org.agatom.springatom.model.beans.client.SClientProblemReport;
  * @since 0.0.1
  */
 
-public interface SClientProblemReportBO extends GenericBO<SClientProblemReport> {
+public interface DAORepository<T, ID extends Serializable> extends CrudRepository<T, ID> {
+    T findByNaturalId(final String fieldName, ID serializable);
+
+    T load(T t);
+
+    T load(ID id);
+
+    T update(T t);
 }

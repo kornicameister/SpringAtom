@@ -15,9 +15,11 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo;
+package org.agatom.springatom.mvc.model.dao;
 
-import org.agatom.springatom.model.beans.client.SClientProblemReport;
+import org.agatom.springatom.model.beans.client.SClientContact;
+
+import java.util.Set;
 
 /**
  * @author kornicameister
@@ -25,5 +27,7 @@ import org.agatom.springatom.model.beans.client.SClientProblemReport;
  * @since 0.0.1
  */
 
-public interface SClientProblemReportBO extends GenericBO<SClientProblemReport> {
+public interface SClientContactDAO
+        extends DAORepository<SClientContact, Long> {
+    Set<SClientContact> findByClient(final Long id);
 }

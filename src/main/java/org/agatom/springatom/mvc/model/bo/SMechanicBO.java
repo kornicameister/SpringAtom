@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.mvc.model.bo;
 
-import org.agatom.springatom.model.mechanic.SMechanic;
+import org.agatom.springatom.model.beans.mechanic.SMechanic;
 
 /**
  * @author kornicameister

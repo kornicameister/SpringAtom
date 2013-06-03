@@ -17,11 +17,13 @@
 
 package org.agatom.springatom.mvc.model.bo;
 
-import org.agatom.springatom.model.client.SClient;
-import org.agatom.springatom.model.mechanic.SMechanic;
-import org.agatom.springatom.model.meta.SClientProblemReportType;
+import org.agatom.springatom.model.beans.client.SClient;
+import org.agatom.springatom.model.beans.client.SClientContact;
+import org.agatom.springatom.model.beans.mechanic.SMechanic;
+import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
 
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 /**
  * @author kornicameister
@@ -38,4 +40,18 @@ public interface SClientBO extends GenericBO<SClient> {
                           @NotNull final SClient client,
                           @NotNull final SMechanic mechanic,
                           @NotNull final SClientProblemReportType problemReportType);
+
+    SClientContact newPhone(@NotNull final String contact,
+                            @NotNull final SClient client);
+
+    SClientContact newEmail(@NotNull final String contact,
+                            @NotNull final SClient client);
+
+    SClientContact newCellPhone(@NotNull final String contact,
+                                @NotNull final SClient client);
+
+    SClientContact newFax(@NotNull final String contact,
+                          @NotNull final SClient client);
+
+    Set<SClientContact> findAllContacts(final Long idClient);
 }

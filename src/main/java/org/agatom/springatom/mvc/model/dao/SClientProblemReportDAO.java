@@ -17,8 +17,7 @@
 
 package org.agatom.springatom.mvc.model.dao;
 
-import org.agatom.springatom.model.client.SClientProblemReport;
-import org.springframework.data.repository.CrudRepository;
+import org.agatom.springatom.model.beans.client.SClientProblemReport;
 
 /**
  * @author Tomasz
@@ -27,5 +26,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 
 public interface SClientProblemReportDAO
-        extends CrudRepository<SClientProblemReport, Long> {
+        extends DAORepository<SClientProblemReport, Long> {
 }

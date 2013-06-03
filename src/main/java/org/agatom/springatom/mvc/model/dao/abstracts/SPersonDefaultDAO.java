@@ -17,9 +17,9 @@
 
 package org.agatom.springatom.mvc.model.dao.abstracts;
 
-import org.agatom.springatom.model.Persistable;
-import org.agatom.springatom.model.util.SPerson;
-import org.agatom.springatom.model.util.SPersonalInformation;
+import org.agatom.springatom.model.beans.Persistable;
+import org.agatom.springatom.model.beans.util.SPerson;
+import org.agatom.springatom.model.beans.util.SPersonalInformation;
 import org.agatom.springatom.mvc.model.dao.SPersonDAO;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +62,7 @@ public abstract class SPersonDefaultDAO<T extends SPerson, ID extends Serializab
     @Transactional
     public T setDisabled(@NotNull final SPerson person, @NotNull final Boolean enable) {
         person.setDisabled(enable);
-        this.update(person);
+        this.update((T) person);
         return (T) person;
     }
 

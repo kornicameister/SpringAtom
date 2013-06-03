@@ -17,8 +17,8 @@
 
 package org.agatom.springatom.mvc.model.dao;
 
-import org.agatom.springatom.model.appointment.SAppointment;
-import org.agatom.springatom.model.mechanic.SMechanic;
+import org.agatom.springatom.model.beans.appointment.SAppointment;
+import org.agatom.springatom.model.beans.mechanic.SMechanic;
 
 import javax.validation.constraints.NotNull;
 
