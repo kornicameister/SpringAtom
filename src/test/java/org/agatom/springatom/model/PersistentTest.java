@@ -17,13 +17,14 @@
 
 package org.agatom.springatom.model;
 
-import org.agatom.springatom.model.client.SClient;
-import org.agatom.springatom.model.mechanic.SMechanic;
-import org.agatom.springatom.model.meta.SAppointmentTaskType;
-import org.agatom.springatom.model.meta.SClientProblemReportType;
-import org.agatom.springatom.model.meta.SContactType;
-import org.agatom.springatom.model.meta.SNotificationType;
-import org.agatom.springatom.model.user.SUser;
+import org.agatom.springatom.model.beans.Persistable;
+import org.agatom.springatom.model.beans.client.SClient;
+import org.agatom.springatom.model.beans.mechanic.SMechanic;
+import org.agatom.springatom.model.beans.meta.SAppointmentTaskType;
+import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
+import org.agatom.springatom.model.beans.meta.SContactType;
+import org.agatom.springatom.model.beans.meta.SNotificationType;
+import org.agatom.springatom.model.beans.user.SUser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,7 +70,7 @@ public class PersistentTest {
         for (Class aClass : this.clazzList) {
             Persistable persistable = (Persistable) aClass.newInstance();
             System.out.println(String.format("%s = %s", aClass.getSimpleName(), persistable.getIdColumnName()));
-//            Assert.assertEquals("id" + aClass.getSimpleName(), persistable.getIdColumnName());
+            //            Assert.assertEquals("id" + aClass.getSimpleName(), persistable.getIdColumnName());
         }
     }
 }

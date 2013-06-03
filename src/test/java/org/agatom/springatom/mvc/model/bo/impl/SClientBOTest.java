@@ -18,12 +18,13 @@
 package org.agatom.springatom.mvc.model.bo.impl;
 
 import org.agatom.springatom.AbstractSpringTestCase;
-import org.agatom.springatom.model.client.SClient;
-import org.agatom.springatom.model.client.SClientProblemReport;
-import org.agatom.springatom.model.mechanic.SMechanic;
-import org.agatom.springatom.model.meta.SClientProblemReportType;
-import org.agatom.springatom.model.meta.SMetaData;
-import org.agatom.springatom.model.util.SPersonalInformation;
+import org.agatom.springatom.model.beans.client.SClient;
+import org.agatom.springatom.model.beans.client.SClientContact;
+import org.agatom.springatom.model.beans.client.SClientProblemReport;
+import org.agatom.springatom.model.beans.mechanic.SMechanic;
+import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
+import org.agatom.springatom.model.beans.meta.SMetaData;
+import org.agatom.springatom.model.beans.util.SPersonalInformation;
 import org.agatom.springatom.mvc.model.bo.SClientBO;
 import org.agatom.springatom.mvc.model.bo.SClientProblemReportBO;
 import org.agatom.springatom.mvc.model.bo.SMechanicBO;
@@ -59,7 +60,18 @@ public class SClientBOTest extends AbstractSpringTestCase {
     SClientProblemReportBO clientProblemReportService;
 
     @Test
-    public void test_A_CreateClient() throws Exception {
+    public void test_A_DeleteAll() throws Exception {
+        this.clientService.deleteAll();
+        this.mechanicService.deleteAll();
+
+        Set<SClient> clients = (Set<SClient>) this.clientService.findAll();
+        Set<SMechanic> mechanics = (Set<SMechanic>) this.mechanicService.findAll();
+        Assert.assertTrue("Clients not removed", clients.size() == 0);
+        Assert.assertTrue("Mechanics not removed", mechanics.size() == 0);
+    }
+
+    @Test
+    public void test_B_CreateClient() throws Exception {
         SPersonalInformation personalInformation = new SPersonalInformation();
         personalInformation.setFirstName("Tomasz");
         personalInformation.setLastName("Trębski");
@@ -70,20 +82,36 @@ public class SClientBOTest extends AbstractSpringTestCase {
 
         SClient newClient = this.clientService.save(client);
 
-
         Assert.assertNotNull("newClient is null", newClient);
         Assert.assertNotNull("newClient#id is null", newClient.getId());
         SClientBOTest.client = newClient;
     }
 
     @Test
-    public void test_B_FindClient() throws Exception {
+    public void test_C_FindClient() throws Exception {
         SClient sClient = this.clientService.findOne(SClientBOTest.client.getId());
         Assert.assertNotNull("Client did not persisted", sClient);
     }
 
     @Test
-    public void test_C_ChangeStatusOfClient() throws Exception {
+    public void test_D_AddContactData() throws Exception {
+        SClientContact mail = this.clientService.newEmail("tomasz.trebski@gmail.com", SClientBOTest.client);
+        SClientContact cellPhone = this.clientService.newCellPhone("724-470-830", SClientBOTest.client);
+        SClientContact fax = this.clientService.newFax("888-66-33", SClientBOTest.client);
+        SClientContact phone = this.clientService.newPhone("838-12-54", SClientBOTest.client);
+
+        Assert.assertNotNull("mail is null", mail);
+        Assert.assertNotNull("cellPhone is null", cellPhone);
+        Assert.assertNotNull("fax is null", fax);
+        Assert.assertNotNull("phone is null", phone);
+
+        Set<SClientContact> clientContacts = this.clientService.findAllContacts(SClientBOTest.client.getId());
+        Assert.assertNotNull("clientContacts are null", clientContacts);
+        Assert.assertTrue("clientContacts are empty", clientContacts.size() > 0);
+    }
+
+    @Test
+    public void test_E_ChangeStatusOfClient() throws Exception {
         SClient sClient = this.clientService.disable(SClientBOTest.client);
         Assert.assertTrue("newClient#oldClient are equal", SClientBOTest.client.equals(sClient));
         SClientBOTest.client = sClient;
@@ -91,13 +119,13 @@ public class SClientBOTest extends AbstractSpringTestCase {
     }
 
     @Test
-    public void test_D_CountClients() throws Exception {
+    public void test_F_CountClients() throws Exception {
         Long clients = this.clientService.count();
         Assert.assertEquals("Not 1 client found", (Object) 1l, clients);
     }
 
     @Test
-    public void test_E_createSampleWorker() throws Exception {
+    public void test_G_createSampleWorker() throws Exception {
         SPersonalInformation personalInformation = new SPersonalInformation();
         personalInformation.setFirstName("Maja");
         personalInformation.setLastName("Staszczyk");
@@ -115,7 +143,7 @@ public class SClientBOTest extends AbstractSpringTestCase {
     }
 
     @Test
-    public void test_F_AddProblemReports() throws Exception {
+    public void test_H_AddProblemReports() throws Exception {
         SClientProblemReport problemReport;
         Iterable metaDatas = this.metaDataService.findAll(SClientProblemReportType.class);
         List<SMetaData> sMetaDataList = new ArrayList<>();
@@ -140,7 +168,7 @@ public class SClientBOTest extends AbstractSpringTestCase {
     }
 
     @Test
-    public void test_G_ListReports() throws Exception {
+    public void test_I_ListReports() throws Exception {
         Iterable<SClientProblemReport> problemReports = this.clientProblemReportService.findAll();
         Assert.assertNotNull("problemReports is null", problemReports);
 
@@ -158,23 +186,13 @@ public class SClientBOTest extends AbstractSpringTestCase {
     }
 
     @Test
-    public void test_H_DeleteClient() throws Exception {
+    public void test_J_DeleteClient() throws Exception {
         this.clientService.deleteOne(SClientBOTest.client);
     }
 
     @Test
-    public void test_I_DeleteMechanic() throws Exception {
+    public void test_K_DeleteMechanic() throws Exception {
         this.mechanicService.deleteOne(SClientBOTest.mechanic);
     }
 
-    @Test
-    public void test_J_DeleteAll() throws Exception {
-        this.clientService.deleteAll();
-        this.mechanicService.deleteAll();
-
-        Set<SClient> clients = (Set<SClient>) this.clientService.findAll();
-        Set<SMechanic> mechanics = (Set<SMechanic>) this.mechanicService.findAll();
-        Assert.assertTrue("Clients not removed", clients.size() == 0);
-        Assert.assertTrue("Mechanics not removed", mechanics.size() == 0);
-    }
 }

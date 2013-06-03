@@ -18,7 +18,7 @@
 package org.agatom.springatom.mvc.model.dao.impl;
 
 import org.agatom.springatom.AbstractSpringTestCase;
-import org.agatom.springatom.model.meta.*;
+import org.agatom.springatom.model.beans.meta.*;
 import org.agatom.springatom.mvc.model.bo.SMetaDataBO;
 import org.junit.Assert;
 import org.junit.Before;
@@ -82,6 +82,7 @@ public class SMetaDataDAOTest extends AbstractSpringTestCase {
         Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("app_done", SNotificationType.class));
         Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("fake_id", SClientProblemReportType.class));
         Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("fake_id", SClientProblemReportType.class));
-        Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("missed_app", SClientProblemReportType.class));
+        Assert.assertNotNull("TypeData is null", this.typeDataBo
+                .getByType("missed_app", SClientProblemReportType.class));
     }
 }
