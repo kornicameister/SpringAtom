@@ -12,7 +12,7 @@ INSERT INTO `smetadata` (`type`, `meta`) VALUES ('fake_id', 'SCPR');
 INSERT INTO `smetadata` (`type`, `meta`) VALUES ('missed_app', 'SCPR');
 INSERT INTO `smetadata` (`type`, `meta`) VALUES ('no_payment', 'SCPR');
 
-INSERT INTO `smetadata` (`type`, `meta`) VALUES ('callPhone', 'SCT');
+INSERT INTO `smetadata` (`type`, `meta`) VALUES ('cellPhone', 'SCT');
 INSERT INTO `smetadata` (`type`, `meta`) VALUES ('fax', 'SCT');
 INSERT INTO `smetadata` (`type`, `meta`) VALUES ('mail', 'SCT');
 INSERT INTO `smetadata` (`type`, `meta`) VALUES ('phone', 'SCT');
