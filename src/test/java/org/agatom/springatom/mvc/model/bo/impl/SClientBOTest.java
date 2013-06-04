@@ -22,13 +22,12 @@ import org.agatom.springatom.model.beans.client.SClient;
 import org.agatom.springatom.model.beans.client.SClientContact;
 import org.agatom.springatom.model.beans.client.SClientProblemReport;
 import org.agatom.springatom.model.beans.mechanic.SMechanic;
-import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
-import org.agatom.springatom.model.beans.meta.SMetaData;
 import org.agatom.springatom.model.beans.util.SPersonalInformation;
 import org.agatom.springatom.mvc.model.bo.SClientBO;
 import org.agatom.springatom.mvc.model.bo.SClientProblemReportBO;
 import org.agatom.springatom.mvc.model.bo.SMechanicBO;
 import org.agatom.springatom.mvc.model.bo.SMetaDataBO;
+import org.agatom.springatom.mvc.model.dao.SMetaDataDAO;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -49,23 +48,28 @@ import java.util.Set;
 @FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
 public class SClientBOTest extends AbstractSpringTestCase {
     protected static SClient client = null;
+
     protected static SMechanic mechanic = null;
+
     @Autowired
-    SClientBO clientService;
+    SClientBO clientBO;
+
     @Autowired
-    SMetaDataBO metaDataService;
+    SMetaDataBO metaDataBO;
+
     @Autowired
-    SMechanicBO mechanicService;
+    SMechanicBO mechanicBO;
+
     @Autowired
-    SClientProblemReportBO clientProblemReportService;
+    SClientProblemReportBO clientProblemReportBO;
 
     @Test
     public void test_A_DeleteAll() throws Exception {
-        this.clientService.deleteAll();
-        this.mechanicService.deleteAll();
+        this.clientBO.deleteAll();
+        this.mechanicBO.deleteAll();
 
-        Set<SClient> clients = (Set<SClient>) this.clientService.findAll();
-        Set<SMechanic> mechanics = (Set<SMechanic>) this.mechanicService.findAll();
+        Set<SClient> clients = (Set<SClient>) this.clientBO.findAll();
+        Set<SMechanic> mechanics = (Set<SMechanic>) this.mechanicBO.findAll();
         Assert.assertTrue("Clients not removed", clients.size() == 0);
         Assert.assertTrue("Mechanics not removed", mechanics.size() == 0);
     }
@@ -80,7 +84,7 @@ public class SClientBOTest extends AbstractSpringTestCase {
         client.setInformation(personalInformation);
         client.setEmail("kornicameister@gmail.com");
 
-        SClient newClient = this.clientService.save(client);
+        SClient newClient = this.clientBO.save(client);
 
         Assert.assertNotNull("newClient is null", newClient);
         Assert.assertNotNull("newClient#id is null", newClient.getId());
@@ -89,38 +93,39 @@ public class SClientBOTest extends AbstractSpringTestCase {
 
     @Test
     public void test_C_FindClient() throws Exception {
-        SClient sClient = this.clientService.findOne(SClientBOTest.client.getId());
+        SClient sClient = this.clientBO.findOne(SClientBOTest.client.getId());
         Assert.assertNotNull("Client did not persisted", sClient);
     }
 
     @Test
     public void test_D_AddContactData() throws Exception {
-        SClientContact mail = this.clientService.newEmail("tomasz.trebski@gmail.com", SClientBOTest.client);
-        SClientContact cellPhone = this.clientService.newCellPhone("724-470-830", SClientBOTest.client);
-        SClientContact fax = this.clientService.newFax("888-66-33", SClientBOTest.client);
-        SClientContact phone = this.clientService.newPhone("838-12-54", SClientBOTest.client);
+        SClientContact mail = this.clientBO.newEmail("tomasz.trebski@gmail.com", SClientBOTest.client.getId());
+        SClientContact cellPhone = this.clientBO.newCellPhone("724-470-830", SClientBOTest.client.getId());
+        SClientContact fax = this.clientBO.newFax("888-66-33", SClientBOTest.client.getId());
+        SClientContact phone = this.clientBO.newPhone("838-12-54", SClientBOTest.client.getId());
 
         Assert.assertNotNull("mail is null", mail);
         Assert.assertNotNull("cellPhone is null", cellPhone);
         Assert.assertNotNull("fax is null", fax);
         Assert.assertNotNull("phone is null", phone);
 
-        Set<SClientContact> clientContacts = this.clientService.findAllContacts(SClientBOTest.client.getId());
+        Set<SClientContact> clientContacts = this.clientBO.findAllContacts(SClientBOTest.client.getId());
         Assert.assertNotNull("clientContacts are null", clientContacts);
         Assert.assertTrue("clientContacts are empty", clientContacts.size() > 0);
     }
 
     @Test
     public void test_E_ChangeStatusOfClient() throws Exception {
-        SClient sClient = this.clientService.disable(SClientBOTest.client);
-        Assert.assertTrue("newClient#oldClient are equal", SClientBOTest.client.equals(sClient));
+        SClient sClient = this.clientBO.disable(SClientBOTest.client.getId());
+        Assert.assertFalse("newClient#oldClient are equal", SClientBOTest.client.getDisabled()
+                .equals(sClient.getDisabled()));
         SClientBOTest.client = sClient;
         Assert.assertTrue("newClient#disabled did not change", SClientBOTest.client.getDisabled());
     }
 
     @Test
     public void test_F_CountClients() throws Exception {
-        Long clients = this.clientService.count();
+        Long clients = this.clientBO.count();
         Assert.assertEquals("Not 1 client found", (Object) 1l, clients);
     }
 
@@ -134,7 +139,7 @@ public class SClientBOTest extends AbstractSpringTestCase {
         sMechanic.setInformation(personalInformation);
         sMechanic.setEmail("m2311007@gmail.com");
 
-        SMechanic newMechanic = this.mechanicService.save(sMechanic);
+        SMechanic newMechanic = this.mechanicBO.save(sMechanic);
 
 
         Assert.assertNotNull("newMechanic is null", newMechanic);
@@ -144,32 +149,28 @@ public class SClientBOTest extends AbstractSpringTestCase {
 
     @Test
     public void test_H_AddProblemReports() throws Exception {
-        SClientProblemReport problemReport;
-        Iterable metaDatas = this.metaDataService.findAll(SClientProblemReportType.class);
-        List<SMetaData> sMetaDataList = new ArrayList<>();
-        for (Object sMetaData : metaDatas) {
-            sMetaDataList.add((SMetaData) sMetaData);
-        }
+        List<SMetaDataDAO.MetaType> sMetaDataList = new ArrayList<>();
+
+        sMetaDataList.add(SMetaDataDAO.MetaType.SCPR_FAKE_ID);
+        sMetaDataList.add(SMetaDataDAO.MetaType.SCPR_DEBTS);
+        sMetaDataList.add(SMetaDataDAO.MetaType.SCPR_MISSED_APP);
+        sMetaDataList.add(SMetaDataDAO.MetaType.SCPR_NO_PAYMENT);
+
         Random seed = new Random();
 
-        for (int i = 0 ; i < 10 ; i++) {
-            problemReport = new SClientProblemReport();
-            problemReport.setClient(SClientBOTest.client);
-            problemReport.setType((SClientProblemReportType) sMetaDataList.get(seed.nextInt(sMetaDataList.size())));
-            problemReport.setProblem(String.format("problem %d", i));
-            this.clientService.newProblemReport(
+        for (int i = 0 ; i < 20 ; i++) {
+            this.clientBO.newProblemReport(
                     String.format("problem %d", i),
-                    SClientBOTest.client,
-                    SClientBOTest.mechanic,
-                    (SClientProblemReportType) sMetaDataList.get(seed.nextInt(sMetaDataList.size()))
+                    SClientBOTest.client.getId(),
+                    SClientBOTest.mechanic.getId(),
+                    sMetaDataList.get(seed.nextInt(sMetaDataList.size()))
             );
         }
-        System.out.println();
     }
 
     @Test
     public void test_I_ListReports() throws Exception {
-        Iterable<SClientProblemReport> problemReports = this.clientProblemReportService.findAll();
+        Iterable<SClientProblemReport> problemReports = this.clientProblemReportBO.findAll();
         Assert.assertNotNull("problemReports is null", problemReports);
 
 
@@ -187,12 +188,12 @@ public class SClientBOTest extends AbstractSpringTestCase {
 
     @Test
     public void test_J_DeleteClient() throws Exception {
-        this.clientService.deleteOne(SClientBOTest.client);
+        this.clientBO.deleteOne(SClientBOTest.client.getId());
     }
 
     @Test
     public void test_K_DeleteMechanic() throws Exception {
-        this.mechanicService.deleteOne(SClientBOTest.mechanic);
+        this.mechanicBO.deleteOne(SClientBOTest.mechanic.getId());
     }
 
 }

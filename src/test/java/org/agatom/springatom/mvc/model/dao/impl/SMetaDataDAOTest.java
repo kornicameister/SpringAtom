@@ -74,15 +74,4 @@ public class SMetaDataDAOTest extends AbstractSpringTestCase {
         Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 8, SClientProblemReportType.class));
         Assert.assertNotNull("TypeData is null", this.typeDataBo.getById((long) 5, SClientProblemReportType.class));
     }
-
-    @Test
-    public void testGetByType() throws Exception {
-        Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("app_done", SNotificationType.class));
-        Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("fake_id", SClientProblemReportType.class));
-        Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("app_done", SNotificationType.class));
-        Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("fake_id", SClientProblemReportType.class));
-        Assert.assertNotNull("TypeData is null", this.typeDataBo.getByType("fake_id", SClientProblemReportType.class));
-        Assert.assertNotNull("TypeData is null", this.typeDataBo
-                .getByType("missed_app", SClientProblemReportType.class));
-    }
 }
