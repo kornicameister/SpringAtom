@@ -50,8 +50,25 @@ abstract public class PersistentVersionedObject extends Persistent {
     @Column(name = "updatedBy")
     private String updatedBy;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updatedOn")
+    private Date updatedOn;
+
+    @Version
+    @GeneratedValue
+    private Long version = 0l;
+
     public PersistentVersionedObject() {
         super();
+        this.updatedOn = new Date();
+    }
+
+    public Date getUpdatedOn() {
+        return updatedOn;
+    }
+
+    Long getVersion() {
+        return version;
     }
 
     public String getUpdatedBy() {

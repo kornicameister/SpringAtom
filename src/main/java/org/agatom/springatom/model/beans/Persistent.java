@@ -20,8 +20,9 @@ package org.agatom.springatom.model.beans;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author kornicamaister
@@ -35,27 +36,11 @@ abstract class Persistent implements Persistable {
     @Transient
     protected String idColumnName;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updatedOn")
-    private Date updatedOn;
-
-    @Version
-    private Long version = 0l;
-
     public Persistent() {
         this.resolveIdColumnName();
-        this.updatedOn = new Date();
     }
 
     protected abstract void resolveIdColumnName();
-
-    public Date getUpdatedOn() {
-        return updatedOn;
-    }
-
-    Long getVersion() {
-        return version;
-    }
 
     @Override
     public String getEntityName() {
@@ -69,36 +54,5 @@ abstract class Persistent implements Persistable {
     @Override
     public String getIdColumnName() {
         return this.idColumnName;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = updatedOn != null ? updatedOn.hashCode() : 0;
-        result = 31 * result + (version != null ? version.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Persistent)) {
-            return false;
-        }
-
-        Persistent that = (Persistent) o;
-
-        return !(updatedOn != null ? !updatedOn.equals(that.updatedOn) : that.updatedOn != null) &&
-                !(version != null ? !version.equals(that.version) : that.version != null);
-    }
-
-    @Override
-    public String toString() {
-        return "Persistent{" +
-                "idColumnName='" + idColumnName + '\'' +
-                ", updatedOn=" + updatedOn +
-                ", version=" + version +
-                '}';
     }
 }
