@@ -16,3 +16,6 @@ logs/*
 database/**.mwb.bak
 database/**.png
 database/**.pdf
+
+# tmp
+*~*
