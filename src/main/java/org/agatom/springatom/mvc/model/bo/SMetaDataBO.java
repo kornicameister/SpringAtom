@@ -18,6 +18,7 @@
 package org.agatom.springatom.mvc.model.bo;
 
 import org.agatom.springatom.model.beans.meta.SMetaData;
+import org.agatom.springatom.mvc.model.dao.SMetaDataDAO;
 
 import javax.validation.constraints.NotNull;
 
@@ -31,5 +32,5 @@ public interface SMetaDataBO {
 
     SMetaData getById(@NotNull final Long id, @NotNull final Class<? extends SMetaData> clazz);
 
-    SMetaData getByType(@NotNull final String type, @NotNull final Class<? extends SMetaData> clazz);
+    SMetaData getByType(@NotNull final SMetaDataDAO.MetaType type);
 }

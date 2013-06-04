@@ -22,6 +22,7 @@ import org.agatom.springatom.model.beans.Persistable;
 import org.agatom.springatom.model.beans.meta.SMetaData;
 import org.agatom.springatom.mvc.model.dao.SMetaDataDAO;
 import org.agatom.springatom.mvc.model.dao.abstracts.DefaultDAO;
+import org.apache.log4j.Logger;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
@@ -37,7 +38,10 @@ import javax.validation.constraints.NotNull;
 @SuppressWarnings("SpringElInspection")
 public class SMetaDataDAOImpl extends DefaultDAO<SMetaData, Long>
         implements SMetaDataDAO {
+    private static final Logger LOGGER = Logger.getLogger(SMetaDataDAOImpl.class);
+
     private static final String TYPE = "type";
+
     private static final String CACHE_NAME = "typedata";
 
     @Override
@@ -55,9 +59,24 @@ public class SMetaDataDAOImpl extends DefaultDAO<SMetaData, Long>
     }
 
     @Override
-    public SMetaData findByType(@NotNull final String type, @NotNull final Class<? extends SMetaData> clazz) {
-        this.target = clazz;
-        return this.findByNaturalId(TYPE, type);
+    public SMetaData findByType(@NotNull final MetaType type) {
+        this.target = type.getTarget();
+        SMetaData object = this.findByNaturalId(TYPE, type.getType());
+        if (object == null) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(String
+                        .format("%s returned null by natural id, requesting by query", SMetaDataDAO.class.getName()));
+            }
+            final String queryString = String
+                    .format("from %s meta_table where meta_table.type=:type", type.getTarget().getSimpleName());
+            object = (SMetaData) this.getSession()
+                    .createQuery(queryString)
+                    .setSerializable("type", type.getType())
+                    .list()
+                    .get(0);
+
+        }
+        return object;
     }
 
     @Override

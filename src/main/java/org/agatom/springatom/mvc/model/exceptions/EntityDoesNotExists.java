@@ -15,55 +15,22 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo.impl;
+package org.agatom.springatom.mvc.model.exceptions;
 
-import org.agatom.springatom.model.beans.mechanic.SMechanic;
-import org.agatom.springatom.mvc.model.bo.SMechanicBO;
-import org.agatom.springatom.mvc.model.dao.SMechanicDAO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.agatom.springatom.model.beans.Persistable;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Service(value = "SMechanicBO")
-public class SMechanicBOImpl
-        implements SMechanicBO {
 
-    @Autowired
-    SMechanicDAO sMechanicDAO;
+public class EntityDoesNotExists extends Exception {
+    private static final String MSG = "No entry exists for %s with pk=%s";
 
-    @Override
-    public SMechanic findOne(@NotNull final Long id) {
-        return this.sMechanicDAO.findOne(id);
-    }
-
-    @Override
-    public Iterable<SMechanic> findAll() {
-        return this.sMechanicDAO.findAll();
-    }
-
-    @Override
-    public SMechanic save(@NotNull final SMechanic persistable) {
-        return this.sMechanicDAO.save(persistable);
-    }
-
-    @Override
-    public Long count() {
-        return this.sMechanicDAO.count();
-    }
-
-    @Override
-    public void deleteOne(@NotNull final Long pk) {
-        this.sMechanicDAO.delete(pk);
-    }
-
-    @Override
-    public void deleteAll() {
-        this.sMechanicDAO.deleteAll();
+    public EntityDoesNotExists(final Class<? extends Persistable> entityClazz, final Serializable pk) {
+        super(String.format(MSG, entityClazz.getName(), pk));
     }
 }

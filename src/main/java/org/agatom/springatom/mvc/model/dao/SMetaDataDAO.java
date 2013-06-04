@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.mvc.model.dao;
 
-import org.agatom.springatom.model.beans.meta.SMetaData;
+import org.agatom.springatom.model.beans.meta.*;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import javax.validation.constraints.NotNull;
@@ -31,7 +31,52 @@ import javax.validation.constraints.NotNull;
 public interface SMetaDataDAO {
     Iterable findAll(@NotNull final Class<? extends SMetaData> clazz);
 
-    SMetaData findOne(@NotNull final Long id, @NotNull final Class<? extends SMetaData> clazz);
+    SMetaData findOne(@NotNull final Long id,
+                      @NotNull final Class<? extends SMetaData> clazz);
 
-    SMetaData findByType(@NotNull final String type, @NotNull final Class<? extends SMetaData> clazz);
+    SMetaData findByType(@NotNull final MetaType type);
+
+    public static enum MetaType {
+        //SCT
+        SCT_FAX("fax", SContactType.class),
+        SCT_CELL_PHONE("cellPhone", SContactType.class),
+        SCT_MAIL("mail", SContactType.class),
+        SCT_PHONE("phone", SContactType.class),
+        //SCT
+
+        //SAT
+        SAT_REPAIR("repair", SAppointmentTaskType.class),
+        SAT_NORMAL("normal", SAppointmentTaskType.class),
+        //SAT
+
+        //SCPR
+        SCPR_DEBTS("debts", SClientProblemReportType.class),
+        SCPR_FAKE_ID("fake_id", SClientProblemReportType.class),
+        SCPR_MISSED_APP("missed_app", SClientProblemReportType.class),
+        SCPR_NO_PAYMENT("no_payment", SClientProblemReportType.class),
+        //SCPR
+
+        //SNT
+        SNT_APP_CANCELED("app_canceled", SNotificationType.class),
+        SNT_APP_DONE("app_done", SNotificationType.class),
+        SNT_APP_REJECTED("app_rejected", SNotificationType.class);
+        //SNT
+
+        private final String type;
+
+        private final Class<? extends SMetaData> target;
+
+        MetaType(final String type, Class<? extends SMetaData> target) {
+            this.type = type;
+            this.target = target;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public Class<? extends SMetaData> getTarget() {
+            return target;
+        }
+    }
 }

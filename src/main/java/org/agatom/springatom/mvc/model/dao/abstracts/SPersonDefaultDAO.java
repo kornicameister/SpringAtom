@@ -62,8 +62,7 @@ public abstract class SPersonDefaultDAO<T extends SPerson, ID extends Serializab
     @Transactional
     public T setDisabled(@NotNull final SPerson person, @NotNull final Boolean enable) {
         person.setDisabled(enable);
-        this.update((T) person);
-        return (T) person;
+        return this.load(this.update((T) person));
     }
 
     @Override

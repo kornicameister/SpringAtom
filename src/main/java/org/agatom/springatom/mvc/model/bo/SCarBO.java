@@ -15,10 +15,14 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.dao;
+package org.agatom.springatom.mvc.model.bo;
 
-import org.agatom.springatom.model.beans.meta.SContactType;
-import org.springframework.data.repository.NoRepositoryBean;
+import org.agatom.springatom.model.beans.car.SCar;
+import org.agatom.springatom.model.beans.car.SCarMaster;
+import org.agatom.springatom.model.beans.links.SCarClientLink;
+
+import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 /**
  * @author kornicameister
@@ -26,28 +30,19 @@ import org.springframework.data.repository.NoRepositoryBean;
  * @since 0.0.1
  */
 
-@NoRepositoryBean
-public interface SContactTypeDAO
-        extends DAORepository<SContactType, Long> {
+public interface SCarBO extends GenericBO<SCar, Long> {
+    SCarMaster findByMaster(@NotNull final String brand,
+                            @NotNull final String model);
 
-    SContactType findByType(final ContactType type);
+    SCarMaster findByMaster(@NotNull final Long carId);
 
-    public static enum ContactType {
-        FAX_TYPE("fax"),
-        CELL_PHONE_TYPE("cellPhone"),
-        MAIL_TYPE("mail"),
-        PHONE_TYPE("phone");
+    SCar saveWithMaster(@NotNull final String brand,
+                        @NotNull final String model,
+                        @NotNull final String licencePlate,
+                        @NotNull final String vinNumber);
 
-        private final String type;
+    SCar changeOwner(@NotNull final Long idCar,
+                     @NotNull final Long idClient);
 
-        ContactType(final String type) {
-            this.type = type;
-        }
-
-        @Override
-        public String toString() {
-            return this.type;
-        }
-    }
-
+    Set<SCarClientLink> findOwnershipHistory(@NotNull final Long idCar);
 }

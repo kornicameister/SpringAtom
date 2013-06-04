@@ -15,53 +15,21 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.dao.impl;
+package org.agatom.springatom.mvc.model.dao;
 
-import org.agatom.springatom.model.beans.Persistable;
-import org.agatom.springatom.model.beans.meta.SContactType;
-import org.agatom.springatom.mvc.model.dao.SContactTypeDAO;
-import org.agatom.springatom.mvc.model.dao.SMetaDataDAO;
-import org.agatom.springatom.mvc.model.dao.abstracts.DefaultDAO;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.NoRepositoryBean;
 
+import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Repository(value = "SContactTypeDAO")
-public class SContactTypeDAOImpl extends DefaultDAO<SContactType, Long>
-        implements SContactTypeDAO {
-    private static final Logger LOGGER = Logger.getLogger(SContactTypeDAOImpl.class);
 
-    private static final String TYPE_FIELD = "type";
+@NoRepositoryBean
+public interface DAORevisionableRepository<T, ID extends Serializable> {
+    <S extends T> Iterable<S> findAllRevisions(final ID pk);
 
-    @Autowired
-    SMetaDataDAO sMetaDataDAO;
-
-    @Override
-    protected Class<? extends Persistable> getTargetClazz() {
-        return SContactType.class;
-    }
-
-    @Override
-    public SContactType findByType(final ContactType type) {
-        Object object = this.sMetaDataDAO.findByType(type.toString(), SContactType.class);
-        if (object == null) {
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(String
-                        .format("%s returned null by natural id, requesting by query", SMetaDataDAO.class.getName()));
-            }
-            object = this.getSession()
-                    .createQuery("from SContactType sct where sct.type=:type")
-                    .setSerializable(TYPE_FIELD, type.toString())
-                    .list()
-                    .get(0);
-
-        }
-        return (SContactType) object;
-    }
+    <S extends T> S findLatestRevision(final ID pk);
 }

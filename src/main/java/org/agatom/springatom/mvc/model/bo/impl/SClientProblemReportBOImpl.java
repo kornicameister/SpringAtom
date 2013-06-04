@@ -58,8 +58,8 @@ public class SClientProblemReportBOImpl implements SClientProblemReportBO {
     }
 
     @Override
-    public void deleteOne(@NotNull final SClientProblemReport persistable) {
-        this.sClientProblemReportDAO.delete(persistable);
+    public void deleteOne(@NotNull final Long pk) {
+        this.sClientProblemReportDAO.delete(pk);
     }
 
     @Override

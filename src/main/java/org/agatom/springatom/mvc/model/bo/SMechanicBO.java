@@ -25,6 +25,6 @@ import org.agatom.springatom.model.beans.mechanic.SMechanic;
  * @since 0.0.1
  */
 
-public interface SMechanicBO extends GenericBO<SMechanic> {
+public interface SMechanicBO extends GenericBO<SMechanic, Long> {
 
 }

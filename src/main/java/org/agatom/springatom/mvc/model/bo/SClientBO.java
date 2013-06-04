@@ -19,8 +19,9 @@ package org.agatom.springatom.mvc.model.bo;
 
 import org.agatom.springatom.model.beans.client.SClient;
 import org.agatom.springatom.model.beans.client.SClientContact;
-import org.agatom.springatom.model.beans.mechanic.SMechanic;
-import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
+import org.agatom.springatom.model.beans.client.SClientProblemReport;
+import org.agatom.springatom.mvc.model.dao.SMetaDataDAO;
+import org.agatom.springatom.mvc.model.exceptions.EntityDoesNotExists;
 
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -30,28 +31,29 @@ import java.util.Set;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SClientBO extends GenericBO<SClient> {
+public interface SClientBO extends GenericBO<SClient, Long> {
 
-    SClient disable(@NotNull final SClient client);
+    SClient disable(@NotNull final Long pk) throws EntityDoesNotExists;
 
-    SClient enable(@NotNull final SClient client);
+    SClient enable(@NotNull final Long pk) throws EntityDoesNotExists;
 
-    void newProblemReport(@NotNull final String problem,
-                          @NotNull final SClient client,
-                          @NotNull final SMechanic mechanic,
-                          @NotNull final SClientProblemReportType problemReportType);
+    SClientProblemReport newProblemReport(@NotNull final String problem,
+                                          @NotNull final Long client,
+                                          @NotNull final Long mechanic,
+                                          @NotNull final SMetaDataDAO.MetaType problemReportType) throws
+            EntityDoesNotExists;
 
     SClientContact newPhone(@NotNull final String contact,
-                            @NotNull final SClient client);
+                            @NotNull final Long client) throws EntityDoesNotExists;
 
     SClientContact newEmail(@NotNull final String contact,
-                            @NotNull final SClient client);
+                            @NotNull final Long client) throws EntityDoesNotExists;
 
     SClientContact newCellPhone(@NotNull final String contact,
-                                @NotNull final SClient client);
+                                @NotNull final Long client) throws EntityDoesNotExists;
 
     SClientContact newFax(@NotNull final String contact,
-                          @NotNull final SClient client);
+                          @NotNull final Long client) throws EntityDoesNotExists;
 
     Set<SClientContact> findAllContacts(final Long idClient);
 }

@@ -47,7 +47,7 @@ public class SMetaDataBOImpl implements SMetaDataBO {
     }
 
     @Override
-    public SMetaData getByType(@NotNull final String type, @NotNull final Class<? extends SMetaData> clazz) {
-        return this.typeDataDao.findByType(type, clazz);
+    public SMetaData getByType(@NotNull final SMetaDataDAO.MetaType type) {
+        return this.typeDataDao.findByType(type);
     }
 }

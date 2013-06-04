@@ -26,6 +26,7 @@ import org.agatom.springatom.model.beans.meta.SContactType;
 import org.agatom.springatom.model.beans.util.SIssueReporter;
 import org.agatom.springatom.mvc.model.bo.SClientBO;
 import org.agatom.springatom.mvc.model.dao.*;
+import org.agatom.springatom.mvc.model.exceptions.EntityDoesNotExists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,52 +43,85 @@ public class SClientBOImpl implements SClientBO {
 
     @Autowired
     SClientDAO sClientDAO;
+
+    @Autowired
+    SMechanicDAO sMechanicDAO;
+
     @Autowired
     SClientProblemReportDAO sClientProblemReportDAO;
+
     @Autowired
     SMetaDataDAO sMetaDataDAO;
 
     @Autowired
     SClientContactDAO sClientContactDAO;
 
-    @Autowired
-    SContactTypeDAO   sContactTypeDAO;
-
     @Override
-    public SClient disable(@NotNull final SClient client) {
+    public SClient disable(@NotNull final Long pk) throws EntityDoesNotExists {
+        final SClient client = this.sClientDAO.findOne(pk);
+        if (client == null) {
+            throw new EntityDoesNotExists(SClient.class, pk);
+        }
         return this.sClientDAO.setDisabled(client, true);
     }
 
     @Override
-    public SClient enable(@NotNull final SClient client) {
+    public SClient enable(@NotNull final Long pk) throws EntityDoesNotExists {
+        final SClient client = this.sClientDAO.findOne(pk);
+        if (client == null) {
+            throw new EntityDoesNotExists(SClient.class, pk);
+        }
         return this.sClientDAO.setDisabled(client, false);
     }
 
     @Override
-    public void newProblemReport(@NotNull final String problem,
-                                 @NotNull final SClient client,
-                                 @NotNull final SMechanic mechanic,
-                                 @NotNull final SClientProblemReportType problemReportType) {
+    public SClientProblemReport newProblemReport(@NotNull final String problem,
+                                                 @NotNull final Long clientPk,
+                                                 @NotNull final Long mechanicPk,
+                                                 @NotNull final SMetaDataDAO.MetaType metaType) throws
+            EntityDoesNotExists {
+
+        // load objects
+        final SClient client = this.sClientDAO.findOne(clientPk);
+        final SMechanic mechanic = this.sMechanicDAO.findOne(mechanicPk);
+        final SClientProblemReportType problemReportType = (SClientProblemReportType) this.sMetaDataDAO
+                .findByType(metaType);
+
+        if (client == null) {
+            throw new EntityDoesNotExists(SClient.class, clientPk);
+        }
+        if (mechanic == null) {
+            throw new EntityDoesNotExists(SMechanic.class, mechanicPk);
+        }
+        if (problemReportType == null) {
+            throw new EntityDoesNotExists(SClientProblemReportType.class, metaType);
+        }
+
         SClientProblemReport problemReport = new SClientProblemReport();
+
         problemReport.setClient(client);
         problemReport.setReporter(new SIssueReporter(mechanic));
         problemReport.setProblem(problem);
-        problemReport.setType((SClientProblemReportType) this
-                .sMetaDataDAO.findOne(problemReportType.getId(), SClientProblemReportType.class));
-        this.sClientProblemReportDAO.save(problemReport);
+        problemReport.setType(problemReportType);
+
+        return this.sClientProblemReportDAO.save(problemReport);
     }
 
     @Override
     public SClientContact newPhone(@NotNull final String contact,
-                                   @NotNull final SClient client) {
-        final SContactType contactType = this.sContactTypeDAO
-                .findByType(SContactTypeDAO.ContactType.PHONE_TYPE);
+                                   @NotNull final Long client) throws EntityDoesNotExists {
+        final SContactType contactType = (SContactType) this.sMetaDataDAO
+                .findByType(SMetaDataDAO.MetaType.SCT_PHONE);
         return this.newContactData(contact, client, contactType);
     }
 
     private SClientContact newContactData(@NotNull final String contact,
-                                          @NotNull final SClient client,
-                                          @NotNull final SContactType type) {
+                                          @NotNull final Long clientPk,
+                                          @NotNull final SContactType type) throws EntityDoesNotExists {
+        final SClient client = this.sClientDAO.findOne(clientPk);
+        if (client == null) {
+            throw new EntityDoesNotExists(SClient.class, clientPk);
+        }
         final SClientContact clientContact = new SClientContact();
         clientContact.setClient(client);
         clientContact.setContact(contact);
@@ -97,23 +131,25 @@ public class SClientBOImpl implements SClientBO {
 
     @Override
     public SClientContact newEmail(@NotNull final String contact,
-                                   @NotNull final SClient client) {
-        final SContactType contactType = this.sContactTypeDAO
-                .findByType(SContactTypeDAO.ContactType.MAIL_TYPE);
+                                   @NotNull final Long client) throws EntityDoesNotExists {
+        final SContactType contactType = (SContactType) this.sMetaDataDAO
+                .findByType(SMetaDataDAO.MetaType.SCT_MAIL);
         return this.newContactData(contact, client, contactType);
     }
 
     @Override
-    public SClientContact newCellPhone(@NotNull final String contact, @NotNull final SClient client) {
-        final SContactType contactType = this.sContactTypeDAO
-                .findByType(SContactTypeDAO.ContactType.CELL_PHONE_TYPE);
+    public SClientContact newCellPhone(@NotNull final String contact,
+                                       @NotNull final Long client) throws EntityDoesNotExists {
+        final SContactType contactType = (SContactType) this.sMetaDataDAO
+                .findByType(SMetaDataDAO.MetaType.SCT_CELL_PHONE);
         return this.newContactData(contact, client, contactType);
     }
 
     @Override
-    public SClientContact newFax(@NotNull final String contact, @NotNull final SClient client) {
-        final SContactType contactType = this.sContactTypeDAO
-                .findByType(SContactTypeDAO.ContactType.FAX_TYPE);
+    public SClientContact newFax(@NotNull final String contact,
+                                 @NotNull final Long client) throws EntityDoesNotExists {
+        final SContactType contactType = (SContactType) this.sMetaDataDAO
+                .findByType(SMetaDataDAO.MetaType.SCT_FAX);
         return this.newContactData(contact, client, contactType);
     }
 
@@ -143,8 +179,8 @@ public class SClientBOImpl implements SClientBO {
     }
 
     @Override
-    public void deleteOne(@NotNull final SClient persistable) {
-        this.sClientDAO.delete(persistable);
+    public void deleteOne(@NotNull final Long pk) {
+        this.sClientDAO.delete(pk);
     }
 
     @Override

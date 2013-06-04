@@ -26,6 +26,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,12 +112,16 @@ abstract public class DefaultDAO<T, ID extends Serializable> extends _DefaultDao
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public T update(final T obj) {
+        Persistable persistable = null;
         if (this.isQueryPossible(String.format(UPDATE_METHOD, obj))) {
-            this.getSession().update(obj);
-            return obj;
+            this.getSession().saveOrUpdate(obj);
+            persistable = (Persistable) this.getSession().byId(obj.getClass())
+                    .load(((Persistable) obj).getId());
+            this.getSession().flush();
         }
-        return null;
+        return (T) persistable;
     }
 
     @Override
@@ -158,13 +163,13 @@ abstract public class DefaultDAO<T, ID extends Serializable> extends _DefaultDao
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
     @Cacheable(value = "singleObjectCache", key = "#serializable")
     public T findOne(final Serializable serializable) {
         if (!this.isQueryPossible(String.format(FIND_METHOD, serializable))) {
             return null;
         }
-        return (T) this.getSession().load(this.target, serializable);
+        return this.load(serializable);
     }
 
     @Override

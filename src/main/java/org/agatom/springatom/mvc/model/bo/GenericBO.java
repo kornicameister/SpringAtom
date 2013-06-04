@@ -20,6 +20,7 @@ package org.agatom.springatom.mvc.model.bo;
 import org.agatom.springatom.model.beans.Persistable;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * @author Tomasz
@@ -27,7 +28,7 @@ import javax.validation.constraints.NotNull;
  * @since 0.0.1
  */
 
-public interface GenericBO<T extends Persistable> {
+public interface GenericBO<T extends Persistable, ID extends Serializable> {
     T findOne(@NotNull Long id);
 
     Iterable<T> findAll();
@@ -36,7 +37,7 @@ public interface GenericBO<T extends Persistable> {
 
     Long count();
 
-    void deleteOne(@NotNull final T persistable);
+    void deleteOne(@NotNull final ID pk);
 
     void deleteAll();
 }

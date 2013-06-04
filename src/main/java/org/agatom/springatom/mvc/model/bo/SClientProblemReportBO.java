@@ -25,5 +25,5 @@ import org.agatom.springatom.model.beans.client.SClientProblemReport;
  * @since 0.0.1
  */
 
-public interface SClientProblemReportBO extends GenericBO<SClientProblemReport> {
+public interface SClientProblemReportBO extends GenericBO<SClientProblemReport, Long> {
 }
