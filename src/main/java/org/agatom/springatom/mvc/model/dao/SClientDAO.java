@@ -19,6 +19,7 @@ package org.agatom.springatom.mvc.model.dao;
 
 import org.agatom.springatom.model.beans.client.SClient;
 import org.agatom.springatom.model.beans.client.SClientProblemReport;
+import org.springframework.data.repository.NoRepositoryBean;
 
 import javax.validation.constraints.NotNull;
 
@@ -27,6 +28,7 @@ import javax.validation.constraints.NotNull;
  * @version 0.0.1
  * @since 0.0.1
  */
+@NoRepositoryBean
 public interface SClientDAO extends SPersonDAO<SClient, Long> {
     Iterable findByProblemReport(@NotNull final SClientProblemReport report);
 

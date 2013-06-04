@@ -19,6 +19,7 @@ package org.agatom.springatom.mvc.model.dao;
 
 import org.agatom.springatom.model.beans.appointment.SAppointment;
 import org.agatom.springatom.model.beans.mechanic.SMechanic;
+import org.springframework.data.repository.NoRepositoryBean;
 
 import javax.validation.constraints.NotNull;
 
@@ -28,6 +29,7 @@ import javax.validation.constraints.NotNull;
  * @since 0.0.1
  */
 
+@NoRepositoryBean
 public interface SMechanicDAO extends SPersonDAO<SMechanic, Long> {
     SMechanic findByAppointment(@NotNull final SAppointment appointment);
 

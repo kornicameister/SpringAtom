@@ -18,6 +18,7 @@
 package org.agatom.springatom.mvc.model.dao;
 
 import org.agatom.springatom.model.beans.meta.SMetaData;
+import org.springframework.data.repository.NoRepositoryBean;
 
 import javax.validation.constraints.NotNull;
 
@@ -26,6 +27,7 @@ import javax.validation.constraints.NotNull;
  * @version 0.0.1
  * @since 0.0.1
  */
+@NoRepositoryBean
 public interface SMetaDataDAO {
     Iterable findAll(@NotNull final Class<? extends SMetaData> clazz);
 

@@ -19,6 +19,7 @@ package org.agatom.springatom.mvc.model.dao;
 
 import org.agatom.springatom.model.beans.util.SPerson;
 import org.agatom.springatom.model.beans.util.SPersonalInformation;
+import org.springframework.data.repository.NoRepositoryBean;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -28,6 +29,7 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
+@NoRepositoryBean
 public interface SPersonDAO<T extends SPerson, ID extends Serializable>
         extends DAORepository<T, ID> {
     Iterable findByPersonalInformation(@NotNull final SPersonalInformation information);

@@ -18,6 +18,7 @@
 package org.agatom.springatom.mvc.model.dao;
 
 import org.agatom.springatom.model.beans.meta.SContactType;
+import org.springframework.data.repository.NoRepositoryBean;
 
 /**
  * @author kornicameister
@@ -25,6 +26,7 @@ import org.agatom.springatom.model.beans.meta.SContactType;
  * @since 0.0.1
  */
 
+@NoRepositoryBean
 public interface SContactTypeDAO
         extends DAORepository<SContactType, Long> {
 

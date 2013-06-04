@@ -18,6 +18,7 @@
 package org.agatom.springatom.mvc.model.dao;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 
 import java.io.Serializable;
 
@@ -27,6 +28,7 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 
+@NoRepositoryBean
 public interface DAORepository<T, ID extends Serializable> extends CrudRepository<T, ID> {
     T findByNaturalId(final String fieldName, ID serializable);
 
