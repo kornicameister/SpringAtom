@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.client;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.meta.SContactType;
 import org.hibernate.annotations.OnDelete;
@@ -117,14 +116,5 @@ public class SClientContact extends PersistentObject {
         return client.equals(that.client) &&
                 contact.equals(that.contact) &&
                 type.equals(that.type);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("client", client)
-                .add("type", type)
-                .add("contact", contact)
-                .toString();
     }
 }

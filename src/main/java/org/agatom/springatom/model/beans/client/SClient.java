@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.client;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.util.SPerson;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OnDelete;
@@ -63,20 +62,5 @@ public class SClient extends SPerson {
 
     public void setProblemReportSet(final Set<SClientProblemReport> problemReportSet) {
         this.problemReportSet = problemReportSet;
-    }
-
-    public boolean addProblemReport(final SClientProblemReport sClientProblemReport) {
-        return problemReportSet.add(sClientProblemReport);
-    }
-
-    public boolean removeProblemReport(final Object sClientProblemReport) {
-        return problemReportSet.remove(sClientProblemReport);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("problems", problemReportSet.size())
-                .toString();
     }
 }

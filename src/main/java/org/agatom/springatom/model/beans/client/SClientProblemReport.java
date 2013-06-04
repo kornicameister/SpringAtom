@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.client;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
 import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
@@ -142,16 +141,5 @@ public class SClientProblemReport extends PersistentObject {
                 client.equals(that.client) && problem.equals(that.problem) &&
                 !(reporter != null ? !reporter.equals(that.reporter) : that.reporter != null) &&
                 type.equals(that.type);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("client", client)
-                .add("type", type)
-                .add("appointment", appointment)
-                .add("problem", problem)
-                .add("reporter", reporter)
-                .toString();
     }
 }
