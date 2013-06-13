@@ -38,28 +38,29 @@ public interface SMetaDataDAO {
 
     public static enum MetaType {
         //SCT
-        SCT_FAX("fax", SContactType.class),
-        SCT_CELL_PHONE("cellPhone", SContactType.class),
-        SCT_MAIL("mail", SContactType.class),
-        SCT_PHONE("phone", SContactType.class),
+        SCT_FAX("fax", Constants.CONTACT_TYPE_CLASS),
+        SCT_CELL_PHONE("cellPhone", Constants.CONTACT_TYPE_CLASS),
+        SCT_MAIL("mail", Constants.CONTACT_TYPE_CLASS),
+        SCT_PHONE("phone", Constants.CONTACT_TYPE_CLASS),
         //SCT
 
         //SAT
-        SAT_REPAIR("repair", SAppointmentTaskType.class),
-        SAT_NORMAL("normal", SAppointmentTaskType.class),
+        SAT_REPAIR("repair", Constants.APPOINTMENT_TASK_TYPE_CLASS),
+        SAT_NORMAL("normal", Constants.APPOINTMENT_TASK_TYPE_CLASS),
         //SAT
 
         //SCPR
-        SCPR_DEBTS("debts", SClientProblemReportType.class),
-        SCPR_FAKE_ID("fake_id", SClientProblemReportType.class),
-        SCPR_MISSED_APP("missed_app", SClientProblemReportType.class),
-        SCPR_NO_PAYMENT("no_payment", SClientProblemReportType.class),
+        SCPR_DEBTS("debts", Constants.CLIENT_PROBLEM_REPORT_TYPE_CLASS),
+        SCPR_FAKE_ID("fake_id", Constants.CLIENT_PROBLEM_REPORT_TYPE_CLASS),
+        SCPR_MISSED_APP("missed_app", Constants.CLIENT_PROBLEM_REPORT_TYPE_CLASS),
+        SCPR_NO_PAYMENT("no_payment", Constants.CLIENT_PROBLEM_REPORT_TYPE_CLASS),
         //SCPR
 
         //SNT
-        SNT_APP_CANCELED("app_canceled", SNotificationType.class),
-        SNT_APP_DONE("app_done", SNotificationType.class),
-        SNT_APP_REJECTED("app_rejected", SNotificationType.class);
+        SNT_APP_CANCELED("app_canceled", Constants.NOTIFICATION_TYPE_CLASS),
+        SNT_APP_DONE("app_done", Constants.NOTIFICATION_TYPE_CLASS),
+        SNT_APP_REJECTED("app_rejected", Constants.NOTIFICATION_TYPE_CLASS);
+
         //SNT
 
         private final String type;
@@ -77,6 +78,16 @@ public interface SMetaDataDAO {
 
         public Class<? extends SMetaData> getTarget() {
             return target;
+        }
+
+        private static class Constants {
+            private static final Class<SContactType> CONTACT_TYPE_CLASS = SContactType.class;
+
+            private static final Class<SAppointmentTaskType> APPOINTMENT_TASK_TYPE_CLASS = SAppointmentTaskType.class;
+
+            private static final Class<SClientProblemReportType> CLIENT_PROBLEM_REPORT_TYPE_CLASS = SClientProblemReportType.class;
+
+            private static final Class<SNotificationType> NOTIFICATION_TYPE_CLASS = SNotificationType.class;
         }
     }
 }
