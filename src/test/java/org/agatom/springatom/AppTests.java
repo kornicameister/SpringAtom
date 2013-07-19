@@ -15,9 +15,8 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo.impl;
+package org.agatom.springatom;
 
-import org.agatom.springatom.AbstractSpringTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class AppTests extends AbstractSpringTestCase {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     protected WebApplicationContext wac;
-    private MockMvc mockMvc;
+    private   MockMvc               mockMvc;
 
     @Before
     public void setup() {

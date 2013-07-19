@@ -43,11 +43,12 @@ public class CacheResolverHelperTest extends AbstractSpringTestCase {
     @Test
     public void test_2_GetCachesForName() throws Exception {
         String[] names = {
-                "org.agatom.springatom.mvc.model.dao.SMetaDataDAO",
-                "org.agatom.springatom.mvc.model.dao.SMechanicDAO"
+                "org.agatom.springatom.jpa.impl.SMetaDataRepository",
+                "org.agatom.springatom.jpa.impl.SMechanicRepository"
         };
         for (String name : names) {
-            Assert.assertNotNull(String.format("No cache for %s", name), this.cacheResolverHelper.getCachesForName(name).getDao());
+            Assert.assertNotNull(String.format("No cache for %s", name), this.cacheResolverHelper.getCachesForName(name)
+                    .getDao());
         }
     }
 }
