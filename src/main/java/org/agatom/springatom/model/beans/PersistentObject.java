@@ -17,94 +17,73 @@
 
 package org.agatom.springatom.model.beans;
 
-import com.google.common.base.Objects;
-import org.hibernate.annotations.GenericGenerator;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ComparisonChain;
+import com.google.common.primitives.Longs;
+import com.google.common.reflect.TypeToken;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.*;
-import java.lang.annotation.Annotation;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Comparator;
 
 /**
- * MappedSuperclass for entities, aggregates all shared properties
- * that can be found in spring.database
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
+@DynamicInsert
+@DynamicUpdate
 @MappedSuperclass
-abstract public class PersistentObject extends Persistent {
+abstract public class PersistentObject<PK extends Serializable>
+        extends AbstractPersistable<PK>
+        implements Comparable<PersistentObject<PK>> {
+    @Transient
+    private static final Comparator<Serializable> ID_COMPARATOR = new Comparator<Serializable>() {
+        private static final String COMPARED_KEYS_ARE_NOT_EQUAL_IN_TYPE_O1_S_O2_S = "Compared keys are not equal in type >> o1=%s != o2=%s";
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "increment", strategy = "hilo")
-    private Long id = null;
+        @Override
+        public int compare(final Serializable o1, final Serializable o2) {
+            Preconditions.checkArgument(o1 != null, "o1 key can not be null");
+            Preconditions.checkArgument(o2 != null, "o2 key can not be null");
+            assert o1 != null;
+            assert o2 != null;
+            final TypeToken<? extends Serializable> typeToken1 = TypeToken.of(o1.getClass());
+            final TypeToken<? extends Serializable> typeToken2 = TypeToken.of(o2.getClass());
+            if (this.areLongs(typeToken1, typeToken2)) {
+                return Longs.compare((long) o1, (long) o2);
+            } else if (this.areStrings(typeToken1, typeToken2)) {
+                return ((String) o1).compareTo((String) o2);
+            }
+            throw new IllegalArgumentException(String
+                    .format(COMPARED_KEYS_ARE_NOT_EQUAL_IN_TYPE_O1_S_O2_S, typeToken1.getType(), typeToken2
+                            .getType()));
+        }
+
+        private boolean areStrings(final TypeToken<? extends Serializable> typeToken1, final TypeToken<? extends Serializable> typeToken2) {
+            return typeToken1.isAssignableFrom(String.class) && typeToken2
+                    .isAssignableFrom(String.class);
+        }
+
+        private boolean areLongs(final TypeToken<? extends Serializable> typeToken1, final TypeToken<? extends Serializable> typeToken2) {
+            return typeToken1.isAssignableFrom(Long.class) && typeToken2
+                    .isAssignableFrom(Long.class);
+        }
+    };
 
     public PersistentObject() {
         super();
     }
 
     @Override
-    protected void resolveIdColumnName() {
-        for (Annotation annotation : this.getClass().getAnnotations()) {
-            if (annotation instanceof AttributeOverride) {
-                AttributeOverride attributeOverride = (AttributeOverride) annotation;
-                if (attributeOverride.name().equals("id")) {
-                    Column column = attributeOverride.column();
-                    this.idColumnName = column.name();
-                    break;
-                }
-            } else if (annotation instanceof AttributeOverrides) {
-                AttributeOverrides attributeOverrides = (AttributeOverrides) annotation;
-                for (AttributeOverride attributeOverride : attributeOverrides.value()) {
-                    if (attributeOverride.name().equals("id")) {
-                        Column column = attributeOverride.column();
-                        this.idColumnName = column.name();
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (id != null ? id.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof PersistentObject)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        PersistentObject that = (PersistentObject) o;
-
-        return !(id != null ? !id.equals(that.id) : that.id != null);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("id", id)
-                .toString();
-    }
-
-    @Override
-    public int compareTo(final Persistable object) {
-        return this.getId().compareTo(object.getId());
-    }
-
-    @Override
-    public final Long getId() {
-        return id;
+    public int compareTo(@NotNull final PersistentObject<PK> pObject) {
+        return ComparisonChain
+                .start()
+                .compare(this.getId(), pObject.getId(), ID_COMPARATOR)
+                .result();
     }
 }
