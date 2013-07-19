@@ -69,7 +69,8 @@ import java.util.List;
  *                               &lt;/complexType>
  *                             &lt;/element>
  *                           &lt;/sequence>
- *                           &lt;attribute name="dao" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *                           &lt;attribute name="impl" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
+ * />
  *                         &lt;/restriction>
  *                       &lt;/complexContent>
  *                     &lt;/complexType>
@@ -99,7 +100,7 @@ public class Caches {
      * Gets the value of the definition property.
      *
      * @return possible object is
-     *         {@link Definition }
+     * {@link Definition }
      */
     public Definition getDefinition() {
         return definition;

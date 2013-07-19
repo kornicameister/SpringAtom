@@ -71,7 +71,7 @@ import java.util.List;
  *                     &lt;/complexType>
  *                   &lt;/element>
  *                 &lt;/sequence>
- *                 &lt;attribute name="dao" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *                 &lt;attribute name="impl" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *               &lt;/restriction>
  *             &lt;/complexContent>
  *           &lt;/complexType>

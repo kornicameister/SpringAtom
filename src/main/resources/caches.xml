@@ -20,15 +20,15 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://www.example.org/SpringAtom schemas/caches.xsd">
     <sa:definition>
-        <sa:class dao="org.agatom.springatom.mvc.model.dao.SMetaDataDAO">
-            <sa:impl class="org.agatom.springatom.mvc.model.dao.impl.SMetaDataDAOImpl">
+        <sa:class dao="org.agatom.springatom.jpa.SMetaDataRepository">
+            <sa:impl class="org.agatom.springatom.jpa.impl.SMetaDataRepositoryImpl">
                 <sa:cache name="typedata" method="findAll"/>
                 <sa:cache name="typedata" method="findOne" key="#id"/>
                 <sa:cache name="typedata" method="findByType" key="#type"/>
             </sa:impl>
         </sa:class>
-        <sa:class dao="org.agatom.springatom.mvc.model.dao.SMechanicDAO">
-            <sa:impl class="org.agatom.springatom.mvc.model.dao.impl.SMechanicDAOImpl">
+        <sa:class dao="org.agatom.springatom.jpa.SMechanicRepository">
+            <sa:impl class="org.agatom.springatom.jpa.impl.SMechanicRepositoryImpl">
                 <sa:cache name="appointment" method="findByAppointment" key="#appointment.id"/>
             </sa:impl>
         </sa:class>

@@ -61,7 +61,7 @@ import javax.xml.bind.annotation.*;
  *           &lt;/complexType>
  *         &lt;/element>
  *       &lt;/sequence>
- *       &lt;attribute name="dao" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="impl" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -75,14 +75,14 @@ public class CachedClass {
 
     @XmlElement(required = true)
     protected CachedClassImpl impl;
-    @XmlAttribute(name = "dao", required = true)
-    protected String dao;
+    @XmlAttribute(name = "impl", required = true)
+    protected String          dao;
 
     /**
      * Gets the value of the impl property.
      *
      * @return possible object is
-     *         {@link CachedClassImpl }
+     * {@link CachedClassImpl }
      */
     public CachedClassImpl getImpl() {
         return impl;
@@ -100,10 +100,10 @@ public class CachedClass {
     }
 
     /**
-     * Gets the value of the dao property.
+     * Gets the value of the impl property.
      *
      * @return possible object is
-     *         {@link String }
+     * {@link String }
      */
     public
     @Nonnull
@@ -112,7 +112,7 @@ public class CachedClass {
     }
 
     /**
-     * Sets the value of the dao property.
+     * Sets the value of the impl property.
      *
      * @param value
      *         allowed object is
