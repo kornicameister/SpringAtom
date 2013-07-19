@@ -15,44 +15,46 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans;
+package org.agatom.springatom.model.beans.person.client;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import org.agatom.springatom.model.beans.person.SPerson;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
-@MappedSuperclass
-@DynamicInsert
-@DynamicUpdate
-abstract class Persistent implements Persistable {
-    @Transient
-    protected String idColumnName;
+@Entity(name = "SClient")
+@Table(name = "SClient")
+@PrimaryKeyJoinColumn(name = "idSClient")
+public class SClient extends SPerson<SPerson, Long> {
 
-    public Persistent() {
-        this.resolveIdColumnName();
+    @BatchSize(size = 10)
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "client",
+            cascade = {
+                    CascadeType.REMOVE
+            }
+    )
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<SClientProblemReport> problemReportSet = new HashSet<>();
+
+    public SClient() {
+        super();
     }
 
-    protected abstract void resolveIdColumnName();
-
-    @Override
-    public String getEntityName() {
-        Table annotation = this.getClass().getAnnotation(Table.class);
-        if (annotation == null) {
-            annotation = this.getClass().getSuperclass().getAnnotation(Table.class);
-        }
-        return annotation.name();
+    public Set<SClientProblemReport> getProblemReportSet() {
+        return problemReportSet;
     }
 
-    @Override
-    public String getIdColumnName() {
-        return this.idColumnName;
+    public void setProblemReportSet(final Set<SClientProblemReport> problemReportSet) {
+        this.problemReportSet = problemReportSet;
     }
 }

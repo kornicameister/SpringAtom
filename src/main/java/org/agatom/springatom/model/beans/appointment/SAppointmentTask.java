@@ -38,18 +38,16 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
-public class SAppointmentTask extends PersistentObject {
+public class SAppointmentTask extends PersistentObject<Long> {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment", updatable = false)
-    private SAppointment appointment;
-
+    private SAppointment         appointment;
     @NaturalId
     @ManyToOne(optional = false)
     @JoinColumn(name = "type", referencedColumnName = "idSMetaData", updatable = true)
     private SAppointmentTaskType type;
-
     @Column(name = "task", nullable = false, length = 444)
-    private String task;
+    private String               task;
 
     public SAppointment getAppointment() {
         return appointment;
@@ -76,10 +74,12 @@ public class SAppointmentTask extends PersistentObject {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        return result;
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("appointment", appointment)
+                .add("type", type)
+                .add("task", task)
+                .toString();
     }
 
     @Override
@@ -101,11 +101,9 @@ public class SAppointmentTask extends PersistentObject {
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("appointment", appointment)
-                .add("type", type)
-                .add("task", task)
-                .toString();
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        return result;
     }
 }

@@ -15,28 +15,19 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.mechanic;
+package org.agatom.springatom.model.beans.person.administrator;
 
-import org.agatom.springatom.model.beans.util.SPerson;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
+import org.agatom.springatom.model.beans.person.SPerson;
 
 import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SMechanic")
-@Table(name = "SMechanic")
-@PrimaryKeyJoinColumn(name = "idSMechanic")
-@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-public class SMechanic extends SPerson {
-    @Override
-    public String getIdColumnName() {
-        return "idSMechanic";
-    }
+@Entity(name = "SAdministrator")
+@Table(name = "SAdministrator")
+public class SAdministrator extends SPerson<SAdministrator, Long> {
 }

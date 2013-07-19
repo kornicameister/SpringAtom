@@ -15,9 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.user;
+package org.agatom.springatom.model.beans.person.user;
 
 import com.google.common.base.Objects;
+import org.agatom.springatom.model.beans.person.user.role.SRole;
 
 import javax.persistence.*;
 import java.io.Serializable;

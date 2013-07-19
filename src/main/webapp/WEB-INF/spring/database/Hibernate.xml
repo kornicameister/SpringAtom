@@ -16,22 +16,25 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:tx="http://www.springframework.org/schema/tx"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
- http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
- http://www.springframework.org/schema/tx
- http://www.springframework.org/schema/tx/spring-tx.xsd">
+  http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-
-    <bean id="sessionFactory"
-          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
-          lazy-init="true">
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="hibernateProperties">
+        <property name="packagesToScan" value="org.agatom.springatom.model.beans"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="MYSQL"/>
+                <property name="databasePlatform" value="${db.hibernate.dialect}"/>
+                <property name="generateDdl" value="${db.hibernate.generateDDL}"/>
+                <property name="showSql" value="${db.hibernate.show_sql}"/>
+            </bean>
+        </property>
+        <property name="jpaProperties">
             <props>
-                <prop key="hibernate.dialect">${db.hibernate.dialect}</prop>
                 <prop key="hibernate.order_inserts">${db.hibernate.order_inserts}</prop>
                 <prop key="hibernate.order_updates">${db.hibernate.order_updates}</prop>
                 <prop key="hibernate.connection.useUnicode">${db.hibernate.useUnicode}</prop>
@@ -59,13 +62,6 @@
                 </prop>
             </props>
         </property>
-        <property name="packagesToScan" value="org.agatom.springatom.model"/>
     </bean>
 
-    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager"
-          lazy-init="true">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-
-    <tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>

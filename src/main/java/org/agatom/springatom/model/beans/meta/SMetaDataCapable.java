@@ -15,32 +15,15 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.dao;
-
-import org.agatom.springatom.model.beans.util.SPerson;
-import org.agatom.springatom.model.beans.util.SPersonalInformation;
-import org.springframework.data.repository.NoRepositoryBean;
-
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+package org.agatom.springatom.model.beans.meta;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@NoRepositoryBean
-public interface SPersonDAO<T extends SPerson, ID extends Serializable>
-        extends DAORepository<T, ID> {
-    Iterable findByPersonalInformation(@NotNull final SPersonalInformation information);
+public interface SMetaDataCapable {
+    SMetaData getMetaInformation();
 
-    Iterable findByFirstName(@NotNull final String firstName);
-
-    Iterable findByLastName(@NotNull final String lastName);
-
-    T findByEmail(@NotNull final String email);
-
-    Iterable findByStatus(@NotNull final Boolean enabled);
-
-    T setDisabled(@NotNull final SPerson person, @NotNull final Boolean enable);
+    void setMetaInformation(final SMetaData metaData);
 }

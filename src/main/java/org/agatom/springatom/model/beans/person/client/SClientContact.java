@@ -15,12 +15,11 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.client;
+package org.agatom.springatom.model.beans.person.client;
 
 import org.agatom.springatom.model.beans.PersistentObject;
-import org.agatom.springatom.model.beans.appointment.SAppointment;
-import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
-import org.agatom.springatom.model.beans.util.SIssueReporter;
+import org.agatom.springatom.model.beans.meta.SMetaData;
+import org.agatom.springatom.model.beans.meta.SMetaDataCapable;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -31,46 +30,31 @@ import javax.persistence.*;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SClientProblemReport")
-@Table(name = "SClientProblemReport")
+@Entity(name = "SClientContact")
+@Table(name = "SClientContact")
 @AttributeOverride(
         name = "id",
         column = @Column(
-                name = "idSClientProblemReport",
+                name = "idSClientContact",
                 updatable = false,
                 nullable = false)
 )
-public class SClientProblemReport extends PersistentObject {
+public class SClientContact extends PersistentObject<Long> implements SMetaDataCapable {
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "client",
             referencedColumnName = "idSClient",
             updatable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private SClient client;
-
+    private SClient   client;
     @ManyToOne(optional = false,
-            fetch = FetchType.EAGER,
-            cascade = {
-                    CascadeType.REFRESH
-            })
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.DETACH
+    )
     @JoinColumn(name = "type", referencedColumnName = "idSMetaData")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private SClientProblemReportType type;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "appointment",
-            referencedColumnName = "idSAppointment",
-            updatable = false)
-    private SAppointment appointment;
-
-    @Column(name = "problem",
-            nullable = false,
-            length = 444)
-    private String problem;
-
-    @Embedded
-    private SIssueReporter reporter;
+    private SMetaData type;
+    @Column(name = "contact", length = 60)
+    private String    contact;
 
     public SClient getClient() {
         return client;
@@ -80,47 +64,22 @@ public class SClientProblemReport extends PersistentObject {
         this.client = client;
     }
 
-    public SClientProblemReportType getType() {
-        return type;
-    }
-
-    public void setType(final SClientProblemReportType type) {
-        this.type = type;
-    }
-
-    public SAppointment getAppointment() {
-        return appointment;
-    }
-
-    public void setAppointment(final SAppointment appointment) {
-        this.appointment = appointment;
-    }
-
-    public String getProblem() {
-        return problem;
-    }
-
-    public void setProblem(final String problem) {
-        this.problem = problem;
-    }
-
-    public SIssueReporter getReporter() {
-        return reporter;
-    }
-
-    public void setReporter(final SIssueReporter reporter) {
-        this.reporter = reporter;
+    @Override
+    public SMetaData getMetaInformation() {
+        return this.type;
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + client.hashCode();
-        result = 31 * result + type.hashCode();
-        result = 31 * result + (appointment != null ? appointment.hashCode() : 0);
-        result = 31 * result + problem.hashCode();
-        result = 31 * result + (reporter != null ? reporter.hashCode() : 0);
-        return result;
+    public void setMetaInformation(final SMetaData metaData) {
+        this.type = metaData;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(final String contact) {
+        this.contact = contact;
     }
 
     @Override
@@ -128,18 +87,26 @@ public class SClientProblemReport extends PersistentObject {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SClientProblemReport)) {
+        if (!(o instanceof SClientContact)) {
             return false;
         }
         if (!super.equals(o)) {
             return false;
         }
 
-        SClientProblemReport that = (SClientProblemReport) o;
+        SClientContact that = (SClientContact) o;
 
-        return !(appointment != null ? !appointment.equals(that.appointment) : that.appointment != null) &&
-                client.equals(that.client) && problem.equals(that.problem) &&
-                !(reporter != null ? !reporter.equals(that.reporter) : that.reporter != null) &&
+        return client.equals(that.client) &&
+                contact.equals(that.contact) &&
                 type.equals(that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + client.hashCode();
+        result = 31 * result + type.hashCode();
+        result = 31 * result + contact.hashCode();
+        return result;
     }
 }

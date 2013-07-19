@@ -18,7 +18,7 @@
 package org.agatom.springatom.model.beans.util;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.model.beans.mechanic.SMechanic;
+import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
@@ -43,7 +43,7 @@ public class SIssueReporter {
 
     @Type(type = "timestamp")
     @Column(name = "assigned")
-    private Date      assigned;
+    private Date assigned;
 
     public SIssueReporter() {
         this.assigned = new Date();

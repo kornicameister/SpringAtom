@@ -19,6 +19,7 @@ package org.agatom.springatom.model.beans.meta;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 /**
  * @author kornicameister
@@ -28,18 +29,6 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue(value = SContactType.SHORT_NAME)
 public class SContactType extends SMetaData {
+    @Transient
     protected static final String SHORT_NAME = "SCT";
-
-    public SContactType() {
-        super();
-    }
-
-    public SContactType(final String type) {
-        super(type);
-    }
-
-    @Override
-    public String getEntityName() {
-        return this.getClass().getSimpleName();
-    }
 }

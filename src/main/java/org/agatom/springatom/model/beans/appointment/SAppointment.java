@@ -41,27 +41,23 @@ import java.util.Set;
                 updatable = false,
                 nullable = false)
 )
-public class SAppointment extends PersistentObject {
+public class SAppointment extends PersistentObject<Long> {
 
     @Type(type = "timestamp")
     @Column(name = "startDate")
-    private Date startDate;
-
+    private Date                  startDate;
     @Type(type = "timestamp")
     @Column(nullable = false,
             name = "endDate")
-    private Date endDate;
-
+    private Date                  endDate;
     @Type(type = "time")
     @Column(nullable = false,
             name = "startTime")
-    private Time startTime;
-
+    private Time                  startTime;
     @Type(type = "time")
     @Column(nullable = false,
             name = "endTime")
-    private Time endTime;
-
+    private Time                  endTime;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "appointment")
     private Set<SAppointmentTask> tasks;
 
@@ -117,13 +113,13 @@ public class SAppointment extends PersistentObject {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
-        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
-        result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
-        result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
-        return result;
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("startDate", startDate)
+                .add("endDate", endDate)
+                .add("startTime", startTime)
+                .add("endTime", endTime)
+                .toString();
     }
 
     @Override
@@ -147,12 +143,12 @@ public class SAppointment extends PersistentObject {
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("startDate", startDate)
-                .add("endDate", endDate)
-                .add("startTime", startTime)
-                .add("endTime", endTime)
-                .toString();
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
+        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
+        result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
+        result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
+        return result;
     }
 }

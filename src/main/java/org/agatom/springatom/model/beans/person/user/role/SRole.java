@@ -15,34 +15,72 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo;
+package org.agatom.springatom.model.beans.person.user.role;
 
-import org.agatom.springatom.model.beans.car.SCar;
-import org.agatom.springatom.model.beans.car.SCarMaster;
-import org.agatom.springatom.model.beans.links.SCarClientLink;
+import com.google.common.base.Objects;
+import org.agatom.springatom.model.beans.PersistentObject;
+import org.hibernate.annotations.NaturalId;
 
-import javax.validation.constraints.NotNull;
-import java.util.Set;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
- * @author kornicameister
+ * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
+@Entity(name = "SRole")
+@Table(name = "SRole")
+@AttributeOverride(
+        name = "id",
+        column = @Column(
+                name = "idSRole",
+                updatable = false,
+                nullable = false)
+)
+public class SRole extends PersistentObject<Long> {
+    @NaturalId
+    @Column(name = "role", updatable = false, unique = true, length = 50, nullable = false)
+    private String role;
 
-public interface SCarBO extends GenericBO<SCar, Long> {
-    SCarMaster findByMaster(@NotNull final String brand,
-                            @NotNull final String model);
+    public String getRole() {
+        return role;
+    }
 
-    SCarMaster findByMaster(@NotNull final Long carId);
+    public void setRole(final String role) {
+        this.role = role;
+    }
 
-    SCar saveWithMaster(@NotNull final String brand,
-                        @NotNull final String model,
-                        @NotNull final String licencePlate,
-                        @NotNull final String vinNumber);
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("role", role)
+                .toString();
+    }
 
-    SCar changeOwner(@NotNull final Long idCar,
-                     @NotNull final Long idClient);
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SRole)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
 
-    Set<SCarClientLink> findOwnershipHistory(@NotNull final Long idCar);
+        SRole sRole = (SRole) o;
+
+        return role.equals(sRole.role);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + role.hashCode();
+        return result;
+    }
 }

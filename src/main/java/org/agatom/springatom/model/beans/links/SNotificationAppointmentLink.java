@@ -33,8 +33,7 @@ public class SNotificationAppointmentLink extends SNotificationLink {
 
     @ManyToOne
     @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment")
-    private SAppointment appointment;
-
+    private SAppointment           appointment;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "workerLink", referencedColumnName = "idSAppointmentWorkerLink", updatable = false)
     private SAppointmentWorkerLink workerLink;
@@ -56,11 +55,11 @@ public class SNotificationAppointmentLink extends SNotificationLink {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (appointment != null ? appointment.hashCode() : 0);
-        result = 31 * result + (workerLink != null ? workerLink.hashCode() : 0);
-        return result;
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("appointment", appointment)
+                .add("workerLink", workerLink)
+                .toString();
     }
 
     @Override
@@ -82,10 +81,10 @@ public class SNotificationAppointmentLink extends SNotificationLink {
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("appointment", appointment)
-                .add("workerLink", workerLink)
-                .toString();
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (appointment != null ? appointment.hashCode() : 0);
+        result = 31 * result + (workerLink != null ? workerLink.hashCode() : 0);
+        return result;
     }
 }

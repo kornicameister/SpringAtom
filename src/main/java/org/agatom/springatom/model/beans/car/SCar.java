@@ -19,6 +19,7 @@ package org.agatom.springatom.model.beans.car;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentVersionedObject;
+import org.agatom.springatom.model.beans.person.SPerson;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.envers.Audited;
 
@@ -38,25 +39,23 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
-public class SCar extends PersistentVersionedObject {
+public class SCar extends PersistentVersionedObject<SPerson, Long> {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "carMaster", referencedColumnName = "idSCarMaster", updatable = true)
     private SCarMaster carMaster;
-
     @Audited
     @NaturalId(mutable = true)
     @Column(nullable = false,
             length = 45,
             name = "licencePlate")
-    private String licencePlate;
-
+    private String     licencePlate;
     @Audited
     @NaturalId(mutable = true)
     @Column(nullable = false,
             length = 45,
             name = "vinNumber")
-    private String vinNumber;
+    private String     vinNumber;
 
     public SCarMaster getCarMaster() {
         return carMaster;
@@ -83,11 +82,12 @@ public class SCar extends PersistentVersionedObject {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (licencePlate != null ? licencePlate.hashCode() : 0);
-        result = 31 * result + (vinNumber != null ? vinNumber.hashCode() : 0);
-        return result;
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("carMaster", carMaster)
+                .add("registrationNumber", licencePlate)
+                .add("vinNumber", vinNumber)
+                .toString();
     }
 
     @Override
@@ -109,11 +109,10 @@ public class SCar extends PersistentVersionedObject {
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("carMaster", carMaster)
-                .add("registrationNumber", licencePlate)
-                .add("vinNumber", vinNumber)
-                .toString();
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (licencePlate != null ? licencePlate.hashCode() : 0);
+        result = 31 * result + (vinNumber != null ? vinNumber.hashCode() : 0);
+        return result;
     }
 }

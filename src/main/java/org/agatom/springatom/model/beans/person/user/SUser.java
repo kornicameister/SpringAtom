@@ -15,11 +15,12 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.user;
+package org.agatom.springatom.model.beans.person.user;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentVersionedObject;
-import org.agatom.springatom.model.beans.util.SPerson;
+import org.agatom.springatom.model.beans.person.SPerson;
+import org.agatom.springatom.model.beans.person.user.role.SRole;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.envers.Audited;
 
@@ -43,19 +44,16 @@ import java.util.Set;
                 updatable = false,
                 nullable = false)
 )
-public class SUser extends PersistentVersionedObject {
+public class SUser extends PersistentVersionedObject<SPerson, Long> {
     @NaturalId
     @Column(name = "login", length = 45, unique = true, nullable = false)
-    private String login;
-
+    private String           login;
     @Audited
     @Column(name = "secPass", length = 66, nullable = false)
-    private String password;
-
+    private String           password;
     @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "person", referencedColumnName = "idSPerson")
-    private SPerson person;
-
+    private SPerson          person;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.user")
     private Set<SUserToRole> roles;
 
@@ -130,10 +128,11 @@ public class SUser extends PersistentVersionedObject {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + login.hashCode();
-        return result;
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("login", login)
+                .add("password", password)
+                .toString();
     }
 
     @Override
@@ -154,10 +153,9 @@ public class SUser extends PersistentVersionedObject {
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("login", login)
-                .add("password", password)
-                .toString();
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + login.hashCode();
+        return result;
     }
 }

@@ -15,19 +15,34 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans;
+package org.agatom.springatom.mvc.model.service;
 
-import java.io.Serializable;
+import org.agatom.springatom.model.beans.car.SCar;
+import org.agatom.springatom.model.beans.car.SCarMaster;
+import org.agatom.springatom.model.beans.links.SCarClientLink;
+
+import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface Persistable extends Serializable, Comparable<Persistable> {
-    Long getId();
 
-    String getEntityName();
+public interface SCarService extends GenericService<SCar, Long> {
+    SCarMaster findByMaster(@NotNull final String brand,
+                            @NotNull final String model);
 
-    String getIdColumnName();
+    SCarMaster findByMaster(@NotNull final Long carId);
+
+    SCar saveWithMaster(@NotNull final String brand,
+                        @NotNull final String model,
+                        @NotNull final String licencePlate,
+                        @NotNull final String vinNumber);
+
+    SCar changeOwner(@NotNull final Long idCar,
+                     @NotNull final Long idClient);
+
+    Set<SCarClientLink> findOwnershipHistory(@NotNull final Long idCar);
 }

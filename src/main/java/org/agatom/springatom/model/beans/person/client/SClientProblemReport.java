@@ -15,14 +15,16 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.links;
+package org.agatom.springatom.model.beans.person.client;
 
-import com.google.common.base.Objects;
-import org.agatom.springatom.model.beans.PersistentVersionedObject;
+import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
-import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
+import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
+import org.agatom.springatom.model.beans.meta.SMetaData;
+import org.agatom.springatom.model.beans.meta.SMetaDataCapable;
 import org.agatom.springatom.model.beans.util.SIssueReporter;
-import org.hibernate.envers.Audited;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -31,26 +33,44 @@ import javax.persistence.*;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SAppointmentWorkerLink")
-@Table(name = "SAppointmentWorkerLink")
+@Entity(name = "SClientProblemReport")
+@Table(name = "SClientProblemReport")
 @AttributeOverride(
         name = "id",
         column = @Column(
-                name = "idSAppointmentWorkerLink",
+                name = "idSClientProblemReport",
                 updatable = false,
                 nullable = false)
 )
-public class SAppointmentWorkerLink extends PersistentVersionedObject<SMechanic, Long> {
+public class SClientProblemReport extends PersistentObject<Long> implements SMetaDataCapable {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment", updatable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "client", referencedColumnName = "idSClient")
+    private SClient        client;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.DETACH, targetEntity = SClientProblemReportType.class)
+    @JoinColumn(name = "type", referencedColumnName = "idSMetaData")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private SMetaData      type;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "appointment",
+            referencedColumnName = "idSAppointment",
+            updatable = false)
     private SAppointment   appointment;
-    @Audited
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "assignee", referencedColumnName = "idSMechanic")
-    private SMechanic      assignee;
+    @Column(name = "problem",
+            nullable = false,
+            length = 444)
+    private String         problem;
     @Embedded
     private SIssueReporter reporter;
+
+    public SClient getClient() {
+        return client;
+    }
+
+    public void setClient(final SClient client) {
+        this.client = client;
+    }
 
     public SAppointment getAppointment() {
         return appointment;
@@ -60,12 +80,12 @@ public class SAppointmentWorkerLink extends PersistentVersionedObject<SMechanic,
         this.appointment = appointment;
     }
 
-    public SMechanic getAssignee() {
-        return assignee;
+    public String getProblem() {
+        return problem;
     }
 
-    public void setAssignee(final SMechanic assignee) {
-        this.assignee = assignee;
+    public void setProblem(final String problem) {
+        this.problem = problem;
     }
 
     public SIssueReporter getReporter() {
@@ -77,39 +97,43 @@ public class SAppointmentWorkerLink extends PersistentVersionedObject<SMechanic,
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("appointment", appointment)
-                .add("assignee", assignee)
-                .add("reporter", reporter)
-                .toString();
-    }
-
-    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SAppointmentWorkerLink)) {
+        if (!(o instanceof SClientProblemReport)) {
             return false;
         }
         if (!super.equals(o)) {
             return false;
         }
 
-        SAppointmentWorkerLink that = (SAppointmentWorkerLink) o;
+        SClientProblemReport that = (SClientProblemReport) o;
 
         return !(appointment != null ? !appointment.equals(that.appointment) : that.appointment != null) &&
-                !(assignee != null ? !assignee.equals(that.assignee) : that.assignee != null) &&
-                !(reporter != null ? !reporter.equals(that.reporter) : that.reporter != null);
+                client.equals(that.client) && problem.equals(that.problem) &&
+                !(reporter != null ? !reporter.equals(that.reporter) : that.reporter != null) &&
+                type.equals(that.type);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
+        result = 31 * result + client.hashCode();
+        result = 31 * result + type.hashCode();
         result = 31 * result + (appointment != null ? appointment.hashCode() : 0);
-        result = 31 * result + (assignee != null ? assignee.hashCode() : 0);
+        result = 31 * result + problem.hashCode();
         result = 31 * result + (reporter != null ? reporter.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public SMetaData getMetaInformation() {
+        return this.type;
+    }
+
+    @Override
+    public void setMetaInformation(final SMetaData metaData) {
+        this.type = metaData;
     }
 }

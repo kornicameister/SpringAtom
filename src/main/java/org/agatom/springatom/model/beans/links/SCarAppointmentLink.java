@@ -38,12 +38,11 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
-public class SCarAppointmentLink extends PersistentObject {
+public class SCarAppointmentLink extends PersistentObject<Long> {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "car", referencedColumnName = "idScar")
-    private SCar car;
-
+    private SCar         car;
     @ManyToOne(optional = false)
     @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment")
     private SAppointment appointment;
@@ -65,12 +64,12 @@ public class SCarAppointmentLink extends PersistentObject {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (car != null ? car.hashCode() : 0);
-        result = 31 * result + (car != null ? car.hashCode() : 0);
-        result = 31 * result + (appointment != null ? appointment.hashCode() : 0);
-        return result;
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("car", car)
+                .add("carRevision", car)
+                .add("appointment", appointment)
+                .toString();
     }
 
     @Override
@@ -93,11 +92,11 @@ public class SCarAppointmentLink extends PersistentObject {
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("car", car)
-                .add("carRevision", car)
-                .add("appointment", appointment)
-                .toString();
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (car != null ? car.hashCode() : 0);
+        result = 31 * result + (car != null ? car.hashCode() : 0);
+        result = 31 * result + (appointment != null ? appointment.hashCode() : 0);
+        return result;
     }
 }

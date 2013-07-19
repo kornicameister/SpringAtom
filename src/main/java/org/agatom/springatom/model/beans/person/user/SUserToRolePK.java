@@ -15,12 +15,15 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.util;
+package org.agatom.springatom.model.beans.person.user;
 
 import com.google.common.base.Objects;
+import org.agatom.springatom.model.beans.person.user.role.SRole;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.io.Serializable;
 
 /**
  * @author kornicamaister
@@ -28,33 +31,44 @@ import javax.persistence.Embeddable;
  * @since 0.0.1
  */
 @Embeddable
-public class SPersonalInformation {
-    @Column(name = "fName", length = 45, nullable = false)
-    private String firstName;
+public class SUserToRolePK implements Serializable {
+    @ManyToOne
+    @JoinColumn(name = "user", referencedColumnName = "idSUser")
+    private SUser user;
 
-    @Column(name = "lName", length = 45, nullable = false)
-    private String lastName;
+    @ManyToOne
+    @JoinColumn(name = "role", referencedColumnName = "idSRole")
+    private SRole role;
 
-    public String getFirstName() {
-        return firstName;
+    public SUserToRolePK() {
+        super();
     }
 
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
+    public SUserToRolePK(final SUser user, final SRole role) {
+        this.user = user;
+        this.role = role;
     }
 
-    public String getLastName() {
-        return lastName;
+    public SUser getUser() {
+        return user;
     }
 
-    public void setLastName(final String lastName) {
-        this.lastName = lastName;
+    public void setUser(final SUser user) {
+        this.user = user;
+    }
+
+    public SRole getRole() {
+        return role;
+    }
+
+    public void setRole(final SRole role) {
+        this.role = role;
     }
 
     @Override
     public int hashCode() {
-        int result = firstName.hashCode();
-        result = 31 * result + lastName.hashCode();
+        int result = user.hashCode();
+        result = 31 * result + role.hashCode();
         return result;
     }
 
@@ -63,20 +77,21 @@ public class SPersonalInformation {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SPersonalInformation)) {
+        if (!(o instanceof SUserToRolePK)) {
             return false;
         }
 
-        SPersonalInformation that = (SPersonalInformation) o;
+        SUserToRolePK that = (SUserToRolePK) o;
 
-        return firstName.equals(that.firstName) && lastName.equals(that.lastName);
+        return role.equals(that.role) &&
+                user.equals(that.user);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("firstName", firstName)
-                .add("lastName", lastName)
+                .add("person", user)
+                .add("role", role)
                 .toString();
     }
 }

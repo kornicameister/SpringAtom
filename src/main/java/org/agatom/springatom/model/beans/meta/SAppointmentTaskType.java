@@ -19,6 +19,7 @@ package org.agatom.springatom.model.beans.meta;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 /**
  * @author kornicameister
@@ -28,18 +29,6 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue(value = SAppointmentTaskType.SHORT_NAME)
 public class SAppointmentTaskType extends SMetaData {
+    @Transient
     protected static final String SHORT_NAME = "SAT";
-
-    public SAppointmentTaskType() {
-        super();
-    }
-
-    public SAppointmentTaskType(final String type) {
-        super(type);
-    }
-
-    @Override
-    public String getEntityName() {
-        return this.getClass().getSimpleName();
-    }
 }

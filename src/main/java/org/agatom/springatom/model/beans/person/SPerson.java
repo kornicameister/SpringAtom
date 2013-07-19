@@ -15,13 +15,17 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.car;
+package org.agatom.springatom.model.beans.person;
 
 import com.google.common.base.Objects;
+import org.agatom.springatom.model.beans.PersistentVersionedObject;
+import org.agatom.springatom.model.beans.person.user.embeddable.SPersonalInformation;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
+import org.hibernate.validator.constraints.Email;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -29,76 +33,65 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Embeddable
-public class SCarMasterManufacturingData implements Serializable {
 
+@Entity(name = "SPerson")
+@Table(name = "SPerson", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+})
+@AttributeOverride(
+        name = "id",
+        column = @Column(
+                name = "idSPerson",
+                updatable = false,
+                nullable = false
+        )
+)
+@Inheritance(strategy = InheritanceType.JOINED)
+abstract public class SPerson<U, PK extends Serializable>
+        extends PersistentVersionedObject<U, PK> {
+
+    @Embedded
+    private SPersonalInformation information;
+    @Email
+    @Audited
     @NaturalId
-    @Column(nullable = false,
-            length = 45,
-            updatable = true,
-            insertable = true,
-            name = "brand")
-    private String brand;
+    @Column(name = "email", length = 45, nullable = false, unique = true)
+    private String               email;
+    @Audited
+    @Type(type = "boolean")
+    @Column(name = "disabled")
+    private Boolean disabled = Boolean.FALSE;
 
-    @Column(nullable = false,
-            length = 45,
-            updatable = true,
-            insertable = true,
-            name = "model")
-    private String model;
-
-    public SCarMasterManufacturingData() {
-        super();
+    public SPersonalInformation getInformation() {
+        return information;
     }
 
-    public SCarMasterManufacturingData(final String brand, final String model) {
-        this.brand = brand;
-        this.model = model;
+    public void setInformation(final SPersonalInformation information) {
+        this.information = information;
     }
 
-    public String getBrand() {
-        return brand;
+    public String getEmail() {
+        return email;
     }
 
-    public void setBrand(final String brand) {
-        this.brand = brand;
+    public void setEmail(final String email) {
+        this.email = email;
     }
 
-    public String getModel() {
-        return model;
+    public Boolean getDisabled() {
+        return disabled;
     }
 
-    public void setModel(final String model) {
-        this.model = model;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = brand != null ? brand.hashCode() : 0;
-        result = 31 * result + (model != null ? model.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SCarMasterManufacturingData)) {
-            return false;
-        }
-
-        SCarMasterManufacturingData that = (SCarMasterManufacturingData) o;
-
-        return !(brand != null ? !brand.equals(that.brand) : that.brand != null)
-                && !(model != null ? !model.equals(that.model) : that.model != null);
+    public void setDisabled(final Boolean disabled) {
+        this.disabled = disabled;
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("brand", brand)
-                .add("model", model)
+                .add("personal", information)
+                .add("email", email)
+                .add("disabled", disabled)
                 .toString();
     }
 }

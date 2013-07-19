@@ -15,52 +15,68 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.client;
+package org.agatom.springatom.model.beans.person.user.embeddable;
 
-import org.agatom.springatom.model.beans.util.SPerson;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import com.google.common.base.Objects;
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SClient")
-@Table(name = "SClient")
-@PrimaryKeyJoinColumn(name = "idSClient")
-public class SClient extends SPerson {
+@Embeddable
+public class SPersonalInformation implements Serializable {
+    @Column(name = "fName", length = 45, nullable = false)
+    private String firstName;
+    @Column(name = "lName", length = 45, nullable = false)
+    private String lastName;
 
-    @BatchSize(size = 10)
-    @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "client",
-            cascade = {
-                    CascadeType.REMOVE,
-                    CascadeType.PERSIST
-            }
-    )
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<SClientProblemReport> problemReportSet = new HashSet<>();
+    public String getFirstName() {
+        return firstName;
+    }
 
-    public SClient() {
-        super();
+    public void setFirstName(final String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(final String lastName) {
+        this.lastName = lastName;
     }
 
     @Override
-    public String getIdColumnName() {
-        return "idSClient";
+    public int hashCode() {
+        int result = firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        return result;
     }
 
-    public Set<SClientProblemReport> getProblemReportSet() {
-        return problemReportSet;
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SPersonalInformation)) {
+            return false;
+        }
+
+        SPersonalInformation that = (SPersonalInformation) o;
+
+        return firstName.equals(that.firstName) && lastName.equals(that.lastName);
     }
 
-    public void setProblemReportSet(final Set<SClientProblemReport> problemReportSet) {
-        this.problemReportSet = problemReportSet;
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("firstName", firstName)
+                .add("lastName", lastName)
+                .toString();
     }
 }

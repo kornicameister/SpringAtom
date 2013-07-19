@@ -18,99 +18,52 @@
 package org.agatom.springatom.model.beans;
 
 import org.agatom.springatom.model.listeners.VersionedObjectListener;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.RevisionEntity;
-import org.hibernate.envers.RevisionNumber;
 import org.hibernate.envers.RevisionTimestamp;
+import org.joda.time.DateTime;
+import org.springframework.data.jpa.domain.AbstractAuditable;
 
 import javax.persistence.*;
-import java.lang.annotation.Annotation;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 @MappedSuperclass
 @RevisionEntity(VersionedObjectListener.class)
-abstract public class PersistentVersionedObject extends Persistent {
-
-    @Id
-    @RevisionNumber
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "increment", strategy = "hilo")
-    private Long id = null;
-
+abstract public class PersistentVersionedObject<U, PK extends Serializable>
+        extends AbstractAuditable<U, PK> {
     @RevisionTimestamp
     @Type(type = "timestamp")
     private Date revisionTimeStamp;
-
-    @Column(name = "updatedBy")
-    private String updatedBy;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updatedOn")
-    private Date updatedOn;
-
     @Version
     @GeneratedValue
     private Long version = 0l;
 
     public PersistentVersionedObject() {
         super();
-        this.updatedOn = new Date();
     }
 
-    public Date getUpdatedOn() {
-        return updatedOn;
+    public Date getRevisionTimeStamp() {
+        return revisionTimeStamp;
     }
 
-    Long getVersion() {
+    public Long getVersion() {
         return version;
     }
 
-    public String getUpdatedBy() {
-        return updatedBy;
+    @PrePersist
+    public void preCreateHandler() {
+        this.setCreatedDate(DateTime.now());
+        this.preUpdateHandler();
     }
 
-    public void setUpdatedBy(final String updateBy) {
-        this.updatedBy = updateBy;
+    @PreUpdate
+    public void preUpdateHandler() {
+        this.setLastModifiedDate(DateTime.now());
     }
-
-    @Override
-    protected void resolveIdColumnName() {
-        for (Annotation annotation : this.getClass().getAnnotations()) {
-            if (annotation instanceof AttributeOverride) {
-                AttributeOverride attributeOverride = (AttributeOverride) annotation;
-                if (attributeOverride.name().equals("pk.id")) {
-                    Column column = attributeOverride.column();
-                    this.idColumnName = column.name();
-                    break;
-                }
-            } else if (annotation instanceof AttributeOverrides) {
-                AttributeOverrides attributeOverrides = (AttributeOverrides) annotation;
-                for (AttributeOverride attributeOverride : attributeOverrides.value()) {
-                    if (attributeOverride.name().equals("pk.id")) {
-                        Column column = attributeOverride.column();
-                        this.idColumnName = column.name();
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public int compareTo(final Persistable o) {
-        return this.getId().compareTo(o.getId());
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-
 }

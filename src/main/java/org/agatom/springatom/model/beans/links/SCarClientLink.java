@@ -20,7 +20,7 @@ package org.agatom.springatom.model.beans.links;
 import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.car.SCar;
-import org.agatom.springatom.model.beans.client.SClient;
+import org.agatom.springatom.model.beans.person.client.SClient;
 
 import javax.persistence.*;
 
@@ -38,15 +38,14 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
-public class SCarClientLink extends PersistentObject {
+public class SCarClientLink extends PersistentObject<Long> {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "client", referencedColumnName = "idSClient", updatable = false)
     private SClient client;
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "car", referencedColumnName = "idScar")
-    private SCar car;
+    private SCar    car;
 
     public SClient getClient() {
         return client;
@@ -65,11 +64,11 @@ public class SCarClientLink extends PersistentObject {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + client.hashCode();
-        result = 31 * result + car.hashCode();
-        return result;
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("client", client)
+                .add("car", car)
+                .toString();
     }
 
     @Override
@@ -91,10 +90,10 @@ public class SCarClientLink extends PersistentObject {
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("client", client)
-                .add("car", car)
-                .toString();
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + client.hashCode();
+        result = 31 * result + car.hashCode();
+        return result;
     }
 }

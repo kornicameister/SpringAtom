@@ -15,13 +15,13 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.user;
+package org.agatom.springatom.model.beans.car.embeddable;
 
 import com.google.common.base.Objects;
+import org.hibernate.annotations.NaturalId;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 /**
@@ -30,44 +30,52 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 @Embeddable
-public class SUserToRolePK implements Serializable {
-    @ManyToOne
-    @JoinColumn(name = "user", referencedColumnName = "idSUser")
-    private SUser user;
+public class SCarMasterManufacturingData implements Serializable {
 
-    @ManyToOne
-    @JoinColumn(name = "role", referencedColumnName = "idSRole")
-    private SRole role;
+    @NaturalId
+    @Column(nullable = false,
+            length = 45,
+            updatable = true,
+            insertable = true,
+            name = "brand")
+    private String brand;
 
-    public SUserToRolePK() {
+    @Column(nullable = false,
+            length = 45,
+            updatable = true,
+            insertable = true,
+            name = "model")
+    private String model;
+
+    public SCarMasterManufacturingData() {
         super();
     }
 
-    public SUserToRolePK(final SUser user, final SRole role) {
-        this.user = user;
-        this.role = role;
+    public SCarMasterManufacturingData(final String brand, final String model) {
+        this.brand = brand;
+        this.model = model;
     }
 
-    public SUser getUser() {
-        return user;
+    public String getBrand() {
+        return brand;
     }
 
-    public void setUser(final SUser user) {
-        this.user = user;
+    public void setBrand(final String brand) {
+        this.brand = brand;
     }
 
-    public SRole getRole() {
-        return role;
+    public String getModel() {
+        return model;
     }
 
-    public void setRole(final SRole role) {
-        this.role = role;
+    public void setModel(final String model) {
+        this.model = model;
     }
 
     @Override
     public int hashCode() {
-        int result = user.hashCode();
-        result = 31 * result + role.hashCode();
+        int result = brand != null ? brand.hashCode() : 0;
+        result = 31 * result + (model != null ? model.hashCode() : 0);
         return result;
     }
 
@@ -76,21 +84,21 @@ public class SUserToRolePK implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SUserToRolePK)) {
+        if (!(o instanceof SCarMasterManufacturingData)) {
             return false;
         }
 
-        SUserToRolePK that = (SUserToRolePK) o;
+        SCarMasterManufacturingData that = (SCarMasterManufacturingData) o;
 
-        return role.equals(that.role) &&
-                user.equals(that.user);
+        return !(brand != null ? !brand.equals(that.brand) : that.brand != null)
+                && !(model != null ? !model.equals(that.model) : that.model != null);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("user", user)
-                .add("role", role)
+                .add("brand", brand)
+                .add("model", model)
                 .toString();
     }
 }

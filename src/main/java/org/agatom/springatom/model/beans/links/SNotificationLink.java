@@ -19,8 +19,8 @@ package org.agatom.springatom.model.beans.links;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentObject;
-import org.agatom.springatom.model.beans.client.SClient;
 import org.agatom.springatom.model.beans.notification.SNotification;
+import org.agatom.springatom.model.beans.person.client.SClient;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -44,19 +44,17 @@ import javax.persistence.*;
         name = "type",
         discriminatorType = DiscriminatorType.STRING
 )
-public class SNotificationLink extends PersistentObject {
+public class SNotificationLink extends PersistentObject<Long> {
 
     @OneToOne(optional = false)
     @JoinColumn(name = "notification", referencedColumnName = "idSNotification", updatable = false)
     private SNotification notification;
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "client", referencedColumnName = "idSClient", updatable = false)
-    private SClient client;
-
+    private SClient       client;
     @Type(type = "boolean")
     @Column(name = "checked")
-    private Boolean checked;
+    private Boolean       checked;
 
     public Boolean isChecked() {
         return this.checked;
@@ -83,12 +81,12 @@ public class SNotificationLink extends PersistentObject {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + notification.hashCode();
-        result = 31 * result + client.hashCode();
-        result = 31 * result + checked.hashCode();
-        return result;
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("notification", notification)
+                .add("client", client)
+                .add("checked", checked)
+                .toString();
     }
 
     @Override
@@ -111,11 +109,11 @@ public class SNotificationLink extends PersistentObject {
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("notification", notification)
-                .add("client", client)
-                .add("checked", checked)
-                .toString();
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + notification.hashCode();
+        result = 31 * result + client.hashCode();
+        result = 31 * result + checked.hashCode();
+        return result;
     }
 }

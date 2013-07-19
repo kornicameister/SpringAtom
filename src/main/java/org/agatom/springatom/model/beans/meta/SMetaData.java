@@ -41,7 +41,7 @@ import javax.persistence.*;
         name = "meta",
         discriminatorType = DiscriminatorType.STRING
 )
-abstract public class SMetaData extends PersistentObject {
+abstract public class SMetaData extends PersistentObject<Long> {
 
     @NaturalId
     @Column(nullable = false,
@@ -54,21 +54,12 @@ abstract public class SMetaData extends PersistentObject {
         super();
     }
 
-    public SMetaData(final String type) {
-        this.type = type;
-    }
-
     public String getType() {
         return type;
     }
 
     public void setType(final String type) {
         this.type = type;
-    }
-
-    @Override
-    protected void resolveIdColumnName() {
-        this.idColumnName = "idSMetaData";
     }
 
     @Override

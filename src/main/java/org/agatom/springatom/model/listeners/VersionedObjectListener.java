@@ -34,6 +34,6 @@ public class VersionedObjectListener implements RevisionListener {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         PersistentVersionedObject versionedObject = (PersistentVersionedObject) revisionEntity;
 
-        versionedObject.setUpdatedBy(user.getUsername());
+        versionedObject.setLastModifiedBy(user);
     }
 }

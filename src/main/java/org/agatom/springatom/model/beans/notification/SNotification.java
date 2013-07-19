@@ -40,20 +40,18 @@ import java.util.Date;
                 updatable = false,
                 nullable = false)
 )
-public class SNotification extends PersistentObject {
+public class SNotification extends PersistentObject<Long> {
 
     @NaturalId
     @ManyToOne(optional = false)
     @JoinColumn(name = "type",
             referencedColumnName = "idSMetaData", updatable = true)
     private SNotificationType type;
-
     @Column(name = "message", length = 1000)
-    private String message;
-
+    private String            message;
     @Type(type = "timestamp")
     @Column(name = "sent")
-    private Date sent;
+    private Date              sent;
 
     public SNotification() {
         super();
@@ -84,12 +82,12 @@ public class SNotification extends PersistentObject {
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (message != null ? message.hashCode() : 0);
-        result = 31 * result + (sent != null ? sent.hashCode() : 0);
-        return result;
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("type", type)
+                .add("message", message)
+                .add("sent", sent)
+                .toString();
     }
 
     @Override
@@ -112,11 +110,11 @@ public class SNotification extends PersistentObject {
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("type", type)
-                .add("message", message)
-                .add("sent", sent)
-                .toString();
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (message != null ? message.hashCode() : 0);
+        result = 31 * result + (sent != null ? sent.hashCode() : 0);
+        return result;
     }
 }
