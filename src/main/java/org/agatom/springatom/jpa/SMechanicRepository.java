@@ -15,18 +15,21 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.dao;
+package org.agatom.springatom.jpa;
 
-import org.agatom.springatom.model.beans.client.SClientProblemReport;
-import org.springframework.data.repository.NoRepositoryBean;
+import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.repository.RepositoryDefinition;
 
 /**
- * @author Tomasz
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 
-@NoRepositoryBean
-public interface SClientProblemReportDAO
-        extends DAORepository<SClientProblemReport, Long> {
+@RepositoryDefinition(domainClass = SMechanic.class, idClass = Long.class)
+public interface SMechanicRepository
+        extends JpaRepository<SMechanic, Long>, QueryDslPredicateExecutor<SMechanic> {
+
 }

@@ -15,21 +15,20 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.dao;
+package org.agatom.springatom.jpa;
 
-import org.agatom.springatom.model.beans.client.SClientContact;
-import org.springframework.data.repository.NoRepositoryBean;
-
-import java.util.Set;
+import org.agatom.springatom.model.beans.person.client.SClient;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.repository.RepositoryDefinition;
 
 /**
- * @author kornicameister
+ * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
 
-@NoRepositoryBean
-public interface SClientContactDAO
-        extends DAORepository<SClientContact, Long> {
-    Set<SClientContact> findByClient(final Long id);
+@RepositoryDefinition(domainClass = SClient.class, idClass = Long.class)
+public interface SClientRepository
+        extends JpaRepository<SClient, Long>, QueryDslPredicateExecutor<SClient> {
 }

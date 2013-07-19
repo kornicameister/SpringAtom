@@ -15,32 +15,19 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.util;
+package org.agatom.springatom.jpa;
 
-public class QueryConstants {
+import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.repository.RepositoryDefinition;
 
-    public class QueryBody {
-        public static final String FROM_TABLE_BY_TABLE_NAME = "from %s";
-        public static final String DELETE_FROM_TABLE_BY_TABLE_NAME = "delete from %s";
-        public static final String DELETE_FROM_TABLE_BY_TABLE_NAME_WHERE = "delete from %s where %s in (%s)";
-    }
-
-    public class QueryTrace {
-        public static final String READ_ENTITY_FROM_TABLE = "Read entity %s from table %s";
-    }
-
-    public class QueryResult {
-        public static final String FROM_TABLE_RESULT_WITH_CLASS_NAME = "Loaded %d objects from %s";
-        public static final String FROM_WHERE_RESULT_WITH_CLASS_NAME = "Loaded %d objects from %s by where %s";
-        public static final String SAVED_OBJECT_TO_TABLE = "Saved 1 one object of type %s";
-        public static final String SAVED_N_OBJECTS_TO_TABLE = "Saved %d objects of type %s";
-        public static final String DELETED_N_OBJECTS_TO_TABLE = "Saved %d objects of type %s";
-    }
-
-    public class Error {
-        public static final String INACTIVE_SESSION = "Session is not active";
-        public static final String MISSING_TARGET_CLASS = "No target class provided, can not execute query %s";
-        public static final String FAILED_TO_SAVE_OBJECT = "Could not save object of type %s";
-        public static final String FAILED_TO_SAVE_N_OBJECTS = "Could not save %d objects of type %s";
-    }
+/**
+ * @author Tomasz
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+@RepositoryDefinition(domainClass = SClientProblemReport.class, idClass = Long.class)
+public interface SClientProblemReportRepository
+        extends JpaRepository<SClientProblemReport, Long>, QueryDslPredicateExecutor<SClientProblemReport> {
 }

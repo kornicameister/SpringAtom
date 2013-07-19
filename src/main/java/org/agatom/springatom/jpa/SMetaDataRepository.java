@@ -15,26 +15,22 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.dao;
+package org.agatom.springatom.jpa;
 
 import org.agatom.springatom.model.beans.meta.*;
-import org.springframework.data.repository.NoRepositoryBean;
-
-import javax.validation.constraints.NotNull;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.repository.RepositoryDefinition;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@NoRepositoryBean
-public interface SMetaDataDAO {
-    Iterable findAll(@NotNull final Class<? extends SMetaData> clazz);
 
-    SMetaData findOne(@NotNull final Long id,
-                      @NotNull final Class<? extends SMetaData> clazz);
-
-    SMetaData findByType(@NotNull final MetaType type);
+@RepositoryDefinition(domainClass = SMetaData.class, idClass = Long.class)
+public interface SMetaDataRepository
+        extends JpaRepository<SMetaData, Long>, QueryDslPredicateExecutor<SMetaData> {
 
     public static enum MetaType {
         //SCT
@@ -60,11 +56,8 @@ public interface SMetaDataDAO {
         SNT_APP_CANCELED("app_canceled", Constants.NOTIFICATION_TYPE_CLASS),
         SNT_APP_DONE("app_done", Constants.NOTIFICATION_TYPE_CLASS),
         SNT_APP_REJECTED("app_rejected", Constants.NOTIFICATION_TYPE_CLASS);
-
         //SNT
-
-        private final String type;
-
+        private final String                     type;
         private final Class<? extends SMetaData> target;
 
         MetaType(final String type, Class<? extends SMetaData> target) {
@@ -81,13 +74,10 @@ public interface SMetaDataDAO {
         }
 
         private static class Constants {
-            private static final Class<SContactType> CONTACT_TYPE_CLASS = SContactType.class;
-
-            private static final Class<SAppointmentTaskType> APPOINTMENT_TASK_TYPE_CLASS = SAppointmentTaskType.class;
-
+            private static final Class<SContactType>             CONTACT_TYPE_CLASS               = SContactType.class;
+            private static final Class<SAppointmentTaskType>     APPOINTMENT_TASK_TYPE_CLASS      = SAppointmentTaskType.class;
             private static final Class<SClientProblemReportType> CLIENT_PROBLEM_REPORT_TYPE_CLASS = SClientProblemReportType.class;
-
-            private static final Class<SNotificationType> NOTIFICATION_TYPE_CLASS = SNotificationType.class;
+            private static final Class<SNotificationType>        NOTIFICATION_TYPE_CLASS          = SNotificationType.class;
         }
     }
 }
