@@ -15,39 +15,71 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo.impl;
+package org.agatom.springatom.mvc.model.service.impl;
 
-import org.agatom.springatom.model.beans.meta.SMetaData;
-import org.agatom.springatom.mvc.model.bo.SMetaDataBO;
-import org.agatom.springatom.mvc.model.dao.SMetaDataDAO;
+import com.google.common.base.Preconditions;
+import org.agatom.springatom.jpa.SClientProblemReportRepository;
+import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
+import org.agatom.springatom.mvc.model.service.SClientProblemReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Service(value = "STypeDataBO")
-public class SMetaDataBOImpl implements SMetaDataBO {
+
+@Service
+@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
+public class SClientProblemReportServiceImpl implements SClientProblemReportService {
 
     @Autowired
-    SMetaDataDAO typeDataDao;
+    SClientProblemReportRepository repository;
 
     @Override
-    public Iterable findAll(@NotNull final Class<? extends SMetaData> clazz) {
-        return this.typeDataDao.findAll(clazz);
+    public SClientProblemReport findOne(@NotNull final Long id) {
+        return this.repository.findOne(id);
     }
 
     @Override
-    public SMetaData getById(@NotNull final Long id, @NotNull final Class<? extends SMetaData> clazz) {
-        return this.typeDataDao.findOne(id, clazz);
+    public List<SClientProblemReport> findAll() {
+        return this.repository.findAll();
     }
 
     @Override
-    public SMetaData getByType(@NotNull final SMetaDataDAO.MetaType type) {
-        return this.typeDataDao.findByType(type);
+    @Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
+    public SClientProblemReport save(@NotNull final SClientProblemReport persistable) {
+        Preconditions.checkArgument(persistable != null, "SClientProblemReport must not be null");
+        return this.repository.saveAndFlush(persistable);
+    }
+
+    @Override
+    public Long count() {
+        return this.repository.count();
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteOne(@NotNull final Long pk) {
+        this.repository.delete(pk);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteAll() {
+        this.repository.deleteAll();
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void delete(final Long id) {
+        this.repository.delete(id);
     }
 }

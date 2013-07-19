@@ -15,16 +15,20 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo;
+package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.model.beans.mechanic.SMechanic;
+import org.agatom.springatom.jpa.SMetaDataRepository;
+import org.agatom.springatom.model.beans.meta.SMetaData;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+public interface SMetaDataService {
+    Iterable findAll(@NotNull final Class<? extends SMetaData> clazz);
 
-public interface SMechanicBO extends GenericBO<SMechanic, Long> {
-
+    SMetaData findByType(@NotNull final SMetaDataRepository.MetaType type);
 }

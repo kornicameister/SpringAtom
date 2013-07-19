@@ -15,9 +15,9 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo;
+package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.model.beans.client.SClientProblemReport;
+import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
 
 /**
  * @author kornicameister
@@ -25,5 +25,5 @@ import org.agatom.springatom.model.beans.client.SClientProblemReport;
  * @since 0.0.1
  */
 
-public interface SClientProblemReportBO extends GenericBO<SClientProblemReport, Long> {
+public interface SClientProblemReportService extends GenericService<SClientProblemReport, Long> {
 }

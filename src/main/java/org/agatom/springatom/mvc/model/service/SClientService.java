@@ -15,23 +15,24 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo;
+package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.model.beans.client.SClient;
-import org.agatom.springatom.model.beans.client.SClientContact;
-import org.agatom.springatom.model.beans.client.SClientProblemReport;
-import org.agatom.springatom.mvc.model.dao.SMetaDataDAO;
+import org.agatom.springatom.jpa.SMetaDataRepository;
+import org.agatom.springatom.model.beans.person.client.SClient;
+import org.agatom.springatom.model.beans.person.client.SClientContact;
+import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
+import org.agatom.springatom.model.beans.person.user.embeddable.SPersonalInformation;
 import org.agatom.springatom.mvc.model.exceptions.EntityDoesNotExists;
 
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SClientBO extends GenericBO<SClient, Long> {
+public interface SClientService extends GenericService<SClient, Long> {
 
     SClient disable(@NotNull final Long pk) throws EntityDoesNotExists;
 
@@ -40,11 +41,15 @@ public interface SClientBO extends GenericBO<SClient, Long> {
     SClientProblemReport newProblemReport(@NotNull final String problem,
                                           @NotNull final Long client,
                                           @NotNull final Long mechanic,
-                                          @NotNull final SMetaDataDAO.MetaType problemReportType) throws
+                                          @NotNull final SMetaDataRepository.MetaType problemReportType) throws
             EntityDoesNotExists;
 
     SClientContact newPhone(@NotNull final String contact,
                             @NotNull final Long client) throws EntityDoesNotExists;
+
+    SClientContact newContactData(@NotNull String contact,
+                                  @NotNull Long clientPk,
+                                  @NotNull SMetaDataRepository.MetaType type) throws EntityDoesNotExists;
 
     SClientContact newEmail(@NotNull final String contact,
                             @NotNull final Long client) throws EntityDoesNotExists;
@@ -55,5 +60,15 @@ public interface SClientBO extends GenericBO<SClient, Long> {
     SClientContact newFax(@NotNull final String contact,
                           @NotNull final Long client) throws EntityDoesNotExists;
 
-    Set<SClientContact> findAllContacts(final Long idClient);
+    List<SClientContact> findAllContacts(final Long idClient);
+
+    List<SClient> findByPersonalInformation(@NotNull final SPersonalInformation information);
+
+    List<SClient> findByFirstName(@NotNull final String firstName);
+
+    List<SClient> findByLastName(@NotNull final String lastName);
+
+    SClient findByEmail(@NotNull final String email);
+
+    List<SClient> findByStatus(@NotNull final Boolean enabled);
 }

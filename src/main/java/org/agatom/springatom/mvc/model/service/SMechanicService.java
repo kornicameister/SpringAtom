@@ -15,29 +15,16 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo;
+package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.model.beans.Persistable;
-
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
 
 /**
- * @author Tomasz
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 
-public interface GenericBO<T extends Persistable, ID extends Serializable> {
-    T findOne(@NotNull Long id);
+public interface SMechanicService extends GenericService<SMechanic, Long> {
 
-    Iterable<T> findAll();
-
-    T save(@NotNull final T persistable);
-
-    Long count();
-
-    void deleteOne(@NotNull final ID pk);
-
-    void deleteAll();
 }

@@ -15,55 +15,52 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo.impl;
+package org.agatom.springatom.jpa;
 
-import org.agatom.springatom.model.beans.client.SClientProblemReport;
-import org.agatom.springatom.mvc.model.bo.SClientProblemReportBO;
-import org.agatom.springatom.mvc.model.dao.SClientProblemReportDAO;
+import org.agatom.springatom.AbstractSpringTestCase;
+import org.agatom.springatom.model.beans.meta.*;
+import org.agatom.springatom.mvc.model.service.SMetaDataService;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
-/**
- * @author kornicameister
- * @version 0.0.1
- * @since 0.0.1
- */
 
-@Service(value = "SClientProblemReportBO")
-public class SClientProblemReportBOImpl implements SClientProblemReportBO {
-
+public class SMetaDataDAOTest extends AbstractSpringTestCase {
     @Autowired
-    SClientProblemReportDAO sClientProblemReportDAO;
+    SMetaDataService typeDataBo;
+    private List<Class<? extends SMetaData>> clazzList;
 
-    @Override
-    public SClientProblemReport findOne(@NotNull final Long id) {
-        return null;
+    @Before
+    public void setUp() throws Exception {
+        List<Class<? extends SMetaData>> classList = new ArrayList<>();
+
+        classList.add(SNotificationType.class);
+        classList.add(SContactType.class);
+        classList.add(SAppointmentTaskType.class);
+        classList.add(SClientProblemReportType.class);
+
+        this.clazzList = classList;
     }
 
-    @Override
-    public Iterable<SClientProblemReport> findAll() {
-        return this.sClientProblemReportDAO.findAll();
+    @Test
+    public void testNotNull() throws Exception {
+        Assert.assertNotNull("Dao is null", typeDataBo);
     }
 
-    @Override
-    public SClientProblemReport save(@NotNull final SClientProblemReport persistable) {
-        return null;
-    }
-
-    @Override
-    public Long count() {
-        return null;
-    }
-
-    @Override
-    public void deleteOne(@NotNull final Long pk) {
-        this.sClientProblemReportDAO.delete(pk);
-    }
-
-    @Override
-    public void deleteAll() {
-        this.sClientProblemReportDAO.deleteAll();
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetAll() throws Exception {
+        for (Class clazz : this.clazzList) {
+            Set<SMetaData> dataSet = (Set<SMetaData>) typeDataBo.findAll(clazz);
+            Assert.assertNotSame(String.format("Data set is empty for %s", clazz.getSimpleName()), 0, dataSet.size());
+            for (SMetaData typeData : dataSet) {
+                Assert.assertNotNull("TypeData is null", typeData);
+            }
+        }
     }
 }

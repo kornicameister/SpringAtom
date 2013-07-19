@@ -15,22 +15,32 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo;
+package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.model.beans.meta.SMetaData;
-import org.agatom.springatom.mvc.model.dao.SMetaDataDAO;
+import org.springframework.data.domain.Persistable;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.List;
 
 /**
- * @author kornicameister
+ * @author Tomasz
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SMetaDataBO {
-    Iterable findAll(@NotNull final Class<? extends SMetaData> clazz);
 
-    SMetaData getById(@NotNull final Long id, @NotNull final Class<? extends SMetaData> clazz);
+public interface GenericService<T extends Persistable, ID extends Serializable> {
+    T findOne(@NotNull Long id);
 
-    SMetaData getByType(@NotNull final SMetaDataDAO.MetaType type);
+    List<T> findAll();
+
+    T save(@NotNull final T persistable);
+
+    Long count();
+
+    void deleteOne(@NotNull final ID pk);
+
+    void deleteAll();
+
+    void delete(ID id);
 }

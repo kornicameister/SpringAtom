@@ -15,13 +15,17 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.bo.impl;
+package org.agatom.springatom.mvc.model.service.impl;
 
-import org.agatom.springatom.model.beans.mechanic.SMechanic;
-import org.agatom.springatom.mvc.model.bo.SMechanicBO;
-import org.agatom.springatom.mvc.model.dao.SMechanicDAO;
+import org.agatom.springatom.jpa.SMetaDataRepository;
+import org.agatom.springatom.model.beans.meta.QSMetaData;
+import org.agatom.springatom.model.beans.meta.SMetaData;
+import org.agatom.springatom.mvc.model.service.SMetaDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 
@@ -30,40 +34,20 @@ import javax.validation.constraints.NotNull;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Service(value = "SMechanicBO")
-public class SMechanicBOImpl
-        implements SMechanicBO {
+@Service
+@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
+public class SMetaDataServiceImpl implements SMetaDataService {
 
     @Autowired
-    SMechanicDAO sMechanicDAO;
+    SMetaDataRepository repository;
 
     @Override
-    public SMechanic findOne(@NotNull final Long id) {
-        return this.sMechanicDAO.findOne(id);
+    public Iterable findAll(@NotNull final Class<? extends SMetaData> clazz) {
+        return this.repository.findAll(QSMetaData.sMetaData.instanceOf(clazz));
     }
 
     @Override
-    public Iterable<SMechanic> findAll() {
-        return this.sMechanicDAO.findAll();
-    }
-
-    @Override
-    public SMechanic save(@NotNull final SMechanic persistable) {
-        return this.sMechanicDAO.save(persistable);
-    }
-
-    @Override
-    public Long count() {
-        return this.sMechanicDAO.count();
-    }
-
-    @Override
-    public void deleteOne(@NotNull final Long pk) {
-        this.sMechanicDAO.delete(pk);
-    }
-
-    @Override
-    public void deleteAll() {
-        this.sMechanicDAO.deleteAll();
+    public SMetaData findByType(@NotNull final SMetaDataRepository.MetaType type) {
+        return this.repository.findOne(QSMetaData.sMetaData.type.eq(type.getType()));
     }
 }
