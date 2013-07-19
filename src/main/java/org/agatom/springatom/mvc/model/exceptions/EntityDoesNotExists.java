@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.mvc.model.exceptions;
 
-import org.agatom.springatom.model.beans.Persistable;
+import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 

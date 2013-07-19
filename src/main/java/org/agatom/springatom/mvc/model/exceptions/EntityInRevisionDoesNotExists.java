@@ -15,12 +15,9 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.dao;
+package org.agatom.springatom.mvc.model.exceptions;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.NoRepositoryBean;
-
-import java.io.Serializable;
+import org.springframework.data.domain.Persistable;
 
 /**
  * @author kornicameister
@@ -28,13 +25,10 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 
-@NoRepositoryBean
-public interface DAORepository<T, ID extends Serializable> extends CrudRepository<T, ID> {
-    T findByNaturalId(final String fieldName, ID serializable);
+public class EntityInRevisionDoesNotExists extends Exception {
+    private static final String MSG = "No entry exists for %s with revision=%d";
 
-    T load(T t);
-
-    T load(ID id);
-
-    T update(T t);
+    public EntityInRevisionDoesNotExists(final Class<? extends Persistable> entityClazz, final Integer revision) {
+        super(String.format(MSG, entityClazz.getName(), revision));
+    }
 }
