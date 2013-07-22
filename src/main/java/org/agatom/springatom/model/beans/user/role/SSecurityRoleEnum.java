@@ -15,83 +15,61 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.person.user;
+package org.agatom.springatom.model.beans.user.role;
 
-import com.google.common.base.Objects;
-import org.agatom.springatom.model.beans.person.user.role.SRole;
-
-import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import java.io.Serializable;
+import org.agatom.springatom.populators.DatabaseEnumPopulable;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Embeddable
-public class SUserToRolePK implements Serializable {
-    @ManyToOne
-    @JoinColumn(name = "user", referencedColumnName = "idSUser")
-    private SUser user;
+public enum SSecurityRoleEnum implements DatabaseEnumPopulable {
+    ADMIN(666),
+    ANONYMOUS(-1),
+    GUEST(0),
+    CLIENT(1),
+    MECHANIC(2),
+    BOSS(3),
+    ACCOUNT_ADMINISTRATOR(4),
+    //per persistent business class
+    CAR_UPDATE(5),
+    CAR_READ(6),
+    CAR_CREATE(7),
+    CAR_DELETE(8),
+    APPOINTMENT_CREATE(9),
+    APPOINTMENT_READ(10),
+    APPOINTMENT_UPDATE(11),
+    APPOINTMENT_DELETE(12);
+    //per persistent business class
+    private static final String PREFIX = "ROLE_";
+    private final int roleId;
 
-    @ManyToOne
-    @JoinColumn(name = "role", referencedColumnName = "idSRole")
-    private SRole role;
-
-    public SUserToRolePK() {
-        super();
+    SSecurityRoleEnum(final int id) {
+        this.roleId = id;
     }
 
-    public SUserToRolePK(final SUser user, final SRole role) {
-        this.user = user;
-        this.role = role;
-    }
-
-    public SUser getUser() {
-        return user;
-    }
-
-    public void setUser(final SUser user) {
-        this.user = user;
-    }
-
-    public SRole getRole() {
-        return role;
-    }
-
-    public void setRole(final SRole role) {
-        this.role = role;
+    public int getRoleId() {
+        return this.roleId;
     }
 
     @Override
-    public int hashCode() {
-        int result = user.hashCode();
-        result = 31 * result + role.hashCode();
-        return result;
+    public String[] getColumns() {
+        return new String[]{"role"};
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SUserToRolePK)) {
-            return false;
-        }
+    public String getTable() {
+        return "srole";
+    }
 
-        SUserToRolePK that = (SUserToRolePK) o;
-
-        return role.equals(that.role) &&
-                user.equals(that.user);
+    @Override
+    public String[] getData() {
+        return new String[]{this.toString()};
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("person", user)
-                .add("role", role)
-                .toString();
+        return String.format("%s%s", PREFIX, super.toString());
     }
 }

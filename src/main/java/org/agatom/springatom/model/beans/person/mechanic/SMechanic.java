@@ -34,6 +34,6 @@ import javax.persistence.Table;
 @Table(name = "SMechanic")
 @PrimaryKeyJoinColumn(name = "idSMechanic")
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-public class SMechanic extends SPerson<SMechanic, Long> {
+public class SMechanic extends SPerson {
 
 }

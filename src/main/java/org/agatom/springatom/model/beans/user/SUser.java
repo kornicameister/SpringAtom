@@ -15,13 +15,15 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.person.user;
+package org.agatom.springatom.model.beans.user;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.model.beans.person.SPerson;
-import org.agatom.springatom.model.beans.person.user.role.SRole;
-import org.hibernate.annotations.NaturalId;
+import org.agatom.springatom.model.beans.user.embeddable.SUserCredentials;
+import org.agatom.springatom.model.beans.user.role.SRole;
+import org.agatom.springatom.model.beans.user.role.SUserToRole;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -44,33 +46,36 @@ import java.util.Set;
                 updatable = false,
                 nullable = false)
 )
-public class SUser extends PersistentVersionedObject<SPerson, Long> {
-    @NaturalId
-    @Column(name = "login", length = 45, unique = true, nullable = false)
-    private String           login;
+public class SUser extends PersistentVersionedObject {
+
     @Audited
-    @Column(name = "secPass", length = 66, nullable = false)
-    private String           password;
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @Embedded
+    private SUserCredentials credentials;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "person", referencedColumnName = "idSPerson")
     private SPerson          person;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.user")
     private Set<SUserToRole> roles;
 
+    public SUser() {
+        this.credentials = new SUserCredentials();
+    }
+
     public String getLogin() {
-        return login;
+        return this.credentials.getLogin();
     }
 
     public void setLogin(final String login) {
-        this.login = login;
+        this.credentials.setLogin(login);
     }
 
     public String getPassword() {
-        return password;
+        return this.credentials.getLogin();
     }
 
     public void setPassword(final String password) {
-        this.password = password;
+        this.credentials.setPassword(password);
     }
 
     public SPerson getPerson() {
@@ -128,14 +133,6 @@ public class SUser extends PersistentVersionedObject<SPerson, Long> {
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("login", login)
-                .add("password", password)
-                .toString();
-    }
-
-    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
@@ -147,15 +144,15 @@ public class SUser extends PersistentVersionedObject<SPerson, Long> {
             return false;
         }
 
-        SUser sUser = (SUser) o;
+        final SUser sUser = (SUser) o;
 
-        return login.equals(sUser.login);
+        return !(credentials != null ? !credentials.equals(sUser.credentials) : sUser.credentials != null);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + login.hashCode();
+        result = 31 * result + (credentials != null ? credentials.hashCode() : 0);
         return result;
     }
 }

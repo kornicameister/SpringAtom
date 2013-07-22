@@ -30,5 +30,5 @@ import javax.persistence.Transient;
 @DiscriminatorValue(value = SClientProblemReportType.SHORT_NAME)
 public class SClientProblemReportType extends SMetaData {
     @Transient
-    protected static final String SHORT_NAME = "SCPR";
+    protected static final String SHORT_NAME = "SCPRT";
 }

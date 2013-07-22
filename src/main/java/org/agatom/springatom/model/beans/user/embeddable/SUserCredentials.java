@@ -15,49 +15,52 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.person.user.role;
+package org.agatom.springatom.model.beans.user.embeddable;
 
-import com.google.common.base.Objects;
-import org.agatom.springatom.model.beans.PersistentObject;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SRole")
-@Table(name = "SRole")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSRole",
-                updatable = false,
-                nullable = false)
-)
-public class SRole extends PersistentObject<Long> {
-    @NaturalId
-    @Column(name = "role", updatable = false, unique = true, length = 50, nullable = false)
-    private String role;
 
-    public String getRole() {
-        return role;
+@Embeddable
+public class SUserCredentials implements Serializable {
+    @NotEmpty
+    @NaturalId
+    @Column(name = "login", length = 45, unique = true, nullable = false)
+    private String login;
+    @NotEmpty
+    @Column(name = "secPass", length = 66, nullable = false)
+    private String password;
+
+    public String getLogin() {
+        return login;
     }
 
-    public void setRole(final String role) {
-        this.role = role;
+    public void setLogin(final String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(final String password) {
+        this.password = password;
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("role", role)
-                .toString();
+    public int hashCode() {
+        int result = login != null ? login.hashCode() : 0;
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -65,22 +68,20 @@ public class SRole extends PersistentObject<Long> {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SRole)) {
-            return false;
-        }
-        if (!super.equals(o)) {
+        if (!(o instanceof SUserCredentials)) {
             return false;
         }
 
-        SRole sRole = (SRole) o;
+        final SUserCredentials that = (SUserCredentials) o;
 
-        return role.equals(sRole.role);
+        return !(login != null ? !login.equals(that.login) : that.login != null) && !(password != null ? !password
+                .equals(that.password) : that.password != null);
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + role.hashCode();
-        return result;
+    public String toString() {
+        return "SUserCredentials{" +
+                "login='" + login + '\'' +
+                "} " + super.toString();
     }
 }

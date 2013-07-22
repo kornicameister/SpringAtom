@@ -16,23 +16,44 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="dataSourceInitializer"
           class="org.springframework.jdbc.datasource.init.DataSourceInitializer">
         <property name="dataSource" ref="dataSource"/>
-        <property name="databasePopulator" ref="resourceDBPopulate"/>
-        <property name="enabled" value="${db.database.load.data}"/>
+        <property name="databasePopulator" ref="compositePopulator"/>
+        <property name="enabled" value="${db.database.initialize}"/>
     </bean>
 
-    <bean id="resourceDBPopulate"
-          class="org.springframework.jdbc.datasource.init.ResourceDatabasePopulator">
-        <property name="scripts">
+    <bean id="compositePopulator"
+          class="org.springframework.jdbc.datasource.init.CompositeDatabasePopulator">
+        <property name="populators">
             <array>
-                <value>classpath:data/smetadata.sql</value>
+                <bean class="org.springframework.jdbc.datasource.init.ResourceDatabasePopulator">
+                    <property name="scripts">
+                        <array>
+                            <value>classpath:data/clear.sql</value>
+                        </array>
+                    </property>
+                </bean>
+                <bean class="org.agatom.springatom.populators.EnumDatabasePopulator">
+                    <property name="enums">
+                        <props>
+                            <prop key="srole">org.agatom.springatom.model.beans.user.role.SSecurityRoleEnum</prop>
+                            <prop key="smetadata">org.agatom.springatom.model.beans.meta.SMetaDataType</prop>
+                        </props>
+                    </property>
+                </bean>
+                <bean class="org.springframework.jdbc.datasource.init.ResourceDatabasePopulator">
+                    <property name="scripts">
+                        <array>
+                            <value>classpath:data/sadministrator.sql</value>
+                        </array>
+                    </property>
+                </bean>
             </array>
         </property>
     </bean>

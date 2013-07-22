@@ -15,12 +15,14 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.person.user;
+package org.agatom.springatom.model.beans.user.role;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.model.beans.person.user.role.SRole;
+import org.agatom.springatom.model.beans.user.SUser;
 
-import javax.persistence.*;
+import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 /**
@@ -28,56 +30,46 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SUserToRole")
-@Table(name = "SUserToRole")
-@AssociationOverrides({
-        @AssociationOverride(name = "pk.user", joinColumns = @JoinColumn(name = "user")),
-        @AssociationOverride(name = "pk.role", joinColumns = @JoinColumn(name = "role"))
-})
-public class SUserToRole implements Serializable {
+@Embeddable
+public class SUserToRolePK implements Serializable {
+    @ManyToOne
+    @JoinColumn(name = "user", referencedColumnName = "idSUser")
+    private SUser user;
 
-    @EmbeddedId
-    private SUserToRolePK pk;
+    @ManyToOne
+    @JoinColumn(name = "role", referencedColumnName = "idSRole")
+    private SRole role;
 
-    public SUserToRole() {
-        this.pk = new SUserToRolePK();
+    public SUserToRolePK() {
+        super();
     }
 
-    public SUserToRole(final SUser user, final SRole role) {
-        this.pk = new SUserToRolePK(user, role);
+    public SUserToRolePK(final SUser user, final SRole role) {
+        this.user = user;
+        this.role = role;
     }
 
-    public SUserToRolePK getPk() {
-        return pk;
-    }
-
-    public void setPk(final SUserToRolePK pk) {
-        this.pk = pk;
-    }
-
-    @Transient
     public SUser getUser() {
-        return pk.getUser();
+        return user;
     }
 
-    @Transient
     public void setUser(final SUser user) {
-        pk.setUser(user);
+        this.user = user;
     }
 
-    @Transient
     public SRole getRole() {
-        return pk.getRole();
+        return role;
     }
 
-    @Transient
     public void setRole(final SRole role) {
-        pk.setRole(role);
+        this.role = role;
     }
 
     @Override
     public int hashCode() {
-        return pk.hashCode();
+        int result = user.hashCode();
+        result = 31 * result + role.hashCode();
+        return result;
     }
 
     @Override
@@ -85,19 +77,21 @@ public class SUserToRole implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SUserToRole)) {
+        if (!(o instanceof SUserToRolePK)) {
             return false;
         }
 
-        SUserToRole that = (SUserToRole) o;
+        SUserToRolePK that = (SUserToRolePK) o;
 
-        return pk.equals(that.pk);
+        return role.equals(that.role) &&
+                user.equals(that.user);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("pk", pk)
+                .add("person", user)
+                .add("role", role)
                 .toString();
     }
 }

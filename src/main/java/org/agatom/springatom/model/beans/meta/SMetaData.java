@@ -20,6 +20,7 @@ package org.agatom.springatom.model.beans.meta;
 import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -43,23 +44,29 @@ import javax.persistence.*;
 )
 abstract public class SMetaData extends PersistentObject<Long> {
 
-    @NaturalId
+    @Type(type = "org.hibernate.type.EnumType")
     @Column(nullable = false,
-            length = 20,
+            length = 30,
             updatable = false,
             name = "type")
-    private String type;
+    @NaturalId(mutable = false)
+    @Enumerated(value = EnumType.STRING)
+    private SMetaDataType type;
 
     protected SMetaData() {
         super();
     }
 
-    public String getType() {
+    public SMetaDataType getType() {
         return type;
     }
 
-    public void setType(final String type) {
+    public void setType(final SMetaDataType type) {
         this.type = type;
+    }
+
+    public void setType(final String type) {
+        this.setType(SMetaDataType.valueOf(type));
     }
 
     @Override

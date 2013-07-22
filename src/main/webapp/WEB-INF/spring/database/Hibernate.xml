@@ -23,6 +23,7 @@
 
     <bean id="entityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="hibernate"/>
         <property name="dataSource" ref="dataSource"/>
         <property name="packagesToScan" value="org.agatom.springatom.model.beans"/>
         <property name="jpaVendorAdapter">

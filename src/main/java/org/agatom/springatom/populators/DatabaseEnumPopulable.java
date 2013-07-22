@@ -15,26 +15,20 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans;
-
-import org.agatom.springatom.model.beans.user.SUser;
-import org.springframework.data.jpa.domain.AbstractAuditable;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
+package org.agatom.springatom.populators;
 
 /**
+ * {@code DatabaseEnumPopulable} is the interface that is used by {@link EnumDatabasePopulator}.
+ * Defines the functionality required to built <b>INSERT</b> statements during populating the database data.
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@MappedSuperclass
-@EntityListeners(value = AuditingEntityListener.class)
-abstract public class PersistentVersionedObject
-        extends AbstractAuditable<SUser, Long> {
+public interface DatabaseEnumPopulable {
+    String[] getColumns();
 
-    public PersistentVersionedObject() {
-        super();
-    }
+    String getTable();
+
+    String[] getData();
 }

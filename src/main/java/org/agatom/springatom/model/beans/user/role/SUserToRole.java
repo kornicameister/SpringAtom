@@ -15,82 +15,89 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.person;
+package org.agatom.springatom.model.beans.user.role;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.model.beans.PersistentVersionedObject;
-import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.Type;
-import org.hibernate.envers.Audited;
-import org.hibernate.validator.constraints.Email;
+import org.agatom.springatom.model.beans.user.SUser;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
-
-@Entity(name = "SPerson")
-@Table(name = "SPerson", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "email")
+@Entity(name = "SUserToRole")
+@Table(name = "SUserToRole")
+@AssociationOverrides({
+        @AssociationOverride(name = "pk.user", joinColumns = @JoinColumn(name = "user")),
+        @AssociationOverride(name = "pk.role", joinColumns = @JoinColumn(name = "role"))
 })
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSPerson",
-                updatable = false,
-                nullable = false
-        )
-)
-@Inheritance(strategy = InheritanceType.JOINED)
-abstract public class SPerson
-        extends PersistentVersionedObject {
+public class SUserToRole implements Serializable {
 
-    @Embedded
-    private SPersonalInformation information;
-    @Email
-    @Audited
-    @NaturalId
-    @Column(name = "email", length = 45, nullable = false, unique = true)
-    private String               email;
-    @Audited
-    @Type(type = "boolean")
-    @Column(name = "enabled")
-    private Boolean enabled = Boolean.TRUE;
+    @EmbeddedId
+    private SUserToRolePK pk;
 
-    public SPersonalInformation getInformation() {
-        return information;
+    public SUserToRole() {
+        this.pk = new SUserToRolePK();
     }
 
-    public void setInformation(final SPersonalInformation information) {
-        this.information = information;
+    public SUserToRole(final SUser user, final SRole role) {
+        this.pk = new SUserToRolePK(user, role);
     }
 
-    public String getEmail() {
-        return email;
+    public SUserToRolePK getPk() {
+        return pk;
     }
 
-    public void setEmail(final String email) {
-        this.email = email;
+    public void setPk(final SUserToRolePK pk) {
+        this.pk = pk;
     }
 
-    public Boolean isEnabled() {
-        return enabled;
+    @Transient
+    public SUser getUser() {
+        return pk.getUser();
     }
 
-    public void setEnabled(final Boolean disabled) {
-        this.enabled = disabled;
+    @Transient
+    public void setUser(final SUser user) {
+        pk.setUser(user);
+    }
+
+    @Transient
+    public SRole getRole() {
+        return pk.getRole();
+    }
+
+    @Transient
+    public void setRole(final SRole role) {
+        pk.setRole(role);
+    }
+
+    @Override
+    public int hashCode() {
+        return pk.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SUserToRole)) {
+            return false;
+        }
+
+        SUserToRole that = (SUserToRole) o;
+
+        return pk.equals(that.pk);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("personal", information)
-                .add("email", email)
-                .add("enabled", enabled)
+                .add("pk", pk)
                 .toString();
     }
 }

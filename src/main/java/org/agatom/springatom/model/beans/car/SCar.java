@@ -19,7 +19,6 @@ package org.agatom.springatom.model.beans.car;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentVersionedObject;
-import org.agatom.springatom.model.beans.person.SPerson;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.envers.Audited;
 
@@ -39,7 +38,7 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
-public class SCar extends PersistentVersionedObject<SPerson, Long> {
+public class SCar extends PersistentVersionedObject {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "carMaster", referencedColumnName = "idSCarMaster", updatable = true)

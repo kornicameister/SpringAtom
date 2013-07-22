@@ -34,7 +34,7 @@ import java.util.Set;
 @Entity(name = "SClient")
 @Table(name = "SClient")
 @PrimaryKeyJoinColumn(name = "idSClient")
-public class SClient extends SPerson<SPerson, Long> {
+public class SClient extends SPerson {
 
     @BatchSize(size = 10)
     @OneToMany(fetch = FetchType.LAZY,

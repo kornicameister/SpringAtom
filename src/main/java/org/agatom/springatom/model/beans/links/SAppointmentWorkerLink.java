@@ -40,7 +40,7 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
-public class SAppointmentWorkerLink extends PersistentVersionedObject<SMechanic, Long> {
+public class SAppointmentWorkerLink extends PersistentVersionedObject {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment", updatable = false)

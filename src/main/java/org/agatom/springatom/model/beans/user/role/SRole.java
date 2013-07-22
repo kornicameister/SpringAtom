@@ -15,47 +15,53 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.person.user.embeddable;
+package org.agatom.springatom.model.beans.user.role;
 
 import com.google.common.base.Objects;
+import org.agatom.springatom.model.beans.PersistentObject;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import java.io.Serializable;
+import javax.persistence.*;
 
 /**
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Embeddable
-public class SPersonalInformation implements Serializable {
-    @Column(name = "fName", length = 45, nullable = false)
-    private String firstName;
-    @Column(name = "lName", length = 45, nullable = false)
-    private String lastName;
+@Entity(name = "SRole")
+@Table(name = "SRole")
+@AttributeOverride(
+        name = "id",
+        column = @Column(
+                name = "idSRole",
+                updatable = false,
+                nullable = false)
+)
+public class SRole extends PersistentObject<Long> {
+    @Type(type = "org.hibernate.type.EnumType")
+    @Column(name = "role", updatable = false, unique = true, length = 50, nullable = false)
+    @NaturalId(mutable = false)
+    @Enumerated(value = EnumType.STRING)
+    private SSecurityRoleEnum role;
 
-    public String getFirstName() {
-        return firstName;
+    public SSecurityRoleEnum getRole() {
+        return role;
     }
 
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
+    public void setRole(final String role) {
+        this.role = SSecurityRoleEnum.valueOf(role);
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(final String lastName) {
-        this.lastName = lastName;
+    public void setRole(final SSecurityRoleEnum role) {
+        this.role = role;
     }
 
     @Override
-    public int hashCode() {
-        int result = firstName.hashCode();
-        result = 31 * result + lastName.hashCode();
-        return result;
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("role", role)
+                .toString();
     }
 
     @Override
@@ -63,20 +69,22 @@ public class SPersonalInformation implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SPersonalInformation)) {
+        if (!(o instanceof SRole)) {
+            return false;
+        }
+        if (!super.equals(o)) {
             return false;
         }
 
-        SPersonalInformation that = (SPersonalInformation) o;
+        SRole sRole = (SRole) o;
 
-        return firstName.equals(that.firstName) && lastName.equals(that.lastName);
+        return role.equals(sRole.role);
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("firstName", firstName)
-                .add("lastName", lastName)
-                .toString();
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + role.hashCode();
+        return result;
     }
 }
