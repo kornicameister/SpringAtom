@@ -18,6 +18,7 @@
 package org.agatom.springatom.mvc.model.service;
 
 import org.agatom.springatom.model.beans.meta.SMetaData;
+import org.agatom.springatom.model.beans.meta.SMetaDataCapable;
 import org.agatom.springatom.model.beans.meta.SMetaDataType;
 
 import javax.validation.constraints.NotNull;
@@ -32,4 +33,13 @@ public interface SMetaDataService {
     List<SMetaData> findAll(@NotNull final Class<? extends SMetaData> clazz);
 
     SMetaData findByType(@NotNull final SMetaDataType type);
+
+    /**
+     * Returns list of equivalent
+     *
+     * @param metaDataCapable
+     *
+     * @return
+     */
+    List<SMetaData> findEquivalences(@NotNull final SMetaDataCapable metaDataCapable);
 }

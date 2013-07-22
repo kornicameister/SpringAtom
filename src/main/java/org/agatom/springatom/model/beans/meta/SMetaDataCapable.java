@@ -22,8 +22,8 @@ package org.agatom.springatom.model.beans.meta;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SMetaDataCapable {
-    SMetaData getMetaInformation();
+public interface SMetaDataCapable<MD extends SMetaData> {
+    MD getMetaInformation();
 
-    void setMetaInformation(final SMetaData metaData);
+    void setMetaInformation(final MD metaData);
 }

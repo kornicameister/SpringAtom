@@ -18,6 +18,7 @@
 package org.agatom.springatom.model.beans.notification;
 
 import org.agatom.springatom.model.beans.meta.SMetaDataHolder;
+import org.agatom.springatom.model.beans.meta.SNotificationType;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
@@ -42,7 +43,7 @@ import java.util.Date;
                 nullable = false)
 )
 public class SNotification
-        extends SMetaDataHolder {
+        extends SMetaDataHolder<SNotificationType, Long> {
 
     @Column(name = "message", length = 1000)
     private String message;

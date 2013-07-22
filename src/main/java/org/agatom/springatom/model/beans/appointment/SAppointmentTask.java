@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.model.beans.appointment;
 
+import org.agatom.springatom.model.beans.meta.SAppointmentTaskType;
 import org.agatom.springatom.model.beans.meta.SMetaDataHolder;
 
 import javax.persistence.*;
@@ -36,7 +37,7 @@ import javax.persistence.*;
                 nullable = false)
 )
 public class SAppointmentTask
-        extends SMetaDataHolder {
+        extends SMetaDataHolder<SAppointmentTaskType, Long> {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment", updatable = false)
     private SAppointment appointment;

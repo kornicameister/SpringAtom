@@ -20,6 +20,7 @@ package org.agatom.springatom.model.beans.meta;
 import org.agatom.springatom.model.beans.PersistentObject;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author kornicameister
@@ -27,9 +28,9 @@ import javax.persistence.*;
  * @since 0.0.1
  */
 @MappedSuperclass
-abstract public class SMetaDataHolder
-        extends PersistentObject<Long>
-        implements SMetaDataCapable {
+abstract public class SMetaDataHolder<MD extends SMetaData, PK extends Serializable>
+        extends PersistentObject<PK>
+        implements SMetaDataCapable<MD> {
 
     @ManyToOne(optional = false,
             fetch = FetchType.LAZY,
@@ -39,12 +40,13 @@ abstract public class SMetaDataHolder
     private SMetaData type;
 
     @Override
-    public SMetaData getMetaInformation() {
-        return this.type;
+    @SuppressWarnings("unchecked")
+    public MD getMetaInformation() {
+        return (MD) this.type;
     }
 
     @Override
-    public void setMetaInformation(final SMetaData metaData) {
+    public void setMetaInformation(final MD metaData) {
         this.type = metaData;
     }
 }

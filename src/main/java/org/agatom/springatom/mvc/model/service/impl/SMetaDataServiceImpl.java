@@ -20,6 +20,7 @@ package org.agatom.springatom.mvc.model.service.impl;
 import org.agatom.springatom.jpa.SMetaDataRepository;
 import org.agatom.springatom.model.beans.meta.QSMetaData;
 import org.agatom.springatom.model.beans.meta.SMetaData;
+import org.agatom.springatom.model.beans.meta.SMetaDataCapable;
 import org.agatom.springatom.model.beans.meta.SMetaDataType;
 import org.agatom.springatom.mvc.model.service.SMetaDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,10 @@ public class SMetaDataServiceImpl implements SMetaDataService {
     @Override
     public SMetaData findByType(@NotNull final SMetaDataType type) {
         return this.repository.findOne(QSMetaData.sMetaData.type.eq(type));
+    }
+
+    @Override
+    public List<SMetaData> findEquivalences(@NotNull final SMetaDataCapable metaDataCapable) {
+        return this.findAll(metaDataCapable.getMetaInformation().getClass());
     }
 }

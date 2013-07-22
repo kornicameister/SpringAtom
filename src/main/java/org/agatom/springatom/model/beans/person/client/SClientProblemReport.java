@@ -18,6 +18,7 @@
 package org.agatom.springatom.model.beans.person.client;
 
 import org.agatom.springatom.model.beans.appointment.SAppointment;
+import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
 import org.agatom.springatom.model.beans.meta.SMetaDataHolder;
 import org.agatom.springatom.model.beans.util.SIssueReporter;
 import org.hibernate.annotations.OnDelete;
@@ -40,7 +41,7 @@ import javax.persistence.*;
                 nullable = false)
 )
 public class SClientProblemReport
-        extends SMetaDataHolder {
+        extends SMetaDataHolder<SClientProblemReportType, Long> {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)

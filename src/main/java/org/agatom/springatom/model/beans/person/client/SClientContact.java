@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.model.beans.person.client;
 
+import org.agatom.springatom.model.beans.meta.SContactType;
 import org.agatom.springatom.model.beans.meta.SMetaDataHolder;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -38,7 +39,7 @@ import javax.persistence.*;
                 nullable = false)
 )
 public class SClientContact
-        extends SMetaDataHolder {
+        extends SMetaDataHolder<SContactType, Long> {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "client",

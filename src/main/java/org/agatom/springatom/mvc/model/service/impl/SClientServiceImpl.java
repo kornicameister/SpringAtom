@@ -147,7 +147,7 @@ public class SClientServiceImpl
         final SClientContact clientContact = new SClientContact();
         clientContact.setClient(client);
         clientContact.setContact(contact);
-        clientContact.setMetaInformation(metaData);
+        clientContact.setMetaInformation((SContactType) metaData);
         return this.clientContactService.save(clientContact);
     }
 
