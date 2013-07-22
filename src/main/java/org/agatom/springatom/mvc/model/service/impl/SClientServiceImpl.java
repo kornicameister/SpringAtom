@@ -17,24 +17,27 @@
 
 package org.agatom.springatom.mvc.model.service.impl;
 
-import com.google.common.base.Preconditions;
-import org.agatom.springatom.jpa.*;
-import org.agatom.springatom.model.beans.meta.QSMetaData;
+import org.agatom.springatom.jpa.SClientRepository;
 import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
 import org.agatom.springatom.model.beans.meta.SContactType;
 import org.agatom.springatom.model.beans.meta.SMetaData;
-import org.agatom.springatom.model.beans.person.client.*;
+import org.agatom.springatom.model.beans.meta.SMetaDataType;
+import org.agatom.springatom.model.beans.person.client.QSClient;
+import org.agatom.springatom.model.beans.person.client.SClient;
+import org.agatom.springatom.model.beans.person.client.SClientContact;
+import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
+import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
-import org.agatom.springatom.model.beans.person.user.embeddable.SPersonalInformation;
 import org.agatom.springatom.model.beans.util.SIssueReporter;
 import org.agatom.springatom.mvc.model.exceptions.EntityDoesNotExists;
-import org.agatom.springatom.mvc.model.service.SClientService;
+import org.agatom.springatom.mvc.model.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -45,38 +48,46 @@ import java.util.List;
  */
 @Service
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
-public class SClientServiceImpl implements SClientService {
-    @Resource
-    SClientRepository              sClientRepository;
-    @Resource
-    SMechanicRepository            sMechanicRepository;
-    @Resource
-    SClientProblemReportRepository sClientProblemReportRepository;
-    @Resource
-    SMetaDataRepository            sMetaDataRepository;
-    @Resource
-    SClientContactRepository       sClientContactRepository;
+public class SClientServiceImpl
+        extends DefaultService<SClient, Long, SClientRepository>
+        implements SClientService {
+    SClientRepository clientRepository;
+    @Autowired
+    SMechanicService            mechanicService;
+    @Autowired
+    SClientProblemReportService clientProblemReportService;
+    @Autowired
+    SMetaDataService            metaDataService;
+    @Autowired
+    SClientContactService       clientContactService;
+
+    @Override
+    @Autowired(required = true)
+    public void autoWireRepository(final SClientRepository repo) {
+        this.clientRepository = repo;
+        this.jpaRepository = (JpaRepository) repo;
+    }
 
     @Override
     @Transactional(rollbackFor = EntityDoesNotExists.class)
     public SClient disable(@NotNull final Long pk) throws EntityDoesNotExists {
-        final SClient client = this.sClientRepository.findOne(pk);
+        final SClient client = this.clientRepository.findOne(pk);
         if (client == null) {
             throw new EntityDoesNotExists(SClient.class, pk);
         }
-        client.setDisabled(true);
-        return this.sClientRepository.saveAndFlush(client);
+        client.setEnabled(false);
+        return this.clientRepository.save(client);
     }
 
     @Override
     @Transactional(rollbackFor = EntityDoesNotExists.class)
     public SClient enable(@NotNull final Long pk) throws EntityDoesNotExists {
-        final SClient client = this.sClientRepository.findOne(pk);
+        final SClient client = this.clientRepository.findOne(pk);
         if (client == null) {
             throw new EntityDoesNotExists(SClient.class, pk);
         }
-        client.setDisabled(false);
-        return this.sClientRepository.saveAndFlush(client);
+        client.setEnabled(true);
+        return this.clientRepository.save(client);
     }
 
     @Override
@@ -84,14 +95,14 @@ public class SClientServiceImpl implements SClientService {
     public SClientProblemReport newProblemReport(@NotNull final String problem,
                                                  @NotNull final Long clientPk,
                                                  @NotNull final Long mechanicPk,
-                                                 @NotNull final SMetaDataRepository.MetaType metaType) throws
+                                                 @NotNull final SMetaDataType metaType) throws
             EntityDoesNotExists {
 
         // load objects
-        final SClient client = this.sClientRepository.findOne(clientPk);
-        final SMechanic mechanic = this.sMechanicRepository.findOne(mechanicPk);
-        final SClientProblemReportType problemReportType = (SClientProblemReportType) this.sMetaDataRepository
-                .findOne(QSMetaData.sMetaData.type.eq(metaType.getType()));
+        final SClient client = this.clientRepository.findOne(clientPk);
+        final SMechanic mechanic = this.mechanicService.findOne(mechanicPk);
+        final SClientProblemReportType problemReportType = (SClientProblemReportType) this.metaDataService
+                .findByType(metaType);
 
         if (client == null) {
             throw new EntityDoesNotExists(SClient.class, clientPk);
@@ -110,23 +121,23 @@ public class SClientServiceImpl implements SClientService {
         problemReport.setProblem(problem);
         problemReport.setMetaInformation(problemReportType);
 
-        return this.sClientProblemReportRepository.save(problemReport);
+        return this.clientProblemReportService.save(problemReport);
     }
 
     @Override
     @Transactional(rollbackFor = EntityDoesNotExists.class)
     public SClientContact newPhone(@NotNull final String contact,
                                    @NotNull final Long client) throws EntityDoesNotExists {
-        return this.newContactData(contact, client, SMetaDataRepository.MetaType.SCT_PHONE);
+        return this.newContactData(contact, client, SMetaDataType.SCT_PHONE);
     }
 
     @Override
     @Transactional(rollbackFor = EntityDoesNotExists.class)
     public SClientContact newContactData(@NotNull final String contact,
                                          @NotNull final Long clientPk,
-                                         @NotNull final SMetaDataRepository.MetaType type) throws EntityDoesNotExists {
-        final SClient client = this.sClientRepository.findOne(clientPk);
-        final SMetaData metaData = this.sMetaDataRepository.findOne(QSMetaData.sMetaData.type.eq(type.getType()));
+                                         @NotNull final SMetaDataType type) throws EntityDoesNotExists {
+        final SClient client = this.clientRepository.findOne(clientPk);
+        final SMetaData metaData = this.metaDataService.findByType(type);
         if (client == null) {
             throw new EntityDoesNotExists(SClient.class, clientPk);
         }
@@ -137,100 +148,58 @@ public class SClientServiceImpl implements SClientService {
         clientContact.setClient(client);
         clientContact.setContact(contact);
         clientContact.setMetaInformation(metaData);
-        return this.sClientContactRepository.save(clientContact);
+        return this.clientContactService.save(clientContact);
     }
 
     @Override
     @Transactional(rollbackFor = EntityDoesNotExists.class)
     public SClientContact newEmail(@NotNull final String contact,
                                    @NotNull final Long client) throws EntityDoesNotExists {
-        return this.newContactData(contact, client, SMetaDataRepository.MetaType.SCT_MAIL);
+        return this.newContactData(contact, client, SMetaDataType.SCT_MAIL);
     }
 
     @Override
     @Transactional(rollbackFor = EntityDoesNotExists.class)
     public SClientContact newCellPhone(@NotNull final String contact,
                                        @NotNull final Long client) throws EntityDoesNotExists {
-        return this.newContactData(contact, client, SMetaDataRepository.MetaType.SCT_CELL_PHONE);
+        return this.newContactData(contact, client, SMetaDataType.SCT_CELL_PHONE);
     }
 
     @Override
     @Transactional(rollbackFor = EntityDoesNotExists.class)
     public SClientContact newFax(@NotNull final String contact,
                                  @NotNull final Long client) throws EntityDoesNotExists {
-        return this.newContactData(contact, client, SMetaDataRepository.MetaType.SCT_FAX);
+        return this.newContactData(contact, client, SMetaDataType.SCT_FAX);
     }
 
     @Override
     public List<SClientContact> findAllContacts(final Long idClient) {
-        return (List<SClientContact>) this.sClientContactRepository
-                .findAll(QSClientContact.sClientContact.client.id.eq(idClient));
+        return this.clientContactService.findByClient(idClient);
     }
 
     @Override
     public List<SClient> findByPersonalInformation(@NotNull final SPersonalInformation information) {
-        return (List<SClient>) this.sClientRepository.findAll(QSClient.sClient.information.eq(information));
+        return (List<SClient>) this.clientRepository.findAll(QSClient.sClient.information.eq(information));
     }
 
     @Override
     public List<SClient> findByFirstName(@NotNull final String firstName) {
-        return (List<SClient>) this.sClientRepository.findAll(QSClient.sClient.information.firstName.eq(firstName));
+        return (List<SClient>) this.clientRepository.findAll(QSClient.sClient.information.firstName.eq(firstName));
     }
 
     @Override
     public List<SClient> findByLastName(@NotNull final String lastName) {
-        return (List<SClient>) this.sClientRepository.findAll(QSClient.sClient.information.lastName.eq(lastName));
+        return (List<SClient>) this.clientRepository.findAll(QSClient.sClient.information.lastName.eq(lastName));
     }
 
     @Override
     public SClient findByEmail(@NotNull final String email) {
-        return this.sClientRepository.findOne(QSClient.sClient.email.eq(email));
+        return this.clientRepository.findOne(QSClient.sClient.email.eq(email));
     }
 
     @Override
     public List<SClient> findByStatus(@NotNull final Boolean enabled) {
-        return (List<SClient>) this.sClientRepository.findAll(QSClient.sClient.disabled.eq(enabled));
-    }
-
-    @Override
-    public SClient findOne(@NotNull final Long id) {
-        return this.sClientRepository.findOne(id);
-    }
-
-    @Override
-    public List<SClient> findAll() {
-        return this.sClientRepository.findAll();
-    }
-
-    @Override
-    @Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
-    public SClient save(@NotNull final SClient persistable) {
-        Preconditions.checkArgument(persistable != null, "SClient must not be null");
-        return this.sClientRepository.save(persistable);
-    }
-
-    @Override
-    public Long count() {
-        return this.sClientRepository.count();
-    }
-
-    @Override
-    @Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
-    public void deleteOne(@NotNull final Long pk) {
-        Preconditions.checkArgument(pk != null, "SClient#pk must not be null");
-        this.sClientRepository.delete(pk);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void deleteAll() {
-        this.sClientRepository.deleteAll();
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void delete(final Long id) {
-        this.sClientRepository.delete(id);
+        return (List<SClient>) this.clientRepository.findAll(QSClient.sClient.enabled.eq(enabled));
     }
 
 }

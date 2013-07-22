@@ -13,13 +13,13 @@
   ~ GNU General Public License for more details.                                                  ~
   ~                                                                                               ~
   ~ You should have received a copy of the GNU General Public License                             ~
-  ~ along with SpringAtom.  If not, see <http://www.gnu.org/licenses/gpl.html>.                   ~
+  ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:p="http://www.springframework.org/schema/p"
+<beans xmlns:p="http://www.springframework.org/schema/p"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
       http://www.springframework.org/schema/cache
@@ -28,9 +28,11 @@
     <!-- Ehcache library setup -->
     <bean id="cacheManager"
           class="org.springframework.cache.ehcache.EhCacheCacheManager"
+          lazy-init="true"
           p:cacheManager-ref="ehcache"/>
     <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
           p:configLocation="classpath:ehcache.xml"
+          lazy-init="true"
           p:shared="true"/>
 
     <cache:annotation-driven/>

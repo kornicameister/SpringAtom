@@ -17,10 +17,11 @@
 
 package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.jpa.SMetaDataRepository;
 import org.agatom.springatom.model.beans.meta.SMetaData;
+import org.agatom.springatom.model.beans.meta.SMetaDataType;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author kornicameister
@@ -28,7 +29,7 @@ import javax.validation.constraints.NotNull;
  * @since 0.0.1
  */
 public interface SMetaDataService {
-    Iterable findAll(@NotNull final Class<? extends SMetaData> clazz);
+    List<SMetaData> findAll(@NotNull final Class<? extends SMetaData> clazz);
 
-    SMetaData findByType(@NotNull final SMetaDataRepository.MetaType type);
+    SMetaData findByType(@NotNull final SMetaDataType type);
 }

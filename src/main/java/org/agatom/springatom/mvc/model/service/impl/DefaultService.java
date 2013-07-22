@@ -17,39 +17,64 @@
 
 package org.agatom.springatom.mvc.model.service.impl;
 
-import org.agatom.springatom.jpa.SMetaDataRepository;
-import org.agatom.springatom.model.beans.meta.QSMetaData;
-import org.agatom.springatom.model.beans.meta.SMetaData;
-import org.agatom.springatom.model.beans.meta.SMetaDataType;
-import org.agatom.springatom.mvc.model.service.SMetaDataService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.google.common.base.Preconditions;
+import org.agatom.springatom.mvc.model.service.Service;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 /**
+ * {@code DefaultService} is the base class for all services
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Service
-@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
-public class SMetaDataServiceImpl implements SMetaDataService {
 
-    @Autowired
-    SMetaDataRepository repository;
+@SuppressWarnings("unchecked")
+@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
+abstract class DefaultService<T extends Persistable, ID extends Serializable, R extends JpaRepository>
+        implements Service<T, ID, R> {
+    protected JpaRepository jpaRepository;
 
     @Override
-    public List<SMetaData> findAll(@NotNull final Class<? extends SMetaData> clazz) {
-        return (List<SMetaData>) this.repository.findAll(QSMetaData.sMetaData.instanceOf(clazz));
+    public T findOne(@NotNull final ID id) {
+        return (T) this.jpaRepository.findOne(id);
     }
 
     @Override
-    public SMetaData findByType(@NotNull final SMetaDataType type) {
-        return this.repository.findOne(QSMetaData.sMetaData.type.eq(type));
+    public List<T> findAll() {
+        return this.jpaRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
+    public T save(@NotNull final T persistable) {
+        Preconditions
+                .checkArgument(persistable != null, "Persistable must not be null");
+        return (T) this.jpaRepository.save(persistable);
+    }
+
+    @Override
+    public Long count() {
+        return this.jpaRepository.count();
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteOne(@NotNull final ID pk) {
+        this.jpaRepository.delete(pk);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteAll() {
+        this.jpaRepository.deleteAll();
     }
 }

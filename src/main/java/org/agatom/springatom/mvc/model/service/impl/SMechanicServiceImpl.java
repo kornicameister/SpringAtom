@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.mvc.model.service.impl;
 
-import com.google.common.base.Preconditions;
 import org.agatom.springatom.jpa.SMechanicRepository;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
 import org.agatom.springatom.mvc.model.service.SMechanicService;
@@ -27,9 +26,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
-
 /**
  * @author kornicameister
  * @version 0.0.1
@@ -38,49 +34,15 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SMechanicServiceImpl
+        extends DefaultService<SMechanic, Long, SMechanicRepository>
         implements SMechanicService {
 
+    SMechanicRepository repository;
+
+    @Override
     @Autowired
-    SMechanicRepository mechanicService;
-
-    @Override
-    public SMechanic findOne(@NotNull final Long id) {
-        return this.mechanicService.findOne(id);
-    }
-
-    @Override
-    public List<SMechanic> findAll() {
-        return this.mechanicService.findAll();
-    }
-
-    @Override
-    @Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
-    public SMechanic save(@NotNull final SMechanic persistable) {
-        Preconditions.checkArgument(persistable != null, "SMechanic must not be null");
-        return this.mechanicService.save(persistable);
-    }
-
-    @Override
-    public Long count() {
-        return this.mechanicService.count();
-    }
-
-    @Override
-    @Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
-    public void deleteOne(@NotNull final Long pk) {
-        Preconditions.checkArgument(pk != null, "SMechanic#pk must not be null");
-        this.mechanicService.delete(pk);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void deleteAll() {
-        this.mechanicService.deleteAll();
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void delete(final Long id) {
-        this.mechanicService.delete(id);
+    public void autoWireRepository(final SMechanicRepository repo) {
+        this.repository = repo;
+        this.jpaRepository = repo;
     }
 }

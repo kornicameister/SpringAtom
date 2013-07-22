@@ -17,14 +17,24 @@
 
 package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.jpa.SClientProblemReportRepository;
-import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
+import org.agatom.springatom.jpa.SClientContactRepository;
+import org.agatom.springatom.model.beans.person.client.SClientContact;
+
+import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
-public interface SClientProblemReportService extends Service<SClientProblemReport, Long, SClientProblemReportRepository> {
+public interface SClientContactService extends Service<SClientContact, Long, SClientContactRepository> {
+    /**
+     * Returns all {@link SClientContact} entities for the given {@link org.agatom.springatom.model.beans.person.client.SClient#id}
+     *
+     * @param idClient
+     *         id of the {@link org.agatom.springatom.model.beans.person.client.SClient}
+     *
+     * @return the list of all {@link SClientContact}s for given {@code SClient}
+     */
+    List<SClientContact> findByClient(Long idClient);
 }

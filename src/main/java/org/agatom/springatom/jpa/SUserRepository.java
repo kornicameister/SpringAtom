@@ -15,10 +15,12 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.service;
+package org.agatom.springatom.jpa;
 
-import org.agatom.springatom.jpa.SClientProblemReportRepository;
-import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
+import org.agatom.springatom.model.beans.user.SUser;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.repository.RepositoryDefinition;
 
 /**
  * @author kornicameister
@@ -26,5 +28,7 @@ import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
  * @since 0.0.1
  */
 
-public interface SClientProblemReportService extends Service<SClientProblemReport, Long, SClientProblemReportRepository> {
+@RepositoryDefinition(domainClass = SUser.class, idClass = Long.class)
+public interface SUserRepository
+        extends JpaRepository<SUser, Long>, QueryDslPredicateExecutor<SUser> {
 }

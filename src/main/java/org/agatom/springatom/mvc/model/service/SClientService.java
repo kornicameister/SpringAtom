@@ -17,11 +17,12 @@
 
 package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.jpa.SMetaDataRepository;
+import org.agatom.springatom.jpa.SClientRepository;
+import org.agatom.springatom.model.beans.meta.SMetaDataType;
 import org.agatom.springatom.model.beans.person.client.SClient;
 import org.agatom.springatom.model.beans.person.client.SClientContact;
 import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
-import org.agatom.springatom.model.beans.person.user.embeddable.SPersonalInformation;
+import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
 import org.agatom.springatom.mvc.model.exceptions.EntityDoesNotExists;
 
 import javax.validation.constraints.NotNull;
@@ -32,7 +33,7 @@ import java.util.List;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SClientService extends GenericService<SClient, Long> {
+public interface SClientService extends Service<SClient, Long, SClientRepository> {
 
     SClient disable(@NotNull final Long pk) throws EntityDoesNotExists;
 
@@ -41,7 +42,7 @@ public interface SClientService extends GenericService<SClient, Long> {
     SClientProblemReport newProblemReport(@NotNull final String problem,
                                           @NotNull final Long client,
                                           @NotNull final Long mechanic,
-                                          @NotNull final SMetaDataRepository.MetaType problemReportType) throws
+                                          @NotNull final SMetaDataType problemReportType) throws
             EntityDoesNotExists;
 
     SClientContact newPhone(@NotNull final String contact,
@@ -49,7 +50,7 @@ public interface SClientService extends GenericService<SClient, Long> {
 
     SClientContact newContactData(@NotNull String contact,
                                   @NotNull Long clientPk,
-                                  @NotNull SMetaDataRepository.MetaType type) throws EntityDoesNotExists;
+                                  @NotNull SMetaDataType type) throws EntityDoesNotExists;
 
     SClientContact newEmail(@NotNull final String contact,
                             @NotNull final Long client) throws EntityDoesNotExists;

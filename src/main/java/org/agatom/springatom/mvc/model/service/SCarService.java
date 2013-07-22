@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.mvc.model.service;
 
+import org.agatom.springatom.jpa.SCarRepository;
 import org.agatom.springatom.model.beans.car.SCar;
 import org.agatom.springatom.model.beans.car.SCarMaster;
 import org.agatom.springatom.model.beans.links.SCarClientLink;
@@ -30,7 +31,7 @@ import java.util.Set;
  * @since 0.0.1
  */
 
-public interface SCarService extends GenericService<SCar, Long> {
+public interface SCarService extends Service<SCar, Long, SCarRepository> {
     SCarMaster findByMaster(@NotNull final String brand,
                             @NotNull final String model);
 

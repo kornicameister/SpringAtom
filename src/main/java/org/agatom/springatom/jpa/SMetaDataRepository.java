@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.jpa;
 
-import org.agatom.springatom.model.beans.meta.*;
+import org.agatom.springatom.model.beans.meta.SMetaData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.RepositoryDefinition;
@@ -31,53 +31,4 @@ import org.springframework.data.repository.RepositoryDefinition;
 @RepositoryDefinition(domainClass = SMetaData.class, idClass = Long.class)
 public interface SMetaDataRepository
         extends JpaRepository<SMetaData, Long>, QueryDslPredicateExecutor<SMetaData> {
-
-    public static enum MetaType {
-        //SCT
-        SCT_FAX("fax", Constants.CONTACT_TYPE_CLASS),
-        SCT_CELL_PHONE("cellPhone", Constants.CONTACT_TYPE_CLASS),
-        SCT_MAIL("mail", Constants.CONTACT_TYPE_CLASS),
-        SCT_PHONE("phone", Constants.CONTACT_TYPE_CLASS),
-        //SCT
-
-        //SAT
-        SAT_REPAIR("repair", Constants.APPOINTMENT_TASK_TYPE_CLASS),
-        SAT_NORMAL("normal", Constants.APPOINTMENT_TASK_TYPE_CLASS),
-        //SAT
-
-        //SCPR
-        SCPR_DEBTS("debts", Constants.CLIENT_PROBLEM_REPORT_TYPE_CLASS),
-        SCPR_FAKE_ID("fake_id", Constants.CLIENT_PROBLEM_REPORT_TYPE_CLASS),
-        SCPR_MISSED_APP("missed_app", Constants.CLIENT_PROBLEM_REPORT_TYPE_CLASS),
-        SCPR_NO_PAYMENT("no_payment", Constants.CLIENT_PROBLEM_REPORT_TYPE_CLASS),
-        //SCPR
-
-        //SNT
-        SNT_APP_CANCELED("app_canceled", Constants.NOTIFICATION_TYPE_CLASS),
-        SNT_APP_DONE("app_done", Constants.NOTIFICATION_TYPE_CLASS),
-        SNT_APP_REJECTED("app_rejected", Constants.NOTIFICATION_TYPE_CLASS);
-        //SNT
-        private final String                     type;
-        private final Class<? extends SMetaData> target;
-
-        MetaType(final String type, Class<? extends SMetaData> target) {
-            this.type = type;
-            this.target = target;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public Class<? extends SMetaData> getTarget() {
-            return target;
-        }
-
-        private static class Constants {
-            private static final Class<SContactType>             CONTACT_TYPE_CLASS               = SContactType.class;
-            private static final Class<SAppointmentTaskType>     APPOINTMENT_TASK_TYPE_CLASS      = SAppointmentTaskType.class;
-            private static final Class<SClientProblemReportType> CLIENT_PROBLEM_REPORT_TYPE_CLASS = SClientProblemReportType.class;
-            private static final Class<SNotificationType>        NOTIFICATION_TYPE_CLASS          = SNotificationType.class;
-        }
-    }
 }

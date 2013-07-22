@@ -15,32 +15,23 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.service;
+package org.agatom.springatom.jpa;
 
-import org.springframework.data.domain.Persistable;
-
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.util.List;
+import org.agatom.springatom.model.beans.appointment.SAppointment;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.repository.RepositoryDefinition;
 
 /**
- * @author Tomasz
+ * {@code SAppointmentRepository} supports CRUD operations, backend with {@link org.springframework.data.jpa.repository.support.Querydsl}
+ * support.
+ *
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 
-public interface GenericService<T extends Persistable, ID extends Serializable> {
-    T findOne(@NotNull Long id);
-
-    List<T> findAll();
-
-    T save(@NotNull final T persistable);
-
-    Long count();
-
-    void deleteOne(@NotNull final ID pk);
-
-    void deleteAll();
-
-    void delete(ID id);
+@RepositoryDefinition(domainClass = SAppointment.class, idClass = Long.class)
+public interface SAppointmentRepository
+        extends JpaRepository<SAppointment, Long>, QueryDslPredicateExecutor<SAppointment> {
 }

@@ -15,25 +15,20 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.listeners;
+package org.agatom.springatom.jpa;
 
-import org.agatom.springatom.model.beans.PersistentVersionedObject;
-import org.hibernate.envers.RevisionListener;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
+import org.agatom.springatom.model.beans.appointment.SAppointmentTask;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.repository.RepositoryDefinition;
 
 /**
- * @author Tomasz
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 
-public class VersionedObjectListener implements RevisionListener {
-    @Override
-    public void newRevision(final Object revisionEntity) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        PersistentVersionedObject versionedObject = (PersistentVersionedObject) revisionEntity;
-
-        versionedObject.setLastModifiedBy(user);
-    }
+@RepositoryDefinition(domainClass = SAppointmentTask.class, idClass = Long.class)
+public interface SAppointmentTaskRepository
+        extends JpaRepository<SAppointmentTask, Long>, QueryDslPredicateExecutor<SAppointmentTask> {
 }

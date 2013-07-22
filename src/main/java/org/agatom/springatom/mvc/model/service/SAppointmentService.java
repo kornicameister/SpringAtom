@@ -17,14 +17,13 @@
 
 package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.jpa.SClientProblemReportRepository;
-import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
+import org.agatom.springatom.jpa.SCarRepository;
+import org.agatom.springatom.model.beans.appointment.SAppointment;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
-public interface SClientProblemReportService extends Service<SClientProblemReport, Long, SClientProblemReportRepository> {
+public interface SAppointmentService extends Service<SAppointment, Long, SCarRepository> {
 }

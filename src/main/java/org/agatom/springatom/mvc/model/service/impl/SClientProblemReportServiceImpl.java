@@ -17,18 +17,15 @@
 
 package org.agatom.springatom.mvc.model.service.impl;
 
-import com.google.common.base.Preconditions;
 import org.agatom.springatom.jpa.SClientProblemReportRepository;
 import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
 import org.agatom.springatom.mvc.model.service.SClientProblemReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * @author kornicameister
@@ -38,48 +35,16 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
-public class SClientProblemReportServiceImpl implements SClientProblemReportService {
+public class SClientProblemReportServiceImpl
+        extends DefaultService<SClientProblemReport, Long, SClientProblemReportRepository>
+        implements SClientProblemReportService {
 
-    @Autowired
     SClientProblemReportRepository repository;
 
     @Override
-    public SClientProblemReport findOne(@NotNull final Long id) {
-        return this.repository.findOne(id);
-    }
-
-    @Override
-    public List<SClientProblemReport> findAll() {
-        return this.repository.findAll();
-    }
-
-    @Override
-    @Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
-    public SClientProblemReport save(@NotNull final SClientProblemReport persistable) {
-        Preconditions.checkArgument(persistable != null, "SClientProblemReport must not be null");
-        return this.repository.saveAndFlush(persistable);
-    }
-
-    @Override
-    public Long count() {
-        return this.repository.count();
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void deleteOne(@NotNull final Long pk) {
-        this.repository.delete(pk);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void deleteAll() {
-        this.repository.deleteAll();
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void delete(final Long id) {
-        this.repository.delete(id);
+    @Autowired(required = true)
+    public void autoWireRepository(final SClientProblemReportRepository repo) {
+        this.repository = repo;
+        this.jpaRepository = (JpaRepository) repo;
     }
 }

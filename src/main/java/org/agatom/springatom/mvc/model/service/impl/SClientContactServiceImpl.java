@@ -15,10 +15,19 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.service;
+package org.agatom.springatom.mvc.model.service.impl;
 
-import org.agatom.springatom.jpa.SClientProblemReportRepository;
-import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
+import org.agatom.springatom.jpa.SClientContactRepository;
+import org.agatom.springatom.model.beans.person.client.QSClientContact;
+import org.agatom.springatom.model.beans.person.client.SClientContact;
+import org.agatom.springatom.mvc.model.service.SClientContactService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author kornicameister
@@ -26,5 +35,24 @@ import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
  * @since 0.0.1
  */
 
-public interface SClientProblemReportService extends Service<SClientProblemReport, Long, SClientProblemReportRepository> {
+@Service
+@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
+public class SClientContactServiceImpl
+        extends DefaultService<SClientContact, Long, SClientContactRepository>
+        implements SClientContactService {
+
+    SClientContactRepository clientContactRepository;
+
+    @Override
+    public List<SClientContact> findByClient(final Long idClient) {
+        return (List<SClientContact>) this.clientContactRepository
+                .findAll(QSClientContact.sClientContact.client.id.eq(idClient));
+    }
+
+    @Override
+    @Autowired
+    public void autoWireRepository(final SClientContactRepository repo) {
+        this.clientContactRepository = repo;
+        this.jpaRepository = repo;
+    }
 }
