@@ -24,11 +24,12 @@
      http://www.springframework.org/schema/context/spring-context.xsd">
 
     <import resource="spring/database/DataSource.xml"/>
+    <import resource="spring/database/DBPopulator.xml"/>
     <import resource="spring/database/Hibernate.xml"/>
     <import resource="spring/database/Ehcache.xml"/>
     <import resource="spring/database/TX.xml"/>
     <import resource="spring/database/JPA.xml"/>
-    <import resource="spring/database/DBPopulator.xml"/>
+    <import resource="spring/security/security.xml"/>
 
     <context:component-scan base-package="org.agatom.springatom.mvc"/>
 

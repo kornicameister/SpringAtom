@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is free software: you can redistribute it and/or modify                          ~
+  ~ it under the terms of the GNU General Public License as published by                          ~
+  ~ the Free Software Foundation, either version 3 of the License, or                             ~
+  ~ (at your option) any later version.                                                           ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is distributed in the hope that it will be useful,                               ~
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of                                ~
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                 ~
+  ~ GNU General Public License for more details.                                                  ~
+  ~                                                                                               ~
+  ~ You should have received a copy of the GNU General Public License                             ~
+  ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <http auto-config="true">
+        <form-login login-page="/app/account/login"
+                    default-target-url="/app/*"
+                    authentication-failure-url="/app/account/login/failed"/>
+
+        <anonymous enabled="false"/>
+        <session-management session-fixation-protection="newSession"/>
+        <access-denied-handler error-page="/app/access/denied"/>
+
+        <logout logout-success-url="/app/account/logout"/>
+    </http>
+
+    <authentication-manager>
+        <authentication-provider>
+            <password-encoder hash="sha-256" base64="true"/>
+            <jdbc-user-service
+                    id="userAuthenticationJdbcService"
+                    data-source-ref="dataSource"
+                    users-by-username-query="SELECT su.login,su.secPass FROM suser su WHERE login=?"
+                    authorities-by-username-query="SELECT u.login, ur.role FROM suser u, susertorole ur WHERE u.idSUser = ur.user AND u.login=?"
+                    />
+        </authentication-provider>
+    </authentication-manager>
+
+</beans:beans>
+
