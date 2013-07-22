@@ -17,11 +17,19 @@
 
 package org.agatom.springatom;
 
+import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import javax.annotation.Resource;
 
 /**
  * @author Tomasz
@@ -33,4 +41,18 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ContextConfiguration("file:src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml")
 public abstract class AbstractSpringTestCase extends ReflectionTestUtils {
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    protected WebApplicationContext wac;
+    protected MockMvc               mockMvc;
+    @Resource
+    private   FilterChainProxy      springSecurityFilterChain;
+
+    @Before
+    public void setup() {
+        this.mockMvc = MockMvcBuilders.
+                webAppContextSetup(this.wac)
+                .addFilter(this.springSecurityFilterChain, "/**")
+                .build();
+    }
 }

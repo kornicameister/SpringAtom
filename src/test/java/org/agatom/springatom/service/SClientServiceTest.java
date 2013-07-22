@@ -18,12 +18,12 @@
 package org.agatom.springatom.service;
 
 import org.agatom.springatom.AbstractSpringTestCase;
-import org.agatom.springatom.jpa.SMetaDataRepository;
+import org.agatom.springatom.model.beans.meta.SMetaDataType;
 import org.agatom.springatom.model.beans.person.client.SClient;
 import org.agatom.springatom.model.beans.person.client.SClientContact;
 import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
+import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
-import org.agatom.springatom.model.beans.person.user.embeddable.SPersonalInformation;
 import org.agatom.springatom.mvc.model.service.SClientProblemReportService;
 import org.agatom.springatom.mvc.model.service.SClientService;
 import org.agatom.springatom.mvc.model.service.SMechanicService;
@@ -111,10 +111,10 @@ public class SClientServiceTest extends AbstractSpringTestCase {
     @Test
     public void test_E_ChangeStatusOfClient() throws Exception {
         SClient sClient = this.clientBO.disable(SClientServiceTest.client.getId());
-        Assert.assertFalse("newClient#oldClient are equal", SClientServiceTest.client.getDisabled()
-                .equals(sClient.getDisabled()));
+        Assert.assertNotEquals("newClient#oldClient are equal", SClientServiceTest.client.isEnabled(),
+                sClient.isEnabled());
         SClientServiceTest.client = sClient;
-        Assert.assertTrue("newClient#disabled did not change", SClientServiceTest.client.getDisabled());
+        Assert.assertFalse("newClient#disabled did not change", SClientServiceTest.client.isEnabled());
     }
 
     @Test
@@ -143,12 +143,12 @@ public class SClientServiceTest extends AbstractSpringTestCase {
 
     @Test
     public void test_H_AddProblemReports() throws Exception {
-        List<SMetaDataRepository.MetaType> sMetaDataList = new ArrayList<>();
+        List<SMetaDataType> sMetaDataList = new ArrayList<>();
 
-        sMetaDataList.add(SMetaDataRepository.MetaType.SCPR_FAKE_ID);
-        sMetaDataList.add(SMetaDataRepository.MetaType.SCPR_DEBTS);
-        sMetaDataList.add(SMetaDataRepository.MetaType.SCPR_MISSED_APP);
-        sMetaDataList.add(SMetaDataRepository.MetaType.SCPR_NO_PAYMENT);
+        sMetaDataList.add(SMetaDataType.SCPR_FAKE_ID);
+        sMetaDataList.add(SMetaDataType.SCPR_DEBTS);
+        sMetaDataList.add(SMetaDataType.SCPR_MISSED_APP);
+        sMetaDataList.add(SMetaDataType.SCPR_NO_PAYMENT);
 
         Random seed = new Random();
 
