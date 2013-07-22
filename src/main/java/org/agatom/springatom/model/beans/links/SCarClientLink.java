@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.links;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.car.SCar;
 import org.agatom.springatom.model.beans.person.client.SClient;
@@ -61,39 +60,5 @@ public class SCarClientLink extends PersistentObject<Long> {
 
     public void setCar(final SCar car) {
         this.car = car;
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("client", client)
-                .add("car", car)
-                .toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SCarClientLink)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        SCarClientLink that = (SCarClientLink) o;
-
-        return car.equals(that.car) &&
-                client.equals(that.client);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + client.hashCode();
-        result = 31 * result + car.hashCode();
-        return result;
     }
 }

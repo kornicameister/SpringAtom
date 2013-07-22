@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.car.embeddable;
 
-import com.google.common.base.Objects;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Column;
@@ -92,13 +91,5 @@ public class SCarMasterManufacturingData implements Serializable {
 
         return !(brand != null ? !brand.equals(that.brand) : that.brand != null)
                 && !(model != null ? !model.equals(that.model) : that.model != null);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("brand", brand)
-                .add("model", model)
-                .toString();
     }
 }

@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.links;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
 import org.agatom.springatom.model.beans.car.SCar;
@@ -61,42 +60,5 @@ public class SCarAppointmentLink extends PersistentObject<Long> {
 
     public void setAppointment(final SAppointment appointment) {
         this.appointment = appointment;
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("car", car)
-                .add("carRevision", car)
-                .add("appointment", appointment)
-                .toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SCarAppointmentLink)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        SCarAppointmentLink that = (SCarAppointmentLink) o;
-
-        return !(appointment != null ? !appointment.equals(that.appointment) : that.appointment != null) &&
-                !(car != null ? !car.equals(that.car) : that.car != null) &&
-                !(car != null ? !car.equals(that.car) : that.car != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (car != null ? car.hashCode() : 0);
-        result = 31 * result + (car != null ? car.hashCode() : 0);
-        result = 31 * result + (appointment != null ? appointment.hashCode() : 0);
-        return result;
     }
 }

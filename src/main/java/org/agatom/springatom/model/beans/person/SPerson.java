@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.person;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
 import org.hibernate.annotations.NaturalId;
@@ -83,14 +82,5 @@ abstract public class SPerson
 
     public void setEnabled(final Boolean disabled) {
         this.enabled = disabled;
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("personal", information)
-                .add("email", email)
-                .add("enabled", enabled)
-                .toString();
     }
 }

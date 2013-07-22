@@ -17,11 +17,11 @@
 
 package org.agatom.springatom.model.beans.util;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -40,18 +40,17 @@ public class SIssueReporter {
             updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private SMechanic mechanic;
-
     @Type(type = "timestamp")
     @Column(name = "assigned")
-    private Date assigned;
-
-    public SIssueReporter() {
-        this.assigned = new Date();
-    }
+    private Date      assigned;
 
     public SIssueReporter(final SMechanic mechanic) {
         this();
         this.mechanic = mechanic;
+    }
+
+    public SIssueReporter() {
+        this.assigned = new Date();
     }
 
     public SMechanic getMechanic() {
@@ -62,41 +61,12 @@ public class SIssueReporter {
         this.mechanic = mechanic;
     }
 
-    public Date getAssigned() {
-        return assigned;
+    public DateTime getAssigned() {
+        return null == this.assigned ? null : new DateTime(this.assigned);
     }
 
-    public void setAssigned(final Date assigned) {
-        this.assigned = assigned;
+    public void setAssigned(final DateTime assigned) {
+        this.assigned = assigned.toDate();
     }
 
-    @Override
-    public int hashCode() {
-        int result = mechanic != null ? mechanic.hashCode() : 0;
-        result = 31 * result + (assigned != null ? assigned.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SIssueReporter)) {
-            return false;
-        }
-
-        SIssueReporter that = (SIssueReporter) o;
-
-        return !(assigned != null ? !assigned.equals(that.assigned) : that.assigned != null) &&
-                !(mechanic != null ? !mechanic.equals(that.mechanic) : that.mechanic != null);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("mechanic", mechanic)
-                .add("assigned", assigned)
-                .toString();
-    }
 }

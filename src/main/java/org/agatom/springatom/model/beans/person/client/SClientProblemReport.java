@@ -17,11 +17,8 @@
 
 package org.agatom.springatom.model.beans.person.client;
 
-import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
-import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
-import org.agatom.springatom.model.beans.meta.SMetaData;
-import org.agatom.springatom.model.beans.meta.SMetaDataCapable;
+import org.agatom.springatom.model.beans.meta.SMetaDataHolder;
 import org.agatom.springatom.model.beans.util.SIssueReporter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -42,16 +39,13 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
-public class SClientProblemReport extends PersistentObject<Long> implements SMetaDataCapable {
+public class SClientProblemReport
+        extends SMetaDataHolder {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "client", referencedColumnName = "idSClient")
     private SClient        client;
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.DETACH, targetEntity = SClientProblemReportType.class)
-    @JoinColumn(name = "type", referencedColumnName = "idSMetaData")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private SMetaData      type;
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "appointment",
             referencedColumnName = "idSAppointment",
@@ -94,46 +88,5 @@ public class SClientProblemReport extends PersistentObject<Long> implements SMet
 
     public void setReporter(final SIssueReporter reporter) {
         this.reporter = reporter;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SClientProblemReport)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        SClientProblemReport that = (SClientProblemReport) o;
-
-        return !(appointment != null ? !appointment.equals(that.appointment) : that.appointment != null) &&
-                client.equals(that.client) && problem.equals(that.problem) &&
-                !(reporter != null ? !reporter.equals(that.reporter) : that.reporter != null) &&
-                type.equals(that.type);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + client.hashCode();
-        result = 31 * result + type.hashCode();
-        result = 31 * result + (appointment != null ? appointment.hashCode() : 0);
-        result = 31 * result + problem.hashCode();
-        result = 31 * result + (reporter != null ? reporter.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public SMetaData getMetaInformation() {
-        return this.type;
-    }
-
-    @Override
-    public void setMetaInformation(final SMetaData metaData) {
-        this.type = metaData;
     }
 }

@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.links;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
@@ -76,40 +75,4 @@ public class SAppointmentWorkerLink extends PersistentVersionedObject {
         this.reporter = reporter;
     }
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("appointment", appointment)
-                .add("assignee", assignee)
-                .add("reporter", reporter)
-                .toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SAppointmentWorkerLink)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        SAppointmentWorkerLink that = (SAppointmentWorkerLink) o;
-
-        return !(appointment != null ? !appointment.equals(that.appointment) : that.appointment != null) &&
-                !(assignee != null ? !assignee.equals(that.assignee) : that.assignee != null) &&
-                !(reporter != null ? !reporter.equals(that.reporter) : that.reporter != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (appointment != null ? appointment.hashCode() : 0);
-        result = 31 * result + (assignee != null ? assignee.hashCode() : 0);
-        result = 31 * result + (reporter != null ? reporter.hashCode() : 0);
-        return result;
-    }
 }

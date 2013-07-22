@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.user.role;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
@@ -55,36 +54,5 @@ public class SRole extends PersistentObject<Long> {
 
     public void setRole(final SSecurityRoleEnum role) {
         this.role = role;
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("role", role)
-                .toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SRole)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        SRole sRole = (SRole) o;
-
-        return role.equals(sRole.role);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + role.hashCode();
-        return result;
     }
 }

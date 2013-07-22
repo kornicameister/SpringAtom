@@ -77,11 +77,4 @@ public class SUserCredentials implements Serializable {
         return !(login != null ? !login.equals(that.login) : that.login != null) && !(password != null ? !password
                 .equals(that.password) : that.password != null);
     }
-
-    @Override
-    public String toString() {
-        return "SUserCredentials{" +
-                "login='" + login + '\'' +
-                "} " + super.toString();
-    }
 }

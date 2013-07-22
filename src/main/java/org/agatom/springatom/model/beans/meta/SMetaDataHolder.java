@@ -15,37 +15,36 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.person.embeddable;
+package org.agatom.springatom.model.beans.meta;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import java.io.Serializable;
+import org.agatom.springatom.model.beans.PersistentObject;
+
+import javax.persistence.*;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Embeddable
-public class SPersonalInformation implements Serializable {
-    @Column(name = "fName", length = 45, nullable = false)
-    private String firstName;
-    @Column(name = "lName", length = 45, nullable = false)
-    private String lastName;
+@MappedSuperclass
+abstract public class SMetaDataHolder
+        extends PersistentObject<Long>
+        implements SMetaDataCapable {
 
-    public String getFirstName() {
-        return firstName;
+    @ManyToOne(optional = false,
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.DETACH
+    )
+    @JoinColumn(name = "type", referencedColumnName = "idSMetaData", updatable = true)
+    private SMetaData type;
+
+    @Override
+    public SMetaData getMetaInformation() {
+        return this.type;
     }
 
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(final String lastName) {
-        this.lastName = lastName;
+    @Override
+    public void setMetaInformation(final SMetaData metaData) {
+        this.type = metaData;
     }
 }

@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.meta;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
@@ -67,12 +66,5 @@ abstract public class SMetaData extends PersistentObject<Long> {
 
     public void setType(final String type) {
         this.setType(SMetaDataType.valueOf(type));
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("type", type)
-                .toString();
     }
 }

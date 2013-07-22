@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.car;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.car.embeddable.SCarMasterManufacturingData;
 import org.hibernate.annotations.BatchSize;
@@ -85,13 +84,5 @@ public class SCarMaster extends PersistentObject<Long> {
 
     public boolean removeChild(final Object car) {
         return this.children.remove(car);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("manufacturingData", manufacturingData)
-                .add("thumbnailPath", thumbnailPath)
-                .toString();
     }
 }

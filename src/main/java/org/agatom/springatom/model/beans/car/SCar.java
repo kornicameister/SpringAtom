@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.car;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentVersionedObject;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.envers.Audited;
@@ -80,38 +79,4 @@ public class SCar extends PersistentVersionedObject {
         this.vinNumber = vinNumber;
     }
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("carMaster", carMaster)
-                .add("registrationNumber", licencePlate)
-                .add("vinNumber", vinNumber)
-                .toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SCar)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        SCar sCar = (SCar) o;
-
-        return !(licencePlate != null ? !licencePlate.equals(sCar.licencePlate) : sCar.licencePlate != null)
-                && !(vinNumber != null ? !vinNumber.equals(sCar.vinNumber) : sCar.vinNumber != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (licencePlate != null ? licencePlate.hashCode() : 0);
-        result = 31 * result + (vinNumber != null ? vinNumber.hashCode() : 0);
-        return result;
-    }
 }

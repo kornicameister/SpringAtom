@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.links;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
 
 import javax.persistence.*;
@@ -54,37 +53,4 @@ public class SNotificationAppointmentLink extends SNotificationLink {
         this.workerLink = workerLink;
     }
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("appointment", appointment)
-                .add("workerLink", workerLink)
-                .toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SNotificationAppointmentLink)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        SNotificationAppointmentLink that = (SNotificationAppointmentLink) o;
-
-        return !(appointment != null ? !appointment.equals(that.appointment) : that.appointment != null) &&
-                !(workerLink != null ? !workerLink.equals(that.workerLink) : that.workerLink != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (appointment != null ? appointment.hashCode() : 0);
-        result = 31 * result + (workerLink != null ? workerLink.hashCode() : 0);
-        return result;
-    }
 }

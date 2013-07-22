@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.links;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.notification.SNotification;
 import org.agatom.springatom.model.beans.person.client.SClient;
@@ -78,42 +77,5 @@ public class SNotificationLink extends PersistentObject<Long> {
 
     public void setChecked(final Boolean read) {
         this.checked = read;
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("notification", notification)
-                .add("client", client)
-                .add("checked", checked)
-                .toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SNotificationLink)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        SNotificationLink that = (SNotificationLink) o;
-
-        return checked.equals(that.checked) &&
-                client.equals(that.client) &&
-                notification.equals(that.notification);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + notification.hashCode();
-        result = 31 * result + client.hashCode();
-        result = 31 * result + checked.hashCode();
-        return result;
     }
 }

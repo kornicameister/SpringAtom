@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.appointment;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.hibernate.annotations.Type;
 
@@ -112,43 +111,4 @@ public class SAppointment extends PersistentObject<Long> {
         return this.tasks != null && this.tasks.remove(sAppointmentTask);
     }
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("startDate", startDate)
-                .add("endDate", endDate)
-                .add("startTime", startTime)
-                .add("endTime", endTime)
-                .toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SAppointment)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        SAppointment that = (SAppointment) o;
-
-        return !(endDate != null ? !endDate.equals(that.endDate) : that.endDate != null) &&
-                !(endTime != null ? !endTime.equals(that.endTime) : that.endTime != null) &&
-                !(startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) &&
-                !(startTime != null ? !startTime.equals(that.startTime) : that.startTime != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
-        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
-        result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
-        result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
-        return result;
-    }
 }

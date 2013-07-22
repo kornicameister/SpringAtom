@@ -131,28 +131,4 @@ public class SUser extends PersistentVersionedObject {
         }
         return rolesIn.containsAll(roles);
     }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SUser)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        final SUser sUser = (SUser) o;
-
-        return !(credentials != null ? !credentials.equals(sUser.credentials) : sUser.credentials != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (credentials != null ? credentials.hashCode() : 0);
-        return result;
-    }
 }

@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.model.beans.user.role;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.model.beans.user.SUser;
 
 import javax.persistence.*;
@@ -73,31 +72,5 @@ public class SUserToRole implements Serializable {
     @Transient
     public void setRole(final SRole role) {
         pk.setRole(role);
-    }
-
-    @Override
-    public int hashCode() {
-        return pk.hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SUserToRole)) {
-            return false;
-        }
-
-        SUserToRole that = (SUserToRole) o;
-
-        return pk.equals(that.pk);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("pk", pk)
-                .toString();
     }
 }

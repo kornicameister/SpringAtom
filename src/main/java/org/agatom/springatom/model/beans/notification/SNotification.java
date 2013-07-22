@@ -17,13 +17,14 @@
 
 package org.agatom.springatom.model.beans.notification;
 
-import com.google.common.base.Objects;
-import org.agatom.springatom.model.beans.PersistentObject;
-import org.agatom.springatom.model.beans.meta.SNotificationType;
-import org.hibernate.annotations.NaturalId;
+import org.agatom.springatom.model.beans.meta.SMetaDataHolder;
 import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
 
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -40,29 +41,17 @@ import java.util.Date;
                 updatable = false,
                 nullable = false)
 )
-public class SNotification extends PersistentObject<Long> {
+public class SNotification
+        extends SMetaDataHolder {
 
-    @NaturalId
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "type",
-            referencedColumnName = "idSMetaData", updatable = true)
-    private SNotificationType type;
     @Column(name = "message", length = 1000)
-    private String            message;
+    private String message;
     @Type(type = "timestamp")
     @Column(name = "sent")
-    private Date              sent;
+    private Date   sent;
 
     public SNotification() {
         super();
-    }
-
-    public SNotificationType getType() {
-        return type;
-    }
-
-    public void setType(final SNotificationType type) {
-        this.type = type;
     }
 
     public String getMessage() {
@@ -73,48 +62,13 @@ public class SNotification extends PersistentObject<Long> {
         this.message = notification;
     }
 
-    public Date getSent() {
-        return sent;
+    public DateTime getSent() {
+        return null == this.sent ? null : new DateTime(this.sent);
     }
 
-    public void setSent(final Date sent) {
-        this.sent = sent;
+    public void setSent(final DateTime sent) {
+        this.sent = sent.toDate();
     }
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("type", type)
-                .add("message", message)
-                .add("sent", sent)
-                .toString();
-    }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SNotification)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        SNotification that = (SNotification) o;
-
-        return !(message != null ? !message.equals(that.message) : that.message != null) &&
-                !(sent != null ? !sent.equals(that.sent) : that.sent != null) &&
-                !(type != null ? !type.equals(that.type) : that.type != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (message != null ? message.hashCode() : 0);
-        result = 31 * result + (sent != null ? sent.hashCode() : 0);
-        return result;
-    }
 }

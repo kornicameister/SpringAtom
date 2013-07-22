@@ -17,10 +17,7 @@
 
 package org.agatom.springatom.model.beans.appointment;
 
-import com.google.common.base.Objects;
-import org.agatom.springatom.model.beans.PersistentObject;
-import org.agatom.springatom.model.beans.meta.SAppointmentTaskType;
-import org.hibernate.annotations.NaturalId;
+import org.agatom.springatom.model.beans.meta.SMetaDataHolder;
 
 import javax.persistence.*;
 
@@ -38,16 +35,13 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
-public class SAppointmentTask extends PersistentObject<Long> {
+public class SAppointmentTask
+        extends SMetaDataHolder {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment", updatable = false)
-    private SAppointment         appointment;
-    @NaturalId
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "type", referencedColumnName = "idSMetaData", updatable = true)
-    private SAppointmentTaskType type;
+    private SAppointment appointment;
     @Column(name = "task", nullable = false, length = 444)
-    private String               task;
+    private String       task;
 
     public SAppointment getAppointment() {
         return appointment;
@@ -55,14 +49,6 @@ public class SAppointmentTask extends PersistentObject<Long> {
 
     public void setAppointment(final SAppointment appointment) {
         this.appointment = appointment;
-    }
-
-    public SAppointmentTaskType getType() {
-        return type;
-    }
-
-    public void setType(final SAppointmentTaskType type) {
-        this.type = type;
     }
 
     public String getTask() {
@@ -73,37 +59,4 @@ public class SAppointmentTask extends PersistentObject<Long> {
         this.task = task;
     }
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("appointment", appointment)
-                .add("type", type)
-                .add("task", task)
-                .toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SAppointmentTask)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        SAppointmentTask that = (SAppointmentTask) o;
-
-        return !(type != null ? !type.equals(that.type) : that.type != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        return result;
-    }
 }
