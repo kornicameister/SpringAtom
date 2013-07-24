@@ -23,6 +23,8 @@ import org.agatom.springatom.model.beans.meta.SMetaDataHolder;
 import org.agatom.springatom.model.beans.util.SIssueReporter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
 
@@ -40,6 +42,7 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
+@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class SClientProblemReport
         extends SMetaDataHolder<SClientProblemReportType, Long> {
 

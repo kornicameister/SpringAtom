@@ -17,5 +17,13 @@ TRUNCATE TABLE `sappointmenttask`;
 TRUNCATE TABLE `sappointmentworkerlink`;
 TRUNCATE TABLE `sappointmentworkerlink_history`;
 TRUNCATE TABLE `scar`;
+TRUNCATE TABLE `scar_history`;
+TRUNCATE TABLE `sclientproblemreport`;
+TRUNCATE TABLE `sclientproblemreport_history`;
+TRUNCATE TABLE `sclient_history`;
+TRUNCATE TABLE `revchanges`;
+TRUNCATE TABLE `scarmaster`;
+TRUNCATE TABLE `snotification`;
+TRUNCATE TABLE `snotificationlink`;
 
 SET foreign_key_checks = 1;

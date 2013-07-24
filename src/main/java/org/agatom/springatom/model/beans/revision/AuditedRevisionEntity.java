@@ -15,50 +15,32 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.links;
+package org.agatom.springatom.model.beans.revision;
 
-import org.agatom.springatom.model.beans.PersistentObject;
-import org.agatom.springatom.model.beans.car.SCar;
-import org.agatom.springatom.model.beans.person.client.SClient;
+import org.hibernate.envers.DefaultTrackingModifiedEntitiesRevisionEntity;
+import org.hibernate.envers.RevisionEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SCarClientLink")
-@Table(name = "SCarClientLink")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSCarClientLink",
-                updatable = false,
-                nullable = false)
-)
-public class SCarClientLink extends PersistentObject<Long> {
+@Table(name = "revinfo")
+@Entity(name = "revinfo")
+@RevisionEntity(value = AuditingRevisionEntity.class)
+public class AuditedRevisionEntity extends DefaultTrackingModifiedEntitiesRevisionEntity {
+    @Column(length = 50)
+    private String user;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "client", referencedColumnName = "idSClient", updatable = false)
-    private SClient client;
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "car", referencedColumnName = "idScar")
-    private SCar    car;
-
-    public SClient getClient() {
-        return client;
+    public String getUser() {
+        return user;
     }
 
-    public void setClient(final SClient client) {
-        this.client = client;
-    }
-
-    public SCar getCar() {
-        return car;
-    }
-
-    public void setCar(final SCar car) {
-        this.car = car;
+    public void setUser(final String user) {
+        this.user = user;
     }
 }

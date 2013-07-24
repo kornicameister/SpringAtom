@@ -45,17 +45,16 @@ import javax.persistence.*;
         )
 )
 @Inheritance(strategy = InheritanceType.JOINED)
+@Audited(auditParents = PersistentVersionedObject.class)
 abstract public class SPerson
         extends PersistentVersionedObject {
 
     @Embedded
     private SPersonalInformation information;
     @Email
-    @Audited
     @NaturalId
     @Column(name = "email", length = 45, nullable = false, unique = true)
     private String               email;
-    @Audited
     @Type(type = "boolean")
     @Column(name = "enabled")
     private Boolean enabled = Boolean.TRUE;

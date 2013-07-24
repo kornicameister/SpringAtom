@@ -19,7 +19,6 @@ package org.agatom.springatom.model.beans.person.mechanic;
 
 import org.agatom.springatom.model.beans.person.SPerson;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -30,10 +29,10 @@ import javax.persistence.Table;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SMechanic")
 @Table(name = "SMechanic")
+@Entity(name = "SMechanic")
+@Audited(auditParents = SPerson.class)
 @PrimaryKeyJoinColumn(name = "idSMechanic")
-@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class SMechanic extends SPerson {
 
 }

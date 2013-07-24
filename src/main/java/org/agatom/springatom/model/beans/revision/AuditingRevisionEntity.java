@@ -15,49 +15,27 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.person.client;
+package org.agatom.springatom.model.beans.revision;
 
-import org.agatom.springatom.model.beans.person.SPerson;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
-
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import org.hibernate.envers.RevisionListener;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Table(name = "SClient")
-@Entity(name = "SClient")
-@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-@PrimaryKeyJoinColumn(name = "idSClient")
-public class SClient extends SPerson {
-
-    @BatchSize(size = 10)
-    @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "client",
-            cascade = {
-                    CascadeType.REMOVE
-            }
-    )
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<SClientProblemReport> problemReportSet = new HashSet<>();
-
-    public SClient() {
-        super();
-    }
-
-    public Set<SClientProblemReport> getProblemReportSet() {
-        return problemReportSet;
-    }
-
-    public void setProblemReportSet(final Set<SClientProblemReport> problemReportSet) {
-        this.problemReportSet = problemReportSet;
+public class AuditingRevisionEntity implements RevisionListener {
+    @Override
+    public void newRevision(final Object revisionEntity) {
+        final AuditedRevisionEntity auditedRevisionEntity = (AuditedRevisionEntity) revisionEntity;
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            final String userName = authentication.getName();
+            auditedRevisionEntity.setUser(userName);
+        } else {
+            auditedRevisionEntity.setUser("SYSTEM");
+        }
     }
 }

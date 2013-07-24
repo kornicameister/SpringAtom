@@ -18,7 +18,11 @@
 package org.agatom.springatom.model.beans.appointment;
 
 import org.agatom.springatom.model.beans.PersistentObject;
+import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
+import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import java.sql.Time;
@@ -40,7 +44,9 @@ import java.util.Set;
                 updatable = false,
                 nullable = false)
 )
-public class SAppointment extends PersistentObject<Long> {
+public class SAppointment
+        extends PersistentObject<Long>
+        implements Persistable<Long> {
 
     @Type(type = "timestamp")
     @Column(name = "startDate")
@@ -57,7 +63,10 @@ public class SAppointment extends PersistentObject<Long> {
     @Column(nullable = false,
             name = "endTime")
     private Time                  endTime;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "appointment")
+    @Formula(value = "endTime - startTime")
+    private Long                  duration;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "appointment", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<SAppointmentTask> tasks;
 
     public Date getStartDate() {

@@ -18,8 +18,10 @@
 package org.agatom.springatom.model.beans.car;
 
 import org.agatom.springatom.model.beans.PersistentVersionedObject;
+import org.agatom.springatom.model.beans.person.client.SClient;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
 
@@ -37,22 +39,21 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
+// TODO is business model update required ?
 public class SCar extends PersistentVersionedObject {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "carMaster", referencedColumnName = "idSCarMaster", updatable = true)
     private SCarMaster carMaster;
-    @Audited
+    @Audited(targetAuditMode = RelationTargetAuditMode.AUDITED)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "owner", referencedColumnName = "idSClient", updatable = false)
+    private SClient    owner;
     @NaturalId(mutable = true)
-    @Column(nullable = false,
-            length = 45,
-            name = "licencePlate")
+    @Column(nullable = false, length = 45, name = "licencePlate", unique = true)
     private String     licencePlate;
-    @Audited
     @NaturalId(mutable = true)
-    @Column(nullable = false,
-            length = 45,
-            name = "vinNumber")
+    @Column(nullable = false, length = 45, name = "vinNumber", unique = true)
     private String     vinNumber;
 
     public SCarMaster getCarMaster() {
@@ -79,4 +80,11 @@ public class SCar extends PersistentVersionedObject {
         this.vinNumber = vinNumber;
     }
 
+    public SClient getOwner() {
+        return owner;
+    }
+
+    public void setOwner(final SClient client) {
+        this.owner = client;
+    }
 }
