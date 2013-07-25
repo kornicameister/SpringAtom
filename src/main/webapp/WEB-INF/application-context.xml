@@ -52,16 +52,6 @@
           scope="prototype"
           class="org.agatom.springatom.util.ResourceLoaderHelper"/>
 
-    <bean id="cacheHolderHelper"
-          factory-method="newInstance"
-          scope="singleton"
-          depends-on="resourceLoaderHelper,jaxbXMLHelper"
-          class="org.agatom.springatom.cache.CacheResolverHelper">
-        <constructor-arg type="org.agatom.springatom.util.ResourceLoaderHelper" ref="resourceLoaderHelper"/>
-        <constructor-arg type="org.agatom.springatom.xml.OXMHelper" ref="jaxbXMLHelper"/>
-        <constructor-arg type="java.lang.String" value="classpath:caches.xml"/>
-    </bean>
-
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="classpath:database.properties"/>
     </bean>
