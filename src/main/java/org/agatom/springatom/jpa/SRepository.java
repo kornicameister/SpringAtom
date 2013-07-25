@@ -26,6 +26,9 @@ import org.springframework.data.repository.history.RevisionRepository;
 import java.io.Serializable;
 
 /**
+ * {@code SRepository} is an extension of {@link SBasicRepository} that adds revision capable methods from
+ * {@link RevisionRepository}.
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -33,8 +36,34 @@ import java.io.Serializable;
 @NoRepositoryBean
 public interface SRepository<T, ID extends Serializable, N extends Number & Comparable<N>>
         extends SBasicRepository<T, ID>, RevisionRepository<T, ID, N> {
+    /**
+     * {@code findInRevision} returns {@link Revision} of the target underlying target entity in the given revision
+     * described in {@code revision} param
+     *
+     * @param id
+     *         id of the entity {@link org.springframework.data.domain.Persistable#getId()}
+     * @param revision
+     *         the revision number
+     *
+     * @return {@link Revision} for passed arguments
+     *
+     * @throws EntityInRevisionDoesNotExists
+     * @see SRepository#findInRevisions(java.io.Serializable, Number[])
+     */
     Revision<N, T> findInRevision(final ID id, final N revision) throws EntityInRevisionDoesNotExists;
 
+    /**
+     * {@code findInRevisions} does exactly the same job but for multiple possible {@code revisions}.
+     *
+     * @param id
+     *         id of the entity {@link org.springframework.data.domain.Persistable#getId()}
+     * @param revisions
+     *         varargs with revision numbers
+     *
+     * @return {@link Revisions}
+     *
+     * @throws EntityInRevisionDoesNotExists
+     */
     @SuppressWarnings("unchecked")
     Revisions<N, T> findInRevisions(final ID id, final N... revisions) throws EntityInRevisionDoesNotExists;
 }

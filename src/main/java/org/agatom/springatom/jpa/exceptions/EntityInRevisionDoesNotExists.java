@@ -22,6 +22,8 @@ import org.springframework.data.domain.Persistable;
 import java.util.Arrays;
 
 /**
+ * {@code EntityInRevisionDoesNotExists} is thrown when entity in given revision or revisions can not been found.
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
