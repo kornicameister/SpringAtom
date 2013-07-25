@@ -18,7 +18,7 @@
 package org.agatom.springatom.mvc.model.service.impl;
 
 import com.google.common.base.Preconditions;
-import org.agatom.springatom.mvc.model.service.Service;
+import org.agatom.springatom.mvc.model.service.SBasicService;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Isolation;
@@ -30,7 +30,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * {@code DefaultService} is the base class for all services
+ * {@code SBasicServiceImpl} is the base class for all services
  *
  * @author kornicameister
  * @version 0.0.1
@@ -39,8 +39,8 @@ import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
-abstract class DefaultService<T extends Persistable, ID extends Serializable, R extends JpaRepository>
-        implements Service<T, ID, R> {
+abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable, R extends JpaRepository>
+        implements SBasicService<T, ID, R> {
     protected JpaRepository jpaRepository;
 
     @Override

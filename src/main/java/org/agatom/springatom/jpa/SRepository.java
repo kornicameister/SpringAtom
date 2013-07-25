@@ -18,6 +18,7 @@
 package org.agatom.springatom.jpa;
 
 import org.agatom.springatom.jpa.exceptions.EntityInRevisionDoesNotExists;
+import org.joda.time.DateTime;
 import org.springframework.data.history.Revision;
 import org.springframework.data.history.Revisions;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -66,4 +67,7 @@ public interface SRepository<T, ID extends Serializable, N extends Number & Comp
      */
     @SuppressWarnings("unchecked")
     Revisions<N, T> findInRevisions(final ID id, final N... revisions) throws EntityInRevisionDoesNotExists;
+
+    Revisions<N, T> findRevisions(final ID id, final DateTime dateTime, final Operators before) throws
+            EntityInRevisionDoesNotExists;
 }

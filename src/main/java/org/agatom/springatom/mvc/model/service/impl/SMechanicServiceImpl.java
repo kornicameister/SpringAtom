@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SMechanicServiceImpl
-        extends DefaultService<SMechanic, Long, SMechanicRepository>
+        extends SServiceImpl<SMechanic, Long, Integer, SMechanicRepository>
         implements SMechanicService {
 
     SMechanicRepository repository;

@@ -222,6 +222,11 @@ public class SClientServiceTest extends AbstractSpringTestCase {
     }
 
     @Test
+    public void test_K_findRevisions() throws Exception {
+        //        Revisions<Integer, SClient> revisions = this.clientBO.findAll();
+    }
+
+    @Test
     public void test_Y_DeleteClient() throws Exception {
         this.clientBO.deleteOne(SClientServiceTest.client.getId());
     }

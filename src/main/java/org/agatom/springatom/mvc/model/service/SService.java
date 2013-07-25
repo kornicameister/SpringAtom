@@ -17,24 +17,43 @@
 
 package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.jpa.repositories.SCarMasterRepository;
-import org.agatom.springatom.model.beans.car.SCar;
-import org.agatom.springatom.model.beans.car.SCarMaster;
+import org.agatom.springatom.jpa.exceptions.EntityInRevisionDoesNotExists;
+import org.joda.time.DateTime;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.history.Revision;
+import org.springframework.data.history.Revisions;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.io.Serializable;
 
 /**
+ * {@code SBasicService} is the interface for the services layers in {@code SpringAtom}.
+ * Defines commonly used functionality of <b>CRUD</b> operations.
+ *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
-public interface SCarMasterService extends SBasicService<SCarMaster, Long, SCarMasterRepository> {
-    List<SCarMaster> findByBrand(@NotNull final String... brand);
 
-    List<SCarMaster> findByModel(@NotNull final String... model);
+public interface SService<
+        T extends Persistable,
+        ID extends Serializable,
+        N extends Number & Comparable<N>,
+        R extends JpaRepository>
+        extends SBasicService<T, ID, R> {
 
-    SCarMaster findOne(@NotNull final String brand, @NotNull final String model);
+    Revision<N, T> findFirstRevision(final ID id);
 
-    List<SCar> findChildren(@NotNull final Long... masterIds);
+    Revisions<N, T> findAllRevisions(final ID id);
+
+    Revision<N, T> findLatestRevision(final ID id);
+
+    long countRevisions(final ID id);
+
+    Revisions<N, T> findModifiedBefore(final ID id, final DateTime dateTime) throws EntityInRevisionDoesNotExists;
+
+    Revisions<N, T> findModifiedAfter(final ID id, final DateTime dateTime) throws EntityInRevisionDoesNotExists;
+
+    Revisions<N, T> findModifiedAt(final ID id, final DateTime dateTime) throws EntityInRevisionDoesNotExists;
+
 }

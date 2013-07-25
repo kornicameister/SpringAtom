@@ -26,5 +26,6 @@ import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
  * @since 0.0.1
  */
 
-public interface SClientProblemReportService extends Service<SClientProblemReport, Long, SClientProblemReportRepository> {
+public interface SClientProblemReportService
+        extends SService<SClientProblemReport, Long, Integer, SClientProblemReportRepository> {
 }

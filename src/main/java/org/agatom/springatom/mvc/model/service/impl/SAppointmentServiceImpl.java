@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @since 0.0.1
  */
 public class SAppointmentServiceImpl
-        extends DefaultService<SAppointment, Long, SAppointmentRepository>
+        extends SBasicServiceImpl<SAppointment, Long, SAppointmentRepository>
         implements SAppointmentService {
     @Autowired
     SAppointmentTaskRepository taskRepository;

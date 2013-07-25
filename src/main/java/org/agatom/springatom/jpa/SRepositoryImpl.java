@@ -27,6 +27,10 @@ import com.google.common.base.Preconditions;
 import org.agatom.springatom.jpa.exceptions.EntityInRevisionDoesNotExists;
 import org.apache.log4j.Logger;
 import org.hibernate.envers.*;
+import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.AuditQuery;
+import org.hibernate.envers.query.criteria.AuditProperty;
+import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
@@ -53,11 +57,12 @@ import java.util.*;
 public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comparable<N>>
         extends QueryDslJpaRepository<T, ID>
         implements SRepository<T, ID, N> {
-    private static final Logger LOGGER                 = Logger.getLogger(SRepositoryImpl.class);
-    private static final String ERROR_MESSAGE_ID       = "ID must not be null";
-    private static final String ERROR_MESSAGE_PAGEABLE = "Pageable must not be null";
-    private static final String ERROR_MESSAGE_REVISION = "Revision must not be null";
-    private static final String ERROR_MESSAGE_REI      = "RevisionEntityInformation must not be null";
+    public static final  String ERROR_MESSAGE_INSUFFICIENT_REV_NUMBERS = "Insufficient revision numbers";
+    private static final Logger LOGGER                                 = Logger.getLogger(SRepositoryImpl.class);
+    private static final String ERROR_MESSAGE_ID                       = "ID must not be null";
+    private static final String ERROR_MESSAGE_PAGEABLE                 = "Pageable must not be null";
+    private static final String ERROR_MESSAGE_REVISION                 = "Revision must not be null";
+    private static final String ERROR_MESSAGE_REI                      = "RevisionEntityInformation must not be null";
     private final JpaEntityInformation<T, ID> entityInformation;
     private final EntityManager               entityManager;
     private final RevisionEntityInformation   revisionEntityInformation;
@@ -83,6 +88,9 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
     @SuppressWarnings("unchecked")
     public Revision<N, T> findLastChangeRevision(final ID id) {
         Preconditions.checkArgument(id != null, ERROR_MESSAGE_ID);
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("%s(%s)", "findLastChangeRevision", id));
+        }
         return this.repository.findLastChangeRevision(id);
     }
 
@@ -90,6 +98,9 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
     @SuppressWarnings("unchecked")
     public Revisions<N, T> findRevisions(final ID id) {
         Preconditions.checkArgument(id != null, ERROR_MESSAGE_ID);
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("%s(%s)", "findRevisions", id));
+        }
         return this.repository.findRevisions(id);
     }
 
@@ -98,6 +109,9 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
     public Page<Revision<N, T>> findRevisions(final ID id, final Pageable pageable) {
         Preconditions.checkArgument(id != null, ERROR_MESSAGE_ID);
         Preconditions.checkArgument(pageable != null, ERROR_MESSAGE_PAGEABLE);
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("%s(%s,%s)", "findRevisions", id, pageable));
+        }
         return this.repository.findRevisions(id, pageable);
     }
 
@@ -105,6 +119,9 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
     public Revision<N, T> findInRevision(final ID id, final N revision) throws EntityInRevisionDoesNotExists {
         Preconditions.checkArgument(id != null, ERROR_MESSAGE_ID);
         Preconditions.checkArgument(revision != null, ERROR_MESSAGE_REVISION);
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("%s(%s,%s)", "findInRevision", id, revision));
+        }
         return this.findInRevisions(id, revision).getLatestRevision();
     }
 
@@ -113,6 +130,13 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
     @SuppressWarnings("unchecked")
     public final Revisions<N, T> findInRevisions(final ID id, final N... revisionNumbers) throws
             EntityInRevisionDoesNotExists {
+        Preconditions.checkArgument(id != null, ERROR_MESSAGE_ID);
+        Preconditions.checkArgument(revisionNumbers.length >= 1, ERROR_MESSAGE_INSUFFICIENT_REV_NUMBERS);
+
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("%s(%s,%s)", "findInRevision", id, Arrays.toString(revisionNumbers)));
+        }
+
         final Class<T> type = this.entityInformation.getJavaType();
         final AuditReader reader = AuditReaderFactory.get(this.entityManager);
         final Map<N, T> revisions = new HashMap<>(revisionNumbers.length);
@@ -129,6 +153,43 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
         }
 
         return new Revisions<>(this.toRevisions(revisions, revisionEntities));
+    }
+
+    @Override
+    @SuppressWarnings({"unchecked", "SuspiciousToArrayCall"})
+    public Revisions<N, T> findRevisions(final ID id, final DateTime dateTime, final Operators operator) throws
+            EntityInRevisionDoesNotExists {
+        final Class<T> type = this.entityInformation.getJavaType();
+        final AuditReader reader = AuditReaderFactory.get(this.entityManager);
+        final AuditProperty<Object> actualDate = AuditEntity.property("actualDate");
+
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("%s(%s,%s,%s)", "findRevisions", id, dateTime, operator));
+        }
+
+        AuditQuery auditQuery = reader.createQuery()
+                .forRevisionsOfEntity(type, false, true);
+
+        switch (operator) {
+            case BEFORE:
+                auditQuery = auditQuery.add(actualDate.le(dateTime));
+                break;
+            case AFTER:
+                auditQuery = auditQuery.add(actualDate.ge(dateTime));
+                break;
+            case EQ:
+                auditQuery = auditQuery.add(actualDate.eq(dateTime));
+                break;
+        }
+
+        final List<? extends Number> numbers = auditQuery.getResultList();
+
+        if (numbers.size() == 0) {
+            throw new EntityInRevisionDoesNotExists(String
+                    .format("No revisions for class=%s at date=%s [operator=%s]", type, dateTime, operator));
+        }
+
+        return this.findInRevisions(id, (N[]) numbers.toArray(new Number[numbers.size()]));
     }
 
     @SuppressWarnings("unchecked")

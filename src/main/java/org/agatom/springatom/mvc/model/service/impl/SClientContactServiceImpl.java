@@ -38,7 +38,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SClientContactServiceImpl
-        extends DefaultService<SClientContact, Long, SClientContactRepository>
+        extends SServiceImpl<SClientContact, Long, Integer, SClientContactRepository>
         implements SClientContactService {
 
     SClientContactRepository clientContactRepository;

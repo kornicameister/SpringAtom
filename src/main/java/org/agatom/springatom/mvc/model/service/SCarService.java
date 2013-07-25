@@ -37,7 +37,7 @@ import java.util.List;
  * @since 0.0.1
  */
 
-public interface SCarService extends Service<SCar, Long, SCarRepository> {
+public interface SCarService extends SService<SCar, Long, Integer, SCarRepository> {
     List<SCar> findByMaster(@NotNull final String brand,
                             @NotNull final String model);
 

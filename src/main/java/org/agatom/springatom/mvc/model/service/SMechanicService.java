@@ -26,6 +26,6 @@ import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
  * @since 0.0.1
  */
 
-public interface SMechanicService extends Service<SMechanic, Long, SMechanicRepository> {
+public interface SMechanicService extends SService<SMechanic, Long, Integer, SMechanicRepository> {
 
 }

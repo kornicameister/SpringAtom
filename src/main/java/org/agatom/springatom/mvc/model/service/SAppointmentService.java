@@ -25,5 +25,5 @@ import org.agatom.springatom.model.beans.appointment.SAppointment;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SAppointmentService extends Service<SAppointment, Long, SAppointmentRepository> {
+public interface SAppointmentService extends SBasicService<SAppointment, Long, SAppointmentRepository> {
 }

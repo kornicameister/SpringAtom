@@ -30,9 +30,13 @@ import java.util.Arrays;
  */
 
 public class EntityInRevisionDoesNotExists extends Exception {
-    private static final String MSG = "No entry exists for %s with revision=%d";
+    private static final String MSG = "No entry exists for %s with revision=%s";
 
     public EntityInRevisionDoesNotExists(final Class<? extends Persistable> entityClazz, final Object... revision) {
-        super(String.format(MSG, entityClazz.getName(), Arrays.toString(revision)));
+        this(String.format(MSG, entityClazz.getName(), Arrays.toString(revision)));
+    }
+
+    public EntityInRevisionDoesNotExists(final String msg) {
+        super(msg);
     }
 }

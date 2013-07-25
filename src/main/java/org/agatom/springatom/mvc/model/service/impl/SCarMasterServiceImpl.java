@@ -42,7 +42,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SCarMasterServiceImpl
-        extends DefaultService<SCarMaster, Long, SCarMasterRepository>
+        extends SBasicServiceImpl<SCarMaster, Long, SCarMasterRepository>
         implements SCarMasterService {
     private SCarMasterRepository repository;
 

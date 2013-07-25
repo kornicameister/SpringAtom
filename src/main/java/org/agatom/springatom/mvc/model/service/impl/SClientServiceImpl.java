@@ -49,7 +49,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SClientServiceImpl
-        extends DefaultService<SClient, Long, SClientRepository>
+        extends SServiceImpl<SClient, Long, Integer, SClientRepository>
         implements SClientService {
     SClientRepository clientRepository;
     @Autowired

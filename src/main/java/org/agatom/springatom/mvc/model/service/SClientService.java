@@ -33,7 +33,7 @@ import java.util.List;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SClientService extends Service<SClient, Long, SClientRepository> {
+public interface SClientService extends SService<SClient, Long, Integer, SClientRepository> {
 
     SClient disable(@NotNull final Long pk) throws EntityDoesNotExists;
 

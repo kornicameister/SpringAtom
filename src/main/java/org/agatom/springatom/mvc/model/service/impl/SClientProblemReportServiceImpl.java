@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SClientProblemReportServiceImpl
-        extends DefaultService<SClientProblemReport, Long, SClientProblemReportRepository>
+        extends SServiceImpl<SClientProblemReport, Long, Integer, SClientProblemReportRepository>
         implements SClientProblemReportService {
 
     SClientProblemReportRepository repository;

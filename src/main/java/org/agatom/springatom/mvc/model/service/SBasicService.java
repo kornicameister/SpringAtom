@@ -25,7 +25,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * {@code Service} is the interface for the services layers in {@code SpringAtom}.
+ * {@code SBasicService} is the interface for the services layers in {@code SpringAtom}.
  * Defines commonly used functionality of <b>CRUD</b> operations.
  *
  * @author kornicameister
@@ -33,7 +33,7 @@ import java.util.List;
  * @since 0.0.1
  */
 
-public interface Service<T extends Persistable, ID extends Serializable, R extends JpaRepository> {
+public interface SBasicService<T extends Persistable, ID extends Serializable, R extends JpaRepository> {
     /**
      * Method implemented by services with {@link org.springframework.beans.factory.annotation.Autowired} annotation to
      * set the {@link org.springframework.data.jpa.repository.JpaRepository}
@@ -45,7 +45,7 @@ public interface Service<T extends Persistable, ID extends Serializable, R exten
     void autoWireRepository(final R repo);
 
     /**
-     * Returns single entity by provided ID of the {@code Service}'s <b>domain class</b>
+     * Returns single entity by provided ID of the {@code SBasicService}'s <b>domain class</b>
      *
      * @param id
      *         the id
@@ -55,14 +55,14 @@ public interface Service<T extends Persistable, ID extends Serializable, R exten
     T findOne(@NotNull ID id);
 
     /**
-     * Returns all entities of the type for which {@code Service} was defined (<b>domain class</b>)
+     * Returns all entities of the type for which {@code SBasicService} was defined (<b>domain class</b>)
      *
-     * @return all entities of the {@code Service}'s domain class
+     * @return all entities of the {@code SBasicService}'s domain class
      */
     List<T> findAll();
 
     /**
-     * Saves the {@code Service}'s <b>domain class</b> object and returns its persisted version,
+     * Saves the {@code SBasicService}'s <b>domain class</b> object and returns its persisted version,
      * This method can be used to either save or update the entity thanks to {@link
      * org.springframework.data.jpa.repository.support.SimpleJpaRepository#save(Object)} method
      *
@@ -74,14 +74,14 @@ public interface Service<T extends Persistable, ID extends Serializable, R exten
     T save(@NotNull final T persistable);
 
     /**
-     * Returns how many objects of {@code Service}'s <b>domain class</b> exists
+     * Returns how many objects of {@code SBasicService}'s <b>domain class</b> exists
      *
      * @return row count
      */
     Long count();
 
     /**
-     * Deletes only one entity of {@code Service}'s <b>domain class</b> for given {@code ID}
+     * Deletes only one entity of {@code SBasicService}'s <b>domain class</b> for given {@code ID}
      *
      * @param pk
      *         the entity's {@code ID}
@@ -89,7 +89,7 @@ public interface Service<T extends Persistable, ID extends Serializable, R exten
     void deleteOne(@NotNull final ID pk);
 
     /**
-     * Deletes all entities of {@code Service}'s <b>domain class</b>
+     * Deletes all entities of {@code SBasicService}'s <b>domain class</b>
      */
     void deleteAll();
 }
