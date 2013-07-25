@@ -18,6 +18,7 @@
 package org.agatom.springatom.model.beans.appointment;
 
 import org.agatom.springatom.model.beans.PersistentObject;
+import org.agatom.springatom.model.beans.car.SCar;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -68,6 +69,9 @@ public class SAppointment
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "appointment", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<SAppointmentTask> tasks;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "car", referencedColumnName = "idScar")
+    private SCar                  car;
 
     public Date getStartDate() {
         return startDate;
@@ -120,4 +124,15 @@ public class SAppointment
         return this.tasks != null && this.tasks.remove(sAppointmentTask);
     }
 
+    public Long getDuration() {
+        return duration;
+    }
+
+    public SCar getCar() {
+        return car;
+    }
+
+    public void setCar(final SCar car) {
+        this.car = car;
+    }
 }
