@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.mvc.model.service.impl;
 
-import org.agatom.springatom.jpa.SMetaDataRepository;
+import org.agatom.springatom.jpa.repositories.SMetaDataRepository;
 import org.agatom.springatom.model.beans.meta.QSMetaData;
 import org.agatom.springatom.model.beans.meta.SMetaData;
 import org.agatom.springatom.model.beans.meta.SMetaDataCapable;

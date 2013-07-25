@@ -15,19 +15,26 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.jpa;
+package org.agatom.springatom.mvc.model.service;
 
+import org.agatom.springatom.jpa.repositories.SCarMasterRepository;
 import org.agatom.springatom.model.beans.car.SCar;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
-import org.springframework.data.repository.RepositoryDefinition;
+import org.agatom.springatom.model.beans.car.SCarMaster;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@RepositoryDefinition(domainClass = SCar.class, idClass = Long.class)
-public interface SCarRepository
-        extends JpaRepository<SCar, Long>, QueryDslPredicateExecutor<SCar> {
+public interface SCarMasterService extends Service<SCarMaster, Long, SCarMasterRepository> {
+    List<SCarMaster> findByBrand(@NotNull final String... brand);
+
+    List<SCarMaster> findByModel(@NotNull final String... model);
+
+    SCarMaster findOne(@NotNull final String brand, @NotNull final String model);
+
+    List<SCar> findChildren(@NotNull final Long... masterIds);
 }

@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.jpa.SMechanicRepository;
+import org.agatom.springatom.jpa.repositories.SMechanicRepository;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
 
 /**

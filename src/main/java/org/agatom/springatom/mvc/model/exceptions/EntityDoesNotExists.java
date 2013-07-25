@@ -20,6 +20,7 @@ package org.agatom.springatom.mvc.model.exceptions;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * @author kornicameister
@@ -28,9 +29,14 @@ import java.io.Serializable;
  */
 
 public class EntityDoesNotExists extends Exception {
-    private static final String MSG = "No entry exists for %s with pk=%s";
+    private static final String MSG_1 = "No entry exists for %s with PK=%s";
+    private static final String MSG_2 = "No entry exists for %s for ARGS=%s";
 
     public EntityDoesNotExists(final Class<? extends Persistable> entityClazz, final Serializable pk) {
-        super(String.format(MSG, entityClazz.getName(), pk));
+        super(String.format(MSG_1, entityClazz.getName(), pk));
+    }
+
+    public EntityDoesNotExists(final Class<? extends Persistable> entityClazz, final Object[] args) {
+        super(String.format(MSG_2, entityClazz.getName(), Arrays.deepToString(args)));
     }
 }

@@ -15,50 +15,30 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.auditing;
+package org.agatom.springatom.mvc.model.service.impl;
 
-import org.agatom.springatom.jpa.repositories.SUserRepository;
-import org.agatom.springatom.model.beans.user.QSUser;
-import org.agatom.springatom.model.beans.user.SUser;
-import org.apache.log4j.Logger;
+import org.agatom.springatom.jpa.repositories.SAppointmentRepository;
+import org.agatom.springatom.jpa.repositories.SAppointmentTaskRepository;
+import org.agatom.springatom.model.beans.appointment.SAppointment;
+import org.agatom.springatom.mvc.model.service.SAppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.data.domain.AuditorAware;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import static org.apache.log4j.Logger.getLogger;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SpringSecurityAuditorAware implements AuditorAware<SUser>, ApplicationListener<ContextRefreshedEvent> {
-    private static final Logger LOGGER = getLogger(SpringSecurityAuditorAware.class);
+public class SAppointmentServiceImpl
+        extends DefaultService<SAppointment, Long, SAppointmentRepository>
+        implements SAppointmentService {
     @Autowired
-    SUserRepository repository;
-    private SUser systemUser;
+    SAppointmentTaskRepository taskRepository;
+    private SAppointmentRepository repository;
 
     @Override
-    public SUser getCurrentAuditor() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SUser principal;
-        if (authentication == null || !authentication.isAuthenticated()) {
-            principal = systemUser;
-        } else {
-            principal = (SUser) authentication.getPrincipal();
-        }
-        LOGGER.info(String.format("Current auditor is >>> %s", principal));
-        return principal;
-    }
-
-    @Override
-    public void onApplicationEvent(final ContextRefreshedEvent event) {
-        if (this.systemUser == null) {
-            LOGGER.info("%s >>> loading system user");
-            systemUser = this.repository.findOne(QSUser.sUser.credentials.login.eq("SYSTEM"));
-        }
+    @Autowired
+    public void autoWireRepository(final SAppointmentRepository repo) {
+        this.jpaRepository = repo;
+        this.repository = repo;
     }
 }

@@ -17,13 +17,19 @@
 
 package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.jpa.SCarRepository;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.expr.BooleanExpression;
+import com.mysema.query.types.path.NumberPath;
+import com.mysema.query.types.path.StringPath;
+import org.agatom.springatom.jpa.repositories.SCarRepository;
+import org.agatom.springatom.model.beans.car.QSCar;
 import org.agatom.springatom.model.beans.car.SCar;
 import org.agatom.springatom.model.beans.car.SCarMaster;
-import org.agatom.springatom.model.beans.links.SCarClientLink;
+import org.agatom.springatom.mvc.model.exceptions.EntityDoesNotExists;
+import org.agatom.springatom.mvc.model.service.impl.SCarServiceImpl;
 
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author kornicameister
@@ -32,18 +38,44 @@ import java.util.Set;
  */
 
 public interface SCarService extends Service<SCar, Long, SCarRepository> {
-    SCarMaster findByMaster(@NotNull final String brand,
+    List<SCar> findByMaster(@NotNull final String brand,
                             @NotNull final String model);
 
-    SCarMaster findByMaster(@NotNull final Long carId);
+    List<SCar> findByMaster(@NotNull final Long... masterId);
 
-    SCar saveWithMaster(@NotNull final String brand,
-                        @NotNull final String model,
-                        @NotNull final String licencePlate,
-                        @NotNull final String vinNumber);
+    SCarMaster findMaster(@NotNull final Long carId);
 
-    SCar changeOwner(@NotNull final Long idCar,
-                     @NotNull final Long idClient);
+    SCar findBy(@NotNull final SCarAttribute attribute, @NotNull final String value);
 
-    Set<SCarClientLink> findOwnershipHistory(@NotNull final Long idCar);
+    SCar newCar(@NotNull final String brand,
+                @NotNull final String model,
+                @NotNull final String licencePlate,
+                @NotNull final String vinNumber,
+                @NotNull final Long ownerId) throws EntityDoesNotExists;
+
+    SCar newOwner(@NotNull final Long idCar,
+                  @NotNull final Long idClient) throws EntityDoesNotExists, SCarServiceImpl.InvalidOwnerException;
+
+    public static enum SCarAttribute {
+        LICENCE_PLATE(QSCar.sCar.licencePlate),
+        OWNER(QSCar.sCar.owner.id),
+        VIN_NUMBER(QSCar.sCar.vinNumber);
+        private final Path expression;
+
+        SCarAttribute(final Path expression) {
+            this.expression = expression;
+        }
+
+        @SuppressWarnings("unchecked")
+        public BooleanExpression eq(final Object value) {
+            if (value instanceof String) {
+                final StringPath path = (StringPath) this.expression;
+                return path.eq((String) value);
+            } else if (value instanceof Long) {
+                final NumberPath<Long> path = (NumberPath<Long>) this.expression;
+                return path.eq((Long) value);
+            }
+            return null;
+        }
+    }
 }

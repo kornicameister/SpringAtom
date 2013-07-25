@@ -17,18 +17,31 @@
 
 package org.agatom.springatom.jpa;
 
-import org.agatom.springatom.model.beans.appointment.SAppointmentTask;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
-import org.springframework.data.repository.RepositoryDefinition;
+import org.agatom.springatom.model.beans.revision.AuditedRevisionEntity;
+import org.springframework.data.repository.history.support.RevisionEntityInformation;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+class AuditingRevisionEntityInformation implements RevisionEntityInformation {
+    public AuditingRevisionEntityInformation() {
+        super();
+    }
 
-@RepositoryDefinition(domainClass = SAppointmentTask.class, idClass = Long.class)
-public interface SAppointmentTaskRepository
-        extends JpaRepository<SAppointmentTask, Long>, QueryDslPredicateExecutor<SAppointmentTask> {
+    @Override
+    public Class<?> getRevisionNumberType() {
+        return Integer.class;
+    }
+
+    @Override
+    public boolean isDefaultRevisionEntity() {
+        return false;
+    }
+
+    @Override
+    public Class<?> getRevisionEntityClass() {
+        return AuditedRevisionEntity.class;
+    }
 }

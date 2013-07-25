@@ -26,11 +26,14 @@
 
     <!-- Spring JPA support -->
     <bean id="auditorAware" class="org.agatom.springatom.mvc.auditing.SpringSecurityAuditorAware"/>
+
     <jpa:repositories
-            base-package="org.agatom.springatom.jpa"
+            base-package="org.agatom.springatom.jpa.repositories"
             transaction-manager-ref="transactionManager"
             entity-manager-factory-ref="entityManagerFactory"
-            query-lookup-strategy="create-if-not-found"/>
+            query-lookup-strategy="create-if-not-found"
+            factory-class="org.agatom.springatom.jpa.RevisionRepositoryFactoryBean"/>
+
     <jpa:auditing auditor-aware-ref="auditorAware"/>
 
 </beans>

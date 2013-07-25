@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.jpa.SClientProblemReportRepository;
+import org.agatom.springatom.jpa.repositories.SClientProblemReportRepository;
 import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
 
 /**

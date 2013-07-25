@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.jpa.SClientContactRepository;
+import org.agatom.springatom.jpa.repositories.SClientContactRepository;
 import org.agatom.springatom.model.beans.person.client.SClientContact;
 
 import java.util.List;

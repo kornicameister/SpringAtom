@@ -15,34 +15,12 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.service.impl;
-
-import org.agatom.springatom.jpa.repositories.SMechanicRepository;
-import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
-import org.agatom.springatom.mvc.model.service.SMechanicService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+package org.agatom.springatom.mvc.model.exceptions;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Service
-@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
-public class SMechanicServiceImpl
-        extends DefaultService<SMechanic, Long, SMechanicRepository>
-        implements SMechanicService {
-
-    SMechanicRepository repository;
-
-    @Override
-    @Autowired
-    public void autoWireRepository(final SMechanicRepository repo) {
-        this.repository = repo;
-        this.jpaRepository = repo;
-    }
+public class EntityNotPersisted {
 }

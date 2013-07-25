@@ -15,11 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.jpa;
+package org.agatom.springatom.jpa.repositories;
 
-import org.agatom.springatom.model.beans.car.SCarMaster;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.agatom.springatom.jpa.SBasicRepository;
+import org.agatom.springatom.model.beans.user.role.SRole;
 import org.springframework.data.repository.RepositoryDefinition;
 
 /**
@@ -27,7 +26,6 @@ import org.springframework.data.repository.RepositoryDefinition;
  * @version 0.0.1
  * @since 0.0.1
  */
-@RepositoryDefinition(domainClass = SCarMaster.class, idClass = Long.class)
-public interface SCarMasterRepository
-        extends JpaRepository<SCarMaster, Long>, QueryDslPredicateExecutor<SCarMaster> {
+@RepositoryDefinition(domainClass = SRole.class, idClass = Long.class)
+public interface SRoleRepository extends SBasicRepository<SRole, Long> {
 }

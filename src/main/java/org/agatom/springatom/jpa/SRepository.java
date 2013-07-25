@@ -17,19 +17,17 @@
 
 package org.agatom.springatom.jpa;
 
-import org.agatom.springatom.model.beans.person.client.SClientContact;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
-import org.springframework.data.repository.RepositoryDefinition;
+import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.data.repository.history.RevisionRepository;
+
+import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
-@RepositoryDefinition(domainClass = SClientContact.class, idClass = Long.class)
-public interface SClientContactRepository
-        extends JpaRepository<SClientContact, Long>, QueryDslPredicateExecutor<SClientContact> {
-
+@NoRepositoryBean
+public interface SRepository<T, ID extends Serializable, N extends Number & Comparable<N>>
+        extends SBasicRepository<T, ID>, RevisionRepository<T, ID, N> {
 }

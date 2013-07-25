@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.jpa.SCarRepository;
+import org.agatom.springatom.jpa.repositories.SAppointmentRepository;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
 
 /**
@@ -25,5 +25,5 @@ import org.agatom.springatom.model.beans.appointment.SAppointment;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SAppointmentService extends Service<SAppointment, Long, SCarRepository> {
+public interface SAppointmentService extends Service<SAppointment, Long, SAppointmentRepository> {
 }

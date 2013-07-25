@@ -15,50 +15,54 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.auditing;
+package org.agatom.springatom.jpa;
 
-import org.agatom.springatom.jpa.repositories.SUserRepository;
-import org.agatom.springatom.model.beans.user.QSUser;
-import org.agatom.springatom.model.beans.user.SUser;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.data.domain.AuditorAware;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.history.Revision;
+import org.springframework.data.history.Revisions;
+import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.QueryDslJpaRepository;
+import org.springframework.data.repository.history.support.RevisionEntityInformation;
 
-import static org.apache.log4j.Logger.getLogger;
+import javax.persistence.EntityManager;
+import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SpringSecurityAuditorAware implements AuditorAware<SUser>, ApplicationListener<ContextRefreshedEvent> {
-    private static final Logger LOGGER = getLogger(SpringSecurityAuditorAware.class);
-    @Autowired
-    SUserRepository repository;
-    private SUser systemUser;
+public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comparable<N>>
+        extends QueryDslJpaRepository<T, ID>
+        implements SRepository<T, ID, N> {
 
-    @Override
-    public SUser getCurrentAuditor() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SUser principal;
-        if (authentication == null || !authentication.isAuthenticated()) {
-            principal = systemUser;
-        } else {
-            principal = (SUser) authentication.getPrincipal();
-        }
-        LOGGER.info(String.format("Current auditor is >>> %s", principal));
-        return principal;
+    private RevisionEntityInformation revisionEntityInformation;
+
+    public SRepositoryImpl(final JpaEntityInformation<T, ID> entityInformation,
+                           final RevisionEntityInformation revisionEntityInformation,
+                           final EntityManager entityManager) {
+        this(entityInformation, entityManager);
+        this.revisionEntityInformation = revisionEntityInformation;
+    }
+
+    public SRepositoryImpl(final JpaEntityInformation<T, ID> entityInformation,
+                           final EntityManager entityManager) {
+        super(entityInformation, entityManager);
     }
 
     @Override
-    public void onApplicationEvent(final ContextRefreshedEvent event) {
-        if (this.systemUser == null) {
-            LOGGER.info("%s >>> loading system user");
-            systemUser = this.repository.findOne(QSUser.sUser.credentials.login.eq("SYSTEM"));
-        }
+    public Revision<N, T> findLastChangeRevision(final ID id) {
+        return null;
+    }
+
+    @Override
+    public Revisions<N, T> findRevisions(final ID id) {
+        return null;
+    }
+
+    @Override
+    public Page<Revision<N, T>> findRevisions(final ID id, final Pageable pageable) {
+        return null;
     }
 }

@@ -15,23 +15,19 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.jpa;
+package org.agatom.springatom.jpa.repositories;
 
-import org.agatom.springatom.model.beans.appointment.SAppointment;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.agatom.springatom.jpa.SBasicRepository;
+import org.agatom.springatom.model.beans.meta.SMetaData;
 import org.springframework.data.repository.RepositoryDefinition;
 
 /**
- * {@code SAppointmentRepository} supports CRUD operations, backend with {@link org.springframework.data.jpa.repository.support.Querydsl}
- * support.
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 
-@RepositoryDefinition(domainClass = SAppointment.class, idClass = Long.class)
-public interface SAppointmentRepository
-        extends JpaRepository<SAppointment, Long>, QueryDslPredicateExecutor<SAppointment> {
+@RepositoryDefinition(domainClass = SMetaData.class, idClass = Long.class)
+public interface SMetaDataRepository
+        extends SBasicRepository<SMetaData, Long> {
 }

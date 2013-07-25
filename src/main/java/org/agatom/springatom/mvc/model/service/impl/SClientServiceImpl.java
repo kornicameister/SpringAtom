@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.mvc.model.service.impl;
 
-import org.agatom.springatom.jpa.SClientRepository;
+import org.agatom.springatom.jpa.repositories.SClientRepository;
 import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
 import org.agatom.springatom.model.beans.meta.SContactType;
 import org.agatom.springatom.model.beans.meta.SMetaData;

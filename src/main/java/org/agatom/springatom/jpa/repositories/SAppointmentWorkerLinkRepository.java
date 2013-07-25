@@ -15,11 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.jpa;
+package org.agatom.springatom.jpa.repositories;
 
-import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.agatom.springatom.jpa.SRepository;
+import org.agatom.springatom.model.beans.links.SAppointmentWorkerLink;
 import org.springframework.data.repository.RepositoryDefinition;
 
 /**
@@ -28,8 +27,7 @@ import org.springframework.data.repository.RepositoryDefinition;
  * @since 0.0.1
  */
 
-@RepositoryDefinition(domainClass = SMechanic.class, idClass = Long.class)
-public interface SMechanicRepository
-        extends JpaRepository<SMechanic, Long>, QueryDslPredicateExecutor<SMechanic> {
-
+@RepositoryDefinition(domainClass = SAppointmentWorkerLink.class, idClass = Long.class)
+public interface SAppointmentWorkerLinkRepository
+        extends SRepository<SAppointmentWorkerLink, Long, Integer> {
 }

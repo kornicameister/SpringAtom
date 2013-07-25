@@ -15,11 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.jpa;
+package org.agatom.springatom.jpa.repositories;
 
-import org.agatom.springatom.model.beans.user.SUser;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.agatom.springatom.jpa.SBasicRepository;
+import org.agatom.springatom.model.beans.links.SNotificationLink;
 import org.springframework.data.repository.RepositoryDefinition;
 
 /**
@@ -27,8 +26,7 @@ import org.springframework.data.repository.RepositoryDefinition;
  * @version 0.0.1
  * @since 0.0.1
  */
-
-@RepositoryDefinition(domainClass = SUser.class, idClass = Long.class)
-public interface SUserRepository
-        extends JpaRepository<SUser, Long>, QueryDslPredicateExecutor<SUser> {
+@RepositoryDefinition(domainClass = SNotificationLink.class, idClass = Long.class)
+public interface SNotificationLinkRepository
+        extends SBasicRepository<SNotificationLink, Long> {
 }
