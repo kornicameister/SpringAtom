@@ -15,9 +15,11 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.exceptions;
+package org.agatom.springatom.jpa.exceptions;
 
 import org.springframework.data.domain.Persistable;
+
+import java.util.Arrays;
 
 /**
  * @author kornicameister
@@ -28,7 +30,7 @@ import org.springframework.data.domain.Persistable;
 public class EntityInRevisionDoesNotExists extends Exception {
     private static final String MSG = "No entry exists for %s with revision=%d";
 
-    public EntityInRevisionDoesNotExists(final Class<? extends Persistable> entityClazz, final Integer revision) {
-        super(String.format(MSG, entityClazz.getName(), revision));
+    public EntityInRevisionDoesNotExists(final Class<? extends Persistable> entityClazz, final Object... revision) {
+        super(String.format(MSG, entityClazz.getName(), Arrays.toString(revision)));
     }
 }

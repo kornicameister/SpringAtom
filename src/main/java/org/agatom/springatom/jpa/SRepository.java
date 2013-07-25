@@ -17,6 +17,9 @@
 
 package org.agatom.springatom.jpa;
 
+import org.agatom.springatom.jpa.exceptions.EntityInRevisionDoesNotExists;
+import org.springframework.data.history.Revision;
+import org.springframework.data.history.Revisions;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.history.RevisionRepository;
 
@@ -30,4 +33,8 @@ import java.io.Serializable;
 @NoRepositoryBean
 public interface SRepository<T, ID extends Serializable, N extends Number & Comparable<N>>
         extends SBasicRepository<T, ID>, RevisionRepository<T, ID, N> {
+    Revision<N, T> findInRevision(final ID id, final N revision) throws EntityInRevisionDoesNotExists;
+
+    @SuppressWarnings("unchecked")
+    Revisions<N, T> findInRevisions(final ID id, final N... revisions) throws EntityInRevisionDoesNotExists;
 }
