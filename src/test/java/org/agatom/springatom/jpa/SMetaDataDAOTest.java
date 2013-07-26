@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 public class SMetaDataDAOTest extends AbstractSpringTestCase {
@@ -56,8 +55,8 @@ public class SMetaDataDAOTest extends AbstractSpringTestCase {
     @Test
     public void testGetAll() throws Exception {
         for (Class clazz : this.clazzList) {
-            Set<SMetaData> dataSet = (Set<SMetaData>) typeDataBo.findAll(clazz);
-            Assert.assertNotSame(String.format("Data set is empty for %s", clazz.getSimpleName()), 0, dataSet.size());
+            List<SMetaData> dataSet = typeDataBo.findAll(clazz);
+            Assert.assertTrue(String.format("Data set is empty for %s", clazz.getSimpleName()), dataSet.size() > 0);
             for (SMetaData typeData : dataSet) {
                 Assert.assertNotNull("TypeData is null", typeData);
             }

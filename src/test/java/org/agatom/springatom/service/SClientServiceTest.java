@@ -28,11 +28,14 @@ import org.agatom.springatom.mvc.model.service.SClientProblemReportService;
 import org.agatom.springatom.mvc.model.service.SClientService;
 import org.agatom.springatom.mvc.model.service.SMechanicService;
 import org.agatom.springatom.mvc.model.service.SMetaDataService;
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.history.Revision;
+import org.springframework.data.history.Revisions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +49,10 @@ import java.util.Random;
 
 @FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
 public class SClientServiceTest extends AbstractSpringTestCase {
-    protected static SClient   client   = null;
-    protected static SMechanic mechanic = null;
+    protected static final DateTime  PAST_TIME   = DateTime.now().minusMonths(1);
+    protected static final DateTime  FUTURE_TIME = DateTime.now().plusMonths(1);
+    protected static       SClient   client      = null;
+    protected static       SMechanic mechanic    = null;
     @Autowired
     SClientService              clientBO;
     @Autowired
@@ -222,8 +227,56 @@ public class SClientServiceTest extends AbstractSpringTestCase {
     }
 
     @Test
-    public void test_K_findRevisions() throws Exception {
-        //        Revisions<Integer, SClient> revisions = this.clientBO.findAll();
+    public void test_K_findAllRevisions() throws Exception {
+        final Revisions<Integer, SClient> revisions = this.clientBO.findAllRevisions(SClientServiceTest.client.getId());
+        Assert.assertNotNull("Revision are null", revisions);
+        Assert.assertTrue("There are no revisions", revisions.getContent().size() > 0);
+        System.out.println("All revision:");
+        for (final Revision<Integer, SClient> revision : revisions) {
+            System.out.println(revision);
+        }
+    }
+
+    @Test
+    public void test_L_findFirstRevision() throws Exception {
+        final Revision<Integer, SClient> first = this.clientBO.findFirstRevision(SClientServiceTest.client.getId());
+        Assert.assertNotNull("Revision is null", first);
+        System.out.println(String.format("FirstRev=%s", first));
+    }
+
+    @Test
+    public void test_M_findLastRevision() throws Exception {
+        final Revision<Integer, SClient> last = this.clientBO.findLatestRevision(SClientServiceTest.client.getId());
+        Assert.assertNotNull("Revision is null", last);
+        System.out.println(String.format("LastRev=%s", last));
+    }
+
+    @Test
+    public void test_N_findRevisionPast() throws Exception {
+        final Revisions<Integer, SClient> modifiedBefore = this.clientBO.findModifiedBefore(SClientServiceTest.client
+                .getId(), PAST_TIME);
+        Assert.assertTrue(String.format("Before %s are not empty", PAST_TIME), modifiedBefore.getContent().isEmpty());
+
+        final Revisions<Integer, SClient> modifiedAfter = this.clientBO.findModifiedAfter(SClientServiceTest.client
+                .getId(), PAST_TIME);
+        Assert.assertTrue(String.format("Before %s are not empty", PAST_TIME), !modifiedAfter.getContent().isEmpty());
+    }
+
+    @Test
+    public void test_O_findRevisionFuture() throws Exception {
+        final Revisions<Integer, SClient> modifiedBefore = this.clientBO.findModifiedBefore(SClientServiceTest.client
+                .getId(), FUTURE_TIME);
+        Assert.assertTrue(String.format("After %s are not empty", FUTURE_TIME), !modifiedBefore.getContent().isEmpty());
+
+        final Revisions<Integer, SClient> modifiedAfter = this.clientBO.findModifiedAfter(SClientServiceTest.client
+                .getId(), FUTURE_TIME);
+        Assert.assertTrue(String.format("After %s are not empty", FUTURE_TIME), modifiedAfter.getContent().isEmpty());
+    }
+
+    @Test
+    public void test_U_countRevisions() throws Exception {
+        final Long revision = this.clientBO.countRevisions(SClientServiceTest.client.getId());
+        Assert.assertTrue(revision > 0);
     }
 
     @Test
