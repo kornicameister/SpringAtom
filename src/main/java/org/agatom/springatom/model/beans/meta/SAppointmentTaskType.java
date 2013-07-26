@@ -30,5 +30,5 @@ import javax.persistence.Transient;
 @DiscriminatorValue(value = SAppointmentTaskType.SHORT_NAME)
 public class SAppointmentTaskType extends SMetaData {
     @Transient
-    protected static final String SHORT_NAME = "SAT";
+    protected static final String SHORT_NAME = "SATT";
 }

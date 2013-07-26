@@ -129,6 +129,12 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
             <version>${spring-data-jpa.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -197,7 +203,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
+            <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
@@ -412,13 +418,24 @@
                     <encoding>${maven-compiler.sourceEncoding}</encoding>
                     <optimize>${maven-compiler-plugin.optimize}</optimize>
                     <showDeprecation>${maven-compiler-plugin.showDeprecation}</showDeprecation>
+                    <compilerId>eclipse</compilerId>
+                    <fork>true</fork>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.plexus</groupId>
+                        <artifactId>plexus-compiler-eclipse</artifactId>
+                        <version>2.1</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <forkMode>always</forkMode>
+                    <detail>true</detail>
+                    <printSummary>true</printSummary>
+                    <forkMode>once</forkMode>
                     <excludes>
                         <exclude>**/*Test.class</exclude>
                     </excludes>
@@ -452,6 +469,7 @@
                             <version>2.5.1</version>
                         </plugin>
                     </reportPlugins>
+                    <detail>true</detail>
                 </configuration>
             </plugin>
             <plugin>
@@ -474,6 +492,11 @@
                         <configuration>
                             <outputDirectory>target/generated-sources</outputDirectory>
                             <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+                            <options>
+                                <querydsl.excludedPackages>
+                                    org.agatom.springatom.model.beans.revision
+                                </querydsl.excludedPackages>o
+                            </options>
                         </configuration>
                     </execution>
                 </executions>

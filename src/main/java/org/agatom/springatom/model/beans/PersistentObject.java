@@ -55,7 +55,7 @@ abstract public class PersistentObject<PK extends Serializable>
             final TypeToken<? extends Serializable> typeToken1 = TypeToken.of(o1.getClass());
             final TypeToken<? extends Serializable> typeToken2 = TypeToken.of(o2.getClass());
             if (this.areLongs(typeToken1, typeToken2)) {
-                return Longs.compare((long) o1, (long) o2);
+                return Longs.compare((Long) o1, (Long) o2);
             } else if (this.areStrings(typeToken1, typeToken2)) {
                 return ((String) o1).compareTo((String) o2);
             }
