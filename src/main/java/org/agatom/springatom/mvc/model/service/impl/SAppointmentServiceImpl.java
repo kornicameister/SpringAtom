@@ -22,12 +22,18 @@ import org.agatom.springatom.jpa.repositories.SAppointmentTaskRepository;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
 import org.agatom.springatom.mvc.model.service.SAppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+@Service
+@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SAppointmentServiceImpl
         extends SBasicServiceImpl<SAppointment, Long, SAppointmentRepository>
         implements SAppointmentService {
@@ -38,7 +44,7 @@ public class SAppointmentServiceImpl
     @Override
     @Autowired
     public void autoWireRepository(final SAppointmentRepository repo) {
-        this.jpaRepository = repo;
+        super.autoWireRepository(repo);
         this.repository = repo;
     }
 }

@@ -43,6 +43,6 @@ public class SMechanicServiceImpl
     @Autowired
     public void autoWireRepository(final SMechanicRepository repo) {
         this.repository = repo;
-        this.jpaRepository = repo;
+        this.basicRepository = repo;
     }
 }

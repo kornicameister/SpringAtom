@@ -51,7 +51,7 @@ public interface SRepository<T, ID extends Serializable, N extends Number & Comp
      * @throws EntityInRevisionDoesNotExists
      * @see SRepository#findInRevisions(java.io.Serializable, Number[])
      */
-    Revision<N, T> findInRevision(final ID id, final N revision) throws EntityInRevisionDoesNotExists;
+    Revision<N, T> findInRevision(final ID id, final N revision);
 
     /**
      * {@code findInRevisions} does exactly the same job but for multiple possible {@code revisions}.
@@ -62,12 +62,11 @@ public interface SRepository<T, ID extends Serializable, N extends Number & Comp
      *         varargs with revision numbers
      *
      * @return {@link Revisions}
-     *
-     * @throws EntityInRevisionDoesNotExists
      */
     @SuppressWarnings("unchecked")
-    Revisions<N, T> findInRevisions(final ID id, final N... revisions) throws EntityInRevisionDoesNotExists;
+    Revisions<N, T> findInRevisions(final ID id, final N... revisions);
 
-    Revisions<N, T> findRevisions(final ID id, final DateTime dateTime, final Operators before) throws
-            EntityInRevisionDoesNotExists;
+    Revisions<N, T> findRevisions(final ID id, final DateTime dateTime, final Operators before);
+
+    long countRevisions(ID id);
 }

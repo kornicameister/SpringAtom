@@ -61,8 +61,8 @@ public class SCarServiceImpl
     @Override
     @Autowired
     public void autoWireRepository(final SCarRepository repo) {
+        super.autoWireRepository(repo);
         this.repository = repo;
-        this.jpaRepository = repo;
     }
 
     @Override

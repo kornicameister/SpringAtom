@@ -21,7 +21,6 @@ import org.agatom.springatom.jpa.repositories.SClientProblemReportRepository;
 import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
 import org.agatom.springatom.mvc.model.service.SClientProblemReportService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -39,12 +38,12 @@ public class SClientProblemReportServiceImpl
         extends SServiceImpl<SClientProblemReport, Long, Integer, SClientProblemReportRepository>
         implements SClientProblemReportService {
 
-    SClientProblemReportRepository repository;
+    private SClientProblemReportRepository repository;
 
     @Override
     @Autowired(required = true)
     public void autoWireRepository(final SClientProblemReportRepository repo) {
+        super.autoWireRepository(repo);
         this.repository = repo;
-        this.jpaRepository = (JpaRepository) repo;
     }
 }

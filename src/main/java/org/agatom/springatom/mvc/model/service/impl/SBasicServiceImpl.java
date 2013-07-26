@@ -18,7 +18,9 @@
 package org.agatom.springatom.mvc.model.service.impl;
 
 import com.google.common.base.Preconditions;
+import org.agatom.springatom.jpa.SBasicRepository;
 import org.agatom.springatom.mvc.model.service.SBasicService;
+import org.apache.log4j.Logger;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Isolation;
@@ -41,16 +43,25 @@ import java.util.List;
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable, R extends JpaRepository>
         implements SBasicService<T, ID, R> {
-    protected JpaRepository jpaRepository;
+    private static final Logger LOGGER = Logger.getLogger(SBasicServiceImpl.class);
+    protected SBasicRepository basicRepository;
+
+    @Override
+    public void autoWireRepository(final R repo) {
+        this.basicRepository = (SBasicRepository) repo;
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("Repository set to %s", this.basicRepository));
+        }
+    }
 
     @Override
     public T findOne(@NotNull final ID id) {
-        return (T) this.jpaRepository.findOne(id);
+        return (T) this.basicRepository.findOne(id);
     }
 
     @Override
     public List<T> findAll() {
-        return this.jpaRepository.findAll();
+        return this.basicRepository.findAll();
     }
 
     @Override
@@ -58,23 +69,23 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
     public T save(@NotNull final T persistable) {
         Preconditions
                 .checkArgument(persistable != null, "Persistable must not be null");
-        return (T) this.jpaRepository.save(persistable);
+        return (T) this.basicRepository.save(persistable);
     }
 
     @Override
     public Long count() {
-        return this.jpaRepository.count();
+        return this.basicRepository.count();
     }
 
     @Override
     @Transactional(readOnly = false)
     public void deleteOne(@NotNull final ID pk) {
-        this.jpaRepository.delete(pk);
+        this.basicRepository.delete(pk);
     }
 
     @Override
     @Transactional(readOnly = false)
     public void deleteAll() {
-        this.jpaRepository.deleteAll();
+        this.basicRepository.deleteAll();
     }
 }

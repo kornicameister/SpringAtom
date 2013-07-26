@@ -32,7 +32,6 @@ import org.agatom.springatom.model.beans.util.SIssueReporter;
 import org.agatom.springatom.mvc.model.exceptions.EntityDoesNotExists;
 import org.agatom.springatom.mvc.model.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -51,7 +50,6 @@ import java.util.List;
 public class SClientServiceImpl
         extends SServiceImpl<SClient, Long, Integer, SClientRepository>
         implements SClientService {
-    SClientRepository clientRepository;
     @Autowired
     SMechanicService            mechanicService;
     @Autowired
@@ -60,34 +58,35 @@ public class SClientServiceImpl
     SMetaDataService            metaDataService;
     @Autowired
     SClientContactService       clientContactService;
+    private SClientRepository repository;
 
     @Override
     @Autowired(required = true)
     public void autoWireRepository(final SClientRepository repo) {
-        this.clientRepository = repo;
-        this.jpaRepository = (JpaRepository) repo;
+        super.autoWireRepository(repo);
+        this.repository = repo;
     }
 
     @Override
     @Transactional(rollbackFor = EntityDoesNotExists.class)
     public SClient disable(@NotNull final Long pk) throws EntityDoesNotExists {
-        final SClient client = this.clientRepository.findOne(pk);
+        final SClient client = this.repository.findOne(pk);
         if (client == null) {
             throw new EntityDoesNotExists(SClient.class, pk);
         }
         client.setEnabled(false);
-        return this.clientRepository.save(client);
+        return this.repository.save(client);
     }
 
     @Override
     @Transactional(rollbackFor = EntityDoesNotExists.class)
     public SClient enable(@NotNull final Long pk) throws EntityDoesNotExists {
-        final SClient client = this.clientRepository.findOne(pk);
+        final SClient client = this.repository.findOne(pk);
         if (client == null) {
             throw new EntityDoesNotExists(SClient.class, pk);
         }
         client.setEnabled(true);
-        return this.clientRepository.save(client);
+        return this.repository.save(client);
     }
 
     @Override
@@ -99,7 +98,7 @@ public class SClientServiceImpl
             EntityDoesNotExists {
 
         // load objects
-        final SClient client = this.clientRepository.findOne(clientPk);
+        final SClient client = this.repository.findOne(clientPk);
         final SMechanic mechanic = this.mechanicService.findOne(mechanicPk);
         final SClientProblemReportType problemReportType = (SClientProblemReportType) this.metaDataService
                 .findByType(metaType);
@@ -136,7 +135,7 @@ public class SClientServiceImpl
     public SClientContact newContactData(@NotNull final String contact,
                                          @NotNull final Long clientPk,
                                          @NotNull final SMetaDataType type) throws EntityDoesNotExists {
-        final SClient client = this.clientRepository.findOne(clientPk);
+        final SClient client = this.repository.findOne(clientPk);
         final SMetaData metaData = this.metaDataService.findByType(type);
         if (client == null) {
             throw new EntityDoesNotExists(SClient.class, clientPk);
@@ -179,27 +178,27 @@ public class SClientServiceImpl
 
     @Override
     public List<SClient> findByPersonalInformation(@NotNull final SPersonalInformation information) {
-        return (List<SClient>) this.clientRepository.findAll(QSClient.sClient.information.eq(information));
+        return (List<SClient>) this.repository.findAll(QSClient.sClient.information.eq(information));
     }
 
     @Override
     public List<SClient> findByFirstName(@NotNull final String firstName) {
-        return (List<SClient>) this.clientRepository.findAll(QSClient.sClient.information.firstName.eq(firstName));
+        return (List<SClient>) this.repository.findAll(QSClient.sClient.information.firstName.eq(firstName));
     }
 
     @Override
     public List<SClient> findByLastName(@NotNull final String lastName) {
-        return (List<SClient>) this.clientRepository.findAll(QSClient.sClient.information.lastName.eq(lastName));
+        return (List<SClient>) this.repository.findAll(QSClient.sClient.information.lastName.eq(lastName));
     }
 
     @Override
     public SClient findByEmail(@NotNull final String email) {
-        return this.clientRepository.findOne(QSClient.sClient.email.eq(email));
+        return this.repository.findOne(QSClient.sClient.email.eq(email));
     }
 
     @Override
     public List<SClient> findByStatus(@NotNull final Boolean enabled) {
-        return (List<SClient>) this.clientRepository.findAll(QSClient.sClient.enabled.eq(enabled));
+        return (List<SClient>) this.repository.findAll(QSClient.sClient.enabled.eq(enabled));
     }
 
 }

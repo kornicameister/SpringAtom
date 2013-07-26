@@ -28,7 +28,7 @@ import java.util.List;
  * @since 0.0.1
  */
 public interface SClientContactService
-        extends SService<SClientContact, Long, Integer, SClientContactRepository> {
+        extends SBasicService<SClientContact, Long, SClientContactRepository> {
     /**
      * Returns all {@link SClientContact} entities for the given {@link org.agatom.springatom.model.beans.person.client.SClient#id}
      *

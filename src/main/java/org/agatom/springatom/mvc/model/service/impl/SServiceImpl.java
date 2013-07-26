@@ -51,11 +51,15 @@ abstract class SServiceImpl<T extends Persistable, ID extends Serializable, N ex
         implements SService<T, ID, N, R> {
 
     private static final Logger LOGGER = Logger.getLogger(SServiceImpl.class);
-    private SRepository<T, ID, N> revRepo;
+    protected SRepository<T, ID, N> revRepo;
 
     @Override
     public void autoWireRepository(final R repo) {
+        super.autoWireRepository(repo);
         this.revRepo = (SRepository) repo;
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("Repository set to %s", this.revRepo));
+        }
     }
 
     @Override
@@ -87,7 +91,7 @@ abstract class SServiceImpl<T extends Persistable, ID extends Serializable, N ex
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("%s(%s)", "countRevisions", id));
         }
-        return this.findAllRevisions(id).getContent().size();
+        return this.revRepo.countRevisions(id);
     }
 
     @Override

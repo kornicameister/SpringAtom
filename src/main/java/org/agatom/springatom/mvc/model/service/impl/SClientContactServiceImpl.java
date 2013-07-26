@@ -38,21 +38,21 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SClientContactServiceImpl
-        extends SServiceImpl<SClientContact, Long, Integer, SClientContactRepository>
+        extends SBasicServiceImpl<SClientContact, Long, SClientContactRepository>
         implements SClientContactService {
 
-    SClientContactRepository clientContactRepository;
+    private SClientContactRepository repository;
 
     @Override
     public List<SClientContact> findByClient(final Long idClient) {
-        return (List<SClientContact>) this.clientContactRepository
+        return (List<SClientContact>) this.repository
                 .findAll(QSClientContact.sClientContact.client.id.eq(idClient));
     }
 
     @Override
     @Autowired
     public void autoWireRepository(final SClientContactRepository repo) {
-        this.clientContactRepository = repo;
-        this.jpaRepository = repo;
+        super.autoWireRepository(repo);
+        this.repository = repo;
     }
 }

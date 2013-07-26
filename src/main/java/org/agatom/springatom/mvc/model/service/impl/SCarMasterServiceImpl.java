@@ -48,8 +48,8 @@ public class SCarMasterServiceImpl
 
     @Override
     public void autoWireRepository(final SCarMasterRepository repo) {
+        super.autoWireRepository(repo);
         this.repository = repo;
-        this.jpaRepository = repo;
     }
 
     @Override
