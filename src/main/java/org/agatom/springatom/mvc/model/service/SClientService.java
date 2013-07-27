@@ -66,6 +66,4 @@ public interface SClientService extends SService<SClient, Long, Integer, SClient
     List<SClient> findByLastName(@NotNull final String lastName);
 
     SClient findByEmail(@NotNull final String email);
-
-    List<SClient> findByStatus(@NotNull final Boolean enabled);
 }

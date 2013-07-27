@@ -27,7 +27,7 @@ import org.agatom.springatom.populators.DatabaseEnumPopulable;
 public enum SSecurityRoleEnum implements DatabaseEnumPopulable {
     ADMIN(666),
     ANONYMOUS(-1),
-    GUEST(0),
+    USER(0),
     CLIENT(1),
     MECHANIC(2),
     BOSS(3),

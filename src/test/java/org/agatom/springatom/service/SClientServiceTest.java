@@ -199,22 +199,6 @@ public class SClientServiceTest extends AbstractSpringTestCase {
         //by email
         SClient sClient = this.clientBO.findByEmail("kornicameister@gmail.com");
         Assert.assertNotNull("findByEmail is null", sClient);
-
-        //find by status#enabled
-        testIt = this.clientBO.findByStatus(false);
-        Assert.assertNotNull("findByStatus#enabled is null", testTest);
-        for (Object scpr : testIt) {
-            testTest.add((SClient) scpr);
-        }
-        Assert.assertTrue("findByStatus#enabled is empty", testTest.size() > 0);
-
-        //find by status#disabled
-        testIt = this.clientBO.findByStatus(true);
-        Assert.assertNotNull("findByStatus#disabled is null", testTest);
-        for (Object scpr : testIt) {
-            testTest.add((SClient) scpr);
-        }
-        Assert.assertTrue("findByStatus#disabled is empty", testTest.size() > 0);
     }
 
     @Test

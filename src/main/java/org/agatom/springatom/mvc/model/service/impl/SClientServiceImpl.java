@@ -174,9 +174,4 @@ public class SClientServiceImpl
         return this.repository.findOne(QSClient.sClient.email.eq(email));
     }
 
-    @Override
-    public List<SClient> findByStatus(@NotNull final Boolean enabled) {
-        return (List<SClient>) this.repository.findAll(QSClient.sClient.enabled.eq(enabled));
-    }
-
 }
