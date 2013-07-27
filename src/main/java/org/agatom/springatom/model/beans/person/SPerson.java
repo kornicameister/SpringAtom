@@ -20,7 +20,6 @@ package org.agatom.springatom.model.beans.person;
 import org.agatom.springatom.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.Email;
 
@@ -55,9 +54,6 @@ abstract public class SPerson
     @NaturalId
     @Column(name = "email", length = 45, nullable = false, unique = true)
     private String               email;
-    @Type(type = "boolean")
-    @Column(name = "enabled")
-    private Boolean enabled = Boolean.TRUE;
 
     public SPersonalInformation getInformation() {
         return information;
@@ -73,13 +69,5 @@ abstract public class SPerson
 
     public void setEmail(final String email) {
         this.email = email;
-    }
-
-    public Boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(final Boolean disabled) {
-        this.enabled = disabled;
     }
 }

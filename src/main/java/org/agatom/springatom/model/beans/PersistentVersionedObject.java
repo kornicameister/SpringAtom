@@ -23,6 +23,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 
 /**
  * @author kornicameister
@@ -33,6 +34,9 @@ import javax.persistence.MappedSuperclass;
 @EntityListeners(value = AuditingEntityListener.class)
 abstract public class PersistentVersionedObject
         extends AbstractAuditable<SUser, Long> {
+
+    @Version
+    private Long version;
 
     public PersistentVersionedObject() {
         super();

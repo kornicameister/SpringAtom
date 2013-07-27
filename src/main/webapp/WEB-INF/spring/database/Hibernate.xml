@@ -62,6 +62,7 @@
                     ${db.hibernate.validator.autoregister_listeners}
                 </prop>
                 <prop key="org.hibernate.envers.track_entities_changed_in_revision">true</prop>
+                <prop key="org.hibernate.envers.revision_on_collection_change">false</prop>
             </props>
         </property>
     </bean>

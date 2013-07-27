@@ -24,6 +24,7 @@ import org.agatom.springatom.model.beans.user.role.SRole;
 import org.agatom.springatom.model.beans.user.role.SUserToRole;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -57,6 +58,9 @@ public class SUser extends PersistentVersionedObject {
     private SPerson          person;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.user")
     private Set<SUserToRole> roles;
+    @Type(type = "boolean")
+    @Column(name = "enabled")
+    private Boolean enabled = Boolean.TRUE;
 
     public SUser() {
         this.credentials = new SUserCredentials();
@@ -130,5 +134,13 @@ public class SUser extends PersistentVersionedObject {
             rolesIn.add(userToRole.getRole());
         }
         return rolesIn.containsAll(roles);
+    }
+
+    public Boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(final Boolean disabled) {
+        this.enabled = disabled;
     }
 }
