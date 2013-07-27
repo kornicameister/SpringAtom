@@ -69,7 +69,7 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
     public T save(@NotNull final T persistable) {
         Preconditions
                 .checkArgument(persistable != null, "Persistable must not be null");
-        return (T) this.basicRepository.save(persistable);
+        return (T) this.basicRepository.saveAndFlush(persistable);
     }
 
     @Override

@@ -114,15 +114,6 @@ public class SClientServiceTest extends AbstractSpringTestCase {
     }
 
     @Test
-    public void test_E_ChangeStatusOfClient() throws Exception {
-        SClient sClient = this.clientBO.disable(SClientServiceTest.client.getId());
-        Assert.assertNotEquals("newClient#oldClient are equal", SClientServiceTest.client.isEnabled(),
-                sClient.isEnabled());
-        SClientServiceTest.client = sClient;
-        Assert.assertFalse("newClient#disabled did not change", SClientServiceTest.client.isEnabled());
-    }
-
-    @Test
     public void test_F_CountClients() throws Exception {
         Long clients = this.clientBO.count();
         Assert.assertEquals("Not 1 client found", (Object) 1l, clients);

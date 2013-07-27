@@ -35,10 +35,6 @@ import java.util.List;
  */
 public interface SClientService extends SService<SClient, Long, Integer, SClientRepository> {
 
-    SClient disable(@NotNull final Long pk) throws EntityDoesNotExists;
-
-    SClient enable(@NotNull final Long pk) throws EntityDoesNotExists;
-
     SClientProblemReport newProblemReport(@NotNull final String problem,
                                           @NotNull final Long client,
                                           @NotNull final Long mechanic,

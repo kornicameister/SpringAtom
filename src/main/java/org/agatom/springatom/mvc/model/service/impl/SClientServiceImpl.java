@@ -69,28 +69,6 @@ public class SClientServiceImpl
 
     @Override
     @Transactional(rollbackFor = EntityDoesNotExists.class)
-    public SClient disable(@NotNull final Long pk) throws EntityDoesNotExists {
-        final SClient client = this.repository.findOne(pk);
-        if (client == null) {
-            throw new EntityDoesNotExists(SClient.class, pk);
-        }
-        client.setEnabled(false);
-        return this.repository.save(client);
-    }
-
-    @Override
-    @Transactional(rollbackFor = EntityDoesNotExists.class)
-    public SClient enable(@NotNull final Long pk) throws EntityDoesNotExists {
-        final SClient client = this.repository.findOne(pk);
-        if (client == null) {
-            throw new EntityDoesNotExists(SClient.class, pk);
-        }
-        client.setEnabled(true);
-        return this.repository.save(client);
-    }
-
-    @Override
-    @Transactional(rollbackFor = EntityDoesNotExists.class)
     public SClientProblemReport newProblemReport(@NotNull final String problem,
                                                  @NotNull final Long clientPk,
                                                  @NotNull final Long mechanicPk,
