@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.jpa;
+package org.agatom.springatom.mvc.model.service.impl;
 
 import org.agatom.springatom.AbstractSpringTestCase;
 import org.agatom.springatom.model.beans.meta.*;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SMetaDataDAOTest extends AbstractSpringTestCase {
+public class SMetaDataServiceImplTest extends AbstractSpringTestCase {
     @Autowired
     SMetaDataService typeDataBo;
     private List<Class<? extends SMetaData>> clazzList;
