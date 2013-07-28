@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.service;
+package org.agatom.springatom.mvc.model.service.impl;
 
 import org.agatom.springatom.AbstractSpringTestCase;
 import org.agatom.springatom.model.beans.meta.SMetaDataType;

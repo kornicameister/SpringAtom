@@ -49,7 +49,7 @@ public abstract class AbstractSpringTestCase extends ReflectionTestUtils {
     private   FilterChainProxy      springSecurityFilterChain;
 
     @Before
-    public void setup() {
+    public void setUp() throws Exception {
         this.mockMvc = MockMvcBuilders.
                 webAppContextSetup(this.wac)
                 .addFilter(this.springSecurityFilterChain, "/**")
