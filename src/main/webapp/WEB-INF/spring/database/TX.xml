@@ -29,6 +29,6 @@
         <property name="entityManagerFactory"
                   ref="entityManagerFactory"/>
     </bean>
-    <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>
+    <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager" order="0" proxy-target-class="true"/>
 
 </beans>

@@ -35,5 +35,7 @@
           lazy-init="true"
           p:shared="true"/>
 
-    <cache:annotation-driven/>
+    <cache:annotation-driven cache-manager="cacheManager"
+                             proxy-target-class="false"
+                             mode="aspectj"/>
 </beans>

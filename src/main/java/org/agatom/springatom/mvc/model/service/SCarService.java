@@ -26,6 +26,7 @@ import org.agatom.springatom.model.beans.car.QSCar;
 import org.agatom.springatom.model.beans.car.SCar;
 import org.agatom.springatom.model.beans.car.SCarMaster;
 import org.agatom.springatom.mvc.model.exceptions.EntityDoesNotExists;
+import org.agatom.springatom.mvc.model.exceptions.UnambiguousResultException;
 import org.agatom.springatom.mvc.model.service.impl.SCarServiceImpl;
 
 import javax.validation.constraints.NotNull;
@@ -45,7 +46,8 @@ public interface SCarService extends SService<SCar, Long, Integer, SCarRepositor
 
     SCarMaster findMaster(@NotNull final Long carId);
 
-    SCar findBy(@NotNull final SCarAttribute attribute, @NotNull final String value);
+    List<SCar> findBy(@NotNull final SCarAttribute attribute, @NotNull final Object value) throws
+            UnambiguousResultException;
 
     SCar newCar(@NotNull final String brand,
                 @NotNull final String model,

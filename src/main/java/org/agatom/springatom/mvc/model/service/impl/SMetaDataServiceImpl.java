@@ -24,6 +24,7 @@ import org.agatom.springatom.model.beans.meta.SMetaDataCapable;
 import org.agatom.springatom.model.beans.meta.SMetaDataType;
 import org.agatom.springatom.mvc.model.service.SMetaDataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -45,16 +46,19 @@ public class SMetaDataServiceImpl implements SMetaDataService {
     SMetaDataRepository repository;
 
     @Override
+    @Cacheable(value = "typedata")
     public List<SMetaData> findAll(@NotNull final Class<? extends SMetaData> clazz) {
         return (List<SMetaData>) this.repository.findAll(QSMetaData.sMetaData.instanceOf(clazz));
     }
 
     @Override
+    @Cacheable(value = "typedata")
     public SMetaData findByType(@NotNull final SMetaDataType type) {
         return this.repository.findOne(QSMetaData.sMetaData.type.eq(type));
     }
 
     @Override
+    @Cacheable(value = "typedata", key = "metaDataCapable.getMetaInformation().getType()")
     public List<SMetaData> findEquivalences(@NotNull final SMetaDataCapable metaDataCapable) {
         return this.findAll(metaDataCapable.getMetaInformation().getClass());
     }

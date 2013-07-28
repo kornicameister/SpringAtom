@@ -19,19 +19,20 @@ package org.agatom.springatom.mvc.model.service.impl;
 
 import com.mysema.query.types.expr.BooleanExpression;
 import org.agatom.springatom.jpa.repositories.SCarMasterRepository;
+import org.agatom.springatom.jpa.repositories.SCarRepository;
+import org.agatom.springatom.model.beans.car.QSCar;
 import org.agatom.springatom.model.beans.car.QSCarMaster;
 import org.agatom.springatom.model.beans.car.SCar;
 import org.agatom.springatom.model.beans.car.SCarMaster;
 import org.agatom.springatom.model.beans.car.embeddable.QSCarMasterManufacturingData;
 import org.agatom.springatom.mvc.model.service.SCarMasterService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -44,9 +45,12 @@ import java.util.List;
 public class SCarMasterServiceImpl
         extends SBasicServiceImpl<SCarMaster, Long, SCarMasterRepository>
         implements SCarMasterService {
+    @Autowired
+    SCarRepository carRepository;
     private SCarMasterRepository repository;
 
     @Override
+    @Autowired
     public void autoWireRepository(final SCarMasterRepository repo) {
         super.autoWireRepository(repo);
         this.repository = repo;
@@ -72,17 +76,6 @@ public class SCarMasterServiceImpl
 
     @Override
     public List<SCar> findChildren(@NotNull final Long... masterId) {
-        final List<SCarMaster> sCarMasterList = new ArrayList<>();
-        final List<SCar> sCars = new ArrayList<>();
-        if (masterId.length == 0) {
-            sCarMasterList.addAll(this.repository.findAll());
-        } else {
-            sCarMasterList.addAll((Collection<? extends SCarMaster>) this.repository
-                    .findAll(QSCarMaster.sCarMaster.id.in(masterId)));
-        }
-        for (final SCarMaster sCarMaster : sCarMasterList) {
-            sCars.addAll(sCarMaster.getChildren());
-        }
-        return sCars;
+        return (List<SCar>) this.carRepository.findAll(QSCar.sCar.carMaster.id.in(masterId));
     }
 }

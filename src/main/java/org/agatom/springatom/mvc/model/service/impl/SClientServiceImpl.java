@@ -32,6 +32,7 @@ import org.agatom.springatom.model.beans.util.SIssueReporter;
 import org.agatom.springatom.mvc.model.exceptions.EntityDoesNotExists;
 import org.agatom.springatom.mvc.model.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -102,14 +103,17 @@ public class SClientServiceImpl
     }
 
     @Override
-    @Transactional(rollbackFor = EntityDoesNotExists.class)
+    @Transactional(propagation = Propagation.NEVER)
     public SClientContact newPhone(@NotNull final String contact,
                                    @NotNull final Long client) throws EntityDoesNotExists {
         return this.newContactData(contact, client, SMetaDataType.SCT_PHONE);
     }
 
     @Override
-    @Transactional(rollbackFor = EntityDoesNotExists.class)
+    @Transactional(readOnly = false,
+            isolation = Isolation.SERIALIZABLE,
+            propagation = Propagation.SUPPORTS,
+            rollbackFor = EntityDoesNotExists.class)
     public SClientContact newContactData(@NotNull final String contact,
                                          @NotNull final Long clientPk,
                                          @NotNull final SMetaDataType type) throws EntityDoesNotExists {
@@ -129,27 +133,28 @@ public class SClientServiceImpl
     }
 
     @Override
-    @Transactional(rollbackFor = EntityDoesNotExists.class)
+    @Transactional(propagation = Propagation.NEVER)
     public SClientContact newEmail(@NotNull final String contact,
                                    @NotNull final Long client) throws EntityDoesNotExists {
         return this.newContactData(contact, client, SMetaDataType.SCT_MAIL);
     }
 
     @Override
-    @Transactional(rollbackFor = EntityDoesNotExists.class)
+    @Transactional(propagation = Propagation.NEVER)
     public SClientContact newCellPhone(@NotNull final String contact,
                                        @NotNull final Long client) throws EntityDoesNotExists {
         return this.newContactData(contact, client, SMetaDataType.SCT_CELL_PHONE);
     }
 
     @Override
-    @Transactional(rollbackFor = EntityDoesNotExists.class)
+    @Transactional(propagation = Propagation.NEVER)
     public SClientContact newFax(@NotNull final String contact,
                                  @NotNull final Long client) throws EntityDoesNotExists {
         return this.newContactData(contact, client, SMetaDataType.SCT_FAX);
     }
 
     @Override
+    @CacheEvict(value = "clients", key = "#idClient", beforeInvocation = true)
     public List<SClientContact> findAllContacts(final Long idClient) {
         return this.clientContactService.findByClient(idClient);
     }
@@ -160,16 +165,19 @@ public class SClientServiceImpl
     }
 
     @Override
+    @CacheEvict(value = "clients", key = "#firstName", beforeInvocation = true)
     public List<SClient> findByFirstName(@NotNull final String firstName) {
         return (List<SClient>) this.repository.findAll(QSClient.sClient.information.firstName.eq(firstName));
     }
 
     @Override
+    @CacheEvict(value = "clients", key = "#lastName", beforeInvocation = true)
     public List<SClient> findByLastName(@NotNull final String lastName) {
         return (List<SClient>) this.repository.findAll(QSClient.sClient.information.lastName.eq(lastName));
     }
 
     @Override
+    @CacheEvict(value = "clients", key = "#email", beforeInvocation = true)
     public SClient findByEmail(@NotNull final String email) {
         return this.repository.findOne(QSClient.sClient.email.eq(email));
     }
