@@ -17,8 +17,6 @@
 
 package org.agatom.springatom.model.beans.car.embeddable;
 
-import org.hibernate.annotations.NaturalId;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
@@ -31,7 +29,6 @@ import java.io.Serializable;
 @Embeddable
 public class SCarMasterManufacturingData implements Serializable {
 
-    @NaturalId
     @Column(nullable = false,
             length = 45,
             updatable = true,

@@ -22,6 +22,7 @@ import org.agatom.springatom.model.beans.car.embeddable.SCarMasterManufacturingD
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -42,13 +43,22 @@ import java.util.Set;
 public class SCarMaster extends PersistentObject<Long> {
     @Embedded
     private SCarMasterManufacturingData manufacturingData;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "carMaster")
-    @BatchSize(size = 10)
-    private Set<SCar>                   children;
-    @Column(nullable = false,
+    @BatchSize(
+            size = 10
+    )
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.DETACH
+            },
+            orphanRemoval = true,
+            mappedBy = "carMaster"
+    )
+    private Set<SCar> children = new HashSet<>();
+    @Column(nullable = true,
             length = 1000,
             name = "thumbnailPath")
-    private String                      thumbnailPath;
+    private String thumbnailPath;
 
     public SCarMaster() {
         super();

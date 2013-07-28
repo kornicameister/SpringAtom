@@ -20,6 +20,8 @@ package org.agatom.springatom.model.beans.car;
 import org.agatom.springatom.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.model.beans.person.client.SClient;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
@@ -42,18 +44,53 @@ import javax.persistence.*;
 // TODO is business model update required ?
 public class SCar extends PersistentVersionedObject {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "carMaster", referencedColumnName = "idSCarMaster", updatable = true)
+    @ManyToOne(
+            fetch = FetchType.EAGER,
+            optional = false
+    )
+    @JoinColumn(
+            name = "carMaster",
+            referencedColumnName = "idSCarMaster",
+            updatable = true
+    )
     private SCarMaster carMaster;
-    @Audited(targetAuditMode = RelationTargetAuditMode.AUDITED)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-    @JoinColumn(name = "owner", referencedColumnName = "idSClient", updatable = false)
+    @Audited(
+            targetAuditMode = RelationTargetAuditMode.AUDITED
+    )
+    @ManyToOne(
+            optional = false,
+            fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.DETACH,
+                    CascadeType.REFRESH
+            }
+    )
+    @JoinColumn(
+            name = "owner",
+            referencedColumnName = "idSClient",
+            updatable = false
+    )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private SClient    owner;
-    @NaturalId(mutable = true)
-    @Column(nullable = false, length = 45, name = "licencePlate", unique = true)
+    @NaturalId(
+            mutable = true
+    )
+    @Column(
+            nullable = false,
+            length = 45,
+            name = "licencePlate",
+            unique = true
+    )
     private String     licencePlate;
-    @NaturalId(mutable = true)
-    @Column(nullable = false, length = 45, name = "vinNumber", unique = true)
+    @NaturalId(
+            mutable = true
+    )
+    @Column(
+            nullable = false,
+            length = 45,
+            name = "vinNumber",
+            unique = true
+    )
     private String     vinNumber;
 
     public SCarMaster getCarMaster() {

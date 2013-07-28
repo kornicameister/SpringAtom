@@ -41,4 +41,8 @@ abstract public class PersistentVersionedObject
     public PersistentVersionedObject() {
         super();
     }
+
+    public Long getVersion() {
+        return this.version;
+    }
 }
