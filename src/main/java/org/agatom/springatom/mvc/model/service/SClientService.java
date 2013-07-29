@@ -23,7 +23,7 @@ import org.agatom.springatom.model.beans.person.client.SClient;
 import org.agatom.springatom.model.beans.person.client.SClientContact;
 import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
 import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
-import org.agatom.springatom.mvc.model.exceptions.EntityDoesNotExists;
+import org.agatom.springatom.mvc.model.exceptions.SEntityDoesNotExists;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -39,23 +39,23 @@ public interface SClientService extends SService<SClient, Long, Integer, SClient
                                           @NotNull final Long client,
                                           @NotNull final Long mechanic,
                                           @NotNull final SMetaDataType problemReportType) throws
-            EntityDoesNotExists;
+            SEntityDoesNotExists;
 
     SClientContact newPhone(@NotNull final String contact,
-                            @NotNull final Long client) throws EntityDoesNotExists;
+                            @NotNull final Long client) throws SEntityDoesNotExists;
 
     SClientContact newContactData(@NotNull String contact,
                                   @NotNull Long clientPk,
-                                  @NotNull SMetaDataType type) throws EntityDoesNotExists;
+                                  @NotNull SMetaDataType type) throws SEntityDoesNotExists;
 
     SClientContact newEmail(@NotNull final String contact,
-                            @NotNull final Long client) throws EntityDoesNotExists;
+                            @NotNull final Long client) throws SEntityDoesNotExists;
 
     SClientContact newCellPhone(@NotNull final String contact,
-                                @NotNull final Long client) throws EntityDoesNotExists;
+                                @NotNull final Long client) throws SEntityDoesNotExists;
 
     SClientContact newFax(@NotNull final String contact,
-                          @NotNull final Long client) throws EntityDoesNotExists;
+                          @NotNull final Long client) throws SEntityDoesNotExists;
 
     List<SClientContact> findAllContacts(final Long idClient);
 

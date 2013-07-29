@@ -28,8 +28,9 @@ import org.agatom.springatom.model.beans.car.SCarMaster;
 import org.agatom.springatom.model.beans.car.embeddable.QSCarMasterManufacturingData;
 import org.agatom.springatom.model.beans.car.embeddable.SCarMasterManufacturingData;
 import org.agatom.springatom.model.beans.person.client.SClient;
-import org.agatom.springatom.mvc.model.exceptions.EntityDoesNotExists;
-import org.agatom.springatom.mvc.model.exceptions.UnambiguousResultException;
+import org.agatom.springatom.mvc.model.exceptions.SEntityDoesNotExists;
+import org.agatom.springatom.mvc.model.exceptions.SException;
+import org.agatom.springatom.mvc.model.exceptions.SUnambiguousResultException;
 import org.agatom.springatom.mvc.model.service.SCarService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,16 +100,16 @@ public class SCarServiceImpl
             readOnly = true,
             isolation = Isolation.SERIALIZABLE,
             propagation = Propagation.SUPPORTS,
-            rollbackFor = UnambiguousResultException.class
+            rollbackFor = SUnambiguousResultException.class
     )
     public List<SCar> findBy(@NotNull final SCarAttribute attribute, @NotNull final Object value) throws
-            UnambiguousResultException {
+            SUnambiguousResultException {
         final List<SCar> cars = (List<SCar>) this.repository.findAll(attribute.eq(value));
         switch (attribute) {
             case LICENCE_PLATE:
             case VIN_NUMBER:
                 if (cars.size() > 1) {
-                    throw new UnambiguousResultException(attribute, value, 1, cars.size());
+                    throw new SUnambiguousResultException(SCar.class, attribute, value, 1, cars.size());
                 }
                 break;
             case OWNER:
@@ -121,21 +122,21 @@ public class SCarServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = false, rollbackFor = EntityDoesNotExists.class) //TODO figure out possible exceptions
+    @Transactional(readOnly = false, rollbackFor = SEntityDoesNotExists.class) //TODO figure out possible exceptions
     public SCar newCar(@NotNull final String brand,
                        @NotNull final String model,
                        @NotNull final String licencePlate,
                        @NotNull final String vinNumber,
-                       @NotNull final Long ownerId) throws EntityDoesNotExists {
+                       @NotNull final Long ownerId) throws SEntityDoesNotExists {
 
         final SClient owner = this.getOwner(ownerId);
         final SCarMaster sCarMaster = this.getOrPersistMaster(brand, model);
 
         if (owner == null) {
-            throw new EntityDoesNotExists(SClient.class, ownerId);
+            throw new SEntityDoesNotExists(SClient.class, ownerId);
         }
         if (sCarMaster == null) {
-            throw new EntityDoesNotExists(SCarMaster.class, new String[]{brand, model});
+            throw new SEntityDoesNotExists(SCarMaster.class, new String[]{brand, model});
         }
         final SCar sCar = this.persistCar(licencePlate, vinNumber, sCarMaster, owner);
         LOGGER.info(String.format("Created SCar >> %s", sCar));
@@ -175,7 +176,7 @@ public class SCarServiceImpl
 
     @Override
     @Transactional(readOnly = false,
-            rollbackFor = EntityDoesNotExists.class,
+            rollbackFor = SEntityDoesNotExists.class,
             isolation = Isolation.READ_COMMITTED,
             propagation = Propagation.REQUIRES_NEW)
     @Cacheable(key = "#idCar",
@@ -186,14 +187,14 @@ public class SCarServiceImpl
             beforeInvocation = true)
     public SCar newOwner(@NotNull final Long idCar,
                          @NotNull final Long idClient) throws
-            EntityDoesNotExists {
+            SEntityDoesNotExists {
         final SCar car = this.findOne(idCar);
         final SClient owner = this.getOwner(idClient);
         if (car == null) {
-            throw new EntityDoesNotExists(SCar.class, idCar);
+            throw new SEntityDoesNotExists(SCar.class, idCar);
         }
         if (owner == null) {
-            throw new EntityDoesNotExists(SClient.class, idClient);
+            throw new SEntityDoesNotExists(SClient.class, idClient);
         }
 
         car.setOwner(owner);
@@ -214,9 +215,9 @@ public class SCarServiceImpl
         return owner;
     }
 
-    public class InvalidOwnerException extends Exception {
+    public class InvalidOwnerException extends SException {
         public InvalidOwnerException(final SCar car, final SClient owner) {
-            super(String.format("Owner for %s does not differ from current one %s", car, owner));
+            super(SCar.class, String.format("Owner for %s does not differ from current one %s", car, owner));
         }
     }
 }

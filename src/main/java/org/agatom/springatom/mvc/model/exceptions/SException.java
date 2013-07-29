@@ -19,24 +19,36 @@ package org.agatom.springatom.mvc.model.exceptions;
 
 import org.springframework.data.domain.Persistable;
 
-import java.io.Serializable;
-import java.util.Arrays;
-
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+public class SException extends Exception {
+    private static final String MSG_PATTERN   = "For target=%s exception occurred\nmsg=%s";
+    private static final String MSG_PATTERN_2 = "For target=%s exception occurred";
 
-public class EntityDoesNotExists extends Exception {
-    private static final String MSG_1 = "No entry exists for %s with PK=%s";
-    private static final String MSG_2 = "No entry exists for %s for ARGS=%s";
-
-    public EntityDoesNotExists(final Class<? extends Persistable> entityClazz, final Serializable pk) {
-        super(String.format(MSG_1, entityClazz.getName(), pk));
+    public SException(final Class<? extends Persistable> target,
+                      final String message) {
+        super(String.format(MSG_PATTERN, target, message));
     }
 
-    public EntityDoesNotExists(final Class<? extends Persistable> entityClazz, final Object[] args) {
-        super(String.format(MSG_2, entityClazz.getName(), Arrays.deepToString(args)));
+    public SException(final Class<? extends Persistable> target,
+                      final String message,
+                      final Throwable cause) {
+        super(String.format(MSG_PATTERN, target, message), cause);
+    }
+
+    public SException(final Class<? extends Persistable> target,
+                      final Throwable cause) {
+        super(String.format(MSG_PATTERN_2, target), cause);
+    }
+
+    public SException(final Class<? extends Persistable> target,
+                      final String message,
+                      final Throwable cause,
+                      final boolean enableSuppression,
+                      final boolean writableStackTrace) {
+        super(String.format(MSG_PATTERN, target, message), cause, enableSuppression, writableStackTrace);
     }
 }

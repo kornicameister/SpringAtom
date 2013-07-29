@@ -29,7 +29,7 @@ import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
 import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
 import org.agatom.springatom.model.beans.util.SIssueReporter;
-import org.agatom.springatom.mvc.model.exceptions.EntityDoesNotExists;
+import org.agatom.springatom.mvc.model.exceptions.SEntityDoesNotExists;
 import org.agatom.springatom.mvc.model.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -69,12 +69,12 @@ public class SClientServiceImpl
     }
 
     @Override
-    @Transactional(rollbackFor = EntityDoesNotExists.class)
+    @Transactional(rollbackFor = SEntityDoesNotExists.class)
     public SClientProblemReport newProblemReport(@NotNull final String problem,
                                                  @NotNull final Long clientPk,
                                                  @NotNull final Long mechanicPk,
                                                  @NotNull final SMetaDataType metaType) throws
-            EntityDoesNotExists {
+            SEntityDoesNotExists {
 
         // load objects
         final SClient client = this.repository.findOne(clientPk);
@@ -83,13 +83,13 @@ public class SClientServiceImpl
                 .findByType(metaType);
 
         if (client == null) {
-            throw new EntityDoesNotExists(SClient.class, clientPk);
+            throw new SEntityDoesNotExists(SClient.class, clientPk);
         }
         if (mechanic == null) {
-            throw new EntityDoesNotExists(SMechanic.class, mechanicPk);
+            throw new SEntityDoesNotExists(SMechanic.class, mechanicPk);
         }
         if (problemReportType == null) {
-            throw new EntityDoesNotExists(SClientProblemReportType.class, metaType);
+            throw new SEntityDoesNotExists(SClientProblemReportType.class, metaType);
         }
 
         SClientProblemReport problemReport = new SClientProblemReport();
@@ -105,7 +105,7 @@ public class SClientServiceImpl
     @Override
     @Transactional(propagation = Propagation.NEVER)
     public SClientContact newPhone(@NotNull final String contact,
-                                   @NotNull final Long client) throws EntityDoesNotExists {
+                                   @NotNull final Long client) throws SEntityDoesNotExists {
         return this.newContactData(contact, client, SMetaDataType.SCT_PHONE);
     }
 
@@ -113,17 +113,17 @@ public class SClientServiceImpl
     @Transactional(readOnly = false,
             isolation = Isolation.SERIALIZABLE,
             propagation = Propagation.SUPPORTS,
-            rollbackFor = EntityDoesNotExists.class)
+            rollbackFor = SEntityDoesNotExists.class)
     public SClientContact newContactData(@NotNull final String contact,
                                          @NotNull final Long clientPk,
-                                         @NotNull final SMetaDataType type) throws EntityDoesNotExists {
+                                         @NotNull final SMetaDataType type) throws SEntityDoesNotExists {
         final SClient client = this.repository.findOne(clientPk);
         final SMetaData metaData = this.metaDataService.findByType(type);
         if (client == null) {
-            throw new EntityDoesNotExists(SClient.class, clientPk);
+            throw new SEntityDoesNotExists(SClient.class, clientPk);
         }
         if (metaData == null) {
-            throw new EntityDoesNotExists(SContactType.class, type);
+            throw new SEntityDoesNotExists(SContactType.class, type);
         }
         final SClientContact clientContact = new SClientContact();
         clientContact.setClient(client);
@@ -135,21 +135,21 @@ public class SClientServiceImpl
     @Override
     @Transactional(propagation = Propagation.NEVER)
     public SClientContact newEmail(@NotNull final String contact,
-                                   @NotNull final Long client) throws EntityDoesNotExists {
+                                   @NotNull final Long client) throws SEntityDoesNotExists {
         return this.newContactData(contact, client, SMetaDataType.SCT_MAIL);
     }
 
     @Override
     @Transactional(propagation = Propagation.NEVER)
     public SClientContact newCellPhone(@NotNull final String contact,
-                                       @NotNull final Long client) throws EntityDoesNotExists {
+                                       @NotNull final Long client) throws SEntityDoesNotExists {
         return this.newContactData(contact, client, SMetaDataType.SCT_CELL_PHONE);
     }
 
     @Override
     @Transactional(propagation = Propagation.NEVER)
     public SClientContact newFax(@NotNull final String contact,
-                                 @NotNull final Long client) throws EntityDoesNotExists {
+                                 @NotNull final Long client) throws SEntityDoesNotExists {
         return this.newContactData(contact, client, SMetaDataType.SCT_FAX);
     }
 

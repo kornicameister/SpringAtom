@@ -17,14 +17,26 @@
 
 package org.agatom.springatom.mvc.model.exceptions;
 
+import org.springframework.data.domain.Persistable;
+
+import java.io.Serializable;
+import java.util.Arrays;
+
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class UnambiguousResultException extends Exception {
-    public UnambiguousResultException(final Object attribute, final Object value, final Integer expected, final Integer was) {
-        super(String
-                .format("For %s=%s query returned unambiguous result, expected=%d, was=%s", attribute, value, expected, was));
+
+public class SEntityDoesNotExists extends SException {
+    private static final String MSG_1 = "No entry exists for %s with PK=%s";
+    private static final String MSG_2 = "No entry exists for %s for ARGS=%s";
+
+    public SEntityDoesNotExists(final Class<? extends Persistable> entityClazz, final Serializable pk) {
+        super(entityClazz, String.format(MSG_1, entityClazz.getName(), pk));
+    }
+
+    public SEntityDoesNotExists(final Class<? extends Persistable> entityClazz, final Object[] args) {
+        super(entityClazz, String.format(MSG_2, entityClazz.getName(), Arrays.deepToString(args)));
     }
 }
