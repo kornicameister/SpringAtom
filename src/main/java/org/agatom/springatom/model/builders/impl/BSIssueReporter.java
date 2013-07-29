@@ -15,60 +15,24 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.notification;
+package org.agatom.springatom.model.builders.impl;
 
-import org.agatom.springatom.model.beans.meta.SMetaDataHolder;
-import org.agatom.springatom.model.beans.meta.SNotificationType;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import org.agatom.springatom.model.builders.SAppointmentBuilder;
+import org.agatom.springatom.model.builders.SIssueReporterBuilder;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SNotification")
-@Table(name = "SNotification")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSNotification",
-                updatable = false,
-                nullable = false)
-)
-public class SNotification
-        extends SMetaDataHolder<SNotificationType, Long> {
-    private static final String DATE_TIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
-    @Column(name = "message", length = 1000)
-    private String   message;
-    @Type(type = DATE_TIME_TYPE)
-    @Column(name = "sent", nullable = false)
-    private DateTime sent;
+public class BSIssueReporter
+        extends BaseBuilder<SIssueReporterBuilder> {
 
-    public SNotification() {
-        super();
+    protected BSIssueReporter() {
+        super(SAppointmentBuilder.class);
     }
 
-    public String getMessage() {
-        return message;
+    public static SIssueReporterBuilder builder() {
+        return new BSIssueReporter().builder;
     }
-
-    public void setMessage(final String notification) {
-        this.message = notification;
-    }
-
-    public DateTime getSent() {
-        return null == this.sent ? null : this.sent;
-    }
-
-    public void setSent(final DateTime sent) {
-        this.sent = sent;
-    }
-
-
 }

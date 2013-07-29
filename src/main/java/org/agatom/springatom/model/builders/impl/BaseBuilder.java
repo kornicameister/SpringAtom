@@ -15,60 +15,25 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.notification;
+package org.agatom.springatom.model.builders.impl;
 
-import org.agatom.springatom.model.beans.meta.SMetaDataHolder;
-import org.agatom.springatom.model.beans.meta.SNotificationType;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import com.fluentinterface.ReflectionBuilder;
+import com.fluentinterface.builder.Builder;
+import com.fluentinterface.proxy.impl.SetterAttributeAccessStrategy;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SNotification")
-@Table(name = "SNotification")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSNotification",
-                updatable = false,
-                nullable = false)
-)
-public class SNotification
-        extends SMetaDataHolder<SNotificationType, Long> {
-    private static final String DATE_TIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
-    @Column(name = "message", length = 1000)
-    private String   message;
-    @Type(type = DATE_TIME_TYPE)
-    @Column(name = "sent", nullable = false)
-    private DateTime sent;
+abstract class BaseBuilder<B extends Builder> {
+    protected B builder;
 
-    public SNotification() {
-        super();
+    @SuppressWarnings("unchecked")
+    protected BaseBuilder(final Class<? extends Builder> builder) {
+        this.builder = (B) ReflectionBuilder
+                .implementationFor(builder)
+                .usingAttributeAccessStrategy(new SetterAttributeAccessStrategy())
+                .create();
     }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(final String notification) {
-        this.message = notification;
-    }
-
-    public DateTime getSent() {
-        return null == this.sent ? null : this.sent;
-    }
-
-    public void setSent(final DateTime sent) {
-        this.sent = sent;
-    }
-
-
 }

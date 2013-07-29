@@ -19,17 +19,17 @@ package org.agatom.springatom.model.beans.appointment;
 
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.car.SCar;
-import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
-import org.springframework.data.domain.Persistable;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.ReadableDuration;
+import org.joda.time.ReadableInterval;
 
 import javax.persistence.*;
-import java.sql.Time;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import javax.validation.constraints.NotNull;
+import java.util.*;
 
 /**
  * @author kornicamaister
@@ -47,92 +47,85 @@ import java.util.Set;
 )
 public class SAppointment
         extends PersistentObject<Long>
-        implements Persistable<Long> {
-
-    @Type(type = "timestamp")
-    @Column(name = "startDate")
-    private Date                  startDate;
-    @Type(type = "timestamp")
-    @Column(nullable = false,
-            name = "endDate")
-    private Date                  endDate;
-    @Type(type = "time")
-    @Column(nullable = false,
-            name = "startTime")
-    private Time                  startTime;
-    @Type(type = "time")
-    @Column(nullable = false,
-            name = "endTime")
-    private Time                  endTime;
-    @Formula(value = "endTime - startTime")
-    private Long                  duration;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "appointment", cascade = CascadeType.ALL)
+        implements Iterable<SAppointmentTask> {
+    private static final String BEGIN_NULL_MSG = "Begin dateTime for appointment must not be null";
+    private static final String END_NULL_MSG   = "End dateTime for appointment must not be null";
+    private static final String DATE_TIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
+    @Type(type = DATE_TIME_TYPE)
+    @Column(name = "begin", nullable = false)
+    private DateTime begin;
+    @Type(type = DATE_TIME_TYPE)
+    @Column(name = "end", nullable = false)
+    private DateTime end;
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "appointment",
+            cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<SAppointmentTask> tasks;
+    private Set<SAppointmentTask> tasks = new HashSet<>();
     @ManyToOne(optional = false)
     @JoinColumn(name = "car", referencedColumnName = "idScar")
-    private SCar                  car;
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(final Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Time getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(final Time startTime) {
-        this.startTime = startTime;
-    }
-
-    public Time getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(final Time endTime) {
-        this.endTime = endTime;
-    }
+    private SCar car;
 
     public Set<SAppointmentTask> getTasks() {
         return tasks;
     }
 
-    public void setTasks(final Set<SAppointmentTask> tasks) {
-        this.tasks = tasks;
+    public boolean addTask(@NotNull final SAppointmentTask... tasks) {
+        return Collections.addAll(this.tasks, tasks);
     }
 
-    public boolean addAppointment(final SAppointmentTask sAppointmentTask) {
-        if (this.tasks == null) {
-            this.tasks = new HashSet<>();
+    public boolean removeTask(@NotNull final SAppointmentTask... tasks) {
+        return this.tasks.removeAll(Arrays.asList(tasks));
+    }
+
+    @NotNull(message = BEGIN_NULL_MSG)
+    public DateTime getBegin() {
+        return begin;
+    }
+
+    public void setBegin(final DateTime begin) {
+        this.begin = begin;
+    }
+
+    @NotNull(message = END_NULL_MSG)
+    public DateTime getEnd() {
+        return end;
+    }
+
+    public void setEnd(final DateTime end) {
+        this.end = end;
+    }
+
+    public Interval getInterval() {
+        return new Interval(this.begin, this.end);
+    }
+
+    public void setInterval(final ReadableInterval duration) {
+        this.begin = duration.getStart();
+        this.end = duration.getEnd();
+    }
+
+    public boolean postpone(final ReadableDuration duration, final boolean toFuture) {
+        if (this.begin != null && this.end != null) {
+            final int scalar = toFuture ? 1 : -1;
+            this.begin.withDurationAdded(duration, scalar);
+            this.end.withDurationAdded(duration, scalar);
+            return true;
         }
-        return this.tasks.add(sAppointmentTask);
+        return false;
     }
 
-    public boolean removeAppointment(final SAppointmentTask sAppointmentTask) {
-        return this.tasks != null && this.tasks.remove(sAppointmentTask);
-    }
-
-    public Long getDuration() {
-        return duration;
-    }
-
+    @NotNull
     public SCar getCar() {
-        return car;
+        return this.car;
     }
 
-    public void setCar(final SCar car) {
+    public void setCar(@NotNull final SCar car) {
         this.car = car;
+    }
+
+    @Override
+    public Iterator<SAppointmentTask> iterator() {
+        return this.tasks.iterator();
     }
 }

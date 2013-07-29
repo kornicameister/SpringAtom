@@ -15,64 +15,24 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.links;
+package org.agatom.springatom.model.builders;
 
-import org.agatom.springatom.model.beans.PersistentVersionedObject;
+import com.fluentinterface.builder.Builder;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
+import org.agatom.springatom.model.beans.links.SAppointmentWorkerLink;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
 import org.agatom.springatom.model.beans.util.SIssueReporter;
-import org.hibernate.envers.Audited;
-
-import javax.persistence.*;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SAppointmentWorkerLink")
-@Table(name = "SAppointmentWorkerLink")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSAppointmentWorkerLink",
-                updatable = false,
-                nullable = false)
-)
-public class SAppointmentWorkerLink extends PersistentVersionedObject {
+public interface SAppointmentWorkerLinkBuilder
+        extends Builder<SAppointmentWorkerLink> {
+    SAppointmentWorkerLinkBuilder withAppointment(final SAppointment appointment);
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment", updatable = false)
-    private SAppointment   appointment;
-    @Audited
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "assignee", referencedColumnName = "idSMechanic")
-    private SMechanic      assignee;
-    @Embedded
-    private SIssueReporter reporter;
+    SAppointmentWorkerLinkBuilder withAssignee(final SMechanic assignee);
 
-    public SAppointment getAppointment() {
-        return appointment;
-    }
-
-    public void setAppointment(final SAppointment appointment) {
-        this.appointment = appointment;
-    }
-
-    public SMechanic getAssignee() {
-        return assignee;
-    }
-
-    public void setAssignee(final SMechanic assignee) {
-        this.assignee = assignee;
-    }
-
-    public SIssueReporter getReporter() {
-        return reporter;
-    }
-
-    public void setReporter(final SIssueReporter reporter) {
-        this.reporter = reporter;
-    }
-
+    SAppointmentWorkerLinkBuilder withReporter(final SIssueReporter reporter);
 }

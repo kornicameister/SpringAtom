@@ -24,7 +24,6 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * @author kornicamaister
@@ -33,16 +32,16 @@ import java.util.Date;
  */
 @Embeddable
 public class SIssueReporter {
-
+    private static final String DATE_TIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "mechanic",
             referencedColumnName = "idSMechanic",
             updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private SMechanic mechanic;
-    @Type(type = "timestamp")
-    @Column(name = "assigned")
-    private Date      assigned;
+    @Type(type = DATE_TIME_TYPE)
+    @Column(name = "assigned", nullable = false)
+    private DateTime  assigned;
 
     public SIssueReporter(final SMechanic mechanic) {
         this();
@@ -50,7 +49,7 @@ public class SIssueReporter {
     }
 
     public SIssueReporter() {
-        this.assigned = new Date();
+        this.assigned = DateTime.now();
     }
 
     public SMechanic getMechanic() {
@@ -66,7 +65,7 @@ public class SIssueReporter {
     }
 
     public void setAssigned(final DateTime assigned) {
-        this.assigned = assigned.toDate();
+        this.assigned = assigned;
     }
 
 }

@@ -37,6 +37,7 @@ public enum SMetaDataType implements DatabaseEnumPopulable {
     //SAT
     SAT_REPAIR("repair", Constants.APPOINTMENT_TASK_TYPE_CLASS),
     SAT_NORMAL("normal", Constants.APPOINTMENT_TASK_TYPE_CLASS),
+    SAT_OIL_CHANGE("oil change", Constants.APPOINTMENT_TASK_TYPE_CLASS),
     //SAT
 
     //SCPR

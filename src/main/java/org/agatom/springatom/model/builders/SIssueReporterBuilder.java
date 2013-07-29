@@ -15,12 +15,20 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.exceptions;
+package org.agatom.springatom.model.builders;
+
+import com.fluentinterface.builder.Builder;
+import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
+import org.agatom.springatom.model.beans.util.SIssueReporter;
+import org.joda.time.DateTime;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class EntityNotPersisted {
+public interface SIssueReporterBuilder extends Builder<SIssueReporter> {
+    SIssueReporterBuilder withMechanic(final SMechanic mechanic);
+
+    SIssueReporterBuilder withAssigned(final DateTime assigned);
 }

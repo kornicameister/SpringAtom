@@ -63,6 +63,7 @@
                 </prop>
                 <prop key="org.hibernate.envers.track_entities_changed_in_revision">true</prop>
                 <prop key="org.hibernate.envers.revision_on_collection_change">false</prop>
+                <prop key="jadira.usertype.autoRegisterUserTypes">true</prop>
             </props>
         </property>
     </bean>
