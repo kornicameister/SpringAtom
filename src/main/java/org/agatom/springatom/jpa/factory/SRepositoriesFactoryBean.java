@@ -15,8 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.jpa;
+package org.agatom.springatom.jpa.factory;
 
+import org.agatom.springatom.jpa.SRepository;
+import org.agatom.springatom.jpa.impl.SRepositoryImpl;
 import org.agatom.springatom.model.beans.revision.AuditedRevisionEntity;
 import org.apache.log4j.Logger;
 import org.hibernate.envers.DefaultRevisionEntity;
@@ -37,8 +39,8 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class RevisionRepositoryFactoryBean
-        extends JpaRepositoryFactoryBean<SRepository<Object, Serializable, Integer>, Object, Serializable> {
+public class SRepositoriesFactoryBean
+extends JpaRepositoryFactoryBean<SRepository<Object, Serializable, Integer>, Object, Serializable> {
 
     private Class<?> revisionEntityClass;
 

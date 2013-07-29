@@ -21,9 +21,10 @@
  */
 
 
-package org.agatom.springatom.jpa;
+package org.agatom.springatom.jpa.impl;
 
 import com.google.common.base.Preconditions;
+import org.agatom.springatom.jpa.SRepository;
 import org.apache.log4j.Logger;
 import org.hibernate.envers.*;
 import org.hibernate.envers.query.AuditEntity;
@@ -148,6 +149,29 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
         return new Revisions<>(this.toRevisions(revisions, revisionEntities));
     }
 
+    @SuppressWarnings("unchecked")
+    private List<Revision<N, T>> toRevisions(Map<N, T> source, Map<Number, Object> revisionEntities) {
+        final List<Revision<N, T>> result = new ArrayList<>();
+        for (Map.Entry<N, T> revision : source.entrySet()) {
+            final N revisionNumber = revision.getKey();
+            final T entity = revision.getValue();
+            final RevisionMetadata<N> metadata = (RevisionMetadata<N>) getRevisionMetadata(revisionEntities
+                    .get(revisionNumber));
+            result.add(new Revision<>(metadata, entity));
+        }
+        Collections.sort(result);
+        return Collections.unmodifiableList(result);
+    }
+
+    @SuppressWarnings("Convert2Diamond")
+    private RevisionMetadata<?> getRevisionMetadata(Object object) {
+        if (object instanceof DefaultRevisionEntity) {
+            return new DefaultRevisionMetadata((DefaultRevisionEntity) object);
+        } else {
+            return new AnnotationRevisionMetadata<N>(object, RevisionNumber.class, RevisionTimestamp.class);
+        }
+    }
+
     @Override
     @SuppressWarnings({"unchecked", "SuspiciousToArrayCall"})
     public Revisions<N, T> findRevisions(final ID id, final DateTime dateTime, final Operators operator) {
@@ -204,28 +228,5 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
                 .forRevisionsOfEntity(type, false, true)
                 .addProjection(AuditEntity.revisionNumber().count())
                 .getSingleResult();
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Revision<N, T>> toRevisions(Map<N, T> source, Map<Number, Object> revisionEntities) {
-        final List<Revision<N, T>> result = new ArrayList<>();
-        for (Map.Entry<N, T> revision : source.entrySet()) {
-            final N revisionNumber = revision.getKey();
-            final T entity = revision.getValue();
-            final RevisionMetadata<N> metadata = (RevisionMetadata<N>) getRevisionMetadata(revisionEntities
-                    .get(revisionNumber));
-            result.add(new Revision<>(metadata, entity));
-        }
-        Collections.sort(result);
-        return Collections.unmodifiableList(result);
-    }
-
-    @SuppressWarnings("Convert2Diamond")
-    private RevisionMetadata<?> getRevisionMetadata(Object object) {
-        if (object instanceof DefaultRevisionEntity) {
-            return new DefaultRevisionMetadata((DefaultRevisionEntity) object);
-        } else {
-            return new AnnotationRevisionMetadata<N>(object, RevisionNumber.class, RevisionTimestamp.class);
-        }
     }
 }

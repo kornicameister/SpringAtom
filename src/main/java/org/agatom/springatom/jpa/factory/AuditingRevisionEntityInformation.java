@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.jpa;
+package org.agatom.springatom.jpa.factory;
 
 import org.agatom.springatom.model.beans.revision.AuditedRevisionEntity;
 import org.springframework.data.repository.history.support.RevisionEntityInformation;
