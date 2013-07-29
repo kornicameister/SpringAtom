@@ -1,4 +1,3 @@
-
 /**************************************************************************************************
  * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
  *                                                                                                *
@@ -16,11 +15,20 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.xml.beans;
+package org.agatom.springatom.helpers.xml.beans;
 
-import javax.xml.bind.annotation.*;
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * <p>Java class for anonymous complex type.
@@ -32,50 +40,38 @@ import java.util.List;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="definition">
+ *         &lt;element name="class" maxOccurs="unbounded" minOccurs="0">
  *           &lt;complexType>
  *             &lt;complexContent>
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                 &lt;sequence>
- *                   &lt;element name="class" maxOccurs="unbounded" minOccurs="0">
+ *                   &lt;element name="impl">
  *                     &lt;complexType>
  *                       &lt;complexContent>
  *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *                           &lt;sequence>
- *                             &lt;element name="impl">
+ *                             &lt;element name="cache" maxOccurs="unbounded" minOccurs="0">
  *                               &lt;complexType>
- *                                 &lt;complexContent>
- *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                     &lt;sequence>
- *                                       &lt;element name="cache" maxOccurs="unbounded" minOccurs="0">
- *                                         &lt;complexType>
- *                                           &lt;simpleContent>
- *                                             &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *                                               &lt;attribute name="name" use="required"
- * type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                               &lt;attribute name="method" use="required"
- * type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                               &lt;attribute name="key" type="{http://www.w3.org/2001/XMLSchema}string"
+ *                                 &lt;simpleContent>
+ *                                   &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
+ *                                     &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
  * />
- *                                             &lt;/extension>
- *                                           &lt;/simpleContent>
- *                                         &lt;/complexType>
- *                                       &lt;/element>
- *                                     &lt;/sequence>
- *                                     &lt;attribute name="class" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
+ *                                     &lt;attribute name="method" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
  * />
- *                                   &lt;/restriction>
- *                                 &lt;/complexContent>
+ *                                     &lt;attribute name="key" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *                                   &lt;/extension>
+ *                                 &lt;/simpleContent>
  *                               &lt;/complexType>
  *                             &lt;/element>
  *                           &lt;/sequence>
- *                           &lt;attribute name="impl" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
+ *                           &lt;attribute name="class" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
  * />
  *                         &lt;/restriction>
  *                       &lt;/complexContent>
  *                     &lt;/complexType>
  *                   &lt;/element>
  *                 &lt;/sequence>
+ *                 &lt;attribute name="impl" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *               &lt;/restriction>
  *             &lt;/complexContent>
  *           &lt;/complexType>
@@ -88,36 +84,39 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "definition"
+        "cachedClass"
 })
-@XmlRootElement(name = "caches")
-public class Caches {
+public class Definition {
 
-    @XmlElement(required = true)
-    protected Definition definition;
-
-    /**
-     * Gets the value of the definition property.
-     *
-     * @return possible object is
-     * {@link Definition }
-     */
-    public Definition getDefinition() {
-        return definition;
-    }
+    @XmlElement(name = "class")
+    protected List<CachedClass> cachedClass;
 
     /**
-     * Sets the value of the definition property.
-     *
-     * @param value
-     *         allowed object is
-     *         {@link Definition }
+     * Gets the value of the cachedClass property.
+     * <p/>
+     * <p/>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the cachedClass property.
+     * <p/>
+     * <p/>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getCachedClass().add(newItem);
+     * </pre>
+     * <p/>
+     * <p/>
+     * <p/>
+     * Objects of the following type(s) are allowed in the list
+     * {@link CachedClass }
      */
-    public void setDefinition(Definition value) {
-        this.definition = value;
+    public List<CachedClass> getCachedClass() {
+        if (cachedClass == null) {
+            cachedClass = new ArrayList<CachedClass>();
+        }
+        return this.cachedClass;
     }
 
-    public List<CachedClass> getClazz() {
-        return definition.getCachedClass();
-    }
+
 }

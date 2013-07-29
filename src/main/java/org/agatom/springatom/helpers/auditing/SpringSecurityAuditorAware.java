@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.auditing;
+package org.agatom.springatom.helpers.auditing;
 
 import org.agatom.springatom.jpa.repositories.SUserRepository;
 import org.agatom.springatom.model.beans.user.QSUser;

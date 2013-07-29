@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.xml.beans;
+package org.agatom.springatom.helpers.xml.beans;
 
 /**
  * @author kornicameister
@@ -23,7 +23,6 @@ package org.agatom.springatom.xml.beans;
  * @since 0.0.1
  */
 
-import javax.annotation.Nonnull;
 import javax.xml.bind.annotation.*;
 
 /**
@@ -33,93 +32,114 @@ import javax.xml.bind.annotation.*;
  * <p/>
  * <pre>
  * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="impl">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="cache" maxOccurs="unbounded" minOccurs="0">
- *                     &lt;complexType>
- *                       &lt;simpleContent>
- *                         &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *                           &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
- * />
- *                           &lt;attribute name="method" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
- * />
- *                           &lt;attribute name="key" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                         &lt;/extension>
- *                       &lt;/simpleContent>
- *                     &lt;/complexType>
- *                   &lt;/element>
- *                 &lt;/sequence>
- *                 &lt;attribute name="class" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *       &lt;/sequence>
- *       &lt;attribute name="impl" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
+ *   &lt;simpleContent>
+ *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
+ *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="method" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="key" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *     &lt;/extension>
+ *   &lt;/simpleContent>
  * &lt;/complexType>
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "impl"
+        "value"
 })
-public class CachedClass {
+public class Cache {
 
-    @XmlElement(required = true)
-    protected CachedClassImpl impl;
-    @XmlAttribute(name = "impl", required = true)
-    protected String          dao;
-
-    /**
-     * Gets the value of the impl property.
-     *
-     * @return possible object is
-     * {@link CachedClassImpl }
-     */
-    public CachedClassImpl getImpl() {
-        return impl;
-    }
+    @XmlValue
+    protected String value;
+    @XmlAttribute(name = "name", required = true)
+    protected String name;
+    @XmlAttribute(name = "method", required = true)
+    protected String method;
+    @XmlAttribute(name = "key")
+    protected String key;
 
     /**
-     * Sets the value of the impl property.
-     *
-     * @param value
-     *         allowed object is
-     *         {@link CachedClassImpl }
-     */
-    public void setImpl(CachedClassImpl value) {
-        this.impl = value;
-    }
-
-    /**
-     * Gets the value of the impl property.
+     * Gets the value of the value property.
      *
      * @return possible object is
      * {@link String }
      */
-    public
-    @Nonnull
-    String getDao() {
-        return dao;
+    public String getValue() {
+        return value;
     }
 
     /**
-     * Sets the value of the impl property.
+     * Sets the value of the value property.
      *
      * @param value
      *         allowed object is
      *         {@link String }
      */
-    public void setDao(String value) {
-        this.dao = value;
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    /**
+     * Gets the value of the name property.
+     *
+     * @return possible object is
+     * {@link String }
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the value of the name property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link String }
+     */
+    public void setName(String value) {
+        this.name = value;
+    }
+
+    /**
+     * Gets the value of the method property.
+     *
+     * @return possible object is
+     * {@link String }
+     */
+    public String getMethod() {
+        return method;
+    }
+
+    /**
+     * Sets the value of the method property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link String }
+     */
+    public void setMethod(String value) {
+        this.method = value;
+    }
+
+    /**
+     * Gets the value of the key property.
+     *
+     * @return possible object is
+     * {@link String }
+     */
+    public String getKey() {
+        return key;
+    }
+
+    /**
+     * Sets the value of the key property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link String }
+     */
+    public void setKey(String value) {
+        this.key = value;
     }
 
 }
+

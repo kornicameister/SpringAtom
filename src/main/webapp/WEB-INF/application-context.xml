@@ -38,19 +38,19 @@
 
     <!--jaxb-->
     <bean id="jaxbXMLHelper"
-          class="org.agatom.springatom.xml.OXMHelper">
-        <property name="marshaller" ref="jaxb2Marshaller"/>
+          class="org.agatom.springatom.helpers.xml.OXMHelper">
+    <property name="marshaller" ref="jaxb2Marshaller"/>
         <property name="unmarshaller" ref="jaxb2Marshaller"/>
     </bean>
     <bean id="jaxb2Marshaller"
           class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-        <property name="packagesToScan" value="org.agatom.springatom.xml.beans"/>
+        <property name="packagesToScan" value="org.agatom.springatom.helpers.xml.beans"/>
     </bean>
     <!--jaxb-->
 
     <bean id="resourceLoaderHelper"
           scope="prototype"
-          class="org.agatom.springatom.util.ResourceLoaderHelper"/>
+          class="org.agatom.springatom.helpers.resources.ResourceLoaderHelper"/>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="classpath:database.properties"/>

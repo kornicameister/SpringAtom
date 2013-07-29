@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.xml.beans;
+package org.agatom.springatom.helpers.xml.beans;
 
 /**
  * @author kornicameister
@@ -23,9 +23,8 @@ package org.agatom.springatom.xml.beans;
  * @since 0.0.1
  */
 
+import javax.annotation.Nonnull;
 import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -37,19 +36,32 @@ import java.util.List;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="cache" maxOccurs="unbounded" minOccurs="0">
+ *         &lt;element name="impl">
  *           &lt;complexType>
- *             &lt;simpleContent>
- *               &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *                 &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="method" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="key" type="{http://www.w3.org/2001/XMLSchema}string" />
- *               &lt;/extension>
- *             &lt;/simpleContent>
+ *             &lt;complexContent>
+ *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 &lt;sequence>
+ *                   &lt;element name="cache" maxOccurs="unbounded" minOccurs="0">
+ *                     &lt;complexType>
+ *                       &lt;simpleContent>
+ *                         &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
+ *                           &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
+ * />
+ *                           &lt;attribute name="method" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
+ * />
+ *                           &lt;attribute name="key" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *                         &lt;/extension>
+ *                       &lt;/simpleContent>
+ *                     &lt;/complexType>
+ *                   &lt;/element>
+ *                 &lt;/sequence>
+ *                 &lt;attribute name="class" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *               &lt;/restriction>
+ *             &lt;/complexContent>
  *           &lt;/complexType>
  *         &lt;/element>
  *       &lt;/sequence>
- *       &lt;attribute name="class" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="impl" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -57,61 +69,57 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "cache"
+        "impl"
 })
-public class CachedClassImpl {
+public class CachedClass {
+
     @XmlElement(required = true)
-    protected List<Cache> cache;
-    @XmlAttribute(name = "class", required = true)
-    protected String clazz;
+    protected CachedClassImpl impl;
+    @XmlAttribute(name = "impl", required = true)
+    protected String          dao;
 
     /**
-     * Gets the value of the cache property.
-     * <p/>
-     * <p/>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the cache property.
-     * <p/>
-     * <p/>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getCache().add(newItem);
-     * </pre>
-     * <p/>
-     * <p/>
-     * <p/>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Cache }
-     */
-    public List<Cache> getCache() {
-        if (cache == null) {
-            cache = new ArrayList<>();
-        }
-        return this.cache;
-    }
-
-    /**
-     * Gets the value of the cachedClass property.
+     * Gets the value of the impl property.
      *
      * @return possible object is
-     *         {@link String }
+     * {@link CachedClassImpl }
      */
-    public String getClazz() {
-        return clazz;
+    public CachedClassImpl getImpl() {
+        return impl;
     }
 
     /**
-     * Sets the value of the cachedClass property.
+     * Sets the value of the impl property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link CachedClassImpl }
+     */
+    public void setImpl(CachedClassImpl value) {
+        this.impl = value;
+    }
+
+    /**
+     * Gets the value of the impl property.
+     *
+     * @return possible object is
+     * {@link String }
+     */
+    public
+    @Nonnull
+    String getDao() {
+        return dao;
+    }
+
+    /**
+     * Sets the value of the impl property.
      *
      * @param value
      *         allowed object is
      *         {@link String }
      */
-    public void setClazz(String value) {
-        this.clazz = value;
+    public void setDao(String value) {
+        this.dao = value;
     }
-
 
 }

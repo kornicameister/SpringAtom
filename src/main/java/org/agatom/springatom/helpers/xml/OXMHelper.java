@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.xml;
+package org.agatom.springatom.helpers.xml;
 
 import org.apache.log4j.Logger;
 import org.springframework.oxm.Marshaller;
@@ -36,7 +36,7 @@ import java.io.IOException;
 
 public class OXMHelper {
     private static final Logger LOGGER = Logger.getLogger(OXMHelper.class);
-    protected Marshaller marshaller;
+    protected Marshaller   marshaller;
     protected Unmarshaller unmarshaller;
 
     public Marshaller getMarshaller() {

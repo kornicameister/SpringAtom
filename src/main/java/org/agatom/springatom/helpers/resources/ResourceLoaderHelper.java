@@ -15,12 +15,39 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-@javax.xml.bind.annotation.XmlSchema(
-        namespace = "http://www.example.org/SpringAtom",
-        xmlns = {
-                @XmlNs(prefix = "sa", namespaceURI = "http://www.example.org/SpringAtom")
-        },
-        elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED
-) package org.agatom.springatom.xml.beans;
+package org.agatom.springatom.helpers.resources;
 
-import javax.xml.bind.annotation.XmlNs;
+import com.google.common.base.Objects;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Component;
+
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+
+@Component(value = "ResourceLoaderHelper")
+public class ResourceLoaderHelper implements ResourceLoaderAware {
+    @javax.annotation.Resource(shareable = true)
+    private ResourceLoader resourceLoader;
+
+    @Autowired
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
+
+    public Resource getResource(String location) {
+        return resourceLoader.getResource(location);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("resourceLoader", resourceLoader)
+                .toString();
+    }
+}
