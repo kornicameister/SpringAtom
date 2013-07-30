@@ -70,12 +70,18 @@ public class SAppointment
         return tasks;
     }
 
-    public boolean addTask(@NotNull final SAppointmentTask... tasks) {
-        return Collections.addAll(this.tasks, tasks);
+    public SAppointment addTask(@NotNull final SAppointmentTask... tasks) {
+        if (!Collections.addAll(this.tasks, tasks)) {
+            return null;
+        }
+        return this;
     }
 
-    public boolean removeTask(@NotNull final SAppointmentTask... tasks) {
-        return this.tasks.removeAll(Arrays.asList(tasks));
+    public SAppointment removeTask(@NotNull final SAppointmentTask... tasks) {
+        if (!this.tasks.removeAll(Arrays.asList(tasks))) {
+            return null;
+        }
+        return this;
     }
 
     @NotNull(message = BEGIN_NULL_MSG)
@@ -83,8 +89,9 @@ public class SAppointment
         return begin;
     }
 
-    public void setBegin(final DateTime begin) {
+    public SAppointment setBegin(final DateTime begin) {
         this.begin = begin;
+        return this;
     }
 
     @NotNull(message = END_NULL_MSG)
@@ -92,17 +99,19 @@ public class SAppointment
         return end;
     }
 
-    public void setEnd(final DateTime end) {
+    public SAppointment setEnd(final DateTime end) {
         this.end = end;
+        return this;
     }
 
     public Interval getInterval() {
         return new Interval(this.begin, this.end);
     }
 
-    public void setInterval(final ReadableInterval duration) {
+    public SAppointment setInterval(final ReadableInterval duration) {
         this.begin = duration.getStart();
         this.end = duration.getEnd();
+        return this;
     }
 
     public boolean postpone(final ReadableDuration duration, final boolean toFuture) {
@@ -120,8 +129,9 @@ public class SAppointment
         return this.car;
     }
 
-    public void setCar(@NotNull final SCar car) {
+    public SAppointment setCar(@NotNull final SCar car) {
         this.car = car;
+        return this;
     }
 
     @Override

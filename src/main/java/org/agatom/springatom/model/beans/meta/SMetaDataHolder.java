@@ -46,7 +46,8 @@ abstract public class SMetaDataHolder<MD extends SMetaData, PK extends Serializa
     }
 
     @Override
-    public void setMetaInformation(final MD metaData) {
+    public SMetaDataHolder setMetaInformation(final MD metaData) {
         this.type = metaData;
+        return this;
     }
 }

@@ -63,19 +63,22 @@ public class SNotificationLink extends PersistentObject<Long> {
         return notification;
     }
 
-    public void setNotification(final SNotification notification) {
+    public SNotificationLink setNotification(final SNotification notification) {
         this.notification = notification;
+        return this;
     }
 
     public SClient getClient() {
         return client;
     }
 
-    public void setClient(final SClient client) {
+    public SNotificationLink setClient(final SClient client) {
         this.client = client;
+        return this;
     }
 
-    public void setChecked(final Boolean read) {
+    public SNotificationLink setChecked(final Boolean read) {
         this.checked = read;
+        return this;
     }
 }

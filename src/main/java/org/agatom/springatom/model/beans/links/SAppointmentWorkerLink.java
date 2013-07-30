@@ -55,24 +55,27 @@ public class SAppointmentWorkerLink extends PersistentVersionedObject {
         return appointment;
     }
 
-    public void setAppointment(final SAppointment appointment) {
+    public SAppointmentWorkerLink setAppointment(final SAppointment appointment) {
         this.appointment = appointment;
+        return this;
     }
 
     public SMechanic getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(final SMechanic assignee) {
+    public SAppointmentWorkerLink setAssignee(final SMechanic assignee) {
         this.assignee = assignee;
+        return this;
     }
 
     public SIssueReporter getReporter() {
         return reporter;
     }
 
-    public void setReporter(final SIssueReporter reporter) {
+    public SAppointmentWorkerLink setReporter(final SIssueReporter reporter) {
         this.reporter = reporter;
+        return this;
     }
 
 }

@@ -24,6 +24,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author kornicamaister
@@ -31,7 +32,8 @@ import javax.persistence.*;
  * @since 0.0.1
  */
 @Embeddable
-public class SIssueReporter {
+public class SIssueReporter
+        implements Serializable {
     private static final String DATE_TIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "mechanic",
@@ -56,16 +58,18 @@ public class SIssueReporter {
         return mechanic;
     }
 
-    public void setMechanic(final SMechanic mechanic) {
+    public SIssueReporter setMechanic(final SMechanic mechanic) {
         this.mechanic = mechanic;
+        return this;
     }
 
     public DateTime getAssigned() {
         return null == this.assigned ? null : new DateTime(this.assigned);
     }
 
-    public void setAssigned(final DateTime assigned) {
+    public SIssueReporter setAssigned(final DateTime assigned) {
         this.assigned = assigned;
+        return this;
     }
 
 }

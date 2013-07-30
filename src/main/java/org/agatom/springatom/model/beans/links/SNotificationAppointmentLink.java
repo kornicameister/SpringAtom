@@ -41,16 +41,18 @@ public class SNotificationAppointmentLink extends SNotificationLink {
         return appointment;
     }
 
-    public void setAppointment(final SAppointment appointment) {
+    public SNotificationAppointmentLink setAppointment(final SAppointment appointment) {
         this.appointment = appointment;
+        return this;
     }
 
     public SAppointmentWorkerLink getWorkerLink() {
         return workerLink;
     }
 
-    public void setWorkerLink(final SAppointmentWorkerLink workerLink) {
+    public SNotificationAppointmentLink setWorkerLink(final SAppointmentWorkerLink workerLink) {
         this.workerLink = workerLink;
+        return this;
     }
 
 }

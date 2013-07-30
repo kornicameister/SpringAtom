@@ -35,7 +35,6 @@ public class SCarMasterManufacturingData implements Serializable {
             insertable = true,
             name = "brand")
     private String brand;
-
     @Column(nullable = false,
             length = 45,
             updatable = true,
@@ -56,16 +55,18 @@ public class SCarMasterManufacturingData implements Serializable {
         return brand;
     }
 
-    public void setBrand(final String brand) {
+    public SCarMasterManufacturingData setBrand(final String brand) {
         this.brand = brand;
+        return this;
     }
 
     public String getModel() {
         return model;
     }
 
-    public void setModel(final String model) {
+    public SCarMasterManufacturingData setModel(final String model) {
         this.model = model;
+        return this;
     }
 
     @Override

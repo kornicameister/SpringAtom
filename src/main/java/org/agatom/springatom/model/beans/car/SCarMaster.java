@@ -68,31 +68,26 @@ public class SCarMaster extends PersistentObject<Long> {
         return manufacturingData;
     }
 
-    public void setManufacturingData(final SCarMasterManufacturingData manufacturingData) {
+    public SCarMaster setManufacturingData(final SCarMasterManufacturingData manufacturingData) {
         this.manufacturingData = manufacturingData;
+        return this;
     }
 
     public String getThumbnailPath() {
         return thumbnailPath;
     }
 
-    public void setThumbnailPath(final String thumbnailPath) {
+    public SCarMaster setThumbnailPath(final String thumbnailPath) {
         this.thumbnailPath = thumbnailPath;
+        return this;
     }
 
     public Set<SCar> getChildren() {
         return children;
     }
 
-    public void setChildren(final Set<SCar> children) {
+    public SCarMaster setChildren(final Set<SCar> children) {
         this.children = children;
-    }
-
-    public boolean addChild(final SCar sCar) {
-        return this.children.add(sCar);
-    }
-
-    public boolean removeChild(final Object car) {
-        return this.children.remove(car);
+        return this;
     }
 }

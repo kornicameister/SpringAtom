@@ -48,16 +48,22 @@ public class SAppointmentTask
         return appointment;
     }
 
-    public void setAppointment(final SAppointment appointment) {
+    public SAppointmentTask setAppointment(final SAppointment appointment) {
         this.appointment = appointment;
+        return this;
     }
 
     public String getTask() {
         return task;
     }
 
-    public void setTask(final String task) {
+    public SAppointmentTask setTask(final String task) {
         this.task = task;
+        return this;
     }
 
+    @Override
+    public SAppointmentTask setMetaInformation(final SAppointmentTaskType metaData) {
+        return (SAppointmentTask) super.setMetaInformation(metaData);
+    }
 }

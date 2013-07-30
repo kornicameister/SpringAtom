@@ -97,31 +97,35 @@ public class SCar extends PersistentVersionedObject {
         return carMaster;
     }
 
-    public void setCarMaster(final SCarMaster carMaster) {
+    public SCar setCarMaster(final SCarMaster carMaster) {
         this.carMaster = carMaster;
+        return this;
     }
 
     public String getLicencePlate() {
         return licencePlate;
     }
 
-    public void setLicencePlate(final String registrationNumber) {
+    public SCar setLicencePlate(final String registrationNumber) {
         this.licencePlate = registrationNumber;
+        return this;
     }
 
     public String getVinNumber() {
         return vinNumber;
     }
 
-    public void setVinNumber(final String vinNumber) {
+    public SCar setVinNumber(final String vinNumber) {
         this.vinNumber = vinNumber;
+        return this;
     }
 
     public SClient getOwner() {
         return owner;
     }
 
-    public void setOwner(final SClient client) {
+    public SCar setOwner(final SClient client) {
         this.owner = client;
+        return this;
     }
 }
