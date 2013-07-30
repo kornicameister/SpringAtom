@@ -137,6 +137,7 @@ public class SAppointmentServiceImplTest extends AbstractCarTestCase {
                             mockAppointment.interval,
                             mockAppointment.carId,
                             mockAppointment.assigneeId,
+                            mockAppointment.assigneeId,
                             mockAppointment.tasks
                     );
             Assert.assertNotNull(appointment);
