@@ -18,14 +18,9 @@
 package org.agatom.springatom;
 
 import org.agatom.springatom.model.beans.car.SCar;
-import org.agatom.springatom.model.beans.person.client.SClient;
-import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
 import org.agatom.springatom.mvc.model.service.SCarMasterService;
 import org.agatom.springatom.mvc.model.service.SCarService;
-import org.agatom.springatom.mvc.model.service.SClientService;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -37,22 +32,20 @@ import java.util.Map;
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class AbstractCarTestCase extends AbstractSpringTestCase {
+abstract public class AbstractCarTestCase extends AbstractTestCaseWithClient {
 
-    protected static Long            MOCKED_MASTER_DISTINCT = null;
-    protected static Map<Long, SCar> CARS                   = null;
-    protected static SClient           C_1;
+    protected static final List<MockCar>   MOCK_CARS              = new ArrayList<>();
+    protected static       Long            MOCKED_MASTER_DISTINCT = null;
+    protected static       Map<Long, SCar> MOCKED_CARS            = null;
     protected static List<MockMaster>  MOCKED_MASTERS;
-    protected static SClient           C_2;
     @Autowired
     protected        SCarService       carService;
     @Autowired
-    protected        SClientService    clientService;
-    @Autowired
     protected        SCarMasterService carMasterService;
 
-    @BeforeClass
-    public static void mockMasterMap() {
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
         MOCKED_MASTERS = new ArrayList<>();
 
         MOCKED_MASTERS.add(new MockMaster("Fiat", "Panda"));
@@ -62,42 +55,13 @@ abstract public class AbstractCarTestCase extends AbstractSpringTestCase {
         MOCKED_MASTERS.add(new MockMaster("Jeep", "Commander"));
 
         MOCKED_MASTER_DISTINCT = 3l;
-    }
 
-    @Before
-    public void test_0_createOwner() {
-        if (AbstractCarTestCase.C_1 != null && AbstractCarTestCase.C_2 != null) {
-            return;
-        }
-        {
-            SPersonalInformation personalInformation = new SPersonalInformation();
-            personalInformation.setFirstName("Tomasz");
-            personalInformation.setLastName("Trębski");
-
-            SClient client = new SClient();
-            client.setInformation(personalInformation);
-            client.setEmail("kornicameister@gmail.com");
-
-            SClient newClient = this.clientService.save(client);
-
-            Assert.assertNotNull("newClient is null", newClient);
-            Assert.assertNotNull("newClient#id is null", newClient.getId());
-            AbstractCarTestCase.C_1 = newClient;
-        }
-        {
-            SPersonalInformation personalInformation = new SPersonalInformation();
-            personalInformation.setFirstName("Maja");
-            personalInformation.setLastName("Staszczyk");
-
-            SClient client = new SClient();
-            client.setInformation(personalInformation);
-            client.setEmail("m2311007@gmail.com");
-
-            SClient newClient = this.clientService.save(client);
-
-            Assert.assertNotNull("newClient is null", newClient);
-            Assert.assertNotNull("newClient#id is null", newClient.getId());
-            AbstractCarTestCase.C_2 = newClient;
+        int it = 0;
+        for (final MockMaster mockMaster : MOCKED_MASTERS) {
+            final String licencePlate = String.format("E%dKRZ", it++);
+            final String vinNumber = String.valueOf(mockMaster.hashCode());
+            final Long ownerId = C_1.getId();
+            MOCK_CARS.add(new MockCar(licencePlate, vinNumber, ownerId, mockMaster));
         }
     }
 
@@ -108,6 +72,20 @@ abstract public class AbstractCarTestCase extends AbstractSpringTestCase {
         public MockMaster(final String brand, final String model) {
             this.brand = brand;
             this.model = model;
+        }
+    }
+
+    protected static class MockCar {
+        public final String     licencePlate;
+        public final String     vinNumber;
+        public final Long       ownerId;
+        public final MockMaster mockMaster;
+
+        public MockCar(final String licencePlate, final String vinNumber, final Long ownerId, final MockMaster mockMaster) {
+            this.licencePlate = licencePlate;
+            this.vinNumber = vinNumber;
+            this.ownerId = ownerId;
+            this.mockMaster = mockMaster;
         }
     }
 }

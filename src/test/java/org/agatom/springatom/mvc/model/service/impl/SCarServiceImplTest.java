@@ -22,6 +22,7 @@ import org.agatom.springatom.model.beans.car.SCar;
 import org.agatom.springatom.model.beans.car.SCarMaster;
 import org.agatom.springatom.mvc.model.service.SCarService;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -37,7 +38,12 @@ import java.util.*;
 @FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
 public class SCarServiceImplTest extends AbstractCarTestCase {
 
-    protected static final List<MockCar> MOCK_CARS = new ArrayList<>();
+
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+    }
 
     @Test
     public void test_A_A_NewCars() throws Exception {
@@ -45,13 +51,12 @@ public class SCarServiceImplTest extends AbstractCarTestCase {
         final List<SCar> list = new ArrayList<>();
 
         int it = 0;
-        for (final MockMaster mockMaster : MOCKED_MASTERS) {
+        for (final MockCar mockedCar : MOCK_CARS) {
             final String licencePlate = String.format("E%dKRZ", it++);
-            final String vinNumber = String.valueOf(mockMaster.hashCode());
+            final String vinNumber = String.valueOf(mockedCar.hashCode());
             final Long ownerId = C_1.getId();
             list.add(this.carService
-                    .newCar(mockMaster.brand, mockMaster.model, licencePlate, vinNumber, ownerId));
-            MOCK_CARS.add(new MockCar(licencePlate, vinNumber, ownerId));
+                    .newCar(mockedCar.mockMaster.brand, mockedCar.mockMaster.model, licencePlate, vinNumber, ownerId));
         }
 
         Assert.assertTrue(list.size() == MOCKED_MASTERS.size());
@@ -62,13 +67,13 @@ public class SCarServiceImplTest extends AbstractCarTestCase {
             map.put(sCar.getId(), sCar);
         }
 
-        SCarServiceImplTest.CARS = map;
+        SCarServiceImplTest.MOCKED_CARS = map;
     }
 
     @Test
     public void test_B_B_ValidateMasters() throws Exception {
         final Set<SCarMaster> carMasters = new HashSet<>();
-        for (final SCar sCar : CARS.values()) {
+        for (final SCar sCar : MOCKED_CARS.values()) {
             carMasters.add(sCar.getCarMaster());
         }
         Assert.assertTrue(MOCKED_MASTER_DISTINCT.equals((long) carMasters.size()));
@@ -82,10 +87,10 @@ public class SCarServiceImplTest extends AbstractCarTestCase {
 
     @Test
     public void test_D_ChangeOwner() throws Exception {
-        final Long carId = CARS.keySet().iterator().next();
+        final Long carId = MOCKED_CARS.keySet().iterator().next();
         final Long newOwnerId = C_2.getId();
-        final Long oldOwnerId = CARS.get(carId).getOwner().getId();
-        final Long oldVersion = CARS.get(carId).getVersion();
+        final Long oldOwnerId = MOCKED_CARS.get(carId).getOwner().getId();
+        final Long oldVersion = MOCKED_CARS.get(carId).getVersion();
         final SCar sCar = this.carService.newOwner(carId, newOwnerId);
 
         Assert.assertNotNull(sCar);
@@ -169,7 +174,7 @@ public class SCarServiceImplTest extends AbstractCarTestCase {
 
     @Test
     public void test_J_FindMaster() throws Exception {
-        for (final Long carId : SCarServiceImplTest.CARS.keySet()) {
+        for (final Long carId : SCarServiceImplTest.MOCKED_CARS.keySet()) {
             final SCarMaster master = this.carService.findMaster(carId);
             Assert.assertNotNull(master);
             Assert.assertNotNull(master.getId());
@@ -201,8 +206,8 @@ public class SCarServiceImplTest extends AbstractCarTestCase {
 
     @Test
     public void test_Y_DeleteOne() throws Exception {
-        final Long randomCarId = (Long) SCarServiceImplTest.CARS.keySet().toArray()[new Random()
-                .nextInt(SCarServiceImplTest.CARS.size())];
+        final Long randomCarId = (Long) SCarServiceImplTest.MOCKED_CARS.keySet().toArray()[new Random()
+                .nextInt(SCarServiceImplTest.MOCKED_CARS.size())];
         this.carService.deleteOne(randomCarId);
         final SCar sCar = this.carService.findOne(randomCarId);
         Assert.assertNull(sCar);
@@ -210,8 +215,8 @@ public class SCarServiceImplTest extends AbstractCarTestCase {
 
     @Test
     public void test_L_FindOne() throws Exception {
-        final Long randomCarId = (Long) SCarServiceImplTest.CARS.keySet().toArray()[new Random()
-                .nextInt(SCarServiceImplTest.CARS.size())];
+        final Long randomCarId = (Long) SCarServiceImplTest.MOCKED_CARS.keySet().toArray()[new Random()
+                .nextInt(SCarServiceImplTest.MOCKED_CARS.size())];
         final SCar car = this.carService.findOne(randomCarId);
         Assert.assertNotNull(car);
         Assert.assertNotNull(car.getId());
@@ -234,21 +239,9 @@ public class SCarServiceImplTest extends AbstractCarTestCase {
     @Test
     public void test_Z_DeleteAll() throws Exception {
         this.carService.deleteAll();
-        for (final Long carId : SCarServiceImplTest.CARS.keySet()) {
+        for (final Long carId : SCarServiceImplTest.MOCKED_CARS.keySet()) {
             final SCar sCar = this.carService.findOne(carId);
             Assert.assertNull(sCar);
-        }
-    }
-
-    protected class MockCar {
-        String licencePlate;
-        String vinNumber;
-        Long   ownerId;
-
-        public MockCar(final String licencePlate, final String vinNumber, final Long ownerId) {
-            this.licencePlate = licencePlate;
-            this.vinNumber = vinNumber;
-            this.ownerId = ownerId;
         }
     }
 }
