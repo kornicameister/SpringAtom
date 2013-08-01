@@ -29,7 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class AbstractTestCaseWithClient extends AbstractSpringTestCase {
+abstract public class AbstractTestCaseWithClient
+        extends AbstractSpringTestCase {
     protected static SClient        C_1;
     protected static SClient        C_2;
     @Autowired
@@ -49,7 +50,7 @@ abstract public class AbstractTestCaseWithClient extends AbstractSpringTestCase 
 
             SClient client = new SClient();
             client.setInformation(personalInformation);
-            client.setEmail("kornicameister@gmail.com");
+            client.setPrimaryMail("kornicameister@gmail.com");
 
             SClient newClient = this.clientService.save(client);
 
@@ -64,7 +65,7 @@ abstract public class AbstractTestCaseWithClient extends AbstractSpringTestCase 
 
             SClient client = new SClient();
             client.setInformation(personalInformation);
-            client.setEmail("m2311007@gmail.com");
+            client.setPrimaryMail("m2311007@gmail.com");
 
             SClient newClient = this.clientService.save(client);
 

@@ -29,6 +29,7 @@ import org.joda.time.ReadableInterval;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
@@ -64,6 +65,7 @@ public class SAppointment
     @Column(name = "end", nullable = false)
     @NotNull(message = END_NULL_MSG)
     private DateTime              end;
+    @Size(min = 1, message = "SAppointment must contain at least one task [SAppointmentTask]")
     @OneToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.DETACH,

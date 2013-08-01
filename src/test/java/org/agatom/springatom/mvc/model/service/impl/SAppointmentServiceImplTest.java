@@ -20,9 +20,10 @@ package org.agatom.springatom.mvc.model.service.impl;
 import org.agatom.springatom.AbstractCarTestCase;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
 import org.agatom.springatom.model.beans.car.SCar;
-import org.agatom.springatom.model.beans.meta.SMetaDataType;
 import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
+import org.agatom.springatom.model.dto.SAppointmentTaskDTO;
+import org.agatom.springatom.model.types.meta.SMetaDataEnum;
 import org.agatom.springatom.mvc.model.service.SAppointmentService;
 import org.agatom.springatom.mvc.model.service.SMechanicService;
 import org.joda.time.DateTime;
@@ -30,9 +31,12 @@ import org.joda.time.Interval;
 import org.joda.time.ReadableInterval;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.ConstraintViolationException;
 import java.util.*;
 
 import static org.hamcrest.core.Is.is;
@@ -43,7 +47,9 @@ import static org.hamcrest.core.Is.is;
  * @since 0.0.1
  */
 
-public class SAppointmentServiceImplTest extends AbstractCarTestCase {
+@FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
+public class SAppointmentServiceImplTest
+        extends AbstractCarTestCase {
     public static final  int                        INT        = 10;
     private static final ArrayList<MockAppointment> MOCKED_APP = new ArrayList<>();
     private static SMechanic MECHANIC;
@@ -56,14 +62,14 @@ public class SAppointmentServiceImplTest extends AbstractCarTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        {
+        if (SAppointmentServiceImplTest.MECHANIC == null) {
             SPersonalInformation personalInformation = new SPersonalInformation();
             personalInformation.setFirstName("John");
             personalInformation.setLastName("Doe");
 
             SMechanic sMechanic = new SMechanic();
             sMechanic.setInformation(personalInformation);
-            sMechanic.setEmail("john.doe@gmail.com");
+            sMechanic.setPrimaryMail("john.doe@gmail.com");
 
             SMechanic newMechanic = this.mechanicService.save(sMechanic);
 
@@ -72,7 +78,7 @@ public class SAppointmentServiceImplTest extends AbstractCarTestCase {
             Assert.assertNotNull("newMechanic#id is null", newMechanic.getId());
             SAppointmentServiceImplTest.MECHANIC = newMechanic;
         }
-        {
+        if (SAppointmentServiceImplTest.MOCKED_APP.isEmpty()) {
             final Map<Long, SCar> map = new HashMap<>();
             final List<SCar> list = new ArrayList<>();
 
@@ -95,51 +101,55 @@ public class SAppointmentServiceImplTest extends AbstractCarTestCase {
 
             SCarServiceImplTest.MOCKED_CARS = map;
         }
-        {
-            int it = 1;
+        if (SAppointmentServiceImplTest.MOCKED_APP.isEmpty()) {
             for (final Long mockCarId : MOCKED_CARS.keySet()) {
-                final SAppointmentService.SAppointmentTaskDTO[] tasks = new SAppointmentService.SAppointmentTaskDTO[new Random()
-                        .nextInt(it + 10)];
-                for (int i = 0 ; i < tasks.length ; i++) {
-                    tasks[i] = new SAppointmentService.SAppointmentTaskDTO(
-                            SMetaDataType.SAT_NORMAL,
-                            String.format("Normal_%d", new Random().nextInt())
-                    );
-                    if (i + 1 < tasks.length - 1) {
-                        tasks[i + 1] = new SAppointmentService.SAppointmentTaskDTO(
-                                SMetaDataType.SAT_OIL_CHANGE,
-                                String.format("OilChange_%d", new Random().nextInt())
-                        );
-                    }
-                    if (i + 2 < tasks.length - 1) {
-                        tasks[i + 2] = new SAppointmentService.SAppointmentTaskDTO(
-                                SMetaDataType.SAT_REPAIR,
-                                String.format("Repair_%d", new Random().nextInt())
-                        );
-                    }
+                final List<SAppointmentTaskDTO> tasks = new ArrayList<>(20);
+                int it = 1;
+                for (int i = 0 ; i < 20 ; i++) {
+                    tasks.add(new SAppointmentTaskDTO(
+                            SMetaDataEnum.SAT_NORMAL,
+                            String.format("66666666666666_Normal_%d", new Random().nextInt(it++))));
+                    tasks.add(new SAppointmentTaskDTO(
+                            SMetaDataEnum.SAT_OIL_CHANGE,
+                            String.format("66666666666666_OilChange_%d", new Random().nextInt(it++))));
+                    tasks.add(new SAppointmentTaskDTO(
+                            SMetaDataEnum.SAT_REPAIR,
+                            String.format("6666666666666666_Repair_%d", new Random().nextInt(it++))));
                 }
+
                 MOCKED_APP.add(new MockAppointment(
-                        new Interval(DateTime.now(), DateTime.now().plusHours(it++)),
+                        new Interval(DateTime.now(), DateTime.now().plusHours(new Random().nextInt(3))),
                         mockCarId,
                         MECHANIC.getId(),
-                        tasks
+                        tasks.toArray(new SAppointmentTaskDTO[20])
                 ));
             }
         }
     }
 
+    @Test(expected = ConstraintViolationException.class)
+    public void test_A_NewAppointmentWithoutTaskExpectingException() throws Exception {
+        for (final MockAppointment mockAppointment : MOCKED_APP) {
+            this.appointmentService.newAppointment(
+                    mockAppointment.interval,
+                    mockAppointment.carId,
+                    mockAppointment.assigneeId,
+                    mockAppointment.assigneeId
+            );
+        }
+    }
+
     @Test
-    public void test_A_NewAppointment() throws Exception {
+    public void test_B_NewAppointmentWithTasks() throws Exception {
         final List<SAppointment> tmpApps = new ArrayList<>();
         for (final MockAppointment mockAppointment : MOCKED_APP) {
-            final SAppointment appointment = this.appointmentService.
-                    newAppointment(
-                            mockAppointment.interval,
-                            mockAppointment.carId,
-                            mockAppointment.assigneeId,
-                            mockAppointment.assigneeId,
-                            mockAppointment.tasks
-                    );
+            final SAppointment appointment = this.appointmentService.newAppointment(
+                    mockAppointment.interval,
+                    mockAppointment.carId,
+                    mockAppointment.assigneeId,
+                    mockAppointment.assigneeId,
+                    mockAppointment.tasks
+            );
             Assert.assertNotNull(appointment);
             Assert.assertFalse(appointment.isNew());
             Assert.assertNotNull(appointment.getId());
@@ -149,15 +159,15 @@ public class SAppointmentServiceImplTest extends AbstractCarTestCase {
     }
 
     protected class MockAppointment {
-        final ReadableInterval                          interval;
-        final Long                                      carId;
-        final Long                                      assigneeId;
-        final SAppointmentService.SAppointmentTaskDTO[] tasks;
+        final ReadableInterval      interval;
+        final Long                  carId;
+        final Long                  assigneeId;
+        final SAppointmentTaskDTO[] tasks;
 
         public MockAppointment(final ReadableInterval interval,
                                final Long carId,
                                final Long assigneeId,
-                               final SAppointmentService.SAppointmentTaskDTO... tasks) {
+                               final SAppointmentTaskDTO... tasks) {
             this.interval = interval;
             this.carId = carId;
             this.assigneeId = assigneeId;

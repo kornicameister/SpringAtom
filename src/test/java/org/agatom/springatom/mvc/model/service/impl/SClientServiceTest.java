@@ -18,12 +18,12 @@
 package org.agatom.springatom.mvc.model.service.impl;
 
 import org.agatom.springatom.AbstractSpringTestCase;
-import org.agatom.springatom.model.beans.meta.SMetaDataType;
 import org.agatom.springatom.model.beans.person.client.SClient;
-import org.agatom.springatom.model.beans.person.client.SClientContact;
 import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
 import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
+import org.agatom.springatom.model.types.contact.SContact;
+import org.agatom.springatom.model.types.meta.SMetaDataEnum;
 import org.agatom.springatom.mvc.model.service.SClientProblemReportService;
 import org.agatom.springatom.mvc.model.service.SClientService;
 import org.agatom.springatom.mvc.model.service.SMechanicService;
@@ -48,7 +48,8 @@ import java.util.Random;
  */
 
 @FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
-public class SClientServiceTest extends AbstractSpringTestCase {
+public class SClientServiceTest
+        extends AbstractSpringTestCase {
     protected static final DateTime  PAST_TIME   = DateTime.now().minusMonths(1);
     protected static final DateTime  FUTURE_TIME = DateTime.now().plusMonths(1);
     protected static       SClient   client      = null;
@@ -75,15 +76,15 @@ public class SClientServiceTest extends AbstractSpringTestCase {
 
     @Test
     public void test_B_CreateClient() throws Exception {
-        SPersonalInformation personalInformation = new SPersonalInformation();
-        personalInformation.setFirstName("Tomasz");
-        personalInformation.setLastName("Trębski");
-
-        SClient client = new SClient();
-        client.setInformation(personalInformation);
-        client.setEmail("kornicameister@gmail.com");
-
-        SClient newClient = this.clientBO.save(client);
+        final SClient newClient = this.clientBO.save(
+                (SClient) new SClient()
+                        .setInformation(
+                                new SPersonalInformation()
+                                        .setFirstName("Tomasz")
+                                        .setLastName("Trębski")
+                        )
+                        .setPrimaryMail("kornicameister@gmail.com")
+        );
 
         Assert.assertNotNull("newClient is null", newClient);
         Assert.assertNotNull("newClient#id is null", newClient.getId());
@@ -98,17 +99,17 @@ public class SClientServiceTest extends AbstractSpringTestCase {
 
     @Test
     public void test_D_AddContactData() throws Exception {
-        SClientContact mail = this.clientBO.newEmail("tomasz.trebski@gmail.com", SClientServiceTest.client.getId());
-        SClientContact cellPhone = this.clientBO.newCellPhone("724-470-830", SClientServiceTest.client.getId());
-        SClientContact fax = this.clientBO.newFax("888-66-33", SClientServiceTest.client.getId());
-        SClientContact phone = this.clientBO.newPhone("838-12-54", SClientServiceTest.client.getId());
+        final SContact mail = this.clientBO.newEmail("tomasz.trebski@gmail.com", SClientServiceTest.client.getId());
+        final SContact cellPhone = this.clientBO.newCellPhone("724-470-830", SClientServiceTest.client.getId());
+        final SContact fax = this.clientBO.newFax("888-66-33", SClientServiceTest.client.getId());
+        final SContact phone = this.clientBO.newPhone("838-12-54", SClientServiceTest.client.getId());
 
         Assert.assertNotNull("mail is null", mail);
         Assert.assertNotNull("cellPhone is null", cellPhone);
         Assert.assertNotNull("fax is null", fax);
         Assert.assertNotNull("phone is null", phone);
 
-        final List<SClientContact> clientContacts = this.clientBO.findAllContacts(SClientServiceTest.client.getId());
+        final List<SContact> clientContacts = this.clientBO.findAllContacts(SClientServiceTest.client.getId());
         Assert.assertNotNull("clientContacts are null", clientContacts);
         Assert.assertTrue("clientContacts are empty", clientContacts.size() > 0);
     }
@@ -127,7 +128,7 @@ public class SClientServiceTest extends AbstractSpringTestCase {
 
         SMechanic sMechanic = new SMechanic();
         sMechanic.setInformation(personalInformation);
-        sMechanic.setEmail("m2311007@gmail.com");
+        sMechanic.setPrimaryMail("m2311007@gmail.com");
 
         SMechanic newMechanic = this.mechanicBO.save(sMechanic);
 
@@ -139,12 +140,12 @@ public class SClientServiceTest extends AbstractSpringTestCase {
 
     @Test
     public void test_H_AddProblemReports() throws Exception {
-        List<SMetaDataType> sMetaDataList = new ArrayList<>();
+        List<SMetaDataEnum> sMetaDataList = new ArrayList<>();
 
-        sMetaDataList.add(SMetaDataType.SCPR_FAKE_ID);
-        sMetaDataList.add(SMetaDataType.SCPR_DEBTS);
-        sMetaDataList.add(SMetaDataType.SCPR_MISSED_APP);
-        sMetaDataList.add(SMetaDataType.SCPR_NO_PAYMENT);
+        sMetaDataList.add(SMetaDataEnum.SCPR_FAKE_ID);
+        sMetaDataList.add(SMetaDataEnum.SCPR_DEBTS);
+        sMetaDataList.add(SMetaDataEnum.SCPR_MISSED_APP);
+        sMetaDataList.add(SMetaDataEnum.SCPR_NO_PAYMENT);
 
         Random seed = new Random();
 
@@ -229,22 +230,22 @@ public class SClientServiceTest extends AbstractSpringTestCase {
     @Test
     public void test_N_findRevisionPast() throws Exception {
         final Revisions<Integer, SClient> modifiedBefore = this.clientBO.findModifiedBefore(SClientServiceTest.client
-                .getId(), PAST_TIME);
+                                                                                                              .getId(), PAST_TIME);
         Assert.assertTrue(String.format("Before %s are not empty", PAST_TIME), modifiedBefore.getContent().isEmpty());
 
         final Revisions<Integer, SClient> modifiedAfter = this.clientBO.findModifiedAfter(SClientServiceTest.client
-                .getId(), PAST_TIME);
+                                                                                                            .getId(), PAST_TIME);
         Assert.assertTrue(String.format("Before %s are not empty", PAST_TIME), !modifiedAfter.getContent().isEmpty());
     }
 
     @Test
     public void test_O_findRevisionFuture() throws Exception {
         final Revisions<Integer, SClient> modifiedBefore = this.clientBO.findModifiedBefore(SClientServiceTest.client
-                .getId(), FUTURE_TIME);
+                                                                                                              .getId(), FUTURE_TIME);
         Assert.assertTrue(String.format("After %s are not empty", FUTURE_TIME), !modifiedBefore.getContent().isEmpty());
 
         final Revisions<Integer, SClient> modifiedAfter = this.clientBO.findModifiedAfter(SClientServiceTest.client
-                .getId(), FUTURE_TIME);
+                                                                                                            .getId(), FUTURE_TIME);
         Assert.assertTrue(String.format("After %s are not empty", FUTURE_TIME), modifiedAfter.getContent().isEmpty());
     }
 
