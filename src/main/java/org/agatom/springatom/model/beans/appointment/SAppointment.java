@@ -17,11 +17,11 @@
 
 package org.agatom.springatom.model.beans.appointment;
 
+import com.google.common.collect.Sets;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.car.SCar;
 import org.hibernate.annotations.Index;
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.br.CPF;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.ReadableDuration;
@@ -29,7 +29,9 @@ import org.joda.time.ReadableInterval;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * @author kornicamaister
@@ -55,47 +57,46 @@ public class SAppointment
     @Index(name = "sa_begin")
     @Type(type = DATE_TIME_TYPE)
     @Column(name = "begin", nullable = false)
-    private DateTime begin;
+    @NotNull(message = BEGIN_NULL_MSG)
+    private DateTime              begin;
     @Index(name = "sa_end")
     @Type(type = DATE_TIME_TYPE)
     @Column(name = "end", nullable = false)
-    private DateTime end;
+    @NotNull(message = END_NULL_MSG)
+    private DateTime              end;
     @OneToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.DETACH,
-                    CascadeType.MERGE
+                    CascadeType.MERGE,
+                    CascadeType.PERSIST
             },
             orphanRemoval = true
     )
     @JoinColumn(name = "appointment", nullable = false)
-    private Set<SAppointmentTask> tasks = new HashSet<>();
+    private Set<SAppointmentTask> tasks;
+    @NotNull(message = CAR_NULL_MSG)
     @ManyToOne(optional = false)
     @JoinColumn(name = "car", referencedColumnName = "idScar")
-    private SCar car;
+    private SCar                  car;
 
     public Set<SAppointmentTask> getTasks() {
         return tasks;
     }
 
-    public SAppointment addTask(
-            @NotNull
-            final SAppointmentTask... tasks) {
-        if (!Collections.addAll(this.tasks, tasks)) {
-            return null;
+    public SAppointment addTask(final SAppointmentTask... tasks) {
+        if (this.tasks == null) {
+            this.tasks = Sets.newHashSet(tasks);
         }
         return this;
     }
 
-    public SAppointment removeTask(
-            @NotNull
-            final SAppointmentTask... tasks) {
+    public SAppointment removeTask(final SAppointmentTask... tasks) {
         if (!this.tasks.removeAll(Arrays.asList(tasks))) {
             return null;
         }
         return this;
     }
 
-    @NotNull(message = BEGIN_NULL_MSG)
     public DateTime getBegin() {
         return begin;
     }
@@ -105,7 +106,6 @@ public class SAppointment
         return this;
     }
 
-    @NotNull(message = END_NULL_MSG)
     public DateTime getEnd() {
         return end;
     }
@@ -135,15 +135,11 @@ public class SAppointment
         return false;
     }
 
-    @CPF
-    @NotNull(message = CAR_NULL_MSG)
     public SCar getCar() {
         return this.car;
     }
 
-    public SAppointment setCar(
-            @NotNull
-            final SCar car) {
+    public SAppointment setCar(final SCar car) {
         this.car = car;
         return this;
     }
