@@ -8,7 +8,8 @@ TRUNCATE TABLE `smechanic`;
 TRUNCATE TABLE `smechanic_history`;
 TRUNCATE TABLE `sperson`;
 TRUNCATE TABLE `sperson_history`;
-TRUNCATE TABLE `sclientcontact`;
+TRUNCATE TABLE `scontact`;
+TRUNCATE TABLE `scontact_history`;
 TRUNCATE TABLE `sclient`;
 TRUNCATE TABLE `susertorole`;
 TRUNCATE TABLE `revinfo`;
@@ -24,6 +25,5 @@ TRUNCATE TABLE `sclient_history`;
 TRUNCATE TABLE `revchanges`;
 TRUNCATE TABLE `scarmaster`;
 TRUNCATE TABLE `snotification`;
-TRUNCATE TABLE `snotificationlink`;
 
 SET foreign_key_checks = 1;
