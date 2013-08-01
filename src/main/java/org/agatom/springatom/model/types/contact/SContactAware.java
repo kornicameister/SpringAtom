@@ -15,45 +15,19 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.appointment;
+package org.agatom.springatom.model.types.contact;
 
-import org.agatom.springatom.model.beans.meta.SAppointmentTaskType;
-import org.agatom.springatom.model.beans.meta.holder.SBasicMetaDataHolder;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.agatom.springatom.model.types.PersistentBean;
+import org.springframework.data.domain.Persistable;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SAppointmentTask")
-@Table(name = "SAppointmentTask")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSAppointmentTask",
-                updatable = false,
-                nullable = false)
-)
-public class SAppointmentTask
-        extends SBasicMetaDataHolder<SAppointmentTaskType, Long> {
-    @NotEmpty
-    @Length(min = 10, max = 444)
-    @Column(name = "task", nullable = false, length = 444)
-    private String task;
-
-    public String getTask() {
-        return task;
-    }
-
-    public SAppointmentTask setTask(final String task) {
-        this.task = task;
-        return this;
-    }
+public interface SContactAware<PK extends Serializable>
+        extends PersistentBean,
+                Persistable<PK> {
 }

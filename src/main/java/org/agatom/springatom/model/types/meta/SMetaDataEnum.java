@@ -15,18 +15,20 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.meta;
+package org.agatom.springatom.model.types.meta;
 
+import org.agatom.springatom.model.beans.meta.*;
 import org.agatom.springatom.populators.DatabaseEnumPopulable;
 
-import java.util.Iterator;
-
 /**
+ * {@code SMetaDataEnum} provides overall description over meta data that is used throughout beans
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public enum SMetaDataType implements DatabaseEnumPopulable {
+public enum SMetaDataEnum
+        implements DatabaseEnumPopulable {
     //SCT
     SCT_FAX("fax", Constants.CONTACT_TYPE_CLASS),
     SCT_CELL_PHONE("cellPhone", Constants.CONTACT_TYPE_CLASS),
@@ -54,9 +56,8 @@ public enum SMetaDataType implements DatabaseEnumPopulable {
     //SNT
     private final String                     type;
     private final Class<? extends SMetaData> target;
-    private       Iterator<SMetaDataType>    enumIterator;
 
-    SMetaDataType(final String type, Class<? extends SMetaData> target) {
+    SMetaDataEnum(final String type, Class<? extends SMetaData> target) {
         this.type = type;
         this.target = target;
     }

@@ -19,9 +19,9 @@ package org.agatom.springatom.model.beans.appointment;
 
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.car.SCar;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.Index;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.br.CPF;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.ReadableDuration;
@@ -50,17 +50,24 @@ public class SAppointment
         implements Iterable<SAppointmentTask> {
     private static final String BEGIN_NULL_MSG = "Begin dateTime for appointment must not be null";
     private static final String END_NULL_MSG   = "End dateTime for appointment must not be null";
+    private static final String CAR_NULL_MSG   = "Car for appointment must not be null";
     private static final String DATE_TIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
+    @Index(name = "sa_begin")
     @Type(type = DATE_TIME_TYPE)
     @Column(name = "begin", nullable = false)
     private DateTime begin;
+    @Index(name = "sa_end")
     @Type(type = DATE_TIME_TYPE)
     @Column(name = "end", nullable = false)
     private DateTime end;
     @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "appointment",
-            cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+            cascade = {
+                    CascadeType.DETACH,
+                    CascadeType.MERGE
+            },
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "appointment", nullable = false)
     private Set<SAppointmentTask> tasks = new HashSet<>();
     @ManyToOne(optional = false)
     @JoinColumn(name = "car", referencedColumnName = "idScar")
@@ -70,14 +77,18 @@ public class SAppointment
         return tasks;
     }
 
-    public SAppointment addTask(@NotNull final SAppointmentTask... tasks) {
+    public SAppointment addTask(
+            @NotNull
+            final SAppointmentTask... tasks) {
         if (!Collections.addAll(this.tasks, tasks)) {
             return null;
         }
         return this;
     }
 
-    public SAppointment removeTask(@NotNull final SAppointmentTask... tasks) {
+    public SAppointment removeTask(
+            @NotNull
+            final SAppointmentTask... tasks) {
         if (!this.tasks.removeAll(Arrays.asList(tasks))) {
             return null;
         }
@@ -124,12 +135,15 @@ public class SAppointment
         return false;
     }
 
-    @NotNull
+    @CPF
+    @NotNull(message = CAR_NULL_MSG)
     public SCar getCar() {
         return this.car;
     }
 
-    public SAppointment setCar(@NotNull final SCar car) {
+    public SAppointment setCar(
+            @NotNull
+            final SCar car) {
         this.car = car;
         return this;
     }

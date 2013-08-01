@@ -15,45 +15,76 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.appointment;
+package org.agatom.springatom.model.beans.contact;
 
-import org.agatom.springatom.model.beans.meta.SAppointmentTaskType;
+import org.agatom.springatom.model.beans.PersistentContactable;
+import org.agatom.springatom.model.beans.meta.SContactType;
 import org.agatom.springatom.model.beans.meta.holder.SBasicMetaDataHolder;
+import org.agatom.springatom.model.types.contact.SContact;
+import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SAppointmentTask")
-@Table(name = "SAppointmentTask")
+@Entity(name = "SContact")
+@Table(name = "SContact")
 @AttributeOverride(
         name = "id",
         column = @Column(
-                name = "idSAppointmentTask",
+                name = "idContact",
                 updatable = false,
                 nullable = false)
 )
-public class SAppointmentTask
-        extends SBasicMetaDataHolder<SAppointmentTaskType, Long> {
-    @NotEmpty
-    @Length(min = 10, max = 444)
-    @Column(name = "task", nullable = false, length = 444)
-    private String task;
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+        name = SBasicContact.CONTACT_IS,
+        discriminatorType = DiscriminatorType.STRING
+)
+@Audited
+abstract public class SBasicContact<SC_H extends PersistentContactable>
+        extends SBasicMetaDataHolder<SContactType, Long>
+        implements SContact<SC_H, SContactType, Long> {
 
-    public String getTask() {
-        return task;
+    @Transient
+    protected static final String CONTACT_IS = "contactIs";
+    @Length(min = 5, max = 60)
+    @Column(name = "contact", length = 60)
+    protected              String contact    = "";
+
+    public static Class<SContactType> holds() {
+        return SContactType.class;
     }
 
-    public SAppointmentTask setTask(final String task) {
-        this.task = task;
+    @Override
+    public final String getContact() {
+        return contact;
+    }
+
+    @Override
+    public final SContact setContact(final
+                                     @NotNull
+                                     @NotEmpty
+                                     String contact) {
+        this.contact = this.setWithValidation(contact);
         return this;
     }
+
+    /**
+     * Method is implemented by consecutive subclasses with following benefit.
+     * Each class marks the attribute {@code contact} with appropriate annotations,
+     * that is further used by one of the validators.r
+     *
+     * @param contact
+     *         contact to be set
+     *
+     * @return validated contact
+     */
+    protected abstract String setWithValidation(final String contact);
 }

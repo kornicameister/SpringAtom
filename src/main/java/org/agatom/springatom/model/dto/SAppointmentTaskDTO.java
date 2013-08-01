@@ -15,15 +15,59 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.meta;
+package org.agatom.springatom.model.dto;
+
+import org.agatom.springatom.model.types.meta.SMetaDataEnum;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SMetaDataCapable<MD extends SMetaData> {
-    MD getMetaInformation();
+public class SAppointmentTaskDTO
+        implements DTO {
+    final private SMetaDataEnum type;
+    final private String        task;
 
-    SMetaDataHolder setMetaInformation(final MD metaData);
+    public SAppointmentTaskDTO(final SMetaDataEnum type, final String task) {
+        this.type = type;
+        this.task = task;
+    }
+
+    public SMetaDataEnum getType() {
+        return type;
+    }
+
+    public String getTask() {
+        return task;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + task.hashCode();
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SAppointmentTaskDTO)) {
+            return false;
+        }
+
+        final SAppointmentTaskDTO that = (SAppointmentTaskDTO) o;
+
+        return task.equals(that.task) && type.equals(that.type);
+    }
+
+    @Override
+    public String toString() {
+        return "SAppointmentTaskDTO{" +
+                "type=" + type +
+                ", task='" + task + '\'' +
+                "} " + super.toString();
+    }
 }

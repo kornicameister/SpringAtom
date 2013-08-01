@@ -15,45 +15,40 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.appointment;
+package org.agatom.springatom.model.beans.notification;
 
-import org.agatom.springatom.model.beans.meta.SAppointmentTaskType;
-import org.agatom.springatom.model.beans.meta.holder.SBasicMetaDataHolder;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.agatom.springatom.model.types.notification.STargetedNotification;
+import org.springframework.data.domain.Persistable;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SAppointmentTask")
-@Table(name = "SAppointmentTask")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSAppointmentTask",
-                updatable = false,
-                nullable = false)
-)
-public class SAppointmentTask
-        extends SBasicMetaDataHolder<SAppointmentTaskType, Long> {
-    @NotEmpty
-    @Length(min = 10, max = 444)
-    @Column(name = "task", nullable = false, length = 444)
-    private String task;
 
-    public String getTask() {
-        return task;
+@MappedSuperclass
+abstract class SBasicTargetedNotification<SN_T extends Persistable<Long>>
+        extends SBasicNotification
+        implements STargetedNotification<SN_T, Long> {
+
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "target", updatable = false)
+    private SN_T client;
+
+    @Override
+    public SN_T getTarget() {
+        return this.client;
     }
 
-    public SAppointmentTask setTask(final String task) {
-        this.task = task;
+    @Override
+    public STargetedNotification<SN_T, Long> setTarget(final SN_T target) {
+        this.client = target;
         return this;
     }
 }

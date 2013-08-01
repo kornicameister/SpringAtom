@@ -15,45 +15,46 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.appointment;
+package org.agatom.springatom.model.beans.meta.holder;
 
-import org.agatom.springatom.model.beans.meta.SAppointmentTaskType;
-import org.agatom.springatom.model.beans.meta.holder.SBasicMetaDataHolder;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.agatom.springatom.model.beans.PersistentObject;
+import org.agatom.springatom.model.beans.meta.SMetaData;
+import org.agatom.springatom.model.types.meta.SMetaDataHolder;
+import org.hibernate.annotations.Index;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SAppointmentTask")
-@Table(name = "SAppointmentTask")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSAppointmentTask",
-                updatable = false,
-                nullable = false)
-)
-public class SAppointmentTask
-        extends SBasicMetaDataHolder<SAppointmentTaskType, Long> {
-    @NotEmpty
-    @Length(min = 10, max = 444)
-    @Column(name = "task", nullable = false, length = 444)
-    private String task;
+@MappedSuperclass
+abstract public class SBasicMetaDataHolder<MD extends SMetaData, PK extends Serializable>
+        extends PersistentObject<PK>
+        implements SMetaDataHolder<MD> {
 
-    public String getTask() {
-        return task;
+    @NotNull(message = "SMetaDataHolder requires knowledge of the meta data, it can not be null")
+    @Index(name = "sbmdh_type")
+    @OrderColumn(nullable = false)
+    @ManyToOne(optional = false,
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.DETACH,
+            targetEntity = SMetaData.class
+    )
+    @JoinColumn(name = "type", referencedColumnName = "idSMetaData", updatable = true)
+    private MD type;
+
+    @Override
+    public MD getMetaInformation() {
+        return this.type;
     }
 
-    public SAppointmentTask setTask(final String task) {
-        this.task = task;
+    @Override
+    public <MDS extends MD> SMetaDataHolder setMetaInformation(final MDS metaData) {
+        this.type = metaData;
         return this;
     }
 }

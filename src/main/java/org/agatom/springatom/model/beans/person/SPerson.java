@@ -17,13 +17,25 @@
 
 package org.agatom.springatom.model.beans.person;
 
-import org.agatom.springatom.model.beans.PersistentVersionedObject;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
+import com.mysema.query.annotations.QueryInit;
+import org.agatom.springatom.model.beans.PersistentContactable;
+import org.agatom.springatom.model.beans.person.contact.SPersonContact;
 import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
-import org.hibernate.annotations.NaturalId;
+import org.agatom.springatom.model.types.contact.SContact;
+import org.agatom.springatom.model.types.contact.SMultiContactable;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.envers.Audited;
-import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author kornicamaister
@@ -32,9 +44,11 @@ import javax.persistence.*;
  */
 
 @Entity(name = "SPerson")
-@Table(name = "SPerson", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "email")
-})
+@Table(name = "SPerson",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "primaryMail")
+        }
+)
 @AttributeOverride(
         name = "id",
         column = @Column(
@@ -44,30 +58,52 @@ import javax.persistence.*;
         )
 )
 @Inheritance(strategy = InheritanceType.JOINED)
-@Audited(auditParents = PersistentVersionedObject.class)
+@Audited(auditParents = PersistentContactable.class)
 abstract public class SPerson
-        extends PersistentVersionedObject {
+        extends PersistentContactable
+        implements SMultiContactable<Long> {
 
     @Embedded
+    @QueryInit(value = "information")
     private SPersonalInformation information;
-    @Email
-    @NaturalId
-    @Column(name = "email", length = 45, nullable = false, unique = true)
-    private String               email;
+    @BatchSize(size = 10)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "assigned", targetEntity = SPersonContact.class)
+    private Set<SContact>        contacts;
 
     public SPersonalInformation getInformation() {
         return information;
     }
 
-    public void setInformation(final SPersonalInformation information) {
+    public SPerson setInformation(final SPersonalInformation information) {
         this.information = information;
+        return this;
     }
 
-    public String getEmail() {
-        return email;
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<SContact> getContacts() {
+        return ImmutableList.copyOf(this.contacts);
     }
 
-    public void setEmail(final String email) {
-        this.email = email;
+    @Override
+    public <SC extends SContact<?, ?, ?>> SMultiContactable addContact(final Collection<SC> contacts) {
+        if (contacts.size() > 0) {
+            if (this.contacts == null) {
+                this.contacts = Sets.newIdentityHashSet();
+            }
+            this.contacts.addAll(contacts);
+        }
+        return this;
+    }
+
+    @Override
+    public <SC extends SContact<?, ?, ?>> SMultiContactable removeContact(final Collection<SC> contacts) {
+        if (contacts.size() > 0 && this.contacts != null) {
+            final HashSet<SC> contactSet = Sets.newHashSet(contacts);
+            final ImmutableSet<SContact> difference = Sets.union(this.contacts, contactSet).immutableCopy();
+            this.contacts.removeAll(difference);
+        }
+        return this;
     }
 }

@@ -19,14 +19,17 @@ package org.agatom.springatom.model.beans.person.client;
 
 import org.agatom.springatom.model.beans.appointment.SAppointment;
 import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
-import org.agatom.springatom.model.beans.meta.SMetaDataHolder;
+import org.agatom.springatom.model.beans.meta.holder.SBasicMetaDataHolder;
 import org.agatom.springatom.model.beans.util.SIssueReporter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author kornicamaister
@@ -44,8 +47,9 @@ import javax.persistence.*;
 )
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class SClientProblemReport
-        extends SMetaDataHolder<SClientProblemReportType, Long> {
+        extends SBasicMetaDataHolder<SClientProblemReportType, Long> {
 
+    @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "client", referencedColumnName = "idSClient")
@@ -55,10 +59,13 @@ public class SClientProblemReport
             referencedColumnName = "idSAppointment",
             updatable = false)
     private SAppointment   appointment;
+    @NotEmpty
+    @Length(min = 5, max = 444, message = "Insufficient problem description")
     @Column(name = "problem",
             nullable = false,
             length = 444)
     private String         problem;
+    @NotNull
     @Embedded
     private SIssueReporter reporter;
 

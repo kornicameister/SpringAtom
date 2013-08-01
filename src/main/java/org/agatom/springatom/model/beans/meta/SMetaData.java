@@ -18,6 +18,8 @@
 package org.agatom.springatom.model.beans.meta;
 
 import org.agatom.springatom.model.beans.PersistentObject;
+import org.agatom.springatom.model.types.meta.SMetaDataEnum;
+import org.agatom.springatom.model.types.meta.SMetaDataType;
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
@@ -43,7 +45,9 @@ import javax.persistence.*;
         discriminatorType = DiscriminatorType.STRING
 )
 @Immutable
-abstract public class SMetaData extends PersistentObject<Long> {
+abstract public class SMetaData
+        extends PersistentObject<Long>
+        implements SMetaDataType<Long> {
 
     @Type(type = "org.hibernate.type.EnumType")
     @Column(nullable = false,
@@ -52,13 +56,14 @@ abstract public class SMetaData extends PersistentObject<Long> {
             name = "type")
     @NaturalId(mutable = false)
     @Enumerated(value = EnumType.STRING)
-    private SMetaDataType type;
+    private SMetaDataEnum type;
 
     protected SMetaData() {
         super();
     }
 
-    public SMetaDataType getType() {
+    @Override
+    public SMetaDataEnum getType() {
         return this.type;
     }
 }

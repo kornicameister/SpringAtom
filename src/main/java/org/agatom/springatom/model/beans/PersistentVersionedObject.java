@@ -18,6 +18,7 @@
 package org.agatom.springatom.model.beans;
 
 import org.agatom.springatom.model.beans.user.SUser;
+import org.agatom.springatom.model.types.PersistentVersionedBean;
 import org.springframework.data.jpa.domain.AbstractAuditable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -33,7 +34,8 @@ import javax.persistence.Version;
 @MappedSuperclass
 @EntityListeners(value = AuditingEntityListener.class)
 abstract public class PersistentVersionedObject
-        extends AbstractAuditable<SUser, Long> {
+        extends AbstractAuditable<SUser, Long>
+        implements PersistentVersionedBean {
 
     @Version
     private Long version;
@@ -42,6 +44,7 @@ abstract public class PersistentVersionedObject
         super();
     }
 
+    @Override
     public Long getVersion() {
         return this.version;
     }

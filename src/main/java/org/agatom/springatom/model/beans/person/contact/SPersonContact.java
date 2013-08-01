@@ -15,58 +15,71 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.person.client;
+package org.agatom.springatom.model.beans.person.contact;
 
+import org.agatom.springatom.model.beans.contact.SBasicContact;
 import org.agatom.springatom.model.beans.person.SPerson;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.agatom.springatom.model.types.contact.SContact;
+import org.agatom.springatom.model.types.meta.SMetaDataEnum;
+import org.hibernate.annotations.Type;
+import org.hibernate.envers.AuditJoinTable;
+import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Table(name = "SClient")
-@Entity(name = "SClient")
-@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSClient",
-                updatable = false,
-                nullable = false
+@Entity
+@Audited
+@AuditOverride(name = "contact",
+        forClass = SBasicContact.class,
+        auditJoinTable = @AuditJoinTable(
+                name = "spersoncontact_history"
         )
 )
-@PrimaryKeyJoinColumn(name = "idSClient")
-public class SClient
-        extends SPerson {
+abstract public class SPersonContact
+        extends SBasicContact<SPerson> {
 
-    @BatchSize(size = 10)
-    @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "client",
-            cascade = {
-                    CascadeType.REMOVE
-            }
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "assigned",
+            updatable = true
     )
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<SClientProblemReport> problemReportSet = new HashSet<>();
+    @Type(type = "java.io.Serializable")
+    protected SPerson assigned = null;
 
-    public SClient() {
-        super();
+    public static SContact fromType(SMetaDataEnum type) {
+        switch (type) {
+            case SCT_CELL_PHONE:
+                return new SPersonCellPhoneContact();
+            case SCT_FAX:
+                return new SPersonFaxContact();
+            case SCT_MAIL:
+                return new SPersonEmailContact();
+            case SCT_PHONE:
+                return new SPersonPhoneContact();
+        }
+        return null;
     }
 
-    public Set<SClientProblemReport> getProblemReportSet() {
-        return problemReportSet;
+    @Override
+    public SPerson getAssigned() {
+        return this.assigned;
     }
 
-    public void setProblemReportSet(final Set<SClientProblemReport> problemReportSet) {
-        this.problemReportSet = problemReportSet;
+    @Override
+    public SContact setAssigned(final
+                                @NotNull
+                                SPerson assigned) {
+        this.assigned = assigned;
+        return this;
     }
 }

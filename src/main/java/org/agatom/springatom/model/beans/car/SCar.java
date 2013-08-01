@@ -19,6 +19,8 @@ package org.agatom.springatom.model.beans.car;
 
 import org.agatom.springatom.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.model.beans.person.client.SClient;
+import org.agatom.springatom.model.validators.LicencePlatePL;
+import org.agatom.springatom.model.validators.VinNumber;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -26,6 +28,7 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author kornicamaister
@@ -34,63 +37,31 @@ import javax.persistence.*;
  */
 @Entity(name = "SCar")
 @Table(name = "SCar")
-@AttributeOverride(
-        name = "id",
+@AttributeOverride(name = "id",
         column = @Column(
                 name = "idSCar",
                 updatable = false,
                 nullable = false)
 )
 // TODO is business model update required ?
-public class SCar extends PersistentVersionedObject {
+public class SCar
+        extends PersistentVersionedObject {
 
-    @ManyToOne(
-            fetch = FetchType.EAGER,
-            optional = false
-    )
-    @JoinColumn(
-            name = "carMaster",
-            referencedColumnName = "idSCarMaster",
-            updatable = true
-    )
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "carMaster", referencedColumnName = "idSCarMaster", updatable = false)
     private SCarMaster carMaster;
-    @Audited(
-            targetAuditMode = RelationTargetAuditMode.AUDITED
-    )
-    @ManyToOne(
-            optional = false,
-            fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.DETACH,
-                    CascadeType.REFRESH
-            }
-    )
-    @JoinColumn(
-            name = "owner",
-            referencedColumnName = "idSClient",
-            updatable = false
-    )
+    @NotNull
+    @Audited(targetAuditMode = RelationTargetAuditMode.AUDITED)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "owner", referencedColumnName = "idSClient", updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private SClient    owner;
-    @NaturalId(
-            mutable = true
-    )
-    @Column(
-            nullable = false,
-            length = 45,
-            name = "licencePlate",
-            unique = true
-    )
+    @NaturalId(mutable = true)
+    @Column(nullable = false, length = 45, name = "licencePlate", unique = true)
     private String     licencePlate;
-    @NaturalId(
-            mutable = true
-    )
-    @Column(
-            nullable = false,
-            length = 45,
-            name = "vinNumber",
-            unique = true
-    )
+    @NaturalId(mutable = true)
+    @Column(nullable = false, length = 45, name = "vinNumber", unique = true)
     private String     vinNumber;
 
     public SCarMaster getCarMaster() {
@@ -106,7 +77,9 @@ public class SCar extends PersistentVersionedObject {
         return licencePlate;
     }
 
-    public SCar setLicencePlate(final String registrationNumber) {
+    public SCar setLicencePlate(final
+                                @LicencePlatePL
+                                String registrationNumber) {
         this.licencePlate = registrationNumber;
         return this;
     }
@@ -115,7 +88,9 @@ public class SCar extends PersistentVersionedObject {
         return vinNumber;
     }
 
-    public SCar setVinNumber(final String vinNumber) {
+    public SCar setVinNumber(final
+                             @VinNumber
+                             String vinNumber) {
         this.vinNumber = vinNumber;
         return this;
     }

@@ -15,70 +15,86 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.links;
+package org.agatom.springatom.model.beans.notification;
 
-import org.agatom.springatom.model.beans.PersistentObject;
-import org.agatom.springatom.model.beans.notification.SNotification;
-import org.agatom.springatom.model.beans.person.client.SClient;
+import org.agatom.springatom.model.beans.meta.SNotificationType;
+import org.agatom.springatom.model.beans.meta.holder.SBasicMetaDataHolder;
+import org.agatom.springatom.model.types.notification.SNotification;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import javax.validation.constraints.Past;
 
 /**
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SNotificationLink")
-@Table(name = "SNotificationLink")
+@Entity(name = "SNotification")
+@Table(name = "SNotification")
 @AttributeOverride(
         name = "id",
         column = @Column(
-                name = "idSNotificationLink",
+                name = "idSNotification",
                 updatable = false,
                 nullable = false)
 )
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(
-        name = "type",
+        name = "tt",
         discriminatorType = DiscriminatorType.STRING
 )
-public class SNotificationLink extends PersistentObject<Long> {
-
-    @OneToOne(optional = false)
-    @JoinColumn(name = "notification", referencedColumnName = "idSNotification", updatable = false)
-    private SNotification notification;
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "client", referencedColumnName = "idSClient", updatable = false)
-    private SClient       client;
+abstract public class SBasicNotification
+        extends SBasicMetaDataHolder<SNotificationType, Long>
+        implements SNotification<Long> {
+    private static final String DATE_TIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
+    @NotBlank
+    @Length(max = 1000)
+    @Column(name = "message", length = 1000)
+    private String message;
     @Type(type = "boolean")
-    @Column(name = "checked")
-    private Boolean       checked;
+    @Column(name = "wasRead")
+    private Boolean read = false;
+    @Past
+    @Type(type = DATE_TIME_TYPE)
+    @Column(name = "sent", nullable = false)
+    private DateTime sent;
 
-    public Boolean isChecked() {
-        return this.checked;
+    @Override
+    public String getMessage() {
+        return message;
     }
 
-    public SNotification getNotification() {
-        return notification;
-    }
-
-    public SNotificationLink setNotification(final SNotification notification) {
-        this.notification = notification;
+    @Override
+    public SBasicNotification setMessage(final String notification) {
+        this.message = notification;
         return this;
     }
 
-    public SClient getClient() {
-        return client;
+    @Override
+    public DateTime getSent() {
+        return null == this.sent ? null : this.sent;
     }
 
-    public SNotificationLink setClient(final SClient client) {
-        this.client = client;
+    @Override
+    public SBasicNotification setSent(final DateTime sent) {
+        this.sent = sent;
         return this;
     }
 
-    public SNotificationLink setChecked(final Boolean read) {
-        this.checked = read;
+    @Override
+    public Boolean isRead() {
+        return this.read;
+    }
+
+    @Override
+    public SBasicNotification readNotification() {
+        this.read = true;
         return this;
     }
+
+
 }

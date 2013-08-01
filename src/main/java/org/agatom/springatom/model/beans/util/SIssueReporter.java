@@ -24,6 +24,8 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.io.Serializable;
 
 /**
@@ -35,12 +37,14 @@ import java.io.Serializable;
 public class SIssueReporter
         implements Serializable {
     private static final String DATE_TIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
+    @NotNull
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "mechanic",
             referencedColumnName = "idSMechanic",
             updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private SMechanic mechanic;
+    @Past
     @Type(type = DATE_TIME_TYPE)
     @Column(name = "assigned", nullable = false)
     private DateTime  assigned;

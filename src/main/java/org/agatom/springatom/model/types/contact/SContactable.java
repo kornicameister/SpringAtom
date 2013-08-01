@@ -15,44 +15,25 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.links;
+package org.agatom.springatom.model.types.contact;
 
-import org.agatom.springatom.model.beans.appointment.SAppointment;
+import org.hibernate.validator.constraints.Email;
 
-import javax.persistence.*;
+import java.io.Serializable;
 
 /**
- * @author kornicamaister
+ * {@code SContactable} marks entity as contactable using embedded
+ * <b>email value</b>
+ *
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity
-@DiscriminatorValue(value = "SNAL")
-public class SNotificationAppointmentLink extends SNotificationLink {
+public interface SContactable<PK extends Serializable>
+        extends SContactAware<PK> {
+    String getPrimaryMail();
 
-    @ManyToOne
-    @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment")
-    private SAppointment           appointment;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "workerLink", referencedColumnName = "idSAppointmentWorkerLink", updatable = false)
-    private SAppointmentWorkerLink workerLink;
-
-    public SAppointment getAppointment() {
-        return appointment;
-    }
-
-    public SNotificationAppointmentLink setAppointment(final SAppointment appointment) {
-        this.appointment = appointment;
-        return this;
-    }
-
-    public SAppointmentWorkerLink getWorkerLink() {
-        return workerLink;
-    }
-
-    public SNotificationAppointmentLink setWorkerLink(final SAppointmentWorkerLink workerLink) {
-        this.workerLink = workerLink;
-        return this;
-    }
-
+    SContactable setPrimaryMail(final
+                                @Email
+                                String mail);
 }

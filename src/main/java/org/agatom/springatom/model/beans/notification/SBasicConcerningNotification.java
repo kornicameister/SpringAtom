@@ -15,45 +15,44 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.appointment;
+package org.agatom.springatom.model.beans.notification;
 
-import org.agatom.springatom.model.beans.meta.SAppointmentTaskType;
-import org.agatom.springatom.model.beans.meta.holder.SBasicMetaDataHolder;
-import org.hibernate.validator.constraints.Length;
+import org.agatom.springatom.model.types.notification.SConcerningNotification;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.data.domain.Persistable;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SAppointmentTask")
-@Table(name = "SAppointmentTask")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSAppointmentTask",
-                updatable = false,
-                nullable = false)
-)
-public class SAppointmentTask
-        extends SBasicMetaDataHolder<SAppointmentTaskType, Long> {
-    @NotEmpty
-    @Length(min = 10, max = 444)
-    @Column(name = "task", nullable = false, length = 444)
-    private String task;
 
-    public String getTask() {
-        return task;
+@MappedSuperclass
+abstract class SBasicConcerningNotification<SN_C extends Persistable<Long>, SN_T extends Persistable<Long>>
+        extends SBasicTargetedNotification<SN_T>
+        implements SConcerningNotification<SN_C, SN_T, Long> {
+
+    @NotEmpty
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "SNotificiationConcerns", joinColumns = @JoinColumn(name = "fkNotification"))
+    private Set<SN_C> concerns;
+
+    @Override
+    public Set<SN_C> getConcerning() {
+        return this.concerns;
     }
 
-    public SAppointmentTask setTask(final String task) {
-        this.task = task;
+    @Override
+    public SConcerningNotification<SN_C, SN_T, Long> setConcerning(final Collection<SN_C> concerning) {
+        if (this.concerns == null) {
+            this.concerns = new HashSet<>();
+        }
+        this.concerns.addAll(concerning);
         return this;
     }
 }

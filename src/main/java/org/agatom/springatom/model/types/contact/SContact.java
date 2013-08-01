@@ -15,60 +15,39 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.notification;
+package org.agatom.springatom.model.types.contact;
 
-import org.agatom.springatom.model.beans.meta.SMetaDataHolder;
-import org.agatom.springatom.model.beans.meta.SNotificationType;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
+import org.agatom.springatom.model.types.meta.SMetaDataEnum;
+import org.agatom.springatom.model.types.meta.SMetaDataHolder;
+import org.agatom.springatom.model.types.meta.SMetaDataType;
+import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
- * @author kornicamaister
+ * {@code SContact} is an interface marking the entity, which implements it,
+ * as being
+ *
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SNotification")
-@Table(name = "SNotification")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSNotification",
-                updatable = false,
-                nullable = false)
-)
-public class SNotification
-        extends SMetaDataHolder<SNotificationType, Long> {
-    private static final String DATE_TIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
-    @Column(name = "message", length = 1000)
-    private String   message;
-    @Type(type = DATE_TIME_TYPE)
-    @Column(name = "sent", nullable = false)
-    private DateTime sent;
+public interface SContact<SC_H extends SContactable<PK>, MD extends SMetaDataType, PK extends Serializable>
+        extends SContactAware<PK>,
+                SMetaDataHolder<MD> {
+    String getContact();
 
-    public SNotification() {
-        super();
-    }
+    SContact setContact(final
+                        @NotNull
+                        @NotEmpty
+                        String contact);
 
-    public String getMessage() {
-        return message;
-    }
+    SMetaDataEnum getType();
 
-    public void setMessage(final String notification) {
-        this.message = notification;
-    }
+    SC_H getAssigned();
 
-    public DateTime getSent() {
-        return null == this.sent ? null : this.sent;
-    }
-
-    public void setSent(final DateTime sent) {
-        this.sent = sent;
-    }
-
-
+    SContact setAssigned(final
+                         @NotNull
+                         SC_H assigned);
 }

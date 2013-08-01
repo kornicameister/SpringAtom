@@ -20,9 +20,7 @@ package org.agatom.springatom.model.beans.person.mechanic;
 import org.agatom.springatom.model.beans.person.SPerson;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author kornicamaister
@@ -32,7 +30,16 @@ import javax.persistence.Table;
 @Table(name = "SMechanic")
 @Entity(name = "SMechanic")
 @Audited(auditParents = SPerson.class)
+@AttributeOverride(
+        name = "id",
+        column = @Column(
+                name = "idSMechanic",
+                updatable = false,
+                nullable = false
+        )
+)
 @PrimaryKeyJoinColumn(name = "idSMechanic")
-public class SMechanic extends SPerson {
+public class SMechanic
+        extends SPerson {
 
 }

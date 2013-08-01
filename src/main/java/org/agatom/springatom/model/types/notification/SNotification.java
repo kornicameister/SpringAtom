@@ -15,18 +15,34 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.jpa.repositories;
+package org.agatom.springatom.model.types.notification;
 
-import org.agatom.springatom.jpa.SBasicRepository;
-import org.agatom.springatom.model.beans.links.SNotificationLink;
-import org.springframework.data.repository.RepositoryDefinition;
+import org.agatom.springatom.model.types.PersistentBean;
+import org.joda.time.DateTime;
+import org.springframework.data.domain.Persistable;
+
+import java.io.Serializable;
 
 /**
+ * {@code SNotification} describes the functionality of simple notification
+ * which is sent to the given {@code principal}
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@RepositoryDefinition(domainClass = SNotificationLink.class, idClass = Long.class)
-public interface SNotificationLinkRepository
-        extends SBasicRepository<SNotificationLink, Long> {
+public interface SNotification<PK extends Serializable>
+        extends PersistentBean,
+                Persistable<PK> {
+    String getMessage();
+
+    SNotification<PK> setMessage(final String notification);
+
+    DateTime getSent();
+
+    SNotification<PK> setSent(final DateTime sent);
+
+    Boolean isRead();
+
+    SNotification<PK> readNotification();
 }

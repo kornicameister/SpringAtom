@@ -21,10 +21,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.primitives.Longs;
 import com.google.common.reflect.TypeToken;
+import org.agatom.springatom.model.types.PersistentBean;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -39,9 +42,11 @@ import java.util.Comparator;
 @DynamicInsert
 @DynamicUpdate
 @MappedSuperclass
+@Access(value = AccessType.FIELD)
 abstract public class PersistentObject<PK extends Serializable>
         extends AbstractPersistable<PK>
-        implements Comparable<PersistentObject<PK>> {
+        implements PersistentBean,
+                   Comparable<PersistentObject<PK>> {
     @Transient
     private static final Comparator<Serializable> ID_COMPARATOR = new Comparator<Serializable>() {
         private static final String COMPARED_KEYS_ARE_NOT_EQUAL_IN_TYPE_O1_S_O2_S = "Compared keys are not equal in type >> o1=%s != o2=%s";
@@ -80,7 +85,9 @@ abstract public class PersistentObject<PK extends Serializable>
     }
 
     @Override
-    public int compareTo(@NotNull final PersistentObject<PK> pObject) {
+    public int compareTo(
+            @NotNull
+            final PersistentObject<PK> pObject) {
         return ComparisonChain
                 .start()
                 .compare(this.getId(), pObject.getId(), ID_COMPARATOR)

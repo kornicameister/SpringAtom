@@ -15,45 +15,48 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.appointment;
+package org.agatom.springatom.model.beans;
 
-import org.agatom.springatom.model.beans.meta.SAppointmentTaskType;
-import org.agatom.springatom.model.beans.meta.holder.SBasicMetaDataHolder;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.agatom.springatom.model.types.contact.SContactable;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 
 /**
- * @author kornicamaister
+ * {@code PersistentContactable} is superclass for all entities that can be accesses using
+ * {@link SContactable} information.
+ * {@code PersistentContactable} extends from {@link PersistentVersionedObject} because of the nature of
+ * the data known further as contact information.
+ * In this particular class it is rather obvious that {@link PersistentContactable#primaryMail} is an immutable
+ * value that can be changed in the future.
+ *
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SAppointmentTask")
-@Table(name = "SAppointmentTask")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSAppointmentTask",
-                updatable = false,
-                nullable = false)
-)
-public class SAppointmentTask
-        extends SBasicMetaDataHolder<SAppointmentTaskType, Long> {
-    @NotEmpty
-    @Length(min = 10, max = 444)
-    @Column(name = "task", nullable = false, length = 444)
-    private String task;
 
-    public String getTask() {
-        return task;
+@MappedSuperclass
+abstract public class PersistentContactable
+        extends PersistentVersionedObject
+        implements SContactable<Long> {
+
+    @Email
+    @NotBlank
+    @NaturalId
+    @Column(name = "primaryMail", length = 45, nullable = false, unique = true)
+    private String primaryMail;
+
+    @Override
+    public String getPrimaryMail() {
+        return this.primaryMail;
     }
 
-    public SAppointmentTask setTask(final String task) {
-        this.task = task;
+    @Override
+    public SContactable setPrimaryMail(final String email) {
+        this.primaryMail = email;
         return this;
     }
 }

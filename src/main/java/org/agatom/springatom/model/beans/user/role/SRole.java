@@ -18,6 +18,7 @@
 package org.agatom.springatom.model.beans.user.role;
 
 import org.agatom.springatom.model.beans.PersistentObject;
+import org.agatom.springatom.model.types.user.SSecurityRoleEnum;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 
@@ -37,7 +38,8 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
-public class SRole extends PersistentObject<Long> {
+public class SRole
+        extends PersistentObject<Long> {
     @Type(type = "org.hibernate.type.EnumType")
     @Column(name = "role", updatable = false, unique = true, length = 50, nullable = false)
     @NaturalId(mutable = false)

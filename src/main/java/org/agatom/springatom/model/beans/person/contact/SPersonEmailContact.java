@@ -15,45 +15,36 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.appointment;
+package org.agatom.springatom.model.beans.person.contact;
 
-import org.agatom.springatom.model.beans.meta.SAppointmentTaskType;
-import org.agatom.springatom.model.beans.meta.holder.SBasicMetaDataHolder;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.agatom.springatom.model.types.meta.SMetaDataEnum;
+import org.hibernate.annotations.DiscriminatorOptions;
+import org.hibernate.validator.constraints.Email;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SAppointmentTask")
-@Table(name = "SAppointmentTask")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSAppointmentTask",
-                updatable = false,
-                nullable = false)
-)
-public class SAppointmentTask
-        extends SBasicMetaDataHolder<SAppointmentTaskType, Long> {
-    @NotEmpty
-    @Length(min = 10, max = 444)
-    @Column(name = "task", nullable = false, length = 444)
-    private String task;
+@Entity
+@DiscriminatorValue(value = SPersonEmailContact.DISC)
+@DiscriminatorOptions(force = true)
+final public class SPersonEmailContact
+        extends SPersonContact {
+    public static final String DISC = "p>mail";
 
-    public String getTask() {
-        return task;
+    @Override
+    protected String setWithValidation(final
+                                       @Email
+                                       String contact) {
+        return contact;
     }
 
-    public SAppointmentTask setTask(final String task) {
-        this.task = task;
-        return this;
+    @Override
+    public SMetaDataEnum getType() {
+        return SMetaDataEnum.SCT_MAIL;
     }
 }

@@ -15,39 +15,16 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.meta;
-
-import org.agatom.springatom.model.beans.PersistentObject;
-
-import javax.persistence.*;
-import java.io.Serializable;
+package org.agatom.springatom.model.types;
 
 /**
+ * {@code PersistentBean} is common interface for all beans in <b>SpringAtom</b>.
+ * The main of goal for it is to provide general functionality applicable for the beans.
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@MappedSuperclass
-abstract public class SMetaDataHolder<MD extends SMetaData, PK extends Serializable>
-        extends PersistentObject<PK>
-        implements SMetaDataCapable<MD> {
+public interface PersistentBean {
 
-    @ManyToOne(optional = false,
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.DETACH
-    )
-    @JoinColumn(name = "type", referencedColumnName = "idSMetaData", updatable = true)
-    private SMetaData type;
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public MD getMetaInformation() {
-        return (MD) this.type;
-    }
-
-    @Override
-    public SMetaDataHolder setMetaInformation(final MD metaData) {
-        this.type = metaData;
-        return this;
-    }
 }

@@ -15,55 +15,21 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.beans.person.client;
+package org.agatom.springatom.model.beans.notification;
 
-import org.agatom.springatom.model.beans.meta.SContactType;
-import org.agatom.springatom.model.beans.meta.SMetaDataHolder;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.agatom.springatom.model.beans.person.client.SClient;
 
-import javax.persistence.*;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 /**
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SClientContact")
-@Table(name = "SClientContact")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSClientContact",
-                updatable = false,
-                nullable = false)
-)
-public class SClientContact
-        extends SMetaDataHolder<SContactType, Long> {
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "client",
-            referencedColumnName = "idSClient",
-            updatable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private SClient client;
-    @Column(name = "contact", length = 60)
-    private String  contact;
-
-    public SClient getClient() {
-        return client;
-    }
-
-    public void setClient(final SClient client) {
-        this.client = client;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(final String contact) {
-        this.contact = contact;
-    }
+@Entity(name = "SClientNotification")
+@DiscriminatorValue(value = "client")
+public class SClientNotification
+        extends SBasicTargetedNotification<SClient> {
 
 }
