@@ -15,19 +15,12 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.service.impl;
+package org.agatom.springatom.jpa.repositories;
 
-import org.agatom.springatom.jpa.repositories.SClientContactRepository;
-import org.agatom.springatom.model.beans.person.client.QSClientContact;
-import org.agatom.springatom.model.beans.person.client.SClientContact;
-import org.agatom.springatom.mvc.model.service.SClientContactService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
+import org.agatom.springatom.jpa.SBasicRepository;
+import org.agatom.springatom.model.beans.person.contact.SPersonContact;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.repository.RepositoryDefinition;
 
 /**
  * @author kornicameister
@@ -35,24 +28,9 @@ import java.util.List;
  * @since 0.0.1
  */
 
-@Service
-@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
-public class SClientContactServiceImpl
-        extends SBasicServiceImpl<SClientContact, Long, SClientContactRepository>
-        implements SClientContactService {
+@Qualifier("SPersonContactRepository")
+@RepositoryDefinition(domainClass = SPersonContact.class, idClass = Long.class)
+public interface SPersonContactRepository
+        extends SBasicRepository<SPersonContact, Long> {
 
-    private SClientContactRepository repository;
-
-    @Override
-    public List<SClientContact> findByClient(final Long idClient) {
-        return (List<SClientContact>) this.repository
-                .findAll(QSClientContact.sClientContact.client.id.eq(idClient));
-    }
-
-    @Override
-    @Autowired
-    public void autoWireRepository(final SClientContactRepository repo) {
-        super.autoWireRepository(repo);
-        this.repository = repo;
-    }
 }

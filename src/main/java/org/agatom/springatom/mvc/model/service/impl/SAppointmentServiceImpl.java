@@ -17,10 +17,7 @@
 
 package org.agatom.springatom.mvc.model.service.impl;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 import com.mysema.query.types.path.DateTimePath;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.agatom.springatom.jpa.repositories.*;
 import org.agatom.springatom.model.beans.appointment.QSAppointment;
 import org.agatom.springatom.model.beans.appointment.QSAppointmentTask;
@@ -28,10 +25,11 @@ import org.agatom.springatom.model.beans.appointment.SAppointment;
 import org.agatom.springatom.model.beans.appointment.SAppointmentTask;
 import org.agatom.springatom.model.beans.car.SCar;
 import org.agatom.springatom.model.beans.links.SAppointmentWorkerLink;
+import org.agatom.springatom.model.beans.meta.QSMetaData;
+import org.agatom.springatom.model.beans.meta.SAppointmentTaskType;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
-import org.agatom.springatom.model.builders.impl.BSAppointment;
-import org.agatom.springatom.model.builders.impl.BSAppointmentWorkerLink;
-import org.agatom.springatom.model.builders.impl.BSIssueReporter;
+import org.agatom.springatom.model.beans.util.SIssueReporter;
+import org.agatom.springatom.model.dto.SAppointmentTaskDTO;
 import org.agatom.springatom.mvc.model.exceptions.SEntityDoesNotExists;
 import org.agatom.springatom.mvc.model.exceptions.SException;
 import org.agatom.springatom.mvc.model.service.SAppointmentService;
@@ -40,15 +38,11 @@ import org.joda.time.DateTime;
 import org.joda.time.ReadableDuration;
 import org.joda.time.ReadableInterval;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -60,6 +54,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 @Service
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
+@SuppressWarnings("SpringJavaAutowiringInspection")
 public class SAppointmentServiceImpl
         extends SBasicServiceImpl<SAppointment, Long, SAppointmentRepository>
         implements SAppointmentService {
@@ -75,6 +70,8 @@ public class SAppointmentServiceImpl
     SMechanicRepository              mechanicRepository;
     @Autowired
     SAppointmentWorkerLinkRepository workerLinkRepository;
+    @Autowired
+    SMetaDataRepository metaDataRepository;
 
     @Override
     @Autowired
@@ -87,67 +84,59 @@ public class SAppointmentServiceImpl
     public SAppointment newAppointment(final ReadableInterval interval,
                                        final Long carId,
                                        final Long assigneeId,
-                                       final SAppointmentTask... tasks) throws SException {
-        checkArgument(this.validateTasks(tasks), "Tasks already persisted");
+                                       final Long reportedId,
+                                       final SAppointmentTaskDTO... tasks) throws SException {
         checkArgument(carId != null, String.format(BAD_ARG_MSG, "SCar#getId()"));
         checkArgument(assigneeId != null, String.format(BAD_ARG_MSG, "SMechanic#getId()"));
 
         final SCar car = this.carRepository.findOne(carId);
         final SMechanic assignee = this.mechanicRepository.findOne(assigneeId);
-        SMechanic reporter;
-
-        try {
-            reporter = this.findReporter();
-        } catch (SException se) {
-            LOGGER.fatal(String.format("Could not resolve current %s", SMechanic.class.getSimpleName()), se);
-            throw se;
-        }
+        final SMechanic reporter = this.mechanicRepository.findOne(reportedId);
         if (car == null) {
             throw new SEntityDoesNotExists(SCar.class, carId);
         }
         if (assignee == null) {
             throw new SEntityDoesNotExists(SMechanic.class, assigneeId);
         }
+        if (reporter == null) {
+            throw new SEntityDoesNotExists(SMechanic.class, reportedId);
+        }
 
         final SAppointment appointment = this.repository.save(
-                BSAppointment.builder()
-                        .withCar(car)
-                        .withInterval(interval)
-                        .withTasks(tasks)
-                        .build()
+                new SAppointment()
+                        .setCar(car)
+                        .setInterval(interval)
+                        .addTask(this.convertTasks(tasks))
         );
-        final SAppointmentWorkerLink workerLink = this.workerLinkRepository.save(
-                BSAppointmentWorkerLink.builder()
-                        .withAppointment(appointment)
-                        .withAssignee(assignee)
-                        .withReporter(
-                                BSIssueReporter.builder()
-                                        .withAssigned(DateTime.now())
-                                        .withMechanic(reporter)
-                                        .build()
+        final SAppointmentWorkerLink workerLink = this.workerLinkRepository.saveAndFlush(
+                new SAppointmentWorkerLink()
+                        .setAppointment(appointment)
+                        .setAssignee(assignee)
+                        .setReporter(
+                                new SIssueReporter()
+                                        .setAssigned(DateTime.now())
+                                        .setMechanic(reporter)
                         )
-                        .build()
         );
 
 
         return workerLink.getAppointment();
     }
 
-    private boolean validateTasks(final SAppointmentTask[] tasks) {
-        return FluentIterable.from(Arrays.asList(tasks))
-                .filter(SAppointmentTask.class)
-                .firstMatch(new Predicate<SAppointmentTask>() {
-                    @Override
-                    public boolean apply(@Nullable final SAppointmentTask input) {
-                        assert input != null;
-                        return !input.isNew();
-                    }
-                })
-                .isPresent();
+    private SAppointmentTask[] convertTasks(final SAppointmentTaskDTO[] tasks) {
+        final SAppointmentTask[] appointmentTasks = new SAppointmentTask[tasks.length];
+        for (int i = 0, tasksLength = tasks.length ; i < tasksLength ; i++) {
+            final SAppointmentTaskDTO taskDTO = tasks[i];
+            appointmentTasks[i] = (SAppointmentTask) new SAppointmentTask()
+                    .setTask(taskDTO.getTask())
+                    .setMetaInformation((SAppointmentTaskType) this.metaDataRepository
+                            .findOne(QSMetaData.sMetaData.type.eq(taskDTO.getType())));
+        }
+        return appointmentTasks;
     }
 
     @Override
-    @Transactional(readOnly = false, rollbackFor = {SEntityDoesNotExists.class, InvalidArgumentException.class})
+    @Transactional(readOnly = false, rollbackFor = {SEntityDoesNotExists.class, IllegalArgumentException.class})
     public SAppointment addTask(final Long idAppointment, final SAppointmentTask... tasks) throws SEntityDoesNotExists {
         checkArgument(idAppointment != null, String.format(BAD_ARG_MSG, "SAppointment#getId()"));
         checkArgument(tasks.length != 0, String.format(BAD_ARG_MSG, "SAppointmentTask#getId()"));
@@ -157,7 +146,7 @@ public class SAppointmentServiceImpl
     }
 
     @Override
-    @Transactional(readOnly = false, rollbackFor = {SEntityDoesNotExists.class, InvalidArgumentException.class})
+    @Transactional(readOnly = false, rollbackFor = {SEntityDoesNotExists.class, IllegalArgumentException.class})
     public SAppointment removeTask(final Long idAppointment, final Long... tasksId) throws SEntityDoesNotExists {
         checkArgument(idAppointment != null, String.format(BAD_ARG_MSG, "SAppointment#getId()"));
         final SAppointment appointment = this.getAppointment(idAppointment);
@@ -168,7 +157,7 @@ public class SAppointmentServiceImpl
     }
 
     @Override
-    @Transactional(rollbackFor = InvalidArgumentException.class)
+    @Transactional(rollbackFor = IllegalArgumentException.class)
     public SAppointment findByTask(final Long... tasks) {
         checkArgument(tasks.length != 0, String.format(BAD_ARG_MSG, "SAppointmentTask#getId()"));
         return this.repository.findOne(QSAppointment.sAppointment.tasks.any().id.in(tasks));
@@ -181,7 +170,7 @@ public class SAppointmentServiceImpl
     }
 
     @Override
-    @Transactional(rollbackFor = InvalidArgumentException.class)
+    @Transactional(rollbackFor = IllegalArgumentException.class)
     public List<SAppointment> findOne(final DateTime startDate, final DateTime endDate) {
         checkArgument(startDate.isBefore(endDate), ERROR_MESSAGE_SD_GT_ED_MSG);
         final DateTimePath<DateTime> begin = QSAppointment.sAppointment.begin;
@@ -213,7 +202,7 @@ public class SAppointmentServiceImpl
             LOGGER.error("Appointment not postponed to future", e);
             throw new SException(SAppointment.class, e);
         } catch (SEntityDoesNotExists e2) {
-            LOGGER.error("Appointment with pk=%d does not exists", e2);
+            LOGGER.error("Appointment set pk=%d does not exists", e2);
             throw new SException(SAppointment.class, e2);
         }
     }
@@ -239,7 +228,7 @@ public class SAppointmentServiceImpl
             LOGGER.error("Appointment not postponed to past", e);
             throw new SException(SAppointment.class, e);
         } catch (SEntityDoesNotExists e2) {
-            LOGGER.error("Appointment with pk=%d does not exists", e2);
+            LOGGER.error("Appointment set pk=%d does not exists", e2);
             throw new SException(SAppointment.class, e2);
         }
     }
@@ -250,19 +239,11 @@ public class SAppointmentServiceImpl
             try {
                 throw new SEntityDoesNotExists(SAppointment.class, idAppointment);
             } catch (SEntityDoesNotExists e) {
-                LOGGER.error("Appointment with pk=%d does not exists", e);
+                LOGGER.error("Appointment set pk=%d does not exists", e);
                 throw e;
             }
         }
         return appointment;
-    }
-
-    private SMechanic findReporter() throws SException {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null) {
-            throw new SException(SAppointment.class, "Could not resolve current user from SecurityContextHolder");
-        }
-        return (SMechanic) auth.getPrincipal();
     }
 
     public class SAppointmentNotPostponedException extends SException {

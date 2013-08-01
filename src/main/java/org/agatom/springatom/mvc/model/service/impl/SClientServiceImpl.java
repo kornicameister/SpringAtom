@@ -19,27 +19,21 @@ package org.agatom.springatom.mvc.model.service.impl;
 
 import org.agatom.springatom.jpa.repositories.SClientRepository;
 import org.agatom.springatom.model.beans.meta.SClientProblemReportType;
-import org.agatom.springatom.model.beans.meta.SContactType;
-import org.agatom.springatom.model.beans.meta.SMetaData;
-import org.agatom.springatom.model.beans.meta.SMetaDataType;
-import org.agatom.springatom.model.beans.person.client.QSClient;
 import org.agatom.springatom.model.beans.person.client.SClient;
-import org.agatom.springatom.model.beans.person.client.SClientContact;
 import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
-import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
 import org.agatom.springatom.model.beans.util.SIssueReporter;
+import org.agatom.springatom.model.types.meta.SMetaDataEnum;
 import org.agatom.springatom.mvc.model.exceptions.SEntityDoesNotExists;
-import org.agatom.springatom.mvc.model.service.*;
+import org.agatom.springatom.mvc.model.service.SClientService;
+import org.agatom.springatom.mvc.model.service.SMechanicService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * @author Tomasz
@@ -49,20 +43,14 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SClientServiceImpl
-        extends SServiceImpl<SClient, Long, Integer, SClientRepository>
+        extends SPersonServiceImpl<SClient, SClientRepository>
         implements SClientService {
     @Autowired
-    SMechanicService            mechanicService;
-    @Autowired
-    SClientProblemReportService clientProblemReportService;
-    @Autowired
-    SMetaDataService            metaDataService;
-    @Autowired
-    SClientContactService       clientContactService;
+    SMechanicService mechanicService;
     private SClientRepository repository;
 
     @Override
-    @Autowired(required = true)
+    @Autowired
     public void autoWireRepository(final SClientRepository repo) {
         super.autoWireRepository(repo);
         this.repository = repo;
@@ -70,10 +58,15 @@ public class SClientServiceImpl
 
     @Override
     @Transactional(rollbackFor = SEntityDoesNotExists.class)
-    public SClientProblemReport newProblemReport(@NotNull final String problem,
-                                                 @NotNull final Long clientPk,
-                                                 @NotNull final Long mechanicPk,
-                                                 @NotNull final SMetaDataType metaType) throws
+    public SClientProblemReport newProblemReport(
+            @NotNull
+            final String problem,
+            @NotNull
+            final Long clientPk,
+            @NotNull
+            final Long mechanicPk,
+            @NotNull
+            final SMetaDataEnum metaType) throws
             SEntityDoesNotExists {
 
         // load objects
@@ -100,86 +93,6 @@ public class SClientServiceImpl
         problemReport.setMetaInformation(problemReportType);
 
         return this.clientProblemReportService.save(problemReport);
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.NEVER)
-    public SClientContact newPhone(@NotNull final String contact,
-                                   @NotNull final Long client) throws SEntityDoesNotExists {
-        return this.newContactData(contact, client, SMetaDataType.SCT_PHONE);
-    }
-
-    @Override
-    @Transactional(readOnly = false,
-            isolation = Isolation.SERIALIZABLE,
-            propagation = Propagation.SUPPORTS,
-            rollbackFor = SEntityDoesNotExists.class)
-    public SClientContact newContactData(@NotNull final String contact,
-                                         @NotNull final Long clientPk,
-                                         @NotNull final SMetaDataType type) throws SEntityDoesNotExists {
-        final SClient client = this.repository.findOne(clientPk);
-        final SMetaData metaData = this.metaDataService.findByType(type);
-        if (client == null) {
-            throw new SEntityDoesNotExists(SClient.class, clientPk);
-        }
-        if (metaData == null) {
-            throw new SEntityDoesNotExists(SContactType.class, type);
-        }
-        final SClientContact clientContact = new SClientContact();
-        clientContact.setClient(client);
-        clientContact.setContact(contact);
-        clientContact.setMetaInformation((SContactType) metaData);
-        return this.clientContactService.save(clientContact);
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.NEVER)
-    public SClientContact newEmail(@NotNull final String contact,
-                                   @NotNull final Long client) throws SEntityDoesNotExists {
-        return this.newContactData(contact, client, SMetaDataType.SCT_MAIL);
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.NEVER)
-    public SClientContact newCellPhone(@NotNull final String contact,
-                                       @NotNull final Long client) throws SEntityDoesNotExists {
-        return this.newContactData(contact, client, SMetaDataType.SCT_CELL_PHONE);
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.NEVER)
-    public SClientContact newFax(@NotNull final String contact,
-                                 @NotNull final Long client) throws SEntityDoesNotExists {
-        return this.newContactData(contact, client, SMetaDataType.SCT_FAX);
-    }
-
-    @Override
-    @CacheEvict(value = "clients", key = "#idClient", beforeInvocation = true)
-    public List<SClientContact> findAllContacts(final Long idClient) {
-        return this.clientContactService.findByClient(idClient);
-    }
-
-    @Override
-    public List<SClient> findByPersonalInformation(@NotNull final SPersonalInformation information) {
-        return (List<SClient>) this.repository.findAll(QSClient.sClient.information.eq(information));
-    }
-
-    @Override
-    @CacheEvict(value = "clients", key = "#firstName", beforeInvocation = true)
-    public List<SClient> findByFirstName(@NotNull final String firstName) {
-        return (List<SClient>) this.repository.findAll(QSClient.sClient.information.firstName.eq(firstName));
-    }
-
-    @Override
-    @CacheEvict(value = "clients", key = "#lastName", beforeInvocation = true)
-    public List<SClient> findByLastName(@NotNull final String lastName) {
-        return (List<SClient>) this.repository.findAll(QSClient.sClient.information.lastName.eq(lastName));
-    }
-
-    @Override
-    @CacheEvict(value = "clients", key = "#email", beforeInvocation = true)
-    public SClient findByEmail(@NotNull final String email) {
-        return this.repository.findOne(QSClient.sClient.email.eq(email));
     }
 
 }

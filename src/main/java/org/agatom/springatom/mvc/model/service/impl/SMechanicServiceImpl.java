@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SMechanicServiceImpl
-        extends SServiceImpl<SMechanic, Long, Integer, SMechanicRepository>
+        extends SPersonServiceImpl<SMechanic, SMechanicRepository>
         implements SMechanicService {
 
     SMechanicRepository repository;
@@ -42,7 +42,7 @@ public class SMechanicServiceImpl
     @Override
     @Autowired
     public void autoWireRepository(final SMechanicRepository repo) {
+        super.autoWireRepository(repo);
         this.repository = repo;
-        this.basicRepository = repo;
     }
 }

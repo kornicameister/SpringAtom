@@ -28,7 +28,8 @@ import java.util.Arrays;
  * @since 0.0.1
  */
 
-public class SEntityDoesNotExists extends SException {
+public class SEntityDoesNotExists
+        extends SException {
     private static final String MSG_1 = "No entry exists for %s with PK=%s";
     private static final String MSG_2 = "No entry exists for %s for ARGS=%s";
 
@@ -36,7 +37,7 @@ public class SEntityDoesNotExists extends SException {
         super(entityClazz, String.format(MSG_1, entityClazz.getName(), pk));
     }
 
-    public SEntityDoesNotExists(final Class<? extends Persistable> entityClazz, final Object[] args) {
+    public SEntityDoesNotExists(final Class<? extends Persistable> entityClazz, final Object... args) {
         super(entityClazz, String.format(MSG_2, entityClazz.getName(), Arrays.deepToString(args)));
     }
 }

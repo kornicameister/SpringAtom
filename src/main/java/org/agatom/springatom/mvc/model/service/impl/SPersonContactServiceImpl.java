@@ -15,10 +15,18 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.service;
+package org.agatom.springatom.mvc.model.service.impl;
 
-import org.agatom.springatom.jpa.repositories.SClientContactRepository;
-import org.agatom.springatom.model.beans.person.client.SClientContact;
+import org.agatom.springatom.jpa.repositories.SPersonContactRepository;
+import org.agatom.springatom.model.beans.person.contact.QSPersonContact;
+import org.agatom.springatom.model.beans.person.contact.SPersonContact;
+import org.agatom.springatom.mvc.model.service.SPersonContactService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,15 +35,28 @@ import java.util.List;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SClientContactService
-        extends SBasicService<SClientContact, Long, SClientContactRepository> {
-    /**
-     * Returns all {@link SClientContact} entities for the given {@link org.agatom.springatom.model.beans.person.client.SClient#id}
-     *
-     * @param idClient
-     *         id of the {@link org.agatom.springatom.model.beans.person.client.SClient}
-     *
-     * @return the list of all {@link SClientContact}s for given {@code SClient}
-     */
-    List<SClientContact> findByClient(Long idClient);
+
+@Service
+@Qualifier("SPersonContactService")
+@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
+public class SPersonContactServiceImpl
+        extends SBasicServiceImpl<SPersonContact, Long, SPersonContactRepository>
+        implements SPersonContactService {
+
+    private SPersonContactRepository repository;
+
+    @Override
+    public List<SPersonContact> findByAssigned(final Long idAssigned) {
+        return (List<SPersonContact>) this.repository
+                .findAll(QSPersonContact.sPersonContact.assigned.id.eq(idAssigned));
+    }
+
+    @Override
+    @Autowired
+    public void autoWireRepository(
+            @Qualifier("SPersonContactRepository")
+            final SPersonContactRepository repo) {
+        super.autoWireRepository(repo);
+        this.repository = repo;
+    }
 }

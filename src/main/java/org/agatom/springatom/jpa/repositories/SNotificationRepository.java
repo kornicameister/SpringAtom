@@ -18,7 +18,7 @@
 package org.agatom.springatom.jpa.repositories;
 
 import org.agatom.springatom.jpa.SBasicRepository;
-import org.agatom.springatom.model.beans.notification.SNotification;
+import org.agatom.springatom.model.beans.notification.SBasicNotification;
 import org.springframework.data.repository.RepositoryDefinition;
 
 /**
@@ -26,7 +26,7 @@ import org.springframework.data.repository.RepositoryDefinition;
  * @version 0.0.1
  * @since 0.0.1
  */
-@RepositoryDefinition(domainClass = SNotification.class, idClass = Long.class)
+@RepositoryDefinition(domainClass = SBasicNotification.class, idClass = Long.class)
 public interface SNotificationRepository
-        extends SBasicRepository<SNotification, Long> {
+        extends SBasicRepository<SBasicNotification, Long> {
 }

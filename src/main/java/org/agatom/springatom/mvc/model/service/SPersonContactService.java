@@ -15,20 +15,28 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.jpa.repositories;
+package org.agatom.springatom.mvc.model.service;
 
-import org.agatom.springatom.jpa.SBasicRepository;
-import org.agatom.springatom.model.beans.person.client.SClientContact;
-import org.springframework.data.repository.RepositoryDefinition;
+import org.agatom.springatom.jpa.repositories.SPersonContactRepository;
+import org.agatom.springatom.model.beans.person.contact.SPersonContact;
+import org.agatom.springatom.model.types.contact.SContact;
+
+import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
-@RepositoryDefinition(domainClass = SClientContact.class, idClass = Long.class)
-public interface SClientContactRepository
-        extends SBasicRepository<SClientContact, Long> {
-
+public interface SPersonContactService
+        extends SBasicService<SPersonContact, Long, SPersonContactRepository> {
+    /**
+     * Returns all {@link SContact} entities for the given {@link org.agatom.springatom.model.types.contact.SMultiContactable#getId()}
+     *
+     * @param idAssigned
+     *         id of the {@link org.agatom.springatom.model.types.contact.SMultiContactable}
+     *
+     * @return the list of all {@link SContact}s for given {@code SMultiContactable}
+     */
+    List<SPersonContact> findByAssigned(Long idAssigned);
 }

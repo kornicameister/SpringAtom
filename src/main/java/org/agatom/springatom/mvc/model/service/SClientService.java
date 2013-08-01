@@ -18,52 +18,28 @@
 package org.agatom.springatom.mvc.model.service;
 
 import org.agatom.springatom.jpa.repositories.SClientRepository;
-import org.agatom.springatom.model.beans.meta.SMetaDataType;
 import org.agatom.springatom.model.beans.person.client.SClient;
-import org.agatom.springatom.model.beans.person.client.SClientContact;
 import org.agatom.springatom.model.beans.person.client.SClientProblemReport;
-import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
+import org.agatom.springatom.model.types.meta.SMetaDataEnum;
 import org.agatom.springatom.mvc.model.exceptions.SEntityDoesNotExists;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SClientService extends SService<SClient, Long, Integer, SClientRepository> {
+public interface SClientService
+        extends SPersonService<SClient, SClientRepository> {
 
-    SClientProblemReport newProblemReport(@NotNull final String problem,
-                                          @NotNull final Long client,
-                                          @NotNull final Long mechanic,
-                                          @NotNull final SMetaDataType problemReportType) throws
-            SEntityDoesNotExists;
-
-    SClientContact newPhone(@NotNull final String contact,
-                            @NotNull final Long client) throws SEntityDoesNotExists;
-
-    SClientContact newContactData(@NotNull String contact,
-                                  @NotNull Long clientPk,
-                                  @NotNull SMetaDataType type) throws SEntityDoesNotExists;
-
-    SClientContact newEmail(@NotNull final String contact,
-                            @NotNull final Long client) throws SEntityDoesNotExists;
-
-    SClientContact newCellPhone(@NotNull final String contact,
-                                @NotNull final Long client) throws SEntityDoesNotExists;
-
-    SClientContact newFax(@NotNull final String contact,
-                          @NotNull final Long client) throws SEntityDoesNotExists;
-
-    List<SClientContact> findAllContacts(final Long idClient);
-
-    List<SClient> findByPersonalInformation(@NotNull final SPersonalInformation information);
-
-    List<SClient> findByFirstName(@NotNull final String firstName);
-
-    List<SClient> findByLastName(@NotNull final String lastName);
-
-    SClient findByEmail(@NotNull final String email);
+    SClientProblemReport newProblemReport(
+            @NotNull
+            final String problem,
+            @NotNull
+            final Long client,
+            @NotNull
+            final Long mechanic,
+            @NotNull
+            final SMetaDataEnum problemReportType) throws SEntityDoesNotExists;
 }

@@ -44,7 +44,7 @@ import java.util.List;
 abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable, R extends JpaRepository>
         implements SBasicService<T, ID, R> {
     private static final Logger LOGGER = Logger.getLogger(SBasicServiceImpl.class);
-    protected SBasicRepository basicRepository;
+    private SBasicRepository basicRepository;
 
     @Override
     public void autoWireRepository(final R repo) {
@@ -55,7 +55,9 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
     }
 
     @Override
-    public T findOne(@NotNull final ID id) {
+    public T findOne(
+            @NotNull
+            final ID id) {
         return (T) this.basicRepository.findOne(id);
     }
 
@@ -66,7 +68,9 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
 
     @Override
     @Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
-    public T save(@NotNull final T persistable) {
+    public T save(
+            @NotNull
+            final T persistable) {
         Preconditions
                 .checkArgument(persistable != null, "Persistable must not be null");
         return (T) this.basicRepository.saveAndFlush(persistable);
@@ -79,7 +83,9 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
 
     @Override
     @Transactional(readOnly = false)
-    public void deleteOne(@NotNull final ID pk) {
+    public void deleteOne(
+            @NotNull
+            final ID pk) {
         this.basicRepository.delete(pk);
     }
 

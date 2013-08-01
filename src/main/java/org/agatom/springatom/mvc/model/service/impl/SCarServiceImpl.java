@@ -71,11 +71,19 @@ public class SCarServiceImpl
 
     @Override
     @CacheEvict(value = "cars", allEntries = true, beforeInvocation = true)
-    public List<SCar> findByMaster(@NotNull final String brand, @NotNull final String model) {
+    public List<SCar> findByMaster(
+            @NotNull
+            final String brand,
+            @NotNull
+            final String model) {
         return (List<SCar>) this.repository.findAll(QSCar.sCar.carMaster.eq(this.getMaster(brand, model)));
     }
 
-    private SCarMaster getMaster(@NotNull final String brand, @NotNull final String model) {
+    private SCarMaster getMaster(
+            @NotNull
+            final String brand,
+            @NotNull
+            final String model) {
         final QSCarMasterManufacturingData manufacturingData = QSCarMaster.sCarMaster.manufacturingData;
         final BooleanExpression brandEq = manufacturingData.brand.eq(brand);
         final BooleanExpression modelEq = manufacturingData.model.eq(model);
@@ -84,13 +92,17 @@ public class SCarServiceImpl
 
     @Override
     @CacheEvict(value = "cars", allEntries = true, beforeInvocation = true)
-    public List<SCar> findByMaster(@NotNull final Long... masterId) {
+    public List<SCar> findByMaster(
+            @NotNull
+            final Long... masterId) {
         return (List<SCar>) this.repository.findAll(QSCar.sCar.carMaster.id.in(masterId));
     }
 
     @Override
     @Cacheable(value = "cars", key = "#carId")
-    public SCarMaster findMaster(@NotNull final Long carId) {
+    public SCarMaster findMaster(
+            @NotNull
+            final Long carId) {
         return this.masterService.findOne(QSCarMaster.sCarMaster.children.any().id.eq(carId));
     }
 
@@ -102,7 +114,11 @@ public class SCarServiceImpl
             propagation = Propagation.SUPPORTS,
             rollbackFor = SUnambiguousResultException.class
     )
-    public List<SCar> findBy(@NotNull final SCarAttribute attribute, @NotNull final Object value) throws
+    public List<SCar> findBy(
+            @NotNull
+            final SCarAttribute attribute,
+            @NotNull
+            final Object value) throws
             SUnambiguousResultException {
         final List<SCar> cars = (List<SCar>) this.repository.findAll(attribute.eq(value));
         switch (attribute) {
@@ -123,11 +139,17 @@ public class SCarServiceImpl
 
     @Override
     @Transactional(readOnly = false, rollbackFor = SEntityDoesNotExists.class) //TODO figure out possible exceptions
-    public SCar newCar(@NotNull final String brand,
-                       @NotNull final String model,
-                       @NotNull final String licencePlate,
-                       @NotNull final String vinNumber,
-                       @NotNull final Long ownerId) throws SEntityDoesNotExists {
+    public SCar newCar(
+            @NotNull
+            final String brand,
+            @NotNull
+            final String model,
+            @NotNull
+            final String licencePlate,
+            @NotNull
+            final String vinNumber,
+            @NotNull
+            final Long ownerId) throws SEntityDoesNotExists {
 
         final SClient owner = this.getOwner(ownerId);
         final SCarMaster sCarMaster = this.getOrPersistMaster(brand, model);
@@ -136,7 +158,7 @@ public class SCarServiceImpl
             throw new SEntityDoesNotExists(SClient.class, ownerId);
         }
         if (sCarMaster == null) {
-            throw new SEntityDoesNotExists(SCarMaster.class, new String[]{brand, model});
+            throw new SEntityDoesNotExists(SCarMaster.class, brand, model);
         }
         final SCar sCar = this.persistCar(licencePlate, vinNumber, sCarMaster, owner);
         LOGGER.info(String.format("Created SCar >> %s", sCar));
@@ -185,8 +207,11 @@ public class SCarServiceImpl
     @CacheEvict(key = "#idClient",
             value = "clients",
             beforeInvocation = true)
-    public SCar newOwner(@NotNull final Long idCar,
-                         @NotNull final Long idClient) throws
+    public SCar newOwner(
+            @NotNull
+            final Long idCar,
+            @NotNull
+            final Long idClient) throws
             SEntityDoesNotExists {
         final SCar car = this.findOne(idCar);
         final SClient owner = this.getOwner(idClient);
@@ -215,7 +240,8 @@ public class SCarServiceImpl
         return owner;
     }
 
-    public class InvalidOwnerException extends SException {
+    public class InvalidOwnerException
+            extends SException {
         public InvalidOwnerException(final SCar car, final SClient owner) {
             super(SCar.class, String.format("Owner for %s does not differ from current one %s", car, owner));
         }

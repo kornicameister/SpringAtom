@@ -49,9 +49,8 @@ import java.io.Serializable;
 abstract class SServiceImpl<T extends Persistable, ID extends Serializable, N extends Number & Comparable<N>, R extends JpaRepository>
         extends SBasicServiceImpl<T, ID, R>
         implements SService<T, ID, N, R> {
-
     private static final Logger LOGGER = Logger.getLogger(SServiceImpl.class);
-    protected SRepository<T, ID, N> revRepo;
+    private SRepository<T, ID, N> revRepo;
 
     @Override
     public void autoWireRepository(final R repo) {
