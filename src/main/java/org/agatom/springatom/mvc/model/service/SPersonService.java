@@ -25,6 +25,7 @@ import org.agatom.springatom.model.beans.person.contact.SPersonPhoneContact;
 import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
 import org.agatom.springatom.model.types.contact.SContact;
 import org.agatom.springatom.mvc.model.exceptions.SEntityDoesNotExists;
+import org.agatom.springatom.mvc.model.service.base.SService;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.validation.constraints.NotNull;

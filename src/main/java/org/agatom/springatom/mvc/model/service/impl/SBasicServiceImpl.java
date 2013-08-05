@@ -18,16 +18,22 @@
 package org.agatom.springatom.mvc.model.service.impl;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.mysema.query.jpa.JPQLQuery;
+import com.mysema.query.types.Expression;
+import com.mysema.query.types.OrderSpecifier;
 import org.agatom.springatom.jpa.SBasicRepository;
-import org.agatom.springatom.mvc.model.service.SBasicService;
+import org.agatom.springatom.jpa.impl.SRepositoryImpl;
+import org.agatom.springatom.mvc.model.service.base.SBasicService;
 import org.apache.log4j.Logger;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -44,7 +50,10 @@ import java.util.List;
 abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable, R extends JpaRepository>
         implements SBasicService<T, ID, R> {
     private static final Logger LOGGER = Logger.getLogger(SBasicServiceImpl.class);
-    private SBasicRepository basicRepository;
+    private SBasicRepository    basicRepository;
+    private Pageable            pageable;
+    private OrderSpecifier<?>   order;
+    private List<Expression<?>> groups;
 
     @Override
     public void autoWireRepository(final R repo) {
@@ -55,9 +64,7 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
     }
 
     @Override
-    public T findOne(
-            @NotNull
-            final ID id) {
+    public T findOne(final ID id) {
         return (T) this.basicRepository.findOne(id);
     }
 
@@ -67,10 +74,13 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
     }
 
     @Override
+    public Page<T> findAll(final Pageable pageable) {
+        return this.basicRepository.findAll(pageable);
+    }
+
+    @Override
     @Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
-    public T save(
-            @NotNull
-            final T persistable) {
+    public T save(final T persistable) {
         Preconditions
                 .checkArgument(persistable != null, "Persistable must not be null");
         return (T) this.basicRepository.saveAndFlush(persistable);
@@ -82,10 +92,9 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
     }
 
     @Override
-    @Transactional(readOnly = false)
-    public void deleteOne(
-            @NotNull
-            final ID pk) {
+    @Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
+    public void deleteOne(final ID pk) {
+        Preconditions.checkArgument(pk != null, "PK must not be null");
         this.basicRepository.delete(pk);
     }
 
@@ -94,4 +103,27 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
     public void deleteAll() {
         this.basicRepository.deleteAll();
     }
+
+    public JPQLQuery retrieveQuery() {
+        final SRepositoryImpl sRepository = (SRepositoryImpl) this.basicRepository;
+        return sRepository.createQuery();
+    }
+
+    protected void addFlex(Object param) {
+        if (param.getClass().isAssignableFrom(Pageable.class)) {
+            this.pageable = (Pageable) param;
+        } else if (param.getClass().isAssignableFrom(OrderSpecifier.class)) {
+            this.order = (OrderSpecifier) param;
+        } else if (param.getClass().isArray()) {
+            final Object[] obj = (Object[]) param;
+            final List<Expression<?>> expressions = Lists.newArrayList();
+            for (final Object tObject : obj) {
+                if (tObject.getClass().isAssignableFrom(Expression.class)) {
+                    expressions.add((Expression<?>) tObject);
+                }
+            }
+            this.groups = expressions;
+        }
+    }
+
 }

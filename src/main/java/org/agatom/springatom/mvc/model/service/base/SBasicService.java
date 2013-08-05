@@ -15,18 +15,29 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.service;
+package org.agatom.springatom.mvc.model.service.base;
 
+import com.mysema.query.types.Expression;
+import com.mysema.query.types.OrderSpecifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * {@code SBasicService} is the interface for the services layers in {@code SpringAtom}.
  * Defines commonly used functionality of <b>CRUD</b> operations.
+ * <p/>
+ * It takes advantage from <b>fluent-interface approach</b> allowing to add complex criteria to the
+ * request such as:
+ * <ol>
+ * <li>{@link Pageable} - paging the request</li>
+ * <li>{@link OrderSpecifier} - ordering</li>
+ * <li>{@link Expression} - grouping</li>
+ * </ol>
  *
  * @author kornicameister
  * @version 0.0.2
@@ -52,7 +63,7 @@ public interface SBasicService<T extends Persistable, ID extends Serializable, R
      *
      * @return the entity with the given {@code ID}
      */
-    T findOne(@NotNull ID id);
+    T findOne(ID id);
 
     /**
      * Returns all entities of the type for which {@code SBasicService} was defined (<b>domain class</b>)
@@ -60,6 +71,8 @@ public interface SBasicService<T extends Persistable, ID extends Serializable, R
      * @return all entities of the {@code SBasicService}'s domain class
      */
     List<T> findAll();
+
+    Page<T> findAll(final Pageable pageable);
 
     /**
      * Saves the {@code SBasicService}'s <b>domain class</b> object and returns its persisted version,
@@ -71,7 +84,7 @@ public interface SBasicService<T extends Persistable, ID extends Serializable, R
      *
      * @return persisted entity
      */
-    T save(@NotNull final T persistable);
+    T save(final T persistable);
 
     /**
      * Returns how many objects of {@code SBasicService}'s <b>domain class</b> exists
@@ -86,7 +99,7 @@ public interface SBasicService<T extends Persistable, ID extends Serializable, R
      * @param pk
      *         the entity's {@code ID}
      */
-    void deleteOne(@NotNull final ID pk);
+    void deleteOne(final ID pk);
 
     /**
      * Deletes all entities of {@code SBasicService}'s <b>domain class</b>

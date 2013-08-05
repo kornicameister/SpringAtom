@@ -20,7 +20,7 @@ package org.agatom.springatom.mvc.model.service.impl;
 import org.agatom.springatom.jpa.SBasicRepository;
 import org.agatom.springatom.jpa.SRepository;
 import org.agatom.springatom.jpa.exceptions.EntityInRevisionDoesNotExists;
-import org.agatom.springatom.mvc.model.service.SService;
+import org.agatom.springatom.mvc.model.service.base.SService;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.data.domain.Persistable;

@@ -24,13 +24,14 @@ import org.springframework.data.domain.Persistable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SUnambiguousResultException extends SException {
+public class SUnambiguousResultException
+        extends SException {
     public SUnambiguousResultException(final Class<? extends Persistable> target,
                                        final Object attribute,
                                        final Object value,
                                        final Integer expected,
                                        final Integer was) {
         super(target, String
-                .format("For %s=%s query returned unambiguous result, expected=%d, was=%s", attribute, value, expected, was));
+                .format("For %s=%s query returned unambiguous findBetween, expected=%d, was=%s", attribute, value, expected, was));
     }
 }

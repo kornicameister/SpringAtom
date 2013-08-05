@@ -24,6 +24,8 @@
 package org.agatom.springatom.jpa.impl;
 
 import com.google.common.base.Preconditions;
+import com.mysema.query.jpa.JPQLQuery;
+import com.mysema.query.jpa.impl.JPAQuery;
 import org.agatom.springatom.jpa.SRepository;
 import org.apache.log4j.Logger;
 import org.hibernate.envers.*;
@@ -185,7 +187,7 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
         }
 
         AuditQuery auditQuery = reader.createQuery()
-                .forRevisionsOfEntity(type, false, true);
+                                      .forRevisionsOfEntity(type, false, true);
 
         switch (operator) {
             case BEFORE:
@@ -225,8 +227,12 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
         }
 
         return (long) reader.createQuery()
-                .forRevisionsOfEntity(type, false, true)
-                .addProjection(AuditEntity.revisionNumber().count())
-                .getSingleResult();
+                            .forRevisionsOfEntity(type, false, true)
+                            .addProjection(AuditEntity.revisionNumber().count())
+                            .getSingleResult();
+    }
+
+    public JPQLQuery createQuery() {
+        return new JPAQuery(this.entityManager);
     }
 }

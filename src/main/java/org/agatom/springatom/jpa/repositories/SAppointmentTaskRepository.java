@@ -19,6 +19,7 @@ package org.agatom.springatom.jpa.repositories;
 
 import org.agatom.springatom.jpa.SBasicRepository;
 import org.agatom.springatom.model.beans.appointment.SAppointmentTask;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.RepositoryDefinition;
 
 /**
@@ -27,6 +28,7 @@ import org.springframework.data.repository.RepositoryDefinition;
  * @since 0.0.1
  */
 
+@Qualifier("SAppointmentTaskRepository1")
 @RepositoryDefinition(domainClass = SAppointmentTask.class, idClass = Long.class)
 public interface SAppointmentTaskRepository
         extends SBasicRepository<SAppointmentTask, Long> {

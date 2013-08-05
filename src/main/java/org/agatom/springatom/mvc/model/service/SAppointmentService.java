@@ -23,6 +23,7 @@ import org.agatom.springatom.model.beans.appointment.SAppointmentTask;
 import org.agatom.springatom.model.dto.SAppointmentTaskDTO;
 import org.agatom.springatom.mvc.model.exceptions.SEntityDoesNotExists;
 import org.agatom.springatom.mvc.model.exceptions.SException;
+import org.agatom.springatom.mvc.model.service.base.SBasicService;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDuration;
 import org.joda.time.ReadableInterval;
@@ -37,29 +38,31 @@ import java.util.List;
 public interface SAppointmentService
         extends SBasicService<SAppointment, Long, SAppointmentRepository> {
     SAppointment newAppointment(final ReadableInterval interval,
-                                final Long carId,
-                                final Long assigneeId,
-                                final Long reporterId,
+                                final long carId,
+                                final long assigneeId,
+                                final long reporterId,
                                 final SAppointmentTaskDTO... tasks) throws SException;
 
-    SAppointment addTask(final Long idAppointment,
-                         final SAppointmentTask... tasks) throws SEntityDoesNotExists;
+    SAppointment addTask(final long idAppointment,
+                         final SAppointmentTaskDTO... tasks) throws SEntityDoesNotExists;
 
-    SAppointment removeTask(final Long idAppointment, final Long... tasksId) throws SEntityDoesNotExists;
+    List<SAppointmentTask> findTasks(final long idAppointment);
 
-    SAppointment findByTask(final Long... tasks);
+    SAppointment removeTask(final long idAppointment, final long... tasksId) throws SEntityDoesNotExists;
 
-    List<SAppointment> findByCar(final Long carId);
+    SAppointment findByTask(final long... tasks);
 
-    List<SAppointment> findOne(final DateTime startDate, final DateTime endDate);
+    List<SAppointment> findByCar(final long carId);
+
+    List<SAppointment> findBetween(final DateTime startDate, final DateTime endDate);
 
     List<SAppointment> findLater(final DateTime dateTime);
 
     List<SAppointment> findEarlier(final DateTime dateTime);
 
-    SAppointment postponeToFuture(final Long idAppointment, final ReadableDuration duration) throws
+    SAppointment postponeToFuture(final long idAppointment, final ReadableDuration duration) throws
             SException;
 
-    SAppointment postponeToPast(final Long idAppointment, final ReadableDuration duration) throws
+    SAppointment postponeToPast(final long idAppointment, final ReadableDuration duration) throws
             SException;
 }

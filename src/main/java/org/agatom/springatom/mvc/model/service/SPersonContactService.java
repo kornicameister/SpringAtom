@@ -20,6 +20,7 @@ package org.agatom.springatom.mvc.model.service;
 import org.agatom.springatom.jpa.repositories.SPersonContactRepository;
 import org.agatom.springatom.model.beans.person.contact.SPersonContact;
 import org.agatom.springatom.model.types.contact.SContact;
+import org.agatom.springatom.mvc.model.service.base.SBasicService;
 
 import java.util.List;
 

@@ -30,7 +30,8 @@ import java.io.Serializable;
  */
 @NoRepositoryBean
 public interface SBasicRepository<T, ID extends Serializable>
-        extends JpaRepository<T, ID>, QueryDslPredicateExecutor<T> {
+        extends JpaRepository<T, ID>,
+                QueryDslPredicateExecutor<T> {
 
     public static enum Operators {
         BEFORE,

@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.mvc.model.service;
+package org.agatom.springatom.mvc.model.service.base;
 
 import org.agatom.springatom.jpa.exceptions.EntityInRevisionDoesNotExists;
 import org.joda.time.DateTime;
