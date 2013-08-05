@@ -21,6 +21,8 @@ import org.agatom.springatom.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
 import org.agatom.springatom.model.beans.util.SIssueReporter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -39,9 +41,11 @@ import javax.persistence.*;
                 updatable = false,
                 nullable = false)
 )
-public class SAppointmentWorkerLink extends PersistentVersionedObject {
+public class SAppointmentWorkerLink
+        extends PersistentVersionedObject {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment", updatable = false)
     private SAppointment   appointment;
     @Audited

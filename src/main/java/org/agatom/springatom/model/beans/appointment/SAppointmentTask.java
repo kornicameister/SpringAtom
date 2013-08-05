@@ -22,10 +22,7 @@ import org.agatom.springatom.model.beans.meta.holder.SBasicMetaDataHolder;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author kornicamaister
@@ -46,7 +43,10 @@ public class SAppointmentTask
     @NotEmpty
     @Length(min = 10, max = 444)
     @Column(name = "task", nullable = false, length = 444)
-    private String task;
+    private String       task;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment", updatable = false)
+    private SAppointment appointment;
 
     public String getTask() {
         return task;
@@ -55,5 +55,39 @@ public class SAppointmentTask
     public SAppointmentTask setTask(final String task) {
         this.task = task;
         return this;
+    }
+
+    public SAppointment getAppointment() {
+        return appointment;
+    }
+
+    public SAppointmentTask setAppointment(final SAppointment appointments) {
+        this.appointment = appointments;
+        return this;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SAppointmentTask)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        final SAppointmentTask task1 = (SAppointmentTask) o;
+
+        return task.equals(task1.task);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + task.hashCode();
+        return result;
     }
 }

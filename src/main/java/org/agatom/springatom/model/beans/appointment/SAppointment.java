@@ -17,10 +17,13 @@
 
 package org.agatom.springatom.model.beans.appointment;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.car.SCar;
 import org.hibernate.annotations.Index;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -30,7 +33,7 @@ import org.joda.time.ReadableInterval;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -59,43 +62,52 @@ public class SAppointment
     @Type(type = DATE_TIME_TYPE)
     @Column(name = "begin", nullable = false)
     @NotNull(message = BEGIN_NULL_MSG)
-    private DateTime              begin;
+    private DateTime begin;
     @Index(name = "sa_end")
     @Type(type = DATE_TIME_TYPE)
     @Column(name = "end", nullable = false)
     @NotNull(message = END_NULL_MSG)
-    private DateTime              end;
+    private DateTime end;
     @Size(min = 1, message = "SAppointment must contain at least one task [SAppointmentTask]")
     @OneToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.DETACH,
-                    CascadeType.MERGE,
-                    CascadeType.PERSIST
-            },
-            orphanRemoval = true
-    )
-    @JoinColumn(name = "appointment", nullable = false)
-    private Set<SAppointmentTask> tasks;
+            mappedBy = "appointment",
+            cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<SAppointmentTask> tasks = Sets.newHashSet();
     @NotNull(message = CAR_NULL_MSG)
     @ManyToOne(optional = false)
     @JoinColumn(name = "car", referencedColumnName = "idScar")
-    private SCar                  car;
+    private SCar car;
 
     public Set<SAppointmentTask> getTasks() {
+        if (this.tasks == null) {
+            this.tasks = Sets.newHashSet();
+        }
         return tasks;
     }
 
-    public SAppointment addTask(final SAppointmentTask... tasks) {
+    public SAppointment setTasks(final Collection<SAppointmentTask> tasks) {
+        this.tasks = Sets.newHashSet(tasks);
+        return this;
+    }
+
+    public SAppointment addTask(final Collection<SAppointmentTask> tasks) {
         if (this.tasks == null) {
-            this.tasks = Sets.newHashSet(tasks);
+            this.tasks = Sets.newHashSet();
+        }
+        for (final SAppointmentTask task : tasks) {
+            if (!this.tasks.contains(task)) {
+                this.tasks.add(task.setAppointment(this));
+            }
         }
         return this;
     }
 
     public SAppointment removeTask(final SAppointmentTask... tasks) {
-        if (!this.tasks.removeAll(Arrays.asList(tasks))) {
-            return null;
+        if (this.tasks == null) {
+            this.tasks = Sets.newHashSet();
         }
+        this.tasks.removeAll(Lists.newArrayList(tasks));
         return this;
     }
 
@@ -130,8 +142,8 @@ public class SAppointment
     public boolean postpone(final ReadableDuration duration, final boolean toFuture) {
         if (this.begin != null && this.end != null) {
             final int scalar = toFuture ? 1 : -1;
-            this.begin.withDurationAdded(duration, scalar);
-            this.end.withDurationAdded(duration, scalar);
+            this.begin = this.begin.withDurationAdded(duration, scalar);
+            this.end = this.end.withDurationAdded(duration, scalar);
             return true;
         }
         return false;
