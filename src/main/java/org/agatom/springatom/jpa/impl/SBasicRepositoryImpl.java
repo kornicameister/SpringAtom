@@ -15,53 +15,56 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.jpa;
+package org.agatom.springatom.jpa.impl;
 
 import com.mysema.query.jpa.JPQLQuery;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
-import org.springframework.data.repository.NoRepositoryBean;
+import com.mysema.query.jpa.impl.JPAQuery;
+import org.agatom.springatom.jpa.SBasicRepository;
+import org.apache.log4j.Logger;
+import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.QueryDslJpaRepository;
 
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 
 /**
- * {@code SBasicRepository} is the foundamental interface for the repositories.
- * By extending {@link JpaRepository} and {@link QueryDslPredicateExecutor} it allows to query the database
- * with the help of <b>QueryDSL [{@link org.springframework.data.jpa.repository.support.Querydsl}]</b>.
- * Also it boosts already available functionality with new one.
+ * {@code SBasicRepositoryImpl} implements {@link SBasicRepository}
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.1
  * @since 0.0.1
  */
-@NoRepositoryBean
-public interface SBasicRepository<T, ID extends Serializable>
-        extends JpaRepository<T, ID>,
-                QueryDslPredicateExecutor<T> {
+public class SBasicRepositoryImpl<T, ID extends Serializable>
+        extends QueryDslJpaRepository<T, ID>
+        implements SBasicRepository<T, ID> {
 
-    /**
-     * Method to detach, if necessary, the object from the session.
-     *
-     * @param t
-     *         object to be detached
-     *
-     * @return detached object
-     */
-    T detach(T t);
+    private static final Logger LOGGER = Logger.getLogger(SBasicRepositoryImpl.class);
+    protected final JpaEntityInformation<T, ID> entityInformation;
+    protected final EntityManager               entityManager;
 
-    /**
-     * Returns plain {@link JPQLQuery} without any target and {@link com.mysema.query.types.Predicate} embedded
-     *
-     * @return the query
-     */
-    JPQLQuery createCustomQuery();
+    public SBasicRepositoryImpl(final JpaEntityInformation<T, ID> entityInformation,
+                                final EntityManager entityManager) {
+        super(entityInformation, entityManager);
+        this.entityInformation = entityInformation;
+        this.entityManager = entityManager;
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String
+                    .format("Created %s for arguments=[em=%s,ei=%s]", SBasicRepositoryImpl.class
+                            .getSimpleName(), entityManager, entityInformation));
+        }
+    }
 
-    /**
-     * Custom operators to be used when constructing the queries
-     */
-    public static enum Operators {
-        BEFORE,
-        AFTER,
-        EQ
+    @Override
+    public T detach(final T t) {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("detach(%s)", t));
+        }
+        this.entityManager.detach(t);
+        return t;
+    }
+
+    @Override
+    public JPQLQuery createCustomQuery() {
+        return new JPAQuery(this.entityManager);
     }
 }

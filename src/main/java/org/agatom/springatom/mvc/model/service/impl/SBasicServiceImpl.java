@@ -19,11 +19,7 @@ package org.agatom.springatom.mvc.model.service.impl;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.mysema.query.jpa.JPQLQuery;
-import com.mysema.query.types.Expression;
-import com.mysema.query.types.OrderSpecifier;
 import org.agatom.springatom.jpa.SBasicRepository;
-import org.agatom.springatom.jpa.impl.SRepositoryImpl;
 import org.agatom.springatom.mvc.model.service.base.SBasicService;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
@@ -46,14 +42,11 @@ import java.util.List;
  */
 
 @SuppressWarnings("unchecked")
-@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
+@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRED)
 abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable, R extends JpaRepository>
         implements SBasicService<T, ID, R> {
     private static final Logger LOGGER = Logger.getLogger(SBasicServiceImpl.class);
-    private SBasicRepository    basicRepository;
-    private Pageable            pageable;
-    private OrderSpecifier<?>   order;
-    private List<Expression<?>> groups;
+    private SBasicRepository basicRepository;
 
     @Override
     public void autoWireRepository(final R repo) {
@@ -104,26 +97,17 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
         this.basicRepository.deleteAll();
     }
 
-    public JPQLQuery retrieveQuery() {
-        final SRepositoryImpl sRepository = (SRepositoryImpl) this.basicRepository;
-        return sRepository.createQuery();
+    @Override
+    public T withFullLoad(final T obj) {
+        return obj;
     }
 
-    protected void addFlex(Object param) {
-        if (param.getClass().isAssignableFrom(Pageable.class)) {
-            this.pageable = (Pageable) param;
-        } else if (param.getClass().isAssignableFrom(OrderSpecifier.class)) {
-            this.order = (OrderSpecifier) param;
-        } else if (param.getClass().isArray()) {
-            final Object[] obj = (Object[]) param;
-            final List<Expression<?>> expressions = Lists.newArrayList();
-            for (final Object tObject : obj) {
-                if (tObject.getClass().isAssignableFrom(Expression.class)) {
-                    expressions.add((Expression<?>) tObject);
-                }
-            }
-            this.groups = expressions;
+    @Override
+    public List<T> withFullLoad(final Iterable<T> objects) {
+        final List<T> tList = Lists.newArrayList();
+        for (final T obj : objects) {
+            tList.add(obj);
         }
+        return tList;
     }
-
 }

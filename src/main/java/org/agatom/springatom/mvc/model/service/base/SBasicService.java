@@ -105,4 +105,8 @@ public interface SBasicService<T extends Persistable, ID extends Serializable, R
      * Deletes all entities of {@code SBasicService}'s <b>domain class</b>
      */
     void deleteAll();
+
+    T withFullLoad(T obj);
+
+    List<T> withFullLoad(Iterable<T> objects);
 }

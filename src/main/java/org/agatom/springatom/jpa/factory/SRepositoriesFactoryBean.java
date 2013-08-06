@@ -18,6 +18,7 @@
 package org.agatom.springatom.jpa.factory;
 
 import org.agatom.springatom.jpa.SRepository;
+import org.agatom.springatom.jpa.impl.SBasicRepositoryImpl;
 import org.agatom.springatom.jpa.impl.SRepositoryImpl;
 import org.agatom.springatom.model.beans.revision.AuditedRevisionEntity;
 import org.apache.log4j.Logger;
@@ -35,12 +36,18 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 
 /**
+ * {@code SRepositoriesFactoryBean} creates instances of either:
+ * <ol>
+ * <li>{@link org.agatom.springatom.jpa.SBasicRepository}</li>
+ * <li>{@link org.agatom.springatom.jpa.SRepository}</li>
+ * </ol>
+ *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 public class SRepositoriesFactoryBean
-extends JpaRepositoryFactoryBean<SRepository<Object, Serializable, Integer>, Object, Serializable> {
+        extends JpaRepositoryFactoryBean<SRepository<Object, Serializable, Integer>, Object, Serializable> {
 
     private Class<?> revisionEntityClass;
 
@@ -53,7 +60,8 @@ extends JpaRepositoryFactoryBean<SRepository<Object, Serializable, Integer>, Obj
         return new SRepositoryFactory(entityManager, this.revisionEntityClass);
     }
 
-    private static class SRepositoryFactory extends JpaRepositoryFactory {
+    private static class SRepositoryFactory
+            extends JpaRepositoryFactory {
         private static final Logger LOGGER = Logger.getLogger(SRepositoryFactory.class);
         private final Class<?>                  revisionEntityClass;
         private final RevisionEntityInformation revisionEntityInformation;
@@ -81,12 +89,7 @@ extends JpaRepositoryFactoryBean<SRepository<Object, Serializable, Integer>, Obj
                     .getDomainType());
             final Class<?> repositoryInterface = metadata.getRepositoryInterface();
             if (!SRepository.class.isAssignableFrom(repositoryInterface)) {
-                if (LOGGER.isTraceEnabled()) {
-                    LOGGER.trace(String
-                            .format("%s is not assignable from %s", repositoryInterface, SRepository.class
-                                    .getSimpleName()));
-                }
-                return super.getTargetRepository(metadata, entityManager);
+                return new SBasicRepositoryImpl(entityInformation, entityManager);
             }
             return new SRepositoryImpl(entityInformation, revisionEntityInformation, entityManager);
         }
@@ -95,12 +98,7 @@ extends JpaRepositoryFactoryBean<SRepository<Object, Serializable, Integer>, Obj
         protected Class<?> getRepositoryBaseClass(final RepositoryMetadata metadata) {
             final Class<?> repositoryInterface = metadata.getRepositoryInterface();
             if (!SRepository.class.isAssignableFrom(repositoryInterface)) {
-                if (LOGGER.isTraceEnabled()) {
-                    LOGGER.trace(String
-                            .format("%s is not assignable from %s", repositoryInterface, SRepository.class
-                                    .getSimpleName()));
-                }
-                return super.getRepositoryBaseClass(metadata);
+                return SBasicRepositoryImpl.class;
             }
             return SRepositoryImpl.class;
         }

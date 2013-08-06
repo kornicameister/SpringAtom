@@ -50,6 +50,14 @@ public class SCarMasterServiceImpl
     private SCarMasterRepository repository;
 
     @Override
+    public SCarMaster withFullLoad(final SCarMaster obj) {
+        final BooleanExpression predicate = QSCar.sCar.carMaster.id.eq(obj.getId());
+        final List<SCar> sCars = (List<SCar>) this.carRepository.findAll(predicate);
+        obj.setChildren(sCars);
+        return obj;
+    }
+
+    @Override
     @Autowired
     public void autoWireRepository(final SCarMasterRepository repo) {
         super.autoWireRepository(repo);
@@ -57,17 +65,25 @@ public class SCarMasterServiceImpl
     }
 
     @Override
-    public List<SCarMaster> findByBrand(@NotNull final String... brand) {
+    public List<SCarMaster> findByBrand(
+            @NotNull
+            final String... brand) {
         return (List<SCarMaster>) this.repository.findAll(QSCarMaster.sCarMaster.manufacturingData.brand.in(brand));
     }
 
     @Override
-    public List<SCarMaster> findByModel(@NotNull final String... model) {
+    public List<SCarMaster> findByModel(
+            @NotNull
+            final String... model) {
         return (List<SCarMaster>) this.repository.findAll(QSCarMaster.sCarMaster.manufacturingData.model.in(model));
     }
 
     @Override
-    public SCarMaster findOne(@NotNull final String brand, @NotNull final String model) {
+    public SCarMaster findOne(
+            @NotNull
+            final String brand,
+            @NotNull
+            final String model) {
         final QSCarMasterManufacturingData manufacturingData = QSCarMaster.sCarMaster.manufacturingData;
         final BooleanExpression brandEq = manufacturingData.brand.eq(brand);
         final BooleanExpression modelEq = manufacturingData.model.eq(model);
@@ -75,7 +91,9 @@ public class SCarMasterServiceImpl
     }
 
     @Override
-    public List<SCar> findChildren(@NotNull final Long... masterId) {
+    public List<SCar> findChildren(
+            @NotNull
+            final Long... masterId) {
         return (List<SCar>) this.carRepository.findAll(QSCar.sCar.carMaster.id.in(masterId));
     }
 }

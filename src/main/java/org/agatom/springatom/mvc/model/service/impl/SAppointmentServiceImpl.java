@@ -27,6 +27,7 @@ import org.agatom.springatom.model.beans.appointment.QSAppointment;
 import org.agatom.springatom.model.beans.appointment.QSAppointmentTask;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
 import org.agatom.springatom.model.beans.appointment.SAppointmentTask;
+import org.agatom.springatom.model.beans.car.QSCar;
 import org.agatom.springatom.model.beans.car.SCar;
 import org.agatom.springatom.model.beans.links.SAppointmentWorkerLink;
 import org.agatom.springatom.model.beans.meta.QSMetaData;
@@ -45,7 +46,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nullable;
@@ -89,6 +89,32 @@ public class SAppointmentServiceImpl
     }
 
     @Override
+    public SAppointment withFullLoad(final SAppointment obj) {
+        final long idAppointment = obj.getId();
+
+        final QSAppointment qsAppointment = QSAppointment.sAppointment;
+        final QSCar qsCar = QSCar.sCar;
+
+        final QSCar qsCarAlis = new QSCar("app_car");
+        final QSAppointment qsAppointmentAlias = new QSAppointment("app");
+
+        final SCar car = this.carRepository
+                .createCustomQuery()
+                .from(qsCar, qsCarAlis)
+                .from(qsAppointment, qsAppointmentAlias)
+                .where(qsCarAlis.id.eq(qsCar.id).and(qsAppointmentAlias.id.eq(idAppointment)))
+                .fetchAll()
+                .singleResult(qsCar);
+        final Collection<SAppointmentTask> tasks = (Collection<SAppointmentTask>) this.taskRepository
+                .findAll(QSAppointmentTask.sAppointmentTask.appointment.id.eq(idAppointment));
+
+        obj.setTasks(tasks);
+        obj.setCar(car);
+
+        return obj;
+    }
+
+    @Override
     public SAppointment newAppointment(final ReadableInterval interval,
                                        final long carId,
                                        final long assigneeId,
@@ -124,8 +150,7 @@ public class SAppointmentServiceImpl
         return workerLink.getAppointment();
     }
 
-    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ, propagation = Propagation.REQUIRES_NEW)
-    protected SMechanic getMechanic(final long mechanicId) throws SEntityDoesNotExists {
+    private SMechanic getMechanic(final long mechanicId) throws SEntityDoesNotExists {
         final SMechanic mechanic = this.mechanicRepository.findOne(mechanicId);
         if (mechanic == null) {
             throw new SEntityDoesNotExists(SMechanic.class, mechanicId);
@@ -193,10 +218,7 @@ public class SAppointmentServiceImpl
                                 in(Longs.asList(tasksId))
                 )
         );
-        final SAppointment appointment = this.repository.findOne(idAppointment);
-        appointment.setTasks((Collection<SAppointmentTask>) this.taskRepository
-                .findAll(QSAppointmentTask.sAppointmentTask.appointment.id.eq(idAppointment)));
-        return appointment;
+        return this.repository.findOne(idAppointment);
     }
 
     @Override

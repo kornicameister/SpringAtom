@@ -36,7 +36,8 @@ import java.io.Serializable;
  */
 @NoRepositoryBean
 public interface SRepository<T, ID extends Serializable, N extends Number & Comparable<N>>
-        extends SBasicRepository<T, ID>, RevisionRepository<T, ID, N> {
+        extends SBasicRepository<T, ID>,
+                RevisionRepository<T, ID, N> {
     /**
      * {@code findInRevision} returns {@link Revision} of the target underlying target entity in the given revision
      * described in {@code revision} param
@@ -68,5 +69,13 @@ public interface SRepository<T, ID extends Serializable, N extends Number & Comp
 
     Revisions<N, T> findRevisions(final ID id, final DateTime dateTime, final Operators before);
 
+    /**
+     * Returns how many revisions exists for given {@link org.springframework.data.domain.Persistable#getId()} instance
+     *
+     * @param id
+     *         the id
+     *
+     * @return revisions amount
+     */
     long countRevisions(ID id);
 }

@@ -24,8 +24,6 @@
 package org.agatom.springatom.jpa.impl;
 
 import com.google.common.base.Preconditions;
-import com.mysema.query.jpa.JPQLQuery;
-import com.mysema.query.jpa.impl.JPAQuery;
 import org.agatom.springatom.jpa.SRepository;
 import org.apache.log4j.Logger;
 import org.hibernate.envers.*;
@@ -42,7 +40,6 @@ import org.springframework.data.history.Revision;
 import org.springframework.data.history.RevisionMetadata;
 import org.springframework.data.history.Revisions;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
-import org.springframework.data.jpa.repository.support.QueryDslJpaRepository;
 import org.springframework.data.repository.history.RevisionRepository;
 import org.springframework.data.repository.history.support.RevisionEntityInformation;
 
@@ -56,7 +53,7 @@ import java.util.*;
  * @since 0.0.1
  */
 public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comparable<N>>
-        extends QueryDslJpaRepository<T, ID>
+        extends SBasicRepositoryImpl<T, ID>
         implements SRepository<T, ID, N> {
     public static final  String ERROR_MESSAGE_INSUFFICIENT_REV_NUMBERS = "Insufficient revision numbers";
     private static final Logger LOGGER                                 = Logger.getLogger(SRepositoryImpl.class);
@@ -64,19 +61,15 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
     private static final String ERROR_MESSAGE_PAGEABLE                 = "Pageable must not be null";
     private static final String ERROR_MESSAGE_REVISION                 = "Revision must not be null";
     private static final String ERROR_MESSAGE_REI                      = "RevisionEntityInformation must not be null";
-    private final JpaEntityInformation<T, ID> entityInformation;
-    private final EntityManager               entityManager;
-    private final RevisionEntityInformation   revisionEntityInformation;
-    private final RevisionRepository          repository;
+    private final RevisionEntityInformation revisionEntityInformation;
+    private final RevisionRepository        repository;
 
     public SRepositoryImpl(final JpaEntityInformation<T, ID> entityInformation,
                            final RevisionEntityInformation revisionEntityInformation,
                            final EntityManager entityManager) {
         super(entityInformation, entityManager);
         Preconditions.checkArgument(revisionEntityInformation != null, ERROR_MESSAGE_REI);
-        this.entityInformation = entityInformation;
         this.revisionEntityInformation = revisionEntityInformation;
-        this.entityManager = entityManager;
         this.repository = new EnversRevisionRepositoryImpl<T, ID, N>(entityInformation, revisionEntityInformation, entityManager);
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(String
@@ -230,9 +223,5 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
                             .forRevisionsOfEntity(type, false, true)
                             .addProjection(AuditEntity.revisionNumber().count())
                             .getSingleResult();
-    }
-
-    public JPQLQuery createQuery() {
-        return new JPAQuery(this.entityManager);
     }
 }
