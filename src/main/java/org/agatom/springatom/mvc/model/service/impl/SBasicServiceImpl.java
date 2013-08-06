@@ -106,7 +106,7 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
     public List<T> withFullLoad(final Iterable<T> objects) {
         final List<T> tList = Lists.newArrayList();
         for (final T obj : objects) {
-            tList.add(obj);
+            tList.add(this.withFullLoad(obj));
         }
         return tList;
     }

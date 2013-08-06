@@ -95,14 +95,10 @@ public class SAppointmentServiceImpl
         final QSAppointment qsAppointment = QSAppointment.sAppointment;
         final QSCar qsCar = QSCar.sCar;
 
-        final QSCar qsCarAlis = new QSCar("app_car");
-        final QSAppointment qsAppointmentAlias = new QSAppointment("app");
-
         final SCar car = this.carRepository
                 .createCustomQuery()
-                .from(qsCar, qsCarAlis)
-                .from(qsAppointment, qsAppointmentAlias)
-                .where(qsCarAlis.id.eq(qsCar.id).and(qsAppointmentAlias.id.eq(idAppointment)))
+                .from(qsCar, qsAppointment)
+                .where(qsCar.id.eq(qsAppointment.car.id).and(qsAppointment.id.eq(idAppointment)))
                 .fetchAll()
                 .singleResult(qsCar);
         final Collection<SAppointmentTask> tasks = (Collection<SAppointmentTask>) this.taskRepository
