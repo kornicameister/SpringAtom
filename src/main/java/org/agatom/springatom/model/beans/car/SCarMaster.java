@@ -17,11 +17,13 @@
 
 package org.agatom.springatom.model.beans.car;
 
+import com.google.common.collect.Sets;
 import org.agatom.springatom.model.beans.PersistentObject;
 import org.agatom.springatom.model.beans.car.embeddable.SCarMasterManufacturingData;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,7 +42,8 @@ import java.util.Set;
                 insertable = true,
                 nullable = false)
 )
-public class SCarMaster extends PersistentObject<Long> {
+public class SCarMaster
+        extends PersistentObject<Long> {
     @Embedded
     private SCarMasterManufacturingData manufacturingData;
     @BatchSize(
@@ -86,8 +89,8 @@ public class SCarMaster extends PersistentObject<Long> {
         return children;
     }
 
-    public SCarMaster setChildren(final Set<SCar> children) {
-        this.children = children;
+    public SCarMaster setChildren(final Collection<SCar> children) {
+        this.children = Sets.newHashSet(children);
         return this;
     }
 }

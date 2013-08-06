@@ -38,8 +38,12 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
+ * {@code SAppointment} is the business object describing the appointment.
+ * <b>Appointment</b> is an object that can be placed in time and in particular assigned to the {@link SCar}.
+ * The business requirement dictates that it also holds the list od tasks ({@link SAppointmentTask}).
+ *
  * @author kornicamaister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @Entity(name = "SAppointment")
@@ -75,7 +79,7 @@ public class SAppointment
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<SAppointmentTask> tasks = Sets.newHashSet();
     @NotNull(message = CAR_NULL_MSG)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "car", referencedColumnName = "idScar")
     private SCar car;
 
