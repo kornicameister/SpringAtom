@@ -154,13 +154,14 @@ public class SAppointmentServiceImplTest
     public void test_B_NewAppointmentWithTasks() throws Exception {
         final List<SAppointment> tmpApps = new ArrayList<>();
         for (final MockAppointment mockAppointment : MOCKED_APP) {
-            final SAppointment appointment = this.appointmentService.newAppointment(
-                    mockAppointment.interval,
-                    mockAppointment.carId,
-                    mockAppointment.assigneeId,
-                    mockAppointment.assigneeId,
-                    mockAppointment.tasks
-            );
+            final SAppointment appointment = this.appointmentService
+                    .withFullLoad(this.appointmentService.newAppointment(
+                            mockAppointment.interval,
+                            mockAppointment.carId,
+                            mockAppointment.assigneeId,
+                            mockAppointment.assigneeId,
+                            mockAppointment.tasks
+                    ));
             Assert.assertNotNull(appointment);
             Assert.assertFalse(appointment.isNew());
             Assert.assertNotNull(appointment.getId());
@@ -182,9 +183,10 @@ public class SAppointmentServiceImplTest
         for (final SAppointment mockAppointment : APPS) {
             final int before = mockAppointment.getTasks().size();
             final SAppointment appointment = this.appointmentService
-                    .addTask(mockAppointment.getId(), new SAppointmentTaskDTO(
-                            SMetaDataEnum.SAT_NORMAL,
-                            String.format("Adding task for app=%d", mockAppointment.getId())));
+                    .withFullLoad(this.appointmentService
+                            .addTask(mockAppointment.getId(), new SAppointmentTaskDTO(
+                                    SMetaDataEnum.SAT_NORMAL,
+                                    String.format("Adding task for app=%d", mockAppointment.getId()))));
             final int after = appointment.getTasks().size();
             Assert.assertTrue(before < after);
         }
@@ -218,7 +220,9 @@ public class SAppointmentServiceImplTest
                 final int beforeTaskSize = beforeTask.size();
 
                 final SAppointment appointment = this.appointmentService
-                        .removeTask(appointmentId, this.extractIDS(entry.getValue()));
+                        .withFullLoad(this.appointmentService
+                                .removeTask(appointmentId, this.extractIDS(entry.getValue()))
+                        );
 
                 final int afterTaskSize = appointment.getTasks().size();
 
@@ -367,7 +371,27 @@ public class SAppointmentServiceImplTest
     }
 
     @Test
-    public void test_J_DeleteAll() throws Exception {
+    public void test_J_findByCar() throws Exception {
+        for (final Long carId : MOCKED_CARS.keySet()) {
+            final List<SAppointment> appointments = this.appointmentService
+                    .withFullLoad(
+                            this.appointmentService
+                                    .findByCar(carId)
+                    );
+            Assert.assertNotNull(appointments);
+            Assert.assertTrue(!appointments.isEmpty());
+            for (final SAppointment appointment : appointments) {
+                Assert.assertNotNull(appointment);
+                Assert.assertNotNull(appointment.getId());
+                Assert.assertFalse(appointment.isNew());
+                Assert.assertNotNull(appointment.getCar());
+                Assert.assertTrue(appointment.getCar().getId().equals(carId));
+            }
+        }
+    }
+
+    @Test
+    public void test_K_DeleteAll() throws Exception {
         this.appointmentService.deleteAll();
         final List<SAppointment> sAppointments = this.appointmentService.findAll();
         Assert.assertTrue(sAppointments.isEmpty());
