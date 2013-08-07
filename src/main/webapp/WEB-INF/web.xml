@@ -36,7 +36,7 @@
         </init-param>
         <init-param>
             <param-name>flushMode</param-name>
-            <param-value>AUTO</param-value>
+            <param-value>NEVER</param-value>
         </init-param>
     </filter>
     <filter-mapping>
