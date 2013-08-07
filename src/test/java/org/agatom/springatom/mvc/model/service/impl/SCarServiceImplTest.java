@@ -36,7 +36,8 @@ import java.util.*;
  */
 
 @FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
-public class SCarServiceImplTest extends AbstractCarTestCase {
+public class SCarServiceImplTest
+        extends AbstractCarTestCase {
 
 
     @Before
@@ -52,8 +53,8 @@ public class SCarServiceImplTest extends AbstractCarTestCase {
 
         int it = 0;
         for (final MockCar mockedCar : MOCK_CARS) {
-            final String licencePlate = String.format("E%dKRZ", it++);
-            final String vinNumber = String.valueOf(mockedCar.hashCode());
+            final String licencePlate = mockedCar.licencePlate;
+            final String vinNumber = String.valueOf(mockedCar.vinNumber);
             final Long ownerId = C_1.getId();
             list.add(this.carService
                     .newCar(mockedCar.mockMaster.brand, mockedCar.mockMaster.model, licencePlate, vinNumber, ownerId));
