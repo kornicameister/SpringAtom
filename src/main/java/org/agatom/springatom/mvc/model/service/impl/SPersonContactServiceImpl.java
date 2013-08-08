@@ -46,7 +46,7 @@ public class SPersonContactServiceImpl
     private SPersonContactRepository repository;
 
     @Override
-    public List<SPersonContact> findByAssigned(final Long idAssigned) {
+    public List<SPersonContact> findByAssigned(final long idAssigned) {
         return (List<SPersonContact>) this.repository
                 .findAll(QSPersonContact.sPersonContact.assigned.id.eq(idAssigned));
     }

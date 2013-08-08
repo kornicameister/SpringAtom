@@ -32,4 +32,12 @@
           lazy-init="false"
           scope="singleton"
           class="org.agatom.springatom.aspects.SSystemArchitecture"/>
+
+    <!-- validator -->
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+    <bean id="validatorPostProcessor"
+          class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
+    <!-- validator -->
+
 </beans>

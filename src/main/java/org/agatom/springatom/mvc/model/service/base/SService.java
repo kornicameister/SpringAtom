@@ -24,6 +24,7 @@ import org.springframework.data.history.Revision;
 import org.springframework.data.history.Revisions;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -42,18 +43,38 @@ public interface SService<
         R extends JpaRepository>
         extends SBasicService<T, ID, R> {
 
-    Revision<N, T> findFirstRevision(final ID id);
+    Revision<N, T> findFirstRevision(
+            @NotNull
+            final ID id);
 
-    Revisions<N, T> findAllRevisions(final ID id);
+    Revisions<N, T> findAllRevisions(
+            @NotNull
+            final ID id);
 
-    Revision<N, T> findLatestRevision(final ID id);
+    Revision<N, T> findLatestRevision(
+            @NotNull
+            final ID id);
 
-    long countRevisions(final ID id);
+    long countRevisions(
+            @NotNull
+            final ID id);
 
-    Revisions<N, T> findModifiedBefore(final ID id, final DateTime dateTime) throws EntityInRevisionDoesNotExists;
+    Revisions<N, T> findModifiedBefore(
+            @NotNull
+            final ID id,
+            @NotNull
+            final DateTime dateTime) throws EntityInRevisionDoesNotExists;
 
-    Revisions<N, T> findModifiedAfter(final ID id, final DateTime dateTime) throws EntityInRevisionDoesNotExists;
+    Revisions<N, T> findModifiedAfter(
+            @NotNull
+            final ID id,
+            @NotNull
+            final DateTime dateTime) throws EntityInRevisionDoesNotExists;
 
-    Revisions<N, T> findModifiedAt(final ID id, final DateTime dateTime) throws EntityInRevisionDoesNotExists;
+    Revisions<N, T> findModifiedAt(
+            @NotNull
+            final ID id,
+            @NotNull
+            final DateTime dateTime) throws EntityInRevisionDoesNotExists;
 
 }

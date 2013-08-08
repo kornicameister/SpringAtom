@@ -23,7 +23,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -44,6 +46,7 @@ import java.util.List;
  * @since 0.0.1
  */
 
+@Validated
 public interface SBasicService<T extends Persistable, ID extends Serializable, R extends JpaRepository> {
     /**
      * Method implemented by services with {@link org.springframework.beans.factory.annotation.Autowired} annotation to
@@ -63,6 +66,7 @@ public interface SBasicService<T extends Persistable, ID extends Serializable, R
      *
      * @return the entity with the given {@code ID}
      */
+    @NotNull
     T findOne(ID id);
 
     /**
@@ -70,8 +74,10 @@ public interface SBasicService<T extends Persistable, ID extends Serializable, R
      *
      * @return all entities of the {@code SBasicService}'s domain class
      */
+    @NotNull
     List<T> findAll();
 
+    @NotNull
     Page<T> findAll(final Pageable pageable);
 
     /**
@@ -84,14 +90,17 @@ public interface SBasicService<T extends Persistable, ID extends Serializable, R
      *
      * @return persisted entity
      */
-    T save(final T persistable);
+    @NotNull
+    T save(final
+           @NotNull
+           T persistable);
 
     /**
      * Returns how many objects of {@code SBasicService}'s <b>domain class</b> exists
      *
      * @return row count
      */
-    Long count();
+    long count();
 
     /**
      * Deletes only one entity of {@code SBasicService}'s <b>domain class</b> for given {@code ID}
@@ -106,7 +115,13 @@ public interface SBasicService<T extends Persistable, ID extends Serializable, R
      */
     void deleteAll();
 
-    T withFullLoad(T obj);
+    @NotNull
+    T withFullLoad(
+            @NotNull
+            T obj);
 
-    List<T> withFullLoad(Iterable<T> objects);
+    @NotNull
+    List<T> withFullLoad(
+            @NotNull
+            Iterable<T> objects);
 }

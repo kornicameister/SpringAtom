@@ -33,8 +33,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * @author Tomasz
  * @version 0.0.1
@@ -59,13 +57,9 @@ public class SClientServiceImpl
     @Override
     @Transactional(rollbackFor = SEntityDoesNotExists.class)
     public SClientProblemReport newProblemReport(
-            @NotNull
             final String problem,
-            @NotNull
-            final Long clientPk,
-            @NotNull
-            final Long mechanicPk,
-            @NotNull
+            final long clientPk,
+            final long mechanicPk,
             final SMetaDataEnum metaType) throws
             SEntityDoesNotExists {
 

@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * @since 0.0.1
  */
 public class RegexpPatterns {
-    public static final String BIG_FIRST_LETTER_PATTERN = "^[A-Z].*$";
+    public static final String BIG_FIRST_LETTER_PATTERN = "^([A-Z]|[0-9]).*$";
 
     public static boolean matches(final String value, final String regex) {
         final Pattern pattern = Pattern.compile(regex);

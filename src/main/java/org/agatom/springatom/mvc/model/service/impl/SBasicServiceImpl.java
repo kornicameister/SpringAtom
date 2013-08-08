@@ -80,7 +80,7 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
     }
 
     @Override
-    public Long count() {
+    public long count() {
         return this.basicRepository.count();
     }
 

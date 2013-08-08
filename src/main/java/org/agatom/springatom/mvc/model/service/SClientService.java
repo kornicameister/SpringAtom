@@ -36,10 +36,8 @@ public interface SClientService
     SClientProblemReport newProblemReport(
             @NotNull
             final String problem,
-            @NotNull
-            final Long client,
-            @NotNull
-            final Long mechanic,
+            final long client,
+            final long mechanic,
             @NotNull
             final SMetaDataEnum problemReportType) throws SEntityDoesNotExists;
 }

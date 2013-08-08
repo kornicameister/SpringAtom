@@ -26,6 +26,8 @@ import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
 import org.agatom.springatom.model.types.contact.SContact;
 import org.agatom.springatom.mvc.model.exceptions.SEntityDoesNotExists;
 import org.agatom.springatom.mvc.model.service.base.SService;
+import org.agatom.springatom.mvc.model.service.constraints.PhoneNumber;
+import org.hibernate.validator.constraints.Email;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.validation.constraints.NotNull;
@@ -40,36 +42,31 @@ public interface SPersonService<T extends SPerson, R extends JpaRepository>
         extends SService<T, Long, Integer, R> {
 
     SPersonPhoneContact newPhone(
-            @NotNull
+            @PhoneNumber
             final String contact,
-            @NotNull
-            final Long assignTo) throws SEntityDoesNotExists;
+            final long assignTo) throws SEntityDoesNotExists;
 
     SContact newContactData(
             @NotNull
             final String contact,
-            @NotNull
-            final Long assignTo,
+            final long assignTo,
             @NotNull
             final SContact assignToContact) throws SEntityDoesNotExists;
 
     SPersonEmailContact newEmail(
-            @NotNull
+            @Email
             final String contact,
-            @NotNull
-            final Long assignTo) throws SEntityDoesNotExists;
+            final long assignTo) throws SEntityDoesNotExists;
 
     SPersonCellPhoneContact newCellPhone(
-            @NotNull
+            @PhoneNumber
             final String contact,
-            @NotNull
-            final Long assignTo) throws SEntityDoesNotExists;
+            final long assignTo) throws SEntityDoesNotExists;
 
     SPersonFaxContact newFax(
-            @NotNull
+            @PhoneNumber
             final String contact,
-            @NotNull
-            final Long assignTo) throws SEntityDoesNotExists;
+            final long assignTo) throws SEntityDoesNotExists;
 
     <X extends SContact> List<X> findAllContacts(final Long idClient);
 

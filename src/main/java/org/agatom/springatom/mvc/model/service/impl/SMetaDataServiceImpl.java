@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -50,25 +49,19 @@ public class SMetaDataServiceImpl
 
     @Override
     @Cacheable(value = "typedata")
-    public List<SMetaData> findAll(
-            @NotNull
-            final Class<? extends SMetaData> clazz) {
+    public List<SMetaData> findAll(final Class<? extends SMetaData> clazz) {
         return (List<SMetaData>) this.repository.findAll(QSMetaData.sMetaData.instanceOf(clazz));
     }
 
     @Override
     @Cacheable(value = "typedata")
-    public SMetaData findByType(
-            @NotNull
-            final SMetaDataEnum type) {
+    public SMetaData findByType(final SMetaDataEnum type) {
         return this.repository.findOne(QSMetaData.sMetaData.type.eq(type));
     }
 
     @Override
     @Cacheable(value = "typedata", key = "metaDataCapable.getMetaInformation().getType()")
-    public List<SMetaData> findEquivalences(
-            @NotNull
-            final SMetaDataHolder metaDataCapable) {
+    public List<SMetaData> findEquivalences(final SMetaDataHolder metaDataCapable) {
         final SMetaData sMetaData = (SMetaData) metaDataCapable.getMetaInformation();
         return (List<SMetaData>) this.repository.findAll(QSMetaData.sMetaData.instanceOf(sMetaData.getClass()));
     }

@@ -21,6 +21,7 @@ import org.agatom.springatom.jpa.repositories.SCarMasterRepository;
 import org.agatom.springatom.model.beans.car.SCar;
 import org.agatom.springatom.model.beans.car.SCarMaster;
 import org.agatom.springatom.mvc.model.service.base.SBasicService;
+import org.agatom.springatom.mvc.model.service.constraints.BrandOrModel;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -32,18 +33,19 @@ import java.util.List;
  */
 public interface SCarMasterService
         extends SBasicService<SCarMaster, Long, SCarMasterRepository> {
+
     List<SCarMaster> findByBrand(
-            @NotNull
+            @BrandOrModel
             final String... brand);
 
     List<SCarMaster> findByModel(
-            @NotNull
+            @BrandOrModel
             final String... model);
 
     SCarMaster findOne(
-            @NotNull
+            @BrandOrModel
             final String brand,
-            @NotNull
+            @BrandOrModel
             final String model);
 
     List<SCar> findChildren(

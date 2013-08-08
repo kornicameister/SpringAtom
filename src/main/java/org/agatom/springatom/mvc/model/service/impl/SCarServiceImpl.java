@@ -41,7 +41,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -71,19 +70,11 @@ public class SCarServiceImpl
 
     @Override
     @CacheEvict(value = "cars", allEntries = true, beforeInvocation = true)
-    public List<SCar> findByMaster(
-            @NotNull
-            final String brand,
-            @NotNull
-            final String model) {
+    public List<SCar> findByMaster(final String brand, final String model) {
         return (List<SCar>) this.repository.findAll(QSCar.sCar.carMaster.eq(this.getMaster(brand, model)));
     }
 
-    private SCarMaster getMaster(
-            @NotNull
-            final String brand,
-            @NotNull
-            final String model) {
+    private SCarMaster getMaster(final String brand, final String model) {
         final QSCarMasterManufacturingData manufacturingData = QSCarMaster.sCarMaster.manufacturingData;
         final BooleanExpression brandEq = manufacturingData.brand.eq(brand);
         final BooleanExpression modelEq = manufacturingData.model.eq(model);
@@ -92,17 +83,13 @@ public class SCarServiceImpl
 
     @Override
     @CacheEvict(value = "cars", allEntries = true, beforeInvocation = true)
-    public List<SCar> findByMaster(
-            @NotNull
-            final Long... masterId) {
+    public List<SCar> findByMaster(final Long... masterId) {
         return (List<SCar>) this.repository.findAll(QSCar.sCar.carMaster.id.in(masterId));
     }
 
     @Override
     @Cacheable(value = "cars", key = "#carId")
-    public SCarMaster findMaster(
-            @NotNull
-            final Long carId) {
+    public SCarMaster findMaster(final long carId) {
         return this.masterService.findOne(QSCarMaster.sCarMaster.children.any().id.eq(carId));
     }
 
@@ -114,11 +101,7 @@ public class SCarServiceImpl
             propagation = Propagation.SUPPORTS,
             rollbackFor = SUnambiguousResultException.class
     )
-    public List<SCar> findBy(
-            @NotNull
-            final SCarAttribute attribute,
-            @NotNull
-            final Object value) throws
+    public List<SCar> findBy(final SCarAttribute attribute, final Object value) throws
             SUnambiguousResultException {
         final List<SCar> cars = (List<SCar>) this.repository.findAll(attribute.eq(value));
         switch (attribute) {
@@ -139,17 +122,8 @@ public class SCarServiceImpl
 
     @Override
     @Transactional(readOnly = false, rollbackFor = SEntityDoesNotExists.class) //TODO figure out possible exceptions
-    public SCar newCar(
-            @NotNull
-            final String brand,
-            @NotNull
-            final String model,
-            @NotNull
-            final String licencePlate,
-            @NotNull
-            final String vinNumber,
-            @NotNull
-            final Long ownerId) throws SEntityDoesNotExists {
+    public SCar newCar(final String brand, final String model, final String licencePlate, final String vinNumber, final long ownerId) throws
+            SEntityDoesNotExists {
 
         final SClient owner = this.getOwner(ownerId);
         final SCarMaster sCarMaster = this.getOrPersistMaster(brand, model);
@@ -207,12 +181,8 @@ public class SCarServiceImpl
     @CacheEvict(key = "#idClient",
             value = "clients",
             beforeInvocation = true)
-    public SCar newOwner(
-            @NotNull
-            final Long idCar,
-            @NotNull
-            final Long idClient) throws
-            SEntityDoesNotExists {
+    public SCar newOwner(final long idCar, final long idClient) throws
+    SEntityDoesNotExists {
         final SCar car = this.findOne(idCar);
         final SClient owner = this.getOwner(idClient);
         if (car == null) {

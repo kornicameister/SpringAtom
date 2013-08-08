@@ -38,7 +38,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -68,11 +67,7 @@ abstract class SPersonServiceImpl<T extends SPerson, R extends JpaRepository>
 
     @Override
     @Transactional(propagation = Propagation.NEVER)
-    public SPersonPhoneContact newPhone(
-            @NotNull
-            final String contact,
-            @NotNull
-            final Long client) throws SEntityDoesNotExists {
+    public SPersonPhoneContact newPhone(final String contact, final long client) throws SEntityDoesNotExists {
         return (SPersonPhoneContact) this.newContactData(contact, client, SMetaDataEnum.SCT_PHONE);
     }
 
@@ -81,13 +76,8 @@ abstract class SPersonServiceImpl<T extends SPerson, R extends JpaRepository>
             isolation = Isolation.SERIALIZABLE,
             propagation = Propagation.SUPPORTS,
             rollbackFor = SEntityDoesNotExists.class)
-    public SContact newContactData(
-            @NotNull
-            final String value,
-            @NotNull
-            final Long clientPk,
-            @NotNull
-            final SContact clientContact) throws SEntityDoesNotExists {
+    public SContact newContactData(final String value, final long clientPk,
+                                   final SContact clientContact) throws SEntityDoesNotExists {
         final SPerson client = (SPerson) this.revRepo.findOne(clientPk);
 
         if (client == null) {
@@ -102,31 +92,19 @@ abstract class SPersonServiceImpl<T extends SPerson, R extends JpaRepository>
 
     @Override
     @Transactional(propagation = Propagation.NEVER)
-    public SPersonEmailContact newEmail(
-            @NotNull
-            final String contact,
-            @NotNull
-            final Long client) throws SEntityDoesNotExists {
+    public SPersonEmailContact newEmail(final String contact, final long client) throws SEntityDoesNotExists {
         return (SPersonEmailContact) this.newContactData(contact, client, SMetaDataEnum.SCT_MAIL);
     }
 
     @Override
     @Transactional(propagation = Propagation.NEVER)
-    public SPersonCellPhoneContact newCellPhone(
-            @NotNull
-            final String contact,
-            @NotNull
-            final Long client) throws SEntityDoesNotExists {
+    public SPersonCellPhoneContact newCellPhone(final String contact, final long client) throws SEntityDoesNotExists {
         return (SPersonCellPhoneContact) this.newContactData(contact, client, SMetaDataEnum.SCT_CELL_PHONE);
     }
 
     @Override
     @Transactional(propagation = Propagation.NEVER)
-    public SPersonFaxContact newFax(
-            @NotNull
-            final String contact,
-            @NotNull
-            final Long client) throws SEntityDoesNotExists {
+    public SPersonFaxContact newFax(final String contact, final long client) throws SEntityDoesNotExists {
         return (SPersonFaxContact) this.newContactData(contact, client, SMetaDataEnum.SCT_FAX);
     }
 
@@ -137,33 +115,25 @@ abstract class SPersonServiceImpl<T extends SPerson, R extends JpaRepository>
     }
 
     @Override
-    public List<T> findByPersonalInformation(
-            @NotNull
-            final SPersonalInformation information) {
+    public List<T> findByPersonalInformation(final SPersonalInformation information) {
         return (List<T>) this.revRepo.findAll(QSPerson.sPerson.information.eq(information));
     }
 
     @Override
     @CacheEvict(value = "clients", key = "#firstName", beforeInvocation = true)
-    public List<T> findByFirstName(
-            @NotNull
-            final String firstName) {
+    public List<T> findByFirstName(final String firstName) {
         return (List<T>) this.revRepo.findAll(QSPerson.sPerson.information.firstName.eq(firstName));
     }
 
     @Override
     @CacheEvict(value = "clients", key = "#lastName", beforeInvocation = true)
-    public List<T> findByLastName(
-            @NotNull
-            final String lastName) {
+    public List<T> findByLastName(final String lastName) {
         return (List<T>) this.revRepo.findAll(QSPerson.sPerson.information.lastName.eq(lastName));
     }
 
     @Override
     @CacheEvict(value = "clients", key = "#email", beforeInvocation = true)
-    public T findByEmail(
-            @NotNull
-            final String email) {
+    public T findByEmail(final String email) {
         return (T) this.revRepo.findOne(QSPerson.sPerson.primaryMail.eq(email));
     }
 

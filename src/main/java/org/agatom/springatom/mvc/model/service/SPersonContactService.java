@@ -22,6 +22,7 @@ import org.agatom.springatom.model.beans.person.contact.SPersonContact;
 import org.agatom.springatom.model.types.contact.SContact;
 import org.agatom.springatom.mvc.model.service.base.SBasicService;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -39,5 +40,6 @@ public interface SPersonContactService
      *
      * @return the list of all {@link SContact}s for given {@code SMultiContactable}
      */
-    List<SPersonContact> findByAssigned(Long idAssigned);
+    @NotNull
+    List<SPersonContact> findByAssigned(final long idAssigned);
 }

@@ -28,6 +28,7 @@ import org.joda.time.DateTime;
 import org.joda.time.ReadableDuration;
 import org.joda.time.ReadableInterval;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -37,32 +38,43 @@ import java.util.List;
  */
 public interface SAppointmentService
         extends SBasicService<SAppointment, Long, SAppointmentRepository> {
+    @NotNull
     SAppointment newAppointment(final ReadableInterval interval,
                                 final long carId,
                                 final long assigneeId,
                                 final long reporterId,
                                 final SAppointmentTaskDTO... tasks) throws SException;
 
+    @NotNull
     SAppointment addTask(final long idAppointment,
                          final SAppointmentTaskDTO... tasks) throws SEntityDoesNotExists;
 
+    @NotNull
     List<SAppointmentTask> findTasks(final long idAppointment);
 
+    @NotNull
     SAppointment removeTask(final long idAppointment, final long... tasksId) throws SEntityDoesNotExists;
 
+    @NotNull
     SAppointment findByTask(final long... tasks);
 
+    @NotNull
     List<SAppointment> findByCar(final long carId);
 
+    @NotNull
     List<SAppointment> findBetween(final DateTime startDate, final DateTime endDate);
 
+    @NotNull
     List<SAppointment> findLater(final DateTime dateTime);
 
+    @NotNull
     List<SAppointment> findEarlier(final DateTime dateTime);
 
+    @NotNull
     SAppointment postponeToFuture(final long idAppointment, final ReadableDuration duration) throws
             SException;
 
+    @NotNull
     SAppointment postponeToPast(final long idAppointment, final ReadableDuration duration) throws
             SException;
 }

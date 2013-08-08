@@ -28,7 +28,11 @@ import org.agatom.springatom.model.beans.car.SCarMaster;
 import org.agatom.springatom.mvc.model.exceptions.SEntityDoesNotExists;
 import org.agatom.springatom.mvc.model.exceptions.SUnambiguousResultException;
 import org.agatom.springatom.mvc.model.service.base.SService;
+import org.agatom.springatom.mvc.model.service.constraints.BrandOrModel;
+import org.agatom.springatom.mvc.model.service.constraints.LicencePlatePL;
+import org.agatom.springatom.mvc.model.service.constraints.VinNumber;
 import org.agatom.springatom.mvc.model.service.impl.SCarServiceImpl;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -41,20 +45,23 @@ import java.util.List;
 
 public interface SCarService
         extends SService<SCar, Long, Integer, SCarRepository> {
+    @NotNull
     List<SCar> findByMaster(
-            @NotNull
+            @BrandOrModel
             final String brand,
-            @NotNull
+            @BrandOrModel
             final String model);
 
+    @NotNull
     List<SCar> findByMaster(
             @NotNull
+            @NotEmpty
             final Long... masterId);
 
-    SCarMaster findMaster(
-            @NotNull
-            final Long carId);
+    @NotNull
+    SCarMaster findMaster(final long carId);
 
+    @NotNull
     List<SCar> findBy(
             @NotNull
             final SCarAttribute attribute,
@@ -62,23 +69,22 @@ public interface SCarService
             final Object value) throws
             SUnambiguousResultException;
 
+    @NotNull
     SCar newCar(
-            @NotNull
+            @BrandOrModel
             final String brand,
-            @NotNull
+            @BrandOrModel
             final String model,
-            @NotNull
+            @LicencePlatePL
             final String licencePlate,
-            @NotNull
+            @VinNumber
             final String vinNumber,
-            @NotNull
-            final Long ownerId) throws SEntityDoesNotExists;
+            final long ownerId) throws SEntityDoesNotExists;
 
+    @NotNull
     SCar newOwner(
-            @NotNull
-            final Long idCar,
-            @NotNull
-            final Long idClient) throws SEntityDoesNotExists, SCarServiceImpl.InvalidOwnerException;
+            final long idCar,
+            final long idClient) throws SEntityDoesNotExists, SCarServiceImpl.InvalidOwnerException;
 
     public static enum SCarAttribute {
         LICENCE_PLATE(QSCar.sCar.licencePlate),
