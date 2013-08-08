@@ -72,19 +72,7 @@ abstract public class SBasicContact<SC_H extends PersistentContactable>
                                      @NotNull
                                      @NotEmpty
                                      String contact) {
-        this.contact = this.setWithValidation(contact);
+        this.contact = contact;
         return this;
     }
-
-    /**
-     * Method is implemented by consecutive subclasses with following benefit.
-     * Each class marks the attribute {@code contact} with appropriate annotations,
-     * that is further used by one of the validators.r
-     *
-     * @param contact
-     *         contact to be set
-     *
-     * @return validated contact
-     */
-    protected abstract String setWithValidation(final String contact);
 }

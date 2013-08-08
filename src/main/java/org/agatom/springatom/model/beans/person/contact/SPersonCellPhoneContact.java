@@ -18,7 +18,6 @@
 package org.agatom.springatom.model.beans.person.contact;
 
 import org.agatom.springatom.model.types.meta.SMetaDataEnum;
-import org.agatom.springatom.model.validators.CellPhoneNumber;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -33,13 +32,6 @@ import javax.persistence.Entity;
 final public class SPersonCellPhoneContact
         extends SPersonContact {
     public static final String DISC = "p>cellphone";
-
-    @Override
-    protected String setWithValidation(final
-                                       @CellPhoneNumber
-                                       String contact) {
-        return contact;
-    }
 
     @Override
     public SMetaDataEnum getType() {

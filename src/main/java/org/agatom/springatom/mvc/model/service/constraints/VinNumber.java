@@ -15,35 +15,48 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.validators.impl;
+package org.agatom.springatom.mvc.model.service.constraints;
 
-import org.agatom.springatom.model.validators.LicencePlatePL;
-import org.apache.log4j.Logger;
+import org.agatom.springatom.mvc.model.service.constraints.impl.VinNumberValidator;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import javax.validation.ReportAsSingleViolation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.*;
 
 /**
+ * {@code LicencePlatePL} is the annotation used to validate any {@code String} againts being
+ * validate value for licence plates in <b>Poland</b>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class LicencePlatePLValidator
-        implements ConstraintValidator<LicencePlatePL, String> {
-    private static final Logger LOGGER = Logger.getLogger(LicencePlatePLValidator.class);
 
-    @Override
-    public void initialize(final LicencePlatePL constraintAnnotation) {
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace(String.format("%s initialized",
-                    LicencePlatePLValidator.class.getSimpleName()
-            ));
-        }
-    }
+//business-logic
+@NotEmpty
+@Length(
+        min = 17,
+        max = 17,
+        message = "VinNumber valid length is 17 character"
+)
+//business-logic
+@Target(value = {METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
+@Retention(value = RetentionPolicy.RUNTIME)
+@Documented
+@Constraint(validatedBy = VinNumberValidator.class)
+@ReportAsSingleViolation
+public @interface VinNumber {
+    String message() default "{org.agatom.springatom.mvc.model.service.constraints.VinNumber}";
 
-    @Override
-    public boolean isValid(final String licencePlate, final ConstraintValidatorContext context) {
-        //TODO add validating licence plates
-        return true;
-    }
+    Class<?>[] groups() default {};
+
+    @Deprecated Class<? extends Payload>[] payload() default {};
 }

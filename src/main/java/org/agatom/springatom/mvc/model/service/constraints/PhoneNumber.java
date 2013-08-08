@@ -15,17 +15,17 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.validators;
+package org.agatom.springatom.mvc.model.service.constraints;
 
-import org.agatom.springatom.model.validators.impl.LicencePlatePLValidator;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import javax.validation.ReportAsSingleViolation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.lang.annotation.*;
 
 import static java.lang.annotation.ElementType.*;
 
@@ -37,13 +37,32 @@ import static java.lang.annotation.ElementType.*;
  * @version 0.0.1
  * @since 0.0.1
  */
+
+//business-logic
+@NotNull
+@NotEmpty
+@Length(
+        min = 4,
+        max = 16,
+        message = "Invalid phone number length"
+)
+@Pattern(
+        regexp = "^(\\+\\(?\\d{1,2}\\)?\\s)?" +         //area code
+                "((\\d{7,9})|" +                        //no whitespaces, no dashes
+                "((\\d{3}(-|\\s)){2}\\d{3})|" +         //home number
+                "(\\d{3}(-|\\s)\\d{2}(-|\\s)\\d{2}))$", //cell phone number
+        flags = Pattern.Flag.CASE_INSENSITIVE,
+        message = "Invalid phone number format"
+)
+//business-logic
 @Target(value = {METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
 @Retention(value = RetentionPolicy.RUNTIME)
+@Inherited
 @Documented
-@Constraint(validatedBy = LicencePlatePLValidator.class)
+@Constraint(validatedBy = {})
 @ReportAsSingleViolation
-public @interface FaxNumber {
-    String message() default "{org.agatom.springatom.model.validators.FaxNumber}";
+public @interface PhoneNumber {
+    String message() default "{org.agatom.springatom.mvc.model.service.constraints.PhoneNumber}";
 
     Class<?>[] groups() default {};
 

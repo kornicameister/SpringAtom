@@ -15,18 +15,14 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.model.validators;
+package org.agatom.springatom.mvc.model.service.constraints;
 
-import org.agatom.springatom.model.validators.impl.LicencePlatePLValidator;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length;
 
-import javax.validation.Constraint;
 import javax.validation.Payload;
 import javax.validation.ReportAsSingleViolation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.validation.constraints.Pattern;
+import java.lang.annotation.*;
 
 import static java.lang.annotation.ElementType.*;
 
@@ -38,14 +34,26 @@ import static java.lang.annotation.ElementType.*;
  * @version 0.0.1
  * @since 0.0.1
  */
-@NotEmpty
+
+//business-logic
+@Length(
+        min = 3,
+        max = 8,
+        message = "Invalid licence plate length"
+)
+@Pattern(
+        regexp = "^(\\w{2}\\s\\w{1,5})|(\\w{3}\\s\\w{1,4})$",
+        flags = Pattern.Flag.CASE_INSENSITIVE,
+        message = "Invalid licence plate format"
+)
+//business-logic
 @Target(value = {METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
 @Retention(value = RetentionPolicy.RUNTIME)
+@Inherited
 @Documented
-@Constraint(validatedBy = LicencePlatePLValidator.class)
 @ReportAsSingleViolation
-public @interface CellPhoneNumber {
-    String message() default "{org.agatom.springatom.model.validators.CellPhoneNumber}";
+public @interface LicencePlatePL {
+    String message() default "{org.agatom.springatom.mvc.model.service.constraints.LicencePlatePL}";
 
     Class<?>[] groups() default {};
 

@@ -18,7 +18,7 @@
 package org.agatom.springatom.model.beans.person.contact;
 
 import org.agatom.springatom.model.types.meta.SMetaDataEnum;
-import org.agatom.springatom.model.validators.FaxNumber;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -29,18 +29,11 @@ import javax.persistence.Entity;
  * @since 0.0.1
  */
 @Entity
+@Validated
 @DiscriminatorValue(value = SPersonFaxContact.DISC)
 final public class SPersonFaxContact
         extends SPersonContact {
     public static final String DISC = "p>fax";
-
-    @Override
-    protected String setWithValidation(final
-                                       @FaxNumber
-                                       String contact) {
-        return contact;
-    }
-
     @Override
     public SMetaDataEnum getType() {
         return SMetaDataEnum.SCT_FAX;

@@ -19,8 +19,6 @@ package org.agatom.springatom.model.beans.car;
 
 import org.agatom.springatom.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.model.beans.person.client.SClient;
-import org.agatom.springatom.model.validators.LicencePlatePL;
-import org.agatom.springatom.model.validators.VinNumber;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -57,11 +55,11 @@ public class SCar
     @JoinColumn(name = "owner", referencedColumnName = "idSClient", updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private SClient    owner;
-    @NaturalId(mutable = true)
     @Column(nullable = false, length = 45, name = "licencePlate", unique = true)
-    private String     licencePlate;
     @NaturalId(mutable = true)
-    @Column(nullable = false, length = 45, name = "vinNumber", unique = true)
+    private String     licencePlate;
+    @Column(nullable = false, length = 17, name = "vinNumber", unique = true)
+    @NaturalId(mutable = true)
     private String     vinNumber;
 
     public SCarMaster getCarMaster() {
@@ -77,9 +75,7 @@ public class SCar
         return licencePlate;
     }
 
-    public SCar setLicencePlate(final
-                                @LicencePlatePL
-                                String registrationNumber) {
+    public SCar setLicencePlate(final String registrationNumber) {
         this.licencePlate = registrationNumber;
         return this;
     }
@@ -88,9 +84,7 @@ public class SCar
         return vinNumber;
     }
 
-    public SCar setVinNumber(final
-                             @VinNumber
-                             String vinNumber) {
+    public SCar setVinNumber(final String vinNumber) {
         this.vinNumber = vinNumber;
         return this;
     }

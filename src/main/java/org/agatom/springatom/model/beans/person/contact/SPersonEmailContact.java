@@ -19,7 +19,6 @@ package org.agatom.springatom.model.beans.person.contact;
 
 import org.agatom.springatom.model.types.meta.SMetaDataEnum;
 import org.hibernate.annotations.DiscriminatorOptions;
-import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -35,13 +34,6 @@ import javax.persistence.Entity;
 final public class SPersonEmailContact
         extends SPersonContact {
     public static final String DISC = "p>mail";
-
-    @Override
-    protected String setWithValidation(final
-                                       @Email
-                                       String contact) {
-        return contact;
-    }
 
     @Override
     public SMetaDataEnum getType() {
