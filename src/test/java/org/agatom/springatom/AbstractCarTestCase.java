@@ -32,11 +32,20 @@ import java.util.Map;
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class AbstractCarTestCase extends AbstractTestCaseWithClient {
+abstract public class AbstractCarTestCase
+        extends AbstractTestCaseWithClient {
 
     protected static final List<MockCar>   MOCK_CARS              = new ArrayList<>();
     protected static       Long            MOCKED_MASTER_DISTINCT = null;
     protected static       Map<Long, SCar> MOCKED_CARS            = null;
+    protected static       String[]        VINS                   = new String[]{
+            "1GTFC24C5CF678861",
+            "1GT5C0BG4AZ041882",
+            "WDBRF61J11F925139",
+            "1FTPX12544N854472",
+            "2S3TC52CXX6784490"
+
+    };
     protected static List<MockMaster>  MOCKED_MASTERS;
     @Autowired
     protected        SCarService       carService;
@@ -58,8 +67,8 @@ abstract public class AbstractCarTestCase extends AbstractTestCaseWithClient {
 
         int it = 0;
         for (final MockMaster mockMaster : MOCKED_MASTERS) {
-            final String licencePlate = String.format("E%dKRZ", it++);
-            final String vinNumber = String.valueOf(mockMaster.hashCode());
+            final String licencePlate = String.format("E%d KRZ", it);
+            final String vinNumber = String.valueOf(VINS[it++]);
             final Long ownerId = C_1.getId();
             MOCK_CARS.add(new MockCar(licencePlate, vinNumber, ownerId, mockMaster));
         }

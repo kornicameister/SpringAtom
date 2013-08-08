@@ -95,8 +95,8 @@ public class SAppointmentServiceImplTest
 
             int it = 0;
             for (final MockCar mockedCar : MOCK_CARS) {
-                final String licencePlate = String.format("E%dKRZ", it++);
-                final String vinNumber = String.valueOf(mockedCar.hashCode());
+                final String licencePlate = mockedCar.licencePlate;
+                final String vinNumber = mockedCar.vinNumber;
                 final Long ownerId = C_1.getId();
                 list.add(this.carService
                         .newCar(mockedCar.mockMaster.brand, mockedCar.mockMaster.model, licencePlate, vinNumber, ownerId));
