@@ -18,15 +18,15 @@
 package org.agatom.springatom.mvc.model.service.impl;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Longs;
 import com.mysema.query.types.expr.BooleanExpression;
 import com.mysema.query.types.path.DateTimePath;
 import org.agatom.springatom.jpa.repositories.*;
-import org.agatom.springatom.model.beans.appointment.QSAppointment;
-import org.agatom.springatom.model.beans.appointment.QSAppointmentTask;
-import org.agatom.springatom.model.beans.appointment.SAppointment;
-import org.agatom.springatom.model.beans.appointment.SAppointmentTask;
+import org.agatom.springatom.model.beans.appointment.*;
 import org.agatom.springatom.model.beans.car.QSCar;
 import org.agatom.springatom.model.beans.car.SCar;
 import org.agatom.springatom.model.beans.links.SAppointmentWorkerLink;
@@ -40,6 +40,7 @@ import org.agatom.springatom.mvc.model.exceptions.SException;
 import org.agatom.springatom.mvc.model.service.SAppointmentService;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.joda.time.ReadableDuration;
 import org.joda.time.ReadableInterval;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,9 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -305,6 +308,61 @@ public class SAppointmentServiceImpl
             }
         }
         return appointment;
+    }
+
+    @Override
+    public List<SFreeSlot> findSlots(final SFreeSlot.Slot slot, final long... idAppointment) {
+        final List<SFreeSlot> freeSlots = this.findSlots(idAppointment);
+        return FluentIterable
+                .from(freeSlots)
+                .filter(new Predicate<SFreeSlot>() {
+                    @Override
+                    public boolean apply(
+                            @Nullable
+                            final
+                            SFreeSlot input) {
+                        assert input != null;
+                        return input.getSlot().equals(slot);
+                    }
+                })
+                .toList();
+    }
+
+    @Override
+    public List<SFreeSlot> findSlots(final long... idAppointment) {
+
+        final List<SAppointment> appointments = (List<SAppointment>) this.repository
+                .findAll(QSAppointment.sAppointment.id.in(this.toLong(idAppointment)));
+        final List<SAppointment> allAppointments = (List<SAppointment>) this.repository
+                .findAll(QSAppointment.sAppointment.id.notIn(this.toLong(idAppointment)));
+        final List<SFreeSlot> freeSlots = new ArrayList<>();
+
+        for (SAppointment appointment : appointments) {
+            for (SAppointment nextAppointment : allAppointments) {
+
+                final boolean isAfterNextAppointment = appointment.getEnd().isBefore(nextAppointment.getBegin());
+                final boolean isBeforeNextAppointment = appointment.getBegin().isAfter(nextAppointment.getEnd());
+
+                if (isAfterNextAppointment) {
+                    freeSlots.add(
+                            new SFreeSlot(appointment.getId(), nextAppointment.getId(), new Duration(nextAppointment
+                                    .getBegin(), appointment.getEnd()), SFreeSlot.Slot.AFTER)
+                    );
+                } else if (isBeforeNextAppointment) {
+                    freeSlots.add(
+                            new SFreeSlot(appointment.getId(), nextAppointment.getId(), new Duration(appointment
+                                    .getBegin(), nextAppointment.getEnd()), SFreeSlot.Slot.AFTER)
+                    );
+                } else {
+                    freeSlots.add(
+                            new SFreeSlot(appointment.getId(), nextAppointment
+                                    .getId(), new Duration(0), SFreeSlot.Slot.INTERSECT)
+                    );
+                }
+            }
+        }
+        Collections.sort(freeSlots);
+        return ImmutableList.copyOf(freeSlots);
     }
 
     public class SAppointmentNotPostponedException

@@ -20,6 +20,7 @@ package org.agatom.springatom.mvc.model.service;
 import org.agatom.springatom.jpa.repositories.SAppointmentRepository;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
 import org.agatom.springatom.model.beans.appointment.SAppointmentTask;
+import org.agatom.springatom.model.beans.appointment.SFreeSlot;
 import org.agatom.springatom.model.dto.SAppointmentTaskDTO;
 import org.agatom.springatom.mvc.model.exceptions.SEntityDoesNotExists;
 import org.agatom.springatom.mvc.model.exceptions.SException;
@@ -77,4 +78,10 @@ public interface SAppointmentService
     @NotNull
     SAppointment postponeToPast(final long idAppointment, final ReadableDuration duration) throws
             SException;
+
+    @NotNull
+    List<SFreeSlot> findSlots(final SFreeSlot.Slot slot, final long... idAppointment);
+
+    @NotNull
+    List<SFreeSlot> findSlots(final long... idAppointment);
 }

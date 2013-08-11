@@ -110,4 +110,12 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
         }
         return tList;
     }
+
+    protected Long[] toLong(final long[] longs) {
+        final Long[] bigLongs = new Long[longs.length];
+        for (int i = 0, size = longs.length ; i < size ; i++) {
+            bigLongs[i] = longs[i];
+        }
+        return bigLongs;
+    }
 }
