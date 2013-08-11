@@ -24,6 +24,7 @@ import com.google.common.collect.Maps;
 import org.agatom.springatom.AbstractCarTestCase;
 import org.agatom.springatom.model.beans.appointment.SAppointment;
 import org.agatom.springatom.model.beans.appointment.SAppointmentTask;
+import org.agatom.springatom.model.beans.appointment.SFreeSlot;
 import org.agatom.springatom.model.beans.car.SCar;
 import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
 import org.agatom.springatom.model.beans.person.mechanic.SMechanic;
@@ -93,7 +94,6 @@ public class SAppointmentServiceImplTest
             final Map<Long, SCar> map = new HashMap<>();
             final List<SCar> list = new ArrayList<>();
 
-            int it = 0;
             for (final MockCar mockedCar : MOCK_CARS) {
                 final String licencePlate = mockedCar.licencePlate;
                 final String vinNumber = mockedCar.vinNumber;
@@ -113,7 +113,7 @@ public class SAppointmentServiceImplTest
             SCarServiceImplTest.MOCKED_CARS = map;
 
             for (final Long mockCarId : MOCKED_CARS.keySet()) {
-                it = 1;
+                int it = 1;
                 final List<SAppointmentTaskDTO> tasks = new ArrayList<>(INT);
 
                 for (int i = 0 ; i < INT ; i++) {
@@ -128,8 +128,9 @@ public class SAppointmentServiceImplTest
                             String.format("6666666666666666_Repair_%d", new Random().nextInt(it++))));
                 }
 
+                final DateTime now = new DateTime(System.nanoTime());
                 MOCKED_APP.add(new MockAppointment(
-                        new Interval(DateTime.now(), DateTime.now().plusDays(1)),
+                        new Interval(now, now.plusDays(1)),
                         mockCarId,
                         MECHANIC.getId(),
                         tasks.toArray(new SAppointmentTaskDTO[INT])
@@ -391,7 +392,47 @@ public class SAppointmentServiceImplTest
     }
 
     @Test
-    public void test_K_DeleteAll() throws Exception {
+    public void test_K_1_findAllSlots() throws Exception {
+        for (final SAppointment mockAppointment : APPS) {
+            final List<SFreeSlot> freeSlots = this.appointmentService.findSlots(mockAppointment.getId());
+            if (!freeSlots.isEmpty()) {
+                for (final SFreeSlot freeSlot : freeSlots) {
+                    Assert.assertTrue(freeSlot.getSideA() == mockAppointment.getId());
+                }
+            }
+        }
+    }
+
+    @Test
+    public void test_K_2_findAllSlots_Before() throws Exception {
+        for (final SAppointment mockAppointment : APPS) {
+            final List<SFreeSlot> freeSlots = this.appointmentService
+                    .findSlots(SFreeSlot.Slot.BEFORE, mockAppointment.getId());
+            if (!freeSlots.isEmpty()) {
+                for (final SFreeSlot freeSlot : freeSlots) {
+                    Assert.assertTrue(freeSlot.getSideA() == mockAppointment.getId());
+                    Assert.assertTrue(freeSlot.getSlot().equals(SFreeSlot.Slot.BEFORE));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void test_K_3_findAllSlots_After() throws Exception {
+        for (final SAppointment mockAppointment : APPS) {
+            final List<SFreeSlot> freeSlots = this.appointmentService
+                    .findSlots(SFreeSlot.Slot.AFTER, mockAppointment.getId());
+            if (!freeSlots.isEmpty()) {
+                for (final SFreeSlot freeSlot : freeSlots) {
+                    Assert.assertTrue(freeSlot.getSideA() == mockAppointment.getId());
+                    Assert.assertTrue(freeSlot.getSlot().equals(SFreeSlot.Slot.AFTER));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void test_Z_DeleteAll() throws Exception {
         this.appointmentService.deleteAll();
         final List<SAppointment> sAppointments = this.appointmentService.findAll();
         Assert.assertTrue(sAppointments.isEmpty());
