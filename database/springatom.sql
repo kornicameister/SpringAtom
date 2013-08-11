@@ -345,7 +345,7 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SNotification` (
 
 
 -- -----------------------------------------------------
--- Table `springatom`.`SNotificationLink`
+-- Table `springatom`.`SClientNotification`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `springatom`.`SNotificationLink`;
 
