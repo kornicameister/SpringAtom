@@ -42,7 +42,7 @@ import java.util.Collection;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("file:src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml")
+@ContextConfiguration("file:/WEB-INF/springatom-web.xml")
 public abstract class AbstractSpringTestCase
         extends ReflectionTestUtils {
 

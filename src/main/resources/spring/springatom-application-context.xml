@@ -15,28 +15,44 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<beans xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/mvc
-       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <import resource="application-context.xml"/>
+    <import resource="aspects/Aspects.xml"/>
+    <import resource="database/DataSource.xml"/>
+    <import resource="database/DBPopulator.xml"/>
+    <import resource="database/Hibernate.xml"/>
+    <import resource="database/Ehcache.xml"/>
+    <import resource="database/TX.xml"/>
+    <import resource="database/JPA.xml"/>
 
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/pages/"/>
-        <property name="suffix" value=".jsp"/>
+    <context:component-scan base-package="org.agatom.springatom.mvc.model"/>
+
+    <bean id="autoWirer"
+          class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+    <!--jaxb-->
+    <bean id="jaxbXMLHelper"
+          class="org.agatom.springatom.helpers.xml.OXMHelper">
+        <property name="marshaller" ref="jaxb2Marshaller"/>
+        <property name="unmarshaller" ref="jaxb2Marshaller"/>
     </bean>
-
-    <bean id="messageSource"
-          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="classpath:spring/locale/rb"/>
-        <property name="defaultEncoding" value="UTF-8"/>
+    <bean id="jaxb2Marshaller"
+          class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="packagesToScan" value="org.agatom.springatom.helpers.xml.beans"/>
     </bean>
+    <!--jaxb-->
 
-    <mvc:resources mapping="/static/**" location="/static/"/>
-    <mvc:default-servlet-handler/>
+    <bean id="resourceLoaderHelper"
+          scope="prototype"
+          class="org.agatom.springatom.helpers.resources.ResourceLoaderHelper"/>
 
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:database.properties"/>
+    </bean>
 </beans>

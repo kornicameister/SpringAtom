@@ -18,12 +18,21 @@
 
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/aop
-       http://www.springframework.org/schema/aop/spring-aop.xsd">
-    <aop:aspectj-autoproxy/>
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <aop:aspectj-autoproxy>
+        <aop:include name="callMonitor"/>
+    </aop:aspectj-autoproxy>
+
+    <bean id="callMonitor"
+          class="org.agatom.springatom.aspects.SCallMonitoringAspect"/>
     <bean id="sharedPointcuts"
           lazy-init="false"
           scope="singleton"
@@ -39,5 +48,7 @@
     <bean id="validatorPostProcessor"
           class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
     <!-- validator -->
+
+    <context:mbean-export/>
 
 </beans>

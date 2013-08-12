@@ -45,23 +45,26 @@
     </issueManagement>
 
     <properties>
-        <maven-compiler.sourceEncoding>UTF-8</maven-compiler.sourceEncoding>
+
+        <!-- Generic properties -->
         <jdk.version>1.7</jdk.version>
-        <junit.version>4.11</junit.version>
-        <gxt.version>3.0.1</gxt.version>
+        <project.compiler.sourceEncoding>UTF-8</project.compiler.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.compiler.plugin.optimize>true</project.compiler.plugin.optimize>
+        <project.compiler.plugin.showDeprecation>true</project.compiler.plugin.showDeprecation>
+        <project.surefire.plugin.version>2.15</project.surefire.plugin.version>
+        <project.compiler.plugin.version>3.1</project.compiler.plugin.version>
+        <project.compiler.plugin.verbose>true</project.compiler.plugin.verbose>
+        <project.compiler.plugin.fork>true</project.compiler.plugin.fork>
+        <!-- Generic properties -->
+
+        <!-- logging -->
         <log4j.version>1.2.17</log4j.version>
         <slf4j-log4j12.version>1.7.5</slf4j-log4j12.version>
-        <mysql-connector-java.version>5.1.25</mysql-connector-java.version>
-        <tomcat-servlet-api.version>7.0.21</tomcat-servlet-api.version>
-        <guava-gwt.version>14.0.1</guava-gwt.version>
-        <tomcat.maven.version>2.0</tomcat.maven.version>
-        <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
-        <castor.version>1.2</castor.version>
-        <xercesImpl.version>2.8.1</xercesImpl.version>
-        <joor.version>0.9.3</joor.version>
+        <!-- logging -->
 
         <!-- spring -->
-        <spring.version>3.2.3.RELEASE</spring.version>
+        <spring.version>3.2.4.RELEASE</spring.version>
         <spring-security.version>3.1.4.RELEASE</spring-security.version>
         <!-- spring -->
 
@@ -69,6 +72,7 @@
         <servlet-api.version>3.0.1</servlet-api.version>
         <jsp-api.version>2.1</jsp-api.version>
         <jstl.version>1.2</jstl.version>
+        <jaxb-impl.version>2.2-EA</jaxb-impl.version>
         <!-- servlet and jsp -->
 
         <!-- spring data -->
@@ -82,21 +86,46 @@
 
         <!-- joda -->
         <joda-time.version>2.2</joda-time.version>
-        <joda-time-hibernate.version>1.3</joda-time-hibernate.version>
+        <joda-time.hibernate.version>1.3</joda-time.hibernate.version>
+        <joda-time.jsptags.version>1.1.1</joda-time.jsptags.version>
+        <jadira-usertype-core.version>3.1.0.CR8</jadira-usertype-core.version>
         <!-- joda -->
 
         <!-- hibernate -->
         <hibernate.version>4.2.3.Final</hibernate.version>
-        <hibernate-annotations.version>3.5.6-Final</hibernate-annotations.version>
-        <ehcache.version>2.7.0</ehcache.version>
+        <hibernate.annotations.version>3.5.6-Final</hibernate.annotations.version>
+        <hibernate.validator.version>4.3.1.Final</hibernate.validator.version>
         <c3p0.version>0.9.2.1</c3p0.version>
+        <ehcache.version>2.6.6</ehcache.version>
         <!-- hibernate -->
 
-        <!-- maven compiler -->
-        <maven-compiler-plugin.optimize>true</maven-compiler-plugin.optimize>
-        <maven-compiler-plugin.showDeprecation>true</maven-compiler-plugin.showDeprecation>
-        <!-- maven compiler -->
-        <maven-surefire-plugin.version>2.15</maven-surefire-plugin.version>
+        <!-- web jars -->
+        <webjars-bootstrap.version>3.0.0-rc1</webjars-bootstrap.version>
+        <webjars-jquery-ui.version>1.10.2-1</webjars-jquery-ui.version>
+        <webjars-jquery.version>2.0.3</webjars-jquery.version>
+        <dandelion.version>0.8.14</dandelion.version>
+        <!-- web jars -->
+
+        <!-- testing -->
+        <junit.version>4.11</junit.version>
+        <hamcrest-core.version>1.3</hamcrest-core.version>
+        <!-- testing -->
+
+        <!-- aop -->
+        <aspectj.version>1.7.3</aspectj.version>
+        <!-- aop -->
+
+        <!-- db access -->
+        <mysql-connector-java.version>5.1.26</mysql-connector-java.version>
+        <!-- db access -->
+
+        <tomcat-servlet-api.version>7.0.21</tomcat-servlet-api.version>
+        <guava.version>14.0.1</guava.version>
+        <tomcat.maven.version>2.0</tomcat.maven.version>
+        <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
+        <castor.version>1.2</castor.version>
+        <xercesImpl.version>2.8.1</xercesImpl.version>
+        <joor.version>0.9.3</joor.version>
     </properties>
 
     <repositories>
@@ -107,36 +136,18 @@
     </repositories>
 
     <dependencies>
-        <!-- mysema -->
-        <dependency>
-            <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-core</artifactId>
-            <version>${querydsl.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-apt</artifactId>
-            <version>${querydsl.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-jpa</artifactId>
-            <version>${querydsl.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-collections</artifactId>
-            <version>${querydsl.version}</version>
-        </dependency>
-        <!-- mysema -->
-
         <!-- spring -->
         <!--spring data -->
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
             <version>${spring-data-jpa.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -177,8 +188,14 @@
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>1.7.3</version>
+            <version>${aspectj.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <!-- aspectj -->
 
@@ -244,6 +261,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-oxm</artifactId>
             <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-lang</groupId>
+                    <artifactId>commons-lang</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -251,6 +274,66 @@
             <version>${spring.version}</version>
         </dependency>
         <!-- spring -->
+
+        <!-- Dandelion -->
+        <dependency>
+            <groupId>com.github.dandelion</groupId>
+            <artifactId>datatables-jsp</artifactId>
+            <version>${dandelion.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dandelion</groupId>
+            <artifactId>datatables-export-itext</artifactId>
+            <version>${dandelion.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dandelion</groupId>
+            <artifactId>datatables-servlet2</artifactId>
+            <version>${dandelion.version}</version>
+        </dependency>
+        <!-- Dandelion -->
+
+        <!-- mysema -->
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-core</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>${querydsl.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-collections</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
+        <!-- mysema -->
+
+        <!-- webjars -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>${webjars-bootstrap.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery-ui</artifactId>
+            <version>${webjars-jquery-ui.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>${webjars-jquery.version}</version>
+        </dependency>
+        <!-- webjars -->
 
         <!-- castor -->
         <dependency>
@@ -283,15 +366,13 @@
             <artifactId>jstl</artifactId>
             <version>${jstl.version}</version>
         </dependency>
-        <!-- jsp -->
-
-        <!-- gxt -->
         <dependency>
-            <groupId>com.sencha.gxt</groupId>
-            <artifactId>gxt</artifactId>
-            <version>${gxt.version}</version>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>${jaxb-impl.version}</version>
+            <scope>provided</scope>
         </dependency>
-        <!-- gxt -->
+        <!-- jsp -->
 
         <!-- log4j -->
         <dependency>
@@ -330,7 +411,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>4.3.1.Final</version>
+            <version>${hibernate.validator.version}</version>
         </dependency>
 
         <!-- ehcache hibernate -->
@@ -342,16 +423,21 @@
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache-core</artifactId>
-            <version>2.6.6</version>
+            <version>${ehcache.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- ehcache hibernate -->
-
 
         <!-- annotations -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-annotations</artifactId>
-            <version>${hibernate-annotations.version}</version>
+            <version>${hibernate.annotations.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -385,14 +471,6 @@
         </dependency>
         <!-- c3p0 -->
 
-        <!-- ehcache -->
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-            <version>${ehcache.version}</version>
-        </dependency>
-        <!-- ehcache -->
-
         <!-- tomcat -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
@@ -406,12 +484,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>${guava-gwt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava-gwt</artifactId>
-            <version>${guava-gwt.version}</version>
+            <version>${guava.version}</version>
         </dependency>
         <!-- guava -->
 
@@ -431,7 +504,7 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
-            <version>1.3</version>
+            <version>${hamcrest-core.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- test -->
@@ -479,12 +552,12 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time-hibernate</artifactId>
-            <version>${joda-time-hibernate.version}</version>
+            <version>${joda-time.hibernate.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jadira.usertype</groupId>
             <artifactId>usertype.core</artifactId>
-            <version>3.1.0.CR8</version>
+            <version>${jadira-usertype-core.version}</version>
         </dependency>
         <!-- joda time -->
 
@@ -493,11 +566,16 @@
             <artifactId>validation-api</artifactId>
             <version>1.1.0.Final</version>
         </dependency>
-
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20090211</version>
+        </dependency>
+        <dependency>
+            <groupId>taglibs</groupId>
+            <artifactId>standard</artifactId>
+            <version>1.1.2</version>
+            <scope>runtime</scope>
         </dependency>
 
     </dependencies>
@@ -507,19 +585,23 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>${project.compiler.plugin.version}</version>
                 <configuration>
+                    <compilerArguments>
+                        <Xlint/>
+                    </compilerArguments>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
-                    <encoding>${maven-compiler.sourceEncoding}</encoding>
-                    <optimize>${maven-compiler-plugin.optimize}</optimize>
-                    <showDeprecation>${maven-compiler-plugin.showDeprecation}</showDeprecation>
-                    <fork>true</fork>
+                    <encoding>${project.compiler.sourceEncoding}</encoding>
+                    <optimize>${project.compiler.plugin.optimize}</optimize>
+                    <showDeprecation>${project.compiler.plugin.showDeprecation}</showDeprecation>
+                    <fork>${project.compiler.plugin.fork}</fork>
+                    <verbose>${project.compiler.plugin.verbose}</verbose>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
+                <version>${project.surefire.plugin.version}</version>
                 <configuration>
                     <detail>true</detail>
                     <printSummary>true</printSummary>
@@ -565,6 +647,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
+                    <warName>springatom</warName>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
@@ -583,11 +666,22 @@
                             <options>
                                 <querydsl.excludedPackages>
                                     org.agatom.springatom.model.beans.revision
-                                </querydsl.excludedPackages>o
+                                </querydsl.excludedPackages>
                             </options>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>${tomcat.maven.version}</version>
+                <configuration>
+                    <url>http://localhost:8080/</url>
+                    <server>TomcatServer</server>
+                    <path>/</path>
+                </configuration>
             </plugin>
         </plugins>
     </build>
