@@ -68,7 +68,7 @@ public class SCallMonitoringAspect {
         return (this.callCount > 0 ? this.accumulatedCallTime / this.callCount : 0);
     }
 
-    @Around("within(@org.springframework.stereotype.Repository *)")
+    @Around("within(@org.springframework.stereotype.Service *)")
     public Object invoke(ProceedingJoinPoint joinPoint) throws Throwable {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(String
