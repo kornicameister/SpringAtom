@@ -17,9 +17,9 @@
 
 package org.agatom.springatom;
 
-import org.agatom.springatom.model.beans.person.client.SClient;
-import org.agatom.springatom.model.beans.person.embeddable.SPersonalInformation;
-import org.agatom.springatom.mvc.model.service.SClientService;
+import org.agatom.springatom.server.model.beans.person.client.SClient;
+import org.agatom.springatom.server.model.beans.person.embeddable.SPersonalInformation;
+import org.agatom.springatom.server.service.SClientService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;

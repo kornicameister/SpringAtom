@@ -39,11 +39,11 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
                         </array>
                     </property>
                 </bean>
-                <bean class="org.agatom.springatom.populators.EnumDatabasePopulator">
+                <bean class="org.agatom.springatom.server.populators.EnumDatabasePopulator">
                     <property name="enums">
                         <props>
-                            <prop key="srole">org.agatom.springatom.model.types.user.SSecurityRoleEnum</prop>
-                            <prop key="smetadata">org.agatom.springatom.model.types.meta.SMetaDataEnum</prop>
+                            <prop key="srole">org.agatom.springatom.server.model.types.user.SSecurityRoleEnum</prop>
+                            <prop key="smetadata">org.agatom.springatom.server.model.types.meta.SMetaDataEnum</prop>
                         </props>
                     </property>
                 </bean>

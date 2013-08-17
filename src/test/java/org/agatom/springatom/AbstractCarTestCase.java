@@ -17,9 +17,9 @@
 
 package org.agatom.springatom;
 
-import org.agatom.springatom.model.beans.car.SCar;
-import org.agatom.springatom.mvc.model.service.SCarMasterService;
-import org.agatom.springatom.mvc.model.service.SCarService;
+import org.agatom.springatom.server.model.beans.car.SCar;
+import org.agatom.springatom.server.service.SCarMasterService;
+import org.agatom.springatom.server.service.SCarService;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 
