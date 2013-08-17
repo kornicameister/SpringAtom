@@ -66,6 +66,9 @@
         <!-- spring -->
         <spring.version>3.2.4.RELEASE</spring.version>
         <spring-security.version>3.1.4.RELEASE</spring-security.version>
+        <spring-js-resources.version>2.3.2.RELEASE</spring-js-resources.version>
+        <spring-data-jpa.version>1.2.1.RELEASE</spring-data-jpa.version>
+        <spring-data-envers.version>0.1.0.RELEASE</spring-data-envers.version>
         <!-- spring -->
 
         <!-- servlet and jsp -->
@@ -74,11 +77,6 @@
         <jstl.version>1.2</jstl.version>
         <jaxb-impl.version>2.2-EA</jaxb-impl.version>
         <!-- servlet and jsp -->
-
-        <!-- spring data -->
-        <spring-data-jpa.version>1.2.1.RELEASE</spring-data-jpa.version>
-        <spring-data-envers.version>0.1.0.RELEASE</spring-data-envers.version>
-        <!-- spring data -->
 
         <!-- mysema -->
         <querydsl.version>2.9.0</querydsl.version>
@@ -100,10 +98,7 @@
         <!-- hibernate -->
 
         <!-- web jars -->
-        <webjars-bootstrap.version>3.0.0-rc1</webjars-bootstrap.version>
-        <webjars-jquery-ui.version>1.10.2-1</webjars-jquery-ui.version>
-        <webjars-jquery.version>2.0.3</webjars-jquery.version>
-        <dandelion.version>0.8.14</dandelion.version>
+        <webjar-extjs.version>4.2.1.883</webjar-extjs.version>
         <!-- web jars -->
 
         <!-- testing -->
@@ -275,24 +270,6 @@
         </dependency>
         <!-- spring -->
 
-        <!-- Dandelion -->
-        <dependency>
-            <groupId>com.github.dandelion</groupId>
-            <artifactId>datatables-jsp</artifactId>
-            <version>${dandelion.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.dandelion</groupId>
-            <artifactId>datatables-export-itext</artifactId>
-            <version>${dandelion.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.dandelion</groupId>
-            <artifactId>datatables-servlet2</artifactId>
-            <version>${dandelion.version}</version>
-        </dependency>
-        <!-- Dandelion -->
-
         <!-- mysema -->
         <dependency>
             <groupId>com.mysema.querydsl</groupId>
@@ -320,18 +297,8 @@
         <!-- webjars -->
         <dependency>
             <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>${webjars-bootstrap.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery-ui</artifactId>
-            <version>${webjars-jquery-ui.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-            <version>${webjars-jquery.version}</version>
+            <artifactId>extjs</artifactId>
+            <version>${webjar-extjs.version}</version>
         </dependency>
         <!-- webjars -->
 

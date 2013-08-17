@@ -14,19 +14,37 @@
   ~ You should have received a copy of the GNU General Public License                            ~
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
+
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:set var="extjsVersion" value="4.2.1.883" scope="application"/>
+
+<s:url value="/webjars/extjs/${extjsVersion}/ext-all-dev.js" scope="application" var="extjs"/>
+<s:url value="/webjars/extjs/${extjsVersion}/ext-theme-neptune.js" scope="application" var="extjsNeptune"/>
+<s:url value="/webjars/extjs/${extjsVersion}/resources/css/ext-all-neptune.css" scope="application"
+       var="extjsNeptuneCss"/>
+<s:url value="/static/sa/sa-core.js" scope="application" var="saCore"/>
+<s:url value="/static/sa/application/sa-app.js" scope="application" var="saApp"/>
+
 <!DOCTYPE html>
 <html>
-<jsp:include page="fragments/headTag.jsp"/>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>PetClinic :: a Spring Framework demonstration</title>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="${extjsNeptuneCss}">
+    <!-- css -->
+
+    <!-- scripts -->
+    <script src="${extjs}"></script>
+    <script src="${extjsNeptune}"></script>
+    <script src="${saCore}"></script>
+    <script src="${saApp}"></script>
+    <!-- scripts -->
+</head>
 <body>
-<noscript>
-        <span style="color: red; text-align: center">
-        This is a test message, that appears only if your browser
-        has disabled support for JavaScript.
-        Refresh after enabling JS support.
-        </span>
-</noscript>
-<h1>A</h1>
+<span id="app-msg" style="display:none;"></span>
 </body>
 </html>

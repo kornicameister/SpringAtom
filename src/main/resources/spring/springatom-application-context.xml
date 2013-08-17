@@ -31,7 +31,7 @@
     <import resource="database/TX.xml"/>
     <import resource="database/JPA.xml"/>
 
-    <context:component-scan base-package="org.agatom.springatom.mvc.model"/>
+    <context:component-scan base-package="org.agatom.springatom.web.model"/>
 
     <bean id="autoWirer"
           class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
@@ -48,11 +48,8 @@
     </bean>
     <!--jaxb-->
 
-    <bean id="resourceLoaderHelper"
-          scope="prototype"
-          class="org.agatom.springatom.helpers.resources.ResourceLoaderHelper"/>
-
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:database.properties"/>
+    <bean id="databaseProperties"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:app/database.properties"/>
     </bean>
 </beans>

@@ -15,6 +15,36 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-(function () {
-    Ext.Msg.alert('Status', 'Changes saved successfully.');
-}());
+package org.agatom.springatom.web.controller.util.impl;
+
+import org.agatom.springatom.web.controller.util.PropertiesLoader;
+import org.springframework.core.io.Resource;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+public class PropertiesLoaderAwareImpl
+        extends ResourceLoaderAwareImpl
+        implements PropertiesLoader {
+
+    @Override public Properties getProperties(final String path) throws FileNotFoundException {
+        final Resource propertyResource = this.getResource(path);
+        if (!propertyResource.exists()) {
+            throw new FileNotFoundException(String.format("Properties at path=%s not found", path));
+        }
+        final Properties properties = new Properties();
+        try {
+            properties.load(propertyResource.getInputStream());
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}

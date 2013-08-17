@@ -26,18 +26,15 @@
      http://www.springframework.org/schema/context
      http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <context:component-scan base-package="org.agatom.springatom.web.controller"/>
 
-    <context:component-scan base-package="org.agatom.springatom.mvc.controller"/>
-    <mvc:annotation-driven content-negotiation-manager="cnManager"/>
+    <mvc:default-servlet-handler/>
+    <mvc:annotation-driven/>
 
-    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" cache-period="10" order="0"/>
-    <mvc:resources mapping="/static/**" location="/static/" cache-period="10" order="1"/>
+    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
+    <mvc:resources mapping="/static/**" location="/static/"/>
 
     <mvc:view-controller path="/" view-name="index"/>
-
-    <mvc:interceptors>
-        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
-    </mvc:interceptors>
 
     <bean id="cnManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
         <property name="favorPathExtension" value="true"/>
@@ -55,14 +52,12 @@
 
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <property name="contentNegotiationManager" ref="cnManager"/>
-
         <property name="viewResolvers">
             <list>
                 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
                     <property name="prefix" value="/WEB-INF/jsp/"/>
                     <property name="suffix" value=".jsp"/>
                 </bean>
-                <!-- bean name approach  -->
                 <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
             </list>
         </property>
@@ -70,11 +65,17 @@
 
     <bean id="messageSource"
           class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="classpath:messages/messages"/>
-        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="basename" value="classpath:app/lang"/>
         <property name="cacheSeconds" value="60"/>
     </bean>
-
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <property name="defaultLocale" value="pl_PL"/>
+    </bean>
+    <mvc:interceptors>
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="locale"/>
+        </bean>
+    </mvc:interceptors>
 
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
     <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
