@@ -36,39 +36,32 @@
 
     <mvc:view-controller path="/" view-name="index"/>
 
-    <bean id="cnManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
-        <property name="favorPathExtension" value="true"/>
-        <property name="ignoreAcceptHeader" value="true"/>
-        <property name="defaultContentType" value="text/html"/>
-        <property name="mediaTypes">
-            <map>
-                <entry key="html" value="text/html"/>
-                <entry key="xml" value="application/xml"/>
-                <entry key="atom" value="application/atom+xml"/>
-                <entry key="js" value="application/javascript"/>
-            </map>
+    <bean id="webProperties"
+          class="org.agatom.springatom.web.util.SPropertiesHolder">
+        <property name="locations">
+            <array>
+                <value>classpath:app/web.properties</value>
+            </array>
         </property>
     </bean>
 
-    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
-        <property name="contentNegotiationManager" ref="cnManager"/>
-        <property name="viewResolvers">
-            <list>
-                <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-                    <property name="prefix" value="/WEB-INF/jsp/"/>
-                    <property name="suffix" value=".jsp"/>
-                </bean>
-                <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
-            </list>
-        </property>
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
     </bean>
 
     <bean id="messageSource"
           class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="classpath:app/lang"/>
+        <property name="basenames">
+            <array>
+                <value>classpath:/app/lang/ui</value>
+                <value>classpath:/app/lang/format</value>
+                <value>classpath:/app/lang/messages</value>
+            </array>
+        </property>
         <property name="cacheSeconds" value="60"/>
     </bean>
-    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
         <property name="defaultLocale" value="pl_PL"/>
     </bean>
     <mvc:interceptors>

@@ -15,48 +15,78 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller.meta.bean;
+package org.agatom.springatom.web.controller.locale.bean;
+
+import com.google.common.base.Objects;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SMetaDataUI
+public class SLocalizedPreferences
         implements Serializable {
-    private final String              prefix;
-    private       Map<String, String> settings;
+    private String                     key;
+    private SLocale                    locale;
+    private List<SLocalizedPreference> preferences;
 
-    public SMetaDataUI(final String prefix) {
-        this.prefix = prefix;
-        this.settings = new TreeMap<>();
+    public String getKey() {
+        return this.key;
     }
 
-    public String getPrefix() {
-        return prefix;
+    public SLocalizedPreferences setKey(final String cmp) {
+        this.key = cmp;
+        return this;
     }
 
-    public String put(final String key, final String value) {
-        return this.settings.put(key, value);
+    public SLocale getLocale() {
+        return this.locale;
     }
 
-    public Map<String, String> getSettings() {
-        return settings;
+    public SLocalizedPreferences setLocale(final SLocale locale) {
+        this.locale = locale;
+        return this;
     }
 
-    public void setSettings(final Map<String, String> settings) {
-        this.settings = settings;
+    public List<SLocalizedPreference> getPreferences() {
+        return this.preferences;
+    }
+
+    public SLocalizedPreferences setPreferences(final List<SLocalizedPreference> preferences) {
+        this.preferences = preferences;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SLocalizedPreferences that = (SLocalizedPreferences) o;
+
+        return Objects.equal(this.key, that.key) &&
+                Objects.equal(this.locale, that.locale) &&
+                Objects.equal(this.preferences, that.preferences);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(key, locale, preferences);
     }
 
     @Override
     public String toString() {
-        return "SMetaDataUI{" +
-                "prefix='" + prefix + '\'' +
-                ", settings=" + settings +
-                "} " + super.toString();
+        return Objects.toStringHelper(this)
+                      .addValue(key)
+                      .addValue(locale)
+                      .addValue(preferences)
+                      .toString();
     }
 }

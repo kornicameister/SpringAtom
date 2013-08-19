@@ -17,14 +17,31 @@
 
 package org.agatom.springatom.web.util;
 
-import java.io.FileNotFoundException;
-import java.util.Properties;
+import java.util.Locale;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface PropertiesLoader {
-    Properties getProperties(final String path) throws FileNotFoundException;
+public interface SServer {
+    /**
+     * Retrieves the property value. At first it tries to load applications properties, that are given
+     * locations in xml configuration file.
+     * If the property is not found, than it tries to resolve from system properties {@link System#getProperty(String)}
+     *
+     * @param key
+     *         property key
+     *
+     * @return property
+     */
+    String getProperty(final String key);
+
+    <T> T getProperty(final String key, final Class<T> as);
+
+    Locale getServerLocale();
+
+    void setServerLocale(Locale locale);
+
+    String getDelimiter();
 }

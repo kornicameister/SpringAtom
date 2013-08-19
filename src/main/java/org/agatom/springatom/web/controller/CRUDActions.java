@@ -15,17 +15,16 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.util;
-
-import java.util.Locale;
+package org.agatom.springatom.web.controller;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface Server {
-    String getProperty();
-
-    Locale getLocale();
+abstract public class CRUDActions {
+    public static final String CREATE  = "/new";
+    public static final String READ    = "/load";
+    public static final String UPDATE  = "/update";
+    public static final String DESTROY = "/destroy";
 }

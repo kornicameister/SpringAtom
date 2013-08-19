@@ -15,36 +15,61 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.util.impl;
+package org.agatom.springatom.web.controller.locale.bean;
 
-import org.agatom.springatom.web.util.PropertiesLoader;
-import org.springframework.core.io.Resource;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
+import com.google.common.base.Objects;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class PropertiesLoaderAwareImpl
-        extends ResourceLoaderAwareImpl
-        implements PropertiesLoader {
+public class SLocalizedPreference {
+    private String key;
+    private String value;
 
-    @Override public Properties getProperties(final String path) throws FileNotFoundException {
-        final Resource propertyResource = this.getResource(path);
-        if (!propertyResource.exists()) {
-            throw new FileNotFoundException(String.format("Properties at path=%s not found", path));
+    public String getKey() {
+        return this.key;
+    }
+
+    public SLocalizedPreference setKey(final String key) {
+        this.key = key;
+        return this;
+    }
+
+    public String getValue() {
+        return this.value;
+    }
+
+    public SLocalizedPreference setValue(final String value) {
+        this.value = value;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
-        final Properties properties = new Properties();
-        try {
-            properties.load(propertyResource.getInputStream());
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (o == null || getClass() != o.getClass()) {
+            return false;
         }
-        return null;
+
+        SLocalizedPreference that = (SLocalizedPreference) o;
+
+        return Objects.equal(this.key, that.key) &&
+                Objects.equal(this.value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(key, value);
+    }
+
+    @Override public String toString() {
+        return Objects.toStringHelper(this)
+                      .add("key", key)
+                      .add("value", value)
+                      .toString();
     }
 }

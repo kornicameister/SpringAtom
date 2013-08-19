@@ -31,7 +31,14 @@
     <import resource="database/TX.xml"/>
     <import resource="database/JPA.xml"/>
 
-    <context:component-scan base-package="org.agatom.springatom.server"/>
+    <context:component-scan base-package="org.agatom.springatom.server">
+        <!-- exclude repositories, handled by jpa-->
+        <context:exclude-filter type="annotation" expression="org.springframework.data.repository.NoRepositoryBean"/>
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.data.repository.RepositoryDefinition"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+        <!-- exclude repositories, handled by jpa-->
+    </context:component-scan>
 
     <bean id="autoWirer"
           class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
@@ -39,7 +46,7 @@
     <!--jaxb-->
     <bean id="jaxbXMLHelper"
           class="org.agatom.springatom.server.xml.OXMHelper">
-    <property name="marshaller" ref="jaxb2Marshaller"/>
+        <property name="marshaller" ref="jaxb2Marshaller"/>
         <property name="unmarshaller" ref="jaxb2Marshaller"/>
     </bean>
     <bean id="jaxb2Marshaller"

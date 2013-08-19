@@ -50,4 +50,4 @@ Ext.define('SA.view.dashboard.SADashboardPanel', {
         };
         this.callParent();
     }
-}, SA.logObjectCreated);
+}, SC.logObjectCreated);

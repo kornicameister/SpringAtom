@@ -25,7 +25,6 @@
 <s:url value="/webjars/extjs/${extjsVersion}/resources/css/ext-all-neptune.css" scope="application"
        var="extjsNeptuneCss"/>
 <s:url value="/static/sa/sa-core.js" scope="application" var="saCore"/>
-<s:url value="/static/sa/application/sa-app.js" scope="application" var="saApp"/>
 
 <!DOCTYPE html>
 <html>
@@ -41,10 +40,9 @@
     <script src="${extjs}"></script>
     <script src="${extjsNeptune}"></script>
     <script src="${saCore}"></script>
-    <script src="${saApp}"></script>
     <!-- scripts -->
 </head>
 <body>
-<span id="app-msg" style="display:none;"></span>
+<span tag="app-msg" style="display:none;"></span>
 </body>
 </html>

@@ -15,24 +15,74 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.util.impl;
+package org.agatom.springatom.web.controller.locale.bean;
 
-import org.agatom.springatom.web.util.Server;
-
-import java.util.Locale;
+import com.google.common.base.Objects;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class ServerImpl
-        implements Server {
-    @Override public String getProperty() {
-        return null;
+public class SLocale {
+    private String tag;
+    private String language;
+    private String country;
+
+    public String getTag() {
+        return tag;
     }
 
-    @Override public Locale getLocale() {
-        return null;
+    public SLocale setTag(final String tag) {
+        this.tag = tag;
+        return this;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public SLocale setLanguage(final String language) {
+        this.language = language;
+        return this;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public SLocale setCountry(final String country) {
+        this.country = country;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .add("tag", tag)
+                      .add("language", language)
+                      .add("country", country)
+                      .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SLocale that = (SLocale) o;
+
+        return Objects.equal(this.tag, that.tag) &&
+                Objects.equal(this.language, that.language) &&
+                Objects.equal(this.country, that.country);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(tag, language, country);
     }
 }

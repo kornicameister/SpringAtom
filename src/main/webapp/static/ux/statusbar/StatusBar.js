@@ -43,7 +43,7 @@
  *     });
  *
  *     // Update the status bar later in code:
- *     var sb = Ext.getCmp('my-status');
+ *     var sb = Ext.getTag('my-status');
  *     sb.setStatus({
  *         text: 'OK',
  *         iconCls: 'ok-icon',

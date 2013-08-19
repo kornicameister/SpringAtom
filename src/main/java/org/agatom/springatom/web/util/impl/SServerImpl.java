@@ -17,38 +17,63 @@
 
 package org.agatom.springatom.web.util.impl;
 
-import com.google.common.base.Objects;
+import org.agatom.springatom.web.util.SPropertiesHolder;
+import org.agatom.springatom.web.util.SServer;
+import org.apache.log4j.Logger;
+import org.joor.Reflect;
+import org.joor.ReflectException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ResourceLoaderAware;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.Locale;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
-@Component(value = "ResourceLoaderHelper")
-public class ResourceLoaderAwareImpl
-        implements ResourceLoaderAware {
-    @javax.annotation.Resource(shareable = true)
-    private ResourceLoader resourceLoader;
-
+@Component(value = "springAtomServer")
+public class SServerImpl
+        implements SServer {
+    public static final  String SERVER_DELIMITER = ",";
+    public static final  String SA_DELIMITER     = "sa.delimiter";
+    private static final Logger LOGGER           = Logger.getLogger(SServerImpl.class);
     @Autowired
-    public final void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
+    private SPropertiesHolder propertiesHolder;
 
-    public Resource getResource(String location) {
-        return resourceLoader.getResource(location);
+    @Override
+    public String getProperty(final String key) {
+        return this.propertiesHolder.getProperty(key);
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .add("resourceLoaderAwareImpl", resourceLoader)
-                      .toString();
+    public <T> T getProperty(final String key, final Class<T> as) {
+        T value = null;
+        try {
+            value = Reflect.on(as).create(this.propertiesHolder.getProperty(key)).get();
+        } catch (ReflectException cce) {
+            LOGGER.warn(String.format("Failed to retrieve property for key=%s as clazz=%s", key, as), cce);
+        }
+        return value;
+    }
+
+    @Override
+    public Locale getServerLocale() {
+        return LocaleContextHolder.getLocale();
+    }
+
+    @Override
+    public void setServerLocale(final Locale locale) {
+        LocaleContextHolder.setLocale(locale, true);
+    }
+
+    @Override
+    public String getDelimiter() {
+        final String property = this.getProperty(SA_DELIMITER);
+        if (property == null) {
+            return SERVER_DELIMITER;
+        }
+        return property;
     }
 }
