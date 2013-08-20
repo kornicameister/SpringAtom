@@ -15,19 +15,32 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-Ext.define('SC.core.locale.SLocaleStore', {
-    storeId : 'SLocaleStore',
-    extend  : 'Ext.data.Store',
-    requires: [
-        'Ext.data.Store'
-    ],
-    model   : 'SC.core.locale.SLocalePreferencesModel',
-    sorters : [
-        {
-            property : 'key',
-            direction: 'ASC'
-        }
-    ],
-    autoLoad: true,
-    autoSync: true
-});
+package org.agatom.springatom.web.response;
+
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.concurrent.Callable;
+
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class AsyncResponse
+        extends Response
+        implements Callable<Response> {
+
+    public AsyncResponse(final List<?> root) {
+        super(root);
+    }
+
+    @Override
+    public Response call() throws Exception {
+        return this.getResponse();
+    }
+}

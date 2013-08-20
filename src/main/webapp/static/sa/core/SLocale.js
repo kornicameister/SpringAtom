@@ -22,6 +22,34 @@
  */
 Ext.define('SC.core.SLocale', function () {
     var locales = new Ext.util.MixedCollection(),
+        decodeRecord = function (object) {
+            if (!Ext.isDefined(object) || object === null) {
+                return [];
+            }
+            var key = 'key',
+                locale = 'locale',
+                preferences = 'preferences',
+                id = undefined,
+                wrapper = {};
+            Ext.iterate(object, function (node, value) {
+                if (node === key) {
+                    wrapper[key] = value;
+                    id = value;
+                } else if (node === locale) {
+                    wrapper[locale] = value;
+                } else if (node === preferences) {
+                    wrapper[preferences] = (function () {
+                        var tmp = [];
+                        Ext.each(value, function (item) {
+                            item['parent_id'] = id;
+                            Ext.Array.push(tmp, item);
+                        });
+                        return tmp;
+                    }());
+                }
+            });
+            return Ext.getStore('SLocaleStore').add(wrapper);
+        },
         onLocalesLoad = function (store, data, successful) {
             if (!Ext.isDefined(successful)) {
                 successful = false;
@@ -33,22 +61,22 @@ Ext.define('SC.core.SLocale', function () {
             }
         };
     return {
-        singleton                 : true,
-        requires                  : [
+        singleton           : true,
+        requires            : [
             'Ext.util.Observable',
             'Ext.data.Store',
             'SC.core.SLogger',
             'SC.core.locale.SLocaleStore'
         ],
-        mixins                    : {
+        mixins              : {
             observable: 'Ext.util.Observable'
         },
-        config                    : {
+        config              : {
             store           : undefined,
             availableLocales: undefined,
             locale          : 'pl_PL'
         },
-        constructor               : function (cfg) {
+        constructor         : function (cfg) {
             var me = this;
 
             cfg = {} || cfg;
@@ -76,15 +104,26 @@ Ext.define('SC.core.SLocale', function () {
 
             me.callParent([cfg]);
         },
-        loadAvailableLocales      : function () {
+        loadAvailableLocales: function () {
             var me = this;
 
             Ext.Ajax.request({
                 url    : '/app/lang/available',
                 method : 'GET',
                 success: function (response) {
-                    var obj = Ext.decode(response.responseText);
-                    SC.core.SLogger.debug(obj);
+                    var text = response.responseText,
+                        data = Ext.decode(text),
+                        locales = [];
+
+                    Ext.each(data, function (dd) {
+                        var locale = Ext.create('SC.core.locale.SLocaleModel', dd);
+                        if (locale.get('set')) {
+                            me.setLocale(locale.get('tag'));
+                        }
+                        Ext.Array.push(locales, locale);
+                    });
+                    me.setAvailableLocales(locales);
+                    SC.core.SLogger.debug(locales);
                 },
                 failure: function (response) {
                     var obj = Ext.decode(response.responseText);
@@ -92,7 +131,7 @@ Ext.define('SC.core.SLocale', function () {
                 }
             });
         },
-        loadLocalizedUiPreferences: function (cmp) {
+        getPreferences      : function (cmp) {
             var me = this,
                 localeStore = me.getStore(),
                 pref = localeStore.findRecord('key', cmp);
@@ -107,7 +146,8 @@ Ext.define('SC.core.SLocale', function () {
                     async  : false,
                     success: function (response) {
                         var object = Ext.decode(response.responseText),
-                            _pref = Ext.create('SC.core.locale.SLocalePreferencesModel', object);
+                            _prefs = Ext.getStore('SLocaleStore').add(decodeRecord(object)),
+                            _pref = _prefs[0];
                         if (!Ext.isDefined(_pref)) {
                             Ext.Error.raise(Ext.String.format('Failed to retrieve localized settings for key={0}', cmp));
                         } else {
@@ -118,12 +158,12 @@ Ext.define('SC.core.SLocale', function () {
                 });
                 localeStore.add(pref);
                 localeStore.sync();
-                return pref;
+                return pref.getPreferences();
             }
             SC.core.SLogger.debug(Ext.String.format('SLocalePreferencesModel retrieved from client for key={0}', cmp));
-            return pref;
+            return pref.getPreferences();
         },
-        initEventsListeners       : function () {
+        initEventsListeners : function () {
             var me = this;
 
             me.addListener('localesLoad', onLocalesLoad, me);

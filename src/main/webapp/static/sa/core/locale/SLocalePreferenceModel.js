@@ -33,13 +33,21 @@
  **************************************************************************************************/
 
 Ext.define('SC.core.locale.SLocalePreferenceModel', {
-    extend  : 'Ext.data.Model',
+    extend  : 'SC.core.model.SSequentialModel',
     requires: [
-        'Ext.data.Model'
+        'SC.core.model.SSequentialModel'
     ],
     fields  : [
         { name: 'key', type: 'string'},
-        { name: 'value', type: 'string'}
+        { name: 'value', type: 'string'},
+        {
+            /**
+             * @cfg parent is the the property that should be mapped to
+             * {@link SC.core.locale.SLocalePreferencesModel#getId
+             */
+            name: 'parent_id',
+            type: 'string'
+        }
     ]
 });
 

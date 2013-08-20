@@ -15,19 +15,13 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-Ext.define('SC.core.locale.SLocaleStore', {
-    storeId : 'SLocaleStore',
-    extend  : 'Ext.data.Store',
-    requires: [
-        'Ext.data.Store'
-    ],
-    model   : 'SC.core.locale.SLocalePreferencesModel',
-    sorters : [
-        {
-            property : 'key',
-            direction: 'ASC'
-        }
-    ],
-    autoLoad: true,
-    autoSync: true
-});
+package org.agatom.springatom.web.response;
+
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+public interface WebResponse<T> {
+    T respond();
+}

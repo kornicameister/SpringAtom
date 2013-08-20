@@ -15,10 +15,17 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.aop;
+package org.agatom.springatom.web.response.aop;
 
+import org.agatom.springatom.web.response.Response;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.joda.time.DateTime;
+import org.joor.Reflect;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author kornicameister
@@ -26,16 +33,51 @@ import org.aspectj.lang.annotation.Pointcut;
  * @since 0.0.1
  */
 @Aspect
-public class SSharedPointcuts {
-    @Pointcut("within(org.agatom.springatom.server.service..*)")
-    protected void inServiceLayer() {
+public class ResponseAOP {
+
+    @Pointcut("(target(org.agatom.springatom.web.response.Response) && getResponseCallMethod())")
+    protected void responsePointcut() {
     }
 
-    @Pointcut("within(org.agatom.springatom.web.controller..*)")
-    protected void inController() {
+    @Pointcut(value = "execution(* call*(..))")
+    protected void asyncResponseCallMethod() {
     }
 
-    @Pointcut("execution(public * *(..))")
-    protected void publicMethod() {
+    @Pointcut(value = "execution(* getResponse(..))")
+    protected void getResponseCallMethod() {
     }
+
+    @Around("responsePointcut()")
+    public Object doFillResponse(final ProceedingJoinPoint point) throws Throwable {
+        Object retVal = null;
+        boolean success = true;
+        String msg = "Request execution normal";
+
+        final long startTime = System.nanoTime();
+        try {
+            retVal = point.proceed();
+        } catch (Throwable throwable) {
+            success = false;
+            msg = throwable.getMessage();
+        }
+        final long endTime = System.nanoTime() - startTime;
+
+
+        Response response = null;
+        if (retVal instanceof Response) {
+            response = (Response) retVal;
+        }
+
+        if (response == null) {
+            return retVal;
+        }
+
+        Reflect.on(response).set("timestamp", DateTime.now());
+        Reflect.on(response).set("success", success);
+        Reflect.on(response).set("message", msg);
+        final Reflect reflect = Reflect.on(response).set("time", TimeUnit.NANOSECONDS.toMillis(endTime));
+
+        return reflect.get();
+    }
+
 }

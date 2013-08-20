@@ -72,6 +72,7 @@ public class SLocaleController
     public @ResponseBody Callable<Set<SLocale>> readLocales() {
         final String appResources = this.server.getProperty(SA_LOCALE_SUPPORTS);
         final String delimiter = this.server.getDelimiter();
+        final Locale currentLocale = this.server.getServerLocale();
         return new Callable<Set<SLocale>>() {
             @Override
             public Set<SLocale> call() throws Exception {
@@ -79,8 +80,14 @@ public class SLocaleController
                 final Set<SLocale> locales = Sets.newHashSet();
                 for (final String locale : array) {
                     final Locale loc = Locale.forLanguageTag(locale);
-                    locales.add(new SLocale().setTag(locale).setCountry(loc.getCountry())
-                                             .setLanguage(loc.getLanguage()));
+                    final SLocale sLocale = new SLocale().setTag(locale).setCountry(loc.getCountry())
+                                                         .setLanguage(loc.getLanguage());
+                    if (loc.equals(currentLocale)) {
+                        sLocale.setIsSet(true);
+                    } else {
+                        sLocale.setIsSet(false);
+                    }
+                    locales.add(sLocale);
                 }
                 return locales;
             }
@@ -92,7 +99,7 @@ public class SLocaleController
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public @ResponseBody Callable<SLocalizedPreferences> getUIMetaData(final String key) {
+    public @ResponseBody Callable<SLocalizedPreferences> getLocalizedPreferences(final String key) {
         final String componentKey = this.uiComponents.get(key);
         final Locale locale = LocaleContextHolder.getLocale();
         final String cfg = messageSource.getMessage(componentKey, null, null, locale);

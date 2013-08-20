@@ -15,19 +15,14 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-Ext.define('SC.core.locale.SLocaleStore', {
-    storeId : 'SLocaleStore',
-    extend  : 'Ext.data.Store',
+Ext.define('SC.core.model.SSequentialModel', {
+    extend  : 'Ext.data.Model',
     requires: [
-        'Ext.data.Store'
+        'Ext.data.Model',
+        'Ext.data.SequentialIdGenerator'
     ],
-    model   : 'SC.core.locale.SLocalePreferencesModel',
-    sorters : [
-        {
-            property : 'key',
-            direction: 'ASC'
-        }
-    ],
-    autoLoad: true,
-    autoSync: true
+    idgen   : {
+        type  : 'sequential',
+        prefix: 'sec_'
+    }
 });

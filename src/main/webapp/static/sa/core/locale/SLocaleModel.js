@@ -33,14 +33,15 @@
  **************************************************************************************************/
 
 Ext.define('SC.core.locale.SLocaleModel', {
-    extend  : 'Ext.data.Model',
+    extend  : 'SC.core.model.SSequentialModel',
     requires: [
-        'Ext.data.Model'
+        'SC.core.model.SSequentialModel'
     ],
     fields  : [
         { name: 'tag', type: 'string'},
         { name: 'language', type: 'string'},
-        { name: 'country', type: 'string'}
+        { name: 'country', type: 'string'},
+        { name: 'set', type: 'boolean'}
     ]
 });
 

@@ -15,90 +15,52 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller.locale.bean;
+package org.agatom.springatom.web.response;
 
 import com.google.common.base.Objects;
+import org.joda.time.DateTime;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class Response {
+    private final List<? extends Object> root;
+    private       DateTime               timestamp;
+    private       String                 rootClazz;
+    private       long                   total;
+    private       boolean                success;
+    private       long                   time;
+    private       String                 message;
 
-public class SLocale
-        implements Serializable {
-    private String  tag;
-    private String  language;
-    private String  country;
-    private boolean isSet;
-
-    public SLocale setIsSet(final boolean isSet) {
-        this.isSet = isSet;
-        return this;
-    }
-
-    public boolean isSet() {
-        return isSet;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public SLocale setTag(final String tag) {
-        this.tag = tag;
-        return this;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public SLocale setLanguage(final String language) {
-        this.language = language;
-        return this;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public SLocale setCountry(final String country) {
-        this.country = country;
-        return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        SLocale that = (SLocale) o;
-
-        return Objects.equal(this.tag, that.tag) &&
-                Objects.equal(this.language, that.language) &&
-                Objects.equal(this.country, that.country) &&
-                Objects.equal(this.isSet, that.isSet);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(tag, language, country, isSet);
+    public Response(final List<?> root) {
+        this.root = root;
+        this.rootClazz = root.get(0).getClass().getName();
+        this.total = root.size();
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                      .addValue(tag)
-                      .addValue(language)
-                      .addValue(country)
-                      .addValue(isSet)
+                      .addValue(timestamp)
+                      .addValue(root)
+                      .addValue(rootClazz)
+                      .addValue(total)
+                      .addValue(success)
+                      .addValue(time)
+                      .addValue(message)
                       .toString();
+    }
+
+    public Response getResponse() {
+        return this;
     }
 }

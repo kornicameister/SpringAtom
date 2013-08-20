@@ -17,75 +17,91 @@
 
 /**
  * @class SC.core.locale.SLocalePreferencesModel
- * {@code SLocalePreferencesModel} is a placeholder for localized preferences of the specific locale
+ * {@code SLocalePreferencesModel} is a placeholder for localized preferences of the specific locale.
+ * Notify that although models such as:
+ * - {@link SC.core.locale.SLocalePreferenceModel}
+ * - {@link SC.core.locale.SLocaleModel}
+ * are defined to hold data as {@link Ext.data.Model} this class does not use them internally as fields.
+ * Nevertheless accessor for fields:
+ * - locale
+ * - preferences
+ * are overridden to support returning these model
  * @extend Ext.data.Model
  */
-Ext.define('SC.core.locale.SLocalePreferencesModel', {
-    extend                        : 'Ext.data.Model',
-    requires                      : [
-        'Ext.data.Model',
-        'SC.core.locale.SLocaleModel',
-        'SC.core.locale.SLocalePreferenceModel'
-    ],
-    fields                        : [
-        { name: 'key', type: 'string'},
-        { name: 'locale'},
-        { name: 'preferences'}
-    ],
-    proxy                         : {
-        id    : 'sc-localePreferences',
-        type  : 'localstorage',
-        reader: {
-            type: 'json'
-        }
-    },
+Ext.define('SC.core.locale.SLocalePreferencesModel', function () {
     /**
-     * @constructor
-     * Creates new SLocalePreferencesModel and translates given (in cfg) locale and preferences to:
-     * - locale >> {@link SC.core.locale.SLocaleModel}
-     * - preferences >> {@link SC.core.locale.SLocalePreferenceModel} with {@link Ext.Array.toValueMap}
-     * @param cfg configuration appropriate for {@link Ext.data.Model}
-     * @cfg cfg.locale object literal appropriate for {@link SC.core.locale.SLocaleModel}
-     * @cfg cfg.preferences array of object literals appropriate for {@link SC.core.locale.SLocalePreferenceModel}
+     * Converts from <b>SC.core.locale.SLocalePreferencesModel.fields.preferences<b> to {@link SC.core.locale.SLocalePreferenceModel}
+     * @param record record
+     * @returns [SC.core.locale.SLocalePreferenceModel]
      */
-    constructor                   : function (cfg) {
-        var me = this,
-            locale = cfg['locale'],
-            preferences = cfg['preferences'],
-            pref = [];
+    var toSLocalePreferenceModel = function (record) {
+        var prefs = record.get('preferences'),
+            converted = [];
 
-        me.callParent([cfg]);
-        me['data']['locale'] = (Ext.create('SC.core.locale.SLocaleModel', locale));
-        Ext.each(preferences, function (item) {
-            Ext.Array.push(pref, Ext.create('SC.core.locale.SLocalePreferenceModel', item));
+        Ext.each(prefs, function (value) {
+            var dd = Ext.create('SC.core.locale.SLocalePreferenceModel', value);
+            Ext.log({
+                msg  : 'Converting from object to SC.core.locale.SLocalePreferenceModel',
+                level: 'info',
+                dump : {
+                    from: value,
+                    to  : dd
+                }
+            });
+            Ext.Array.push(converted, dd);
         });
-        me['data']['preferences'] = Ext.Array.toValueMap(pref, me.getKeyOfSLocalePreferenceModel);
-    },
+
+        return converted;
+    };
     /**
-     * @private
-     * getTag method for {@link Ext.Array.toValueMap}.
-     * Key is {@link SC.core.locale.SLocalePreferenceModel#fields}/key
-     *
-     * @param rec instance of {@link SC.core.locale.SLocalePreferenceModel}
-     * @returns String
+     * Converts from <b>SC.core.locale.SLocalePreferencesModel.fields.locale<b> to {@link SC.core.locale.SLocaleModel}
+     * @param record record
+     * @returns {SC.core.locale.SLocaleModel}
      */
-    getKeyOfSLocalePreferenceModel: function (rec) {
-        return rec.get('key');
-    },
-    /**
-     * Resolves preference for given key
-     *
-     * @param key one of the keys defined for preferences of @this class
-     * @returns String
-     */
-    getPreference                 : function (key) {
-        var me = this,
-            preferences = me['data']['preferences'],
-            value = preferences[key];
-        if (!Ext.isDefined(value)) {
-            Ext.Error.raise(Ext.String.format('Failed to retrieve localized preference for cmp={0} with key={1}', me.get('cmp'), key));
+    var toSLocaleModel = function (record) {
+        var loc = record.get('locale'),
+            locale = Ext.create('SC.core.locale.SLocaleModel', loc);
+        return loc;
+    };
+    return {
+        extend        : 'SC.core.model.SSequentialModel',
+        requires      : [
+            'SC.core.model.SSequentialModel',
+            'SC.core.locale.SLocaleModel',
+            'SC.core.locale.SLocalePreferenceModel'
+        ],
+        fields        : [
+            { name: 'key', type: 'string' },
+            { name: 'locale', type: 'object' },
+            { name: 'preferences', type: 'object' }
+        ],
+        /**
+         * proxy with session backend
+         * @cfg proxy
+         * @see Ext.data.proxy.SessionStorage
+         */
+        proxy         : {
+            id  : 'sc-localePreferences',
+            type: 'memory'
+        },
+        /**
+         * @override
+         * @returns {SC.core.locale.SLocaleModel}
+         */
+        getLocale     : function () {
+            var me = this,
+                locale = toSLocaleModel(me);
+            return locale;
+        },
+        /**
+         * @override
+         * @returns [SC.core.locale.SLocalePreferenceModel]
+         */
+        getPreferences: function () {
+            var me = this,
+                preferences = toSLocalePreferenceModel(me);
+            return preferences;
         }
-        return value;
-    }
-}, SC.logObjectCreated);
+    };
+});
 
