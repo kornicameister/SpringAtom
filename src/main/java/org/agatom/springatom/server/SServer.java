@@ -15,61 +15,40 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller.locale.bean;
+package org.agatom.springatom.server;
 
-import com.google.common.base.Objects;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+
+import java.util.Locale;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SLocalizedPreference {
-    private String key;
-    private String value;
 
-    public String getKey() {
-        return this.key;
-    }
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public interface SServer {
+    /**
+     * Retrieves the property value. At first it tries to load applications properties, that are given
+     * locations in xml configuration file.
+     * If the property is not found, than it tries to resolve from system properties {@link System#getProperty(String)}
+     *
+     * @param key
+     *         property key
+     *
+     * @return property
+     */
+    String getProperty(final String key);
 
-    public SLocalizedPreference setKey(final String key) {
-        this.key = key;
-        return this;
-    }
+    <T> T getProperty(final String key, final Class<T> as);
 
-    public String getValue() {
-        return this.value;
-    }
+    Locale getServerLocale();
 
-    public SLocalizedPreference setValue(final String value) {
-        this.value = value;
-        return this;
-    }
+    void setServerLocale(Locale locale);
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+    String getDelimiter();
 
-        SLocalizedPreference that = (SLocalizedPreference) o;
-
-        return Objects.equal(this.key, that.key) &&
-                Objects.equal(this.value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(key, value);
-    }
-
-    @Override public String toString() {
-        return Objects.toStringHelper(this)
-                      .add("key", key)
-                      .add("value", value)
-                      .toString();
-    }
+    String getValueDelimiter();
 }

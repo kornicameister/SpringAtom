@@ -19,20 +19,17 @@ Ext.define('SA.view.SADashboard', {
     extend       : 'Ext.container.Viewport',
     requires     : [
         'Ext.container.Viewport',
-        'SC.core.mixing.SLocalizedComponent',
         'SA.view.dashboard.SADashboardPanel'
     ],
-    mixins       : {
-        localized: 'SC.core.mixing.SLocalizedComponent'
-    },
-    getLazyConfig: function () {
-        return {
+    initComponent: function () {
+        var me = this;
+        Ext.applyIf(me, {
             id    : 'sa-viewport',
             layout: 'border',
             items : {
                 id        : 'sa-dashboard',
                 xtype     : 'panel',
-                title     : '${sa-dashboard.title}$',
+                title     : SC.Locales('sa-dashboard.title'),
                 region    : 'center',
                 layout    : 'border',
                 bodyBorder: false,
@@ -47,11 +44,11 @@ Ext.define('SA.view.SADashboard', {
                         id    : 'sa-dashboard-header',
                         xtype : 'box',
                         region: 'north',
-                        title : '${sa-dashboard-header.title}$'
+                        title: SC.Locales('sa-dashboard-header.title')
                     },
                     {
                         id          : 'sa-dashboard-options',
-                        title       : '${sa-dashboard-options.title}$',
+                        title       : SC.Locales('sa-dashboard-options.title'),
                         region      : 'west',
                         width       : 200,
                         minWidth    : 150,
@@ -67,14 +64,14 @@ Ext.define('SA.view.SADashboard', {
                         items       : [
                             {
                                 id        : 'sa-dashboard-options-navigation',
-                                title     : '${sa-dashboard-options-navigation.title}$',
+                                title: SC.Locales('sa-dashboard-options-navigation.title'),
                                 autoScroll: true,
                                 border    : false,
                                 iconCls   : 'nav'
                             },
                             {
                                 id        : 'sa-dashboard-options-settings',
-                                title     : '${sa-dashboard-options-settings.title}$',
+                                title: SC.Locales('sa-dashboard-options-settings.title'),
                                 border    : false,
                                 autoScroll: true,
                                 iconCls   : 'settings'
@@ -87,21 +84,6 @@ Ext.define('SA.view.SADashboard', {
                         region: 'center'
                     }
                 ]
-            }
-        };
-    },
-    initComponent: function () {
-        var me = this,
-            localize = me['mixins']['localized'];
-        localize.applyLocalization({
-            container: me,
-            cfg      : me.getLazyConfig(),
-            paths    : {
-                'items > title'                            : '${sa-dashboard.title}$',
-                'items > items > [0] > title'              : '${sa-dashboard-header.title}$',
-                'items > items > [1] > title'              : '${sa-dashboard-options.title}$',
-                'items > items > [1] > items > [0] > title': '${sa-dashboard-options-navigation.title}$',
-                'items > items > [1] > items > [1] > title': '${sa-dashboard-options-settings.title}$'
             }
         });
         this.callParent(arguments);

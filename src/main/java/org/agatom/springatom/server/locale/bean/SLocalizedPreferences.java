@@ -15,58 +15,65 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller.locale.bean;
+package org.agatom.springatom.server.locale.bean;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
-public class SLocale
+public class SLocalizedPreferences
         implements Serializable {
-    private String  tag;
-    private String  language;
-    private String  country;
-    private boolean isSet;
+    private String                     paramName;
+    private SLocale                    locale;
+    private List<SLocalizedPreference> preferences;
 
-    public SLocale setIsSet(final boolean isSet) {
-        this.isSet = isSet;
+    public String getParamName() {
+        return paramName;
+    }
+
+    public SLocalizedPreferences setParamName(final String paramName) {
+        this.paramName = paramName;
         return this;
     }
 
-    public boolean isSet() {
-        return isSet;
+    public SLocale getLocale() {
+        return this.locale;
     }
 
-    public String getTag() {
-        return tag;
-    }
-
-    public SLocale setTag(final String tag) {
-        this.tag = tag;
+    public SLocalizedPreferences setLocale(final SLocale locale) {
+        this.locale = locale;
         return this;
     }
 
-    public String getLanguage() {
-        return language;
+    public List<SLocalizedPreference> getPreferences() {
+        return this.preferences;
     }
 
-    public SLocale setLanguage(final String language) {
-        this.language = language;
+    public SLocalizedPreferences setPreferences(final List<SLocalizedPreference> preferences) {
+        this.preferences = preferences;
         return this;
     }
 
-    public String getCountry() {
-        return country;
+    public SLocalizedPreferences put(final List<SLocalizedPreference> preferences) {
+        if (this.preferences == null) {
+            this.preferences = Lists.newArrayList();
+        }
+        this.preferences.addAll(preferences);
+        return this;
     }
 
-    public SLocale setCountry(final String country) {
-        this.country = country;
+    public SLocalizedPreferences put(final String key, final String pref) {
+        if (this.preferences == null) {
+            this.preferences = Lists.newArrayList();
+        }
+        this.preferences.add(new SLocalizedPreference().setKey(key).setValue(pref));
         return this;
     }
 
@@ -79,26 +86,23 @@ public class SLocale
             return false;
         }
 
-        SLocale that = (SLocale) o;
+        SLocalizedPreferences that = (SLocalizedPreferences) o;
 
-        return Objects.equal(this.tag, that.tag) &&
-                Objects.equal(this.language, that.language) &&
-                Objects.equal(this.country, that.country) &&
-                Objects.equal(this.isSet, that.isSet);
+        return Objects.equal(this.locale, that.locale) &&
+                Objects.equal(this.preferences, that.preferences);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(tag, language, country, isSet);
+        return Objects.hashCode(locale, preferences);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                      .addValue(tag)
-                      .addValue(language)
-                      .addValue(country)
-                      .addValue(isSet)
+                      .addValue(paramName)
+                      .addValue(locale)
+                      .addValue(preferences)
                       .toString();
     }
 }

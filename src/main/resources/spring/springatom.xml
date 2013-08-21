@@ -36,22 +36,14 @@
 
     <mvc:view-controller path="/" view-name="index"/>
 
-    <bean id="webProperties"
-          class="org.agatom.springatom.web.util.SPropertiesHolder">
-        <property name="locations">
-            <array>
-                <value>classpath:app/web.properties</value>
-            </array>
-        </property>
-    </bean>
-
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
 
     <bean id="messageSource"
-          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+          init-method="init"
+          class="org.agatom.springatom.server.locale.impl.SMessageSourceImpl">
         <property name="basenames">
             <array>
                 <value>classpath:/app/lang/ui</value>
@@ -60,13 +52,19 @@
             </array>
         </property>
         <property name="cacheSeconds" value="60"/>
+        <property name="storageMode" value="COMBINED"/>
+        <property name="splitBy" value="="/>
     </bean>
-    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
         <property name="defaultLocale" value="pl_PL"/>
     </bean>
     <mvc:interceptors>
-        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-            <property name="paramName" value="locale"/>
+        <bean class="org.agatom.springatom.server.interceptors.SServerConfiguredLocaleChangeInterceptor">
+            <property name="configure">
+                <array>
+                    <value>paramName</value>
+                </array>
+            </property>
         </bean>
     </mvc:interceptors>
 

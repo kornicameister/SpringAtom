@@ -28,6 +28,6 @@ Ext.define('SC.core.locale.SLocaleStore', {
             direction: 'ASC'
         }
     ],
-    autoLoad: true,
+    autoLoad: false,
     autoSync: true
 });

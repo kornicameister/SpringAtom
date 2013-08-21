@@ -19,24 +19,22 @@ package org.agatom.springatom.web.controller.locale;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import org.agatom.springatom.web.controller.locale.bean.SLocale;
-import org.agatom.springatom.web.controller.locale.bean.SLocalizedPreference;
-import org.agatom.springatom.web.controller.locale.bean.SLocalizedPreferences;
-import org.agatom.springatom.web.util.SServer;
+import org.agatom.springatom.server.SServer;
+import org.agatom.springatom.server.locale.SMessageSource;
+import org.agatom.springatom.server.locale.bean.SLocale;
+import org.agatom.springatom.server.locale.bean.SLocalizedPreferences;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.MessageSourceAware;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import javax.annotation.PostConstruct;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 /**
@@ -46,15 +44,15 @@ import java.util.concurrent.Callable;
  */
 @Controller
 @RequestMapping(value = "/app/lang")
-public class SLocaleController
-        implements MessageSourceAware {
+public class SLocaleController {
     public static final  String   SA_UI_COMPONENTS_KEY = "sa.ui.components";
     public static final  String   SA_LOCALE_SUPPORTS   = "sa.locale.supports";
     private static final String[] IGNORED_KEYS         = {"_dc", "page", "start", "limit"};
     private static final Logger   LOGGER               = Logger.getLogger(SLocaleController.class);
     @Autowired
     protected SServer             server;
-    private   MessageSource       messageSource;
+    @Autowired
+    private   SMessageSource      messageSource;
     private   Map<String, String> uiComponents;
 
     @InitBinder
@@ -69,7 +67,7 @@ public class SLocaleController
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public @ResponseBody Callable<Set<SLocale>> readLocales() {
+    public @ResponseBody Callable<Set<SLocale>> getAvailableLocales() {
         final String appResources = this.server.getProperty(SA_LOCALE_SUPPORTS);
         final String delimiter = this.server.getDelimiter();
         final Locale currentLocale = this.server.getServerLocale();
@@ -96,70 +94,56 @@ public class SLocaleController
 
     @RequestMapping(
             value = "/read",
-            method = RequestMethod.POST,
+            method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public @ResponseBody Callable<SLocalizedPreferences> getLocalizedPreferences(final String key) {
-        final String componentKey = this.uiComponents.get(key);
+    public @ResponseBody Callable<SLocalizedPreferences> getLocalizedPreferences() {
         final Locale locale = LocaleContextHolder.getLocale();
-        final String cfg = messageSource.getMessage(componentKey, null, null, locale);
+        final SMessageSource source = this.messageSource;
+        return new Callable<SLocalizedPreferences>() {
+            @Override
+            public SLocalizedPreferences call() throws Exception {
+                return source.getAll(locale);
+            }
+        };
+    }
+
+    @RequestMapping(
+            value = "/read/{requestKey:.+}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public
+    @ResponseBody Callable<SLocalizedPreferences> getLocalizedPreferences(final @PathVariable String requestKey) {
+        final String componentKey = this.uiComponents.get(requestKey);
+        final Locale locale = LocaleContextHolder.getLocale();
+        final SMessageSource source = this.messageSource;
 
         return new Callable<SLocalizedPreferences>() {
             @Override
             public SLocalizedPreferences call() throws Exception {
-
-                final List<String> splitted = Arrays.asList(cfg.split(","));
-                final List<SLocalizedPreference> preferences = new ArrayList<>();
-
-                for (final String part : splitted) {
-                    final String[] strings = part.split("=");
-                    final String cmpKey = strings[0];
-                    final String cmpValue = strings[1];
-                    preferences.add(new SLocalizedPreference().setKey(cmpKey)
-                                                              .setValue(cmpValue));
-                }
-
-                final SLocalizedPreferences dataUI = new SLocalizedPreferences()
-                        .setKey(key)
-                        .setLocale(
-                                new SLocale()
-                                        .setTag(locale.toLanguageTag())
-                                        .setCountry(locale.getCountry())
-                                        .setLanguage(locale.getLanguage())
-                        )
-                        .setPreferences(preferences);
-
+                final SLocalizedPreferences dataUI = source.getAll(componentKey, locale);
                 if (LOGGER.isInfoEnabled()) {
-                    LOGGER.info(String.format("For key=%s and lang=%s returning dataUi=%s", key, locale, dataUI));
+                    LOGGER.info(String
+                            .format("For requestKey=%s and lang=%s returning dataUi=%s", requestKey, locale, dataUI));
                 }
-
                 return dataUI;
             }
         };
     }
 
-    @Override
-    public void setMessageSource(final MessageSource messageSource) {
-        this.messageSource = messageSource;
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace(String.format("%s initialized with rb=%s", SLocaleController.class
-                    .getSimpleName(), this.messageSource));
-        }
-        this.uiComponents = this.resolveUIComponents();
-    }
-
-    private Map<String, String> resolveUIComponents() {
+    @PostConstruct
+    private void resolveUIComponents() {
         final Map<String, String> map = Maps.newHashMap();
-        final String unParsed = this.messageSource
-                .getMessage(SA_UI_COMPONENTS_KEY, null, null, LocaleContextHolder.getLocale());
+        final String unParsed = this.server.getProperty(SA_UI_COMPONENTS_KEY);
         if (unParsed != null) {
-            final String[] parsed = unParsed.split(",");
+            final String[] parsed = unParsed.split(this.server.getDelimiter());
             for (final String chunk : parsed) {
-                final String[] chunkCC = chunk.split("=");
+                final String[] chunkCC = chunk.split(this.server.getValueDelimiter());
                 map.put(chunkCC[0], chunkCC[1]);
             }
         }
-        return map;
+        this.uiComponents = map;
     }
 
 }

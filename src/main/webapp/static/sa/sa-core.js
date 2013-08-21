@@ -72,7 +72,23 @@
             SC.core.SLogger.trace(
                 Ext.String.format('New object has been created, name={0}', obj.getName())
             );
-        }
+        };
+        sa.Locales = function (key) {
+            var records = Ext.getStore('SLocaleStore').getRange(),
+                value = undefined;
+
+            Ext.each(records, function (record) {
+                return Ext.each(record.getPreferences(), function (pref) {
+                    if (pref.get('key').equals(key)) {
+                        value = pref.get('value');
+                        return false;
+                    }
+                    return true;
+                });
+            });
+
+            return Ext.String.format('{0}', value);
+        };
     }
 
     function initApp() {

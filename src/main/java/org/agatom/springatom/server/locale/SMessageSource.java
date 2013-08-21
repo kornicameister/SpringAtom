@@ -15,14 +15,31 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-Ext.define('SC.core.locale.SLocalePreferenceModel', {
-    extend  : 'SC.core.model.SSequentialModel',
-    requires: [
-        'SC.core.model.SSequentialModel'
-    ],
-    fields  : [
-        { name: 'key', type: 'string'},
-        { name: 'value', type: 'string'}
-    ]
-});
+package org.agatom.springatom.server.locale;
 
+import org.agatom.springatom.server.locale.bean.SLocalizedPreferences;
+import org.springframework.context.MessageSource;
+
+import java.util.Locale;
+
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+public interface SMessageSource
+        extends MessageSource {
+
+    void setStorageMode(final StorageMode mode);
+
+    void setSplitBy(String splitBy);
+
+    SLocalizedPreferences getAll(final Locale locale);
+
+    SLocalizedPreferences getAll(final String requestKey, final Locale locale);
+
+    public enum StorageMode {
+        SINGLE,
+        COMBINED
+    }
+}

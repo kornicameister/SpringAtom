@@ -21,92 +21,8 @@
  * @description SC.locale.Locale serves all locale-based tasks
  */
 Ext.define('SC.core.SLocale', function () {
-    var locales = new Ext.util.MixedCollection(),
-        decodeRecord = function (object) {
-            if (!Ext.isDefined(object) || object === null) {
-                return [];
-            }
-            var key = 'key',
-                locale = 'locale',
-                preferences = 'preferences',
-                id = undefined,
-                wrapper = {};
-            Ext.iterate(object, function (node, value) {
-                if (node === key) {
-                    wrapper[key] = value;
-                    id = value;
-                } else if (node === locale) {
-                    wrapper[locale] = value;
-                } else if (node === preferences) {
-                    wrapper[preferences] = (function () {
-                        var tmp = [];
-                        Ext.each(value, function (item) {
-                            item['parent_id'] = id;
-                            Ext.Array.push(tmp, item);
-                        });
-                        return tmp;
-                    }());
-                }
-            });
-            return Ext.getStore('SLocaleStore').add(wrapper);
-        },
-        onLocalesLoad = function (store, data, successful) {
-            if (!Ext.isDefined(successful)) {
-                successful = false;
-            }
-            if (successful) {
-                SC.core.SLogger.debug('Loaded successful, available locales found');
-            } else {
-                SC.core.SLogger.error('Loaded unsuccessful', "Failed to load data");
-            }
-        };
-    return {
-        singleton           : true,
-        requires            : [
-            'Ext.util.Observable',
-            'Ext.data.Store',
-            'SC.core.SLogger',
-            'SC.core.locale.SLocaleStore'
-        ],
-        mixins              : {
-            observable: 'Ext.util.Observable'
-        },
-        config              : {
-            store           : undefined,
-            availableLocales: undefined,
-            locale          : 'pl_PL'
-        },
-        constructor         : function (cfg) {
+    var loadAvailableLocales = function () {
             var me = this;
-
-            cfg = {} || cfg;
-
-            me.mixins.observable.constructor.call(me, cfg);
-            me.addEvents(
-                'localesLoad',
-                'localesChanged'
-            );
-
-            me.initConfig({
-                store           : Ext.create('SC.core.locale.SLocaleStore', {
-                    listeners: {
-                        load: {
-                            scope: me,
-                            fn   : onLocalesLoad
-                        }
-                    }
-                }),
-                locale          : 'pl_PL',
-                availableLocales: []
-            });
-            me.initEventsListeners();
-            me.loadAvailableLocales();
-
-            me.callParent([cfg]);
-        },
-        loadAvailableLocales: function () {
-            var me = this;
-
             Ext.Ajax.request({
                 url    : '/app/lang/available',
                 method : 'GET',
@@ -114,7 +30,6 @@ Ext.define('SC.core.SLocale', function () {
                     var text = response.responseText,
                         data = Ext.decode(text),
                         locales = [];
-
                     Ext.each(data, function (dd) {
                         var locale = Ext.create('SC.core.locale.SLocaleModel', dd);
                         if (locale.get('set')) {
@@ -131,42 +46,108 @@ Ext.define('SC.core.SLocale', function () {
                 }
             });
         },
-        getPreferences      : function (cmp) {
-            var me = this,
-                localeStore = me.getStore(),
-                pref = localeStore.findRecord('key', cmp);
-            if (!Ext.isDefined(pref) || pref === null) {
-                SC.core.SLogger.debug(Ext.String.format('SLocalePreferencesModel not found for key={0}, retrieving...', cmp));
-                Ext.Ajax.request({
-                    url    : '/app/lang/read',
-                    params : {
-                        key : cmp,
-                        lang: me.getLocale()
-                    },
-                    async  : false,
-                    success: function (response) {
-                        var object = Ext.decode(response.responseText),
-                            _prefs = Ext.getStore('SLocaleStore').add(decodeRecord(object)),
-                            _pref = _prefs[0];
-                        if (!Ext.isDefined(_pref)) {
-                            Ext.Error.raise(Ext.String.format('Failed to retrieve localized settings for key={0}', cmp));
-                        } else {
-                            SC.core.SLogger.debug(Ext.String.format('SLocalePreferencesModel retrieved from server for key={0}', cmp));
-                            pref = _pref;
-                        }
-                    }
-                });
-                localeStore.add(pref);
-                localeStore.sync();
-                return pref.getPreferences();
+        onLocalesLoad = function (store, data, successful) {
+            if (!Ext.isDefined(successful)) {
+                successful = false;
             }
-            SC.core.SLogger.debug(Ext.String.format('SLocalePreferencesModel retrieved from client for key={0}', cmp));
-            return pref.getPreferences();
+            if (successful) {
+                SC.core.SLogger.debug('Loaded successful, available locales found');
+            } else {
+                SC.core.SLogger.error('Loaded unsuccessful', "Failed to load data");
+            }
         },
-        initEventsListeners : function () {
+        loadLocalization = function (localeStore) {
+            Ext.Ajax.request({
+                url    : '/app/lang/read',
+                method : 'get',
+                async  : false,
+                success: function (response) {
+                    var decoded = Ext.decode(response.responseText);
+
+                    if (Ext.isObject(decoded)) {
+                        decoded = [decoded];
+                    }
+
+                    Ext.each(decoded, function (rec) {
+                        console.log(localeStore.add([decodeRecord(rec)]));
+                    });
+                }
+            });
+        },
+        decodeRecord = function (object) {
+            if (!Ext.isDefined(object) || object === null) {
+                return [];
+            }
+            var key = 'paramName',
+                locale = 'locale',
+                preferences = 'preferences',
+                wrapper = {};
+            Ext.iterate(object, function (node, value) {
+                if (node === key) {
+                    wrapper[key] = value;
+                } else if (node === locale) {
+                    wrapper[locale] = value;
+                } else if (node === preferences) {
+                    wrapper[preferences] = (function () {
+                        var tmp = [];
+                        Ext.each(value, function (item) {
+                            Ext.Array.push(tmp, item);
+                        });
+                        return tmp;
+                    }());
+                }
+            });
+            return wrapper;
+        },
+        initEventsListeners = function () {
+            var me = this;
+            me.addListener('localesLoad', onLocalesLoad, me);
+        };
+    return {
+        singleton  : true,
+        requires   : [
+            'Ext.util.Observable',
+            'Ext.data.Store',
+            'SC.core.SLogger',
+            'SC.core.locale.SLocaleStore'
+        ],
+        mixins     : {
+            observable: 'Ext.util.Observable'
+        },
+        config     : {
+            availableLocales: undefined,
+            locale          : 'pl_PL'
+        },
+        constructor: function (cfg) {
             var me = this;
 
-            me.addListener('localesLoad', onLocalesLoad, me);
+            cfg = {} || cfg;
+
+            me.mixins.observable.constructor.call(me, cfg);
+            me.addEvents(
+                'localesLoad',
+                'localesChanged'
+            );
+
+            Ext.create('SC.core.locale.SLocaleStore', {
+                listeners: {
+                    load: {
+                        scope: me,
+                        fn   : onLocalesLoad
+                    }
+                }
+            });
+
+            me.initConfig({
+                locale          : 'pl_PL',
+                availableLocales: []
+            });
+
+            initEventsListeners.apply(me);
+            loadAvailableLocales.apply(me);
+            loadLocalization.apply(me, [Ext.getStore('SLocaleStore')]);
+
+            me.callParent([cfg]);
         }
     }
 });

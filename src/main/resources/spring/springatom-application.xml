@@ -40,6 +40,16 @@
         <!-- exclude repositories, handled by jpa-->
     </context:component-scan>
 
+    <bean id="webProperties"
+          class="org.agatom.springatom.server.properties.SPropertiesHolder">
+        <property name="locations">
+            <array>
+                <value>classpath:app/web.properties</value>
+                <value>classpath:app/database.properties</value>
+            </array>
+        </property>
+    </bean>
+
     <bean id="autoWirer"
           class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 

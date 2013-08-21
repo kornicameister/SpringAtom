@@ -15,65 +15,61 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.util.impl;
+package org.agatom.springatom.server.properties;
 
-import org.agatom.springatom.web.util.SPropertiesHolder;
-import org.agatom.springatom.web.util.SServer;
 import org.apache.log4j.Logger;
 import org.joor.Reflect;
 import org.joor.ReflectException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component(value = "springAtomServer")
-public class SServerImpl
-        implements SServer {
-    public static final  String SERVER_DELIMITER = ",";
-    public static final  String SA_DELIMITER     = "sa.delimiter";
-    private static final Logger LOGGER           = Logger.getLogger(SServerImpl.class);
-    @Autowired
-    private SPropertiesHolder propertiesHolder;
+
+public class SPropertiesHolder
+        extends PropertyPlaceholderConfigurer {
+    private static final Logger LOGGER = Logger.getLogger(SPropertiesHolder.class);
+    private Map<String, String> propertiesMap;
 
     @Override
-    public String getProperty(final String key) {
-        return this.propertiesHolder.getProperty(key);
+    protected void processProperties(final ConfigurableListableBeanFactory beanFactory,
+                                     final Properties props) throws BeansException {
+        super.processProperties(beanFactory, props);
+        this.propertiesMap = new HashMap<>();
+        for (Object key : props.keySet()) {
+            String keyStr = key.toString();
+            propertiesMap.put(keyStr, props.getProperty(keyStr));
+        }
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("Cached %d keys", props.keySet().size()));
+        }
     }
 
-    @Override
+    public String getProperty(final String key) {
+        String property = this.getProperty(key, String.class);
+        if (property == null) {
+            property = this.resolveSystemProperty(key);
+        }
+        return property;
+    }
+
     public <T> T getProperty(final String key, final Class<T> as) {
         T value = null;
         try {
-            value = Reflect.on(as).create(this.propertiesHolder.getProperty(key)).get();
+            value = Reflect.on(as).create(this.propertiesMap.get(key)).get();
         } catch (ReflectException cce) {
             LOGGER.warn(String.format("Failed to retrieve property for key=%s as clazz=%s", key, as), cce);
         }
         return value;
     }
 
-    @Override
-    public Locale getServerLocale() {
-        return LocaleContextHolder.getLocale();
-    }
 
-    @Override
-    public void setServerLocale(final Locale locale) {
-        LocaleContextHolder.setLocale(locale, true);
-    }
-
-    @Override
-    public String getDelimiter() {
-        final String property = this.getProperty(SA_DELIMITER);
-        if (property == null) {
-            return SERVER_DELIMITER;
-        }
-        return property;
-    }
 }

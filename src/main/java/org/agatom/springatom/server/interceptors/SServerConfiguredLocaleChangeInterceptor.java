@@ -15,14 +15,41 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-Ext.define('SC.core.locale.SLocalePreferenceModel', {
-    extend  : 'SC.core.model.SSequentialModel',
-    requires: [
-        'SC.core.model.SSequentialModel'
-    ],
-    fields  : [
-        { name: 'key', type: 'string'},
-        { name: 'value', type: 'string'}
-    ]
-});
+package org.agatom.springatom.server.interceptors;
 
+import com.google.common.base.Preconditions;
+import org.agatom.springatom.server.SServer;
+import org.agatom.springatom.server.cfg.SServerConfigured;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+
+import javax.annotation.PostConstruct;
+
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+public class SServerConfiguredLocaleChangeInterceptor
+        extends LocaleChangeInterceptor
+        implements SServerConfigured {
+    private static final Logger LOGGER = Logger.getLogger(SServerConfiguredLocaleChangeInterceptor.class);
+    @Autowired
+    private SServer server;
+
+    @Override
+    @PostConstruct
+    public void configure() {
+        final String paramName = this.server.getProperty("sa.locale.requestParam");
+        LOGGER.trace(String.format("Initialized with paramName=%s", paramName));
+        this.setParamName(paramName);
+    }
+
+    @Override
+    @Required
+    public void setConfigure(final String[] params) {
+        Preconditions.checkArgument(params.length == 1);
+    }
+}

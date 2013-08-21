@@ -40,6 +40,7 @@ Ext.define('SC.core.locale.SLocalePreferencesModel', function () {
 
         Ext.each(prefs, function (value) {
             var dd = Ext.create('SC.core.locale.SLocalePreferenceModel', value);
+            console.log(value, '>>', dd);
             Ext.log({
                 msg  : 'Converting from object to SC.core.locale.SLocalePreferenceModel',
                 level: 'info',
@@ -71,7 +72,7 @@ Ext.define('SC.core.locale.SLocalePreferencesModel', function () {
             'SC.core.locale.SLocalePreferenceModel'
         ],
         fields        : [
-            { name: 'key', type: 'string' },
+            { name: 'paramName', type: 'string' },
             { name: 'locale', type: 'object' },
             { name: 'preferences', type: 'object' }
         ],
@@ -82,7 +83,7 @@ Ext.define('SC.core.locale.SLocalePreferencesModel', function () {
          */
         proxy         : {
             id  : 'sc-localePreferences',
-            type: 'memory'
+            type: 'memory',
         },
         /**
          * @override

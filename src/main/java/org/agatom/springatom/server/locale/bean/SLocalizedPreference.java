@@ -15,48 +15,47 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller.locale.bean;
+package org.agatom.springatom.server.locale.bean;
 
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SLocalizedPreferences
+public class SLocalizedPreference
         implements Serializable {
-    private String                     key;
-    private SLocale                    locale;
-    private List<SLocalizedPreference> preferences;
+    private transient static final String EMPTY_STRING = "";
+    private String key;
+    private String value;
+
+    public SLocalizedPreference() {
+        this(EMPTY_STRING, EMPTY_STRING);
+    }
+
+    public SLocalizedPreference(final String key, final String value) {
+        this.key = key;
+        this.value = value;
+    }
 
     public String getKey() {
-        return this.key;
+        return key;
     }
 
-    public SLocalizedPreferences setKey(final String cmp) {
-        this.key = cmp;
+    public SLocalizedPreference setKey(final String key) {
+        this.key = key;
         return this;
     }
 
-    public SLocale getLocale() {
-        return this.locale;
+    public String getValue() {
+        return value;
     }
 
-    public SLocalizedPreferences setLocale(final SLocale locale) {
-        this.locale = locale;
-        return this;
-    }
-
-    public List<SLocalizedPreference> getPreferences() {
-        return this.preferences;
-    }
-
-    public SLocalizedPreferences setPreferences(final List<SLocalizedPreference> preferences) {
-        this.preferences = preferences;
+    public SLocalizedPreference setValue(final String value) {
+        this.value = value;
         return this;
     }
 
@@ -69,24 +68,20 @@ public class SLocalizedPreferences
             return false;
         }
 
-        SLocalizedPreferences that = (SLocalizedPreferences) o;
+        SLocalizedPreference that = (SLocalizedPreference) o;
 
-        return Objects.equal(this.key, that.key) &&
-                Objects.equal(this.locale, that.locale) &&
-                Objects.equal(this.preferences, that.preferences);
+        return Objects.equal(this.key, that.key);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(key, locale, preferences);
+        return Objects.hashCode(key);
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return Objects.toStringHelper(this)
-                      .addValue(key)
-                      .addValue(locale)
-                      .addValue(preferences)
+                      .add("key", key)
+                      .add("value", value)
                       .toString();
     }
 }
