@@ -23,7 +23,10 @@ import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * @author kornicameister
@@ -35,13 +38,13 @@ import org.springframework.web.bind.annotation.*;
 public class SRemoteLogController {
     private static final Logger LOGGER = Logger.getLogger(SRemoteLogController.class);
 
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @RequestMapping(
             value = "/log",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public @ResponseBody String log(@RequestBody final SLogs logs) {
+    public void log(@RequestBody final SLogs logs) {
         for (final SLog log : logs) {
             final Logger logger = Logger.getLogger(log.getAppender());
             switch (log.getLevel()) {
@@ -56,13 +59,8 @@ public class SRemoteLogController {
                     }
                     break;
                 case "error":
-                    String exception;
-                    if (log.getException().isEmpty()) {
-                        exception = "Generic remote exception";
-                    } else {
-                        exception = log.getException();
-                    }
-                    logger.error(log.getMsg(), new SRemoteException(exception));
+                    logger.error(log.getMsg(), new SRemoteException(log.getClazz(), log.getMethod(), log
+                            .getArguments()));
                     break;
                 default:
                     if (logger.isInfoEnabled()) {
@@ -71,7 +69,6 @@ public class SRemoteLogController {
                     break;
             }
         }
-        return "done";
     }
 
 }

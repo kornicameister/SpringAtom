@@ -15,23 +15,6 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-/**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
- *                                                                                                *
- * [SpringAtom] is free software: you can redistribute it and/or modify                           *
- * it under the terms of the GNU General Public License as published by                           *
- * the Free Software Foundation, either version 3 of the License, or                              *
- * (at your option) any later version.                                                            *
- *                                                                                                *
- * [SpringAtom] is distributed in the hope that it will be useful,                                *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
- * GNU General Public License for more details.                                                   *
- *                                                                                                *
- * You should have received a copy of the GNU General Public License                              *
- * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
- **************************************************************************************************/
-
 
 Ext.define('SC.core.SLogger', function (LOGGER) {
     var pScope = undefined,
@@ -63,7 +46,6 @@ Ext.define('SC.core.SLogger', function (LOGGER) {
                 jsonData: Ext.encode(extracted),
                 success : function (response) {
                     var text = response.responseText;
-                    console.log(text);
                     logs.each(function (log, key) {
                         logs.replace(key, log.setSent(true))
                     });
@@ -78,6 +60,7 @@ Ext.define('SC.core.SLogger', function (LOGGER) {
         requires   : [
             'Ext.data.writer.Json',
             'SC.core.logger.SLog',
+            'SC.core.logger.SExceptionLog',
             'SC.core.logger.SLogLevel'
         ],
         constructor: function (config) {
@@ -93,6 +76,7 @@ Ext.define('SC.core.SLogger', function (LOGGER) {
                 run     : LOGGER.pScope.postLogs,
                 interval: 2500
             }));
+            Ext.Error.handle = LOGGER.pScope.error;
             Ext.apply(LOGGER.pScope, config);
         },
         addLog     : function (log) {
@@ -156,18 +140,19 @@ Ext.define('SC.core.SLogger', function (LOGGER) {
                 level: 'log'
             });
         },
-        error      : function (msg, exception) {
-            var scope = LOGGER.pScope;
-            scope.addLog(Ext.create('SC.core.logger.SLog', {
-                msg      : msg,
-                exception: exception,
+        error      : function (err) {
+            var scope = LOGGER.pScope,
+                args = err['arguments'];
+
+            args = [] || args;
+
+            scope.addLog(Ext.create('SC.core.logger.SExceptionLog', {
+                msg      : err['msg'],
+                clazz    : err['sourceClass'],
+                method   : err['sourceMethod'],
+                arguments: args,
                 level    : SC.core.logger.SLogLevel.static.ERROR
             }));
-            Ext.log({
-                msg  : msg,
-                level: 'warn',
-                stack: true
-            });
         }
     }
 });

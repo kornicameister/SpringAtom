@@ -18,6 +18,7 @@
 package org.agatom.springatom.web.controller.remote.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author kornicameister
@@ -26,50 +27,70 @@ import java.io.Serializable;
  */
 public class SLog
         implements Serializable {
-    private String  msg;
-    private String  appender;
-    private String  level;
-    private String  exception;
-    private boolean sent;
+    private String       msg;
+    private String       appender;
+    private String       level;
+    private List<String> arguments;
+    private String       clazz;
+    private String       method;
+    private boolean      sent;
 
     public SLog() {
-    }
-
-    public SLog(final String msg, final String appender, final String level, final String exception, final boolean sent) {
-        this.msg = msg;
-        this.appender = appender;
-        this.level = level;
-        this.sent = sent;
-        this.exception = exception;
     }
 
     public String getMsg() {
         return msg;
     }
 
+    public void setMsg(final String msg) {
+        this.msg = msg;
+    }
+
     public String getAppender() {
         return appender;
+    }
+
+    public void setAppender(final String appender) {
+        this.appender = appender;
     }
 
     public String getLevel() {
         return level;
     }
 
-    public String getException() {
-        return exception;
+    public void setLevel(final String level) {
+        this.level = level;
+    }
+
+    public List<String> getArguments() {
+        return arguments;
+    }
+
+    public void setArguments(final List<String> arguments) {
+        this.arguments = arguments;
+    }
+
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(final String clazz) {
+        this.clazz = clazz;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(final String method) {
+        this.method = method;
     }
 
     public boolean isSent() {
         return sent;
     }
 
-    @Override
-    public String toString() {
-        return "SLog{" +
-                "msg='" + msg + '\'' +
-                ", appender='" + appender + '\'' +
-                ", level='" + level + '\'' +
-                ", sent=" + sent +
-                "} " + super.toString();
+    public void setSent(final boolean sent) {
+        this.sent = sent;
     }
 }

@@ -41,7 +41,6 @@ Ext.define('SC.core.logger.SLog', {
     fields  : [
         {name: 'msg', type: 'string'},
         {name: 'appender', type: 'string', defaultValue: 'org.agatom.springatom.remote.Core'},
-        {name: 'exception', type: 'string', defaultValue: ''},
         {name: 'level', type: 'string', defaultValue: 'info'},
         {name: 'sent', type: 'boolean', defaultValue: false}
     ],

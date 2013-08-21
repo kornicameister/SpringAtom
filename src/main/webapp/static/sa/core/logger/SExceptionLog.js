@@ -15,22 +15,14 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller.remote;
-
-import java.util.List;
-
-/**
- * @author kornicameister
- * @version 0.0.1
- * @since 0.0.1
- */
-public class SRemoteException
-        extends Exception {
-    public SRemoteException(final String message) {
-        super(String.format("SRE :: %s", message));
-    }
-
-    public SRemoteException(final String clazz, final String method, final List<String> arguments) {
-        this(String.format("%s#%s (%s)", clazz, method, arguments));
-    }
-}
+Ext.define('SC.core.logger.SExceptionLog', {
+    extend  : 'SC.core.logger.SLog',
+    requires: [
+        'SC.core.logger.SLog'
+    ],
+    fields  : [
+        {name: 'clazz', type: 'string'},
+        {name: 'method', type: 'string'},
+        {name: 'arguments'}
+    ]
+});
