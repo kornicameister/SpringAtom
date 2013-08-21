@@ -632,7 +632,7 @@
                             <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
                             <options>
                                 <querydsl.excludedPackages>
-                                    org.agatom.springatom.model.beans.revision
+                                    org.agatom.springatom.server.model.beans.revision
                                 </querydsl.excludedPackages>
                             </options>
                         </configuration>
