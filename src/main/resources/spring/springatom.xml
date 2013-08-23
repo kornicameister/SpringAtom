@@ -68,6 +68,18 @@
         </bean>
     </mvc:interceptors>
 
+    <!--<bean id="jsModelResolver" class="org.agatom.springatom.web.js.JSModelLoader" scope="singleton" primary="true">-->
+    <!--<property name="frontend" value="PLAIN"/>-->
+    <!--<property name="basePackage" value="org.agatom.springatom.server.model.beans"/>-->
+    <!--<property name="exclusions">-->
+    <!--<map>-->
+    <!--<entry key="PATTERN" value="^(Q|Persistent).+"/>-->
+    <!--<entry key="ANNOTATION" value="javax.persistence.MappedSuperclass"/>-->
+    <!--<entry key="PACKAGE" value="org.agatom.springatom.server.model.beans.revision"/>-->
+    <!--</map>-->
+    <!--</property>-->
+    <!--</bean>-->
+
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
     <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
 
