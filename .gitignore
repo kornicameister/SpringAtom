@@ -19,3 +19,7 @@ database/**.pdf
 
 # tmp
 *~*
+
+# SAClient - mock
+SAClient/**
+src/main/webapp/static/log/**

@@ -16,30 +16,34 @@
  **************************************************************************************************/
 
 (function () {
-    // TODO - add loading properties from the server
-    function initApp() {
-        Ext.application({
-            name           : 'SA',
-            appFolder      : 'static/sa/application',
-            enableQuickTips: true,
-            controllers    : [
-                'SAController'
-            ],
-            launch         : function () {
-                Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider());
-                Ext.create('SA.view.SADashboard');
-            }
-        })
-    }
-
     Ext.Loader.setConfig({
-        enabled: true,
-        paths  : {
+        enabled         : true,
+        garbageCollect  : true,
+        scriptChainDelay: true,
+        paths           : {
             'SA': '/static/sa/application'
         }
     });
-    Ext.Loader.require([
-        'SA.view.SADashboard'
-    ], initApp);
-
+    Ext.application({
+        id             : 'SA-01',
+        name           : 'SA',
+        appFolder      : 'static/sa/application',
+        appProperty    : 'app',
+        enableQuickTips: true,
+        controllers    : [
+            'SAController'
+        ],
+        views          : [
+            'SADashboard',
+            'dashboard.Panel',
+            'dashboard.Navigator',
+            'dashboard.navigator.Search',
+            'dashboard.Container',
+            'dashboard.navigator.TreeMenu'
+        ],
+        launch         : function () {
+            Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider());
+            Ext.create('SA.view.SADashboard');
+        }
+    });
 }());
