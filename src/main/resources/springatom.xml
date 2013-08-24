@@ -46,9 +46,9 @@
           class="org.agatom.springatom.server.locale.impl.SMessageSourceImpl">
         <property name="basenames">
             <array>
-                <value>classpath:/app/lang/ui</value>
-                <value>classpath:/app/lang/format</value>
-                <value>classpath:/app/lang/messages</value>
+                <value>classpath:org/agatom/springatom/lang/ui</value>
+                <value>classpath:org/agatom/springatom/lang/format</value>
+                <value>classpath:org/agatom/springatom/lang/messages</value>
             </array>
         </property>
         <property name="cacheSeconds" value="60"/>

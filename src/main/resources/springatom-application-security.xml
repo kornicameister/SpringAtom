@@ -24,7 +24,7 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security.xsd">
 
-    <beans:import resource="database/DataSource.xml"/>
+    <beans:import resource="org/agatom/springatom/server/model/DataSource.xml"/>
 
     <http auto-config="true">
         <intercept-url pattern="/META-INF" access="IS_AUTHENTICATED_ANONYMOUSLY"/>

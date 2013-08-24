@@ -41,10 +41,6 @@
           lazy-init="false"
           scope="singleton"
           class="org.agatom.springatom.aop.SSystemArchitecture"/>
-    <bean id="responseAOP"
-          lazy-init="true"
-          scope="request"
-          class="org.agatom.springatom.web.response.aop.ResponseAOP"/>
 
     <!-- validator -->
     <bean id="validator"

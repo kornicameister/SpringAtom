@@ -62,13 +62,16 @@ public class SPropertiesHolder
     }
 
     public <T> T getProperty(final String key, final Class<T> as) {
-        T value = null;
+        final String val = this.propertiesMap.get(key);
+        if (val == null) {
+            return null;
+        }
         try {
-            value = Reflect.on(as).create(this.propertiesMap.get(key)).get();
+            return Reflect.on(as).create(val).get();
         } catch (ReflectException cce) {
             LOGGER.warn(String.format("Failed to retrieve property for key=%s as clazz=%s", key, as), cce);
         }
-        return value;
+        return null;
     }
 
 

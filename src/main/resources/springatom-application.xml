@@ -23,14 +23,15 @@
      http://www.springframework.org/schema/context
      http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <import resource="aop/Aspects.xml"/>
-    <import resource="database/DataSource.xml"/>
-    <import resource="database/DBPopulator.xml"/>
-    <import resource="database/Hibernate.xml"/>
-    <import resource="database/Ehcache.xml"/>
-    <import resource="database/TX.xml"/>
-    <import resource="database/JPA.xml"/>
+    <import resource="org/agatom/springatom/aop/Aspects.xml"/>
+    <import resource="org/agatom/springatom/server/model/DataSource.xml"/>
+    <import resource="org/agatom/springatom/server/populators/DBPopulator.xml"/>
+    <import resource="org/agatom/springatom/server/model/Hibernate.xml"/>
+    <import resource="org/agatom/springatom/server/service/Ehcache.xml"/>
+    <import resource="org/agatom/springatom/server/service/TX.xml"/>
+    <import resource="org/agatom/springatom/server/repository/JPA.xml"/>
 
+    <context:annotation-config/>
     <context:component-scan base-package="org.agatom.springatom.server">
         <!-- exclude repositories, handled by jpa-->
         <context:exclude-filter type="annotation" expression="org.springframework.data.repository.NoRepositoryBean"/>
@@ -44,8 +45,8 @@
           class="org.agatom.springatom.server.properties.SPropertiesHolder">
         <property name="locations">
             <array>
-                <value>classpath:app/web.properties</value>
-                <value>classpath:app/database.properties</value>
+                <value>classpath:org/agatom/springatom/web/web.properties</value>
+                <value>classpath:org/agatom/springatom/server/database.properties</value>
             </array>
         </property>
     </bean>
@@ -64,9 +65,4 @@
         <property name="packagesToScan" value="org.agatom.springatom.server.xml.beans"/>
     </bean>
     <!--jaxb-->
-
-    <bean id="databaseProperties"
-          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:app/database.properties"/>
-    </bean>
 </beans>

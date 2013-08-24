@@ -35,7 +35,7 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
                 <bean class="org.springframework.jdbc.datasource.init.ResourceDatabasePopulator">
                     <property name="scripts">
                         <array>
-                            <value>classpath:data/clear.sql</value>
+                            <value>classpath:org/agatom/springatom/server/repository/clear.sql</value>
                         </array>
                     </property>
                 </bean>
@@ -50,7 +50,7 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
                 <bean class="org.springframework.jdbc.datasource.init.ResourceDatabasePopulator">
                     <property name="scripts">
                         <array>
-                            <value>classpath:data/sadministrator.sql</value>
+                            <value>classpath:org/agatom/springatom/server/repository/sadministrator.sql</value>
                         </array>
                     </property>
                 </bean>
