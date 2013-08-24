@@ -15,34 +15,31 @@
  */
 
 Ext.define('SA.view.dashboard.Container', {
-    extend: 'Ext.container.Container',
-    alias: 'widget.dashboard_Container',
-
-    requires: [
+    extend       : 'Ext.container.Container',
+    alias        : 'widget.dashboard_Container',
+    requires     : [
         'SA.view.dashboard.Panel',
         'SA.view.dashboard.Toolbar'
     ],
-
-    layout: {
+    layout       : {
         type: 'border'
     },
-
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         Ext.applyIf(me, {
             items: [
                 {
-                    xtype: 'dashboard_panel',
-                    layout: {
+                    xtype     : 'dashboard_panel',
+                    layout    : {
                         type: 'border'
                     },
                     titleAlign: 'center',
-                    region: 'center'
+                    region    : 'center'
                 },
                 {
-                    xtype: 'dashboard_toolbar',
-                    region: 'north',
+                    xtype         : 'dashboard_toolbar',
+                    region        : 'north',
                     splitterResize: false
                 }
             ]

@@ -15,16 +15,10 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@ include file="include.jspf" %>
-
-<!DOCTYPE html>
-<html>
-<%@ include file="meta/head.jspf" %>
-<body>
-<div id="sa-container">
-    <noscript>
-        <%@ include file="erros/nojs.jspf" %>
-    </noscript>
+<div id="sa-no-javascript">
+    <header>No Java Script support detected</header>
+    <p>
+        It seems to me, that Your browser does no support JavaScript or it is turned off.
+        Please enable JavaScript and refresh the page.
+    </p>
 </div>
-</body>
-</html>

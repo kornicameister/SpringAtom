@@ -14,7 +14,7 @@
  * Do NOT hand edit this file.
  */
 
-Ext.define('SA.view.SADashboard', {
+Ext.define('SA.view.Dashboard', {
     extend       : 'Ext.container.Viewport',
     alias        : 'widget.dashboard',
     requires     : [

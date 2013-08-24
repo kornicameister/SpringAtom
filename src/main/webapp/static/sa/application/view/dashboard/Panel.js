@@ -15,48 +15,52 @@
  */
 
 Ext.define('SA.view.dashboard.Panel', {
-    extend: 'Ext.panel.Panel',
-    alias: 'widget.dashboard_panel',
-
+    extend          : 'Ext.panel.Panel',
+    alias           : 'widget.dashboard_panel',
     hideCollapseTool: true,
-    title: 'Dashboard',
-
-    initComponent: function() {
+    title           : 'Dashboard',
+    requires        : [
+        'SA.view.calendar.Panel'
+    ],
+    initComponent   : function () {
         var me = this;
 
         Ext.applyIf(me, {
             tools: [
                 {
-                    xtype: 'tool',
+                    xtype  : 'tool',
                     tooltip: 'Refresh dasboard',
-                    type: 'refresh'
+                    type   : 'refresh'
                 },
                 {
-                    xtype: 'tool',
+                    xtype  : 'tool',
                     tooltip: 'Search within dashboard',
-                    type: 'search'
+                    type   : 'search'
                 },
                 {
-                    xtype: 'tool',
+                    xtype  : 'tool',
                     tooltip: 'Add new object',
-                    type: 'plus'
+                    type   : 'plus'
                 },
                 {
-                    xtype: 'tool',
+                    xtype  : 'tool',
                     tooltip: 'Remove selected object(s)',
-                    type: 'minus'
+                    type   : 'minus'
                 },
                 {
-                    xtype: 'tool',
+                    xtype  : 'tool',
                     tooltip: 'Previous item',
-                    type: 'prev'
+                    type   : 'prev'
                 },
                 {
-                    xtype: 'tool',
+                    xtype  : 'tool',
                     tooltip: 'Next item',
-                    type: 'next'
+                    type   : 'next'
                 }
-            ]
+            ],
+            items: {
+                xtype: 'calendar_panel'
+            }
         });
 
         me.callParent(arguments);

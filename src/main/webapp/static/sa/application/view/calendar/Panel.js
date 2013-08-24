@@ -15,36 +15,36 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-(function () {
-    Ext.Loader.setConfig({
-        enabled         : true,
-        garbageCollect  : true,
-        scriptChainDelay: true,
-        paths           : {
-            'SA': '/static/sa/application'
+Ext.define('SA.view.calendar.Panel', {
+    extend       : 'Ext.panel.Panel',
+    alias        : 'widget.calendar_panel',
+    requires     : [
+        'Ext.layout.container.Card'
+    ],
+    statics      : {
+        VIEW_MODE: {
+            DAY  : 0,
+            MONTH: 1,
+            YEAR : 2
+        },
+        VIEW_TEXT: {
+            DAY  : 'Day',
+            MONTH: 'Month',
+            YEAR : 'Year'
         }
-    });
-    Ext.application({
-        id             : 'SA-01',
-        name           : 'SA',
-        appFolder      : 'static/sa/application',
-        appProperty    : 'app',
-        enableQuickTips: true,
-        controllers    : [
-            'SAController'
-        ],
-        views          : [
-            'Dashboard',
-            'dashboard.Panel',
-            'dashboard.Navigator',
-            'dashboard.navigator.Search',
-            'dashboard.Container',
-            'dashboard.navigator.TreeMenu',
-            'calendar.Panel'
-        ],
-        launch         : function () {
-            Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider());
-            Ext.create('SA.view.Dashboard');
-        }
-    });
-}());
+    },
+    /**
+     * @cfg layoutConfig
+     * @private
+     */
+    layoutConfig : {
+        layoutOnCardChange: true,
+        deferredRender    : true
+    },
+    currentView  : 0,
+    startDate    : new Date(),
+    initComponent: function () {
+        var me = this;
+        me.callParent([arguments]);
+    }
+});

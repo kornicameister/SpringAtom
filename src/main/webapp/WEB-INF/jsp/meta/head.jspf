@@ -15,16 +15,26 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@ include file="include.jspf" %>
 
-<!DOCTYPE html>
-<html>
-<%@ include file="meta/head.jspf" %>
-<body>
-<div id="sa-container">
-    <noscript>
-        <%@ include file="erros/nojs.jspf" %>
-    </noscript>
-</div>
-</body>
-</html>
+<c:set var="extjsVersion" value="4.2.1.883" scope="application"/>
+
+<s:url value="/webjars/extjs/${extjsVersion}/ext-all-dev.js" scope="application" var="extjs"/>
+<s:url value="/webjars/extjs/${extjsVersion}/ext-theme-neptune.js" scope="application" var="extjsNeptune"/>
+<s:url value="/webjars/extjs/${extjsVersion}/resources/css/ext-all-neptune.css" scope="application"
+       var="extjsNeptuneCss"/>
+<s:url value="/static/sa/sa-core.js" scope="application" var="saCore"/>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>PetClinic :: a Spring Framework demonstration</title>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="${extjsNeptuneCss}">
+    <!-- css -->
+
+    <!-- scripts -->
+    <script src="${extjs}"></script>
+    <script src="${extjsNeptune}"></script>
+    <script src="${saCore}"></script>
+    <!-- scripts -->
+</head>

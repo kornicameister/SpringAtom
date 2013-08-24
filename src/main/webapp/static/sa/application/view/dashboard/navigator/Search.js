@@ -15,15 +15,12 @@
  */
 
 Ext.define('SA.view.dashboard.navigator.Search', {
-    extend: 'Ext.panel.Panel',
-    alias: 'widget.dashboard_navigator_search',
-
-    title: 'Options',
-
-    initComponent: function() {
+    extend       : 'Ext.panel.Panel',
+    alias        : 'widget.dashboard_navigator_search',
+    title        : 'Options',
+    initComponent: function () {
         var me = this;
 
         me.callParent(arguments);
     }
-
 });

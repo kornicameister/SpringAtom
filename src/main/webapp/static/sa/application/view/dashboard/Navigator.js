@@ -15,41 +15,38 @@
  */
 
 Ext.define('SA.view.dashboard.Navigator', {
-    extend: 'Ext.panel.Panel',
-    alias: 'widget.dashboard_navigator',
-
-    requires: [
+    extend       : 'Ext.panel.Panel',
+    alias        : 'widget.dashboard_navigator',
+    requires     : [
         'SA.view.dashboard.navigator.TreeMenu',
         'SA.view.dashboard.navigator.Search'
     ],
-
-    width: 250,
-    layout: {
-        animate: true,
+    width        : 250,
+    layout       : {
+        animate    : true,
         activeOnTop: true,
-        type: 'accordion'
+        type       : 'accordion'
     },
-    animCollapse: true,
-    collapsed: false,
-    collapsible: true,
+    animCollapse : true,
+    collapsed    : false,
+    collapsible  : true,
     overlapHeader: false,
-    title: 'Navigator',
-    titleAlign: 'right',
+    title        : 'Navigator',
+    titleAlign   : 'right',
     titleCollapse: true,
-
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         Ext.applyIf(me, {
             items: [
                 {
-                    xtype: 'dashboard_navigator_tree_menu',
-                    title: 'Menu',
+                    xtype        : 'dashboard_navigator_tree_menu',
+                    title        : 'Menu',
                     titleCollapse: true
                 },
                 {
-                    xtype: 'dashboard_navigator_search',
-                    title: 'Search',
+                    xtype        : 'dashboard_navigator_search',
+                    title        : 'Search',
                     titleCollapse: true
                 }
             ]

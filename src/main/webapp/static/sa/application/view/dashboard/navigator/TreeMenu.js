@@ -15,20 +15,18 @@
  */
 
 Ext.define('SA.view.dashboard.navigator.TreeMenu', {
-    extend: 'Ext.tree.Panel',
-    alias: 'widget.dashboard_navigator_tree_menu',
-
-    title: 'My Tree Panel',
-
-    initComponent: function() {
+    extend       : 'Ext.tree.Panel',
+    alias        : 'widget.dashboard_navigator_tree_menu',
+    title        : 'My Tree Panel',
+    initComponent: function () {
         var me = this;
 
         Ext.applyIf(me, {
             viewConfig: {
-                autoScroll: true,
+                autoScroll      : true,
                 disableSelection: true,
-                loadingHeight: 2,
-                animate: true
+                loadingHeight   : 2,
+                animate         : true
             }
         });
 
