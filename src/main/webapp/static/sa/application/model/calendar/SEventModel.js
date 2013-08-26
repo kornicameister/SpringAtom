@@ -15,38 +15,21 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-(function () {
-    var extensible = 'static/lib/extensible-1.6.0-b1';
-    Ext.Loader.setConfig({
-        enabled         : true,
-        garbageCollect  : true,
-        scriptChainDelay: true,
-        paths           : {
-            'SA'        : '/static/sa/application',
-            'Extensible': '/' + extensible
+Ext.define('SA.model.calendar.SEventModel', {
+    extend  : 'Extensible.calendar.data.EventModel',
+    requires: [
+        'Extensible.calendar.data.EventModel'
+    ],
+    proxy   : {
+        type: 'ajax',
+        api : {
+            create : 'app/event/appointment/new',
+            read   : 'app/event/appointment/read',
+            update : 'app/event/appointment/update',
+            destroy: 'app/event/appointment/destroy'
         }
-    });
-
-    Ext.application({
-        id             : 'SA-01',
-        name           : 'SA',
-        appFolder      : 'static/sa/application',
-        appProperty    : 'app',
-        enableQuickTips: true,
-        controllers    : [
-            'SAController'
-        ],
-        views          : [
-            'Dashboard',
-            'dashboard.Panel',
-            'dashboard.Navigator',
-            'dashboard.navigator.Search',
-            'dashboard.Container',
-            'dashboard.navigator.TreeMenu'
-        ],
-        launch         : function () {
-            Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider());
-            Ext.create('SA.view.Dashboard');
-        }
-    });
-}());
+    }
+}, function () {
+    SC.logObjectCreated(this);
+    this.reconfigure();
+});

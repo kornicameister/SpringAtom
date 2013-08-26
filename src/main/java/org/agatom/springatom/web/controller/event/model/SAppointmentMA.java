@@ -15,38 +15,59 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-(function () {
-    var extensible = 'static/lib/extensible-1.6.0-b1';
-    Ext.Loader.setConfig({
-        enabled         : true,
-        garbageCollect  : true,
-        scriptChainDelay: true,
-        paths           : {
-            'SA'        : '/static/sa/application',
-            'Extensible': '/' + extensible
-        }
-    });
+package org.agatom.springatom.web.controller.event.model;
 
-    Ext.application({
-        id             : 'SA-01',
-        name           : 'SA',
-        appFolder      : 'static/sa/application',
-        appProperty    : 'app',
-        enableQuickTips: true,
-        controllers    : [
-            'SAController'
-        ],
-        views          : [
-            'Dashboard',
-            'dashboard.Panel',
-            'dashboard.Navigator',
-            'dashboard.navigator.Search',
-            'dashboard.Container',
-            'dashboard.navigator.TreeMenu'
-        ],
-        launch         : function () {
-            Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider());
-            Ext.create('SA.view.Dashboard');
-        }
-    });
-}());
+import com.google.common.base.Objects;
+import org.joda.time.DateTime;
+import org.springframework.stereotype.Component;
+
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+@Component
+public class SAppointmentMA {
+    private String   _dc;
+    private DateTime startDate;
+    private DateTime endDate;
+
+    public SAppointmentMA() {
+    }
+
+    public String get_dc() {
+        return _dc;
+    }
+
+    public SAppointmentMA set_dc(final String _dc) {
+        this._dc = _dc;
+        return this;
+    }
+
+    public DateTime getStartDate() {
+        return startDate;
+    }
+
+    public SAppointmentMA setStartDate(final DateTime startDate) {
+        this.startDate = startDate;
+        return this;
+    }
+
+    public DateTime getEndDate() {
+        return endDate;
+    }
+
+    public SAppointmentMA setEndDate(final DateTime endDate) {
+        this.endDate = endDate;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(_dc)
+                      .addValue(startDate)
+                      .addValue(endDate)
+                      .toString();
+    }
+}

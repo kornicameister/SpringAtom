@@ -23,6 +23,13 @@
 <s:url value="/webjars/extjs/${extjsVersion}/resources/css/ext-all-neptune.css" scope="application"
        var="extjsNeptuneCss"/>
 <s:url value="/static/sa/sa-core.js" scope="application" var="saCore"/>
+<s:url value="/static/lib/moment.min.js" scope="application" var="momentJs"/>
+<s:url value="/static/lib/extensible-1.6.0-b1/extensible-all-debug.js" scope="application" var="extensibleJs"/>
+
+<s:url value="/static/css/calendar.css" scope="application" var="calendarCss"/>
+<s:url value="/static/css/calendar-colors.css" scope="application" var="calendarColorsCss"/>
+<s:url value="/static/css/extensible-all.css" scope="application" var="extensibleCss"/>
+<s:url value="/static/css/recurrence.css" scope="application" var="recurrenceCss"/>
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -30,11 +37,17 @@
 
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="${extjsNeptuneCss}">
+    <link rel="stylesheet" type="text/css" href="${calendarCss}">
+    <link rel="stylesheet" type="text/css" href="${calendarColorsCss}">
+    <link rel="stylesheet" type="text/css" href="${extensibleCss}">
+    <link rel="stylesheet" type="text/css" href="${recurrenceCss}">
     <!-- css -->
 
     <!-- scripts -->
+    <script src="${momentJs}"></script>
     <script src="${extjs}"></script>
     <script src="${extjsNeptune}"></script>
+    <script src="${extensibleJs}"></script>
     <script src="${saCore}"></script>
     <!-- scripts -->
 </head>

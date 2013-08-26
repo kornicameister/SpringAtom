@@ -20,11 +20,13 @@ Ext.define('SA.view.dashboard.Panel', {
     hideCollapseTool: true,
     title           : 'Dashboard',
     requires        : [
-        'SA.view.calendar.Panel'
+        'Extensible.calendar.CalendarPanel',
+        'SA.store.calendar.SCalendarStore',
+        'SA.store.calendar.SEventStore'
     ],
+    layout          : 'fit',
     initComponent   : function () {
         var me = this;
-
         Ext.applyIf(me, {
             tools: [
                 {
@@ -59,11 +61,14 @@ Ext.define('SA.view.dashboard.Panel', {
                 }
             ],
             items: {
-                xtype: 'calendar_panel'
+                id           : 'sa-dashboard-calendar',
+                xtype        : 'extensible.calendarpanel',
+                calendarStore: Ext.create('SA.store.calendar.SCalendarStore'),
+                eventStore   : Ext.create('SA.store.calendar.SEventStore'),
+                title        : SC.Locales('sa-dashboard-calendar.title')
             }
         });
 
         me.callParent(arguments);
     }
-
-});
+}, SC.logObjectCreated);

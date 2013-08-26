@@ -87,6 +87,10 @@
                 });
             });
 
+            if (!Ext.isDefined(value)) {
+                value = 'no_locale_found';
+            }
+
             return Ext.String.format('{0}', value);
         };
     }

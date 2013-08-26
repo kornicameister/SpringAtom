@@ -38,7 +38,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * {@code SAppointment} is the business object describing the appointment.
+ * {@code SAppointment} is the business object describing the event.
  * <b>Appointment</b> is an object that can be placed in time and in particular assigned to the {@link SCar}.
  * The business requirement dictates that it also holds the list od tasks ({@link SAppointmentTask}).
  *
@@ -58,9 +58,9 @@ import java.util.Set;
 public class SAppointment
         extends PersistentObject<Long>
         implements Iterable<SAppointmentTask> {
-    private static final String BEGIN_NULL_MSG = "Begin dateTime for appointment must not be null";
-    private static final String END_NULL_MSG   = "End dateTime for appointment must not be null";
-    private static final String CAR_NULL_MSG   = "Car for appointment must not be null";
+    private static final String BEGIN_NULL_MSG = "Begin dateTime for event must not be null";
+    private static final String END_NULL_MSG   = "End dateTime for event must not be null";
+    private static final String CAR_NULL_MSG   = "Car for event must not be null";
     private static final String DATE_TIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
     @Index(name = "sa_begin")
     @Type(type = DATE_TIME_TYPE)

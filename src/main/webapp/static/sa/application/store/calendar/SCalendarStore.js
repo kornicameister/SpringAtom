@@ -15,36 +15,13 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-Ext.define('SA.view.calendar.Panel', {
-    extend       : 'Ext.panel.Panel',
-    alias        : 'widget.calendar_panel',
-    requires     : [
-        'Ext.layout.container.Card'
+Ext.define('SA.store.calendar.SCalendarStore', {
+    id      : 'sa-calendar-store',
+    extend  : 'Ext.data.Store',
+    requires: [
+        'SA.model.calendar.SCalendarModel'
     ],
-    statics      : {
-        VIEW_MODE: {
-            DAY  : 0,
-            MONTH: 1,
-            YEAR : 2
-        },
-        VIEW_TEXT: {
-            DAY  : 'Day',
-            MONTH: 'Month',
-            YEAR : 'Year'
-        }
-    },
-    /**
-     * @cfg layoutConfig
-     * @private
-     */
-    layoutConfig : {
-        layoutOnCardChange: true,
-        deferredRender    : true
-    },
-    currentView  : 0,
-    startDate    : new Date(),
-    initComponent: function () {
-        var me = this;
-        me.callParent([arguments]);
-    }
-});
+    model   : 'SA.model.calendar.SCalendarModel',
+    autoLoad: true,
+    autoSync: true
+}, SC.logObjectCreated);
