@@ -15,20 +15,17 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller;
+package org.agatom.springatom.web.bean.command;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import java.io.Serializable;
 
-@Controller(value = "index")
-@RequestMapping(value = "/app")
-public class SIndexController {
-
-    @RequestMapping(method = RequestMethod.GET)
-    public String doIndex() {
-        return "index";
-    }
-
-
+/**
+ * {@code CommandBean} is the backend used by forms.
+ *
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+abstract public class CommandBean
+        implements Serializable {
 }

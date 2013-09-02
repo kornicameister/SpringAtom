@@ -31,6 +31,7 @@
     <mvc:default-servlet-handler/>
     <mvc:annotation-driven/>
 
+    <!--suppress SpringModelInspection -->
     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
     <mvc:resources mapping="/static/**" location="/static/"/>
 
@@ -43,7 +44,7 @@
 
     <bean id="messageSource"
           init-method="init"
-          class="org.agatom.springatom.server.locale.impl.SMessageSourceImpl">
+          class="org.agatom.springatom.web.locale.impl.SMessageSourceImpl">
         <property name="basenames">
             <array>
                 <value>classpath:org/agatom/springatom/lang/ui</value>
@@ -54,18 +55,24 @@
         <property name="cacheSeconds" value="60"/>
         <property name="storageMode" value="COMBINED"/>
         <property name="splitBy" value="="/>
+        <property name="defaultEncoding" value="UTF-8"/>
     </bean>
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
         <property name="defaultLocale" value="pl_PL"/>
     </bean>
     <mvc:interceptors>
-        <bean class="org.agatom.springatom.server.interceptors.SServerConfiguredLocaleChangeInterceptor">
+        <bean class="org.agatom.springatom.web.interceptors.SServerConfiguredLocaleChangeInterceptor">
             <property name="configure">
                 <array>
                     <value>paramName</value>
                 </array>
             </property>
         </bean>
+        <mvc:interceptor>
+            <mvc:mapping path="/app"/>
+            <mvc:exclude-mapping path="/data"/>
+            <bean class="org.agatom.springatom.web.interceptors.SCommonDataAppenderInterceptor"/>
+        </mvc:interceptor>
     </mvc:interceptors>
 
     <!--<bean id="jsModelResolver" class="org.agatom.springatom.web.js.JSModelLoader" scope="singleton" primary="true">-->

@@ -15,20 +15,73 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller;
+package org.agatom.springatom.web.bean.locale;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import com.google.common.base.Objects;
 
-@Controller(value = "index")
-@RequestMapping(value = "/app")
-public class SIndexController {
+import java.io.Serializable;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String doIndex() {
-        return "index";
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+public class SLocalizedPreference
+        implements Serializable {
+    private transient static final String EMPTY_STRING = "";
+    private String key;
+    private String value;
+
+    public SLocalizedPreference() {
+        this(EMPTY_STRING, EMPTY_STRING);
     }
 
+    public SLocalizedPreference(final String key, final String value) {
+        this.key = key;
+        this.value = value;
+    }
 
+    public String getKey() {
+        return key;
+    }
+
+    public SLocalizedPreference setKey(final String key) {
+        this.key = key;
+        return this;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public SLocalizedPreference setValue(final String value) {
+        this.value = value;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SLocalizedPreference that = (SLocalizedPreference) o;
+
+        return Objects.equal(this.key, that.key);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(key);
+    }
+
+    @Override public String toString() {
+        return Objects.toStringHelper(this)
+                      .add("key", key)
+                      .add("value", value)
+                      .toString();
+    }
 }

@@ -22,22 +22,12 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-    <%@ include file="meta/head.jspf" %>
-    <%@ include file="meta/scripts.jspf" %>
-</head>
+<%@ include file="meta/head.jspf" %>
 <body>
-<div id="page">
-    <div class="content-wrapper midway-vertical midway-horizontal">
-        <%@ include file="fragments/header.jspf" %>
-        <div class="content nano">
-            <section>
-                Main content goes here
-            </section>
-        </div>
-        <%@ include file="fragments/footer.jspf" %>
-    </div>
-    <%@ include file="fragments/navigator.jspf" %>
+<div id="sa-container">
+    <noscript>
+        <%@ include file="erros/nojs.jspf" %>
+    </noscript>
 </div>
 </body>
 </html>

@@ -15,20 +15,33 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller;
+package org.agatom.springatom.web.locale;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.agatom.springatom.web.bean.locale.SLocalizedPreferences;
+import org.springframework.context.MessageSource;
 
-@Controller(value = "index")
-@RequestMapping(value = "/app")
-public class SIndexController {
+import java.util.Locale;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String doIndex() {
-        return "index";
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+public interface SMessageSource
+        extends MessageSource {
+
+    void setStorageMode(final StorageMode mode);
+
+    void setSplitBy(String splitBy);
+
+    String getMessage(final String key, final Locale locale);
+
+    SLocalizedPreferences getAll(final Locale locale);
+
+    SLocalizedPreferences getAll(final String requestKey, final Locale locale);
+
+    public enum StorageMode {
+        SINGLE,
+        COMBINED
     }
-
-
 }

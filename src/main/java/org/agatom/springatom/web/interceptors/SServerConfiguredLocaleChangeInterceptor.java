@@ -15,20 +15,41 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller;
+package org.agatom.springatom.web.interceptors;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import com.google.common.base.Preconditions;
+import org.agatom.springatom.server.SServerConfigured;
+import org.agatom.springatom.server.SpringAtomServer;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
-@Controller(value = "index")
-@RequestMapping(value = "/app")
-public class SIndexController {
+import javax.annotation.PostConstruct;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String doIndex() {
-        return "index";
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+public class SServerConfiguredLocaleChangeInterceptor
+        extends LocaleChangeInterceptor
+        implements SServerConfigured {
+    private static final Logger LOGGER = Logger.getLogger(SServerConfiguredLocaleChangeInterceptor.class);
+    @Autowired
+    private SpringAtomServer server;
+
+    @Override
+    @PostConstruct
+    public void configure() {
+        final String paramName = this.server.getProperty("sa.locale.requestParam");
+        LOGGER.trace(String.format("Initialized with paramName=%s", paramName));
+        this.setParamName(paramName);
     }
 
-
+    @Override
+    @Required
+    public void setConfigure(final String[] params) {
+        Preconditions.checkArgument(params.length == 1);
+    }
 }

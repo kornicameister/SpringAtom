@@ -15,20 +15,69 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller;
+package org.agatom.springatom.web.bean.command.search;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import com.google.common.base.Objects;
+import org.agatom.springatom.web.bean.command.CommandBean;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.stereotype.Component;
 
-@Controller(value = "index")
-@RequestMapping(value = "/app")
-public class SIndexController {
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+@Component(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class SSearchCommandBean
+        extends CommandBean {
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String doIndex() {
-        return "index";
+    private String phrase;
+
+    public String getPhrase() {
+        return phrase;
     }
 
+    public SSearchCommandBean setPhrase(final String phrase) {
+        this.phrase = phrase;
+        return this;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SSearchCommandBean that = (SSearchCommandBean) o;
+
+        return Objects.equal(this.phrase, that.phrase);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(phrase);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(phrase)
+                      .toString();
+    }
+
+    public enum Name {
+        GLOBAL(String.format("%s_%s", SSearchCommandBean.class.getSimpleName().toLowerCase(), "global"));
+        private final String name;
+
+        Name(final String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 }

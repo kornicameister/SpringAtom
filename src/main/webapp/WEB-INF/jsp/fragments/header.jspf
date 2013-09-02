@@ -1,0 +1,26 @@
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
+<header id="header" class="main">
+    <p><f:message key="sa.dashboard.header.label"/></p>
+
+    <form:form id="header-search-form"
+               method="post"
+               action="/app/search/global"
+               commandName="ssearchcommandbean_global"
+               autocomplete="true"
+               cssClass="header-search-form header-search-form-cf">
+        <f:message key="sa.header.search.keyword.label" var="phrase_title"/>
+        <form:input path="phrase"
+                    title="${phrase_title}"
+                    maxlength="20"/>
+        <button type="submit">
+            <i class="icon-search icon-large icon-color"></i>
+            <f:message key="sa.header.search.label"/>
+        </button>
+    </form:form>
+
+    <noscript>
+        <%@ include file="../erros/nojs.jspf" %>
+    </noscript>
+
+</header>

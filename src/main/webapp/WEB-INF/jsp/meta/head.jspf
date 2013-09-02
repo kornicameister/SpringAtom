@@ -16,38 +16,49 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
 
-<c:set var="extjsVersion" value="4.2.1.883" scope="application"/>
+<%@page session="true" %>
+<s:url value="/webjars/bootstrap/2.1.1/css/bootstrap.min.css" scope="application" htmlEscape="true" var="bootstrapCss"/>
+<s:url value="/webjars/jquery/2.0.3/jquery.js" scope="application" htmlEscape="true" var="jqueryJs"/>
+<s:url value="/webjars/font-awesome/3.2.1/css/font-awesome.min.css" scope="application" htmlEscape="true"
+       var="fontAwesomeCss"/>
 
-<s:url value="/webjars/extjs/${extjsVersion}/ext-all-dev.js" scope="application" var="extjs"/>
-<s:url value="/webjars/extjs/${extjsVersion}/ext-theme-neptune.js" scope="application" var="extjsNeptune"/>
-<s:url value="/webjars/extjs/${extjsVersion}/resources/css/ext-all-neptune.css" scope="application"
-       var="extjsNeptuneCss"/>
-<s:url value="/static/sa/sa-core.js" scope="application" var="saCore"/>
-<s:url value="/static/lib/moment.min.js" scope="application" var="momentJs"/>
-<s:url value="/static/lib/extensible-1.6.0-b1/extensible-all-debug.js" scope="application" var="extensibleJs"/>
+<s:url value="/webjars/momentjs/2.1.0/min/moment.min.js" scope="application" htmlEscape="true" var="momentJs"/>
+<s:url value="/static/lib/tinycon.min.js" scope="application" htmlEscape="true" var="tinyIconJS"/>
+<s:url value="/static/lib/midway.min.js" scope="application" htmlEscape="true" var="midwayJS"/>
+<s:url value="/static/css/core.css" scope="application" htmlEscape="true" var="coreCss"/>
 
-<s:url value="/static/css/calendar.css" scope="application" var="calendarCss"/>
-<s:url value="/static/css/calendar-colors.css" scope="application" var="calendarColorsCss"/>
-<s:url value="/static/css/extensible-all.css" scope="application" var="extensibleCss"/>
-<s:url value="/static/css/recurrence.css" scope="application" var="recurrenceCss"/>
+<s:url value="/static/lib/mmenu/3.2.1/jquery.mmenu.min.js" scope="application" htmlEscape="true" var="mmenuJs"/>
+<s:url value="/static/lib/mmenu/3.2.1/mmenu.css" scope="application" htmlEscape="true" var="mmenuCss"/>
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>PetClinic :: a Spring Framework demonstration</title>
+<c:set var="notyPath" value="/static/lib/noty/2.1.0/" scope="application"/>
+<s:url value="${notyPath}jquery.noty.js" scope="application" htmlEscape="true" var="notyJs"/>
+<s:url value="${notyPath}layouts/top.js" scope="application" htmlEscape="true" var="notyLayoutJs"/>
+<s:url value="${notyPath}themes/default.js" scope="application" htmlEscape="true" var="notyThemeJs"/>
 
-    <!-- css -->
-    <link rel="stylesheet" type="text/css" href="${extjsNeptuneCss}">
-    <link rel="stylesheet" type="text/css" href="${calendarCss}">
-    <link rel="stylesheet" type="text/css" href="${calendarColorsCss}">
-    <link rel="stylesheet" type="text/css" href="${extensibleCss}">
-    <link rel="stylesheet" type="text/css" href="${recurrenceCss}">
-    <!-- css -->
+<s:url value="/static/lib/searchMeme/jquery.searchMeme.js" scope="application" htmlEscape="true" var="searchMemeJs"/>
+<s:url value="/static/lib/searchMeme/css/searchMeme.css" scope="application" htmlEscape="true" var="searchMemeCss"/>
 
-    <!-- scripts -->
-    <script src="${momentJs}"></script>
-    <script src="${extjs}"></script>
-    <script src="${extjsNeptune}"></script>
-    <script src="${extensibleJs}"></script>
-    <script src="${saCore}"></script>
-    <!-- scripts -->
-</head>
+<jsp:useBean id="pageTitle" scope="request" type="java.lang.String"/>
+<jsp:useBean id="lang" scope="request" type="java.util.Locale"/>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="${lang.language}"/>
+<meta name="author" content="kornicameister@gmail.com"/>
+<meta name="robots" content="noindex, nofollow"/>
+<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes">
+
+<title><c:out value="${pageTitle}"/></title>
+
+<link rel="stylesheet" media="all" href="${coreCss}">
+<link rel="stylesheet" media="all" href="${mmenuCss}">
+<link rel="stylesheet" media="all" href="${fontAwesomeCss}">
+<link rel="stylesheet" media="all" href="${searchMemeCss}">
+
+<script type="text/javascript" src="${jqueryJs}"></script>
+<script type="text/javascript" src="${mmenuJs}"></script>
+<script type="text/javascript" src="${momentJs}"></script>
+<script type="text/javascript" src="${tinyIconJS}"></script>
+<script type="text/javascript" src="${midwayJS}"></script>
+<script type="text/javascript" src="${notyJs}"></script>
+<script type="text/javascript" src="${notyLayoutJs}"></script>
+<script type="text/javascript" src="${notyThemeJs}"></script>
+<script type="text/javascript" src="${searchMemeJs}"></script>

@@ -1,80 +1,298 @@
-/**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
- *                                                                                                *
- * [SpringAtom] is free software: you can redistribute it and/or modify                           *
- * it under the terms of the GNU General Public License as published by                           *
- * the Free Software Foundation, either version 3 of the License, or                              *
- * (at your option) any later version.                                                            *
- *                                                                                                *
- * [SpringAtom] is distributed in the hope that it will be useful,                                *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
- * GNU General Public License for more details.                                                   *
- *                                                                                                *
- * You should have received a copy of the GNU General Public License                              *
- * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
- **************************************************************************************************/
+@charset "UTF-8";
+@font-face {
+    font-family : "Consolas";
+    font-style  : normal;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section, summary {
+    display : block
+}
 
 html, body {
-    background-color : rgba(49, 43, 44, 0.18);
-    width            : 100%;
-    height           : 100%;
-    overflow         : hidden;
+    width      : 100%;
+    height     : 100%;
+    padding    : 0;
+    margin     : 0;
+    overflow-x : hidden;
 }
 
-/* main container cfg*/
+body {
+    background-color : #EEEEEE;
+    font-size        : 14px;
+    line-height      : 22px;
+    color            : #333333;
+}
 
-div.sa-container {
+h1, h2, h3, h4, h5, h6 {
+    line-height : 1;
+    color       : #333300;
+    font-weight : bold;
+    margin      : 20px 0 10px 0;
+}
+
+h1, h2, h3 {
+    font-size : 18px;
+}
+
+h4, h5, h6 {
+    font-size : 16px;
+}
+
+p {
+    margin : 0 0 10px 0;
+}
+
+a, a:link, a:active, a:visited, a:hover {
+    color           : #333333;
+    text-decoration : underline;
+}
+
+#page nav {
+    display : none;
+}
+
+div.content-wrapper {
+    min-height : 100%;
+    height     : 100%;
+    width      : 100%;
+    position   : relative;
+}
+
+header.main, footer.main {
+    background         : #317CA2;
+    background         : -o-linear-gradient(top, #3F94BF, #246485);
+    background         : -ms-linear-gradient(top, #3F94BF, #246485);
+    background         : -moz-linear-gradient(top, #3F94BF, #246485);
+    background         : -webkit-gradient(linear, left top, left bottom, color-stop(0, #3F94BF), color-stop(1, #246485));
+    background         : -webkit-linear-gradient(#3F94BF, #246485);
+    background         : linear-gradient(top, #3F94BF, #246485);
+    -moz-box-shadow    : 0 1px 5px rgba(34, 34, 34, 0.5);
+    -webkit-box-shadow : 0 1px 5px rgba(34, 34, 34, 0.5);
+    box-shadow         : 0 1px 5px rgba(34, 34, 34, 0.5);
+    font-size          : 16px;
+    font-weight        : bold;
+    color              : #FFFFFF;
+    text-align         : center;
+    clear              : both;
+    height             : 5%;
+}
+
+footer.main {
+    margin-top : 5px;
+}
+
+header.main {
+    margin-bottom : 5px;
+}
+
+/*TODO expand content to full browser's height*/
+div.content {
+    margin     : 0 auto;
+    clear      : both;
+    height     : 84%;
+    width      : 98%;
+    border     : 2px dashed #327699;
+    overflow-y : hidden;
+    padding    : 10px 10px 30px; /* Height of the footer */
+}
+
+header.main p, footer.main p {
+    display     : block;
+    position    : relative;
+    float       : left;
+    margin-left : 5%;
+    margin-top  : .5%;
+}
+
+div.content section p:last-child {
+    margin-bottom : 0
+}
+
+/* search bar header */
+.header-search-form-cf:before, .header-search-form-cf:after {
+    content : "";
+    display : table;
+}
+
+.header-search-form-cf:after {
+    clear : both;
+}
+
+.header-search-form-cf {
+    zoom : 1;
+}
+
+/* Form wrapper styling */
+.header-search-form {
+    width         : 20%;
+    float         : right;
+    margin-right  : 10px;
+    padding       : 2px;
+    background    : #444444;
+    background    : rgba(0, 0, 0, .2);
+    border-radius : 10px;
+    box-shadow    : 0 1px 1px rgba(0, 0, 0, .4) inset, 0 1px 0 rgba(255, 255, 255, .2);
+}
+
+/* Form text input */
+
+.header-search-form input {
+    width         : 67%;
+    height        : 90%;
+    padding       : 10px 5px;
+    float         : left;
+    font-size     : inherit;
+    text-align    : center;
+    border        : 0;
+    background    : #EEEEEE;
+    border-radius : 3px 0 0 3px;
+}
+
+.header-search-form input:focus {
+    outline    : 0;
+    background : #FFFFFF;
+    font-size  : larger;
+    box-shadow : 0 0 2px rgba(0, 0, 0, .8) inset;
+}
+
+.header-search-form input::-webkit-input-placeholder {
+    color       : #999999;
+    font-weight : normal;
+    font-style  : italic;
+}
+
+.header-search-form input:-moz-placeholder {
+    color       : #999999;
+    font-weight : normal;
+    font-style  : italic;
+}
+
+.header-search-form input:-ms-input-placeholder {
+    color       : #999999;
+    font-weight : normal;
+    font-style  : italic;
+}
+
+.header-search-form button {
+    overflow           : visible;
+    position           : relative;
+    float              : right;
+    border             : 0;
+    padding            : 0;
+    cursor             : pointer;
+    height             : 40px;
+    width              : 30%;
+    color              : #FFFFFF;
+    text-transform     : uppercase;
+    border-right-color : rgba(17, 145, 255);
+    border-radius      : 0 3px 3px 0;
+    text-shadow        : 0 -1px 0 rgba(0, 0, 0, .3);
+}
+
+.header-search-form button:hover {
+    border-right-color : rgb(0, 17, 255);
+}
+
+.header-search-form button:active,
+.header-search-form button:focus {
+    border-right-color : rgba(17, 145, 255);
+    outline            : 0;
+}
+
+.header-search-form button:before {
+    /* left arrow */
+    content      : '';
+    position     : absolute;
+    border-width : 8px 8px 8px 0;
+    border-style : solid solid solid none;
+    border-color : transparent #000000 transparent;
+    top          : 12px;
+    left         : -6px;
+}
+
+.header-search-form button:hover:before {
+    border-right-color : rgba(0, 17, 255, 0.62);
+    zoom               : 1;
+}
+
+.header-search-form button:focus:before,
+.header-search-form button:active:before {
+    border-right-color : rgba(17, 145, 255, 0.62);
+}
+
+.header-search-form button::-moz-focus-inner {
+    /* remove extra button spacing for Mozilla Firefox */
+    border  : 0;
+    padding : 0;
+}
+
+/*icon blue*/
+.icon-color {
+    color : rgba(58, 255, 245, 0.62);
+}
+
+/* mmenu overridden for icon-bar  */
+.mm-page {
+    background  : inherit;
+    min-height  : 100%;
+    height      : 100%;
+    position    : relative;
+    margin-left : 50px;
+}
+
+html.mm-opened .mm-page {
+    margin-left : 50px;
+}
+
+html.mm-opening .mm-page {
+    margin-left : -65px;
+}
+
+.mm-menu {
+    display : block !important;
+}
+
+.mm-menu li:not([class^="mm-subtitle"]) {
+    height : 40px;
+}
+
+.mm-menu li a [class^="icon-"] {
+    margin : 0 35px 0 -22px;
+}
+
+.mm-menu i {
+    clear : both;
     position : relative;
-    margin   : 0 auto;
-    width    : 99%;
-    height   : 99%;
-    border   : 2px solid black;
 }
 
-div.sa-main-left {
-    width : 15%;
+.mm-menu li i[class~="mm-submenu-icon"] {
+    display     : inline-block;
+    margin-left : 18px;
+    margin-top  : 3%;
+    clear       : left;
 }
 
-div.sa-main-center {
-    height   : 95%;
-    clear    : both;
-    overflow : hidden;
-}
-
-/* main container cfg*/
-
-div.sa-main-header {
-    width    : 99%;
-    float    : right;
-    border   : 2px solid red;
-    height   : 20%;
-    position : relative;
-}
-
-div.sa-main-footer {
-    width    : 99%;
-    float    : right;
-    border   : 2px solid red;
-    height   : 20%;
-    position : relative;
-}
-
-div.sa-main-content {
-    width    : 99%;
-    height   : 60%;
-    float    : right;
-    border   : 2px solid green;
-    margin   : 0 auto;
-    position : relative;
-}
-
-div.sa-main-nav {
-    float        : left;
-    clear        : right;
+.mm-menu li > a[class="mm-subopen"] + a {
     position     : relative;
-    width        : 95%;
-    margin-right : 5px;
-    padding      : 5px;
-    font-size    : smaller;
+    float        : right;
+    margin-right : 51%;
+}
+
+.mm-menu .mm-search {
+    display : none;
+}
+
+/*tooltip*/
+.tooltip {
+    background-color   : #000000;
+    border             : 1px solid #FFFFFF;
+    padding            : 10px 15px;
+    width              : 200px;
+    display            : none;
+    color              : #FFFFFF;
+    text-align         : left;
+    font-size          : 12px;
+    /* outline radius for mozilla/firefox only */
+    -moz-box-shadow    : 0 0 10px #000000;
+    -webkit-box-shadow : 0 0 10px #000000;
 }

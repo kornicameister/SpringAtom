@@ -15,20 +15,16 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller;
+package org.agatom.springatom.server;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
 
-@Controller(value = "index")
-@RequestMapping(value = "/app")
-public class SIndexController {
+public interface SServerConfigured {
+    void configure();
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String doIndex() {
-        return "index";
-    }
-
-
+    void setConfigure(final String[] params);
 }

@@ -22,8 +22,7 @@
             enabled: true,
             paths  : {
                 'Ext.ux' : 'static/ux',
-                'SC.core': 'static/sa/core',
-                'SA.app' : '/static/sa/application'
+                'SC.core': 'static/sa/core'
             }
         });
     }
@@ -38,7 +37,6 @@
                 initTypes();
                 initLoader();
                 initGlobals();
-                initApp();
             });
     }
 
@@ -93,10 +91,6 @@
 
             return Ext.String.format('{0}', value);
         };
-    }
-
-    function initApp() {
-        SC.loadScript('static/sa/application/sa-app.js');
     }
 
     function initJS() {
