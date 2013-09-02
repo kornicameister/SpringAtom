@@ -1,4 +1,3 @@
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~
@@ -16,46 +15,52 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
+<%@ page session="true"
+         contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" %>
+
 <nav id="menu" data-role="navigation">
 
-    <s:message code="sa.nav.index.label" var="indexLabel" htmlEscape="true"/>
-    <s:message code="sa.nav.tooltip" arguments="${indexLabel}" var="indexTooltip" htmlEscape="true"/>
+    <s:escapeBody htmlEscape="true"/>
 
-    <s:message code="sa.nav.user.notifications.label" var="notificationLabel" htmlEscape="true"/>
-    <s:message code="sa.nav.tooltip" arguments="${notificationLabel}" var="notificationTooltip" htmlEscape="true"/>
+    <s:message code="label.nav.index" var="indexLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${indexLabel}" var="indexTooltip" htmlEscape="true"/>
 
-    <s:message code="sa.nav.user.profile.label" var="userProfileLabel" htmlEscape="true"/>
-    <s:message code="sa.nav.tooltip" arguments="${userProfileLabel}" var="userProfileTooltip" htmlEscape="true"/>
+    <s:message code="label.nav.user.notifications" var="notificationLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${notificationLabel}" var="notificationTooltip" htmlEscape="true"/>
 
-    <s:message code="sa.nav.user.profile.label" var="userProfileLabel" htmlEscape="true"/>
-    <s:message code="sa.nav.tooltip" arguments="${userProfileLabel}" var="userProfileTooltip" htmlEscape="true"/>
+    <s:message code="label.nav.user.profile" var="userProfileLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${userProfileLabel}" var="userProfileTooltip" htmlEscape="true"/>
 
-    <s:message code="sa.nav.user.cars.label" var="userCarsLabel" htmlEscape="true"/>
-    <s:message code="sa.nav.tooltip" arguments="${userCarsLabel}" var="userCarsTooltip" htmlEscape="true"/>
+    <s:message code="label.nav.user.profile" var="userProfileLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${userProfileLabel}" var="userProfileTooltip" htmlEscape="true"/>
 
-    <s:message code="sa.nav.user.calendar.label" var="userCalendarLabel" htmlEscape="true"/>
-    <s:message code="sa.nav.tooltip" arguments="${userCalendarLabel}" var="userCalendarTooltip" htmlEscape="true"/>
+    <s:message code="label.nav.user.cars" var="userCarsLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${userCarsLabel}" var="userCarsTooltip" htmlEscape="true"/>
 
-    <s:message code="sa.nav.user.settings.label" var="userSettingsLabel" htmlEscape="true"/>
-    <s:message code="sa.nav.tooltip" arguments="${userSettingsLabel}" var="userSettingsTooltip" htmlEscape="true"/>
+    <s:message code="label.nav.user.calendar" var="userCalendarLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${userCalendarLabel}" var="userCalendarTooltip" htmlEscape="true"/>
 
-    <s:message code="sa.nav.cars.label" var="carsLabel" htmlEscape="true"/>
-    <s:message code="sa.nav.tooltip" arguments="${carsLabel}" var="carsTooltip" htmlEscape="true"/>
+    <s:message code="label.nav.user.settings" var="userSettingsLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${userSettingsLabel}" var="userSettingsTooltip" htmlEscape="true"/>
 
-    <s:message code="sa.nav.clients.label" var="clientsLabel" htmlEscape="true"/>
-    <s:message code="sa.nav.tooltip" arguments="${clientsLabel}" var="clientsTooltip" htmlEscape="true"/>
+    <s:message code="label.nav.cars" var="carsLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${carsLabel}" var="carsTooltip" htmlEscape="true"/>
 
-    <s:message code="sa.nav.calendar.label" var="calendarLabel" htmlEscape="true"/>
-    <s:message code="sa.nav.tooltip" arguments="${calendarLabel}" var="calendarTooltip" htmlEscape="true"/>
+    <s:message code="label.nav.clients" var="clientsLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${clientsLabel}" var="clientsTooltip" htmlEscape="true"/>
 
-    <s:message code="sa.nav.reports.label" var="reportsLabel" htmlEscape="true"/>
-    <s:message code="sa.nav.tooltip" arguments="${reportsLabel}" var="reportsTooltip" htmlEscape="true"/>
+    <s:message code="label.nav.calendar" var="calendarLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${calendarLabel}" var="calendarTooltip" htmlEscape="true"/>
 
-    <s:message code="sa.nav.utilities.label" var="utilitiesLabel" htmlEscape="true"/>
-    <s:message code="sa.nav.tooltip" arguments="${utilitiesLabel}" var="utilitiesTooltip" htmlEscape="true"/>
+    <s:message code="label.nav.reports" var="reportsLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${reportsLabel}" var="reportsTooltip" htmlEscape="true"/>
 
-    <s:message code="sa.nav.about.label" var="aboutLabel" htmlEscape="true"/>
-    <s:message code="sa.nav.tooltip" arguments="${aboutLabel}" var="aboutTooltip" htmlEscape="true"/>
+    <s:message code="label.nav.utilities" var="utilitiesLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${utilitiesLabel}" var="utilitiesTooltip" htmlEscape="true"/>
+
+    <s:message code="label.nav.about" var="aboutLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${aboutLabel}" var="aboutTooltip" htmlEscape="true"/>
 
     <ul>
         <li>
@@ -95,7 +100,7 @@
                 </li>
                 <li>
                     <a href="<s:url value="/app/user/settings"/>" title="${userSettingsTooltip}">
-                        <i class="icon-gear"></i>${userSettingsLabel}
+                        <i class="icon-gear icon-color"></i>${userSettingsLabel}
                     </a>
                 </li>
                 <%-- apppend user name to URL --%>

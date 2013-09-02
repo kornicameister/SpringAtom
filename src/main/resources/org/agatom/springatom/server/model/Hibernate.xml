@@ -48,6 +48,7 @@
                 <prop key="hibernate.order_updates">${db.hibernate.order_updates}</prop>
                 <prop key="hibernate.connection.useUnicode">${db.hibernate.useUnicode}</prop>
                 <prop key="hibernate.connection.characterEncoding">${db.hibernate.characterEncoding}</prop>
+                <prop key="hibernate.connection.charSet">${db.hibernate.characterEncoding}</prop>
                 <prop key="hibernate.show_sql">${db.hibernate.show_sql}</prop>
                 <prop key="hibernate.format_sql">${db.hibernate.format_sql}</prop>
                 <prop key="hibernate.use_sql_comments">${db.hibernate.use_sql_comments}</prop>

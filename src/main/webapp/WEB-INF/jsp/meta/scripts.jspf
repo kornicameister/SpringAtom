@@ -15,7 +15,9 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-
+<%@page session="true"
+        autoFlush="true"
+        buffer="8kb" %>
 <script type="text/javascript">
     $(function () {
         var $nav = $('nav#menu');

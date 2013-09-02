@@ -17,6 +17,8 @@
 
 
 <%@page session="true" %>
+
+<%-- variables starts here --%>
 <s:url value="/webjars/bootstrap/2.1.1/css/bootstrap.min.css" scope="application" htmlEscape="true" var="bootstrapCss"/>
 <s:url value="/webjars/jquery/2.0.3/jquery.js" scope="application" htmlEscape="true" var="jqueryJs"/>
 <s:url value="/webjars/font-awesome/3.2.1/css/font-awesome.min.css" scope="application" htmlEscape="true"
@@ -40,7 +42,9 @@
 
 <jsp:useBean id="pageTitle" scope="request" type="java.lang.String"/>
 <jsp:useBean id="lang" scope="request" type="java.util.Locale"/>
+<%-- variables starts here --%>
 
+<%-- head starts here--%>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="${lang.language}"/>
 <meta name="author" content="kornicameister@gmail.com"/>
 <meta name="robots" content="noindex, nofollow"/>
@@ -62,3 +66,4 @@
 <script type="text/javascript" src="${notyLayoutJs}"></script>
 <script type="text/javascript" src="${notyThemeJs}"></script>
 <script type="text/javascript" src="${searchMemeJs}"></script>
+<%-- head starts here--%>

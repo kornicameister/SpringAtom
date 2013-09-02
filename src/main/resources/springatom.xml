@@ -56,6 +56,8 @@
         <property name="storageMode" value="COMBINED"/>
         <property name="splitBy" value="="/>
         <property name="defaultEncoding" value="UTF-8"/>
+        <property name="fileEncodings" value="UTF-8"/>
+        <property name="useCodeAsDefaultMessage" value="true"/>
     </bean>
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
         <property name="defaultLocale" value="pl_PL"/>
