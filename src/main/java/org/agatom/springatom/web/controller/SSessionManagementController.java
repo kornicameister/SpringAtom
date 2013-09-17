@@ -15,46 +15,34 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.beans.user.role;
+package org.agatom.springatom.web.controller;
 
-import org.agatom.springatom.server.model.beans.PersistentObject;
-import org.agatom.springatom.server.model.types.user.SSecurityRoleEnum;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SRole")
-@Table(name = "SRole")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSRole",
-                updatable = false,
-                nullable = false)
-)
-public class SRole
-        extends PersistentObject<Long> {
-    @Type(type = "org.hibernate.type.EnumType")
-    @Column(name = "role", updatable = false, unique = true, length = 50, nullable = false)
-    @NaturalId(mutable = false)
-    @Enumerated(value = EnumType.STRING)
-    private SSecurityRoleEnum role;
 
-    public SSecurityRoleEnum getRole() {
-        return role;
+@Controller(value = "session")
+@RequestMapping(value = "/app/session")
+public class SSessionManagementController {
+
+    @RequestMapping(value = "/error/invalid")
+    public void handleInvalidSession() {
+
     }
 
-    public void setRole(final String role) {
-        this.role = SSecurityRoleEnum.valueOf(role);
+    @RequestMapping(value = "/error/authentication")
+    public void handleAuthenticationError() {
+
     }
 
-    public void setRole(final SSecurityRoleEnum role) {
-        this.role = role;
+    @RequestMapping(value = "/error/expired")
+    public void handleExpiredSession() {
+
     }
+
 }

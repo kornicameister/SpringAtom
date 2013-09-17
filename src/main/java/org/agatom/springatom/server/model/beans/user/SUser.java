@@ -17,15 +17,18 @@
 
 package org.agatom.springatom.server.model.beans.user;
 
+import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.server.model.beans.person.SPerson;
+import org.agatom.springatom.server.model.beans.user.authority.SAuthority;
+import org.agatom.springatom.server.model.beans.user.authority.SUserAuthority;
 import org.agatom.springatom.server.model.beans.user.embeddable.SUserCredentials;
-import org.agatom.springatom.server.model.beans.user.role.SRole;
-import org.agatom.springatom.server.model.beans.user.role.SUserToRole;
+import org.agatom.springatom.server.model.types.user.SSecuredUser;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -33,8 +36,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * {@code SUser} is the customized version of Spring's {@link org.springframework.security.core.userdetails.User} class
+ * boosted with ability
+ * to be used with {@code QueryDSL} and being associated with {@link org.agatom.springatom.server.model.beans.person.SPerson}
+ * instance.
+ *
  * @author kornicamaister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 
@@ -48,39 +56,94 @@ import java.util.Set;
                 nullable = false)
 )
 public class SUser
-        extends PersistentVersionedObject {
+        extends PersistentVersionedObject
+        implements SSecuredUser {
 
     @Audited
     @Embedded
-    private SUserCredentials credentials;
+    private SUserCredentials    credentials;
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "person", referencedColumnName = "idSPerson")
-    private SPerson          person;
+    private SPerson             person;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.user")
-    private Set<SUserToRole> roles;
+    private Set<SUserAuthority> roles;
     @Type(type = "boolean")
     @Column(name = "enabled")
-    private Boolean enabled = Boolean.TRUE;
+    private Boolean enabled               = Boolean.TRUE;
+    @Type(type = "boolean")
+    @Column(name = "accountNonExpired")
+    private boolean accountNonExpired     = Boolean.TRUE;
+    @Type(type = "boolean")
+    @Column(name = "accountNonLocked")
+    private boolean accountNonLocked      = Boolean.TRUE;
+    @Type(type = "boolean")
+    @Column(name = "credentialsNonExpired")
+    private boolean credentialsNonExpired = Boolean.TRUE;
 
     public SUser() {
         this.credentials = new SUserCredentials();
     }
 
-    public String getLogin() {
-        return this.credentials.getLogin();
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<SAuthority> roles = new HashSet<>();
+        for (SUserAuthority userToRole : this.roles) {
+            roles.add(userToRole.getAuthority());
+        }
+        return roles;
     }
 
-    public void setLogin(final String login) {
-        this.credentials.setLogin(login);
+    public void setAuthorities(final Set<? extends GrantedAuthority> roles) {
+        if (this.roles == null) {
+            this.roles = new HashSet<>();
+        }
+        for (final GrantedAuthority role : roles) {
+            this.roles.add(new SUserAuthority(this, (SAuthority) role));
+        }
     }
 
+    @Override
     public String getPassword() {
-        return this.credentials.getLogin();
+        return this.credentials.getPassword();
     }
 
     public void setPassword(final String password) {
         this.credentials.setPassword(password);
+    }
+
+    @Override
+    public String getUsername() {
+        return this.credentials.getUserName();
+    }
+
+    public void setUserName(final String login) {
+        this.credentials.setUsername(login);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return this.credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @Override
+    public void setEnabled(final boolean disabled) {
+        this.enabled = disabled;
     }
 
     public SPerson getPerson() {
@@ -91,31 +154,16 @@ public class SUser
         this.person = person;
     }
 
-    public Set<SRole> getRoles() {
-        Set<SRole> roles = new HashSet<>();
-        for (SUserToRole userToRole : this.roles) {
-            roles.add(userToRole.getRole());
-        }
-        return roles;
+    @Override
+    public boolean addAuthority(final GrantedAuthority authority) {
+        return roles.add(new SUserAuthority(this, (SAuthority) authority));
     }
 
-    public void setRoles(final Set<SRole> roles) {
-        if (this.roles == null) {
-            this.roles = new HashSet<>();
-        }
-        for (SRole role : roles) {
-            this.roles.add(new SUserToRole(this, role));
-        }
-    }
-
-    public boolean addRole(final SRole role) {
-        return roles.add(new SUserToRole(this, role));
-    }
-
-    public boolean removeRole(final SRole role) {
-        SUserToRole toDelete = null;
-        for (SUserToRole userToRole : this.roles) {
-            if (userToRole.getRole().equals(role)) {
+    @Override
+    public boolean removeAuthority(final GrantedAuthority role) {
+        SUserAuthority toDelete = null;
+        for (SUserAuthority userToRole : this.roles) {
+            if (userToRole.getAuthority().equals(role)) {
                 toDelete = userToRole;
                 break;
             }
@@ -123,25 +171,18 @@ public class SUser
         return toDelete != null && this.roles.remove(toDelete);
     }
 
-    public boolean containsRole(final SRole role) {
-        Set<SRole> rolesOut = new HashSet<>();
-        rolesOut.add(role);
-        return this.containsRoles(rolesOut);
+    @Override
+    public boolean hasAuthority(final GrantedAuthority role) {
+        Set<? extends GrantedAuthority> rolesOut = Sets.newHashSet(role);
+        return this.hasAuthorities(rolesOut);
     }
 
-    public boolean containsRoles(final Collection<SRole> roles) {
-        Set<SRole> rolesIn = new HashSet<>();
-        for (SUserToRole userToRole : this.roles) {
-            rolesIn.add(userToRole.getRole());
+    @Override
+    public boolean hasAuthorities(final Collection<? extends GrantedAuthority> roles) {
+        Set<SAuthority> rolesIn = new HashSet<>();
+        for (SUserAuthority userToRole : this.roles) {
+            rolesIn.add(userToRole.getAuthority());
         }
         return rolesIn.containsAll(roles);
-    }
-
-    public Boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(final Boolean disabled) {
-        this.enabled = disabled;
     }
 }

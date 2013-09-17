@@ -15,53 +15,18 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.beans.user.role;
+package org.agatom.springatom.server.repository.repositories;
 
-import org.agatom.springatom.server.model.beans.user.SUser;
-
-import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import java.io.Serializable;
+import org.agatom.springatom.server.model.beans.user.authority.SAuthority;
+import org.agatom.springatom.server.repository.SBasicRepository;
+import org.springframework.data.repository.RepositoryDefinition;
 
 /**
- * @author kornicamaister
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Embeddable
-public class SUserToRolePK
-        implements Serializable {
-    @ManyToOne
-    @JoinColumn(name = "user", referencedColumnName = "idSUser")
-    private SUser user;
-
-    @ManyToOne
-    @JoinColumn(name = "role", referencedColumnName = "idSRole")
-    private SRole role;
-
-    public SUserToRolePK() {
-        super();
-    }
-
-    public SUserToRolePK(final SUser user, final SRole role) {
-        this.user = user;
-        this.role = role;
-    }
-
-    public SUser getUser() {
-        return user;
-    }
-
-    public void setUser(final SUser user) {
-        this.user = user;
-    }
-
-    public SRole getRole() {
-        return role;
-    }
-
-    public void setRole(final SRole role) {
-        this.role = role;
-    }
+@RepositoryDefinition(domainClass = SAuthority.class, idClass = Long.class)
+public interface SAuthorityRepository
+        extends SBasicRepository<SAuthority, Long> {
 }

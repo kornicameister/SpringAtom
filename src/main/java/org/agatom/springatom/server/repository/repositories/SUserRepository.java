@@ -19,6 +19,7 @@ package org.agatom.springatom.server.repository.repositories;
 
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.repository.SRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.RepositoryDefinition;
 
 /**
@@ -27,6 +28,7 @@ import org.springframework.data.repository.RepositoryDefinition;
  * @since 0.0.1
  */
 
+@Qualifier(value = "userRepo")
 @RepositoryDefinition(domainClass = SUser.class, idClass = Long.class)
 public interface SUserRepository
         extends SRepository<SUser, Long, Integer> {

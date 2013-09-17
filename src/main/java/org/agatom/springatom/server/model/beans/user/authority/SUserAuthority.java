@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.beans.user.role;
+package org.agatom.springatom.server.model.beans.user.authority;
 
 import org.agatom.springatom.server.model.beans.user.SUser;
 
@@ -27,31 +27,31 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SUserToRole")
-@Table(name = "SUserToRole")
+@Entity(name = "SUserAuthority")
+@Table(name = "SUserAuthority")
 @AssociationOverrides({
         @AssociationOverride(name = "pk.user", joinColumns = @JoinColumn(name = "user")),
-        @AssociationOverride(name = "pk.role", joinColumns = @JoinColumn(name = "role"))
+        @AssociationOverride(name = "pk.authority", joinColumns = @JoinColumn(name = "authority"))
 })
-public class SUserToRole
+public class SUserAuthority
         implements Serializable {
 
     @EmbeddedId
-    private SUserToRolePK pk;
+    private SUserAuthorityPK pk;
 
-    public SUserToRole() {
-        this.pk = new SUserToRolePK();
+    public SUserAuthority() {
+        this.pk = new SUserAuthorityPK();
     }
 
-    public SUserToRole(final SUser user, final SRole role) {
-        this.pk = new SUserToRolePK(user, role);
+    public SUserAuthority(final SUser user, final SAuthority role) {
+        this.pk = new SUserAuthorityPK(user, role);
     }
 
-    public SUserToRolePK getPk() {
+    public SUserAuthorityPK getPk() {
         return pk;
     }
 
-    public void setPk(final SUserToRolePK pk) {
+    public void setPk(final SUserAuthorityPK pk) {
         this.pk = pk;
     }
 
@@ -66,12 +66,12 @@ public class SUserToRole
     }
 
     @Transient
-    public SRole getRole() {
-        return pk.getRole();
+    public SAuthority getAuthority() {
+        return this.pk.getAuthority();
     }
 
     @Transient
-    public void setRole(final SRole role) {
-        pk.setRole(role);
+    public void setAuthority(final SAuthority role) {
+        pk.setAuthority(role);
     }
 }

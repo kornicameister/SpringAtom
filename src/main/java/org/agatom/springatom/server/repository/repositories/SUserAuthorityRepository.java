@@ -15,62 +15,22 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.user;
+package org.agatom.springatom.server.repository.repositories;
 
-import org.agatom.springatom.server.populators.DatabaseEnumPopulable;
+import org.agatom.springatom.server.model.beans.user.authority.SUserAuthority;
+import org.agatom.springatom.server.repository.SBasicRepository;
+import org.springframework.data.repository.RepositoryDefinition;
 
 /**
+ * {@code SUserAuthorityRepository} is the {@link org.springframework.data.repository.Repository} designated to
+ * retrieve information about all objects of type={@link org.agatom.springatom.server.model.beans.user.authority.SAuthority}
+ * assigned to any object of type={@link org.agatom.springatom.server.model.beans.user.SUser}
+ *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
-public enum SSecurityRoleEnum
-        implements DatabaseEnumPopulable {
-    ADMIN(666),
-    ANONYMOUS(-1),
-    USER(0),
-    CLIENT(1),
-    MECHANIC(2),
-    BOSS(3),
-    ACCOUNT_ADMINISTRATOR(4),
-    //per persistent business class
-    CAR_UPDATE(5),
-    CAR_READ(6),
-    CAR_CREATE(7),
-    CAR_DELETE(8),
-    APPOINTMENT_CREATE(9),
-    APPOINTMENT_READ(10),
-    APPOINTMENT_UPDATE(11),
-    APPOINTMENT_DELETE(12);
-    //per persistent business class
-    private static final String PREFIX = "ROLE_";
-    private final int roleId;
-
-    SSecurityRoleEnum(final int id) {
-        this.roleId = id;
-    }
-
-    public int getRoleId() {
-        return this.roleId;
-    }
-
-    @Override
-    public String[] getColumns() {
-        return new String[]{"role"};
-    }
-
-    @Override
-    public String getTable() {
-        return "srole";
-    }
-
-    @Override
-    public String[] getData() {
-        return new String[]{this.toString()};
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s%s", PREFIX, super.toString());
-    }
+@RepositoryDefinition(domainClass = SUserAuthority.class, idClass = Long.class)
+public interface SUserAuthorityRepository
+        extends SBasicRepository<SUserAuthority, Long> {
 }

@@ -52,7 +52,7 @@ public class SpringSecurityAuditorAware
     public void onApplicationEvent(final ContextRefreshedEvent event) {
         if (this.systemUser == null) {
             LOGGER.info("%s >>> loading system user");
-            systemUser = this.repository.findOne(QSUser.sUser.credentials.login.eq("SYSTEM"));
+            systemUser = this.repository.findOne(QSUser.sUser.credentials.username.eq("SYSTEM"));
         }
     }
 }

@@ -15,22 +15,47 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.repository.repositories;
+package org.agatom.springatom.server.service.constraints;
 
-import org.agatom.springatom.server.model.beans.person.mechanic.SMechanic;
-import org.agatom.springatom.server.repository.SRepository;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.repository.RepositoryDefinition;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import javax.validation.ReportAsSingleViolation;
+import javax.validation.constraints.NotNull;
+import java.lang.annotation.*;
+
+import static java.lang.annotation.ElementType.*;
 
 /**
+ * {@code UserName} is the part of {@code Constraints} that defines a set of conditions to be met to acknowledge
+ * given <b>username</b> as valid.
+ * <p/>
+ * <p>
+ * Conditions to be met are:
+ * <ol>
+ * <li>user name can not be null</li>
+ * <li>user name length must be between <b>5</b> and <b>20</b> inclusively</li>
+ * </ol>
+ * </p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+@NotNull(message = "Username can not be null")
+@Length(min = 5, max = 20, message = "Username length must be between 5 and 20")
+//business-logic
+@Target(value = {METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
+@Retention(value = RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+@Constraint(validatedBy = {})
+@ReportAsSingleViolation
+public @interface UserName {
+    String message() default "{org.agatom.springatom.server.service.constraints.UserName}";
 
-@Qualifier(value = "mechanicRepository")
-@RepositoryDefinition(domainClass = SMechanic.class, idClass = Long.class)
-public interface SMechanicRepository
-        extends SRepository<SMechanic, Long, Integer> {
+    Class<?>[] groups() default {};
 
+    @Deprecated Class<? extends Payload>[] payload() default {};
 }

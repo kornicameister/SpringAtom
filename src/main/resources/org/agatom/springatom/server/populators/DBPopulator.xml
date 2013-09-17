@@ -42,7 +42,9 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
                 <bean class="org.agatom.springatom.server.populators.EnumDatabasePopulator">
                     <property name="enums">
                         <props>
-                            <prop key="srole">org.agatom.springatom.server.model.types.user.SSecurityRoleEnum</prop>
+                            <prop key="sauthority">
+                                org.agatom.springatom.server.model.types.user.SSecurityAuthorityEnum
+                            </prop>
                             <prop key="smetadata">org.agatom.springatom.server.model.types.meta.SMetaDataEnum</prop>
                         </props>
                     </property>

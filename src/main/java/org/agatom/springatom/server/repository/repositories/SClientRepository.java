@@ -19,6 +19,7 @@ package org.agatom.springatom.server.repository.repositories;
 
 import org.agatom.springatom.server.model.beans.person.client.SClient;
 import org.agatom.springatom.server.repository.SRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.RepositoryDefinition;
 
 /**
@@ -27,6 +28,7 @@ import org.springframework.data.repository.RepositoryDefinition;
  * @since 0.0.1
  */
 
+@Qualifier(value = "clientRepository")
 @RepositoryDefinition(domainClass = SClient.class, idClass = Long.class)
 public interface SClientRepository
         extends SRepository<SClient, Long, Integer> {

@@ -15,18 +15,57 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.repository.repositories;
+package org.agatom.springatom.server.model.beans.user.authority;
 
-import org.agatom.springatom.server.model.beans.user.role.SUserToRole;
-import org.agatom.springatom.server.repository.SBasicRepository;
-import org.springframework.data.repository.RepositoryDefinition;
+import org.agatom.springatom.server.model.beans.PersistentObject;
+import org.agatom.springatom.server.model.types.user.SSecurityAuthorityEnum;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Type;
+import org.springframework.security.core.GrantedAuthority;
+
+import javax.persistence.*;
 
 /**
- * @author kornicameister
+ * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
-@RepositoryDefinition(domainClass = SUserToRole.class, idClass = Long.class)
-public interface SUserToRoleRepository
-        extends SBasicRepository<SUserToRole, Long> {
+@Entity(name = "SAuthority")
+@Table(name = "SAuthority")
+@AttributeOverride(
+        name = "id",
+        column = @Column(
+                name = "idSAuthority",
+                updatable = false,
+                nullable = false)
+)
+public class SAuthority
+        extends PersistentObject<Long>
+        implements GrantedAuthority {
+    @Type(type = "org.hibernate.type.EnumType")
+    @Column(name = "authority", updatable = false, unique = true, length = 50, nullable = false)
+    @NaturalId(mutable = false)
+    @Enumerated(value = EnumType.STRING)
+    private SSecurityAuthorityEnum role;
+
+    public SSecurityAuthorityEnum getAuthorityAsEnum() {
+        return role;
+    }
+
+    public void setAuthority(final SSecurityAuthorityEnum role) {
+        this.role = role;
+    }
+
+    public int getRoleId() {
+        return this.role.getRoleId();
+    }
+
+    @Override
+    public String getAuthority() {
+        return this.role.toString();
+    }
+
+    public void setAuthority(final String role) {
+        this.role = SSecurityAuthorityEnum.valueOf(role);
+    }
 }

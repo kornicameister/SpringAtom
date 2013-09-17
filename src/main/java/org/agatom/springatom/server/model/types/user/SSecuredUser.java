@@ -15,22 +15,37 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.repository.repositories;
+package org.agatom.springatom.server.model.types.user;
 
-import org.agatom.springatom.server.model.beans.person.mechanic.SMechanic;
-import org.agatom.springatom.server.repository.SRepository;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.repository.RepositoryDefinition;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 /**
+ * {@code SSecuredUser} is extended version of <i>OOTB</i>'s SpringSecurity
+ * User's security-related classes with additional methods that allow to create
+ * (<b>register</b>) new users in the application.
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+public interface SSecuredUser
+        extends UserDetails {
 
-@Qualifier(value = "mechanicRepository")
-@RepositoryDefinition(domainClass = SMechanic.class, idClass = Long.class)
-public interface SMechanicRepository
-        extends SRepository<SMechanic, Long, Integer> {
+    void setPassword(final String password);
+
+    void setUserName(final String userName);
+
+    void setEnabled(final boolean disabled);
+
+    <T extends GrantedAuthority> boolean addAuthority(final T authority);
+
+    <T extends GrantedAuthority> boolean removeAuthority(final T authority);
+
+    <T extends GrantedAuthority> boolean hasAuthority(final T authority);
+
+    boolean hasAuthorities(final Collection<? extends GrantedAuthority> authorities);
 
 }

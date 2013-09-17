@@ -15,18 +15,65 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.repository.repositories;
+package org.agatom.springatom.web.bean.command.login;
 
-import org.agatom.springatom.server.model.beans.user.role.SRole;
-import org.agatom.springatom.server.repository.SBasicRepository;
-import org.springframework.data.repository.RepositoryDefinition;
+import com.google.common.base.Objects;
+import org.agatom.springatom.web.bean.command.CommandBean;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@RepositoryDefinition(domainClass = SRole.class, idClass = Long.class)
-public interface SRoleRepository
-        extends SBasicRepository<SRole, Long> {
+//TODO add validation
+public class SLoginCommandBean
+        extends CommandBean {
+    private String username;
+    private String password;
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public SLoginCommandBean setUsername(final String username) {
+        this.username = username;
+        return this;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public SLoginCommandBean setPassword(final String password) {
+        this.password = password;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SLoginCommandBean that = (SLoginCommandBean) o;
+
+        return Objects.equal(this.username, that.username) &&
+                Objects.equal(this.password, that.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(username, password);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(username)
+                      .addValue(password)
+                      .toString();
+    }
 }

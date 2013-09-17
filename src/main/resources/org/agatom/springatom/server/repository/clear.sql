@@ -1,6 +1,6 @@
 SET foreign_key_checks = 0;
 
-TRUNCATE TABLE `srole`;
+TRUNCATE TABLE `sauthority`;
 TRUNCATE TABLE `smetadata`;
 TRUNCATE TABLE `suser`;
 TRUNCATE TABLE `suser_history`;
@@ -11,7 +11,7 @@ TRUNCATE TABLE `sperson_history`;
 TRUNCATE TABLE `scontact`;
 TRUNCATE TABLE `scontact_history`;
 TRUNCATE TABLE `sclient`;
-TRUNCATE TABLE `susertorole`;
+TRUNCATE TABLE `suserauthority`;
 TRUNCATE TABLE `revinfo`;
 TRUNCATE TABLE `sappointment`;
 TRUNCATE TABLE `sappointmenttask`;

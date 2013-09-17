@@ -15,22 +15,52 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.repository.repositories;
+package org.agatom.springatom.server.model.beans.user.authority;
 
-import org.agatom.springatom.server.model.beans.person.mechanic.SMechanic;
-import org.agatom.springatom.server.repository.SRepository;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.repository.RepositoryDefinition;
+import org.agatom.springatom.server.model.beans.user.SUser;
+
+import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.io.Serializable;
 
 /**
- * @author kornicameister
+ * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
+@Embeddable
+public class SUserAuthorityPK
+        implements Serializable {
+    @ManyToOne
+    @JoinColumn(name = "user", referencedColumnName = "idSUser")
+    private SUser      user;
+    @ManyToOne
+    @JoinColumn(name = "authority", referencedColumnName = "idSAuthority")
+    private SAuthority authority;
 
-@Qualifier(value = "mechanicRepository")
-@RepositoryDefinition(domainClass = SMechanic.class, idClass = Long.class)
-public interface SMechanicRepository
-        extends SRepository<SMechanic, Long, Integer> {
+    public SUserAuthorityPK() {
+        super();
+    }
 
+    public SUserAuthorityPK(final SUser user, final SAuthority authority) {
+        this.user = user;
+        this.authority = authority;
+    }
+
+    public SUser getUser() {
+        return user;
+    }
+
+    public void setUser(final SUser user) {
+        this.user = user;
+    }
+
+    public SAuthority getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(final SAuthority role) {
+        this.authority = role;
+    }
 }

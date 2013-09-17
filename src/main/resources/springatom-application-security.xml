@@ -26,19 +26,47 @@
 
     <beans:import resource="org/agatom/springatom/server/model/DataSource.xml"/>
 
-    <http auto-config="true" use-expressions="true">
-        <intercept-url pattern="/META-INF" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+    <!--
+    Allows using annotations to secure access to services layer
+    -->
+    <global-method-security secured-annotations="enabled"
+                            pre-post-annotations="enabled"/>
+
+    <!-- static content -->
+    <http pattern="/webjars/*" security="none"/>
+    <http pattern="/static/*" security="none"/>
+
+    <!-- static content -->
+    <http pattern="/**" use-expressions="true">
+
+        <http-basic/>
+
+        <intercept-url pattern="/app*" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+
+        <!-- session management -->
+        <session-management
+                invalid-session-url="/app/session/error/invalid"
+                session-authentication-error-url="/app/session/error/authentication"
+                session-fixation-protection="migrateSession">
+
+            <concurrency-control max-sessions="1"
+                                 error-if-maximum-exceeded="true"
+                                 expired-url="/app/session/error/expired"/>
+        </session-management>
+        <!-- session management -->
+
     </http>
 
+    <beans:bean id="securedPasswordEncoder"
+                class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+    <beans:bean id="sUserService"
+                depends-on="dataSource"
+                class="org.agatom.springatom.server.service.impl.SUserServiceImpl"/>
+
     <authentication-manager>
-        <authentication-provider>
-            <password-encoder hash="sha-256" base64="true"/>
-            <jdbc-user-service
-                    id="userAuthenticationJdbcService"
-                    data-source-ref="dataSource"
-                    users-by-username-query="SELECT su.login,su.secPass FROM suser su WHERE su.login=?"
-                    authorities-by-username-query="SELECT u.login, ur.role FROM suser u, susertorole ur WHERE u.idSUser = ur.user AND u.login=?"
-                    />
+        <authentication-provider user-service-ref="sUserService">
+            <password-encoder ref="securedPasswordEncoder" base64="true"/>
         </authentication-provider>
     </authentication-manager>
 

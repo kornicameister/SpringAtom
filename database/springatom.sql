@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SClientProblemReport` (
 
 
 -- -----------------------------------------------------
--- Table `springatom`.`SRole`
+-- Table `springatom`.`SAuthority`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `springatom`.`SRole`;
 
@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `springatom`.`SRole` (
 
 
 -- -----------------------------------------------------
--- Table `springatom`.`SUserToRole`
+-- Table `springatom`.`SUserAuthority`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `springatom`.`SUserToRole`;
 

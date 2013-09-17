@@ -25,8 +25,11 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 /**
+ * {@code SUserCredentials} is {@link javax.persistence.Embeddable} object used as placeholder
+ * for credentials available to <b>user</b> of the application.
+ *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 
@@ -35,31 +38,33 @@ public class SUserCredentials
         implements Serializable {
     @NotEmpty
     @NaturalId
-    @Column(name = "login", length = 45, unique = true, nullable = false)
-    private String login;
+    @Column(name = "username", length = 45, unique = true, nullable = false)
+    private String username;
     @NotEmpty
-    @Column(name = "secPass", length = 66, nullable = false)
+    @Column(name = "password", length = 66, nullable = false)
     private String password;
 
-    public String getLogin() {
-        return login;
+    public String getUserName() {
+        return username;
     }
 
-    public void setLogin(final String login) {
-        this.login = login;
+    public SUserCredentials setUsername(final String login) {
+        this.username = login;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(final String password) {
+    public SUserCredentials setPassword(final String password) {
         this.password = password;
+        return this;
     }
 
     @Override
     public int hashCode() {
-        int result = login != null ? login.hashCode() : 0;
+        int result = username != null ? username.hashCode() : 0;
         result = 31 * result + (password != null ? password.hashCode() : 0);
         return result;
     }
@@ -75,7 +80,8 @@ public class SUserCredentials
 
         final SUserCredentials that = (SUserCredentials) o;
 
-        return !(login != null ? !login.equals(that.login) : that.login != null) && !(password != null ? !password
+        return !(username != null ? !username
+                .equals(that.username) : that.username != null) && !(password != null ? !password
                 .equals(that.password) : that.password != null);
     }
 }
