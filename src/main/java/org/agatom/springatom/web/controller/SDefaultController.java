@@ -17,18 +17,14 @@
 
 package org.agatom.springatom.web.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.stereotype.Component;
 
-@Controller(value = "index")
-@RequestMapping(value = "/app")
-public class SIndexController {
-
-    @RequestMapping(method = RequestMethod.GET)
-    public String doIndex() {
-        return "index";
-    }
-
-
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+@Component(value = "SDefaultController")
+public abstract class SDefaultController
+        implements SController {
 }

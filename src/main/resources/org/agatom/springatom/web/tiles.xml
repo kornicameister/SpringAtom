@@ -15,28 +15,32 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:p="http://www.springframework.org/schema/p"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd">
+<beans
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns="http://www.springframework.org/schema/beans"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <context:component-scan base-package="org.agatom.springatom.web"/>
-
-    <import resource="org/agatom/springatom/web/mvc.xml"/>
-    <import resource="org/agatom/springatom/web/tiles.xml"/>
-    <import resource="org/agatom/springatom/web/locale/locale.xml"/>
-    <import resource="org/agatom/springatom/web/interceptors/interceptors.xml"/>
-
-    <bean p:order="1" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-    <property name="prefix" value="/WEB-INF/jsp/"/>
-        <property name="suffix" value=".jsp"/>
+    <bean id="urlBasedViewResolver"
+          class="org.springframework.web.servlet.view.tiles3.TilesViewResolver"
+          p:order="0">
+        <property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView"/>
+        <property name="cache" value="true"/>
+        <property name="cacheUnresolved" value="true"/>
+        <property name="redirectContextRelative" value="true"/>
+        <property name="exposePathVariables" value="true"/>
     </bean>
-
-    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
-    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
-
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+        <property name="definitions">
+            <list>
+                <value>/META-INF/tiles/core.xml</value>
+            </list>
+        </property>
+        <property name="checkRefresh" value="true"/>
+        <property name="validateDefinitions" value="true"/>
+        <property name="useMutableTilesContainer" value="true"/>
+        <property name="preparerFactoryClass"
+                  value="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory"/>
+    </bean>
 </beans>

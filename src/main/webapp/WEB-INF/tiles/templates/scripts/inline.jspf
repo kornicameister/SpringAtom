@@ -15,39 +15,25 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@ page session="true"
-         info="SpringAtom - Car garage manager - UI"
-         language="java"
-         contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
-
-<%@ taglib prefix="s"
-           uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="c"
-           uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="sec"
-           uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="form"
-           uri="http://www.springframework.org/tags/form" %>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <%@ include file="meta/head.jspf" %>
-    <%@ include file="meta/scripts.jspf" %>
-</head>
-<body>
-<div id="page">
-    <div class="content-wrapper midway-vertical midway-horizontal">
-        <%@ include file="fragments/header.jspf" %>
-        <div class="content nano">
-            <section>
-                <img src="<s:url value="/static/images/agatom_logo.png"/>">
-            </section>
-        </div>
-        <%@ include file="fragments/footer.jspf" %>
-    </div>
-    <%@ include file="fragments/navigator.jspf" %>
-</div>
-</body>
-</html>
+<script type="text/javascript">
+    $(function () {
+        var $nav = $('nav#menu');
+        $nav.mmenu({
+            counters     : true,
+            searchfield  : true,
+            configuration: {
+                selectedClass: 'active'
+            }
+        });
+        $nav.on("opening.mm", function () {
+            $('.mm-search').fadeToggle();
+        });
+        $nav.on('closing.mm', function () {
+            // close all opened submenus
+            $('nav#menu .mm-submenu').each(function () {
+                $(this).trigger("close.mm");
+            });
+            $('.mm-search').fadeToggle();
+        });
+    });
+</script>

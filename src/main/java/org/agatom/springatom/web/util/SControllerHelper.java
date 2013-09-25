@@ -15,34 +15,19 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+package org.agatom.springatom.web.util;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+public abstract class SControllerHelper {
 
-@Controller(value = "session")
-@RequestMapping(value = "/app/session")
-public class SSessionManagementController {
+    private static final String REDIRECT_PREFIX = "redirect:%s";
 
-    @RequestMapping(value = "/error/invalid")
-    public void handleInvalidSession() {
-
-    }
-
-    @RequestMapping(value = "/error/authentication")
-    public void handleAuthenticationError() {
-
-    }
-
-    @RequestMapping(value = "/error/expired")
-    public void handleExpiredSession() {
-
+    public static String redirect(final String viewName) {
+        return String.format(REDIRECT_PREFIX, viewName);
     }
 
 }

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
   ~                                                                                               ~
@@ -16,27 +17,26 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:p="http://www.springframework.org/schema/p"
        xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd">
-
-    <context:component-scan base-package="org.agatom.springatom.web"/>
-
-    <import resource="org/agatom/springatom/web/mvc.xml"/>
-    <import resource="org/agatom/springatom/web/tiles.xml"/>
-    <import resource="org/agatom/springatom/web/locale/locale.xml"/>
-    <import resource="org/agatom/springatom/web/interceptors/interceptors.xml"/>
-
-    <bean p:order="1" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-    <property name="prefix" value="/WEB-INF/jsp/"/>
-        <property name="suffix" value=".jsp"/>
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="messageSource"
+          init-method="init"
+          class="org.agatom.springatom.web.locale.impl.SMessageSourceImpl">
+        <property name="basenames">
+            <array>
+                <value>classpath:org/agatom/springatom/lang/ui</value>
+                <value>classpath:org/agatom/springatom/lang/format</value>
+                <value>classpath:org/agatom/springatom/lang/messages</value>
+            </array>
+        </property>
+        <property name="cacheSeconds" value="60"/>
+        <property name="storageMode" value="COMBINED"/>
+        <property name="splitBy" value="="/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="fileEncodings" value="UTF-8"/>
+        <property name="useCodeAsDefaultMessage" value="true"/>
     </bean>
-
-    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
-    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
-
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <property name="defaultLocale" value="pl_PL"/>
+    </bean>
 </beans>

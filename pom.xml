@@ -135,6 +135,15 @@
     </repositories>
 
     <dependencies>
+
+        <!-- tiles -->
+        <dependency>
+            <groupId>org.apache.tiles</groupId>
+            <artifactId>tiles-extras</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <!-- tiles -->
+
         <!-- spring -->
         <!--spring data -->
         <dependency>
@@ -236,7 +245,7 @@
             <version>${spring-security.version}</version>
         </dependency>
         <dependency>
-        <groupId>aopalliance</groupId>
+            <groupId>aopalliance</groupId>
             <artifactId>aopalliance</artifactId>
             <version>1.0</version>
         </dependency>

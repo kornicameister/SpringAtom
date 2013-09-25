@@ -15,28 +15,4 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@page session="true"
-        autoFlush="true"
-        buffer="8kb" %>
-<script type="text/javascript">
-    $(function () {
-        var $nav = $('nav#menu');
-        $nav.mmenu({
-            counters     : true,
-            searchfield  : true,
-            configuration: {
-                selectedClass: 'active'
-            }
-        });
-        $nav.on("opening.mm", function () {
-            $('.mm-search').fadeToggle();
-        });
-        $nav.on('closing.mm', function () {
-            // close all opened submenus
-            $('nav#menu .mm-submenu').each(function () {
-                $(this).trigger("close.mm");
-            });
-            $('.mm-search').fadeToggle();
-        });
-    });
-</script>
+Extra here

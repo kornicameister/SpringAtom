@@ -15,10 +15,15 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<div id="sa-no-javascript">
-    <header>No Java Script support detected</header>
-    <p>
-        It seems to me, that Your browser does no support JavaScript or it is turned off.
-        Please enable JavaScript and refresh the page.
-    </p>
-</div>
+<%@ page session="true" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html"/>
+    <title>SpringAtom - Index</title>
+</head>
+<body>
+<jsp:forward page="/app"/>
+</body>
+</html>

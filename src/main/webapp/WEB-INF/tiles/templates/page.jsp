@@ -1,3 +1,11 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
+<%@ page session="true"
+         language="java"
+         contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"
+         autoFlush="true" %>
+
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~
@@ -15,27 +23,30 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<header id="header" class="main">
-    <p><s:message code="label.dashboard.header" htmlEscape="true"/></p>
-
-    <form:form id="header-search-form"
-               method="post"
-               action="/app/search/global"
-               commandName="ssearchcommandbean_global"
-               autocomplete="true"
-               cssClass="header-search-form header-search-form-cf">
-        <s:message code="tooltip.dashboard.header.search" var="phrase_title" htmlEscape="true"/>
-        <form:input path="phrase"
-                    title="${phrase_title}"
-                    maxlength="20"/>
-        <button type="submit">
-            <i class="icon-search icon-large icon-color"></i>
-            <s:message code="label.dashboard.header.search.button" htmlEscape="true"/>
-        </button>
-    </form:form>
-
-    <noscript>
-        <%@ include file="../erros/nojs.jspf" %>
-    </noscript>
-
-</header>
+<!DOCTYPE html>
+<html>
+<head>
+    <%@ include file="fragments/head.jsp" %>
+</head>
+<body>
+<div id="page">
+    <div class="content-wrapper midway-vertical midway-horizontal">
+        <%@ include file="fragments/header.jsp" %>
+        <div class="content nano">
+            <div class="breadcrumb nano midway-horizontal">
+                <tiles:insertAttribute name="breadcrumb"/>
+            </div>
+            <div id="content">
+                <tiles:insertAttribute name="content"/>
+            </div>
+            <div class="extra nano midway-horizontal">
+                <tiles:insertAttribute name="extra"/>
+            </div>
+        </div>
+        <%@ include file="fragments/footer.jsp" %>
+    </div>
+    <%@ include file="fragments/navigator.jsp" %>
+</div>
+<%@ include file="scripts/inline.jspf" %>
+</body>
+</html>
