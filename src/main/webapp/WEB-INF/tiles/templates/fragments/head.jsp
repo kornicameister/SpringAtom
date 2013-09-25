@@ -22,19 +22,13 @@
 
 <head>
     <%-- variables starts here --%>
-    <s:url value="/webjars/bootstrap/2.1.1/css/bootstrap.min.css" scope="application" htmlEscape="true"
-           var="bootstrapCss"/>
     <s:url value="/webjars/jquery/2.0.3/jquery.js" scope="application" htmlEscape="true" var="jqueryJs"/>
-    <s:url value="/webjars/font-awesome/3.2.1/css/font-awesome.min.css" scope="application" htmlEscape="true"
-           var="fontAwesomeCss"/>
 
     <s:url value="/webjars/momentjs/2.1.0/min/moment.min.js" scope="application" htmlEscape="true" var="momentJs"/>
     <s:url value="/static/lib/tinycon.min.js" scope="application" htmlEscape="true" var="tinyIconJS"/>
     <s:url value="/static/lib/midway.min.js" scope="application" htmlEscape="true" var="midwayJS"/>
-    <s:url value="/static/css/core.css" scope="application" htmlEscape="true" var="coreCss"/>
 
     <s:url value="/static/lib/mmenu/3.2.1/jquery.mmenu.min.js" scope="application" htmlEscape="true" var="mmenuJs"/>
-    <s:url value="/static/lib/mmenu/3.2.1/mmenu.css" scope="application" htmlEscape="true" var="mmenuCss"/>
 
     <c:set var="notyPath" value="/static/lib/noty/2.1.0/" scope="application"/>
     <s:url value="${notyPath}jquery.noty.js" scope="application" htmlEscape="true" var="notyJs"/>
@@ -43,7 +37,6 @@
 
     <s:url value="/static/lib/searchMeme/jquery.searchMeme.js" scope="application" htmlEscape="true"
            var="searchMemeJs"/>
-    <s:url value="/static/lib/searchMeme/css/searchMeme.css" scope="application" htmlEscape="true" var="searchMemeCss"/>
 
     <jsp:useBean id="pageTitle" scope="request" type="java.lang.String"/>
     <jsp:useBean id="lang" scope="request" type="java.util.Locale"/>
@@ -57,12 +50,15 @@
 
     <title><c:out value="${pageTitle}"/></title>
 
-    <link rel="stylesheet" media="all" href="${coreCss}">
-    <link rel="stylesheet" media="all" href="${mmenuCss}">
-    <link rel="stylesheet" media="all" href="${fontAwesomeCss}">
-    <link rel="stylesheet" media="all" href="${searchMemeCss}">
+        <link rel="stylesheet" media="all" href="<s:theme code="application" htmlEscape="true" scope="application"/>">
+        <link rel="stylesheet" media="all"
+              href="<s:theme code="application.navigator.mmenu" htmlEscape="true" scope="application"/>">
+        <link rel="stylesheet" media="all"
+              href="<s:theme code="application.forms.search.searchMeme" htmlEscape="true" scope="application"/>">
+        <link rel="stylesheet" media="all"
+              href="<s:theme code="application.fonts.fontsAwesome" htmlEscape="true" scope="application"/>">
 
-    <script type="text/javascript" src="${jqueryJs}"></script>
+        <script type="text/javascript" src="${jqueryJs}"></script>
     <script type="text/javascript" src="${mmenuJs}"></script>
     <script type="text/javascript" src="${momentJs}"></script>
     <script type="text/javascript" src="${tinyIconJS}"></script>

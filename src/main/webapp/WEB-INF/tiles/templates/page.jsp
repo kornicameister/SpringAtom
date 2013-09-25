@@ -25,9 +25,7 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-    <%@ include file="fragments/head.jsp" %>
-</head>
+<%@ include file="fragments/head.jsp" %>
 <body>
 <div id="page">
     <div class="content-wrapper midway-vertical midway-horizontal">

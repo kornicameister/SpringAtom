@@ -32,5 +32,13 @@
             <mvc:exclude-mapping path="/data"/>
             <bean class="org.agatom.springatom.web.interceptors.SCommonDataAppenderInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/app"/>
+            <mvc:exclude-mapping path="/data*"/>
+            <bean id="themeChangeInterceptor"
+                  class="org.springframework.web.servlet.theme.ThemeChangeInterceptor">
+                <property name="paramName" value="theme"/>
+            </bean>
+        </mvc:interceptor>
     </mvc:interceptors>
 </beans>

@@ -24,6 +24,6 @@
     <title>SpringAtom - Index</title>
 </head>
 <body>
-<jsp:forward page="/app"/>
+<jsp:forward page="/app?lang=pl_PL&theme=default"/>
 </body>
 </html>

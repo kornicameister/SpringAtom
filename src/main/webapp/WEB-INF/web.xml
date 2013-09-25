@@ -151,11 +151,14 @@
     <!-- jsp -->
     <jsp-config>
         <jsp-property-group>
-            <url-pattern>*.jsp</url-pattern>
+            <url-pattern>/app*</url-pattern>
             <trim-directive-whitespaces>true</trim-directive-whitespaces>
-            <page-encoding>UTF-8</page-encoding>
         </jsp-property-group>
     </jsp-config>
     <!-- jsp -->
+
+    <welcome-file-list>
+        <welcome-file>index.jps</welcome-file>
+    </welcome-file-list>
 
 </web-app>
