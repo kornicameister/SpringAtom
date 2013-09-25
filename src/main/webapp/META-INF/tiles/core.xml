@@ -22,16 +22,16 @@
 
 <tiles-definitions>
 
-    <definition name="abstract_page" template="/WEB-INF/tiles/templates/page.jsp">
+    <definition name="abstract_page" template="/tiles/templates/page.jsp">
         <put-attribute name="content" value=""/>
-        <put-attribute name="breadcrumb" value="/WEB-INF/tiles/pages/default/breadcrumb.jsp"/>
-        <put-attribute name="extra" value="/WEB-INF/tiles/pages/default/extra.jsp"/>
+        <put-attribute name="breadcrumb" value="/tiles/pages/default/breadcrumb.jsp"/>
+        <put-attribute name="extra" value="/tiles/pages/default/extra.jsp"/>
     </definition>
     <definition name="abstract_login_logout_manager_page" extends="abstract_page">
         <put-attribute name="holder" value=""/>
     </definition>
 
     <definition name="index" extends="abstract_page">
-        <put-attribute name="content" value="/WEB-INF/tiles/pages/welcome.jsp"/>
+        <put-attribute name="content" value="/tiles/pages/welcome.jsp"/>
     </definition>
 </tiles-definitions>

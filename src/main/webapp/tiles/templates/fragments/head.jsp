@@ -50,15 +50,15 @@
 
     <title><c:out value="${pageTitle}"/></title>
 
-        <link rel="stylesheet" media="all" href="<s:theme code="application" htmlEscape="true" scope="application"/>">
-        <link rel="stylesheet" media="all"
-              href="<s:theme code="application.navigator.mmenu" htmlEscape="true" scope="application"/>">
-        <link rel="stylesheet" media="all"
-              href="<s:theme code="application.forms.search.searchMeme" htmlEscape="true" scope="application"/>">
-        <link rel="stylesheet" media="all"
-              href="<s:theme code="application.fonts.fontsAwesome" htmlEscape="true" scope="application"/>">
+    <link rel="stylesheet" media="all" href="<s:theme code="application" htmlEscape="true" scope="application"/>">
+    <link rel="stylesheet" media="all"
+          href="<s:theme code="application.navigator.mmenu" htmlEscape="true" scope="application"/>">
+    <link rel="stylesheet" media="all"
+          href="<s:theme code="application.forms.search.searchMeme" htmlEscape="true" scope="application"/>">
+    <link rel="stylesheet" media="all"
+          href="<s:theme code="application.fonts.fontsAwesome" htmlEscape="true" scope="application"/>">
 
-        <script type="text/javascript" src="${jqueryJs}"></script>
+    <script type="text/javascript" src="${jqueryJs}"></script>
     <script type="text/javascript" src="${mmenuJs}"></script>
     <script type="text/javascript" src="${momentJs}"></script>
     <script type="text/javascript" src="${tinyIconJS}"></script>

@@ -33,7 +33,7 @@
     <import resource="org/agatom/springatom/web/theme/theme.xml"/>
 
     <bean p:order="1" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="prefix" value="/tiles/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
 
