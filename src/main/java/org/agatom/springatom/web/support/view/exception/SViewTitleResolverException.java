@@ -15,13 +15,20 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.util;
+package org.agatom.springatom.web.support.view.exception;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SControllerConstants {
-    public static final String CONTROLLER_NAME_FIELD = "CONTROLLER_NAME";
+public class SViewTitleResolverException
+        extends Exception {
+    public SViewTitleResolverException(final String message) {
+        super(message);
+    }
+
+    public SViewTitleResolverException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 }
