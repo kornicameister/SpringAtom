@@ -26,6 +26,7 @@ import org.aspectj.lang.annotation.Pointcut;
  * @since 0.0.1
  */
 @Aspect
+@SuppressWarnings("EmptyMethod")
 public class SSharedPointcuts {
     @Pointcut("within(org.agatom.springatom.server.service..*)")
     protected void inServiceLayer() {

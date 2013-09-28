@@ -25,7 +25,7 @@ package org.agatom.springatom.web.support.view.exception;
 public class SViewTitleResolverException
         extends Exception {
     public SViewTitleResolverException(final String message) {
-        super(message);
+        super("Key must contain character *");
     }
 
     public SViewTitleResolverException(final String message, final Throwable cause) {

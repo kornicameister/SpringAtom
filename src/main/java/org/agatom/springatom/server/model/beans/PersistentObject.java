@@ -30,7 +30,6 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -86,7 +85,6 @@ abstract public class PersistentObject<PK extends Serializable>
 
     @Override
     public int compareTo(
-            @NotNull
             final PersistentObject<PK> pObject) {
         return ComparisonChain
                 .start()
