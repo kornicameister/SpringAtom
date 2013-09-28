@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.web.locale;
 
-import org.agatom.springatom.web.bean.locale.SLocalizedPreferences;
+import org.agatom.springatom.web.support.locale.SLocalizedPreferences;
 import org.springframework.context.MessageSource;
 
 import java.util.Locale;

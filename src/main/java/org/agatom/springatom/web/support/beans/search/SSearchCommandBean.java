@@ -15,47 +15,28 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.bean.locale;
+package org.agatom.springatom.web.support.beans.search;
 
 import com.google.common.base.Objects;
-
-import java.io.Serializable;
+import org.agatom.springatom.web.support.beans.WebBean;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SLocalizedPreference
-        implements Serializable {
-    private transient static final String EMPTY_STRING = "";
-    private String key;
-    private String value;
+public class SSearchCommandBean
+        implements WebBean {
 
-    public SLocalizedPreference() {
-        this(EMPTY_STRING, EMPTY_STRING);
+    private static final String BEAN_ID = "searchCommandBean";
+    private String phrase;
+
+    public String getPhrase() {
+        return phrase;
     }
 
-    public SLocalizedPreference(final String key, final String value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public SLocalizedPreference setKey(final String key) {
-        this.key = key;
-        return this;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public SLocalizedPreference setValue(final String value) {
-        this.value = value;
+    public SSearchCommandBean setPhrase(final String phrase) {
+        this.phrase = phrase;
         return this;
     }
 
@@ -68,20 +49,25 @@ public class SLocalizedPreference
             return false;
         }
 
-        SLocalizedPreference that = (SLocalizedPreference) o;
+        SSearchCommandBean that = (SSearchCommandBean) o;
 
-        return Objects.equal(this.key, that.key);
+        return Objects.equal(this.phrase, that.phrase);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(key);
+        return Objects.hashCode(phrase);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return Objects.toStringHelper(this)
-                      .add("key", key)
-                      .add("value", value)
+                      .addValue(phrase)
                       .toString();
+    }
+
+    @Override
+    public String getBeanId() {
+        return BEAN_ID;
     }
 }

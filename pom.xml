@@ -100,6 +100,7 @@
 
         <!-- web jars -->
         <webjars.jquery.version>2.0.3</webjars.jquery.version>
+        <webjars.jquery-form.version>3.28.0-2013.02.06-1</webjars.jquery-form.version>
         <webjars.bootstrap.version>2.1.1</webjars.bootstrap.version>
         <webjars.moment.version>2.1.0</webjars.moment.version>
         <webjars.font-awesome.version>3.2.1</webjars.font-awesome.version>
@@ -317,6 +318,11 @@
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>${webjars.jquery.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery-form</artifactId>
+            <version>${webjars.jquery-form.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>

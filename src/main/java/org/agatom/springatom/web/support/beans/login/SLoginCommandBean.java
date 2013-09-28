@@ -15,27 +15,71 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller.app;
+package org.agatom.springatom.web.support.beans.login;
 
-import org.agatom.springatom.web.controller.SDefaultController;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import com.google.common.base.Objects;
+import org.agatom.springatom.web.support.beans.WebBean;
 
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+//TODO add validation
+public class SLoginCommandBean
+        implements WebBean {
+    private static final String BEAN_ID = "loginBean";
+    private String username;
+    private String password;
 
-@Controller(value = SIndexController.CONTROLLER_NAME)
-@RequestMapping(value = "/app")
-public class SIndexController
-        extends SDefaultController {
-    protected static final String CONTROLLER_NAME = "SIndexController";
+    public String getUsername() {
+        return this.username;
+    }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String doIndex() {
-        return "springatom.tiles.index";
+    public SLoginCommandBean setUsername(final String username) {
+        this.username = username;
+        return this;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public SLoginCommandBean setPassword(final String password) {
+        this.password = password;
+        return this;
     }
 
     @Override
-    public String getControllerName() {
-        return CONTROLLER_NAME;
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SLoginCommandBean that = (SLoginCommandBean) o;
+
+        return Objects.equal(this.username, that.username) &&
+                Objects.equal(this.password, that.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(username, password);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(username)
+                      .addValue(password)
+                      .toString();
+    }
+
+    @Override
+    public String getBeanId() {
+        return BEAN_ID;
     }
 }

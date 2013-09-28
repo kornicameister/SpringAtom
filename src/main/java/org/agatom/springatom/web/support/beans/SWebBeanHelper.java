@@ -15,65 +15,21 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.bean.command.login;
+package org.agatom.springatom.web.support.beans;
 
-import com.google.common.base.Objects;
-import org.agatom.springatom.web.bean.command.CommandBean;
+import org.springframework.ui.ModelMap;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-//TODO add validation
-public class SLoginCommandBean
-        extends CommandBean {
-    private String username;
-    private String password;
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public SLoginCommandBean setUsername(final String username) {
-        this.username = username;
-        return this;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public SLoginCommandBean setPassword(final String password) {
-        this.password = password;
-        return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
+public abstract class SWebBeanHelper {
+    public static void addToModelMap(final ModelMap modelMap, final WebBean webBean) {
+        final String beanId = webBean.getBeanId();
+        if (beanId == null) {
+            modelMap.addAttribute(webBean);
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        SLoginCommandBean that = (SLoginCommandBean) o;
-
-        return Objects.equal(this.username, that.username) &&
-                Objects.equal(this.password, that.password);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(username, password);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(username)
-                      .addValue(password)
-                      .toString();
+        modelMap.addAttribute(beanId, webBean);
     }
 }

@@ -19,10 +19,10 @@ package org.agatom.springatom.web.locale.impl;
 
 import com.google.common.collect.Lists;
 import org.agatom.springatom.server.SpringAtomServer;
-import org.agatom.springatom.web.bean.locale.SLocale;
-import org.agatom.springatom.web.bean.locale.SLocalizedPreference;
-import org.agatom.springatom.web.bean.locale.SLocalizedPreferences;
 import org.agatom.springatom.web.locale.SMessageSource;
+import org.agatom.springatom.web.support.locale.SLocale;
+import org.agatom.springatom.web.support.locale.SLocalizedPreference;
+import org.agatom.springatom.web.support.locale.SLocalizedPreferences;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;

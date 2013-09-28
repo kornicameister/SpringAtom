@@ -15,17 +15,60 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.bean.command;
+package org.agatom.springatom.web.support.beans.login;
 
-import java.io.Serializable;
+import org.agatom.springatom.web.support.beans.WebBean;
 
 /**
- * {@code CommandBean} is the backend used by forms.
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class CommandBean
-        implements Serializable {
+public class SLoginResultBean
+        implements WebBean {
+    private static final String BEAN_ID = "loginResult";
+    private boolean success;
+    private String  message;
+    private String  username;
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public SLoginResultBean setSuccess(final boolean success) {
+        this.success = success;
+        return this;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public SLoginResultBean setMessage(final String message) {
+        this.message = message;
+        return this;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public SLoginResultBean setUsername(final String username) {
+        this.username = username;
+        return this;
+    }
+
+    public SLoginResultBean success() {
+        return this.setSuccess(true);
+    }
+
+    public SLoginResultBean failure() {
+        return this.setSuccess(false);
+    }
+
+    @Override
+    public String getBeanId() {
+        return BEAN_ID;
+    }
+
 }
