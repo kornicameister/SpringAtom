@@ -19,7 +19,6 @@ package org.agatom.springatom.web.controller.search;
 
 import org.agatom.springatom.web.controller.SDefaultController;
 import org.agatom.springatom.web.support.beans.search.SSearchCommandBean;
-import org.agatom.springatom.web.util.SControllerHelper;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -45,7 +44,7 @@ public class SSearchController
     @RequestMapping(value = "/global", method = RequestMethod.POST)
     public String doSearch(@ModelAttribute final SSearchCommandBean bean) {
         LOGGER.debug(String.format("Searching for = %s", bean));
-        return SControllerHelper.redirect("/app");
+        return "redirect:/app";
     }
 
     @Override
