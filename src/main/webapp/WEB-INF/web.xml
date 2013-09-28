@@ -95,11 +95,6 @@
         <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
         <async-supported>true</async-supported>
     </filter>
-    <filter>
-        <filter-name>requestLoginFilter</filter-name>
-        <filter-class>org.springframework.web.filter.ServletContextRequestLoggingFilter</filter-class>
-        <async-supported>true</async-supported>
-    </filter>
 
     <filter-mapping>
         <filter-name>characterEncodingFilter</filter-name>
@@ -116,10 +111,6 @@
     <filter-mapping>
         <filter-name>httpMethodFilter</filter-name>
         <servlet-name>springatom</servlet-name>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>requestLoginFilter</filter-name>
-        <url-pattern>/app*</url-pattern>
     </filter-mapping>
     <!-- filters -->
 
@@ -147,15 +138,6 @@
         <session-timeout>20</session-timeout>
     </session-config>
     <!-- session -->
-
-    <!-- jsp -->
-    <jsp-config>
-        <jsp-property-group>
-            <url-pattern>/app*</url-pattern>
-            <trim-directive-whitespaces>true</trim-directive-whitespaces>
-        </jsp-property-group>
-    </jsp-config>
-    <!-- jsp -->
 
     <welcome-file-list>
         <welcome-file>index.jps</welcome-file>

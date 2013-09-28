@@ -15,25 +15,22 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<script type="text/javascript">
-    $(function () {
-        var $nav = $('nav#menu');
-        $nav.mmenu({
-            counters     : true,
-            searchfield  : true,
-            configuration: {
-                selectedClass: 'active'
-            }
-        });
-        $nav.on("opening.mm", function () {
-            $('.mm-search').fadeToggle();
-        });
-        $nav.on('closing.mm', function () {
-            // close all opened submenus
-            $('nav#menu .mm-submenu').each(function () {
-                $(this).trigger("close.mm");
-            });
-            $('.mm-search').fadeToggle();
-        });
-    });
-</script>
+<head>
+    <jsp:useBean id="lang" scope="request" type="java.util.Locale"/>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="${lang.language}"/>
+    <meta name="author" content="kornicameister@gmail.com"/>
+    <meta name="robots" content="noindex, nofollow"/>
+    <meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes">
+
+    <title>
+        <jsp:useBean id="pageTitleBean"
+                     scope="request"
+                     type="org.agatom.springatom.web.support.view.bean.SViewTitle">
+        </jsp:useBean>
+        <c:out value="${pageTitleBean.paramValue}" default="[SA]::SpringAtom"/>
+    </title>
+
+    <%@include file="imports/css-imports.jspf" %>
+    <%@include file="imports/scripts-imports.jspf" %>
+</head>
