@@ -18,62 +18,56 @@
 package org.agatom.springatom.web.support.locale;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
-
-import java.io.Serializable;
-import java.util.List;
+import org.agatom.springatom.web.support.beans.WebBean;
 
 /**
+ * {@code SLocalizedMessage} is a {@link org.agatom.springatom.web.support.beans.WebBean} wrapping
+ * the information about the message for the given key.
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SLocalizedPreferences
-        implements Serializable {
-    private String                     paramName;
-    private SLocale                    locale;
-    private List<SLocalizedPreference> preferences;
+public class SLocalizedMessage
+        implements WebBean {
+    private static final String BEAN_ID = "localizedMessage";
+    private String  key;
+    private String  message;
+    private SLocale locale;
 
-    public String getParamName() {
-        return paramName;
+    public SLocalizedMessage() {
+        this.setKey("").setMessage("");
     }
 
-    public SLocalizedPreferences setParamName(final String paramName) {
-        this.paramName = paramName;
+    public SLocalizedMessage(final String key, final String message) {
+        this.key = key;
+        this.message = message;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public SLocalizedMessage setKey(final String key) {
+        this.key = key;
+        return this;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public SLocalizedMessage setMessage(final String message) {
+        this.message = message;
         return this;
     }
 
     public SLocale getLocale() {
-        return this.locale;
+        return locale;
     }
 
-    public SLocalizedPreferences setLocale(final SLocale locale) {
+    public SLocalizedMessage setLocale(final SLocale locale) {
         this.locale = locale;
-        return this;
-    }
-
-    public List<SLocalizedPreference> getPreferences() {
-        return this.preferences;
-    }
-
-    public SLocalizedPreferences setPreferences(final List<SLocalizedPreference> preferences) {
-        this.preferences = preferences;
-        return this;
-    }
-
-    public SLocalizedPreferences put(final List<SLocalizedPreference> preferences) {
-        if (this.preferences == null) {
-            this.preferences = Lists.newArrayList();
-        }
-        this.preferences.addAll(preferences);
-        return this;
-    }
-
-    public SLocalizedPreferences put(final String key, final String pref) {
-        if (this.preferences == null) {
-            this.preferences = Lists.newArrayList();
-        }
-        this.preferences.add(new SLocalizedPreference().setKey(key).setValue(pref));
         return this;
     }
 
@@ -86,23 +80,26 @@ public class SLocalizedPreferences
             return false;
         }
 
-        SLocalizedPreferences that = (SLocalizedPreferences) o;
+        SLocalizedMessage that = (SLocalizedMessage) o;
 
-        return Objects.equal(this.locale, that.locale) &&
-                Objects.equal(this.preferences, that.preferences);
+        return Objects.equal(this.key, that.key);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(locale, preferences);
+        return Objects.hashCode(key);
+    }
+
+    @Override public String toString() {
+        return Objects.toStringHelper(this)
+                      .add("key", key)
+                      .add("message", message)
+                      .add("locale", locale)
+                      .toString();
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(paramName)
-                      .addValue(locale)
-                      .addValue(preferences)
-                      .toString();
+    public String getBeanId() {
+        return BEAN_ID;
     }
 }

@@ -17,7 +17,8 @@
 
 package org.agatom.springatom.web.locale;
 
-import org.agatom.springatom.web.support.locale.SLocalizedPreferences;
+import org.agatom.springatom.web.support.locale.SLocalizedMessage;
+import org.agatom.springatom.web.support.locale.SLocalizedMessages;
 import org.springframework.context.MessageSource;
 
 import java.util.Locale;
@@ -29,16 +30,12 @@ import java.util.Locale;
  */
 public interface SMessageSource
         extends MessageSource {
-
-    void setStorageMode(final StorageMode mode);
-
-    void setSplitBy(String splitBy);
-
     String getMessage(final String key, final Locale locale);
 
-    SLocalizedPreferences getAll(final Locale locale);
+    SLocalizedMessage getLocalizedMessage(final String key, final Locale locale);
 
-    SLocalizedPreferences getAll(final String requestKey, final Locale locale);
+    SLocalizedMessages getLocalizedMessages(final Locale locale);
+
 
     public enum StorageMode {
         SINGLE,

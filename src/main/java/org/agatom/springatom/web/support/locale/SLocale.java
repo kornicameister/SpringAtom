@@ -18,21 +18,38 @@
 package org.agatom.springatom.web.support.locale;
 
 import com.google.common.base.Objects;
+import org.agatom.springatom.web.support.beans.WebBean;
 
-import java.io.Serializable;
+import java.util.Locale;
 
 /**
+ * {@code SLocale} is {@link org.agatom.springatom.web.support.beans.WebBean} that carries information about the
+ * localization.
+ *
  * @author kornicameister
  * @version 0.0.1
+ * @{code }
  * @since 0.0.1
  */
 
 public class SLocale
-        implements Serializable {
+        implements WebBean {
+    private static final String BEAN_ID = "sLocale";
     private String  tag;
     private String  language;
     private String  country;
     private boolean isSet;
+
+    public static SLocale fromLocale(final Locale locale) {
+        return new SLocale()
+                .setTag(locale.toLanguageTag())
+                .setCountry(locale.getCountry())
+                .setLanguage(locale.getLanguage());
+    }
+
+    public static Locale toLocale(final SLocale sLocale) {
+        return Locale.forLanguageTag(sLocale.tag);
+    }
 
     public SLocale setIsSet(final boolean isSet) {
         this.isSet = isSet;
@@ -100,5 +117,10 @@ public class SLocale
                       .addValue(country)
                       .addValue(isSet)
                       .toString();
+    }
+
+    @Override
+    public String getBeanId() {
+        return BEAN_ID;
     }
 }

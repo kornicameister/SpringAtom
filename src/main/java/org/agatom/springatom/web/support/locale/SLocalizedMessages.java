@@ -18,44 +18,53 @@
 package org.agatom.springatom.web.support.locale;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Sets;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.io.Serializable;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SLocalizedPreference
-        implements Serializable {
-    private transient static final String EMPTY_STRING = "";
-    private String key;
-    private String value;
+public class SLocalizedMessages
+implements Serializable {
+    private Set<SLocalizedMessage> preferences;
 
-    public SLocalizedPreference() {
-        this(EMPTY_STRING, EMPTY_STRING);
+    public Set<SLocalizedMessage> getPreferences() {
+        return this.preferences;
     }
 
-    public SLocalizedPreference(final String key, final String value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public SLocalizedPreference setKey(final String key) {
-        this.key = key;
+    public SLocalizedMessages setPreferences(final Set<SLocalizedMessage> preferences) {
+        this.preferences = preferences;
         return this;
     }
 
-    public String getValue() {
-        return value;
+    public SLocalizedMessages put(final Set<SLocalizedMessage> preferences) {
+        if (this.preferences == null) {
+            this.preferences = Sets.newHashSet();
+        }
+        this.preferences.addAll(preferences);
+        return this;
     }
 
-    public SLocalizedPreference setValue(final String value) {
-        this.value = value;
+    public SLocalizedMessages put(final String key, final String pref, Locale locale) {
+        if (key != null && pref != null) {
+
+            if (locale == null) {
+                locale = LocaleContextHolder.getLocale();
+            }
+
+            if (this.preferences == null) {
+                this.preferences = Sets.newHashSet();
+            }
+            this.preferences.add(new SLocalizedMessage().setKey(key).setMessage(pref).setLocale(
+                    SLocale.fromLocale(locale)
+            ));
+        }
         return this;
     }
 
@@ -68,20 +77,20 @@ public class SLocalizedPreference
             return false;
         }
 
-        SLocalizedPreference that = (SLocalizedPreference) o;
+        SLocalizedMessages that = (SLocalizedMessages) o;
 
-        return Objects.equal(this.key, that.key);
+        return Objects.equal(this.preferences, that.preferences);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(key);
+        return Objects.hashCode(preferences);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return Objects.toStringHelper(this)
-                      .add("key", key)
-                      .add("value", value)
+                      .addValue(preferences)
                       .toString();
     }
 }

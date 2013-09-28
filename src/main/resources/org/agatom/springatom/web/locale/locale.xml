@@ -20,7 +20,6 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean id="messageSource"
-          init-method="init"
           class="org.agatom.springatom.web.locale.impl.SMessageSourceImpl">
         <property name="basenames">
             <array>
@@ -30,8 +29,6 @@
             </array>
         </property>
         <property name="cacheSeconds" value="60"/>
-        <property name="storageMode" value="COMBINED"/>
-        <property name="splitBy" value="="/>
         <property name="defaultEncoding" value="UTF-8"/>
         <property name="fileEncodings" value="UTF-8"/>
         <property name="useCodeAsDefaultMessage" value="true"/>
