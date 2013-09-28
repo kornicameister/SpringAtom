@@ -18,10 +18,12 @@
 package org.agatom.springatom.web.interceptors;
 
 import org.agatom.springatom.server.SpringAtomServer;
-import org.agatom.springatom.web.bean.command.search.SSearchCommandBean;
-import org.agatom.springatom.web.locale.SMessageSource;
+import org.agatom.springatom.web.support.beans.SWebBeanHelper;
+import org.agatom.springatom.web.support.beans.search.SSearchCommandBean;
+import org.agatom.springatom.web.support.view.SViewTitleResolver;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -29,37 +31,28 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 
 /**
+ * {@code SCDRViewInterceptor} is the shorthand for <i>SCommonDataResolverViewInterceptor</i>.
+ * This class intercepts request for the views before processing them and injects commonly reused beans
+ * into them.
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SCommonDataAppenderInterceptor
+public class SCDRViewInterceptor
         extends HandlerInterceptorAdapter {
-    private static final Logger LOGGER                  = Logger.getLogger(SCommonDataAppenderInterceptor.class);
+    private static final Logger LOGGER                  = Logger.getLogger(SCDRViewInterceptor.class);
     private static final String SA_LOCALE_REQUEST_PARAM = "sa.locale.requestParam";
-    private static final String SA_UI_PAGE_TITLE_KEY    = "sa.ui.page.title.key";
-    private static final String SA_UI_PAGE_TITLE_PREFIX = "sa.ui.page.title.prefix";
     @Autowired
-    private SpringAtomServer server;
-    @Autowired
-    private SMessageSource   messageSource;
-    private String           localeParamKey;
-    private String           pageTitleKey;
-    private String           pageTitlePrefix;
+    private SpringAtomServer   server;
+    private String             localeParamKey;
+    private SViewTitleResolver titleResolver;
 
     @PostConstruct
     private void init() {
         this.localeParamKey = this.server.getProperty(SA_LOCALE_REQUEST_PARAM);
-        this.pageTitleKey = this.server.getProperty(SA_UI_PAGE_TITLE_KEY);
-        this.pageTitlePrefix = this.server.getProperty(SA_UI_PAGE_TITLE_PREFIX);
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String
-                    .format("Initialized for properties names=%s", Arrays
-                            .toString(new String[]{SA_LOCALE_REQUEST_PARAM, SA_UI_PAGE_TITLE_KEY, SA_UI_PAGE_TITLE_PREFIX})));
-        }
     }
 
     @Override
@@ -69,16 +62,17 @@ public class SCommonDataAppenderInterceptor
             final ModelMap modelMap = modelAndView.getModelMap();
 
             modelMap.put(this.localeParamKey, this.server.getServerLocale());
-            modelMap.put(this.pageTitleKey, this.getCurrentViewTitle(modelAndView.getViewName()));
-            modelMap.addAttribute(SSearchCommandBean.Name.GLOBAL.getName(), new SSearchCommandBean());
+            SWebBeanHelper.addToModelMap(modelMap, this.titleResolver.getViewTitle(modelAndView.getViewName()));
+            SWebBeanHelper.addToModelMap(modelMap, new SSearchCommandBean());
 
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace(String.format("SCDR=%s(%s)", modelAndView.getViewName(), modelMap));
+            }
         }
     }
 
-    private String getCurrentViewTitle(final String viewName) {
-        final String keyForTitle = this.pageTitlePrefix.replace("*", viewName != null ? viewName : "index");
-        final String pageTitle = this.messageSource.getMessage(keyForTitle, this.server.getServerLocale());
-        LOGGER.debug(String.format("Resolved title=%s for viewName=%s", pageTitle, viewName));
-        return pageTitle;
+    @Required
+    public void setTitleResolver(final SViewTitleResolver titleResolver) {
+        this.titleResolver = titleResolver;
     }
 }

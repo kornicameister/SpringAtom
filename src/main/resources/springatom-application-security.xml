@@ -20,9 +20,10 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns="http://www.springframework.org/schema/security"
              xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans.xsd
-	http://www.springframework.org/schema/security
-	http://www.springframework.org/schema/security/spring-security.xsd">
+	         http://www.springframework.org/schema/beans/spring-beans.xsd
+	         http://www.springframework.org/schema/security
+	         http://www.springframework.org/schema/security/spring-security.xsd"
+             default-lazy-init="true">
 
     <beans:import resource="org/agatom/springatom/server/model/DataSource.xml"/>
 
@@ -32,39 +33,58 @@
     <global-method-security secured-annotations="enabled"
                             pre-post-annotations="enabled"/>
 
-    <!-- static content -->
+    <!-- static content is not secured -->
     <http pattern="/webjars/*" security="none"/>
     <http pattern="/static/*" security="none"/>
-
+    <http pattern="/tiles/*" security="none"/>
     <!-- static content -->
-    <http pattern="/**" use-expressions="true">
 
-        <http-basic/>
+    <http pattern="/**" auto-config="true" use-expressions="true">
 
-        <intercept-url pattern="/app*" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+        <intercept-url pattern="/app*" access="permitAll()"/>
+        <intercept-url pattern="/app/admin*" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/app/secured*" access="hasAnyRole('ROLE_ADMIN','ROLE_MECHANIC')"/>
 
-        <!-- session management -->
-        <session-management
-                invalid-session-url="/app/session/error/invalid"
-                session-authentication-error-url="/app/session/error/authentication"
-                session-fixation-protection="migrateSession">
+        <intercept-url pattern="/data/ajax/*"/>
+        <intercept-url pattern="/data/stateless/*"/>
 
-            <concurrency-control max-sessions="1"
-                                 error-if-maximum-exceeded="true"
-                                 expired-url="/app/session/error/expired"/>
-        </session-management>
-        <!-- session management -->
+        <!-- dashboard for clients -->
+        <intercept-url pattern="/app/dashboard/client/login=*/*" access="hasRole('ROLE_CLIENT')"/>
+        <intercept-url pattern="/app/dashboard/(mechanic|boss)/garage/*"
+                       access="hasAnyRole('ROLE_MECHANIC','ROLE_BOSS')"/>
+        <intercept-url pattern="/app/manager/*" access="hasAnyRole('ROLE_BOSS')"/>
 
+        <!-- login related configuration -->
+        <intercept-url pattern="/app/auth*" access="permitAll()"/>
+        <form-login login-page="/app/auth/login"
+                    authentication-failure-url="/app/auth/failed"
+                    login-processing-url="/app/auth/login.do"
+                    default-target-url="/app?action=login&amp;status=true"
+                    username-parameter="ares"
+                    password-parameter="athena"
+                    always-use-default-target="false"/>
+        <logout logout-url="/app/auth/logout"
+                invalidate-session="true"
+                delete-cookies="JSESSIONID"
+                logout-success-url="/app?action=logout&amp;status=true"/>
+        <access-denied-handler error-page="/app/auth/access/denied"/>
+        <anonymous enabled="true" granted-authority="ROLE_DATA_ACCESS" key="anonymous"/>
+        <remember-me use-secure-cookie="true"
+                     user-service-ref="sUserService"
+                     services-alias="rememberMeService"
+                     token-validity-seconds="120"
+                     data-source-ref="dataSource"/>
+        <!-- login related configuration -->
     </http>
+
 
     <beans:bean id="securedPasswordEncoder"
                 class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
-
     <beans:bean id="sUserService"
                 depends-on="dataSource"
                 class="org.agatom.springatom.server.service.impl.SUserServiceImpl"/>
 
-    <authentication-manager>
+    <authentication-manager alias="authenticationManager">
         <authentication-provider user-service-ref="sUserService">
             <password-encoder ref="securedPasswordEncoder" base64="true"/>
         </authentication-provider>

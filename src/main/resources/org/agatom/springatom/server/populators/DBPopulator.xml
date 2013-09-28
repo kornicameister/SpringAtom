@@ -36,6 +36,7 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
                     <property name="scripts">
                         <array>
                             <value>classpath:org/agatom/springatom/server/repository/clear.sql</value>
+                            <value>classpath:org/agatom/springatom/server/repository/rememberMe.sql</value>
                         </array>
                     </property>
                 </bean>
