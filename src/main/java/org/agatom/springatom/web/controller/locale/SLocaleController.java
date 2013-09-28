@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ import java.util.concurrent.Callable;
  * @since 0.0.1
  */
 @Controller
-@RequestMapping(value = "/app/data/lang")
+@RequestMapping(value = "/data/lang")
 public class SLocaleController {
     public static final  String   SA_LOCALE_SUPPORTS = "sa.locale.supports";
     private static final String[] IGNORED_KEYS       = {"_dc", "page", "start", "limit"};
@@ -58,12 +59,18 @@ public class SLocaleController {
         binder.setIgnoreUnknownFields(true);
     }
 
+    @Secured(value = {
+            "IS_AUTHENTICATED_ANONYMOUSLY",
+            "IS_AUTHENTICATED_FULLY",
+            "IS_AUTHENTICATED_REMEMBERED"
+    })
+    @ResponseBody
     @RequestMapping(
             value = "/available",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public @ResponseBody Callable<Set<SLocale>> getAvailableLocales() {
+    public Callable<Set<SLocale>> getAvailableLocales() {
         final String appResources = this.server.getProperty(SA_LOCALE_SUPPORTS);
         final String delimiter = this.server.getDelimiter();
         final Locale currentLocale = this.server.getServerLocale();
@@ -88,12 +95,17 @@ public class SLocaleController {
         };
     }
 
+    @Secured(value = {
+            "IS_AUTHENTICATED_FULLY",
+            "IS_AUTHENTICATED_REMEMBERED"
+    })
+    @ResponseBody
     @RequestMapping(
             value = "/all",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public @ResponseBody Callable<SLocalizedMessages> getLocalizedPreferences() {
+    public Callable<SLocalizedMessages> getLocalizedPreferences() {
         final Locale locale = LocaleContextHolder.getLocale();
         final SMessageSource source = this.messageSource;
         return new Callable<SLocalizedMessages>() {
@@ -104,6 +116,11 @@ public class SLocaleController {
         };
     }
 
+    @Secured(value = {
+            "IS_AUTHENTICATED_FULLY",
+            "IS_AUTHENTICATED_REMEMBERED"
+    })
+    @ResponseBody
     @RequestMapping(
             value = "/read",
             method = RequestMethod.POST,
@@ -113,8 +130,7 @@ public class SLocaleController {
                     MediaType.TEXT_PLAIN_VALUE
             }
     )
-    public
-    @ResponseBody Callable<SLocalizedMessages> getLocalizedPreferences(final @RequestBody String[] keys) {
+    public Callable<SLocalizedMessages> getLocalizedPreferences(final @RequestBody String[] keys) {
         final Locale locale = LocaleContextHolder.getLocale();
 
         return new Callable<SLocalizedMessages>() {

@@ -31,6 +31,9 @@
     Allows using annotations to secure access to services layer
     -->
     <global-method-security secured-annotations="enabled"
+                            authentication-manager-ref="authenticationManager"
+                            order="0"
+                            proxy-target-class="true"
                             pre-post-annotations="enabled"/>
 
     <!-- static content is not secured -->
@@ -45,8 +48,7 @@
         <intercept-url pattern="/app/admin*" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/app/secured*" access="hasAnyRole('ROLE_ADMIN','ROLE_MECHANIC')"/>
 
-        <intercept-url pattern="/data/ajax/*"/>
-        <intercept-url pattern="/data/stateless/*"/>
+        <intercept-url pattern="/data/*" access="hasAnyRole('ROLE_CLIENT','ROLE_ADMIN','ROLE_MECHANIC')"/>
 
         <!-- dashboard for clients -->
         <intercept-url pattern="/app/dashboard/client/login=*/*" access="hasRole('ROLE_CLIENT')"/>
