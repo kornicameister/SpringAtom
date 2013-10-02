@@ -16,7 +16,10 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
 <li>
-    <i class="icon-color mm-submenu-icon icon-user"><s:message code="label.nav.principals"/></i>
+    <i class="icon-color mm-submenu-icon icon-user"></i>
+    <a href="#">
+        <s:message code="label.nav.principals"/>
+    </a>
     <ul>
         <s:url value="/app/principals/manager/mechanics" htmlEscape="true" var="mechanicsUrl"/>
         <security:authorize url="${mechanicsUrl}">

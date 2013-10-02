@@ -51,7 +51,7 @@
         <intercept-url pattern="/data/*" access="hasAnyRole('ROLE_CLIENT','ROLE_ADMIN','ROLE_MECHANIC')"/>
 
         <!-- dashboard for clients -->
-        <intercept-url pattern="/app/dashboard/client/login=*/*" access="hasRole('ROLE_CLIENT')"/>
+        <intercept-url pattern="/app/dashboard/client/login=*/*" access="hasAnyRole('ROLE_CLIENT','ROLE_MECHANIC')"/>
         <intercept-url pattern="/app/dashboard/(mechanic|boss)/garage/*"
                        access="hasAnyRole('ROLE_MECHANIC','ROLE_BOSS')"/>
         <intercept-url pattern="/app/manager/*" access="hasAnyRole('ROLE_BOSS')"/>

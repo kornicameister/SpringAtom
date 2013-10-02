@@ -16,7 +16,10 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
 <li>
-    <i class="icon-color mm-submenu-icon icon-magnet"><s:message code="label.nav.management"/></i>
+    <i class="icon-color mm-submenu-icon icon-magnet"></i>
+    <a href="#">
+        <s:message code="label.nav.management"/>
+    </a>
     <ul>
         <s:url value="/app/dashboard/${who}/garage/clients" htmlEscape="true" var="clientsUrl"/>
         <security:authorize url="${clientsUrl}">

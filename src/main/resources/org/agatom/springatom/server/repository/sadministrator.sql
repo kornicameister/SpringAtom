@@ -30,3 +30,13 @@ INSERT INTO `suserauthority` (user, authority) VALUES (1, (SELECT
                                                              `idSAuthority`
                                                            FROM `sauthority`
                                                            WHERE `authority` = "ROLE_ADMIN"));
+
+INSERT INTO `suserauthority` (user, authority) VALUES (2, (SELECT
+                                                             `idSAuthority`
+                                                           FROM `sauthority`
+                                                           WHERE `authority` = "ROLE_CLIENT"));
+
+INSERT INTO `suserauthority` (user, authority) VALUES (3, (SELECT
+                                                             `idSAuthority`
+                                                           FROM `sauthority`
+                                                           WHERE `authority` = "ROLE_MECHANIC"));

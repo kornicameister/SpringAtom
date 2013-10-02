@@ -16,7 +16,10 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
 <li>
-    <i class="icon-color icon-dashboard mm-submenu-icon"><s:message code="label.nav.dashboard"/></i>
+    <i class="icon-color icon-dashboard mm-submenu-icon"></i>
+    <a href="#">
+        <s:message code="label.nav.dashboard"/>
+    </a>
     <ul>
         <%-- /app/dashboard/client|mechanic/*/cars--%>
         <s:url value="/app/dashboard/${who}/login=${userName}/cars" htmlEscape="true"

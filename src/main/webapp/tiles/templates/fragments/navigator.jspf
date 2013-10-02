@@ -49,20 +49,20 @@
                 <security:authorize access="hasRole('ROLE_ADMIN')" var="isAdmin"/>
 
                 <c:if test="${isClient}">
-                    <c:set var="who" value="client"/>
+                    <c:set var="who" value="client" scope="request"/>
                 </c:if>
                 <c:if test="${isMechanic}">
-                    <c:set var="who" value="mechanic"/>
+                    <c:set var="who" value="mechanic" scope="request"/>
                 </c:if>
                 <c:if test="${isBoss}">
-                    <c:set var="who" value="boss"/>
+                    <c:set var="who" value="boss" scope="request"/>
                 </c:if>
 
                 <c:if test="${isClient}">
                     <%@ include file="navigator/client_navigation.jspf" %>
                 </c:if>
-                <c:if test="${isMechanic} || ${isBoss}">
-                    <%@ include file="navigator/garage_navigation.jspf" %>
+                <c:if test="${isMechanic}">
+                <%@ include file="navigator/garage_navigation.jspf" %>
                 </c:if>
                 <c:if test="${isBoss}">
                     <%@ include file="navigator/boss_navigation.jspf" %>
