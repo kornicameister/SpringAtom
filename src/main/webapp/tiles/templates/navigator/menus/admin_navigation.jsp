@@ -15,33 +15,22 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <li>
-    <i class="icon-color mm-submenu-icon icon-user"></i>
-    <a href="#">
-        <s:message code="label.nav.principals"/>
+    <s:message code="label.nav.admin.db" var="adminDbLabel" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${adminDbLabel}" var="adminDbLabelTooltip"
+               htmlEscape="true"/>
+    <a href="<s:url value="/app/admin/db" htmlEscape="true"/>" title="${adminDbLabelTooltip}">
+        <i class="icon-archive icon-color"></i>${adminDbLabel}
     </a>
-    <ul>
-        <s:url value="/app/principals/manager/mechanics" htmlEscape="true" var="mechanicsUrl"/>
-        <security:authorize url="${mechanicsUrl}">
-            <s:message code="label.nav.principals.mechanics" var="mechanics" htmlEscape="true"/>
-            <s:message code="tooltip.nav" arguments="${mechanics}" var="mechanicsTooltip"
-                       htmlEscape="true"/>
-            <li>
-                <a href="${mechanicsUrl}" title="${mechanicsTooltip}">
-                    <i class="icon-wrench icon-color"></i>${mechanics}
-                </a>
-            </li>
-        </security:authorize>
-        <s:url value="/app/principals/manager/users" htmlEscape="true" var="usersUrl"/>
-        <security:authorize url="${usersUrl}">
-            <s:message code="label.nav.principals.users" var="users" htmlEscape="true"/>
-            <s:message code="tooltip.nav" arguments="${users}" var="usersTooltip"
-                       htmlEscape="true"/>
-            <li>
-                <a href="${usersUrl}" title="${usersTooltip}">
-                    <i class="icon-wrench icon-color"></i>${users}
-                </a>
-            </li>
-        </security:authorize>
-    </ul>
+</li>
+<li>
+    <s:message code="label.nav.admin.language" var="adminLanguage" htmlEscape="true"/>
+    <s:message code="tooltip.nav" arguments="${adminLanguage}" var="adminLanguageTooltip"
+               htmlEscape="true"/>
+    <a href="<s:url value="/app/admin/language" htmlEscape="true"/>"
+       title="${adminLanguageTooltip}">
+        <i class="icon-flag icon-color"></i>${adminLanguage}
+    </a>
 </li>

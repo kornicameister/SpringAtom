@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.web.controller.auth;
 
-import org.agatom.springatom.web.controller.SDefaultController;
+import org.agatom.springatom.web.support.controllers.SDefaultController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

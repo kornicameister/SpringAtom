@@ -15,6 +15,8 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <li>
     <i class="icon-color icon-dashboard mm-submenu-icon"></i>
     <a href="#">
@@ -22,7 +24,7 @@
     </a>
     <ul>
         <%-- /app/dashboard/client|mechanic/*/cars--%>
-        <s:url value="/app/dashboard/${who}/login=${userName}/cars" htmlEscape="true"
+        <s:url value="/app/dashboard/cars" htmlEscape="true"
                var="carsUrl"/>
         <security:authorize url="${carsUrl}">
             <s:message code="label.nav.cars" var="carsLabel" htmlEscape="true"/>
@@ -36,7 +38,7 @@
         </security:authorize>
         <%-- /app/dashboard/client|mechanic/*/cars--%>
         <%-- /app/dashboard/client|mechanic/*/calendar--%>
-        <s:url value="/app/dashboard/${who}/login=${userName}/calendar" htmlEscape="true"
+        <s:url value="/app/dashboard/calendar" htmlEscape="true"
                var="calendarUrl"/>
         <security:authorize url="${calendarUrl}">
             <s:message code="label.nav.calendar" var="calendarLabel" htmlEscape="true"/>
@@ -50,7 +52,7 @@
         </security:authorize>
         <%-- /app/dashboard/client|mechanic/*/calendar--%>
         <%-- /app/dashboard/client|mechanic/*/reports--%>
-        <s:url value="/app/dashboard/${who}/login=${userName}/reports" htmlEscape="true"
+        <s:url value="/app/dashboard/reports" htmlEscape="true"
                var="reportsUrl"/>
         <security:authorize url="${reportsUrl}">
             <s:message code="label.nav.reports" var="reportsLabel" htmlEscape="true"/>

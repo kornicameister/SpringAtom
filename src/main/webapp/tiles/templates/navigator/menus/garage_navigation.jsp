@@ -15,13 +15,15 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <li>
     <i class="icon-color mm-submenu-icon icon-magnet"></i>
     <a href="#">
         <s:message code="label.nav.management"/>
     </a>
     <ul>
-        <s:url value="/app/dashboard/${who}/garage/clients" htmlEscape="true" var="clientsUrl"/>
+        <s:url value="/app/dashboard/garage/clients" htmlEscape="true" var="clientsUrl"/>
         <security:authorize url="${clientsUrl}">
             <s:message code="label.nav.clients" var="clientsLabel" htmlEscape="true"/>
             <s:message code="tooltip.nav" arguments="${clientsLabel}" var="clientsTooltip"
@@ -32,7 +34,7 @@
                 </a>
             </li>
         </security:authorize>
-        <s:url value="/app/dashboard/${who}/garage/cars" htmlEscape="true" var="carsUrl"/>
+        <s:url value="/app/dashboard/garage/cars" htmlEscape="true" var="carsUrl"/>
         <security:authorize url="${carsUrl}">
             <s:message code="label.nav.cars" var="carsLabel" htmlEscape="true"/>
             <s:message code="tooltip.nav" arguments="${carsLabel}" var="carsTooltip"
