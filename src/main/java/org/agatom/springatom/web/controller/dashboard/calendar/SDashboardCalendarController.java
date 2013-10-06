@@ -15,27 +15,12 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller.app;
+package org.agatom.springatom.web.controller.dashboard.calendar;
 
-import org.agatom.springatom.web.support.controllers.SDefaultController;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-
-@Controller(value = SIndexController.CONTROLLER_NAME)
-@RequestMapping(value = "/app")
-public class SIndexController
-        extends SDefaultController {
-    protected static final String CONTROLLER_NAME = "SIndexController";
-
-    @RequestMapping(method = RequestMethod.GET)
-    public String doIndex() {
-        return "springatom.tiles.index";
-    }
-
-    @Override
-    public String getControllerName() {
-        return CONTROLLER_NAME;
-    }
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+public class SDashboardCalendarController {
 }

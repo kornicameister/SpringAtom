@@ -17,8 +17,8 @@
 
 package org.agatom.springatom.web.controller.search;
 
-import org.agatom.springatom.web.controller.SDefaultController;
 import org.agatom.springatom.web.support.beans.search.SSearchCommandBean;
+import org.agatom.springatom.web.support.controllers.SDefaultController;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;

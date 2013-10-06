@@ -15,16 +15,12 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller;
-
-import org.springframework.stereotype.Component;
+package org.agatom.springatom.web.controller.dashboard.reports;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component(value = "SDefaultController")
-public abstract class SDefaultController
-        implements SController {
+public class SDashboardReportController {
 }

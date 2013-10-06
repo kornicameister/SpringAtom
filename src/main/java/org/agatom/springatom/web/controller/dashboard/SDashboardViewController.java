@@ -15,23 +15,37 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller.app;
+package org.agatom.springatom.web.controller.dashboard;
 
 import org.agatom.springatom.web.support.controllers.SDefaultController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-
-@Controller(value = SIndexController.CONTROLLER_NAME)
-@RequestMapping(value = "/app")
-public class SIndexController
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+@Controller(value = SDashboardViewController.CONTROLLER_NAME)
+@RequestMapping(value = "/app/dashboard")
+public class SDashboardViewController
         extends SDefaultController {
-    protected static final String CONTROLLER_NAME = "SIndexController";
+    protected static final String CONTROLLER_NAME = "DashboardViewController";
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String doIndex() {
-        return "springatom.tiles.index";
+    @RequestMapping(value = "/cars", method = RequestMethod.GET)
+    public String getCarsPage() throws Exception {
+        return "springatom.tiles.dashboard.cars";
+    }
+
+    @RequestMapping(value = "/calendar", method = RequestMethod.GET)
+    public String getCalendarPage() throws Exception {
+        return "springatom.tiles.dashboard.calendar";
+    }
+
+    @RequestMapping(value = "/reports", method = RequestMethod.GET)
+    public String getReportsPage() throws Exception {
+        return "springatom.tiles.dashboard.reports";
     }
 
     @Override

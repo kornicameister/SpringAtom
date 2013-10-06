@@ -15,7 +15,3 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<s:message code="label.dashboard.header" htmlEscape="true" var="headerLabel"/>
-<header id="header" class="main">
-    <p><c:out value="${headerLabel}"/></p>
-</header>

@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller;
+package org.agatom.springatom.web.support.controllers;
 
 /**
  * @author kornicameister

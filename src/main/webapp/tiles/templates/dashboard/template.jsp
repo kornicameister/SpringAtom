@@ -1,3 +1,4 @@
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~
@@ -15,7 +16,16 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<s:message code="label.dashboard.header" htmlEscape="true" var="headerLabel"/>
-<header id="header" class="main">
-    <p><c:out value="${headerLabel}"/></p>
-</header>
+<section class="dashboard">
+    <div class="navigation">
+        <tiles:insertAttribute name="menubar"/>
+    </div>
+    <div class="dashboard-panel">
+        <div class="dashboard-panel-content">
+            <tiles:insertAttribute name="panel"/>
+        </div>
+    </div>
+    <div class="statusbar">
+        <tiles:insertAttribute name="statusbar"/>
+    </div>
+</section>
