@@ -32,6 +32,7 @@
     <import resource="org/agatom/springatom/web/locale/locale.xml"/>
     <import resource="org/agatom/springatom/web/interceptors/interceptors.xml"/>
     <import resource="org/agatom/springatom/web/theme/theme.xml"/>
+    <import resource="org/agatom/springatom/web/support/actions/actions.xml"/>
 
     <bean p:order="1" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/tiles/"/>
