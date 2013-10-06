@@ -20,15 +20,34 @@
         "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
         "http://tiles.apache.org/dtds/tiles-config_3_0.dtd"
         [<!ENTITY prefix "springatom.tiles.">
-                <!ENTITY auth "springatom.tiles.auth.">]>
+                <!ENTITY auth "springatom.tiles.auth.">
+                <!ENTITY dashboard "springatom.tiles.dashboard.">
+                <!ENTITY report "springatom.tiles.reports.">]>
 
 <tiles-definitions>
 
     <definition name="abstract_page" template="/tiles/templates/page.jsp">
         <put-attribute name="content" value=""/>
-        <put-attribute name="breadcrumb" value="/tiles/pages/default/breadcrumb.jsp"/>
-        <put-attribute name="extra" value="/tiles/pages/default/extra.jsp"/>
-        <put-attribute name="error" value="/tiles/pages/default/error.jsp"/>
+        <put-attribute name="content-header" value="/tiles/templates/fragments/parts/content-header.jsp"/>
+        <put-attribute name="navigator">
+            <definition template="/tiles/templates/navigator/navigator.jsp">
+                <put-attribute name="navigator.secured">
+                    <definition template="/tiles/templates/navigator/secured_navigation.jsp">
+                        <put-attribute name="dashboard"
+                                       value="/tiles/templates/navigator/menus/dashboard_navigation.jsp"/>
+                        <put-attribute name="garage"
+                                       value="/tiles/templates/navigator/menus/garage_navigation.jsp"/>
+                        <put-attribute name="boss"
+                                       value="/tiles/templates/navigator/menus/boss_navigation.jsp"/>
+                        <put-attribute name="admin"
+                                       value="/tiles/templates/navigator/menus/admin_navigation.jsp"/>
+                    </definition>
+                </put-attribute>
+                <put-attribute name="navigator.free" value="/tiles/templates/navigator/menus/free_navigation.jsp"/>
+            </definition>
+        </put-attribute>
+        <put-attribute name="extra" value="/tiles/templates/fragments/parts/extra.jsp"/>
+        <put-attribute name="error" value="/tiles/templates/fragments/parts/error.jsp"/>
     </definition>
 
     <definition name="&prefix;index" extends="abstract_page">
@@ -45,15 +64,13 @@
         <put-attribute name="content" value="/tiles/pages/auth/logout.jsp"/>
         <put-attribute name="mode" value="standalone"/>
     </definition>
-    <definition name="&auth;login.failed"
-                extends="springatom.tiles.auth.login">
+    <definition name="&auth;login.failed" extends="&auth;login">
         <put-attribute name="error" value="/tiles/pages/auth/error_login_failed.jsp"/>
     </definition>
-    <definition name="&auth;access.denied" extends="springatom.tiles.auth.login">
+    <definition name="&auth;access.denied" extends="&auth;login">
         <put-attribute name="error" value="/tiles/pages/auth/error_access_is_denied.jsp"/>
     </definition>
-    <definition name="&auth;forgotten.password"
-                extends="abstract_page">
+    <definition name="&auth;forgotten.password" extends="abstract_page">
         <put-attribute name="content" value="/tiles/pages/auth/forgotten_password.jsp"/>
     </definition>
     <definition name="&auth;login.embedded"
@@ -71,5 +88,61 @@
         <put-attribute name="content" value="/tiles/pages/auth/register.jsp"/>
     </definition>
 
+    <!-- dashboard -->
+    <!-- dashboard templates -->
+    <definition name="abstract.dashboard.menuBar" template="/tiles/templates/dashboard/menubar/template.jsp">
+        <put-attribute name="dashboard.menubar.common" value="/tiles/templates/dashboard/menubar/common-menu.jsp"/>
+        <put-attribute name="dashboard.menubar.specialized" value=""/>
+        <put-attribute name="dashboard.menubar.help" value="/tiles/templates/dashboard/menubar/help-menu.jsp"/>
+    </definition>
+    <definition name="abstract.dashboard.statusbar" template="/tiles/templates/dashboard/statusbar/template.jsp">
+        <put-attribute name="dashboard.statusbar.message" value=""/>
+    </definition>
+    <definition name="abstract.dashboard.content" template="/tiles/templates/dashboard/template.jsp">
+        <put-attribute name="menubar" value="abstract.dashboard.menuBar"/>
+        <put-attribute name="panel" value=""/>
+        <put-attribute name="statusbar" value="abstract.dashboard.statusbar"/>
+    </definition>
+    <!-- dashboard templates -->
+    <!-- dashboard pages -->
+    <definition name="&dashboard;cars" extends="abstract_page">
+        <put-attribute name="content">
+            <definition extends="abstract.dashboard.content">
+                <put-attribute name="panel" value="/tiles/pages/dashboard/cars/panel.jsp"/>
+                <put-attribute name="menubar">
+                    <definition extends="abstract.dashboard.menuBar">
+                        <put-attribute name="dashboard.menubar.specialized"
+                                       value="/tiles/pages/dashboard/cars/menu.jsp"/>
+                    </definition>
+                </put-attribute>
+            </definition>
+        </put-attribute>
+    </definition>
+    <definition name="&dashboard;calendar" extends="abstract_page">
+        <put-attribute name="content">
+            <definition extends="abstract.dashboard.content">
+                <put-attribute name="panel" value="/tiles/pages/dashboard/calendar/panel.jsp"/>
+                <put-attribute name="menubar">
+                    <definition extends="abstract.dashboard.menuBar">
+                        <put-attribute name="specialized" value="/tiles/pages/dashboard/calendar/menu.jsp"/>
+                    </definition>
+                </put-attribute>
+            </definition>
+        </put-attribute>
+    </definition>
+    <definition name="&dashboard;reports" extends="abstract_page">
+        <put-attribute name="content">
+            <definition extends="abstract.dashboard.content">
+                <put-attribute name="panel" value="/tiles/pages/dashboard/reports/panel.jsp"/>
+                <put-attribute name="menubar">
+                    <definition extends="abstract.dashboard.menuBar">
+                        <put-attribute name="specialized" value="/tiles/pages/dashboard/reports/menu.jsp"/>
+                    </definition>
+                </put-attribute>
+            </definition>
+        </put-attribute>
+    </definition>
+    <!-- dashboard pages -->
+    <!-- dashboard -->
 
 </tiles-definitions>
