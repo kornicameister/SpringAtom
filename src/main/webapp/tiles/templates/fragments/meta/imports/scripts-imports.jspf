@@ -23,7 +23,6 @@
 <c:set var="notyPath" value="${staticLib}/noty/2.1.0"/>
 
 <s:url value="${webjars}/jquery/2.0.3/jquery.min.js" htmlEscape="true" var="jqueryJs"/>
-<s:url value="${webjars}/jquery-form/3.28.0-2013.02.06/jquery.form.js" htmlEscape="true" var="jqueryFormJs"/>
 <s:url value="${webjars}/momentjs/2.1.0/min/moment.min.js" htmlEscape="true" var="momentJs"/>
 <s:url value="${staticLib}/tinycon.min.js" htmlEscape="true" var="tinyIconJS"/>
 <s:url value="${staticLib}/midway.min.js" htmlEscape="true" var="midwayJS"/>
@@ -33,13 +32,12 @@
 <s:url value="${notyPath}/layouts/topCenter.js" htmlEscape="true" var="notyLayoutTopCenterJs"/>
 <s:url value="${notyPath}/layouts/center.js" htmlEscape="true" var="notyLayoutCenterJs"/>
 <s:url value="${notyPath}/themes/default.js" htmlEscape="true" var="notyThemeJs"/>
-<s:url value="${staticLib}/searchMeme/jquery.searchMeme.js" htmlEscape="true" var="searchMemeJs"/>
 <s:url value="${staticSa}/sa-core.js" var="coreJS" htmlEscape="true"/>
 <s:url value="${staticSa}/sa-auth.js" var="saAuth" htmlEscape="true"/>
 <s:url value="${staticSa}/sa-mmenu.js" var="saMmenu" htmlEscape="true"/>
+<s:url value="${staticSa}/sa-breadcrumb.js" var="saBreadcrumb" htmlEscape="true"/>
 
 <script type="text/javascript" src="${jqueryJs}"></script>
-<script type="text/javascript" src="${jqueryFormJs}"></script>
 <script type="text/javascript" src="${mmenuJs}"></script>
 <script type="text/javascript" src="${momentJs}"></script>
 <script type="text/javascript" src="${tinyIconJS}"></script>
@@ -49,7 +47,7 @@
 <script type="text/javascript" src="${notyLayoutCenterJs}"></script>
 <script type="text/javascript" src="${notyLayoutTopCenterJs}"></script>
 <script type="text/javascript" src="${notyThemeJs}"></script>
-<script type="text/javascript" src="${searchMemeJs}"></script>
 <script type="text/javascript" src="${saMmenu}"></script>
 <script type="text/javascript" src="${saAuth}"></script>
 <script type="text/javascript" src="${coreJS}"></script>
+<script type="text/javascript" src="${saBreadcrumb}"></script>

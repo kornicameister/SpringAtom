@@ -20,6 +20,7 @@ package org.agatom.springatom.web.interceptors;
 import org.agatom.springatom.server.SpringAtomServer;
 import org.agatom.springatom.web.support.beans.SWebBeanHelper;
 import org.agatom.springatom.web.support.beans.search.SSearchCommandBean;
+import org.agatom.springatom.web.support.breadcrumbs.SBreadcrumbResolver;
 import org.agatom.springatom.web.support.view.SViewTitleResolver;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,10 @@ public class SCDRViewInterceptor
     private static final Logger LOGGER                  = Logger.getLogger(SCDRViewInterceptor.class);
     private static final String SA_LOCALE_REQUEST_PARAM = "sa.locale.requestParam";
     @Autowired
-    private SpringAtomServer   server;
-    private String             localeParamKey;
-    private SViewTitleResolver titleResolver;
+    private SpringAtomServer    server;
+    private String              localeParamKey;
+    private SViewTitleResolver  titleResolver;
+    private SBreadcrumbResolver breadcrumbResolver;
 
     @PostConstruct
     private void init() {
@@ -64,6 +66,7 @@ public class SCDRViewInterceptor
             modelMap.put(this.localeParamKey, this.server.getServerLocale());
             SWebBeanHelper.addToModelMap(modelMap, this.titleResolver.getViewTitle(modelAndView.getViewName()));
             SWebBeanHelper.addToModelMap(modelMap, new SSearchCommandBean());
+            SWebBeanHelper.addToModelMap(modelMap, this.breadcrumbResolver.getBreadcrumbPath(modelAndView.getView()));
 
             if (LOGGER.isTraceEnabled()) {
                 LOGGER.trace(String.format("SCDR=%s(%s)", modelAndView.getViewName(), modelMap));
@@ -74,5 +77,10 @@ public class SCDRViewInterceptor
     @Required
     public void setTitleResolver(final SViewTitleResolver titleResolver) {
         this.titleResolver = titleResolver;
+    }
+
+    @Required
+    public void setBreadcrumbResolver(SBreadcrumbResolver breadcrumbResolver) {
+        this.breadcrumbResolver = breadcrumbResolver;
     }
 }
