@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controller.auth;
+package org.agatom.springatom.web.controller;
 
 import org.agatom.springatom.web.support.controllers.SDefaultController;
 import org.springframework.stereotype.Controller;
@@ -23,40 +23,69 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
-@Controller(value = SAuthController.CONTROLLER_NAME)
-@RequestMapping(value = "/app/auth")
-public class SAuthController
-        extends SDefaultController {
-    protected static final String CONTROLLER_NAME = "AuthorizationController";
+@Controller(value = STilesController.CONTROLLER_NAME)
+@RequestMapping(value = "/app")
+public class STilesController
+extends SDefaultController {
+    protected static final String CONTROLLER_NAME = "TilesViewController";
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
+    public String getIndexPage() {
+        return "springatom.tiles.index";
+    }
+
+    @RequestMapping(value = "/reports", method = RequestMethod.GET)
+    public String getFreeReportsPage() {
+        return "springatom.tiles.reports";
+    }
+
+    @RequestMapping(value = "/about", method = RequestMethod.GET)
+    public String getAboutPage() {
+        return "springatom.tiles.about";
+    }
+
+    @RequestMapping(value = "/auth/login", method = RequestMethod.GET)
     public String getLoginPage() {
         return "springatom.tiles.auth.login";
     }
 
-    @RequestMapping(value = "/failed", method = RequestMethod.GET)
+    @RequestMapping(value = "/auth/failed", method = RequestMethod.GET)
     public String getLoginFailedPage() {
         return "springatom.tiles.auth.login.failed";
     }
 
-    @RequestMapping(value = "/access/denied")
+    @RequestMapping(value = "/auth/access/denied")
     public String getAccessDeniedPage() {
         return "springatom.tiles.auth.access.denied";
     }
 
-    @RequestMapping(value = "/forgotten/password", method = RequestMethod.GET)
+    @RequestMapping(value = "/auth/forgotten/password", method = RequestMethod.GET)
     public String getForgottenPasswordPage() {
         return "springatom.tiles.auth.forgotten.password";
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    @RequestMapping(value = "/auth/register", method = RequestMethod.GET)
     public String getRegisterPage() {
         return "springatom.tiles.auth.register";
+    }
+
+    @RequestMapping(value = "/dashboard/cars", method = RequestMethod.GET)
+    public String getCarsPage() throws Exception {
+        return "springatom.tiles.dashboard.cars";
+    }
+
+    @RequestMapping(value = "/dashboard/calendar", method = RequestMethod.GET)
+    public String getCalendarPage() throws Exception {
+        return "springatom.tiles.dashboard.calendar";
+    }
+
+    @RequestMapping(value = "/dashboard/reports", method = RequestMethod.GET)
+    public String getReportsPage() throws Exception {
+        return "springatom.tiles.dashboard.reports";
     }
 
     @Override
     public String getControllerName() {
         return CONTROLLER_NAME;
     }
-
 }

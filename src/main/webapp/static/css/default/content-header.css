@@ -36,16 +36,19 @@ section.x-content-header {
     position : relative;
     width    : 99%;
     padding  : 2px;
+    height : 50px;
+}
+
+section.x-content-header > * {
+    background : none;
+    min-height : 100%;
 }
 
 section.x-content-header .x-search {
-    float      : right;
-    width      : 25%;
-    background : none;
-}
-
-.x-search .x-search-form-global:after {
-    clear : both;
+    float        : right;
+    width        : 23%;
+    margin-right : 5px;
+    margin-left  : 40px;
 }
 
 .x-search .x-search-form-global {
@@ -92,18 +95,18 @@ section.x-content-header .x-search {
     height             : 40px;
     color              : #FFFFFF;
     text-transform     : uppercase;
-    border-right-color : rgba(17, 145, 255);
+    border-right-color : rgba(17, 145, 255, 0.9);
     border-radius      : 20%;
     text-shadow        : 0 -1px 0 rgba(0, 0, 0, .3);
 }
 
 .x-search .x-search-form-global button:hover {
-    border-right-color : rgb(0, 17, 255);
+    border-right-color : rgba(0, 17, 255, 0.8);
 }
 
 .x-search .x-search-form-global button:active,
 .x-search .x-search-form-global button:focus {
-    border-right-color : rgba(17, 145, 255);
+    border-right-color : rgba(17, 145, 255, 0.8);
     outline            : 0;
 }
 
@@ -134,12 +137,12 @@ section.x-content-header .x-search {
 }
 
 section.x-content-header .x-breadcrumb {
-    clear       : right;
-    float       : left;
-    width       : 75%;
-    border      : 2px solid #000000;
-    background  : none;
-    margin-left : 10px;
+    float          : left;
+    width          : 72%;
+    border         : 2px solid #000000;
+    margin-left    : 10px;
+    text-align     : left;
+    vertical-align : middle;
 }
 
 .x-breadcrumb .x-breadcrumb-element {

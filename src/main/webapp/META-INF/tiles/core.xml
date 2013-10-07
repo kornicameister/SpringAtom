@@ -53,6 +53,13 @@
     <definition name="&prefix;index" extends="abstract_page">
         <put-attribute name="content" value="/tiles/pages/welcome.jsp"/>
     </definition>
+    <definition name="&prefix;reports" extends="abstract_page">
+        <put-attribute name="content" value="/tiles/pages/reports/reports.jsp"/>
+    </definition>
+    <definition name="&prefix;about" extends="abstract_page">
+        <put-attribute name="content" value="/tiles/pages/about/about.jsp"/>
+    </definition>
+
 
     <!-- login related definitions -->
     <definition name="&auth;login"
@@ -64,10 +71,10 @@
         <put-attribute name="content" value="/tiles/pages/auth/logout.jsp"/>
         <put-attribute name="mode" value="standalone"/>
     </definition>
-    <definition name="&auth;login.failed" extends="&auth;login">
+    <definition name="&auth;login.failed" extends="springatom.tiles.auth.login">
         <put-attribute name="error" value="/tiles/pages/auth/error_login_failed.jsp"/>
     </definition>
-    <definition name="&auth;access.denied" extends="&auth;login">
+    <definition name="&auth;access.denied" extends="springatom.tiles.auth.login">
         <put-attribute name="error" value="/tiles/pages/auth/error_access_is_denied.jsp"/>
     </definition>
     <definition name="&auth;forgotten.password" extends="abstract_page">
