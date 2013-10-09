@@ -41,14 +41,13 @@ public class SSearchController
     protected static final String CONTROLLER_NAME = "SearchController";
     private static final   Logger LOGGER          = Logger.getLogger(SSearchController.class);
 
+    public SSearchController() {
+        super(CONTROLLER_NAME);
+    }
+
     @RequestMapping(value = "/global", method = RequestMethod.POST)
     public String doSearch(@ModelAttribute final SSearchCommandBean bean) {
         LOGGER.debug(String.format("Searching for = %s", bean));
         return "redirect:/app";
-    }
-
-    @Override
-    public String getControllerName() {
-        return CONTROLLER_NAME;
     }
 }

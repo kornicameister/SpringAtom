@@ -29,5 +29,5 @@
     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
     <mvc:resources mapping="/static/**" location="/static/"/>
 
-    <mvc:view-controller path="/app" view-name="index"/>
+    <mvc:view-controller path="/app" view-name="springatom.tiles.index"/>
 </beans>

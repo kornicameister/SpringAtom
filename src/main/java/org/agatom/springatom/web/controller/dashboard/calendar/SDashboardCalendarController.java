@@ -17,10 +17,25 @@
 
 package org.agatom.springatom.web.controller.dashboard.calendar;
 
+import org.agatom.springatom.web.support.controllers.SDefaultController;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SDashboardCalendarController {
+@Controller(value = SDashboardCalendarController.CONTROLLER_NAME)
+@RequestMapping(value = "/data/dashboard", produces = {
+        MediaType.APPLICATION_JSON_VALUE
+})
+public class SDashboardCalendarController
+        extends SDefaultController {
+    protected static final String CONTROLLER_NAME = "DashboardDataController";
+
+    public SDashboardCalendarController() {
+        super(CONTROLLER_NAME);
+    }
 }

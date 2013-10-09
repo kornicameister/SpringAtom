@@ -26,8 +26,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller(value = STilesController.CONTROLLER_NAME)
 @RequestMapping(value = "/app")
 public class STilesController
-extends SDefaultController {
+        extends SDefaultController {
     protected static final String CONTROLLER_NAME = "TilesViewController";
+
+    public STilesController() {
+        super(CONTROLLER_NAME);
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public String getIndexPage() {
@@ -82,10 +86,5 @@ extends SDefaultController {
     @RequestMapping(value = "/dashboard/reports", method = RequestMethod.GET)
     public String getReportsPage() throws Exception {
         return "springatom.tiles.dashboard.reports";
-    }
-
-    @Override
-    public String getControllerName() {
-        return CONTROLLER_NAME;
     }
 }

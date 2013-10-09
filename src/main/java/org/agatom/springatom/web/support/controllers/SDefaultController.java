@@ -27,4 +27,16 @@ import org.springframework.stereotype.Component;
 @Component(value = "SDefaultController")
 public abstract class SDefaultController
         implements SController {
+
+    private final String controllerName;
+
+    protected SDefaultController(final String controllerName) {
+        this.controllerName = controllerName;
+    }
+
+    @Override
+    public final String getControllerName() {
+        return this.controllerName;
+    }
+
 }

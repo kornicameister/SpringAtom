@@ -42,6 +42,10 @@ public abstract class SActioningController
     private SActionRepository actionsRepository;
     private String            componentKey;
 
+    protected SActioningController(final String controllerName) {
+        super(controllerName);
+    }
+
     @PostConstruct
     private void init() {
         this.componentKey = this.getComponentKey();
