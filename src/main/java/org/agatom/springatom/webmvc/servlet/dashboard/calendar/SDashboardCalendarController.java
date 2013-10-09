@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.webmvc.servlet.dashboard.calendar;
 
-import org.agatom.springatom.web.controllers.SDefaultController;
+import org.agatom.springatom.webmvc.servlet.controllers.SDefaultController;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.controllers;
+package org.agatom.springatom.webmvc.servlet.controllers;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.WebApplicationObjectSupport;

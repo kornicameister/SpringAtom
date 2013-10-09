@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.webmvc.servlet;
 
-import org.agatom.springatom.web.controllers.SDefaultController;
+import org.agatom.springatom.webmvc.servlet.controllers.SDefaultController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
