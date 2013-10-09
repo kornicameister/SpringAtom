@@ -15,30 +15,45 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.locale;
+package org.agatom.springatom.web.actions.beans;
 
-import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
-import org.springframework.context.MessageSource;
-
-import java.util.Locale;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SMessageSource
-        extends MessageSource {
-    String getMessage(final String key, final Locale locale);
 
-    SLocalizedMessage getLocalizedMessage(final String key, final Locale locale);
+@XmlEnum
+public enum SActionType
+        implements Serializable {
+    NAVIGATION;
 
-    SLocalizedMessages getLocalizedMessages(final Locale locale);
+    public static class SActionTypeAdapter
+            extends XmlAdapter<String, SActionType> {
 
+        @Override
+        public SActionType unmarshal(final String value) throws Exception {
+            final SActionType sActionType = SActionType.valueOf(value.toUpperCase());
+            if (sActionType == null) {
+                throw new SActionTypeAdapterException(String.format("No SActionType matches %s", value));
+            }
+            return sActionType;
+        }
 
-    public enum StorageMode {
-        SINGLE,
-        COMBINED
+        @Override
+        public String marshal(final SActionType value) throws Exception {
+            return value.name().toLowerCase();
+        }
+
+        private class SActionTypeAdapterException
+                extends Exception {
+            public SActionTypeAdapterException(final String msg) {
+                super(msg);
+            }
+        }
     }
 }

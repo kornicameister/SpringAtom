@@ -15,30 +15,27 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.locale;
+package org.agatom.springatom.webmvc.servlet.dashboard.calendar;
 
-import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
-import org.springframework.context.MessageSource;
-
-import java.util.Locale;
+import org.agatom.springatom.web.controllers.SDefaultController;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SMessageSource
-        extends MessageSource {
-    String getMessage(final String key, final Locale locale);
+@Controller(value = SDashboardCalendarController.CONTROLLER_NAME)
+@RequestMapping(value = "/data/dashboard", produces = {
+        MediaType.APPLICATION_JSON_VALUE
+})
+public class SDashboardCalendarController
+        extends SDefaultController {
+    protected static final String CONTROLLER_NAME = "DashboardDataController";
 
-    SLocalizedMessage getLocalizedMessage(final String key, final Locale locale);
-
-    SLocalizedMessages getLocalizedMessages(final Locale locale);
-
-
-    public enum StorageMode {
-        SINGLE,
-        COMBINED
+    public SDashboardCalendarController() {
+        super(CONTROLLER_NAME);
     }
 }

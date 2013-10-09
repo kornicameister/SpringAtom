@@ -15,60 +15,59 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.locale.impl;
+package org.agatom.springatom.web.beans.search;
 
-import org.agatom.springatom.web.locale.SMessageSource;
-import org.agatom.springatom.web.locale.beans.SLocale;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-
-import java.util.Locale;
-import java.util.Set;
+import com.google.common.base.Objects;
+import org.agatom.springatom.web.beans.WebBean;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SMessageSourceImpl
-        extends ReloadableResourceBundleMessageSource
-        implements SMessageSource {
+public class SSearchCommandBean
+        implements WebBean {
 
-    @Override
-    public String getMessage(final String key, final Locale locale) {
-        return this.getMessage(key, null, locale);
+    private static final String BEAN_ID = "searchCommandBean";
+    private String phrase;
+
+    public String getPhrase() {
+        return phrase;
+    }
+
+    public SSearchCommandBean setPhrase(final String phrase) {
+        this.phrase = phrase;
+        return this;
     }
 
     @Override
-    public SLocalizedMessage getLocalizedMessage(final String key, final Locale locale) {
-        return new SLocalizedMessage()
-                .setKey(key)
-                .setMessage(this.getMessage(key, locale))
-                .setLocale(SLocale.fromLocale(locale));
-    }
-
-    @Override
-    public SLocalizedMessages getLocalizedMessages(final Locale locale) {
-        final SLocalizedMessages preferences = new SLocalizedMessages();
-        final Set<String> keys = this.getKeys(locale);
-
-        for (final String key : keys) {
-            preferences.put(key, this.getMessage(key, locale), locale);
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
         }
 
-        return preferences;
+        SSearchCommandBean that = (SSearchCommandBean) o;
+
+        return Objects.equal(this.phrase, that.phrase);
     }
 
-    /**
-     * Returns all the keys from all given resource bundles ({@link ReloadableResourceBundleMessageSource#setBasenames(String...)}
-     *
-     * @param locale
-     *         locale
-     *
-     * @return set of keys
-     */
-    private Set<String> getKeys(final Locale locale) {
-        return this.getMergedProperties(locale).getProperties().stringPropertyNames();
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(phrase);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(phrase)
+                      .toString();
+    }
+
+    @Override
+    public String getBeanId() {
+        return BEAN_ID;
     }
 }

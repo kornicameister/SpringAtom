@@ -26,7 +26,7 @@
     <title>
         <jsp:useBean id="pageTitleBean"
                      scope="request"
-                     type="org.agatom.springatom.web.support.view.bean.SViewTitle">
+                     type="org.agatom.springatom.web.view.bean.SViewTitle">
         </jsp:useBean>
         <c:out value="${pageTitleBean.paramValue}" default="[SA]::SpringAtom"/>
     </title>

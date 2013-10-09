@@ -15,30 +15,21 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.locale;
-
-import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
-import org.springframework.context.MessageSource;
-
-import java.util.Locale;
+package org.agatom.springatom.web.actions.exception;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SMessageSource
-        extends MessageSource {
-    String getMessage(final String key, final Locale locale);
+public class SActionRepositoryException
+        extends RuntimeException {
 
-    SLocalizedMessage getLocalizedMessage(final String key, final Locale locale);
+    public SActionRepositoryException(final String message) {
+        super(message);
+    }
 
-    SLocalizedMessages getLocalizedMessages(final Locale locale);
-
-
-    public enum StorageMode {
-        SINGLE,
-        COMBINED
+    public SActionRepositoryException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 }

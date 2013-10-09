@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
   ~                                                                                               ~
@@ -17,14 +18,31 @@
 
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd"
-       default-lazy-init="true">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <import resource="org/agatom/springatom/web/web.xml"/>
-    <import resource="org/agatom/springatom/webmvc/webmvc.xml"/>
+    <bean id="actionsXMLResolver"
+          class="org.agatom.springatom.web.actions.xml.SActionsXMLResolver">
+        <property name="resolver" ref="jaxbResolver"/>
+    </bean>
+    <bean id="jaxbResolver"
+          class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="packagesToScan" value="org.agatom.springatom.web.actions.beans"/>
+    </bean>
 
-    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
-    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
+    <bean id="actionsRepository"
+          class="org.agatom.springatom.web.actions.impl.SDefaultActionRepository"
+          scope="singleton"
+          depends-on="actionsXMLResolver"
+          primary="true">
+        <property name="actions">
+            <map>
+                <entry key="dashboard"
+                       value="/META-INF/actions/actions-dashboard.xml"/>
+            </map>
+        </property>
+        <property name="xmlResolver" ref="actionsXMLResolver"/>
+        <property name="capacity" value="10"/>
+    </bean>
+
 
 </beans>

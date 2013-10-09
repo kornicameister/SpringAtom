@@ -15,60 +15,60 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.locale.impl;
+package org.agatom.springatom.web.view.impl;
 
 import org.agatom.springatom.web.locale.SMessageSource;
-import org.agatom.springatom.web.locale.beans.SLocale;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-
-import java.util.Locale;
-import java.util.Set;
+import org.agatom.springatom.web.view.bean.SViewTitle;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SMessageSourceImpl
-        extends ReloadableResourceBundleMessageSource
-        implements SMessageSource {
+public class SResourceBundleViewTitleResolver
+        extends SSimpleViewTitleResolver {
+    protected String[]       keys;
+    protected SMessageSource messageSource;
 
     @Override
-    public String getMessage(final String key, final Locale locale) {
-        return this.getMessage(key, null, locale);
-    }
-
-    @Override
-    public SLocalizedMessage getLocalizedMessage(final String key, final Locale locale) {
-        return new SLocalizedMessage()
-                .setKey(key)
-                .setMessage(this.getMessage(key, locale))
-                .setLocale(SLocale.fromLocale(locale));
-    }
-
-    @Override
-    public SLocalizedMessages getLocalizedMessages(final Locale locale) {
-        final SLocalizedMessages preferences = new SLocalizedMessages();
-        final Set<String> keys = this.getKeys(locale);
-
-        for (final String key : keys) {
-            preferences.put(key, this.getMessage(key, locale), locale);
+    public void afterPropertiesSet() throws Exception {
+        for (final String key : this.keys) {
+            this.validateKey(key);
         }
-
-        return preferences;
     }
 
-    /**
-     * Returns all the keys from all given resource bundles ({@link ReloadableResourceBundleMessageSource#setBasenames(String...)}
-     *
-     * @param locale
-     *         locale
-     *
-     * @return set of keys
-     */
-    private Set<String> getKeys(final Locale locale) {
-        return this.getMergedProperties(locale).getProperties().stringPropertyNames();
+    @Required
+    public void setKeys(final String[] keys) {
+        this.keys = keys;
+    }
+
+    @Override
+    public SViewTitle getViewTitle(final String viewName) {
+        SViewTitle viewTitle = null;
+        for (final String key : this.keys) {
+            if (viewTitle != null) {
+                break;
+            }
+
+            final String tmpKey = key.replace("*", viewName);
+            String result = null;
+
+            try {
+                result = this.messageSource.getMessage(tmpKey, LocaleContextHolder.getLocale());
+            } finally {
+                if (result != null) {
+                    viewTitle = new SViewTitle().setParamName(this.paramName).setParamValue(result)
+                                                .setViewKey(viewName);
+                }
+            }
+        }
+        return viewTitle;
+    }
+
+    @Required
+    public void setMessageSource(final SMessageSource messageSource) {
+        this.messageSource = messageSource;
     }
 }

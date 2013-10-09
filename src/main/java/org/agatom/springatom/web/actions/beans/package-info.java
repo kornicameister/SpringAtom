@@ -15,30 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.locale;
+@XmlJavaTypeAdapters(value = {
+        @XmlJavaTypeAdapter(type = String.class, value = NormalizedStringAdapter.class)
+}) package org.agatom.springatom.web.actions.beans;
 
-import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
-import org.springframework.context.MessageSource;
-
-import java.util.Locale;
-
-/**
- * @author kornicameister
- * @version 0.0.1
- * @since 0.0.1
- */
-public interface SMessageSource
-        extends MessageSource {
-    String getMessage(final String key, final Locale locale);
-
-    SLocalizedMessage getLocalizedMessage(final String key, final Locale locale);
-
-    SLocalizedMessages getLocalizedMessages(final Locale locale);
-
-
-    public enum StorageMode {
-        SINGLE,
-        COMBINED
-    }
-}
+import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapters;

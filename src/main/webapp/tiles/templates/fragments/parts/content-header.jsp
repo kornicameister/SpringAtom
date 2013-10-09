@@ -24,7 +24,7 @@
 <section class="x-content-header">
     <div class="x-breadcrumb">
         <jsp:useBean id="breadcrumbPath" scope="request"
-                     type="org.agatom.springatom.web.support.breadcrumbs.beans.SBreadcrumbPath"/>
+                     type="org.agatom.springatom.web.breadcrumbs.beans.SBreadcrumbPath"/>
         <%--
             provide rest of the implementation
         --%>

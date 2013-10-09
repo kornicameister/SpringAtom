@@ -15,30 +15,16 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.locale;
+package org.agatom.springatom.web.actions;
 
-import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
-import org.springframework.context.MessageSource;
-
-import java.util.Locale;
+import org.agatom.springatom.web.actions.beans.SActions;
+import org.agatom.springatom.web.actions.exception.SNoSuchActionDefinition;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SMessageSource
-        extends MessageSource {
-    String getMessage(final String key, final Locale locale);
-
-    SLocalizedMessage getLocalizedMessage(final String key, final Locale locale);
-
-    SLocalizedMessages getLocalizedMessages(final Locale locale);
-
-
-    public enum StorageMode {
-        SINGLE,
-        COMBINED
-    }
+public interface SActionRepository {
+    SActions getActionsForComponent(String component) throws SNoSuchActionDefinition;
 }

@@ -15,60 +15,41 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.locale.impl;
+package org.agatom.springatom.webmvc.interceptors;
 
-import org.agatom.springatom.web.locale.SMessageSource;
-import org.agatom.springatom.web.locale.beans.SLocale;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import com.google.common.base.Preconditions;
+import org.agatom.springatom.server.SServerConfigured;
+import org.agatom.springatom.server.SpringAtomServer;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
-import java.util.Locale;
-import java.util.Set;
+import javax.annotation.PostConstruct;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SMessageSourceImpl
-        extends ReloadableResourceBundleMessageSource
-        implements SMessageSource {
+public class SServerConfiguredLocaleChangeInterceptor
+        extends LocaleChangeInterceptor
+        implements SServerConfigured {
+    private static final Logger LOGGER = Logger.getLogger(SServerConfiguredLocaleChangeInterceptor.class);
+    @Autowired
+    private SpringAtomServer server;
 
     @Override
-    public String getMessage(final String key, final Locale locale) {
-        return this.getMessage(key, null, locale);
+    @PostConstruct
+    public void configure() {
+        final String paramName = this.server.getProperty("sa.locale.requestParam");
+        LOGGER.trace(String.format("Initialized with paramName=%s", paramName));
+        this.setParamName(paramName);
     }
 
     @Override
-    public SLocalizedMessage getLocalizedMessage(final String key, final Locale locale) {
-        return new SLocalizedMessage()
-                .setKey(key)
-                .setMessage(this.getMessage(key, locale))
-                .setLocale(SLocale.fromLocale(locale));
-    }
-
-    @Override
-    public SLocalizedMessages getLocalizedMessages(final Locale locale) {
-        final SLocalizedMessages preferences = new SLocalizedMessages();
-        final Set<String> keys = this.getKeys(locale);
-
-        for (final String key : keys) {
-            preferences.put(key, this.getMessage(key, locale), locale);
-        }
-
-        return preferences;
-    }
-
-    /**
-     * Returns all the keys from all given resource bundles ({@link ReloadableResourceBundleMessageSource#setBasenames(String...)}
-     *
-     * @param locale
-     *         locale
-     *
-     * @return set of keys
-     */
-    private Set<String> getKeys(final Locale locale) {
-        return this.getMergedProperties(locale).getProperties().stringPropertyNames();
+    @Required
+    public void setConfigure(final String[] params) {
+        Preconditions.checkArgument(params.length == 1);
     }
 }

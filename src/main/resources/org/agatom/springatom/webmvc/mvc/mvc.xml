@@ -15,16 +15,25 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd"
-       default-lazy-init="true">
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <import resource="org/agatom/springatom/web/web.xml"/>
-    <import resource="org/agatom/springatom/webmvc/webmvc.xml"/>
+    <mvc:default-servlet-handler/>
+    <mvc:annotation-driven/>
+    <!--suppress SpringModelInspection -->
+    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
+    <mvc:resources mapping="/static/**" location="/static/"/>
 
-    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
-    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
+    <mvc:view-controller path="/app" view-name="springatom.tiles.index"/>
 
+    <bean p:order="1" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/tiles/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
 </beans>
