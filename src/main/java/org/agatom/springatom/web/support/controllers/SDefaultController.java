@@ -18,6 +18,7 @@
 package org.agatom.springatom.web.support.controllers;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.WebApplicationObjectSupport;
 
 /**
  * @author kornicameister
@@ -26,7 +27,8 @@ import org.springframework.stereotype.Component;
  */
 @Component(value = "SDefaultController")
 public abstract class SDefaultController
-        implements SController {
+        extends WebApplicationObjectSupport
+implements SController {
 
     private final String controllerName;
 
