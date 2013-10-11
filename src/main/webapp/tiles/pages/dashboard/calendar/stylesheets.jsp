@@ -15,22 +15,11 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<head>
-    <jsp:useBean id="lang" scope="request" type="java.util.Locale"/>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="${lang.language}"/>
-    <meta name="author" content="kornicameister@gmail.com"/>
-    <meta name="robots" content="noindex, nofollow"/>
-    <meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes">
-
-    <title>
-        <jsp:useBean id="pageTitleBean"
-                     scope="request"
-                     type="org.agatom.springatom.web.view.bean.SViewTitle">
-        </jsp:useBean>
-        <c:out value="${pageTitleBean.paramValue}" default="[SA]::SpringAtom"/>
-    </title>
-
-    <%@include file="imports/css-imports.jspf" %>
-    <%@include file="imports/scripts-imports.jspf" %>
-</head>
+<link rel="stylesheet"
+      media="all"
+      href="<s:theme code="application.dashboard.calendar.core" htmlEscape="true" />">
+<link rel="stylesheet"
+      media="all"
+      href="<s:theme code="application.dashboard.calendar.extra" htmlEscape="true" />">

@@ -15,43 +15,26 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@ page session="true"
-         language="java"
-         contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
-<%@ taglib prefix="c"
-           uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="tiles"
-           uri="http://tiles.apache.org/tags-tiles" %>
-<%@ taglib prefix="form"
-           uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="s"
-           uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="tiles-extra"
-           uri="http://tiles.apache.org/tags-tiles-extras" %>
-<%@ taglib prefix="security"
-           uri="http://www.springframework.org/security/tags" %>
-
-<!DOCTYPE html>
-<html>
-<tiles:insertAttribute name="head"/>
-<body>
-<div id="page">
-    <div class="content-wrapper midway-vertical midway-horizontal">
-        <%@ include file="fragments/header.jspf" %>
-        <tiles:insertAttribute name="content-header"/>
-        <div class="content">
-            <div id="content">
-                <tiles:insertAttribute name="content"/>
-            </div>
-            <div class="extra midway-horizontal">
-                <tiles:insertAttribute name="extra"/>
-            </div>
-        </div>
-        <%@ include file="fragments/footer.jspf" %>
-    </div>
-    <tiles:insertAttribute name="navigator"/>
-</div>
-</body>
-</html>
+<link rel="stylesheet"
+      media="all"
+      href="<s:theme code="application" htmlEscape="true" />">
+<link rel="stylesheet"
+      media="all"
+      href="<s:theme code="application.auth" htmlEscape="true" />">
+<link rel="stylesheet"
+      media="all"
+      href="<s:theme code="application.content.header" htmlEscape="true" />">
+<link rel="stylesheet"
+      media="all"
+      href="<s:theme code="application.navigator.mmenu" htmlEscape="true" />">
+<link rel="stylesheet"
+      media="all"
+      href="<s:theme code="application.navigator.mmenu.extra" htmlEscape="true" />">
+<link rel="stylesheet"
+      media="all"
+      href="<s:theme code="application.forms.search.searchMeme" htmlEscape="true" />">
+<link rel="stylesheet"
+      media="all"
+      href="<s:theme code="application.fonts.fontsAwesome" htmlEscape="true" />">

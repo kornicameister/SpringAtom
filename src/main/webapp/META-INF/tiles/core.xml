@@ -22,7 +22,15 @@
 
 <tiles-definitions>
 
+    <definition name="abstract_head" template="/tiles/templates/fragments/meta/head.jsp">
+        <put-attribute name="stylesheets" value="/tiles/templates/fragments/meta/imports/css-imports.jsp"/>
+        <put-attribute name="stylesheets.extra" value=""/>
+        <put-attribute name="scripts" value="/tiles/templates/fragments/meta/imports/scripts-imports.jsp"/>
+        <put-attribute name="scripts.extra" value=""/>
+    </definition>
+
     <definition name="abstract_page" template="/tiles/templates/page.jsp">
+        <put-attribute name="head" value="abstract_head"/>
         <put-attribute name="content" value=""/>
         <put-attribute name="content-header" value="/tiles/templates/fragments/parts/content-header.jsp"/>
         <put-attribute name="navigator">
@@ -47,13 +55,13 @@
     </definition>
 
     <definition name="springatom.tiles.index" extends="abstract_page">
-    <put-attribute name="content" value="/tiles/pages/welcome.jsp"/>
+        <put-attribute name="content" value="/tiles/pages/welcome.jsp"/>
     </definition>
     <definition name="springatom.tiles.reports" extends="abstract_page">
-    <put-attribute name="content" value="/tiles/pages/reports/reports.jsp"/>
+        <put-attribute name="content" value="/tiles/pages/reports/reports.jsp"/>
     </definition>
     <definition name="springatom.tiles.about" extends="abstract_page">
-    <put-attribute name="content" value="/tiles/pages/about/about.jsp"/>
+        <put-attribute name="content" value="/tiles/pages/about/about.jsp"/>
     </definition>
 
 
@@ -64,17 +72,17 @@
         <put-attribute name="mode" value="standalone"/>
     </definition>
     <definition name="springatom.tiles.auth.logout" extends="abstract_page">
-    <put-attribute name="content" value="/tiles/pages/auth/logout.jsp"/>
+        <put-attribute name="content" value="/tiles/pages/auth/logout.jsp"/>
         <put-attribute name="mode" value="standalone"/>
     </definition>
     <definition name="springatom.tiles.auth.login.failed" extends="springatom.tiles.auth.login">
-    <put-attribute name="error" value="/tiles/pages/auth/error_login_failed.jsp"/>
+        <put-attribute name="error" value="/tiles/pages/auth/error_login_failed.jsp"/>
     </definition>
     <definition name="springatom.tiles.auth.access.denied" extends="springatom.tiles.auth.login">
-    <put-attribute name="error" value="/tiles/pages/auth/error_access_is_denied.jsp"/>
+        <put-attribute name="error" value="/tiles/pages/auth/error_access_is_denied.jsp"/>
     </definition>
     <definition name="springatom.tiles.auth.forgotten.password" extends="abstract_page">
-    <put-attribute name="content" value="/tiles/pages/auth/forgotten_password.jsp"/>
+        <put-attribute name="content" value="/tiles/pages/auth/forgotten_password.jsp"/>
     </definition>
     <definition name="springatom.tiles.auth.login.embedded"
                 template="/tiles/pages/auth/login.jsp"
@@ -108,8 +116,9 @@
     </definition>
     <!-- dashboard templates -->
     <!-- dashboard pages -->
+
     <definition name="springatom.tiles.dashboard.cars" extends="abstract_page">
-    <put-attribute name="content">
+        <put-attribute name="content">
             <definition extends="abstract.dashboard.content">
                 <put-attribute name="panel" value="/tiles/pages/dashboard/cars/panel.jsp"/>
                 <put-attribute name="menubar">
@@ -121,8 +130,15 @@
             </definition>
         </put-attribute>
     </definition>
+
     <definition name="springatom.tiles.dashboard.calendar" extends="abstract_page">
-    <put-attribute name="content">
+        <put-attribute name="head">
+            <definition extends="abstract_head">
+                <put-attribute name="stylesheets.extra" value="/tiles/pages/dashboard/calendar/stylesheets.jsp"/>
+                <put-attribute name="scripts.extra" value="/tiles/pages/dashboard/calendar/scripts.jsp"/>
+            </definition>
+        </put-attribute>
+        <put-attribute name="content">
             <definition extends="abstract.dashboard.content">
                 <put-attribute name="panel" value="/tiles/pages/dashboard/calendar/panel.jsp"/>
                 <put-attribute name="menubar">
@@ -133,8 +149,9 @@
             </definition>
         </put-attribute>
     </definition>
+
     <definition name="springatom.tiles.dashboard.reports" extends="abstract_page">
-    <put-attribute name="content">
+        <put-attribute name="content">
             <definition extends="abstract.dashboard.content">
                 <put-attribute name="panel" value="/tiles/pages/dashboard/reports/panel.jsp"/>
                 <put-attribute name="menubar">
