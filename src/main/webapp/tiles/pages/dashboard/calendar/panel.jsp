@@ -16,5 +16,64 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
 <section class="x-calendar">
-
+    <div id="calendar"></div>
 </section>
+<script>
+    $(document).ready(function () {
+        var options = {
+            'monthNames'     : 'date.months',
+            'dayNames'       : 'date.days',
+            'dayNamesShort'  : 'date.days.short',
+            'monthNamesShort': 'date.months.short'
+        };
+        var initCalendar = function (opt) {
+            var $calendar = $('#calendar'),
+                    parent = $calendar.parent('.x-calendar'),
+                    pHeight = parent.height();
+
+            opt = $.extend({
+                header     : {
+                    left  : 'prev,next today',
+                    center: 'title',
+                    right : 'month,agendaWeek,agendaDay'
+                },
+                weekends   : false,
+                weekNumbers: true,
+                editable   : true,
+                firstDay   : 1,
+                height     : pHeight,
+                aspectRatio: 2.2
+            }, opt);
+
+            $calendar.fullCalendar(opt);
+        };
+
+        $.ajax({
+            url        : '/data/lang/read',
+            type       : 'POST',
+            contentType: "application/json",
+            data       : JSON.stringify({
+                keys: (function () {
+                    var tmp = [];
+                    $.each(options, function (key, value) {
+                        tmp.push(value);
+                    });
+                    return tmp;
+                }())
+            }),
+            dataType   : 'json',
+            success    : function (data) {
+                var preferences = data['preferences'];
+                $.each(preferences, function (index, pref) {
+                    var _key = pref['key'], _message = pref['message'];
+                    $.each(options, function (key, value) {
+                        if (value === _key) {
+                            options[key] = _message.split(',');
+                        }
+                    });
+                });
+                initCalendar(options);
+            }
+        });
+    });
+</script>

@@ -20,13 +20,13 @@ package org.agatom.springatom.webmvc.servlet.locale;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.server.SpringAtomServer;
 import org.agatom.springatom.web.locale.SMessageSource;
+import org.agatom.springatom.web.locale.beans.LocalizedMessageRequest;
 import org.agatom.springatom.web.locale.beans.SLocale;
 import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -59,11 +59,6 @@ public class SLocaleController {
         binder.setIgnoreUnknownFields(true);
     }
 
-    @Secured(value = {
-            "IS_AUTHENTICATED_ANONYMOUSLY",
-            "IS_AUTHENTICATED_FULLY",
-            "IS_AUTHENTICATED_REMEMBERED"
-    })
     @ResponseBody
     @RequestMapping(
             value = "/available",
@@ -95,10 +90,6 @@ public class SLocaleController {
         };
     }
 
-    @Secured(value = {
-            "IS_AUTHENTICATED_FULLY",
-            "IS_AUTHENTICATED_REMEMBERED"
-    })
     @ResponseBody
     @RequestMapping(
             value = "/all",
@@ -116,10 +107,6 @@ public class SLocaleController {
         };
     }
 
-    @Secured(value = {
-            "IS_AUTHENTICATED_FULLY",
-            "IS_AUTHENTICATED_REMEMBERED"
-    })
     @ResponseBody
     @RequestMapping(
             value = "/read",
@@ -130,23 +117,31 @@ public class SLocaleController {
                     MediaType.TEXT_PLAIN_VALUE
             }
     )
-    public Callable<SLocalizedMessages> getLocalizedPreferences(final @RequestBody String[] keys) {
+    public Callable<SLocalizedMessages> getLocalizedPreferences(
+            @RequestBody final LocalizedMessageRequest request
+    ) {
         final Locale locale = LocaleContextHolder.getLocale();
+        final Boolean pattern = request.isPattern();
+        final String[] keys = request.getKeys();
 
         return new Callable<SLocalizedMessages>() {
             @Override
             public SLocalizedMessages call() throws Exception {
-                final SLocalizedMessages localizedPreferences = new SLocalizedMessages();
-                for (final String key : keys) {
-                    final String msg = messageSource.getMessage(key, locale);
-                    if (msg != null) {
-                        localizedPreferences.put(key, msg, locale);
+                SLocalizedMessages localizedPreferences = new SLocalizedMessages();
+                if (pattern) {
+                    localizedPreferences = messageSource.getLocalizedMessages(keys, locale, pattern);
+                } else {
+                    for (final String key : keys) {
+                        final String msg = messageSource.getMessage(key, locale);
+                        if (msg != null) {
+                            localizedPreferences.put(key, msg, locale);
+                        }
                     }
                 }
                 if (LOGGER.isInfoEnabled()) {
                     LOGGER.info(String
-                            .format("For keys=%s and lang=%s returning dataUi=%s", Arrays
-                                    .toString(keys), locale, localizedPreferences));
+                            .format("For keys=%s and lang=%s returning msgs=%d", Arrays
+                                    .toString(keys), locale, localizedPreferences.size()));
                 }
                 return localizedPreferences;
             }

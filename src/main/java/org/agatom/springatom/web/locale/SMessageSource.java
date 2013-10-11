@@ -32,9 +32,11 @@ public interface SMessageSource
         extends MessageSource {
     String getMessage(final String key, final Locale locale);
 
-    SLocalizedMessage getLocalizedMessage(final String key, final Locale locale);
-
     SLocalizedMessages getLocalizedMessages(final Locale locale);
+
+    SLocalizedMessages getLocalizedMessages(final String[] keys, final Locale locale, final boolean usePattern);
+
+    SLocalizedMessage getLocalizedMessage(final String key, final Locale locale);
 
 
     public enum StorageMode {

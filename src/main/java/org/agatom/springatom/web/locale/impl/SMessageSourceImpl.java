@@ -17,14 +17,18 @@
 
 package org.agatom.springatom.web.locale.impl;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.locale.beans.SLocale;
 import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
 import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
+import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author kornicameister
@@ -58,6 +62,35 @@ public class SMessageSourceImpl
         }
 
         return preferences;
+    }
+
+    @Override
+    public SLocalizedMessages getLocalizedMessages(final String[] keys, final Locale locale, final boolean usePattern) {
+        if (!usePattern) {
+            return this.getLocalizedMessages(locale);
+        }
+        final Set<String> allKeys = this.getKeys(locale);
+        final SLocalizedMessages messages = new SLocalizedMessages();
+
+        for (final String key : keys) {
+            final Pattern pattern = Pattern.compile(key, Pattern.CASE_INSENSITIVE);
+            {
+                final Set<String> filteredMsgKeys = FluentIterable
+                        .from(allKeys)
+                        .filter(new Predicate<String>() {
+                            @Override
+                            public boolean apply(@Nullable final String input) {
+                                return pattern.matcher(input).matches();
+                            }
+                        })
+                        .toSet();
+                for (final String msgKey : filteredMsgKeys) {
+                    messages.put(this.getLocalizedMessage(msgKey, locale));
+                }
+            }
+        }
+
+        return messages;
     }
 
     /**

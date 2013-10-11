@@ -66,10 +66,11 @@
 
         <!-- spring -->
         <spring.version>3.2.4.RELEASE</spring.version>
-        <spring-security.version>3.1.4.RELEASE</spring-security.version>
+        <spring-security.version>3.2.0.RC1</spring-security.version>
         <spring-js-resources.version>2.3.2.RELEASE</spring-js-resources.version>
         <spring-data-jpa.version>1.2.1.RELEASE</spring-data-jpa.version>
         <spring-data-envers.version>0.1.0.RELEASE</spring-data-envers.version>
+        <spring-hateoas.version>0.7.0.RELEASE</spring-hateoas.version>
         <!-- spring -->
 
         <!-- servlet and jsp -->
@@ -133,6 +134,14 @@
             <id>jboss-nexus</id>
             <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
         </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>http://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -181,6 +190,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.hateoas</groupId>
+            <artifactId>spring-hateoas</artifactId>
+            <version>${spring-hateoas.version}</version>
         </dependency>
         <!-- spring web -->
         <dependency>
