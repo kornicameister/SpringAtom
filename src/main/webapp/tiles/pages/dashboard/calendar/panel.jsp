@@ -41,17 +41,35 @@
                         pHeight = parent.height();
 
                 opt = $.extend({
-                    header     : {
+                    header      : {
                         left  : 'prev,next today',
                         center: 'title',
                         right : 'month,agendaWeek,agendaDay'
                     },
-                    weekends   : false,
-                    weekNumbers: true,
-                    editable   : true,
-                    firstDay   : 1,
-                    height     : pHeight,
-                    aspectRatio: 2.2
+                    weekends    : false,
+                    weekNumbers : true,
+                    editable    : true,
+                    firstDay    : 1,
+                    height      : pHeight,
+                    aspectRatio : 2.2,
+                    firstHour   : 8,
+                    minTime     : 7,
+                    maxTime     : 21,
+                    selectHelper: true,
+                    selectable  : true,
+                    editable    : true,
+                    dayClick    : function (date, allDay, jsEvent, view) {
+                        if (allDay) {
+                            console.log('Clicked on the entire day: ' + date);
+                        } else {
+                            console.log('Clicked on the slot: ' + date);
+                        }
+                    },
+                    eventClick  : function (calEvent, jsEvent, view) {
+                        console.log('Event: ' + calEvent.title);
+                        console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+                        console.log('View: ' + view.name);
+                    }
                 }, opt);
 
                 $calendar.fullCalendar(opt);
