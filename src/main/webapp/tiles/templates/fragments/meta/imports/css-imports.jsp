@@ -34,7 +34,4 @@
       href="<s:theme code="application.navigator.mmenu.extra" htmlEscape="true" />">
 <link rel="stylesheet"
       media="all"
-      href="<s:theme code="application.forms.search.searchMeme" htmlEscape="true" />">
-<link rel="stylesheet"
-      media="all"
       href="<s:theme code="application.fonts.fontsAwesome" htmlEscape="true" />">

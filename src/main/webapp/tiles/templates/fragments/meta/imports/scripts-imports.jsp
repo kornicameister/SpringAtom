@@ -39,6 +39,7 @@
 <s:url value="${staticSa}/sa-mmenu.js" var="saMmenu" htmlEscape="true"/>
 <s:url value="${staticSa}/sa-breadcrumb.js" var="saBreadcrumb" htmlEscape="true"/>
 <s:url value="${staticLib}/spin.min.js" var="spinnerJS" htmlEscape="true"/>
+<s:url value="${staticLib}/simpleModal.min.js" var="simpleModalJS" htmlEscape="true"/>
 
 <script type="text/javascript" src="${jqueryJs}"></script>
 <script type="text/javascript" src="${mmenuJs}"></script>
@@ -51,6 +52,7 @@
 <script type="text/javascript" src="${notyLayoutTopCenterJs}"></script>
 <script type="text/javascript" src="${notyThemeJs}"></script>
 <script type="text/javascript" src="${spinnerJS}"></script>
+<script type="text/javascript" src="${simpleModalJS}"></script>
 <script type="text/javascript" src="${saMmenu}"></script>
 <script type="text/javascript" src="${saAuth}"></script>
 <script type="text/javascript" src="${coreJS}"></script>
