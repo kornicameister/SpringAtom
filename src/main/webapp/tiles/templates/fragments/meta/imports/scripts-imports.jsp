@@ -29,28 +29,20 @@
 <s:url value="${staticLib}/tinycon.min.js" htmlEscape="true" var="tinyIconJS"/>
 <s:url value="${staticLib}/midway.min.js" htmlEscape="true" var="midwayJS"/>
 <s:url value="${staticLib}/mmenu/3.2.1/jquery.mmenu.min.js" htmlEscape="true" var="mmenuJs"/>
-<s:url value="${notyPath}/jquery.noty.js" htmlEscape="true" var="notyJs"/>
-<s:url value="${notyPath}/layouts/top.js" htmlEscape="true" var="notyLayoutTopJs"/>
-<s:url value="${notyPath}/layouts/topCenter.js" htmlEscape="true" var="notyLayoutTopCenterJs"/>
-<s:url value="${notyPath}/layouts/center.js" htmlEscape="true" var="notyLayoutCenterJs"/>
-<s:url value="${notyPath}/themes/default.js" htmlEscape="true" var="notyThemeJs"/>
 <s:url value="${staticSa}/sa-core.js" var="coreJS" htmlEscape="true"/>
 <s:url value="${staticSa}/sa-auth.js" var="saAuth" htmlEscape="true"/>
 <s:url value="${staticSa}/sa-mmenu.js" var="saMmenu" htmlEscape="true"/>
 <s:url value="${staticSa}/sa-breadcrumb.js" var="saBreadcrumb" htmlEscape="true"/>
 <s:url value="${staticLib}/spin.min.js" var="spinnerJS" htmlEscape="true"/>
 <s:url value="${staticLib}/simpleModal.min.js" var="simpleModalJS" htmlEscape="true"/>
+<s:url value="${staticLib}/alertify/alertify.min.js" var="alertifyJS" htmlEscape="true"/>
 
 <script type="text/javascript" src="${jqueryJs}"></script>
 <script type="text/javascript" src="${mmenuJs}"></script>
 <script type="text/javascript" src="${momentJs}"></script>
 <script type="text/javascript" src="${tinyIconJS}"></script>
 <script type="text/javascript" src="${midwayJS}"></script>
-<script type="text/javascript" src="${notyJs}"></script>
-<script type="text/javascript" src="${notyLayoutTopJs}"></script>
-<script type="text/javascript" src="${notyLayoutCenterJs}"></script>
-<script type="text/javascript" src="${notyLayoutTopCenterJs}"></script>
-<script type="text/javascript" src="${notyThemeJs}"></script>
+<script type="text/javascript" src="${alertifyJS}"></script>
 <script type="text/javascript" src="${spinnerJS}"></script>
 <script type="text/javascript" src="${simpleModalJS}"></script>
 <script type="text/javascript" src="${saMmenu}"></script>

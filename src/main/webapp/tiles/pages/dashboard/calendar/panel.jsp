@@ -17,7 +17,7 @@
 
 <section class="x-calendar">
     <div id="calendar"></div>
-    <div id="x-new-event">
+    <div id="x-new-event" class="x-modal">
         <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
         <s:message code="form.new-event.title" var="formTitle"/>
         <s:url value="/a/d/new/event" var="formURL"/>
@@ -25,6 +25,7 @@
               action="${formURL}"
               method="post"
               title="${formTitle}"
+              class="x-form"
               autocomplete="on">
             <fieldset>
                 <legend>Time frame</legend>
@@ -54,6 +55,18 @@
             </fieldset>
             <fieldset>
                 <legend>Todo list</legend>
+                <table class="x-table">
+                    <thead class="x-table-header">
+                    <tr class="x-table-header-row">
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody class="x-table-body">
+
+                    </tbody>
+                </table>
             </fieldset>
             <fieldset class="x-form-actions">
                 <input type="submit" value="Submit">
@@ -86,22 +99,7 @@
                 selectable  : true,
                 editable    : true,
                 dayClick    : function (date, allDay, jsEvent, view) {
-                    var viewName = view['name'];
-                    $('#x-new-event').modal({
-                        overlayClose: true,
-                        opacity     : 20,
-                        overlayCss  : {
-                            backgroundColor: "#246485"
-                        },
-                        onOpen      : function (dialog) {
-                            dialog.overlay.fadeIn('slow', function () {
-                                dialog.data.hide();
-                                dialog.container.fadeIn('slow', function () {
-                                    dialog.data.slideDown('slow');
-                                });
-                            });
-                        }
-                    })
+                    SA.core.openModal('#x-ew-event');
                 },
                 eventClick  : function (calEvent, jsEvent, view) {
                     console.log('Event: ' + calEvent.title);
@@ -113,38 +111,17 @@
         }
 
         function loadCalendarAjaxly() {
-            var options = {
-                'monthNames'     : 'date.months',
-                'dayNames'       : 'date.days',
-                'dayNamesShort'  : 'date.days.short',
-                'monthNamesShort': 'date.months.short'
-            };
-            $.ajax({
-                url        : '/data/lang/read',
-                type       : 'POST',
-                contentType: "application/json",
-                data       : JSON.stringify({
-                    keys: (function () {
-                        var tmp = [];
-                        $.each(options, function (key, value) {
-                            tmp.push(value);
-                        });
-                        return tmp;
-                    }())
-                }),
-                dataType   : 'json',
-                success    : function (data) {
-                    var preferences = data['preferences'];
-                    $.each(preferences, function (index, pref) {
-                        var _key = pref['key'], _message = pref['message'];
-                        $.each(options, function (key, value) {
-                            if (value === _key) {
-                                options[key] = _message.split(',');
-                            }
-                        });
-                    });
-                    onAjaxSuccess(options);
-                }
+            SA.core.ajax.loadLocalizedPreferences({
+                keys    : {
+                    'monthNames'     : 'date.months',
+                    'dayNames'       : 'date.days',
+                    'dayNamesShort'  : 'date.days.short',
+                    'monthNamesShort': 'date.months.short'
+                },
+                pattern : false,
+                reversed: true,
+                callback: onAjaxSuccess,
+                scope   : this
             });
         }
 

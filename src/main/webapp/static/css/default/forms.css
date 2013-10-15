@@ -32,8 +32,18 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-(function (SA, $) {
-    if (!SA.breadcrumb) {
-        SA.breadcrumb = {};
-    }
-}(window.SA = window.SA || {}, jQuery));
+.x-form {
+    margin  : 0 auto;
+    padding : 2px;
+    height  : 100%;
+    border  : none;
+}
+
+.x-form fieldset {
+    border        : 1px inset #00A2D3;
+    margin-bottom : 2px;
+}
+
+.x-form fieldset legend {
+    font-size : larger;
+}

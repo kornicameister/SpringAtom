@@ -35,3 +35,16 @@
 <link rel="stylesheet"
       media="all"
       href="<s:theme code="application.fonts.fontsAwesome" htmlEscape="true" />">
+<link rel="stylesheet"
+      media="all"
+      href="<s:theme code="application.forms" htmlEscape="true" />">
+<link rel="stylesheet"
+      media="all"
+      href="<s:theme code="application.modals" htmlEscape="true" />">
+
+<link rel="stylesheet"
+      media="all"
+      href="<s:url value="/static/lib/alertify/themes/alertify.core.css"/>"/>
+<link rel="stylesheet"
+      media="all"
+      href="<s:url value="/static/lib/alertify/themes/alertify.default.css"/>"/>
