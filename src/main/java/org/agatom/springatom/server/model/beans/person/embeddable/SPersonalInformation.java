@@ -32,6 +32,7 @@ import java.io.Serializable;
 @Embeddable
 public class SPersonalInformation
         implements Serializable {
+    private static final long serialVersionUID = -3072720523468830852L;
     @NotEmpty
     @Length(min = 3, max = 45)
     @Column(name = "fName", length = 45, nullable = false)

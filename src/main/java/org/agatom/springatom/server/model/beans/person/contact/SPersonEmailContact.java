@@ -33,7 +33,8 @@ import javax.persistence.Entity;
 @DiscriminatorOptions(force = true)
 final public class SPersonEmailContact
         extends SPersonContact {
-    public static final String DISC = "p>mail";
+    public static final  String DISC             = "p>mail";
+    private static final long   serialVersionUID = -6481595691789221911L;
 
     @Override
     public SMetaDataEnum getType() {

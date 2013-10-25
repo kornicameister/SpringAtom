@@ -31,7 +31,8 @@ import javax.persistence.Entity;
 @DiscriminatorValue(value = SPersonCellPhoneContact.DISC)
 final public class SPersonCellPhoneContact
         extends SPersonContact {
-    public static final String DISC = "p>cellphone";
+    public static final  String DISC             = "p>cellphone";
+    private static final long   serialVersionUID = -3454888170285061151L;
 
     @Override
     public SMetaDataEnum getType() {

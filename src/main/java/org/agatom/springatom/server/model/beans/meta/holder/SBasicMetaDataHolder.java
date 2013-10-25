@@ -35,7 +35,7 @@ import java.io.Serializable;
 abstract public class SBasicMetaDataHolder<MD extends SMetaData, PK extends Serializable>
         extends PersistentObject<PK>
         implements SMetaDataHolder<MD> {
-
+    private static final long serialVersionUID = 8005578539662866251L;
     @NotNull(message = "SMetaDataHolder requires knowledge of the meta data, it can not be null")
     @Index(name = "sbmdh_type")
     @OrderColumn(nullable = false)

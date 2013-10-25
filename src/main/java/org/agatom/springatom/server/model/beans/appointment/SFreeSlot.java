@@ -30,6 +30,7 @@ import java.io.Serializable;
 public class SFreeSlot
         implements Serializable,
                    Comparable<SFreeSlot> {
+    private static final long serialVersionUID = 7645856029174566375L;
     private final long     sideA;
     private final long     sideB;
     private final Duration duration;

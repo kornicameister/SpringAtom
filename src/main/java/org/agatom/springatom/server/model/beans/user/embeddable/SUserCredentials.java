@@ -36,6 +36,7 @@ import java.io.Serializable;
 @Embeddable
 public class SUserCredentials
         implements Serializable {
+    private static final long serialVersionUID = -4152612128922561019L;
     @NotEmpty
     @NaturalId
     @Column(name = "username", length = 45, unique = true, nullable = false)

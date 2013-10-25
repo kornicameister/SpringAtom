@@ -27,7 +27,7 @@ import org.agatom.springatom.server.populators.DatabaseEnumPopulable;
  * @since 0.0.1
  */
 public enum SSecurityAuthorityEnum
-implements DatabaseEnumPopulable {
+        implements DatabaseEnumPopulable {
     ROLE_ADMIN(666),
     ROLE_ANONYMOUS(-1),
     ROLE_USER(0),

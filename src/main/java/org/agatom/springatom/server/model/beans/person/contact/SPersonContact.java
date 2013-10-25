@@ -47,14 +47,14 @@ import javax.validation.constraints.NotNull;
 )
 abstract public class SPersonContact
         extends SBasicContact<SPerson> {
-
+    private static final long    serialVersionUID = 86397657105677805L;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(
             name = "assigned",
             updatable = true
     )
     @Type(type = "java.io.Serializable")
-    protected SPerson assigned = null;
+    protected            SPerson assigned         = null;
 
     public static SContact fromType(SMetaDataEnum type) {
         switch (type) {

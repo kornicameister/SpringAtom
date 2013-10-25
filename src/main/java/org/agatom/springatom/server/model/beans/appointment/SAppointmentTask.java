@@ -40,6 +40,7 @@ import javax.persistence.*;
 )
 public class SAppointmentTask
         extends SBasicMetaDataHolder<SAppointmentTaskType, Long> {
+    private static final long serialVersionUID = -300491275397373687L;
     @NotEmpty
     @Length(min = 10, max = 444)
     @Column(name = "task", nullable = false, length = 444)

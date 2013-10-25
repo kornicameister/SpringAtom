@@ -35,7 +35,7 @@ import javax.validation.constraints.NotNull;
 abstract class SBasicTargetedNotification<SN_T extends Persistable<Long>>
         extends SBasicNotification
         implements STargetedNotification<SN_T, Long> {
-
+    private static final long serialVersionUID = -6217965995023815925L;
     @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "target", updatable = false)

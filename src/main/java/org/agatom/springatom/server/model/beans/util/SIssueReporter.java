@@ -36,7 +36,8 @@ import java.io.Serializable;
 @Embeddable
 public class SIssueReporter
         implements Serializable {
-    private static final String DATE_TIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
+    private static final String DATE_TIME_TYPE   = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
+    private static final long   serialVersionUID = 2584800898826870084L;
     @NotNull
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "mechanic",

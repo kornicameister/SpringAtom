@@ -43,7 +43,7 @@ import javax.persistence.*;
 )
 public class SAppointmentWorkerLink
         extends PersistentVersionedObject {
-
+    private static final long serialVersionUID = 7306174915457185820L;
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment", updatable = false)

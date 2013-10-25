@@ -48,7 +48,7 @@ import javax.validation.constraints.NotNull;
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class SClientProblemReport
         extends SBasicMetaDataHolder<SClientProblemReportType, Long> {
-
+    private static final long serialVersionUID = 8658810841216821601L;
     @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)

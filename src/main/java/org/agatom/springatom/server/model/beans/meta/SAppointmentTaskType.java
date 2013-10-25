@@ -17,6 +17,8 @@
 
 package org.agatom.springatom.server.model.beans.meta;
 
+import org.agatom.springatom.server.model.types.meta.SMetaDataEnum;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -31,5 +33,14 @@ import javax.persistence.Transient;
 public class SAppointmentTaskType
         extends SMetaData {
     @Transient
-    protected static final String SHORT_NAME = "SATT";
+    protected static final String SHORT_NAME       = "SATT";
+    private static final   long   serialVersionUID = 6660601806462343258L;
+
+    public SAppointmentTaskType() {
+    }
+
+    public SAppointmentTaskType(final SMetaDataEnum type) {
+        this.type = type;
+    }
+
 }

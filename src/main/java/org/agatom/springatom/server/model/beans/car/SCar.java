@@ -44,7 +44,7 @@ import javax.validation.constraints.NotNull;
 // TODO is business service update required ?
 public class SCar
         extends PersistentVersionedObject {
-
+    private static final long serialVersionUID = -1473162805427581686L;
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "carMaster", referencedColumnName = "idSCarMaster", updatable = false)

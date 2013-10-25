@@ -36,6 +36,7 @@ import java.io.Serializable;
 public class SUserAuthority
         implements Serializable {
 
+    private static final long serialVersionUID = -61697944597116291L;
     @EmbeddedId
     private SUserAuthorityPK pk;
 

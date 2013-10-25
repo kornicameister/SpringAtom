@@ -35,6 +35,7 @@ import static org.agatom.springatom.shared.RegexpPatterns.BIG_FIRST_LETTER_PATTE
 @Embeddable
 public class SCarMasterManufacturingData
         implements Serializable {
+    private static final long serialVersionUID = 545689870492641597L;
     @Index(name = "scmmd_brand")
     @NotBlank
     @Pattern(regexp = BIG_FIRST_LETTER_PATTERN)

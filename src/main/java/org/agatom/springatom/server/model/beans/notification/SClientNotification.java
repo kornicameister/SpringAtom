@@ -31,5 +31,5 @@ import javax.persistence.Entity;
 @DiscriminatorValue(value = "web")
 public class SClientNotification
         extends SBasicTargetedNotification<SClient> {
-
+    private static final long serialVersionUID = -3785973668178252571L;
 }

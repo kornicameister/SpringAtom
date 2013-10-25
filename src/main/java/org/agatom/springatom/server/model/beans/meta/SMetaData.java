@@ -48,15 +48,14 @@ import javax.persistence.*;
 abstract public class SMetaData
         extends PersistentObject<Long>
         implements SMetaDataType<Long> {
-
+    private static final long serialVersionUID = 6106065657835614287L;
     @Type(type = "org.hibernate.type.EnumType")
     @Column(nullable = false,
             length = 30,
             updatable = false,
             name = "type")
     @NaturalId(mutable = false)
-    @Enumerated(value = EnumType.STRING)
-    private SMetaDataEnum type;
+    @Enumerated(value = EnumType.STRING) protected SMetaDataEnum type;
 
     protected SMetaData() {
         super();

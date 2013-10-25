@@ -31,5 +31,6 @@ import javax.persistence.Transient;
 public class SNotificationType
         extends SMetaData {
     @Transient
-    protected static final String SHORT_NAME = "SNT";
+    protected static final String SHORT_NAME       = "SNT";
+    private static final   long   serialVersionUID = -9119353118570836523L;
 }

@@ -39,7 +39,7 @@ public enum SMetaDataEnum
     //SAT
     SAT_REPAIR("repair", Constants.APPOINTMENT_TASK_TYPE_CLASS),
     SAT_NORMAL("normal", Constants.APPOINTMENT_TASK_TYPE_CLASS),
-    SAT_OIL_CHANGE("oil change", Constants.APPOINTMENT_TASK_TYPE_CLASS),
+    SAT_OIL_CHANGE("oil_change", Constants.APPOINTMENT_TASK_TYPE_CLASS),
     //SAT
 
     //SCPR
@@ -75,6 +75,15 @@ public enum SMetaDataEnum
     @Override
     public String[] getData() {
         return new String[]{this.toString(), this.getMetaType()};
+    }
+
+    public static SMetaDataEnum fromType(final String type) {
+        for (final SMetaDataEnum anEnum : SMetaDataEnum.values()) {
+            if (anEnum.type.equals(type)) {
+                return anEnum;
+            }
+        }
+        return null;
     }
 
     private String getMetaType() {

@@ -36,7 +36,7 @@ import javax.persistence.Version;
 abstract public class PersistentVersionedObject
         extends AbstractAuditable<SUser, Long>
         implements PersistentVersionedBean {
-
+    private static final long serialVersionUID = -3113664043161581649L;
     @Version
     private Long version;
 

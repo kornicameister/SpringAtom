@@ -31,5 +31,6 @@ import javax.persistence.Transient;
 public class SClientProblemReportType
         extends SMetaData {
     @Transient
-    protected static final String SHORT_NAME = "SCPRT";
+    protected static final String SHORT_NAME       = "SCPRT";
+    private static final   long   serialVersionUID = -3278083604138779022L;
 }

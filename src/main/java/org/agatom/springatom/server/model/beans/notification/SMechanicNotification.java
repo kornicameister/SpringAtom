@@ -31,5 +31,5 @@ import javax.persistence.Entity;
 @DiscriminatorValue(value = "mechanic")
 public class SMechanicNotification
         extends SBasicTargetedNotification<SMechanic> {
-
+    private static final long serialVersionUID = 8986312009370151606L;
 }

@@ -53,10 +53,11 @@ abstract public class SBasicContact<SC_H extends PersistentContactable>
         implements SContact<SC_H, SContactType, Long> {
 
     @Transient
-    protected static final String CONTACT_IS = "contactIs";
+    protected static final String CONTACT_IS       = "contactIs";
+    private static final   long   serialVersionUID = 8494361809629647372L;
     @Length(min = 5, max = 60)
     @Column(name = "contact", length = 60)
-    protected              String contact    = "";
+    protected              String contact          = "";
 
     public static Class<SContactType> holds() {
         return SContactType.class;

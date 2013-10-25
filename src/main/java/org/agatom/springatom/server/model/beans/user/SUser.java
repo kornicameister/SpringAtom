@@ -58,7 +58,7 @@ import java.util.Set;
 public class SUser
         extends PersistentVersionedObject
         implements SSecuredUser {
-
+    private static final long serialVersionUID = -5918876176226057267L;
     @Audited
     @Embedded
     private SUserCredentials    credentials;

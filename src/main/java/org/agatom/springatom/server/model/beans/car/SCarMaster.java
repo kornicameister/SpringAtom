@@ -44,6 +44,7 @@ import java.util.Set;
 )
 public class SCarMaster
         extends PersistentObject<Long> {
+    private static final long serialVersionUID = -4932035593494629555L;
     @Embedded
     private SCarMasterManufacturingData manufacturingData;
     @BatchSize(

@@ -63,6 +63,7 @@ abstract public class SPerson
         extends PersistentContactable
         implements SMultiContactable<Long> {
 
+    private static final long serialVersionUID = -8306142304138446067L;
     @Embedded
     @QueryInit(value = "information")
     private SPersonalInformation information;

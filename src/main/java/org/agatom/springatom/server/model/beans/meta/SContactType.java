@@ -31,5 +31,6 @@ import javax.persistence.Transient;
 public class SContactType
         extends SMetaData {
     @Transient
-    protected static final String SHORT_NAME = "SCT";
+    protected static final String SHORT_NAME       = "SCT";
+    private static final   long   serialVersionUID = 8377540775448390856L;
 }

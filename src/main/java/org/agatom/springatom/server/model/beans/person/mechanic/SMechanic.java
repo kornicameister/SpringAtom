@@ -41,5 +41,5 @@ import javax.persistence.*;
 @PrimaryKeyJoinColumn(name = "idSMechanic")
 public class SMechanic
         extends SPerson {
-
+    private static final long serialVersionUID = -2031207545611019735L;
 }

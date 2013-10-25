@@ -36,7 +36,7 @@ import java.util.Set;
 abstract class SBasicConcerningNotification<SN_C extends Persistable<Long>, SN_T extends Persistable<Long>>
         extends SBasicTargetedNotification<SN_T>
         implements SConcerningNotification<SN_C, SN_T, Long> {
-
+    private static final long serialVersionUID = 8637694587051421693L;
     @NotEmpty
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "SNotificiationConcerns", joinColumns = @JoinColumn(name = "fkNotification"))

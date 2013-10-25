@@ -47,7 +47,7 @@ import java.util.Set;
 @PrimaryKeyJoinColumn(name = "idSClient")
 public class SClient
         extends SPerson {
-
+    private static final long                      serialVersionUID = -4561290274125040375L;
     @BatchSize(size = 10)
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "client",
@@ -56,7 +56,7 @@ public class SClient
             }
     )
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<SClientProblemReport> problemReportSet = new HashSet<>();
+    private              Set<SClientProblemReport> problemReportSet = new HashSet<>();
 
     public SClient() {
         super();

@@ -42,7 +42,7 @@ import javax.persistence.MappedSuperclass;
 abstract public class PersistentContactable
         extends PersistentVersionedObject
         implements SContactable<Long> {
-
+    private static final long serialVersionUID = 8693440343386488007L;
     @Email
     @NotBlank
     @NaturalId

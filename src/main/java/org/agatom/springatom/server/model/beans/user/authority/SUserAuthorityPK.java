@@ -32,6 +32,7 @@ import java.io.Serializable;
 @Embeddable
 public class SUserAuthorityPK
         implements Serializable {
+    private static final long serialVersionUID = -605204180160028113L;
     @ManyToOne
     @JoinColumn(name = "user", referencedColumnName = "idSUser")
     private SUser      user;

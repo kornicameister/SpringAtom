@@ -42,6 +42,7 @@ import javax.persistence.*;
 public class SAuthority
         extends PersistentObject<Long>
         implements GrantedAuthority {
+    private static final long serialVersionUID = 2893594861541235345L;
     @Type(type = "org.hibernate.type.EnumType")
     @Column(name = "authority", updatable = false, unique = true, length = 50, nullable = false)
     @NaturalId(mutable = false)

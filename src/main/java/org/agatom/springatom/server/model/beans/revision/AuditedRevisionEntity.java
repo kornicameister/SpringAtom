@@ -34,6 +34,7 @@ import javax.persistence.Table;
 @RevisionEntity(value = AuditingRevisionEntity.class)
 public class AuditedRevisionEntity
         extends DefaultTrackingModifiedEntitiesRevisionEntity {
+    private static final long serialVersionUID = -3255456739922989639L;
     @Column(length = 50)
     private String user;
 

@@ -33,7 +33,8 @@ import javax.persistence.Entity;
 @DiscriminatorValue(value = SPersonFaxContact.DISC)
 final public class SPersonFaxContact
         extends SPersonContact {
-    public static final String DISC = "p>fax";
+    public static final  String DISC             = "p>fax";
+    private static final long   serialVersionUID = -910534682751957792L;
 
     @Override
     public SMetaDataEnum getType() {

@@ -47,7 +47,7 @@ abstract public class PersistentObject<PK extends Serializable>
         implements PersistentBean,
                    Comparable<PersistentObject<PK>> {
     @Transient
-    private static final Comparator<Serializable> ID_COMPARATOR = new Comparator<Serializable>() {
+    private static final Comparator<Serializable> ID_COMPARATOR    = new Comparator<Serializable>() {
         private static final String COMPARED_KEYS_ARE_NOT_EQUAL_IN_TYPE_O1_S_O2_S = "Compared keys are not equal in type >> o1=%s != o2=%s";
 
         @Override
@@ -78,6 +78,7 @@ abstract public class PersistentObject<PK extends Serializable>
                     .isAssignableFrom(Long.class);
         }
     };
+    private static final long serialVersionUID = -6950914229850313642L;
 
     public PersistentObject() {
         super();

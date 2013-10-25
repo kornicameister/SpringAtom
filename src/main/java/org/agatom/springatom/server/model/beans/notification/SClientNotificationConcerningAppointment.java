@@ -32,5 +32,5 @@ import javax.persistence.Entity;
 @DiscriminatorValue(value = "client_ca")
 public class SClientNotificationConcerningAppointment
         extends SBasicConcerningNotification<SAppointment, SClient> {
-
+    private static final long serialVersionUID = 4209297813957418362L;
 }

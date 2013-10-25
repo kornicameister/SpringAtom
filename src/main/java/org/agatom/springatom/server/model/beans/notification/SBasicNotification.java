@@ -50,7 +50,8 @@ import javax.validation.constraints.Past;
 abstract public class SBasicNotification
         extends SBasicMetaDataHolder<SNotificationType, Long>
         implements SNotification<Long> {
-    private static final String DATE_TIME_TYPE = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
+    private static final String DATE_TIME_TYPE   = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
+    private static final long   serialVersionUID = -5518002639762454805L;
     @NotBlank
     @Length(max = 1000)
     @Column(name = "message", length = 1000)

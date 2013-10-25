@@ -32,5 +32,5 @@ import javax.persistence.Entity;
 @DiscriminatorValue(value = "mechanic_cp")
 public class SMechanicNotificationConcerningAppointment
         extends SBasicConcerningNotification<SAppointment, SMechanic> {
-
+    private static final long serialVersionUID = -6320453781637492966L;
 }
