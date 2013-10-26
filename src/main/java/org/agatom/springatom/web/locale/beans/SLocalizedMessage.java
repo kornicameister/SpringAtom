@@ -30,7 +30,8 @@ import org.agatom.springatom.web.beans.WebBean;
  */
 public class SLocalizedMessage
         implements WebBean {
-    private static final String BEAN_ID = "localizedMessage";
+    private static final long   serialVersionUID = -5800265126575659371L;
+    private static final String BEAN_ID          = "localizedMessage";
     private String  key;
     private String  message;
     private SLocale locale;

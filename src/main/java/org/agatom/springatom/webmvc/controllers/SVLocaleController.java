@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.servlet.locale;
+package org.agatom.springatom.webmvc.controllers;
 
 import com.google.common.collect.Sets;
 import org.agatom.springatom.server.SpringAtomServer;
@@ -43,10 +43,10 @@ import java.util.concurrent.Callable;
  */
 @Controller
 @RequestMapping(value = "/data/lang")
-public class SLocaleController {
+public class SVLocaleController {
     public static final  String   SA_LOCALE_SUPPORTS = "sa.locale.supports";
     private static final String[] IGNORED_KEYS       = {"_dc", "page", "start", "limit"};
-    private static final Logger   LOGGER             = Logger.getLogger(SLocaleController.class);
+    private static final Logger   LOGGER             = Logger.getLogger(SVLocaleController.class);
     @Autowired
     protected SpringAtomServer server;
     @Autowired

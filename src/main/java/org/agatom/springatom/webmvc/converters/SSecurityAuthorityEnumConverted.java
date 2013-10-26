@@ -15,10 +15,44 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-@XmlJavaTypeAdapters(value = {
-        @XmlJavaTypeAdapter(type = String.class, value = NormalizedStringAdapter.class)
-}) package org.agatom.springatom.web.actions.beans;
+package org.agatom.springatom.webmvc.converters;
 
-import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapters;
+import org.agatom.springatom.server.model.types.user.SSecurityAuthorityEnum;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.convert.converter.ConditionalConverter;
+import org.springframework.core.convert.converter.Converter;
+
+import java.util.regex.Pattern;
+
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+public class SSecurityAuthorityEnumConverted
+        implements Converter<String, SSecurityAuthorityEnum>,
+                   ConditionalConverter {
+
+    public static final String ERR_MSG = "roleName can not be null";
+
+    @Override
+    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+        return sourceType.getType().isAssignableFrom(String.class)
+                && targetType.getType().isAssignableFrom(SSecurityAuthorityEnum.class);
+    }
+
+    @Override
+    public SSecurityAuthorityEnum convert(final String roleName) {
+        if (roleName != null) {
+
+            final Pattern pattern = Pattern.compile("^ROLE_\\w+$", Pattern.CASE_INSENSITIVE);
+
+            if (pattern.matcher(roleName).matches()) {
+                return SSecurityAuthorityEnum.valueOf(roleName);
+            } else {
+                return SSecurityAuthorityEnum.valueOf(String.format("ROLE_%s", roleName.toUpperCase()));
+            }
+        }
+        throw new IllegalArgumentException(ERR_MSG);
+    }
+}

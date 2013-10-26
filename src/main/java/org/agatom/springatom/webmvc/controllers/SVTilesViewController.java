@@ -15,21 +15,23 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.servlet;
+package org.agatom.springatom.webmvc.controllers;
 
-import org.agatom.springatom.webmvc.servlet.controllers.SDefaultController;
+import org.agatom.springatom.server.model.beans.appointment.SAppointment;
+import org.agatom.springatom.webmvc.core.SVDefaultController;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
-@Controller(value = STilesController.CONTROLLER_NAME)
+@Controller(value = SVTilesViewController.CONTROLLER_NAME)
 @RequestMapping(value = "/app")
-public class STilesController
-        extends SDefaultController {
+public class SVTilesViewController
+        extends SVDefaultController {
     protected static final String CONTROLLER_NAME = "TilesViewController";
 
-    public STilesController() {
+    public SVTilesViewController() {
         super(CONTROLLER_NAME);
     }
 
@@ -79,7 +81,8 @@ public class STilesController
     }
 
     @RequestMapping(value = "/dashboard/calendar", method = RequestMethod.GET)
-    public String getCalendarPage() throws Exception {
+    public String getCalendarPage(final ModelMap modelMap) throws Exception {
+        modelMap.addAttribute("appointment", new SAppointment());
         return "springatom.tiles.dashboard.calendar";
     }
 

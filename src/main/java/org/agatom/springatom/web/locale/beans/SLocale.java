@@ -34,7 +34,8 @@ import java.util.Locale;
 
 public class SLocale
         implements WebBean {
-    private static final String BEAN_ID = "sLocale";
+    private static final long   serialVersionUID = -1965000113537795587L;
+    private static final String BEAN_ID          = "sLocale";
     private String  tag;
     private String  language;
     private String  country;

@@ -15,16 +15,13 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.actions.exception;
+package org.agatom.springatom.webmvc.core;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SNoSuchActionDefinition
-        extends Exception {
-    public SNoSuchActionDefinition(final String key) {
-        super(String.format("No action definitions were found for key=%s", key));
-    }
+public interface SController {
+    String getControllerName();
 }

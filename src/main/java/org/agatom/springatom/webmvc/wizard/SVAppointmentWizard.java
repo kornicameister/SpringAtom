@@ -15,12 +15,39 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.servlet.dashboard.car;
+package org.agatom.springatom.webmvc.wizard;
+
+import org.agatom.springatom.server.model.beans.appointment.SAppointment;
+import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
+import org.agatom.springatom.web.wizard.SVDefaultWizard;
+import org.springframework.stereotype.Component;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SDashboardCarController {
+@Component(value = SVAppointmentWizard.WIZ_NAME_CODE)
+public class SVAppointmentWizard
+        extends SVDefaultWizard {
+    protected static final String WIZ_NAME_CODE    = "wizard.newAppointment.name";
+    private static final   long   serialVersionUID = -4593317700429293435L;
+
+    @Override
+    public <T> boolean processStep(final T data) {
+        return false;
+    }
+
+    @Override
+    public void initialize() {
+
+    }
+
+    public SAppointment getNewAppointment() {
+        return new SAppointment();
+    }
+
+    public SAppointmentTask getNewTask() {
+        return new SAppointmentTask();
+    }
 }

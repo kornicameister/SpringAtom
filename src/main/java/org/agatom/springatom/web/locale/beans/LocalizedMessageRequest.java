@@ -28,6 +28,7 @@ import java.io.Serializable;
  */
 public class LocalizedMessageRequest
         implements Serializable {
+    private static final long serialVersionUID = 5395003418793746321L;
     private String[] keys;
     private boolean  pattern;
 

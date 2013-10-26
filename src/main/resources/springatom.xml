@@ -24,7 +24,4 @@
     <import resource="org/agatom/springatom/web/web.xml"/>
     <import resource="org/agatom/springatom/webmvc/webmvc.xml"/>
 
-    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
-    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
-
 </beans>

@@ -32,6 +32,7 @@ import java.util.Set;
  */
 public class SLocalizedMessages
         implements Serializable {
+    private static final long serialVersionUID = 4409512355804928387L;
     private Set<SLocalizedMessage> preferences;
 
     public Set<SLocalizedMessage> getPreferences() {

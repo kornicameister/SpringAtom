@@ -18,6 +18,7 @@
 
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -25,6 +26,7 @@
        http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:component-scan base-package="org.agatom.springatom.webmvc"/>
+
     <import resource="mvc/mvc.xml"/>
     <import resource="tiles/tiles.xml"/>
     <import resource="interceptors/interceptors.xml"/>

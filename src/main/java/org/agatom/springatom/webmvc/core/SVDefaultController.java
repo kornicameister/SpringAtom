@@ -15,21 +15,30 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.actions.exception;
+package org.agatom.springatom.webmvc.core;
+
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.WebApplicationObjectSupport;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SActionRepositoryException
-        extends RuntimeException {
+@Component(value = "SDefaultController")
+public abstract class SVDefaultController
+        extends WebApplicationObjectSupport
+        implements SController {
 
-    public SActionRepositoryException(final String message) {
-        super(message);
+    private final String controllerName;
+
+    protected SVDefaultController(final String controllerName) {
+        this.controllerName = controllerName;
     }
 
-    public SActionRepositoryException(final String message, final Throwable cause) {
-        super(message, cause);
+    @Override
+    public final String getControllerName() {
+        return this.controllerName;
     }
+
 }
