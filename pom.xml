@@ -66,15 +66,18 @@
 
         <!-- spring -->
         <spring.version>3.2.4.RELEASE</spring.version>
-        <spring-security.version>3.2.0.RC1</spring-security.version>
+        <spring-security.version>3.2.0.CI-SNAPSHOT</spring-security.version>
         <spring-js-resources.version>2.3.2.RELEASE</spring-js-resources.version>
+        <spring-data-commons.version>1.6.1.RELEASE</spring-data-commons.version>
         <spring-data-jpa.version>1.2.1.RELEASE</spring-data-jpa.version>
         <spring-data-envers.version>0.1.0.RELEASE</spring-data-envers.version>
+        <spring-data-rest-webmvc.version>2.0.0.BUILD-SNAPSHOT</spring-data-rest-webmvc.version>
         <spring-hateoas.version>0.7.0.RELEASE</spring-hateoas.version>
+        <spring-webflow.version>2.4.0.M1</spring-webflow.version>
         <!-- spring -->
 
         <!-- servlet and jsp -->
-        <servlet-api.version>3.0.1</servlet-api.version>
+        <servlet-api.version>3.1.0</servlet-api.version>
         <jsp-api.version>2.1</jsp-api.version>
         <jstl.version>1.2</jstl.version>
         <jaxb-impl.version>2.2-EA</jaxb-impl.version>
@@ -85,26 +88,27 @@
         <!-- mysema -->
 
         <!-- joda -->
-        <joda-time.version>2.2</joda-time.version>
+        <joda-time.version>2.3</joda-time.version>
         <joda-time.hibernate.version>1.3</joda-time.hibernate.version>
         <joda-time.jsptags.version>1.1.1</joda-time.jsptags.version>
         <jadira-usertype-core.version>3.1.0.CR8</jadira-usertype-core.version>
         <!-- joda -->
 
         <!-- hibernate -->
-        <hibernate.version>4.2.3.Final</hibernate.version>
+        <hibernate.version>4.2.6.Final</hibernate.version>
         <hibernate.annotations.version>3.5.6-Final</hibernate.annotations.version>
         <hibernate.validator.version>4.3.1.Final</hibernate.validator.version>
-        <c3p0.version>0.9.2.1</c3p0.version>
+        <c3p0.version>0.9.5-pre4</c3p0.version>
         <ehcache.version>2.6.6</ehcache.version>
         <!-- hibernate -->
 
         <!-- web jars -->
-        <webjars.jquery.version>2.0.3</webjars.jquery.version>
+        <webjars.jquery.version>2.0.3-1</webjars.jquery.version>
         <webjars.jquery-form.version>3.28.0-2013.02.06-1</webjars.jquery-form.version>
-        <webjars.bootstrap.version>2.1.1</webjars.bootstrap.version>
+        <webjars.bootstrap.version>3.0.0</webjars.bootstrap.version>
         <webjars.moment.version>2.1.0</webjars.moment.version>
         <webjars.font-awesome.version>3.2.1</webjars.font-awesome.version>
+        <webjars.select2.version>3.4.3</webjars.select2.version>
         <!-- web jars -->
 
         <!-- testing -->
@@ -120,13 +124,16 @@
         <mysql-connector-java.version>5.1.26</mysql-connector-java.version>
         <!-- db access -->
 
-        <tomcat-servlet-api.version>7.0.21</tomcat-servlet-api.version>
-        <guava.version>14.0.1</guava.version>
-        <tomcat.maven.version>2.0</tomcat.maven.version>
+        <tomcat.version>8.0.0-RC3</tomcat.version>
+        <guava.version>15.0</guava.version>
+        <tomcat.maven.version>2.1</tomcat.maven.version>
         <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
         <castor.version>1.2</castor.version>
         <xercesImpl.version>2.8.1</xercesImpl.version>
         <joor.version>0.9.3</joor.version>
+        <dandelion-datatables.version>0.9.2</dandelion-datatables.version>
+        <aopalliance.version>1.0</aopalliance.version>
+        <tiles.version>2.2.2</tiles.version>
     </properties>
 
     <repositories>
@@ -142,20 +149,69 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>http://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <dependencies>
+
+        <!-- since async is turned on an filter/servlets - figure out how to configure dandelion with that -->
+        <!-- dandelion -->
+        <!--<dependency>-->
+        <!--<groupId>com.github.dandelion</groupId>-->
+        <!--<artifactId>datatables-jsp</artifactId>-->
+        <!--<version>${dandelion-datatables.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>com.github.dandelion</groupId>-->
+        <!--<artifactId>datatables-export-itext</artifactId>-->
+        <!--<version>${dandelion-datatables.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>com.github.dandelion</groupId>-->
+        <!--<artifactId>datatables-export-poi</artifactId>-->
+        <!--<version>${dandelion-datatables.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>com.github.dandelion</groupId>-->
+        <!--<artifactId>datatables-export-poi-ooxml</artifactId>-->
+        <!--<version>${dandelion-datatables.version}</version>-->
+        <!--</dependency>-->
+        <!-- dandelion -->
 
         <!-- tiles -->
         <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-extras</artifactId>
-            <version>3.0.1</version>
+            <version>${tiles.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- tiles -->
 
         <!-- spring -->
         <!--spring data -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <version>${spring-data-commons.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
@@ -165,6 +221,10 @@
                     <groupId>org.springframework</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -172,11 +232,27 @@
             <artifactId>spring-data-envers</artifactId>
             <version>${spring-data-envers.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-rest-webmvc</artifactId>
+            <version>${spring-data-rest-webmvc.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <!--spring data -->
         <!-- spring core -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-expression</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <!-- spring core -->
@@ -195,6 +271,12 @@
             <groupId>org.springframework.hateoas</groupId>
             <artifactId>spring-hateoas</artifactId>
             <version>${spring-hateoas.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- spring web -->
         <dependency>
@@ -262,15 +344,9 @@
         <dependency>
             <groupId>aopalliance</groupId>
             <artifactId>aopalliance</artifactId>
-            <version>1.0</version>
+            <version>${aopalliance.version}</version>
         </dependency>
         <!-- security -->
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-expression</artifactId>
-            <version>${spring-security.version}</version>
-        </dependency>
 
         <!-- context -->
         <dependency>
@@ -300,6 +376,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.webflow</groupId>
+            <artifactId>spring-webflow</artifactId>
+            <version>${spring-webflow.version}</version>
         </dependency>
         <!-- spring -->
 
@@ -340,11 +422,6 @@
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>${webjars.bootstrap.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
             <artifactId>font-awesome</artifactId>
             <version>${webjars.font-awesome.version}</version>
         </dependency>
@@ -352,6 +429,11 @@
             <groupId>org.webjars</groupId>
             <artifactId>momentjs</artifactId>
             <version>${webjars.moment.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>select2</artifactId>
+            <version>${webjars.select2.version}</version>
         </dependency>
         <!-- webjars -->
 
@@ -495,7 +577,7 @@
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-servlet-api</artifactId>
-            <version>${tomcat-servlet-api.version}</version>
+            <version>${tomcat.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- tomcat -->

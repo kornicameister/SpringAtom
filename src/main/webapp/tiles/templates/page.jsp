@@ -28,8 +28,6 @@
            uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="s"
            uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="tiles-extra"
-           uri="http://tiles.apache.org/tags-tiles-extras" %>
 <%@ taglib prefix="security"
            uri="http://www.springframework.org/security/tags" %>
 

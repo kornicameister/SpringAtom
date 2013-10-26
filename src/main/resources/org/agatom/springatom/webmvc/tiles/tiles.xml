@@ -22,16 +22,16 @@
         xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="urlBasedViewResolver"
-          class="org.springframework.web.servlet.view.tiles3.TilesViewResolver"
+    <bean id="ajaxViewResolver"
+          class="org.springframework.js.ajax.AjaxUrlBasedViewResolver"
           p:order="0">
-        <property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView"/>
+        <property name="viewClass" value="org.springframework.webflow.mvc.view.FlowAjaxTilesView"/>
         <property name="cache" value="true"/>
         <property name="cacheUnresolved" value="true"/>
         <property name="redirectContextRelative" value="true"/>
         <property name="exposePathVariables" value="true"/>
     </bean>
-    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
         <property name="definitions">
             <list>
                 <value>/META-INF/tiles/core.xml</value>
@@ -41,6 +41,6 @@
         <property name="validateDefinitions" value="true"/>
         <property name="useMutableTilesContainer" value="true"/>
         <property name="preparerFactoryClass"
-                  value="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory"/>
+                  value="org.springframework.web.servlet.view.tiles2.SpringBeanPreparerFactory"/>
     </bean>
 </beans>
