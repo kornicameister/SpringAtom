@@ -22,10 +22,7 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans
 	         http://www.springframework.org/schema/beans/spring-beans.xsd
 	         http://www.springframework.org/schema/security
-	         http://www.springframework.org/schema/security/spring-security.xsd"
-             default-lazy-init="true">
-
-    <beans:import resource="org/agatom/springatom/server/model/DataSource.xml"/>
+	         http://www.springframework.org/schema/security/spring-security.xsd">
 
     <!--
     Allows using annotations to secure access to services layer
@@ -37,7 +34,6 @@
                             pre-post-annotations="enabled"/>
 
     <!-- static content is not secured -->
-    <http pattern="/webjars/*" security="none"/>
     <http pattern="/static/*" security="none"/>
     <http pattern="/tiles/*" security="none"/>
     <http pattern="/data/*" security="none"/>
@@ -71,7 +67,7 @@
         <access-denied-handler error-page="/app/auth/access/denied"/>
         <anonymous enabled="true" granted-authority="ROLE_DATA_ACCESS" key="anonymous"/>
         <remember-me use-secure-cookie="true"
-                     user-service-ref="sUserService"
+                     user-service-ref="sa.service.UserService"
                      services-alias="rememberMeService"
                      token-validity-seconds="120"
                      data-source-ref="dataSource"/>
@@ -81,13 +77,10 @@
 
     <beans:bean id="securedPasswordEncoder"
                 class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
-    <beans:bean id="sUserService"
-                depends-on="dataSource"
-                class="org.agatom.springatom.server.service.impl.SUserServiceImpl"/>
 
     <authentication-manager alias="authenticationManager">
-        <authentication-provider user-service-ref="sUserService">
-            <password-encoder ref="securedPasswordEncoder" base64="true"/>
+        <authentication-provider user-service-ref="sa.service.UserService">
+        <password-encoder ref="securedPasswordEncoder" base64="true"/>
         </authentication-provider>
     </authentication-manager>
 

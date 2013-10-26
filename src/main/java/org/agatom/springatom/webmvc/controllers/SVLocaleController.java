@@ -23,6 +23,7 @@ import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.locale.beans.LocalizedMessageRequest;
 import org.agatom.springatom.web.locale.beans.SLocale;
 import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
+import org.agatom.springatom.webmvc.core.SVDefaultController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -34,23 +35,28 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Controller
+@Controller(value = SVLocaleController.CONTROLLER_NAME)
 @RequestMapping(value = "/data/lang")
-public class SVLocaleController {
+public class SVLocaleController
+        extends SVDefaultController {
     public static final  String   SA_LOCALE_SUPPORTS = "sa.locale.supports";
+    public static final String CONTROLLER_NAME = "sa.controller.data.lang.LocaleDataResolverController";
     private static final String[] IGNORED_KEYS       = {"_dc", "page", "start", "limit"};
     private static final Logger   LOGGER             = Logger.getLogger(SVLocaleController.class);
     @Autowired
     protected SpringAtomServer server;
     @Autowired
     private   SMessageSource   messageSource;
+
+    protected SVLocaleController() {
+        super(SVLocaleController.CONTROLLER_NAME);
+    }
 
     @InitBinder
     public void initBinder(final WebDataBinder binder) {
@@ -65,29 +71,26 @@ public class SVLocaleController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public Callable<Set<SLocale>> getAvailableLocales() {
+    public Set<SLocale> getAvailableLocales() {
         final String appResources = this.server.getProperty(SA_LOCALE_SUPPORTS);
         final String delimiter = this.server.getDelimiter();
         final Locale currentLocale = this.server.getServerLocale();
-        return new Callable<Set<SLocale>>() {
-            @Override
-            public Set<SLocale> call() throws Exception {
-                final String[] array = appResources.split(delimiter);
-                final Set<SLocale> locales = Sets.newHashSet();
-                for (final String locale : array) {
-                    final Locale loc = Locale.forLanguageTag(locale);
-                    final SLocale sLocale = new SLocale().setTag(locale).setCountry(loc.getCountry())
-                                                         .setLanguage(loc.getLanguage());
-                    if (loc.equals(currentLocale)) {
-                        sLocale.setIsSet(true);
-                    } else {
-                        sLocale.setIsSet(false);
-                    }
-                    locales.add(sLocale);
-                }
-                return locales;
+
+        final String[] array = appResources.split(delimiter);
+        final Set<SLocale> locales = Sets.newHashSet();
+
+        for (final String locale : array) {
+            final Locale loc = Locale.forLanguageTag(locale);
+            final SLocale sLocale = new SLocale().setTag(locale).setCountry(loc.getCountry())
+                                                 .setLanguage(loc.getLanguage());
+            if (loc.equals(currentLocale)) {
+                sLocale.setIsSet(true);
+            } else {
+                sLocale.setIsSet(false);
             }
-        };
+            locales.add(sLocale);
+        }
+        return locales;
     }
 
     @ResponseBody
@@ -96,15 +99,8 @@ public class SVLocaleController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public Callable<SLocalizedMessages> getLocalizedPreferences() {
-        final Locale locale = LocaleContextHolder.getLocale();
-        final SMessageSource source = this.messageSource;
-        return new Callable<SLocalizedMessages>() {
-            @Override
-            public SLocalizedMessages call() throws Exception {
-                return source.getLocalizedMessages(locale);
-            }
-        };
+    public SLocalizedMessages getLocalizedPreferences() {
+        return this.messageSource.getLocalizedMessages(LocaleContextHolder.getLocale());
     }
 
     @ResponseBody
@@ -117,35 +113,30 @@ public class SVLocaleController {
                     MediaType.TEXT_PLAIN_VALUE
             }
     )
-    public Callable<SLocalizedMessages> getLocalizedPreferences(
+    public SLocalizedMessages getLocalizedPreferences(
             @RequestBody final LocalizedMessageRequest request
     ) {
         final Locale locale = LocaleContextHolder.getLocale();
         final Boolean pattern = request.isPattern();
         final String[] keys = request.getKeys();
 
-        return new Callable<SLocalizedMessages>() {
-            @Override
-            public SLocalizedMessages call() throws Exception {
-                SLocalizedMessages localizedPreferences = new SLocalizedMessages();
-                if (pattern) {
-                    localizedPreferences = messageSource.getLocalizedMessages(keys, locale, pattern);
-                } else {
-                    for (final String key : keys) {
-                        final String msg = messageSource.getMessage(key, locale);
-                        if (msg != null) {
-                            localizedPreferences.put(key, msg, locale);
-                        }
-                    }
+        SLocalizedMessages localizedPreferences = new SLocalizedMessages();
+        if (pattern) {
+            localizedPreferences = messageSource.getLocalizedMessages(keys, locale, true);
+        } else {
+            for (final String key : keys) {
+                final String msg = messageSource.getMessage(key, locale);
+                if (msg != null) {
+                    localizedPreferences.put(key, msg, locale);
                 }
-                if (LOGGER.isInfoEnabled()) {
-                    LOGGER.info(String
-                            .format("For keys=%s and lang=%s returning msgs=%d", Arrays
-                                    .toString(keys), locale, localizedPreferences.size()));
-                }
-                return localizedPreferences;
             }
-        };
+        }
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(String
+                    .format("For keys=%s and lang=%s returning msgs=%d", Arrays
+                            .toString(keys), locale, localizedPreferences.size()));
+        }
+        return localizedPreferences;
     }
 
 }

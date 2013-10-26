@@ -38,8 +38,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(value = "/search")
 public class SVSearchController
         extends SVDefaultController {
-    protected static final String CONTROLLER_NAME = "SearchController";
-    private static final   Logger LOGGER          = Logger.getLogger(SVSearchController.class);
+    public static final  String CONTROLLER_NAME = "sa.controller.search.DefaultSearchControllers";
+    private static final Logger LOGGER          = Logger.getLogger(SVSearchController.class);
 
     public SVSearchController() {
         super(CONTROLLER_NAME);

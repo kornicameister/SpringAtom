@@ -19,7 +19,7 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:set var="webjars" value="/webjars"/>
+<c:set var="webjars" value="/static"/>
 <c:set var="staticLib" value="/static/lib"/>
 <c:set var="staticSa" value="/static/js"/>
 <c:set var="notyPath" value="${staticLib}/noty/2.1.0"/>

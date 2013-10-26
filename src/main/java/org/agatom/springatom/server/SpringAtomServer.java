@@ -32,8 +32,9 @@ import java.util.Locale;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component(value = "springAtomServer")
+@Component(value = SpringAtomServer.CMP_NAME)
 public final class SpringAtomServer {
+    public static final  String CMP_NAME               = "sa.server.SpringAtom";
     private static final Logger LOGGER                 = Logger.getLogger(SpringAtomServer.class);
     private static final String SERVER_DELIMITER       = ",";
     private static final String SA_DELIMITER           = "sa.delimiter";

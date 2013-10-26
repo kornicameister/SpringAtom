@@ -40,12 +40,12 @@ import org.springframework.transaction.annotation.Transactional;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Service
+@Service(value = SUserServiceImpl.SERVICE_NAME)
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SUserServiceImpl
         extends SServiceImpl<SUser, Long, Integer, SUserRepository>
         implements SUserService {
-
+    public static final String SERVICE_NAME = "sa.service.UserService";
     private SUserRepository     repository;
     @Autowired
     @Qualifier(value = "clientRepository")

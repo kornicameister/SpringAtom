@@ -35,11 +35,9 @@
           class="org.agatom.springatom.aop.SCallMonitoringAspect"/>
     <bean id="sharedPointcuts"
           lazy-init="false"
-          scope="singleton"
           class="org.agatom.springatom.aop.SSharedPointcuts"/>
     <bean id="systemArchitecture"
           lazy-init="false"
-          scope="singleton"
           class="org.agatom.springatom.aop.SSystemArchitecture"/>
 
     <!-- validator -->

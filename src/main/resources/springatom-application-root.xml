@@ -19,18 +19,19 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-     http://www.springframework.org/schema/beans/spring-beans.xsd
-     http://www.springframework.org/schema/context
-     http://www.springframework.org/schema/context/spring-context.xsd"
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd"
        default-lazy-init="true">
 
     <import resource="org/agatom/springatom/aop/aop.xml"/>
-    <import resource="org/agatom/springatom/server/model/DataSource.xml"/>
-    <import resource="org/agatom/springatom/server/populators/DBPopulator.xml"/>
-    <import resource="org/agatom/springatom/server/model/Hibernate.xml"/>
-    <import resource="org/agatom/springatom/server/service/Ehcache.xml"/>
-    <import resource="org/agatom/springatom/server/service/TX.xml"/>
-    <import resource="org/agatom/springatom/server/repository/JPA.xml"/>
+    <import resource="org/agatom/springatom/server/model/ds.xml"/>
+    <import resource="org/agatom/springatom/server/populators/populators.xml"/>
+    <import resource="org/agatom/springatom/server/model/orm.xml"/>
+    <import resource="org/agatom/springatom/server/service/caching.xml"/>
+    <import resource="org/agatom/springatom/server/service/transactions.xml"/>
+    <import resource="org/agatom/springatom/server/repository/jpa.xml"/>
+    <import resource="org/agatom/springatom/security/security.xml"/>
 
     <context:annotation-config/>
     <context:component-scan base-package="org.agatom.springatom.server">
@@ -47,6 +48,7 @@
         <property name="locations">
             <array>
                 <value>classpath:org/agatom/springatom/web/web.properties</value>
+                <value>classpath:org/agatom/springatom/webmvc/webmvc.properties</value>
                 <value>classpath:org/agatom/springatom/server/database.properties</value>
             </array>
         </property>

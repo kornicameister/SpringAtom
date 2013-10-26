@@ -17,11 +17,12 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-http://www.springframework.org/schema/beans/spring-beans.xsd">
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="dataSource"
+<bean id="dataSource"
           class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="${db.connection.driverClassName}"/>
         <property name="jdbcUrl" value="${db.connection.url}"/>

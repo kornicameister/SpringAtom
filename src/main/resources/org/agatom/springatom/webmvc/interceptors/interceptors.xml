@@ -24,7 +24,7 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-<bean id="simpleTitleResolver" class="org.agatom.springatom.web.view.impl.SResourceBundleViewTitleResolver">
+    <bean id="simpleTitleResolver" class="org.agatom.springatom.web.view.impl.SResourceBundleViewTitleResolver">
         <property name="keys">
             <array>
                 <value>page.*.title</value>
@@ -36,9 +36,7 @@
     </bean>
 
     <bean id="breadcrumbResolver"
-          class="org.agatom.springatom.web.breadcrumbs.SBreadcrumbResolver">
-
-    </bean>
+          class="org.agatom.springatom.web.breadcrumbs.SBreadcrumbResolver"/>
 
     <mvc:interceptors>
         <bean class="org.agatom.springatom.webmvc.interceptors.SServerConfiguredLocaleChangeInterceptor">
@@ -57,4 +55,5 @@
             <property name="paramName" value="theme"/>
         </bean>
     </mvc:interceptors>
+
 </beans>
