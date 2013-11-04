@@ -152,6 +152,10 @@ div.content section p:last-child {
     color : rgba(58, 255, 245, 0.62);
 }
 
+.icon-color-black {
+    color : rgba(0, 0, 0, 0.62);
+}
+
 /*tooltip*/
 .tooltip {
     background-color   : #000000;
@@ -165,4 +169,11 @@ div.content section p:last-child {
     /* outline radius for mozilla/firefox only */
     -moz-box-shadow    : 0 0 10px #000000;
     -webkit-box-shadow : 0 0 10px #000000;
+}
+
+div.x-clear {
+    clear       : both;
+    height      : 0;
+    line-height : 0;
+    visibility  : hidden;
 }

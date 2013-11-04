@@ -41,6 +41,9 @@
 <link rel="stylesheet"
       media="all"
       href="<s:theme code="application.modals" htmlEscape="true" />">
+<link rel="stylesheet"
+      media="all"
+      href="<s:theme code="application.buttons" htmlEscape="true" />">
 
 <link rel="stylesheet"
       media="all"
@@ -48,3 +51,6 @@
 <link rel="stylesheet"
       media="all"
       href="<s:url value="/static/lib/alertify/themes/alertify.default.css"/>"/>
+<link rel="stylesheet"
+      media="all"
+      href="<s:url value="/static/css/smart_wizard_vertical.css"/>"/>

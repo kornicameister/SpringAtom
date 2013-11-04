@@ -36,6 +36,7 @@
 <s:url value="${staticLib}/spin.min.js" var="spinnerJS" htmlEscape="true"/>
 <s:url value="${staticLib}/simpleModal.min.js" var="simpleModalJS" htmlEscape="true"/>
 <s:url value="${staticLib}/alertify/alertify.min.js" var="alertifyJS" htmlEscape="true"/>
+<s:url value="${staticLib}/jquery.smartWizard-2.0.js" var="smartWizard" htmlEscape="true"/>
 
 <script type="text/javascript" src="${jqueryJs}"></script>
 <script type="text/javascript" src="${mmenuJs}"></script>
@@ -45,6 +46,7 @@
 <script type="text/javascript" src="${alertifyJS}"></script>
 <script type="text/javascript" src="${spinnerJS}"></script>
 <script type="text/javascript" src="${simpleModalJS}"></script>
+<script type="text/javascript" src="${smartWizard}"></script>
 <script type="text/javascript" src="${saMmenu}"></script>
 <script type="text/javascript" src="${saAuth}"></script>
 <script type="text/javascript" src="${coreJS}"></script>
