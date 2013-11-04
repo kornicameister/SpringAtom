@@ -19,7 +19,6 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<s:message code="form.new-event.title" var="formTitle"/>
 <s:message code="button.next.short" var="nextButton"/>
 <s:message code="button.previous.short" var="previousButton"/>
 <s:message code="button.ok" var="finishButton"/>
@@ -30,48 +29,52 @@
         <li>
             <a href="#step-1">
                 <label class="stepNumber">1</label>
-                        <span class="stepDesc">
-                        Step 1<br/>
-                        <small>Step 1 description</small>
-                        </span>
+                <span class="stepDesc">
+                    <p><s:message code="wizard.step.label" arguments="1"/></p>
+                    <small><s:message code="wizard.newAppointment.step1.desc"/></small>
+                </span>
             </a>
         </li>
-        <li><a href="#step-2">
-            <label class="stepNumber">2</label>
-                    <span class="stepDesc">
-                    Step 2<br/>
-                    <small>Step 2 description</small>
-                    </span>
-        </a>
+        <li>
+            <a href="#step-2">
+                <label class="stepNumber">2</label>
+                <span class="stepDesc">
+                    <p><s:message code="wizard.step.label" arguments="2"/></p>
+                    <small><s:message code="wizard.newAppointment.step2.desc"/></small>
+                </span>
+            </a>
         </li>
     </ul>
     <div id="step-1">
-        <h2 class="stepTitle">Step 1 Content</h2>
+        <h2 class="stepTitle">
+            <s:message code="wizard.newAppointment.title" var="title"/>
+            <s:message code="wizard.step.title" arguments="${title},1" argumentSeparator=","/>
+        </h2>
 
-        <form action="#"
-              title="${formTitle}"
-              class="x-form">
+        <form action="#" class="x-form">
             <fieldset>
-                <legend>Time frame</legend>
-                <label title="Begins">
-                    Begins:
+                <legend><s:message code="wizard.newAppointment.tf.label"/></legend>
+                <label title="<s:message code="wizard.newAppointment.tf.begin.label"/>">
+                    <s:message code="wizard.newAppointment.tf.begin.label"/>:
                     <input type="datetime-local" name="begin" autofocus required>
                 </label>
-                <label title="Ends">
-                    Ends:
+                <label title="<s:message code="wizard.newAppointment.tf.end.label"/>">
+                    <s:message code="wizard.newAppointment.tf.end.label"/>:
                     <input type="datetime-local" name="end" autofocus required>
                 </label>
             </fieldset>
             <fieldset>
-                <legend>Target</legend>
-                <label title="Reporter">
-                    Reporter:
+                <legend><s:message code="wizard.newAppointment.tt.label"/></legend>
+                <label title="<s:message code="wizard.newAppointment.tt.reporter.label"/>">
+                    <s:message code="wizard.newAppointment.tt.reporter.label"/>:
                     <security:authorize access="isFullyAuthenticated()" var="isAuthenticated"/>
                     <security:authorize access="hasRole('ROLE_BOSS')" var="isBoss"/>
                     <c:if test="${isAuthenticated}">
                         <c:choose>
                             <c:when test="${isBoss}">
-                                <input name="reporter" class="x-input-select" placeholder="Reported by..." required/>
+                                <input name="reporter" class="x-input-select"
+                                       placeholder="<s:message code="wizard.newAppointment.tt.reporter.placeholder"/>"
+                                       required/>
                             </c:when>
                             <c:otherwise>
                                 <security:authentication property="principal.person.information" var="ppi"/>
@@ -84,52 +87,54 @@
                         </c:choose>
                     </c:if>
                 </label>
-                <label title="Assignee">
-                    Assignee:
-                    <input name="assignee" class="x-input-select" placeholder="Assigned to..." required/>
+                <label title="<s:message code="wizard.newAppointment.tt.assignee.label"/>">
+                    <s:message code="wizard.newAppointment.tt.assignee.label"/>:
+                    <input name="assignee" class="x-input-select"
+                           placeholder="<s:message code="wizard.newAppointment.tt.assignee.placeholder"/>" required/>
                 </label>
-                <label title="Car">
-                    Car
-                    <input name="car" class="x-input-select" placeholder="Appointment for car..." required/>
+                <label title="<s:message code="wizard.newAppointment.tt.car.label"/>">
+                    <s:message code="wizard.newAppointment.tt.car.label"/>:
+                    <input name="car" class="x-input-select"
+                           placeholder="<s:message code="wizard.newAppointment.tt.car.placeholder"/>" required/>
                 </label>
             </fieldset>
         </form>
     </div>
     <div id="step-2">
-        <h2 class="stepTitle">Step 2 Content</h2>
+        <h2 class="stepTitle">
+            <s:message code="wizard.newAppointment.title" var="title"/>
+            <s:message code="wizard.step.title" arguments="${title},2" argumentSeparator=","/>
+        </h2>
 
-        <form action="#"
-              title="Tasks"
-              class="x-form">
-            <div class="x-multiple-input">
-                <div class="x-inputs">
-                    <ul>
-                        <li id="1" data-role="task">
-                            <input name="type"
-                                   type="text"
-                                   placeholder="Type"
-                                   list="tasks"
-                                   class="x-input x-input-select"
-                                   required>
-                            <input name="task"
-                                   type="text"
-                                   placeholder="Description"
-                                   class="x-input x-input-text">
-                            <a href="#"
-                               data-role="mv-add"
-                               class="x-button x-button-add">
-                                <i class="icon-plus icon-color-black"></i>
-                            </a>
-                            <a href="#"
-                               data-ajax="mv-remove"
-                               class="x-button x-button-remove">
-                                <i class="icon-minus icon-color-black"></i>
-                            </a>
-                        </li>
-                    </ul>
+        <form action="#" class="x-form">
+            <fieldset>
+                <legend><s:message code="wizard.newAppointment.tl.label"/></legend>
+                <div class="x-multiple-input">
+                    <div class="x-inputs">
+                        <ul>
+                            <li id="1" data-role="task">
+                                <input name="type"
+                                       type="text"
+                                       placeholder="<s:message code="wizard.newAppointment.tl.taskType.placeholder"/>"
+                                       list="tasks"
+                                       class="x-input x-input-select"
+                                       required>
+                                <input name="task"
+                                       type="text"
+                                       placeholder="<s:message code="wizard.newAppointment.tl.taskDesc.placeholder"/>"
+                                       class="x-input x-input-text">
+                                <a href="#" data-role="mv-add" class="x-button x-button-add">
+                                    <i class="icon-plus icon-color-black"></i>
+                                </a>
+                                <a href="#" data-ajax="mv-remove" class="x-button x-button-remove">
+                                    <i class="icon-minus icon-color-black"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <datalist id="tasks"></datalist>
+                <datalist id="tasks"></datalist>
+            </fieldset>
         </form>
     </div>
 </div>
