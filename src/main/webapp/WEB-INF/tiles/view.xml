@@ -17,8 +17,8 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <!DOCTYPE tiles-definitions PUBLIC
-        "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
-        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 
 <tiles-definitions>
 
@@ -30,23 +30,6 @@
         <put-attribute name="scripts.extra" value=""/>
     </definition>
     <!-- head -->
-
-    <!-- navigator -->
-    <definition name="abstract_navigator_secured" template="/WEB-INF/tiles/templates/navigator/secured_navigation.jsp">
-        <put-attribute name="dashboard"
-                       value="/WEB-INF/tiles/templates/navigator/menus/dashboard_navigation.jsp"/>
-        <put-attribute name="garage"
-                       value="/WEB-INF/tiles/templates/navigator/menus/garage_navigation.jsp"/>
-        <put-attribute name="boss"
-                       value="/WEB-INF/tiles/templates/navigator/menus/boss_navigation.jsp"/>
-        <put-attribute name="admin"
-                       value="/WEB-INF/tiles/templates/navigator/menus/admin_navigation.jsp"/>
-    </definition>
-    <definition name="abstract_navigator" template="/WEB-INF/tiles/templates/navigator/navigator.jsp">
-        <put-attribute name="navigator.secured" value="abstract_navigator_secured"/>
-        <put-attribute name="navigator.free" value="/WEB-INF/tiles/templates/navigator/menus/free_navigation.jsp"/>
-    </definition>
-    <!-- navigator -->
 
     <definition name="abstract_page" template="/WEB-INF/tiles/templates/page.jsp">
         <put-attribute name="head" value="abstract_head"/>

@@ -1,3 +1,5 @@
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="s" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~
@@ -18,61 +20,6 @@
 <section class="x-calendar">
     <div id="calendar"></div>
     <div id="x-new-event" class="x-modal">
-        <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
-        <s:message code="form.new-event.title" var="formTitle"/>
-        <s:url value="/a/d/new/event" var="formURL"/>
-        <form id="x-new-event-form"
-              action="${formURL}"
-              method="post"
-              title="${formTitle}"
-              class="x-form"
-              autocomplete="on">
-            <fieldset>
-                <legend>Time frame</legend>
-                <fieldset>
-                    <legend>Begin</legend>
-                    <label title="Date"><input type="date" autofocus required></label>
-                    <label title="Time"><input type="time" required></label>
-                </fieldset>
-                <fieldset>
-                    <legend>End</legend>
-                    <label title="Date"><input type="date" required></label>
-                    <label title="Time"><input type="time" required></label>
-                </fieldset>
-            </fieldset>
-            <fieldset>
-                <legend>Mechanic</legend>
-                <label title="Reporter"><input type="text" placeholder="Reported by..." required/></label>
-                <label title="Assignee"><input type="text" placeholder="Assigned to..." required/></label>
-            </fieldset>
-            <fieldset>
-                <legend>Car</legend>
-                <label title="Car"><input list="cars" placeholder="Appointment for car..." required/></label>
-                <datalist id="cars">
-                    <option value="Fiat Panda [E0KRZ]">
-                </datalist>
-                <label title="Owner"><input type="text" placeholder="Car owned by..." readonly/></label>
-            </fieldset>
-            <fieldset>
-                <legend>Todo list</legend>
-                <table class="x-table">
-                    <thead class="x-table-header">
-                    <tr class="x-table-header-row">
-                        <th>ID</th>
-                        <th>Type</th>
-                        <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody class="x-table-body">
-
-                    </tbody>
-                </table>
-            </fieldset>
-            <fieldset class="x-form-actions">
-                <input type="submit" value="Submit">
-                <input type="reset" value="Reset">
-            </fieldset>
-        </form>
     </div>
 </section>
 <script>
@@ -99,7 +46,14 @@
                 selectable  : true,
                 editable    : true,
                 dayClick    : function (date, allDay, jsEvent, view) {
-                    SA.core.openModal('#x-ew-event');
+                    $.ajax({
+                        url    : '/sa/wizard/NewAppointment',
+                        type   : 'POST',
+                        success: function (data) {
+                            $('#x-new-event').html(data);
+                            SA.core.openModal('#x-new-event');
+                        }
+                    });
                 },
                 eventClick  : function (calEvent, jsEvent, view) {
                     console.log('Event: ' + calEvent.title);

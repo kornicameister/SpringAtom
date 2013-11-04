@@ -15,55 +15,68 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.wizard;
+package org.agatom.springatom.web.wizard;
 
-import org.agatom.springatom.web.wizard.SVDefaultWizard;
-import org.agatom.springatom.web.wizard.data.SVBInput;
-import org.agatom.springatom.web.wizard.data.SVBWizardSubmit;
-import org.agatom.springatom.web.wizard.data.SVStep;
-import org.apache.log4j.Logger;
-import org.springframework.http.MediaType;
+import com.google.common.base.Objects;
+import org.agatom.springatom.web.wizard.util.SVWizardHelper;
+import org.agatom.springatom.web.wizard.util.SVWizardModelVariables;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Controller(value = SVAppointmentWizard.CMP_VIEW)
-@RequestMapping(value = SVAppointmentWizard.CMP_URL)
-public class SVAppointmentWizard
-        extends SVDefaultWizard {
-    public static final  String CMP_URL          = "/sa/wizard/NewAppointment";
-    public static final  String CMP_VIEW         = "ui.wizard.NewAppointment";
-    private static final long   serialVersionUID = -4593317700429293435L;
-    private static final Logger LOGGER           = Logger.getLogger(SVAppointmentWizard.class);
+@Controller
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+abstract public class SVDefaultWizard
+        implements SVWizard {
+    private static final long serialVersionUID = -3857823814215380400L;
+    protected final String wizardId;
+    protected final String viewName;
+    protected final String wizardName;
 
-    public SVAppointmentWizard() {
-        super(CMP_URL, CMP_VIEW);
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/submit", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Boolean submit(@RequestBody final SVBWizardSubmit submit) {
-        LOGGER.debug(String.format("Receiving wizard submission = %s", submit));
-        for (final SVStep step : submit) {
-
-            LOGGER.trace(String.format("Step=%s with data=%s", step.getName(), step.getData()));
-
-            for (final SVBInput input : step.getData()) {
-                LOGGER.trace(String.format("Processing input = %s", input));
-            }
-        }
-        return true;
+    protected SVDefaultWizard(final String cmpName, final String viewName) {
+        this.wizardId = SVWizardHelper.generateWizardId(this.getClass().getName());
+        this.wizardName = cmpName;
+        this.viewName = viewName;
     }
 
     @Override
-    protected String getWizardSubmitUrl() {
-        return String.format("%s/%s", CMP_URL, "submit");
+    public String getId() {
+        return this.wizardId;
+    }
+
+    @Override
+    public String getName() {
+        return this.wizardName;
+    }
+
+    @Override
+    public String getViewName() {
+        return this.viewName;
+    }
+
+    @RequestMapping(method = {RequestMethod.POST})
+    public String getView(final ModelMap modelMap) {
+        modelMap.put(SVWizardModelVariables.WIZARD_ID, this.wizardId);
+        modelMap.put(SVWizardModelVariables.WIZARD_NAME, this.wizardName);
+        modelMap.put(SVWizardModelVariables.WIZARD_SUBMIT_URL, this.getWizardSubmitUrl());
+        return this.viewName;
+    }
+
+    protected abstract String getWizardSubmitUrl();
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(wizardId)
+                      .addValue(wizardName)
+                      .toString();
     }
 }

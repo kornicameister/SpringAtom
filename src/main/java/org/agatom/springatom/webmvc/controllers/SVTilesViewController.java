@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.webmvc.controllers;
 
-import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.webmvc.core.SVDefaultController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -82,7 +81,6 @@ public class SVTilesViewController
 
     @RequestMapping(value = "/dashboard/calendar", method = RequestMethod.GET)
     public String getCalendarPage(final ModelMap modelMap) throws Exception {
-        modelMap.addAttribute("appointment", new SAppointment());
         return "springatom.tiles.dashboard.calendar";
     }
 

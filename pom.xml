@@ -73,7 +73,6 @@
         <spring-data-envers.version>0.1.0.RELEASE</spring-data-envers.version>
         <spring-data-rest-webmvc.version>2.0.0.BUILD-SNAPSHOT</spring-data-rest-webmvc.version>
         <spring-hateoas.version>0.7.0.RELEASE</spring-hateoas.version>
-        <spring-webflow.version>2.4.0.M1</spring-webflow.version>
         <!-- spring -->
 
         <!-- servlet and jsp -->
@@ -133,7 +132,7 @@
         <joor.version>0.9.3</joor.version>
         <dandelion-datatables.version>0.9.2</dandelion-datatables.version>
         <aopalliance.version>1.0</aopalliance.version>
-        <tiles.version>2.2.2</tiles.version>
+        <tiles.version>3.0.1</tiles.version>
     </properties>
 
     <repositories>
@@ -376,12 +375,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
             <version>${spring.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.webflow</groupId>
-            <artifactId>spring-webflow</artifactId>
-            <version>${spring-webflow.version}</version>
         </dependency>
         <!-- spring -->
 

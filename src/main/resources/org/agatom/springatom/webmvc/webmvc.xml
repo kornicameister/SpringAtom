@@ -28,19 +28,29 @@
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <context:component-scan base-package="org.agatom.springatom.webmvc"/>
 
-    <mvc:annotation-driven validator="validator" enableMatrixVariables="true"/>
+    <import resource="tiles/tiles.xml"/>
+    <import resource="interceptors/interceptors.xml"/>
+
+    <context:component-scan base-package="org.agatom.springatom.webmvc"/>
+    <mvc:annotation-driven validator="validator"
+                           conversion-service="springAtomConversionService"
+                           enableMatrixVariables="true"/>
     <!--suppress SpringModelInspection -->
     <mvc:resources mapping="/static/**"
                    cache-period="10"
                    location="/static/,classpath:/META-INF/web-resources/,classpath:/META-INF/resources/webjars/"/>
     <mvc:default-servlet-handler/>
-
     <mvc:view-controller path="/app" view-name="springatom.tiles.index"/>
 
-    <import resource="tiles/tiles.xml"/>
-    <import resource="flows/flow.xml"/>
-    <import resource="interceptors/interceptors.xml"/>
+    <bean id="springAtomConversionService"
+          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="registerDefaultFormatters" value="true"/>
+        <property name="converters">
+            <set>
+                <bean class="org.agatom.springatom.webmvc.converters.SSecurityAuthorityEnumConverted"/>
+            </set>
+        </property>
+    </bean>
 
 </beans>

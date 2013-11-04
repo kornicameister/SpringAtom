@@ -32,11 +32,29 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
+/**************************************************************************************************
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ *                                                                                                *
+ * [SpringAtom] is free software: you can redistribute it and/or modify                           *
+ * it under the terms of the GNU General Public License as published by                           *
+ * the Free Software Foundation, either version 3 of the License, or                              *
+ * (at your option) any later version.                                                            *
+ *                                                                                                *
+ * [SpringAtom] is distributed in the hope that it will be useful,                                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
+ * GNU General Public License for more details.                                                   *
+ *                                                                                                *
+ * You should have received a copy of the GNU General Public License                              *
+ * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
+ **************************************************************************************************/
+
 .x-form {
     margin  : 0 auto;
     padding : 2px;
     height  : 100%;
     border  : none;
+    cursor  : hand;
 }
 
 .x-form fieldset {
@@ -46,4 +64,80 @@
 
 .x-form fieldset legend {
     font-size : larger;
+}
+
+.x-input {
+    margin      : 5px;
+    clear       : both;
+    font-weight : bolder;
+    min-width   : 20%;
+    box-shadow  : #000CC6;
+    min-height  : 25px;
+}
+
+.x-input-select {
+    padding               : 3px;
+    margin                : 0;
+    -webkit-border-radius : 4px;
+    -moz-border-radius    : 4px;
+    border-radius         : 4px;
+    -webkit-box-shadow    : 0 3px 0 #CCCCCC, 0 -1px #00A2D3 inset;
+    -moz-box-shadow       : 0 3px 0 #CCCCCC, 0 -1px #00A2D3 inset;
+    box-shadow            : 0 3px 0 #CCCCCC, 0 -1px #00A2D3 inset;
+    color                 : #000CC6;
+    border                : none;
+    outline               : none;
+    display               : inline-block;
+    -webkit-appearance    : none;
+    -moz-appearance       : none;
+    appearance            : none;
+    cursor                : pointer;
+}
+
+/*
+Multiple inputs
+*/
+.x-multiple-input {
+    min-height : 100%;
+    display    : inline-block;
+    width      : 100%;
+}
+
+x.x-multiple-input .x-inputs {
+    float        : left;
+    width        : 80%;
+    clear        : right;
+    margin-right : 5px;
+}
+
+.x-multiple-input .x-inputs ul,
+.x-multiple-input .x-inputs li {
+    list-style-type : none;
+    padding         : 0;
+    margin          : 0;
+}
+
+.x-multiple-input .x-inputs li {
+    list-style-type : decimal;
+    font-size       : larger;
+    font-weight     : bolder;
+    color           : #2B72D5;
+    margin-left     : 5%;
+    height          : 40px;
+    margin-top      : 5px;
+}
+
+.x-inputs li > * {
+    vertical-align : middle;
+}
+
+textarea.x-input-textarea {
+    border : 2px dashed #2B72D5;
+    width  : 40%;
+    height : 40px;
+}
+
+textarea.x-input-textarea-fixed {
+    overflow : auto;
+    resize   : none
 }
