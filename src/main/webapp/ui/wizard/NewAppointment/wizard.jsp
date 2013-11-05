@@ -180,13 +180,7 @@
             stepPrefix: '<%=org.agatom.springatom.web.wizard.util.SVWizardModelVariables.WIZARD_STEP_PREFIX%>',
             steps     : [
                 {id: 'step-1'},
-                {
-                    id       : 'step-2',
-                    collector: function (data) {
-                        console.log(data);
-                        return data;
-                    }
-                }
+                {id: 'step-2'}
             ]
         });
     });
