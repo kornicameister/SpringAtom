@@ -33,6 +33,7 @@
 <s:url value="${staticSa}/sa-auth.js" var="saAuth" htmlEscape="true"/>
 <s:url value="${staticSa}/sa-mmenu.js" var="saMmenu" htmlEscape="true"/>
 <s:url value="${staticSa}/sa-breadcrumb.js" var="saBreadcrumb" htmlEscape="true"/>
+<s:url value="${staticSa}/sa-wizards.js" var="saWizards" htmlEscape="true"/>
 <s:url value="${staticLib}/spin.min.js" var="spinnerJS" htmlEscape="true"/>
 <s:url value="${staticLib}/simpleModal.min.js" var="simpleModalJS" htmlEscape="true"/>
 <s:url value="${staticLib}/alertify/alertify.min.js" var="alertifyJS" htmlEscape="true"/>
@@ -51,3 +52,4 @@
 <script type="text/javascript" src="${saAuth}"></script>
 <script type="text/javascript" src="${coreJS}"></script>
 <script type="text/javascript" src="${saBreadcrumb}"></script>
+<script type="text/javascript" src="${saWizards}"></script>

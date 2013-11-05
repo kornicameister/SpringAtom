@@ -56,6 +56,28 @@
                     });
                 }
             });
+        },
+        initStrings            : function () {
+            String.prototype.startsWith = function (str) {
+                var length = str.length;
+                return this.substring(0, length) === str;
+            };
+            String.prototype.endsWith = function (str) {
+                var length = this.length;
+                return this.substring(length - 1, length) === str;
+            };
+            String.prototype.removeFromBeginning = function (count) {
+                return this.substring(count);
+            };
+            String.prototype.removeFromEnd = function (count) {
+                var length = this.length;
+                return this.substring(0, length - count);
+            };
+        },
+        initJQueryExtension    : function () {
+            $.fn.doesExist = function () {
+                return $(this).length > 0;
+            };
         }
     };
 
@@ -91,8 +113,13 @@
             SA.core.showError("Could not locate target=" + target);
         }
     };
+    SA.core.showSuccess = function (text) {
+        alertify.success(
+            '<span style="font-weight: bold">' + text + '</span>'
+        );
+    };
     SA.core.showError = function (text) {
-        alertify.alert(
+        alertify.error(
             '<span style="font-weight: bold">' + text + '</span>'
         );
     };
@@ -172,9 +199,38 @@
         });
     };
 
+    var bundleCache = {
+
+    };
+    SA.core.getLocalizedMsg = function (key) {
+
+        if (typeof bundleCache[key] !== 'undefined') {
+            return bundleCache[key];
+        }
+
+        $.ajax({
+            url        : '/data/lang/bundle/' + key,
+            type       : 'GET',
+            dataType   : 'json',
+            contentType: "application/json",
+            async      : false,
+            success    : function (data) {
+                bundleCache[key] = data['message'];
+                return bundleCache[key];
+            },
+            error      : function (xhr, status, error) {
+                SA.core.showError('Failed to getLocalizedMsg => ' + error);
+            }
+        });
+
+        return bundleCache[key];
+    };
+
     (function () {
         console.log('Initializing SA.core');
         priv.initNotificiationSystem();
+        priv.initJQueryExtension();
+        priv.initStrings();
         console.log('Initialized SA.core');
     }());
 

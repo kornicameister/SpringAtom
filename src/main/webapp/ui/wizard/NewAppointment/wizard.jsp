@@ -175,44 +175,19 @@
             liEl.attr('id', tasksCount + 1);
             $('.x-inputs').find('ul').append(liEl);
         });
-        $("#<%=request.getAttribute(org.agatom.springatom.web.wizard.util.SVWizardModelVariables.WIZARD_ID)%>").smartWizard({
-            enableAllSteps    : true,
-            enableFinishButton: true,
-            labelNext         : '${nextButton}',
-            labelPrevious     : '${previousButton}',
-            labelFinish       : '${finishButton}',
-            onFinish          : function (steps) {
-                var data = [];
-                var stepPrefix = '<%=org.agatom.springatom.web.wizard.util.SVWizardModelVariables.WIZARD_STEP_PREFIX%>';
-
-                function createInputDate(value) {
-                    console.log(value);
-                    return value;
+        $("#<%=request.getAttribute(org.agatom.springatom.web.wizard.util.SVWizardModelVariables.WIZARD_ID)%>").wizard({
+            url       : '<%=request.getAttribute(org.agatom.springatom.web.wizard.util.SVWizardModelVariables.WIZARD_SUBMIT_URL)%>',
+            stepPrefix: '<%=org.agatom.springatom.web.wizard.util.SVWizardModelVariables.WIZARD_STEP_PREFIX%>',
+            steps     : [
+                {id: 'step-1'},
+                {
+                    id       : 'step-2',
+                    collector: function (data) {
+                        console.log(data);
+                        return data;
+                    }
                 }
-
-                $.each(steps, function (index, step) {
-                    var array = $('div' + $(step).attr('href')).find('form').serializeArray();
-                    var stepData = [];
-
-                    $.each(array, function (index2, val) {
-                        stepData.push(createInputDate(val));
-                    });
-
-                    data.push({
-                        name: stepPrefix + index,
-                        data: stepData
-                    });
-                });
-                $.ajax({
-                    url        : '<%=request.getAttribute(org.agatom.springatom.web.wizard.util.SVWizardModelVariables.WIZARD_SUBMIT_URL)%>',
-                    type       : 'POST',
-                    contentType: "application/json",
-                    data       : JSON.stringify({
-                        data: data
-                    }),
-                    dataType   : 'json'
-                })
-            }
+            ]
         });
     });
 </script>

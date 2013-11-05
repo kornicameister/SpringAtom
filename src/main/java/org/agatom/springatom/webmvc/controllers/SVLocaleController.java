@@ -22,6 +22,7 @@ import org.agatom.springatom.server.SpringAtomServer;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.locale.beans.LocalizedMessageRequest;
 import org.agatom.springatom.web.locale.beans.SLocale;
+import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
 import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
 import org.agatom.springatom.webmvc.core.SVDefaultController;
 import org.apache.log4j.Logger;
@@ -46,7 +47,7 @@ import java.util.Set;
 public class SVLocaleController
         extends SVDefaultController {
     public static final  String   SA_LOCALE_SUPPORTS = "sa.locale.supports";
-    public static final String CONTROLLER_NAME = "sa.controller.data.lang.LocaleDataResolverController";
+    public static final  String   CONTROLLER_NAME    = "sa.controller.data.lang.LocaleDataResolverController";
     private static final String[] IGNORED_KEYS       = {"_dc", "page", "start", "limit"};
     private static final Logger   LOGGER             = Logger.getLogger(SVLocaleController.class);
     @Autowired
@@ -137,6 +138,12 @@ public class SVLocaleController
                             .toString(keys), locale, localizedPreferences.size()));
         }
         return localizedPreferences;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/bundle/{key:.+}")
+    public SLocalizedMessage getBundle(@PathVariable("key") final String key, final Locale locale) {
+        return this.messageSource.getLocalizedMessage(key, locale);
     }
 
 }
