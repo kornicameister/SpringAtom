@@ -26,6 +26,7 @@ import org.springframework.data.repository.RepositoryDefinition;
  * @version 0.0.1
  * @since 0.0.1
  */
+
 @RepositoryDefinition(domainClass = SCarMaster.class, idClass = Long.class)
 public interface SCarMasterRepository
         extends SBasicRepository<SCarMaster, Long> {
