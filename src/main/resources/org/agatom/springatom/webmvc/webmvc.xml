@@ -30,6 +30,7 @@
 
 
     <import resource="tiles/tiles.xml"/>
+    <import resource="flows/flows.xml"/>
     <import resource="interceptors/interceptors.xml"/>
 
     <context:component-scan base-package="org.agatom.springatom.webmvc"/>
@@ -41,7 +42,6 @@
                    cache-period="10"
                    location="/static/,classpath:/META-INF/web-resources/,classpath:/META-INF/resources/webjars/"/>
     <mvc:default-servlet-handler/>
-    <mvc:view-controller path="/app" view-name="springatom.tiles.index"/>
 
     <bean id="springAtomConversionService"
           class="org.springframework.format.support.FormattingConversionServiceFactoryBean">

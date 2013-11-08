@@ -17,40 +17,18 @@
 
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
-<link rel="stylesheet"
-      media="all"
-      href="<s:theme code="application" htmlEscape="true" />">
-<link rel="stylesheet"
-      media="all"
-      href="<s:theme code="application.auth" htmlEscape="true" />">
-<link rel="stylesheet"
-      media="all"
-      href="<s:theme code="application.content.header" htmlEscape="true" />">
-<link rel="stylesheet"
-      media="all"
-      href="<s:theme code="application.navigator.mmenu" htmlEscape="true" />">
-<link rel="stylesheet"
-      media="all"
-      href="<s:theme code="application.navigator.mmenu.extra" htmlEscape="true" />">
-<link rel="stylesheet"
-      media="all"
-      href="<s:theme code="application.fonts.fontsAwesome" htmlEscape="true" />">
-<link rel="stylesheet"
-      media="all"
-      href="<s:theme code="application.forms" htmlEscape="true" />">
-<link rel="stylesheet"
-      media="all"
-      href="<s:theme code="application.modals" htmlEscape="true" />">
-<link rel="stylesheet"
-      media="all"
-      href="<s:theme code="application.buttons" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.auth" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.content.header" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.navigator.mmenu" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.navigator.mmenu.extra" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.fonts.fontsAwesome" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.forms" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.modals" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.buttons" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.wizards" htmlEscape="true" />">
 
-<link rel="stylesheet"
-      media="all"
-      href="<s:url value="/static/lib/alertify/themes/alertify.core.css"/>"/>
-<link rel="stylesheet"
-      media="all"
-      href="<s:url value="/static/lib/alertify/themes/alertify.default.css"/>"/>
-<link rel="stylesheet"
-      media="all"
-      href="<s:url value="/static/css/smart_wizard_vertical.css"/>"/>
+<link rel="stylesheet" media="all" href="<s:url value="/static/lib/alertify/themes/alertify.core.css"/>"/>
+<link rel="stylesheet" media="all" href="<s:url value="/static/lib/alertify/themes/alertify.default.css"/>"/>
+<link type="text/css" rel="stylesheet" href="<s:url value="/static/dijit/themes/dijit.css" />"/>
+<link type="text/css" rel="stylesheet" href="<s:url value="/static/dijit/themes/soria/soria.css" />"/>

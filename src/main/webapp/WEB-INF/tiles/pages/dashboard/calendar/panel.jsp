@@ -17,13 +17,22 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
+<a href="<s:url value="/wizard/NewAppointment"/>" id="dddd">AAAAAAA</a>
 <section class="x-calendar">
     <div id="calendar"></div>
-    <div id="x-new-event" class="x-modal">
-    </div>
 </section>
 <script>
     $(document).ready(function () {
+
+        Spring.addDecoration(new Spring.AjaxEventDecoration({
+            elementId: 'dddd',
+            event    : 'onclick',
+            popup    : true,
+            params   : {
+                mode: "embedded"
+            }
+        }));
+
         function onAjaxSuccess(opt) {
             var $calendar = $('#calendar'),
                     parent = $calendar.parent('.x-calendar'),
@@ -46,14 +55,7 @@
                 selectable  : true,
                 editable    : true,
                 dayClick    : function (date, allDay, jsEvent, view) {
-                    $.ajax({
-                        url    : '/sa/wizard/NewAppointment',
-                        type   : 'POST',
-                        success: function (data) {
-                            $('#x-new-event').html(data);
-                            SA.core.openModal('#x-new-event');
-                        }
-                    });
+                    $('#dddd').click();
                 },
                 eventClick  : function (calEvent, jsEvent, view) {
                     console.log('Event: ' + calEvent.title);

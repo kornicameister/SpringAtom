@@ -1,5 +1,3 @@
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
-
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~
@@ -17,6 +15,45 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<div class="x-clear"></div>
-<tiles:insertAttribute name="content" ignore="false"/>
-<div class="x-clear"></div>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="s" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<jsp:useBean id="wizardID" scope="request" type="java.lang.String"/>
+<jsp:useBean id="formID" scope="request" type="java.lang.String"/>
+<jsp:useBean id="finishAction" scope="request" type="java.lang.String"/>
+<jsp:useBean id="nextAction" scope="request" type="java.lang.String"/>
+<jsp:useBean id="previousAction" scope="request" type="java.lang.String"/>
+<jsp:useBean id="cancelAction" scope="request" type="java.lang.String"/>
+
+<div id="${wizardID}" class="x-wizard">
+    <div class="x-clear"></div>
+    <ul class="x-wizard-header">
+        <tiles:insertAttribute name="wiz.header" ignore="false" flush="false"/>
+    </ul>
+    <div class="x-wizard-steps">
+        <tiles:insertAttribute name="wiz.content" ignore="false" flush="true"/>
+    </div>
+    <div class="x-wizard-actions">
+        <button id="${finishAction}" type="submit" name="${finishAction}" class="buttonFinish"><s:message key="button.ok"/></button>
+        <button id="${cancelAction}" type="submit" name="${cancelAction}" class="buttonCancel"><s:message key="button.cancel"/></button>
+        <button id="${nextAction}" type="submit" name="${nextAction}" class="buttonNext"><s:message key="button.next.short"/></button>
+        <button id="${previousAction}" type="submit" name="${previousAction}" class="buttonPrevious"><s:message key="button.previous.short"/></button>
+    </div>
+    <div class="x-clear"></div>
+</div>
+<script type="text/javascript">
+    var el = ['${nextAction}', '${cancelAction}', '${finishAction}', '${previousAction}'];
+    $.each(el, function (index, val) {
+        Spring.addDecoration(new Spring.AjaxEventDecoration({
+            elementId: val,
+            event    : 'onclick',
+            formId   : '${formID}',
+            popup    : true,
+            params   : {
+                fragments: 'wiz.content',
+                mode     : "embedded"
+            }
+        }));
+    });
+</script>

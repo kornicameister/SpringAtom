@@ -24,32 +24,18 @@
 <c:set var="staticSa" value="/static/js"/>
 <c:set var="notyPath" value="${staticLib}/noty/2.1.0"/>
 
-<s:url value="${webjars}/jquery/2.0.3/jquery.min.js" htmlEscape="true" var="jqueryJs"/>
-<s:url value="${webjars}/momentjs/2.1.0/min/moment.min.js" htmlEscape="true" var="momentJs"/>
-<s:url value="${staticLib}/tinycon.min.js" htmlEscape="true" var="tinyIconJS"/>
-<s:url value="${staticLib}/midway.min.js" htmlEscape="true" var="midwayJS"/>
-<s:url value="${staticLib}/mmenu/3.2.1/jquery.mmenu.min.js" htmlEscape="true" var="mmenuJs"/>
-<s:url value="${staticSa}/sa-core.js" var="coreJS" htmlEscape="true"/>
-<s:url value="${staticSa}/sa-auth.js" var="saAuth" htmlEscape="true"/>
-<s:url value="${staticSa}/sa-mmenu.js" var="saMmenu" htmlEscape="true"/>
-<s:url value="${staticSa}/sa-breadcrumb.js" var="saBreadcrumb" htmlEscape="true"/>
-<s:url value="${staticSa}/sa-wizards.js" var="saWizards" htmlEscape="true"/>
-<s:url value="${staticLib}/spin.min.js" var="spinnerJS" htmlEscape="true"/>
-<s:url value="${staticLib}/simpleModal.min.js" var="simpleModalJS" htmlEscape="true"/>
-<s:url value="${staticLib}/alertify/alertify.min.js" var="alertifyJS" htmlEscape="true"/>
-<s:url value="${staticLib}/jquery.smartWizard-2.0.js" var="smartWizard" htmlEscape="true"/>
-
-<script type="text/javascript" src="${jqueryJs}"></script>
-<script type="text/javascript" src="${mmenuJs}"></script>
-<script type="text/javascript" src="${momentJs}"></script>
-<script type="text/javascript" src="${tinyIconJS}"></script>
-<script type="text/javascript" src="${midwayJS}"></script>
-<script type="text/javascript" src="${alertifyJS}"></script>
-<script type="text/javascript" src="${spinnerJS}"></script>
-<script type="text/javascript" src="${simpleModalJS}"></script>
-<script type="text/javascript" src="${smartWizard}"></script>
-<script type="text/javascript" src="${saMmenu}"></script>
-<script type="text/javascript" src="${saAuth}"></script>
-<script type="text/javascript" src="${coreJS}"></script>
-<script type="text/javascript" src="${saBreadcrumb}"></script>
-<script type="text/javascript" src="${saWizards}"></script>
+<script type="text/javascript" src="<s:url value="${webjars}/jquery/2.0.3/jquery.min.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticLib}/mmenu/3.2.1/jquery.mmenu.min.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${webjars}/momentjs/2.1.0/min/moment.min.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticLib}/tinycon.min.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticLib}/midway.min.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticLib}/alertify/alertify.min.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticLib}/spin.min.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticLib}/simpleModal.min.js"/>"></script>
+<script type="text/javascript" src="<s:url value="/static/dojo/dojo.js" />"></script>
+<script type="text/javascript" src="<s:url value="/static/spring/Spring.js.uncompressed.js" />"></script>
+<script type="text/javascript" src="<s:url value="/static/spring/Spring-Dojo.js.uncompressed.js" />"></script>
+<script type="text/javascript" src="<s:url value="${staticSa}/sa-mmenu.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticSa}/sa-auth.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticSa}/sa-core.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticSa}/sa-breadcrumb.js"/>"></script>

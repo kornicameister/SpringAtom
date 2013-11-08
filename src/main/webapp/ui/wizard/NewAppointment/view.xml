@@ -17,13 +17,14 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <!DOCTYPE tiles-definitions PUBLIC
-        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
-        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+        "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+        "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 
 <tiles-definitions>
 
-    <definition name="ui.wizard.NewAppointment" extends="ui.layout.wizard.DefaultLayout">
-        <put-attribute name="content" value="/ui/wizard/NewAppointment/wizard.jsp"/>
+    <definition name="ui.wizard.NewAppointment.*" extends="ui.layout.wizard.DefaultLayout">
+        <put-attribute name="wiz.header" value="/ui/wizard/NewAppointment/header.jsp"/>
+        <put-attribute name="wiz.content" value="/ui/wizard/NewAppointment/content_{1}.jsp"/>
     </definition>
 
 </tiles-definitions>

@@ -17,9 +17,5 @@
 
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
-<link rel="stylesheet"
-      media="all"
-      href="<s:theme code="application.dashboard.calendar.core" htmlEscape="true" />">
-<link rel="stylesheet"
-      media="all"
-      href="<s:theme code="application.dashboard.calendar.extra" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:url value="/static/css/fullcalendar.css"/>"/>
+<link rel="stylesheet" media="all" href="<s:url value="/static/css/fullcalendar-extra.css"/>"/>

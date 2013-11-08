@@ -16,7 +16,20 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 
-<c:set var="staticLib" value="/static/lib"/>
-<script type="text/javascript" src="<s:url value='${staticLib}/fullcalendar/fullcalendar.js' htmlEscape="true"/>"></script>
+<s:message code="button.next.short" var="nextButton"/>
+<s:message code="button.previous.short" var="previousButton"/>
+<s:message code="button.ok" var="finishButton"/>
+
+<div id="sa-wizard-step-body" class="content">
+    <h2 class="stepTitle">
+        <s:message code="wizard.newAppointment.title" var="title"/>
+        <s:message code="wizard.step.title" arguments="${title},3" argumentSeparator=","/>
+    </h2>
+
+    <form id="${requestScope.formID}" action="${flowExecutionUrl}" class="x-form">
+    </form>
+</div>
