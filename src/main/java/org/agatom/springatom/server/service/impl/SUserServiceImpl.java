@@ -45,7 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SUserServiceImpl
         extends SServiceImpl<SUser, Long, Integer, SUserRepository>
         implements SUserService {
-    public static final String SERVICE_NAME = "sa.service.UserService";
+    public static final String SERVICE_NAME = "SUserService";
     private SUserRepository     repository;
     @Autowired
     @Qualifier(value = "clientRepository")
