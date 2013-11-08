@@ -36,8 +36,4 @@ public class SVWizardHelper {
         }
         return builder.toString();
     }
-
-    public static String getSVBStepDataKeyForStep(final int step) {
-        return String.format("%s%s", SVWizardModelVariables.WIZARD_STEP_PREFIX, step);
-    }
 }

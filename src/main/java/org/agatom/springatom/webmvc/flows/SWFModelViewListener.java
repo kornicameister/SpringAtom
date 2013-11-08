@@ -15,8 +15,16 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
+package org.agatom.springatom.webmvc.flows;
+
+import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
+
 /**
- * {@code SVB} stands for SVBean.
- * This package contains the beans used in server-client <b>AJAX</b> based communication
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
  */
-package org.agatom.springatom.web.wizard.data;
+public class SWFModelViewListener
+        extends FlowExecutionListenerAdapter {
+
+}

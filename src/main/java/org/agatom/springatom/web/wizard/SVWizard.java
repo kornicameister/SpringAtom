@@ -27,8 +27,4 @@ import java.io.Serializable;
 public interface SVWizard
         extends Serializable {
     String getId();
-
-    String getName();
-
-    String getViewName();
 }
