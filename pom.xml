@@ -15,7 +15,8 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -66,6 +67,7 @@
 
         <!-- spring -->
         <spring.version>3.2.4.RELEASE</spring.version>
+        <spring-webflow.version>2.4.0.M1</spring-webflow.version>
         <spring-security.version>3.2.0.CI-SNAPSHOT</spring-security.version>
         <spring-js-resources.version>2.3.2.RELEASE</spring-js-resources.version>
         <spring-data-commons.version>1.6.1.RELEASE</spring-data-commons.version>
@@ -132,7 +134,7 @@
         <joor.version>0.9.3</joor.version>
         <dandelion-datatables.version>0.9.2</dandelion-datatables.version>
         <aopalliance.version>1.0</aopalliance.version>
-        <tiles.version>3.0.1</tiles.version>
+        <tiles.version>2.2.2</tiles.version>
     </properties>
 
     <repositories>
@@ -199,6 +201,11 @@
         <!-- tiles -->
 
         <!-- spring -->
+        <dependency>
+            <groupId>org.springframework.webflow</groupId>
+            <artifactId>spring-webflow</artifactId>
+            <version>${spring-webflow.version}</version>
+        </dependency>
         <!--spring data -->
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -231,17 +238,6 @@
             <artifactId>spring-data-envers</artifactId>
             <version>${spring-data-envers.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-rest-webmvc</artifactId>
-            <version>${spring-data-rest-webmvc.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <!--spring data -->
         <!-- spring core -->
         <dependency>
@@ -265,17 +261,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.hateoas</groupId>
-            <artifactId>spring-hateoas</artifactId>
-            <version>${spring-hateoas.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <!-- spring web -->
         <dependency>
