@@ -33,7 +33,7 @@ import org.agatom.springatom.server.model.beans.meta.QSMetaData;
 import org.agatom.springatom.server.model.beans.meta.SAppointmentTaskType;
 import org.agatom.springatom.server.model.beans.person.mechanic.SMechanic;
 import org.agatom.springatom.server.model.beans.util.SIssueReporter;
-import org.agatom.springatom.server.model.dto.SAppointmentTaskDTO;
+import org.agatom.springatom.server.model.dto.appointment.SAppointmentTaskDTO;
 import org.agatom.springatom.server.repository.repositories.*;
 import org.agatom.springatom.server.service.SAppointmentService;
 import org.agatom.springatom.server.service.exceptions.SEntityDoesNotExists;
@@ -62,7 +62,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Service
+@Service(value = "SAppointmentService")
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class SAppointmentServiceImpl

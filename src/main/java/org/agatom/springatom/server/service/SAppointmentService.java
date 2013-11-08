@@ -20,7 +20,7 @@ package org.agatom.springatom.server.service;
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
 import org.agatom.springatom.server.model.beans.appointment.SFreeSlot;
-import org.agatom.springatom.server.model.dto.SAppointmentTaskDTO;
+import org.agatom.springatom.server.model.dto.appointment.SAppointmentTaskDTO;
 import org.agatom.springatom.server.repository.repositories.SAppointmentRepository;
 import org.agatom.springatom.server.service.base.SBasicService;
 import org.agatom.springatom.server.service.exceptions.SEntityDoesNotExists;

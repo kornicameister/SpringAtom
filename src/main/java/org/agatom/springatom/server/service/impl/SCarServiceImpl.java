@@ -49,7 +49,7 @@ import java.util.List;
  * @since 0.0.1
  */
 
-@Service
+@Service(value = "SCarService")
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SCarServiceImpl
         extends SServiceImpl<SCar, Long, Integer, SCarRepository>
@@ -72,13 +72,6 @@ public class SCarServiceImpl
     @CacheEvict(value = "cars", allEntries = true, beforeInvocation = true)
     public List<SCar> findByMaster(final String brand, final String model) {
         return (List<SCar>) this.repository.findAll(QSCar.sCar.carMaster.eq(this.getMaster(brand, model)));
-    }
-
-    private SCarMaster getMaster(final String brand, final String model) {
-        final QSCarMasterManufacturingData manufacturingData = QSCarMaster.sCarMaster.manufacturingData;
-        final BooleanExpression brandEq = manufacturingData.brand.eq(brand);
-        final BooleanExpression modelEq = manufacturingData.model.eq(model);
-        return this.masterService.findOne(brandEq.and(modelEq));
     }
 
     @Override
@@ -139,37 +132,6 @@ public class SCarServiceImpl
         return sCar;
     }
 
-    private SCar persistCar(final String licencePlate,
-                            final String vinNumber,
-                            final SCarMaster sCarMaster,
-                            final SClient owner) {
-        SCar sCar = new SCar();
-        sCar.setCarMaster(sCarMaster);
-        sCar.setLicencePlate(licencePlate);
-        sCar.setVinNumber(vinNumber);
-        sCar.setOwner(owner);
-        sCar = this.repository.saveAndFlush(sCar);
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("SCar >>> %s", sCar));
-        }
-        return sCar;
-    }
-
-    private SCarMaster getOrPersistMaster(final String brand, final String model) {
-        SCarMaster sCarMaster = this.getMaster(brand, model);
-        if (sCarMaster == null) {
-            LOGGER.warn(String
-                    .format("No %s for brand=%s and service=%s", SCarMaster.class.getSimpleName(), brand, model));
-            sCarMaster = new SCarMaster();
-            sCarMaster.setManufacturingData(new SCarMasterManufacturingData(brand, model));
-            sCarMaster = this.masterService.save(sCarMaster);
-        }
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace(String.format("SCarMaster >>> %s", sCarMaster));
-        }
-        return sCarMaster;
-    }
-
     @Override
     @Transactional(readOnly = false,
             rollbackFor = SEntityDoesNotExists.class,
@@ -200,6 +162,44 @@ public class SCarServiceImpl
         }
 
         return updatedCar;
+    }
+
+    private SCarMaster getMaster(final String brand, final String model) {
+        final QSCarMasterManufacturingData manufacturingData = QSCarMaster.sCarMaster.manufacturingData;
+        final BooleanExpression brandEq = manufacturingData.brand.eq(brand);
+        final BooleanExpression modelEq = manufacturingData.model.eq(model);
+        return this.masterService.findOne(brandEq.and(modelEq));
+    }
+
+    private SCar persistCar(final String licencePlate,
+                            final String vinNumber,
+                            final SCarMaster sCarMaster,
+                            final SClient owner) {
+        SCar sCar = new SCar();
+        sCar.setCarMaster(sCarMaster);
+        sCar.setLicencePlate(licencePlate);
+        sCar.setVinNumber(vinNumber);
+        sCar.setOwner(owner);
+        sCar = this.repository.saveAndFlush(sCar);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("SCar >>> %s", sCar));
+        }
+        return sCar;
+    }
+
+    private SCarMaster getOrPersistMaster(final String brand, final String model) {
+        SCarMaster sCarMaster = this.getMaster(brand, model);
+        if (sCarMaster == null) {
+            LOGGER.warn(String
+                    .format("No %s for brand=%s and service=%s", SCarMaster.class.getSimpleName(), brand, model));
+            sCarMaster = new SCarMaster();
+            sCarMaster.setManufacturingData(new SCarMasterManufacturingData(brand, model));
+            sCarMaster = this.masterService.save(sCarMaster);
+        }
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("SCarMaster >>> %s", sCarMaster));
+        }
+        return sCarMaster;
     }
 
     private SClient getOwner(final Long ownerId) {
