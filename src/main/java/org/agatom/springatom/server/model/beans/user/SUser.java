@@ -94,31 +94,14 @@ public class SUser
         return roles;
     }
 
-    public void setAuthorities(final Set<? extends GrantedAuthority> roles) {
-        if (this.roles == null) {
-            this.roles = new HashSet<>();
-        }
-        for (final GrantedAuthority role : roles) {
-            this.roles.add(new SUserAuthority(this, (SAuthority) role));
-        }
-    }
-
     @Override
     public String getPassword() {
         return this.credentials.getPassword();
     }
 
-    public void setPassword(final String password) {
-        this.credentials.setPassword(password);
-    }
-
     @Override
     public String getUsername() {
         return this.credentials.getUserName();
-    }
-
-    public void setUserName(final String login) {
-        this.credentials.setUsername(login);
     }
 
     @Override
@@ -146,14 +129,6 @@ public class SUser
         this.enabled = disabled;
     }
 
-    public SPerson getPerson() {
-        return person;
-    }
-
-    public void setPerson(final SPerson person) {
-        this.person = person;
-    }
-
     @Override
     public boolean addAuthority(final GrantedAuthority authority) {
         return roles.add(new SUserAuthority(this, (SAuthority) authority));
@@ -173,16 +148,41 @@ public class SUser
 
     @Override
     public boolean hasAuthority(final GrantedAuthority role) {
-        Set<? extends GrantedAuthority> rolesOut = Sets.newHashSet(role);
+        final Set<? extends GrantedAuthority> rolesOut = Sets.newHashSet(role);
         return this.hasAuthorities(rolesOut);
     }
 
     @Override
     public boolean hasAuthorities(final Collection<? extends GrantedAuthority> roles) {
-        Set<SAuthority> rolesIn = new HashSet<>();
+        final Set<SAuthority> rolesIn = Sets.newHashSet();
         for (SUserAuthority userToRole : this.roles) {
             rolesIn.add(userToRole.getAuthority());
         }
         return rolesIn.containsAll(roles);
+    }
+
+    public void setPassword(final String password) {
+        this.credentials.setPassword(password);
+    }
+
+    public void setUserName(final String login) {
+        this.credentials.setUsername(login);
+    }
+
+    public void setAuthorities(final Set<? extends GrantedAuthority> roles) {
+        if (this.roles == null) {
+            this.roles = new HashSet<>();
+        }
+        for (final GrantedAuthority role : roles) {
+            this.roles.add(new SUserAuthority(this, (SAuthority) role));
+        }
+    }
+
+    public SPerson getPerson() {
+        return person;
+    }
+
+    public void setPerson(final SPerson person) {
+        this.person = person;
     }
 }

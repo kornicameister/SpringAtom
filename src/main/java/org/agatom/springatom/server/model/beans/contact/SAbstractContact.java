@@ -15,13 +15,15 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.beans.user.authority;
+package org.agatom.springatom.server.model.beans.contact;
 
+import org.agatom.springatom.server.model.beans.PersistentContactable;
 import org.agatom.springatom.server.model.beans.PersistentObject;
-import org.agatom.springatom.server.model.types.user.SRole;
-import org.hibernate.annotations.NaturalId;
+import org.agatom.springatom.server.model.types.contact.ContactType;
+import org.agatom.springatom.server.model.types.contact.SContact;
 import org.hibernate.annotations.Type;
-import org.springframework.security.core.GrantedAuthority;
+import org.hibernate.envers.Audited;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 
@@ -30,48 +32,45 @@ import javax.persistence.*;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SAuthority")
-@Table(name = "SAuthority")
-@AttributeOverride(name = "id", column = @Column(name = "idSAuthority", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
-public class SAuthority
+
+@Audited
+@Table(name = SAbstractContact.TABLE_NAME)
+@Entity(name = SAbstractContact.ENTITY_NAME)
+@AttributeOverride(name = "id", column = @Column(name = "idContact", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = SAbstractContact.CONTACT_FOR, discriminatorType = DiscriminatorType.STRING)
+abstract public class SAbstractContact<SC_H extends PersistentContactable>
         extends PersistentObject<Long>
-        implements GrantedAuthority {
-    private static final long serialVersionUID = 2893594861541235345L;
+        implements SContact<SC_H> {
+    public static final    String TABLE_NAME  = "contacts";
+    public static final    String ENTITY_NAME = "SAbstractContact";
+    protected static final String CONTACT_FOR = "sac_for";
+    private static final   long   serialVersionUID = 8494361809629647372L;
+    @Length(min = 5, max = 60)
+    @Column(name = "contact", length = 60)
+    protected String      contact;
     @Type(type = "org.hibernate.type.EnumType")
-    @Column(name = "authority", updatable = false, unique = true, length = 50, nullable = false)
-    @NaturalId(mutable = false)
     @Enumerated(value = EnumType.STRING)
-    private SRole role;
+    @Column(name = "type", length = 60)
+    protected ContactType type;
 
-    public SAuthority() {
-    }
-
-    public SAuthority(final String role) {
-        this.role = SRole.valueOf(role);
-    }
-
-    public static GrantedAuthority fromRole(final SRole roleMechanic) {
-        return new SAuthority(roleMechanic.toString());
-    }
-
-    public SRole getRole() {
-        return role;
-    }
-
-    public void setRole(final SRole role) {
-        this.role = role;
-    }
-
-    public int getRoleId() {
-        return this.role.getRoleId();
+    @Override
+    public final String getContact() {
+        return contact;
     }
 
     @Override
-    public String getAuthority() {
-        return this.role.toString();
+    public final void setContact(final String contact) {
+        this.contact = contact;
     }
 
-    public void setAuthority(final String role) {
-        this.role = SRole.valueOf(role);
+    @Override
+    public ContactType getType() {
+        return this.type;
+    }
+
+    @Override
+    public void setType(final ContactType type) {
+        this.type = type;
     }
 }

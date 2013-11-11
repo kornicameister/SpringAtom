@@ -17,8 +17,6 @@
 
 package org.agatom.springatom.server.model.dto;
 
-import org.agatom.springatom.server.model.types.meta.SMetaDataEnum;
-
 /**
  * @author kornicameister
  * @version 0.0.1
@@ -26,15 +24,15 @@ import org.agatom.springatom.server.model.types.meta.SMetaDataEnum;
  */
 public class SAppointmentTaskDTO
         implements DTO {
-    final private SMetaDataEnum type;
-    final private String        task;
+    final private String type;
+    final private String task;
 
-    public SAppointmentTaskDTO(final SMetaDataEnum type, final String task) {
+    public SAppointmentTaskDTO(final String type, final String task) {
         this.type = type;
         this.task = task;
     }
 
-    public SMetaDataEnum getType() {
+    public String getType() {
         return type;
     }
 

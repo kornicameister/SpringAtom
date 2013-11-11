@@ -17,18 +17,14 @@
 
 package org.agatom.springatom.server.model.types.contact;
 
-import org.hibernate.validator.constraints.Email;
-
 /**
- * {@code SContactable} marks entity as contactable using embedded
- * <b>email value</b>
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SContactable {
-    String getPrimaryMail();
-
-    SContactable setPrimaryMail(final @Email String mail);
+public enum ContactType {
+    SCT_FAX,
+    SCT_MAIL,
+    SCT_CELL_PHONE,
+    SCT_PHONE
 }

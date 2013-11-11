@@ -15,20 +15,47 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.contact;
+package org.agatom.springatom.server.model.beans.activity;
 
-import org.hibernate.validator.constraints.Email;
+import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.types.activity.AssignedActivity;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
- * {@code SContactable} marks entity as contactable using embedded
- * <b>email value</b>
+ * {@code SAssignedActivity} is also an {@link org.agatom.springatom.server.model.beans.activity.SActivity} but given with
+ * the ability of being assigned to particular {@link org.agatom.springatom.server.model.beans.user.SUser}.
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SContactable {
-    String getPrimaryMail();
+@MappedSuperclass
+abstract public class SAssignedActivity<PK extends Serializable>
+        extends SActivity<PK>
+        implements AssignedActivity {
+    private static final long serialVersionUID = -8389898294284589238L;
+    @NotNull
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "activity_assignee", referencedColumnName = "idSUser", updatable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    protected SUser assignee;
 
-    SContactable setPrimaryMail(final @Email String mail);
+    @Override
+    public SUser getAssignee() {
+        return this.assignee;
+    }
+
+    @Override
+    public AssignedActivity setAssignee(final SUser assignee) {
+        this.assignee = assignee;
+        return this;
+    }
 }

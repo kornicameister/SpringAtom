@@ -18,7 +18,7 @@
 package org.agatom.springatom.server.model.beans.car;
 
 import org.agatom.springatom.server.model.beans.PersistentVersionedObject;
-import org.agatom.springatom.server.model.beans.person.client.SClient;
+import org.agatom.springatom.server.model.beans.user.SUser;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -33,18 +33,14 @@ import javax.validation.constraints.NotNull;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SCar")
-@Table(name = "SCar")
-@AttributeOverride(name = "id",
-        column = @Column(
-                name = "idSCar",
-                updatable = false,
-                nullable = false)
-)
-// TODO is business service update required ?
+@Table(name = SCar.TABLE_NAME)
+@Entity(name = SCar.ENTITY_NAME)
+@AttributeOverride(name = "id", column = @Column(name = "idSCar", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SCar
         extends PersistentVersionedObject {
-    private static final long serialVersionUID = -1473162805427581686L;
+    public static final  String TABLE_NAME       = "cars";
+    public static final  String ENTITY_NAME      = "SCar";
+    private static final long   serialVersionUID = -1473162805427581686L;
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "carMaster", referencedColumnName = "idSCarMaster", updatable = false)
@@ -52,9 +48,9 @@ public class SCar
     @NotNull
     @Audited(targetAuditMode = RelationTargetAuditMode.AUDITED)
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "owner", referencedColumnName = "idSClient", updatable = false)
+    @JoinColumn(name = "owner", referencedColumnName = "idSUser", updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private SClient    owner;
+    private SUser      owner;
     @Column(nullable = false, length = 45, name = "licencePlate", unique = true)
     @NaturalId(mutable = true)
     private String     licencePlate;
@@ -89,11 +85,11 @@ public class SCar
         return this;
     }
 
-    public SClient getOwner() {
+    public SUser getOwner() {
         return owner;
     }
 
-    public SCar setOwner(final SClient client) {
+    public SCar setOwner(final SUser client) {
         this.owner = client;
         return this;
     }

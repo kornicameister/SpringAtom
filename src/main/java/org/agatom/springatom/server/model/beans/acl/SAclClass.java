@@ -15,20 +15,45 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.contact;
+package org.agatom.springatom.server.model.beans.acl;
 
-import org.hibernate.validator.constraints.Email;
+import org.agatom.springatom.server.model.beans.PersistentObject;
+
+import javax.persistence.*;
+import java.util.Collection;
 
 /**
- * {@code SContactable} marks entity as contactable using embedded
- * <b>email value</b>
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SContactable {
-    String getPrimaryMail();
+@Table(name = SAclClass.TABLE_NAME)
+@Entity(name = SAclClass.ENTITY_NAME)
+@AttributeOverride(name = "id", column = @Column(name = "id", nullable = false, insertable = true, updatable = true, length = 19, precision = 0))
+public class SAclClass
+        extends PersistentObject<Long> {
+    public static final  String TABLE_NAME       = "acl_class";
+    public static final  String ENTITY_NAME      = "SAclClass";
+    private static final long   serialVersionUID = 2345236487666417725L;
+    @Basic
+    @Column(name = "class", nullable = false, insertable = true, updatable = true, length = 255, precision = 0)
+    private String                         clazz;
+    @OneToMany(mappedBy = "aclClass")
+    private Collection<SAclObjectIdentity> aclObjectIdentities;
 
-    SContactable setPrimaryMail(final @Email String mail);
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(final String clazz) {
+        this.clazz = clazz;
+    }
+
+    public Collection<SAclObjectIdentity> getAclObjectIdentities() {
+        return aclObjectIdentities;
+    }
+
+    public void setAclObjectIdentities(final Collection<SAclObjectIdentity> aclObjectIdentitiesById) {
+        this.aclObjectIdentities = aclObjectIdentitiesById;
+    }
 }

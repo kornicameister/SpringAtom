@@ -15,63 +15,62 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.beans.user.authority;
+package org.agatom.springatom.server.model.beans.issue;
 
-import org.agatom.springatom.server.model.beans.PersistentObject;
-import org.agatom.springatom.server.model.types.user.SRole;
-import org.hibernate.annotations.NaturalId;
+import org.agatom.springatom.server.model.beans.activity.SAssignedActivity;
+import org.agatom.springatom.server.model.types.issue.Issue;
+import org.agatom.springatom.server.model.types.issue.IssueType;
 import org.hibernate.annotations.Type;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
- * @author kornicamaister
+ * {@code SIssue} is object which extends from {@link org.agatom.springatom.server.model.beans.activity.SActivity} which means
+ * that issue can be reported and placed in the given date but additionally there is a possibility to specify the message
+ * and the type of the issue.
+ *
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SAuthority")
-@Table(name = "SAuthority")
-@AttributeOverride(name = "id", column = @Column(name = "idSAuthority", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
-public class SAuthority
-        extends PersistentObject<Long>
-        implements GrantedAuthority {
-    private static final long serialVersionUID = 2893594861541235345L;
+@Entity(name = SIssue.ENTITY_NAME)
+@Table(name = SIssue.TABLE_NAME)
+@AttributeOverride(name = "id", column = @Column(name = "idSIssue", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = SIssue.ISSUE_TYPE, discriminatorType = DiscriminatorType.STRING)
+public class SIssue
+        extends SAssignedActivity<Long>
+        implements Issue {
+    public static final    String ENTITY_NAME      = "SIssue";
+    public static final    String TABLE_NAME       = "issues";
+    protected static final String ISSUE_TYPE       = "sit";
+    private static final   long   serialVersionUID = 9153732479122207895L;
+    @NotNull
+    @Column(name = "issue_msg", nullable = false)
+    private String    message;
     @Type(type = "org.hibernate.type.EnumType")
-    @Column(name = "authority", updatable = false, unique = true, length = 50, nullable = false)
-    @NaturalId(mutable = false)
     @Enumerated(value = EnumType.STRING)
-    private SRole role;
+    @Column(name = "issue_type", nullable = false)
+    private IssueType type;
 
-    public SAuthority() {
-    }
-
-    public SAuthority(final String role) {
-        this.role = SRole.valueOf(role);
-    }
-
-    public static GrantedAuthority fromRole(final SRole roleMechanic) {
-        return new SAuthority(roleMechanic.toString());
-    }
-
-    public SRole getRole() {
-        return role;
-    }
-
-    public void setRole(final SRole role) {
-        this.role = role;
-    }
-
-    public int getRoleId() {
-        return this.role.getRoleId();
+    @Override
+    public String getMessage() {
+        return this.message;
     }
 
     @Override
-    public String getAuthority() {
-        return this.role.toString();
+    public void setMessage(final String message) {
+        this.message = message;
     }
 
-    public void setAuthority(final String role) {
-        this.role = SRole.valueOf(role);
+    @Override
+    public IssueType getType() {
+        return this.type;
+    }
+
+    @Override
+    public void setType(final IssueType type) {
+        this.type = type;
     }
 }

@@ -15,20 +15,26 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.contact;
+package org.agatom.springatom.server.model.types.activity;
 
-import org.hibernate.validator.constraints.Email;
+import org.agatom.springatom.server.model.beans.activity.SActivity;
+import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.types.PersistentEmbeddable;
+import org.joda.time.DateTime;
 
 /**
- * {@code SContactable} marks entity as contactable using embedded
- * <b>email value</b>
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SContactable {
-    String getPrimaryMail();
+public interface Activity
+        extends PersistentEmbeddable {
 
-    SContactable setPrimaryMail(final @Email String mail);
+    SUser getReporter();
+
+    SActivity setReporter(SUser user);
+
+    DateTime getAssigned();
+
+    SActivity setAssigned(DateTime assigned);
 }

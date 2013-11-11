@@ -15,20 +15,33 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.contact;
+package org.agatom.springatom.server.model.types.issue;
 
-import org.hibernate.validator.constraints.Email;
+import org.agatom.springatom.server.model.types.activity.AssignedActivity;
 
 /**
- * {@code SContactable} marks entity as contactable using embedded
- * <b>email value</b>
+ * {@code Issue} is an interface marking implementing classes as the Issue. Issue, by being also {@link
+ * org.agatom.springatom.server.model.types.activity.AssignedActivity},
+ * is an object with following properties:
+ * <ol>
+ * <li>assignee - {@link org.agatom.springatom.server.model.beans.user.SUser}</li>
+ * <li>reporter - {@link org.agatom.springatom.server.model.beans.user.SUser}</li>
+ * <li>assigned date - {@link org.joda.time.DateTime}</li>
+ * <li>message - {@link java.lang.String}</li>
+ * <li>type - {@link org.agatom.springatom.server.model.types.issue.IssueType}</li>
+ * </ol>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SContactable {
-    String getPrimaryMail();
+public interface Issue
+        extends AssignedActivity {
+    String getMessage();
 
-    SContactable setPrimaryMail(final @Email String mail);
+    void setMessage(final String issue);
+
+    IssueType getType();
+
+    void setType(final IssueType type);
 }

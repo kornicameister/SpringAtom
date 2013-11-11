@@ -19,7 +19,7 @@ package org.agatom.springatom.server.model.beans.appointment;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.agatom.springatom.server.model.beans.PersistentObject;
+import org.agatom.springatom.server.model.beans.activity.SAssignedActivity;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.hibernate.annotations.Index;
 import org.hibernate.annotations.OnDelete;
@@ -46,40 +46,31 @@ import java.util.Set;
  * @version 0.0.2
  * @since 0.0.1
  */
-@Entity(name = "SAppointment")
-@Table(name = "SAppointment")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSAppointment",
-                updatable = false,
-                nullable = false)
-)
+@Table(name = SAppointment.TABLE_NAME)
+@Entity(name = SAppointment.ENTITY_NAME)
+@AttributeOverride(name = "id", column = @Column(name = "idSAppointment", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SAppointment
-        extends PersistentObject<Long>
-        implements Iterable<SAppointmentTask> {
-    private static final String BEGIN_NULL_MSG   = "Begin dateTime for event must not be null";
-    private static final String END_NULL_MSG     = "End dateTime for event must not be null";
-    private static final String CAR_NULL_MSG     = "Car for event must not be null";
+        extends SAssignedActivity<Long>
+implements Iterable<SAppointmentTask> {
+    public static final String TABLE_NAME  = "appointment";
+    public static final String ENTITY_NAME = "SAppointment";
     private static final String DATE_TIME_TYPE   = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
     private static final long   serialVersionUID = -3158182089097228777L;
     @Index(name = "sa_begin")
     @Type(type = DATE_TIME_TYPE)
     @Column(name = "begin", nullable = false)
-    @NotNull(message = BEGIN_NULL_MSG)
+    @NotNull(message = MSG.BEGIN_NULL_MSG)
     private DateTime begin;
     @Index(name = "sa_end")
     @Type(type = DATE_TIME_TYPE)
     @Column(name = "end", nullable = false)
-    @NotNull(message = END_NULL_MSG)
+    @NotNull(message = MSG.END_NULL_MSG)
     private DateTime end;
-    @Size(min = 1, message = "SAppointment must contain at least one task [SAppointmentTask]")
-    @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "appointment",
-            cascade = CascadeType.ALL)
+    @Size(min = 1, message = MSG.NO_TASK_MSG)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "appointment", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<SAppointmentTask> tasks = Sets.newHashSet();
-    @NotNull(message = CAR_NULL_MSG)
+    @NotNull(message = MSG.CAR_NULL_MSG)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "car", referencedColumnName = "idScar")
     private SCar car;
@@ -166,5 +157,12 @@ public class SAppointment
     @Override
     public Iterator<SAppointmentTask> iterator() {
         return this.tasks.iterator();
+    }
+
+    private static class MSG {
+        static final String BEGIN_NULL_MSG = "Begin dateTime for event must not be null";
+        static final String END_NULL_MSG   = "End dateTime for event must not be null";
+        static final String CAR_NULL_MSG   = "Car for event must not be null";
+        static final String NO_TASK_MSG    = "SAppointment must contain at least one task [SAppointmentTask]";
     }
 }

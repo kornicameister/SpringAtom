@@ -15,20 +15,37 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.contact;
+package org.agatom.springatom.server.model.beans.user.notification;
 
-import org.hibernate.validator.constraints.Email;
+import org.agatom.springatom.server.model.beans.notification.SAbstractNotification;
+import org.agatom.springatom.server.model.beans.user.SUser;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
 
 /**
- * {@code SContactable} marks entity as contactable using embedded
- * <b>email value</b>
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SContactable {
-    String getPrimaryMail();
+@Entity(name = SUserNotification.ENTITY_NAME)
+@DiscriminatorValue(value = "sun")
+public class SUserNotification
+        extends SAbstractNotification {
+    public static final  String ENTITY_NAME      = "UserNotificiation";
+    private static final long   serialVersionUID = 5952975044391002047L;
+    @ManyToOne(cascade = {CascadeType.REMOVE}, optional = false, fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "sur_user", referencedColumnName = "idSUser", updatable = false, nullable = false)
+    private SUser user;
 
-    SContactable setPrimaryMail(final @Email String mail);
+    public SUserNotification setUser(final SUser user) {
+        this.user = user;
+        return this;
+    }
+
+    public SUser getUser() {
+        return user;
+    }
 }

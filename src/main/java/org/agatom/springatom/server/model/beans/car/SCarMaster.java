@@ -32,19 +32,14 @@ import java.util.Set;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SCarMaster")
-@Table(name = "SCarMaster")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSCarMaster",
-                updatable = false,
-                insertable = true,
-                nullable = false)
-)
+@Table(name = SCarMaster.TABLE_NAME)
+@Entity(name = SCarMaster.ENTITY_NAME)
+@AttributeOverride(name = "id", column = @Column(name = "idSCarMaster", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SCarMaster
         extends PersistentObject<Long> {
-    private static final long serialVersionUID = -4932035593494629555L;
+    public static final  String TABLE_NAME       = "car_master";
+    public static final  String ENTITY_NAME      = "SCarMaster";
+    private static final long   serialVersionUID = -4932035593494629555L;
     @Embedded
     private SCarMasterManufacturingData manufacturingData;
     @BatchSize(

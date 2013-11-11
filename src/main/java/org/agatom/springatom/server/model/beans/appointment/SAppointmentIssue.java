@@ -15,20 +15,33 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.contact;
+package org.agatom.springatom.server.model.beans.appointment;
 
-import org.hibernate.validator.constraints.Email;
+import org.agatom.springatom.server.model.beans.issue.SIssue;
+
+import javax.persistence.*;
 
 /**
- * {@code SContactable} marks entity as contactable using embedded
- * <b>email value</b>
- *
- * @author kornicameister
+ * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SContactable {
-    String getPrimaryMail();
+@Entity(name = SAppointmentIssue.ENTITY_NAME)
+@DiscriminatorValue(value = "appointment")
+public class SAppointmentIssue
+        extends SIssue {
+    public static final  String ENTITY_NAME      = "SAppointmentIssue";
+    private static final long   serialVersionUID = 8658810841216821601L;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "sai_app", referencedColumnName = "idSAppointment", updatable = false)
+    private SAppointment appointment;
 
-    SContactable setPrimaryMail(final @Email String mail);
+    public SAppointment getAppointment() {
+        return appointment;
+    }
+
+    public SAppointmentIssue setAppointment(final SAppointment appointment) {
+        this.appointment = appointment;
+        return this;
+    }
 }

@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.server.model.types.contact;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,11 +30,11 @@ import java.util.List;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SMultiContactable<PK extends Serializable>
-        extends SContactable<PK> {
-    <SC extends SContact<?, ?, ?>> List<SC> getContacts();
+public interface SMultiContactable
+        extends SContactable {
+    List<SContact> getContacts();
 
-    <SC extends SContact<?, ?, ?>> SMultiContactable addContact(final Collection<SC> contacts);
+    boolean addContact(final Collection<SContact> contacts);
 
-    <SC extends SContact<?, ?, ?>> SMultiContactable removeContact(final Collection<SC> contacts);
+    boolean removeContact(final Collection<SContact> contacts);
 }

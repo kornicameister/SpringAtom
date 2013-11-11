@@ -15,20 +15,19 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.contact;
-
-import org.hibernate.validator.constraints.Email;
+package org.agatom.springatom.server.model.types.issue;
 
 /**
- * {@code SContactable} marks entity as contactable using embedded
- * <b>email value</b>
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SContactable {
-    String getPrimaryMail();
-
-    SContactable setPrimaryMail(final @Email String mail);
+public enum IssueType {
+    SCPR_DEBTS,
+    SCPR_FAKE_ID,
+    SCPR_MISSED_APP,
+    SCPR_NO_PAYMENT,
+    SNT_APP_CANCELED,
+    SNT_APP_DONE,
+    SNT_APP_REJECTED
 }

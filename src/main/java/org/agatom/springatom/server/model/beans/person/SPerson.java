@@ -20,16 +20,15 @@ package org.agatom.springatom.server.model.beans.person;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.mysema.query.annotations.QueryInit;
 import org.agatom.springatom.server.model.beans.PersistentContactable;
-import org.agatom.springatom.server.model.beans.person.contact.SPersonContact;
-import org.agatom.springatom.server.model.beans.person.embeddable.SPersonalInformation;
 import org.agatom.springatom.server.model.types.contact.SContact;
 import org.agatom.springatom.server.model.types.contact.SMultiContactable;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.envers.Audited;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -44,67 +43,67 @@ import java.util.Set;
  */
 
 @Entity(name = "SPerson")
-@Table(name = "SPerson",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "primaryMail")
-        }
-)
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSPerson",
-                updatable = false,
-                nullable = false
-        )
-)
+@Table(name = "SPerson", uniqueConstraints = {@UniqueConstraint(columnNames = "primaryMail")})
+@AttributeOverride(name = "id", column = @Column(name = "idSPerson", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 @Inheritance(strategy = InheritanceType.JOINED)
 @Audited(auditParents = PersistentContactable.class)
-abstract public class SPerson
+public class SPerson
         extends PersistentContactable
-        implements SMultiContactable<Long> {
+        implements SMultiContactable {
 
     private static final long serialVersionUID = -8306142304138446067L;
-    @Embedded
-    @QueryInit(value = "information")
-    private SPersonalInformation information;
+    @NotEmpty
+    @Length(min = 3, max = 45)
+    @Column(name = "fName", length = 45, nullable = false)
+    private String        firstName;
+    @NotEmpty
+    @Length(min = 3, max = 45)
+    @Column(name = "lName", length = 45, nullable = false)
+    private String        lastName;
     @BatchSize(size = 10)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "assigned", targetEntity = SPersonContact.class)
-    private Set<SContact>        contacts;
+    private Set<SContact> contacts;
 
-    public SPersonalInformation getInformation() {
-        return information;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public SPerson setInformation(final SPersonalInformation information) {
-        this.information = information;
-        return this;
+    public void setFirstName(final String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(final String lastName) {
+        this.lastName = lastName;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<SContact> getContacts() {
         return ImmutableList.copyOf(this.contacts);
     }
 
     @Override
-    public <SC extends SContact<?, ?, ?>> SMultiContactable addContact(final Collection<SC> contacts) {
+    public boolean addContact(final Collection<SContact> contacts) {
         if (contacts.size() > 0) {
             if (this.contacts == null) {
                 this.contacts = Sets.newIdentityHashSet();
             }
-            this.contacts.addAll(contacts);
+            return this.contacts.addAll(contacts);
         }
-        return this;
+        return false;
     }
 
     @Override
-    public <SC extends SContact<?, ?, ?>> SMultiContactable removeContact(final Collection<SC> contacts) {
+    public boolean removeContact(final Collection<SContact> contacts) {
         if (contacts.size() > 0 && this.contacts != null) {
-            final HashSet<SC> contactSet = Sets.newHashSet(contacts);
+            final HashSet<SContact> contactSet = Sets.newHashSet(contacts);
             final ImmutableSet<SContact> difference = Sets.union(this.contacts, contactSet).immutableCopy();
-            this.contacts.removeAll(difference);
+            return this.contacts.removeAll(difference);
         }
-        return this;
+        return false;
     }
 }

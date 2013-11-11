@@ -17,8 +17,10 @@
 
 package org.agatom.springatom.server.model.beans.appointment;
 
-import org.agatom.springatom.server.model.beans.meta.SAppointmentTaskType;
-import org.agatom.springatom.server.model.beans.meta.holder.SBasicMetaDataHolder;
+import org.agatom.springatom.server.model.beans.PersistentObject;
+import org.agatom.springatom.server.model.types.appointment.AppointmentTaskType;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -29,25 +31,26 @@ import javax.persistence.*;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SAppointmentTask")
-@Table(name = "SAppointmentTask")
-@AttributeOverride(
-        name = "id",
-        column = @Column(
-                name = "idSAppointmentTask",
-                updatable = false,
-                nullable = false)
-)
+@Table(name = SAppointmentTask.TABLE_NAME)
+@Entity(name = SAppointmentTask.ENTITY_NAME)
+@AttributeOverride(name = "id", column = @Column(name = "idSAppointmentTask", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SAppointmentTask
-        extends SBasicMetaDataHolder<SAppointmentTaskType, Long> {
-    private static final long serialVersionUID = -300491275397373687L;
+        extends PersistentObject<Long> {
+    public static final  String TABLE_NAME       = "appointment_task";
+    public static final  String ENTITY_NAME      = "SAppointmentTask";
+    private static final long   serialVersionUID = -300491275397373687L;
     @NotEmpty
     @Length(min = 10, max = 444)
-    @Column(name = "task", nullable = false, length = 444)
-    private String       task;
+    @Column(name = "sat_task", nullable = false, length = 444)
+    private String              task;
+    @Type(type = "org.hibernate.type.EnumType")
+    @NaturalId(mutable = true)
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "sat_type", updatable = true, unique = false, length = 50, nullable = false)
+    private AppointmentTaskType type;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "appointment", referencedColumnName = "idSAppointment", updatable = false)
-    private SAppointment appointment;
+    @JoinColumn(name = "sat_app", referencedColumnName = "idSAppointment", updatable = false)
+    private SAppointment        appointment;
 
     public String getTask() {
         return task;
@@ -67,28 +70,12 @@ public class SAppointmentTask
         return this;
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SAppointmentTask)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        final SAppointmentTask task1 = (SAppointmentTask) o;
-
-        return task.equals(task1.task);
-
+    public AppointmentTaskType getType() {
+        return type;
     }
 
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + task.hashCode();
-        return result;
+    public SAppointmentTask setType(final AppointmentTaskType type) {
+        this.type = type;
+        return this;
     }
 }

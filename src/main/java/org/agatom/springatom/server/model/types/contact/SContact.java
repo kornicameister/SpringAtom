@@ -17,14 +17,6 @@
 
 package org.agatom.springatom.server.model.types.contact;
 
-import org.agatom.springatom.server.model.types.meta.SMetaDataEnum;
-import org.agatom.springatom.server.model.types.meta.SMetaDataHolder;
-import org.agatom.springatom.server.model.types.meta.SMetaDataType;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-
 /**
  * {@code SContact} is an interface marking the entity, which implements it,
  * as being
@@ -33,21 +25,17 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SContact<SC_H extends SContactable<PK>, MD extends SMetaDataType, PK extends Serializable>
-        extends SContactAware<PK>,
-                SMetaDataHolder<MD> {
+public interface SContact<SC_H extends SContactable> {
     String getContact();
 
-    SContact setContact(final
-                        @NotNull
-                        @NotEmpty
-                        String contact);
-
-    SMetaDataEnum getType();
+    void setContact(final String contact);
 
     SC_H getAssigned();
 
-    SContact setAssigned(final
-                         @NotNull
-                         SC_H assigned);
+    void setAssigned(final SC_H assigned);
+
+    ContactType getType();
+
+    void setType(ContactType type);
+
 }

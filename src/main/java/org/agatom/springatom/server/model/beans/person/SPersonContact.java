@@ -15,20 +15,43 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.contact;
+package org.agatom.springatom.server.model.beans.person;
 
-import org.hibernate.validator.constraints.Email;
+import org.agatom.springatom.server.model.beans.contact.SAbstractContact;
+import org.hibernate.envers.AuditJoinTable;
+import org.hibernate.envers.AuditOverride;
+import org.hibernate.envers.Audited;
+
+import javax.persistence.*;
 
 /**
- * {@code SContactable} marks entity as contactable using embedded
- * <b>email value</b>
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SContactable {
-    String getPrimaryMail();
+@Entity
+@Audited
+@AuditOverride(name = "contact",
+        forClass = SAbstractContact.class,
+        auditJoinTable = @AuditJoinTable(
+                name = "spersoncontact_history"
+        )
+)
+@DiscriminatorValue("person")
+public class SPersonContact
+        extends SAbstractContact<SPerson> {
+    private static final long    serialVersionUID = 86397657105677805L;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned", updatable = true)
+    protected            SPerson assigned         = null;
 
-    SContactable setPrimaryMail(final @Email String mail);
+    @Override
+    public SPerson getAssigned() {
+        return this.assigned;
+    }
+
+    @Override
+    public void setAssigned(final SPerson assigned) {
+        this.assigned = assigned;
+    }
 }
