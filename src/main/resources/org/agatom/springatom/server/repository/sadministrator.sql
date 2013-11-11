@@ -11,7 +11,7 @@ INSERT INTO `suser` (idSUser,
                      lastModifiedBy_idSUser,
                      person,
                      version)
-  VALUES
+VALUES
   (1,
    null,
    null,
@@ -31,12 +31,12 @@ INSERT INTO `suserauthority` (user, authority) VALUES (1, (SELECT
                                                            FROM `sauthority`
                                                            WHERE `authority` = "ROLE_ADMIN"));
 
-INSERT INTO `suserauthority` (user, authority) VALUES (2, (SELECT
+INSERT INTO `suserauthority` (user, authority) VALUES (1, (SELECT
                                                              `idSAuthority`
                                                            FROM `sauthority`
                                                            WHERE `authority` = "ROLE_CLIENT"));
 
-INSERT INTO `suserauthority` (user, authority) VALUES (3, (SELECT
+INSERT INTO `suserauthority` (user, authority) VALUES (1, (SELECT
                                                              `idSAuthority`
                                                            FROM `sauthority`
                                                            WHERE `authority` = "ROLE_MECHANIC"));
