@@ -24,24 +24,13 @@
 	         http://www.springframework.org/schema/security
 	         http://www.springframework.org/schema/security/spring-security.xsd">
 
-    <!--
-    Allows using annotations to secure access to services layer
-    -->
-    <global-method-security secured-annotations="enabled"
-                            authentication-manager-ref="authenticationManager"
-                            order="0"
-                            proxy-target-class="true"
-                            pre-post-annotations="enabled"/>
-
     <!-- static content is not secured -->
     <http pattern="/static/*" security="none"/>
     <http pattern="/tiles/*" security="none"/>
     <http pattern="/data/*" security="none"/>
     <!-- static content -->
 
-    <http pattern="/**" auto-config="true" use-expressions="true">
-
-
+    <http pattern="/**" auto-config="true" use-expressions="true" access-denied-page="/app/auth/access/denied">
         <intercept-url pattern="/app*" access="permitAll()"/>
         <!--<intercept-url pattern="/app/admin*" access="hasRole('ROLE_ADMIN')"/>-->
         <!--<intercept-url pattern="/app/secured*" access="hasAnyRole('ROLE_ADMIN','ROLE_MECHANIC')"/>-->
@@ -64,10 +53,9 @@
                 invalidate-session="true"
                 delete-cookies="JSESSIONID"
                 logout-success-url="/app?action=logout&amp;status=true"/>
-        <access-denied-handler error-page="/app/auth/access/denied"/>
         <anonymous enabled="true" granted-authority="ROLE_DATA_ACCESS" key="anonymous"/>
         <remember-me use-secure-cookie="true"
-                     user-service-ref="sa.service.UserService"
+                     user-service-ref="SUserService"
                      services-alias="rememberMeService"
                      token-validity-seconds="120"
                      data-source-ref="dataSource"/>
@@ -79,8 +67,8 @@
                 class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
     <authentication-manager alias="authenticationManager">
-        <authentication-provider user-service-ref="sa.service.UserService">
-        <password-encoder ref="securedPasswordEncoder" base64="true"/>
+        <authentication-provider user-service-ref="SUserService">
+            <password-encoder ref="securedPasswordEncoder" base64="true"/>
         </authentication-provider>
     </authentication-manager>
 

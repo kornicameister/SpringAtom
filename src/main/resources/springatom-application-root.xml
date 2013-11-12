@@ -32,6 +32,7 @@
     <import resource="org/agatom/springatom/server/service/transactions.xml"/>
     <import resource="org/agatom/springatom/server/repository/jpa.xml"/>
     <import resource="org/agatom/springatom/security/security.xml"/>
+    <import resource="org/agatom/springatom/security/acl.xml"/>
 
     <context:annotation-config/>
     <context:component-scan base-package="org.agatom.springatom.server">
