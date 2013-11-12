@@ -15,44 +15,47 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.converters;
+package org.agatom.springatom.server.service.support.constraints;
 
-import org.agatom.springatom.server.model.types.user.SRole;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.converter.ConditionalConverter;
-import org.springframework.core.convert.converter.Converter;
+import org.hibernate.validator.constraints.Length;
 
-import java.util.regex.Pattern;
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import javax.validation.ReportAsSingleViolation;
+import javax.validation.constraints.NotNull;
+import java.lang.annotation.*;
+
+import static java.lang.annotation.ElementType.*;
 
 /**
+ * {@code UserName} is the part of {@code Constraints} that defines a set of conditions to be met to acknowledge
+ * given <b>username</b> as valid.
+ * <p/>
+ * <p>
+ * Conditions to be met are:
+ * <ol>
+ * <li>user name can not be null</li>
+ * <li>user name length must be between <b>5</b> and <b>20</b> inclusively</li>
+ * </ol>
+ * </p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SSecurityAuthorityEnumConverted
-        implements Converter<String, SRole>,
-                   ConditionalConverter {
+@NotNull(message = "Username can not be null")
+@Length(min = 5, max = 20, message = "Username length must be between 5 and 20")
+//business-logic
+@Target(value = {METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
+@Retention(value = RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+@Constraint(validatedBy = {})
+@ReportAsSingleViolation
+public @interface UserName {
+    String message() default "{org.agatom.springatom.server.service.support.constraints.UserName}";
 
-    public static final String ERR_MSG = "roleName can not be null";
+    Class<?>[] groups() default {};
 
-    @Override
-    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        return sourceType.getType().isAssignableFrom(String.class)
-                && targetType.getType().isAssignableFrom(SRole.class);
-    }
-
-    @Override
-    public SRole convert(final String roleName) {
-        if (roleName != null) {
-
-            final Pattern pattern = Pattern.compile("^ROLE_\\w+$", Pattern.CASE_INSENSITIVE);
-
-            if (pattern.matcher(roleName).matches()) {
-                return SRole.valueOf(roleName);
-            } else {
-                return SRole.valueOf(String.format("ROLE_%s", roleName.toUpperCase()));
-            }
-        }
-        throw new IllegalArgumentException(ERR_MSG);
-    }
+    @Deprecated Class<? extends Payload>[] payload() default {};
 }

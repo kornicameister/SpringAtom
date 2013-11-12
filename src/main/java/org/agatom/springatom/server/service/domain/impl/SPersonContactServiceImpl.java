@@ -15,44 +15,46 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.converters;
+package org.agatom.springatom.server.service.domain.impl;
 
-import org.agatom.springatom.server.model.types.user.SRole;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.converter.ConditionalConverter;
-import org.springframework.core.convert.converter.Converter;
+import org.agatom.springatom.server.model.beans.person.QSPersonContact;
+import org.agatom.springatom.server.model.beans.person.SPersonContact;
+import org.agatom.springatom.server.repository.repositories.person.SPersonContactRepository;
+import org.agatom.springatom.server.service.domain.SPersonContactService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.regex.Pattern;
+import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SSecurityAuthorityEnumConverted
-        implements Converter<String, SRole>,
-                   ConditionalConverter {
 
-    public static final String ERR_MSG = "roleName can not be null";
+@Service(value = SPersonContactServiceImpl.SERVICE_NAME)
+@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
+public class SPersonContactServiceImpl
+        extends SBasicServiceImpl<SPersonContact, Long, SPersonContactRepository>
+        implements SPersonContactService {
+
+    public static final String SERVICE_NAME = "PersonContactService";
+    private SPersonContactRepository repository;
 
     @Override
-    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        return sourceType.getType().isAssignableFrom(String.class)
-                && targetType.getType().isAssignableFrom(SRole.class);
+    public List<SPersonContact> findByAssigned(final long idAssigned) {
+        return (List<SPersonContact>) this.repository
+                .findAll(QSPersonContact.sPersonContact.assigned.id.eq(idAssigned));
     }
 
     @Override
-    public SRole convert(final String roleName) {
-        if (roleName != null) {
-
-            final Pattern pattern = Pattern.compile("^ROLE_\\w+$", Pattern.CASE_INSENSITIVE);
-
-            if (pattern.matcher(roleName).matches()) {
-                return SRole.valueOf(roleName);
-            } else {
-                return SRole.valueOf(String.format("ROLE_%s", roleName.toUpperCase()));
-            }
-        }
-        throw new IllegalArgumentException(ERR_MSG);
+    @Autowired
+    public void autoWireRepository(@Qualifier("SPersonContactRepository") final SPersonContactRepository repo) {
+        super.autoWireRepository(repo);
+        this.repository = repo;
     }
 }

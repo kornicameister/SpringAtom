@@ -15,44 +15,39 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.converters;
+package org.agatom.springatom.server.service.domain;
 
-import org.agatom.springatom.server.model.types.user.SRole;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.converter.ConditionalConverter;
-import org.springframework.core.convert.converter.Converter;
+import org.agatom.springatom.server.model.beans.car.SCar;
+import org.agatom.springatom.server.model.beans.car.SCarMaster;
+import org.agatom.springatom.server.repository.repositories.car.SCarMasterRepository;
+import org.agatom.springatom.server.service.support.constraints.BrandOrModel;
 
-import java.util.regex.Pattern;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SSecurityAuthorityEnumConverted
-        implements Converter<String, SRole>,
-                   ConditionalConverter {
+public interface SCarMasterService
+        extends SBasicService<SCarMaster, Long, SCarMasterRepository> {
 
-    public static final String ERR_MSG = "roleName can not be null";
+    List<SCarMaster> findByBrand(
+            @BrandOrModel
+            final String... brand);
 
-    @Override
-    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        return sourceType.getType().isAssignableFrom(String.class)
-                && targetType.getType().isAssignableFrom(SRole.class);
-    }
+    List<SCarMaster> findByModel(
+            @BrandOrModel
+            final String... model);
 
-    @Override
-    public SRole convert(final String roleName) {
-        if (roleName != null) {
+    SCarMaster findOne(
+            @BrandOrModel
+            final String brand,
+            @BrandOrModel
+            final String model);
 
-            final Pattern pattern = Pattern.compile("^ROLE_\\w+$", Pattern.CASE_INSENSITIVE);
-
-            if (pattern.matcher(roleName).matches()) {
-                return SRole.valueOf(roleName);
-            } else {
-                return SRole.valueOf(String.format("ROLE_%s", roleName.toUpperCase()));
-            }
-        }
-        throw new IllegalArgumentException(ERR_MSG);
-    }
+    List<SCar> findChildren(
+            @NotNull
+            final Long... masterIds);
 }

@@ -42,7 +42,7 @@ import javax.validation.constraints.Past;
 )
 abstract public class SAbstractNotification
         extends PersistentObject<Long>
-implements SNotification<Long> {
+        implements SNotification<Long> {
     public static final String TABLE_NAME  = "notifications";
     public static final String ENTITY_NAME = "SAbstractNotification";
     private static final String DATE_TIME_TYPE   = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";

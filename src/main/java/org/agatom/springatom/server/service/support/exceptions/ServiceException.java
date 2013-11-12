@@ -15,44 +15,42 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.converters;
+package org.agatom.springatom.server.service.support.exceptions;
 
-import org.agatom.springatom.server.model.types.user.SRole;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.converter.ConditionalConverter;
-import org.springframework.core.convert.converter.Converter;
-
-import java.util.regex.Pattern;
+import org.springframework.data.domain.Persistable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SSecurityAuthorityEnumConverted
-        implements Converter<String, SRole>,
-                   ConditionalConverter {
+public class ServiceException
+        extends Exception {
+    private static final String MSG_PATTERN      = "For target=%s exception occurred\nmsg=%s";
+    private static final String MSG_PATTERN_2    = "For target=%s exception occurred";
+    private static final long   serialVersionUID = 5939562098957474953L;
 
-    public static final String ERR_MSG = "roleName can not be null";
-
-    @Override
-    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        return sourceType.getType().isAssignableFrom(String.class)
-                && targetType.getType().isAssignableFrom(SRole.class);
+    public ServiceException(final Class<? extends Persistable> target,
+                            final String message) {
+        super(String.format(MSG_PATTERN, target, message));
     }
 
-    @Override
-    public SRole convert(final String roleName) {
-        if (roleName != null) {
+    public ServiceException(final Class<? extends Persistable> target,
+                            final String message,
+                            final Throwable cause) {
+        super(String.format(MSG_PATTERN, target, message), cause);
+    }
 
-            final Pattern pattern = Pattern.compile("^ROLE_\\w+$", Pattern.CASE_INSENSITIVE);
+    public ServiceException(final Class<? extends Persistable> target,
+                            final Throwable cause) {
+        super(String.format(MSG_PATTERN_2, target), cause);
+    }
 
-            if (pattern.matcher(roleName).matches()) {
-                return SRole.valueOf(roleName);
-            } else {
-                return SRole.valueOf(String.format("ROLE_%s", roleName.toUpperCase()));
-            }
-        }
-        throw new IllegalArgumentException(ERR_MSG);
+    public ServiceException(final Class<? extends Persistable> target,
+                            final String message,
+                            final Throwable cause,
+                            final boolean enableSuppression,
+                            final boolean writableStackTrace) {
+        super(String.format(MSG_PATTERN, target, message), cause, enableSuppression, writableStackTrace);
     }
 }

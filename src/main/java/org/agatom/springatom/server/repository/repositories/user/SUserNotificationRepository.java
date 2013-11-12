@@ -15,44 +15,21 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.converters;
+package org.agatom.springatom.server.repository.repositories.user;
 
-import org.agatom.springatom.server.model.types.user.SRole;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.converter.ConditionalConverter;
-import org.springframework.core.convert.converter.Converter;
-
-import java.util.regex.Pattern;
+import org.agatom.springatom.server.model.beans.user.notification.SUserNotification;
+import org.agatom.springatom.server.repository.SBasicRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.repository.RepositoryDefinition;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SSecurityAuthorityEnumConverted
-        implements Converter<String, SRole>,
-                   ConditionalConverter {
-
-    public static final String ERR_MSG = "roleName can not be null";
-
-    @Override
-    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        return sourceType.getType().isAssignableFrom(String.class)
-                && targetType.getType().isAssignableFrom(SRole.class);
-    }
-
-    @Override
-    public SRole convert(final String roleName) {
-        if (roleName != null) {
-
-            final Pattern pattern = Pattern.compile("^ROLE_\\w+$", Pattern.CASE_INSENSITIVE);
-
-            if (pattern.matcher(roleName).matches()) {
-                return SRole.valueOf(roleName);
-            } else {
-                return SRole.valueOf(String.format("ROLE_%s", roleName.toUpperCase()));
-            }
-        }
-        throw new IllegalArgumentException(ERR_MSG);
-    }
+@Qualifier(value = SUserNotificationRepository.REPO_NAME)
+@RepositoryDefinition(domainClass = SUserNotification.class, idClass = Long.class)
+public interface SUserNotificationRepository
+        extends SBasicRepository<SUserNotification, Long> {
+    String REPO_NAME = "UserNotificationsRepo";
 }

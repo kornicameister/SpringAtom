@@ -15,44 +15,56 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.converters;
+package org.agatom.springatom.server.service.support.constraints;
 
-import org.agatom.springatom.server.model.types.user.SRole;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.converter.ConditionalConverter;
-import org.springframework.core.convert.converter.Converter;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
-import java.util.regex.Pattern;
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import javax.validation.ReportAsSingleViolation;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.lang.annotation.*;
+
+import static java.lang.annotation.ElementType.*;
 
 /**
+ * {@code LicencePlatePL} is the annotation used to validate any {@code String} againts being
+ * validate value for licence plates in <b>Poland</b>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SSecurityAuthorityEnumConverted
-        implements Converter<String, SRole>,
-                   ConditionalConverter {
 
-    public static final String ERR_MSG = "roleName can not be null";
+//business-logic
+@NotNull
+@NotEmpty
+@Length(
+        min = 4,
+        max = 16,
+        message = "Invalid phone number length"
+)
+@Pattern(
+        regexp = "^(\\+\\(?\\d{1,2}\\)?\\s)?" +         //area code
+                "((\\d{7,9})|" +                        //no whitespaces, no dashes
+                "((\\d{3}(-|\\s)){2}\\d{3})|" +         //home number
+                "(\\d{3}(-|\\s)\\d{2}(-|\\s)\\d{2}))$", //cell phone number
+        flags = Pattern.Flag.CASE_INSENSITIVE,
+        message = "Invalid phone number format"
+)
+//business-logic
+@Target(value = {METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
+@Retention(value = RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+@Constraint(validatedBy = {})
+@ReportAsSingleViolation
+public @interface PhoneNumber {
+    String message() default "{org.agatom.springatom.server.service.support.constraints.PhoneNumber}";
 
-    @Override
-    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        return sourceType.getType().isAssignableFrom(String.class)
-                && targetType.getType().isAssignableFrom(SRole.class);
-    }
+    Class<?>[] groups() default {};
 
-    @Override
-    public SRole convert(final String roleName) {
-        if (roleName != null) {
-
-            final Pattern pattern = Pattern.compile("^ROLE_\\w+$", Pattern.CASE_INSENSITIVE);
-
-            if (pattern.matcher(roleName).matches()) {
-                return SRole.valueOf(roleName);
-            } else {
-                return SRole.valueOf(String.format("ROLE_%s", roleName.toUpperCase()));
-            }
-        }
-        throw new IllegalArgumentException(ERR_MSG);
-    }
+    @Deprecated Class<? extends Payload>[] payload() default {};
 }

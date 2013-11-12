@@ -15,44 +15,42 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.converters;
+package org.agatom.springatom.server.service.domain;
 
-import org.agatom.springatom.server.model.types.user.SRole;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.converter.ConditionalConverter;
-import org.springframework.core.convert.converter.Converter;
+import org.agatom.springatom.server.model.beans.person.SPerson;
+import org.agatom.springatom.server.model.types.contact.SContact;
+import org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.regex.Pattern;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SSecurityAuthorityEnumConverted
-        implements Converter<String, SRole>,
-                   ConditionalConverter {
+public interface SPersonService<T extends SPerson, R extends JpaRepository>
+        extends SService<T, Long, Integer, R> {
 
-    public static final String ERR_MSG = "roleName can not be null";
+    SContact newContactData(
+            @NotNull
+            final String contact,
+            final long assignTo,
+            @NotNull
+            final SContact assignToContact) throws EntityDoesNotExistsServiceException;
 
-    @Override
-    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        return sourceType.getType().isAssignableFrom(String.class)
-                && targetType.getType().isAssignableFrom(SRole.class);
-    }
+    <X extends SContact> List<X> findAllContacts(final Long idClient);
 
-    @Override
-    public SRole convert(final String roleName) {
-        if (roleName != null) {
+    List<T> findByFirstName(
+            @NotNull
+            final String firstName);
 
-            final Pattern pattern = Pattern.compile("^ROLE_\\w+$", Pattern.CASE_INSENSITIVE);
+    List<T> findByLastName(
+            @NotNull
+            final String lastName);
 
-            if (pattern.matcher(roleName).matches()) {
-                return SRole.valueOf(roleName);
-            } else {
-                return SRole.valueOf(String.format("ROLE_%s", roleName.toUpperCase()));
-            }
-        }
-        throw new IllegalArgumentException(ERR_MSG);
-    }
+    T findByEmail(
+            @NotNull
+            final String email);
 }

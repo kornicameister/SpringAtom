@@ -19,9 +19,10 @@ package org.agatom.springatom.server.auditing;
 
 import org.agatom.springatom.server.model.beans.user.QSUser;
 import org.agatom.springatom.server.model.beans.user.SUser;
-import org.agatom.springatom.server.repository.repositories.SUserRepository;
+import org.agatom.springatom.server.repository.repositories.user.SUserRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.data.domain.AuditorAware;
@@ -38,6 +39,7 @@ public class SpringSecurityAuditorAware
                    ApplicationListener<ContextRefreshedEvent> {
     private static final Logger LOGGER = getLogger(SpringSecurityAuditorAware.class);
     @Autowired
+    @Qualifier(value = "UserRepo")
     SUserRepository repository;
     private SUser systemUser;
 
