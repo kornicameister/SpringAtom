@@ -17,9 +17,11 @@
 
 package org.agatom.springatom;
 
-import org.agatom.springatom.server.model.beans.person.client.SClient;
-import org.agatom.springatom.server.model.beans.person.embeddable.SPersonalInformation;
-import org.agatom.springatom.server.service.SClientService;
+
+import org.agatom.springatom.server.model.beans.person.SPerson;
+import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.service.domain.SPersonService;
+import org.agatom.springatom.server.service.domain.SUserService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +33,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 abstract public class AbstractTestCaseWithClient
         extends AbstractSpringTestCase {
-    protected static SClient        C_1;
-    protected static SClient        C_2;
+    protected static SUser C_1;
+    protected static SUser C_2;
     @Autowired
-    protected        SClientService clientService;
+    protected        SUserService   userService;
+    @Autowired
+    protected        SPersonService personService;
 
     @Before
     @Override
@@ -44,30 +48,34 @@ abstract public class AbstractTestCaseWithClient
             return;
         }
         {
-            SPersonalInformation personalInformation = new SPersonalInformation();
-            personalInformation.setFirstName("Tomasz");
-            personalInformation.setLastName("Trębski");
+            SPerson person = new SPerson();
+            person.setFirstName("Tomasz");
+            person.setLastName("Trębski");
+            person.setPrimaryMail("kornicameister@gmail.com");
 
-            SClient client = new SClient();
-            client.setInformation(personalInformation);
-            client.setPrimaryMail("kornicameister@gmail.com");
+            SUser client = new SUser();
+            client.setPerson(person);
+            client.setUserName("kornicameister");
+            client.setPassword("a");
 
-            SClient newClient = this.clientService.save(client);
+            SUser newClient = this.userService.save(client);
 
             Assert.assertNotNull("newClient is null", newClient);
             Assert.assertNotNull("newClient#id is null", newClient.getId());
             AbstractCarTestCase.C_1 = newClient;
         }
         {
-            SPersonalInformation personalInformation = new SPersonalInformation();
-            personalInformation.setFirstName("Maja");
-            personalInformation.setLastName("Staszczyk");
+            SPerson person = new SPerson();
+            person.setFirstName("Maja");
+            person.setLastName("Staszczyk");
+            person.setPrimaryMail("m2311007@gmail.com");
 
-            SClient client = new SClient();
-            client.setInformation(personalInformation);
-            client.setPrimaryMail("m2311007@gmail.com");
+            SUser client = new SUser();
+            client.setPerson(person);
+            client.setUserName("m2311007");
+            client.setPassword("b");
 
-            SClient newClient = this.clientService.save(client);
+            SUser newClient = this.userService.save(client);
 
             Assert.assertNotNull("newClient is null", newClient);
             Assert.assertNotNull("newClient#id is null", newClient.getId());

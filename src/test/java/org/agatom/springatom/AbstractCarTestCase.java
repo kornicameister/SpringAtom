@@ -18,14 +18,15 @@
 package org.agatom.springatom;
 
 import org.agatom.springatom.server.model.beans.car.SCar;
-import org.agatom.springatom.server.service.SCarMasterService;
-import org.agatom.springatom.server.service.SCarService;
+import org.agatom.springatom.server.service.domain.SCarMasterService;
+import org.agatom.springatom.server.service.domain.SCarService;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * @author kornicameister

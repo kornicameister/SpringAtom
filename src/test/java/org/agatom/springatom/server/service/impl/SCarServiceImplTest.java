@@ -20,7 +20,7 @@ package org.agatom.springatom.server.service.impl;
 import org.agatom.springatom.AbstractCarTestCase;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.car.SCarMaster;
-import org.agatom.springatom.server.service.SCarService;
+import org.agatom.springatom.server.service.domain.SCarService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;

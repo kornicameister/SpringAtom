@@ -20,6 +20,7 @@ package org.agatom.springatom;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Persistable;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,7 +33,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.Resource;
 import java.util.Collection;
 
 /**
@@ -42,7 +42,10 @@ import java.util.Collection;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("file:/WEB-INF/springatom-application-web.xml")
+@ContextConfiguration(locations = {
+        "classpath:springatom-application-root.xml",
+        "classpath:springatom-application-web.xml"
+})
 public abstract class AbstractSpringTestCase
         extends ReflectionTestUtils {
 
@@ -50,7 +53,8 @@ public abstract class AbstractSpringTestCase
     @Autowired
     protected WebApplicationContext wac;
     protected MockMvc               mockMvc;
-    @Resource
+    @Autowired
+    @Qualifier("security-filter")
     private   FilterChainProxy      springSecurityFilterChain;
 
     @Before

@@ -25,12 +25,12 @@
 	         http://www.springframework.org/schema/security/spring-security.xsd">
 
     <!-- static content is not secured -->
-    <http pattern="/static/*" security="none"/>
-    <http pattern="/tiles/*" security="none"/>
-    <http pattern="/data/*" security="none"/>
+    <http name="static-no-security-filter" pattern="/static/*" security="none"/>
+    <http name="tiles-no-security-filter" pattern="/tiles/*" security="none"/>
+    <http name="data-no-security-filter" pattern="/data/*" security="none"/>
     <!-- static content -->
 
-    <http pattern="/**" auto-config="true" use-expressions="true" access-denied-page="/app/auth/access/denied">
+    <http name="security-filter" pattern="/**" auto-config="true" use-expressions="true" access-denied-page="/app/auth/access/denied">
         <intercept-url pattern="/app*" access="permitAll()"/>
         <!--<intercept-url pattern="/app/admin*" access="hasRole('ROLE_ADMIN')"/>-->
         <!--<intercept-url pattern="/app/secured*" access="hasAnyRole('ROLE_ADMIN','ROLE_MECHANIC')"/>-->

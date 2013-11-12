@@ -47,7 +47,7 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class SPersonServiceImpl
         extends SServiceImpl<SPerson, Long, Integer, SPersonRepository>
-        implements SPersonService<SPerson, SPersonRepository> {
+        implements SPersonService {
     @Autowired
     @Qualifier("PersonContactService")
     SPersonContactService personContactService;
@@ -83,8 +83,8 @@ public class SPersonServiceImpl
 
     @Override
     @CacheEvict(value = "clients", key = "#idClient", beforeInvocation = true)
-    public <X extends SContact> List<X> findAllContacts(final Long idClient) {
-        return (List<X>) this.personContactService.findByAssigned(idClient);
+    public List<SPersonContact> findAllContacts(final Long idClient) {
+        return this.personContactService.findByAssigned(idClient);
     }
 
     @Override

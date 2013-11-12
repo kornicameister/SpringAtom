@@ -18,9 +18,10 @@
 package org.agatom.springatom.server.service.domain;
 
 import org.agatom.springatom.server.model.beans.person.SPerson;
+import org.agatom.springatom.server.model.beans.person.SPersonContact;
 import org.agatom.springatom.server.model.types.contact.SContact;
+import org.agatom.springatom.server.repository.repositories.person.SPersonRepository;
 import org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -30,8 +31,8 @@ import java.util.List;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SPersonService<T extends SPerson, R extends JpaRepository>
-        extends SService<T, Long, Integer, R> {
+public interface SPersonService
+        extends SService<SPerson, Long, Integer, SPersonRepository> {
 
     SContact newContactData(
             @NotNull
@@ -40,17 +41,17 @@ public interface SPersonService<T extends SPerson, R extends JpaRepository>
             @NotNull
             final SContact assignToContact) throws EntityDoesNotExistsServiceException;
 
-    <X extends SContact> List<X> findAllContacts(final Long idClient);
+    List<SPersonContact> findAllContacts(final Long idClient);
 
-    List<T> findByFirstName(
+    List<SPerson> findByFirstName(
             @NotNull
             final String firstName);
 
-    List<T> findByLastName(
+    List<SPerson> findByLastName(
             @NotNull
             final String lastName);
 
-    T findByEmail(
+    SPerson findByEmail(
             @NotNull
             final String email);
 }
