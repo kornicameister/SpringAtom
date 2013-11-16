@@ -65,7 +65,6 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 @Service(value = "SAppointmentService")
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
-@SuppressWarnings("SpringJavaAutowiringInspection")
 public class SAppointmentServiceImpl
         extends SBasicServiceImpl<SAppointment, Long, SAppointmentRepository>
         implements SAppointmentService {
@@ -85,7 +84,7 @@ public class SAppointmentServiceImpl
 
     @Override
     @Autowired
-    public void autoWireRepository(final SAppointmentRepository repo) {
+    public void autoWireRepository(@Qualifier("AppointmentsRepository") final SAppointmentRepository repo) {
         super.autoWireRepository(repo);
         this.repository = repo;
     }

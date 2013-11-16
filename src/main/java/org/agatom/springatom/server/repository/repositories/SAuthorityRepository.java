@@ -19,6 +19,7 @@ package org.agatom.springatom.server.repository.repositories;
 
 import org.agatom.springatom.server.model.beans.user.authority.SAuthority;
 import org.agatom.springatom.server.repository.SBasicRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.RepositoryDefinition;
 
 /**
@@ -26,7 +27,9 @@ import org.springframework.data.repository.RepositoryDefinition;
  * @version 0.0.1
  * @since 0.0.1
  */
+@Qualifier(value = SAuthorityRepository.REPO_NAME)
 @RepositoryDefinition(domainClass = SAuthority.class, idClass = Long.class)
 public interface SAuthorityRepository
         extends SBasicRepository<SAuthority, Long> {
+    String REPO_NAME = "AuthorityRepo";
 }

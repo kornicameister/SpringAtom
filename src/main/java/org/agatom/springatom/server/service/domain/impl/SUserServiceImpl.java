@@ -40,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 0.0.1
  */
 @Service(value = SUserServiceImpl.SERVICE_NAME)
-@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
+@Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
 public class SUserServiceImpl
         extends SServiceImpl<SUser, Long, Integer, SUserRepository>
         implements SUserService {

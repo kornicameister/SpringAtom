@@ -50,12 +50,13 @@ import java.util.List;
  * @since 0.0.1
  */
 
-@Service(value = "SCarService")
+@Service(value = SCarServiceImpl.SERVICE_NAME)
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SCarServiceImpl
         extends SServiceImpl<SCar, Long, Integer, SCarRepository>
         implements SCarService {
-    private static final Logger LOGGER = Logger.getLogger(SCarServiceImpl.class);
+    public static final  String SERVICE_NAME = "SCarService";
+    private static final Logger LOGGER       = Logger.getLogger(SCarServiceImpl.class);
     @Autowired
     @Qualifier("CarMasterRepository")
     SCarMasterRepository masterService;

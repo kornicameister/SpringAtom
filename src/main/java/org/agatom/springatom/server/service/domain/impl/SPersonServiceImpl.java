@@ -42,12 +42,13 @@ import java.util.List;
  * @since 0.0.1
  */
 
-@Service(value = "SPersonService")
+@Service(value = SPersonServiceImpl.SERVICE_NAME)
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 @SuppressWarnings("unchecked")
 public class SPersonServiceImpl
         extends SServiceImpl<SPerson, Long, Integer, SPersonRepository>
         implements SPersonService {
+    public static final String SERVICE_NAME = "SPersonService";
     @Autowired
     @Qualifier("PersonContactService")
     SPersonContactService personContactService;

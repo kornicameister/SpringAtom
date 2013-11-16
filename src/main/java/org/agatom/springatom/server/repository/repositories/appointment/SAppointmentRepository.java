@@ -19,6 +19,7 @@ package org.agatom.springatom.server.repository.repositories.appointment;
 
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.server.repository.SBasicRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.RepositoryDefinition;
 
 /**
@@ -30,7 +31,9 @@ import org.springframework.data.repository.RepositoryDefinition;
  * @since 0.0.1
  */
 
+@Qualifier(value = SAppointmentRepository.REPO_NAME)
 @RepositoryDefinition(domainClass = SAppointment.class, idClass = Long.class)
 public interface SAppointmentRepository
         extends SBasicRepository<SAppointment, Long> {
+    String REPO_NAME = "AppointmentsRepository";
 }

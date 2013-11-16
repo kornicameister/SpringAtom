@@ -40,11 +40,12 @@ import java.util.List;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Service
+@Service(value = SCarMasterServiceImpl.SERVICE_NAME)
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SCarMasterServiceImpl
         extends SBasicServiceImpl<SCarMaster, Long, SCarMasterRepository>
         implements SCarMasterService {
+    public static final String SERVICE_NAME = "CarMasterService";
     @Autowired
     @Qualifier("CarRepository")
     private SCarRepository       carRepository;
