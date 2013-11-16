@@ -20,6 +20,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
 <div id="sa-wizard-step-body" class="content">
     <h2 class="stepTitle">
@@ -30,7 +31,7 @@
     <form:form id="${requestScope.formID}"
                action="${flowExecutionUrl}"
                commandName="appointment"
-               method="post"
+               method="<%=RequestMethod.POST.toString().toLowerCase()%>"
                title="${title}"
                cssClass="x-form">
         <fieldset>
@@ -38,16 +39,16 @@
             <p>
                 <label class="x-form-label" title="<s:message code="wizard.newAppointment.tf.begin.label"/>">
                     <span><s:message code="wizard.newAppointment.tf.begin.label"/></span>
-                    <input class="x-input" id="begin-date" name="begin-date" type="date" autofocus required>
-                    <input class="x-input" id="begin-time" name="begin-time" type="time" required>
+                    <form:input id="${requestScope.formID}-begin-date" htmlEscape="true" cssClass="x-input" type="date" path="beginDate"/>
+                    <form:input id="${requestScope.formID}-begin-time" htmlEscape="true" cssClass="x-input" type="time" path="beginTime"/>
                 </label>
             </p>
 
             <p>
                 <label class="x-form-label" title="<s:message code="wizard.newAppointment.tf.end.label"/>">
                     <span><s:message code="wizard.newAppointment.tf.end.label"/></span>
-                    <input class="x-input" id="end-date" name="end-date" type="date" required>
-                    <input class="x-input" id="end-time" name="end-time" type="time" required>
+                    <form:input id="${requestScope.formID}-end-date" htmlEscape="true" cssClass="x-input" type="date" path="endDate"/>
+                    <form:input id="${requestScope.formID}-end-time" htmlEscape="true" cssClass="x-input" type="time" path="endTime"/>
                 </label>
             </p>
         </fieldset>
@@ -56,33 +57,28 @@
             <p>
                 <label class="x-form-label" title="<s:message code="wizard.newAppointment.tt.reporter.label"/>">
                     <span><s:message code="wizard.newAppointment.tt.reporter.label"/></span>
-                    <security:authorize access="isFullyAuthenticated()" var="isAuthenticated"/>
-                    <security:authorize access="hasRole('ROLE_BOSS')" var="isBoss"/>
-                    <c:if test="${isAuthenticated}">
-                        <c:choose>
-                            <c:when test="${isBoss}">
-                                <input name="reporter" class="x-input x-input-select"
-                                       placeholder="<s:message code="wizard.newAppointment.tt.reporter.placeholder"/>"
-                                       required/>
-                            </c:when>
-                            <c:otherwise>
-                                <security:authentication property="principal.person.information" var="ppi"/>
-                                <s:bind path="${ppi}" htmlEscape="true">
-                                    <input name="reporter"
-                                           class="x-input x-input-readonly"
-                                           value="<s:transform value="${status.value}"/>" readonly>
-                                </s:bind>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:if>
+                    <form:select id="${requestScope.formID}-repoter"
+                                 htmlEscape="true"
+                                 cssClass="x-input x-input-select"
+                                 items="${requestScope.reporters}"
+                                 itemLabel="person.identity"
+                                 itemValue="id"
+                                 path="reporter"/>
                 </label>
             </p>
 
             <p>
                 <label class="x-form-label" title="<s:message code="wizard.newAppointment.tt.assignee.label"/>">
                     <span><s:message code="wizard.newAppointment.tt.assignee.label"/></span>
-                    <input name="assignee" class="x-input x-input-select"
-                           placeholder="<s:message code="wizard.newAppointment.tt.assignee.placeholder"/>" required/>
+                    <s:message code="wizard.newAppointment.tt.assignee.placeholder" var="assigneePlaceholder"/>
+                    <form:select id="${requestScope.formID}-assignee"
+                                 htmlEscape="true"
+                                 cssClass="x-input x-input-select"
+                                 items="${requestScope.assignees}"
+                                 placeholder="${assigneePlaceholder}"
+                                 itemLabel="person.identity"
+                                 itemValue="id"
+                                 path="assignee"/>
                 </label>
 
             </p>
@@ -90,10 +86,28 @@
             <p>
                 <label class="x-form-label" title="<s:message code="wizard.newAppointment.tt.car.label"/>">
                     <span><s:message code="wizard.newAppointment.tt.car.label"/></span>
-                    <input name="car" class="x-input x-input-select"
-                           placeholder="<s:message code="wizard.newAppointment.tt.car.placeholder"/>" required/>
+                    <s:message code="wizard.newAppointment.tt.car.placeholder" var="carPlaceholder"/>
+                    <form:select id="${requestScope.formID}-car"
+                                 htmlEscape="true"
+                                 cssClass="x-input x-input-select"
+                                 items="${requestScope.cars}"
+                                 placeholder="${carPlaceholder}"
+                                 itemLabel="licencePlate"
+                                 itemValue="id"
+                                 path="car"/>
                 </label>
             </p>
         </fieldset>
+        <div id="error-box" style="visibility: hidden">
+            <form:errors path="*" element="span" htmlEscape="true" cssClass="error-entry"/>
+        </div>
     </form:form>
 </div>
+<script type="text/javascript">
+    $(function () {
+        var box = $('#error-box');
+        if (box.has('.error-entry')) {
+            SA.core.showError(box.children());
+        }
+    })
+</script>

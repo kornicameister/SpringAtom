@@ -24,34 +24,76 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow.xsd">
 
-    <var name="wizard" class="org.agatom.springatom.webmvc.wizard.SVAppointmentWizard"/>
 
     <on-start>
-        <evaluate expression="wizard.id" result="flowScope.wizardID"/>
-        <evaluate expression="'wizard.form.NewAppointment'" result="flowScope.formID"/>
+        <evaluate expression="'NewAppointmentWizard'" result="flowScope.wizardID"/>
+        <evaluate expression="'NewAppointmentWizardForm'" result="flowScope.formID"/>
     </on-start>
 
     <view-state id="step1" view="ui.wizard.NewAppointment.1" model="appointment" popup="true">
+        <binder>
+            <binding property="car" required="true"/>
+            <binding property="assignee" required="true"/>
+            <binding property="reporter" required="true"/>
+            <binding property="beginDate" required="true"/>
+            <binding property="beginTime" required="true"/>
+            <binding property="endDate" required="true"/>
+            <binding property="endTime" required="true"/>
+        </binder>
         <on-entry>
-            <evaluate expression="wizard.appointmentDTO" result="flowScope.appointment"/>
-            <evaluate expression="SCarService.findAll" result="viewScope.cars"/>
+            <evaluate expression="SAppointmentFormService.getNewAppointment(false)"
+                      result="flowScope.appointment"
+                      result-type="org.agatom.springatom.server.model.beans.appointment.SAppointment"/>
+            <evaluate expression="SAppointmentFormService.cars" result="viewScope.cars"/>
+            <evaluate expression="SAppointmentFormService.assignees" result="viewScope.assignees"/>
+            <evaluate expression="SAppointmentFormService.reporters" result="viewScope.reporters"/>
         </on-entry>
-        <transition on="next" to="step2"/>
-        <transition on="cancel" to="cancel" history="invalidate"/>
+        <transition on="next" to="step2" validate="false"/>
+        <transition on="cancel" to="cancel" history="invalidate" bind="false"/>
     </view-state>
 
-    <view-state id="step2" view="ui.wizard.NewAppointment.2" popup="true">
+    <view-state id="step2" view="ui.wizard.NewAppointment.2" model="newTask" popup="true">
+        <binder>
+            <binding property="task" required="false"/>
+            <binding property="type" required="true"/>
+        </binder>
+        <on-entry>
+            <evaluate expression="SAppointmentFormService.newTask"
+                      result="flowScope.newTask"
+                      result-type="org.agatom.springatom.server.model.beans.appointment.SAppointmentTask"/>
+            <evaluate expression="appointment.tasks"
+                      result="viewScope.tasks"/>
+        </on-entry>
+        <transition on="addTask" to="step2">
+            <evaluate expression="SAppointmentFormService.addNewTask(flowScope.appointment, newTask)"/>
+        </transition>
+        <transition on="removeTask" to="step2" bind="false">
+            <evaluate expression="SAppointmentFormService.removeTask(flowScope.appointment, currentEvent.attributes.getString('rtai'))"/>
+        </transition>
         <transition on="previous" to="step1"/>
-        <transition on="next" to="step3"/>
+        <transition on="next" to="step3">
+            <evaluate expression="SAppointmentFormService.addNewTask(flowScope.appointment, newTask)"/>
+        </transition>
         <transition on="cancel" to="cancel" history="invalidate"/>
     </view-state>
 
     <view-state id="step3" view="ui.wizard.NewAppointment.3" popup="true">
-        <transition on="finish" to="success" history="invalidate"/>
+        <on-entry>
+            <evaluate expression="flowScope.appointment"
+                      result="viewScope.finalResultAppointment"
+                      result-type="org.agatom.springatom.server.model.beans.appointment.SAppointment"/>
+        </on-entry>
+        <transition on="finish" to="success" history="invalidate">
+            <evaluate expression="SAppointmentService.save(flowScope.appointment)"
+                      result="flowScope.appointment"
+                      result-type="org.agatom.springatom.server.model.beans.appointment.SAppointment"/>
+        </transition>
         <transition on="cancel" to="cancel" history="invalidate"/>
     </view-state>
 
-    <end-state id="success" commit="true" view="springatom.tiles.dashboard.calendar"/>
-    <end-state id="cancel" view="springatom.tiles.dashboard.calendar"/>
+    <end-state id="success"
+               view="externalRedirect:/app/dashboard/calendar?action=#{currentEvent.id}&amp;eventId=#{appointment.id}&amp;eventBegin=#{appointment.begin}&amp;eventEnd=#{appointment.end}"/>
+    <end-state id="cancel"
+               view="externalRedirect:/app/dashboard/calendar?action=#{currentEvent.id}"/>
 
 </flow>

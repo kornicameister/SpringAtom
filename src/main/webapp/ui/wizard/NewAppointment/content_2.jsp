@@ -19,6 +19,9 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ page import="org.agatom.springatom.server.model.types.appointment.AppointmentTaskType" %>
+<%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
 <div id="sa-wizard-step-body" class="content">
     <h2 class="stepTitle">
@@ -26,34 +29,83 @@
         <s:message code="wizard.step.title" arguments="${title},2" argumentSeparator=","/>
     </h2>
 
-    <form id="${requestScope.formID}" action="${flowExecutionUrl}" class="x-form">
+    <form:form id="${requestScope.formID}"
+               action="${flowExecutionUrl}"
+               modelAttribute="newTask"
+               method="<%=RequestMethod.POST.toString().toLowerCase()%>"
+               title="${title}"
+               cssClass="x-form">
         <fieldset>
             <legend><s:message code="wizard.newAppointment.tl.label"/></legend>
             <div class="x-multiple-input">
                 <div class="x-inputs">
-                    <ul>
-                        <li id="1" data-role="task">
-                            <input name="type"
-                                   type="text"
-                                   placeholder="<s:message code="wizard.newAppointment.tl.taskType.placeholder"/>"
-                                   list="tasks"
-                                   class="x-input x-input-select"
-                                   required>
-                            <input name="task"
-                                   type="text"
-                                   placeholder="<s:message code="wizard.newAppointment.tl.taskDesc.placeholder"/>"
-                                   class="x-input x-input-text">
-                            <a href="#" data-role="mv-add" class="x-button x-button-add">
+                    <ul id="tasks-container">
+                        <s:message code="wizard.newAppointment.tl.taskType.placeholder" var="placeholder"/>
+                        <li id="0" data-role="task">
+                            <form:select id="${requestScope.formID}-type"
+                                         items="<%= AppointmentTaskType.values()%>"
+                                         placeholder="${placeholder}"
+                                         cssClass="x-input x-input-select"
+                                         path="type"/>
+                            <form:textarea id="${requestScope.formID}-task"
+                                           htmlEscape="true"
+                                           cssClass="x-input"
+                                           cols="15"
+                                           rows="1"
+                                           path="task"/>
+                            <button id="form-add-row" name="_eventId_addTask" type="submit" data-role="mv-add" class="x-button x-button-add">
                                 <i class="icon-plus icon-color-black"></i>
-                            </a>
-                            <a href="#" data-ajax="mv-remove" class="x-button x-button-remove">
-                                <i class="icon-minus icon-color-black"></i>
-                            </a>
+                            </button>
                         </li>
+                        <c:forEach items="${requestScope.tasks}" var="task" varStatus="it" begin="0" step="1">
+                            <li id="${it.index+1}">
+                                <input type="text" value="${task.type}" id="${it.current}-type" readonly/>
+                                <textarea id="${it.current}-task" cols="15" rows="1" readonly>${task.task}</textarea>
+                                <button id="form-remove-row-${it.index}" name="_eventId_removeTask" type="submit" data-role="mv-add"
+                                        class="x-button x-button-remove">
+                                    <i class="icon-minus icon-color-black"></i>
+                                </button>
+                                <script type="text/javascript" id="mv-remove-script">
+                                    Spring.addDecoration(new Spring.AjaxEventDecoration({
+                                        elementId: 'form-remove-row-${it.index}',
+                                        event    : 'onclick',
+                                        formId   : '${requestScope.formID}',
+                                        popup    : true,
+                                        params   : {
+                                            fragments: 'wiz.content',
+                                            mode     : "embedded",
+                                            rtai     : '${it.index}'
+                                        }
+                                    }));
+                                </script>
+                            </li>
+                        </c:forEach>
                     </ul>
+                    <script type="text/javascript" id="mv-add-flow-script">
+                        Spring.addDecoration(new Spring.AjaxEventDecoration({
+                            elementId: 'form-add-row',
+                            event    : 'onclick',
+                            formId   : '${requestScope.formID}',
+                            popup    : true,
+                            params   : {
+                                fragments: 'wiz.content',
+                                mode     : "embedded"
+                            }
+                        }));
+                    </script>
                 </div>
             </div>
-            <datalist id="tasks"></datalist>
         </fieldset>
-    </form>
+        <div id="error-box" style="visibility: hidden">
+            <form:errors path="*" element="span" htmlEscape="true" cssClass="error-entry"/>
+        </div>
+    </form:form>
 </div>
+<script type="text/javascript">
+    $(function () {
+        var box = $('#error-box');
+        if (box.has('.error-entry')) {
+            SA.core.showError(box.children());
+        }
+    })
+</script>

@@ -15,22 +15,39 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.wizard;
+package org.agatom.springatom.server.service.form;
 
-import org.agatom.springatom.server.model.dto.appointment.SAppointmentDTO;
-import org.agatom.springatom.web.wizard.SVDefaultWizard;
+import org.agatom.springatom.server.model.beans.appointment.SAppointment;
+import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
+import org.agatom.springatom.server.model.beans.car.SCar;
+import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.service.support.exceptions.ServiceException;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.webflow.execution.Event;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+public interface SAppointmentWizardService {
+    @NotEmpty List<SUser> getReporters() throws ServiceException;
 
-public class SVAppointmentWizard
-        extends SVDefaultWizard {
-    private static final long serialVersionUID = -4593317700429293435L;
+    @NotEmpty List<SUser> getAssignees() throws ServiceException;
 
-    public SAppointmentDTO getAppointmentDTO() {
-        return new SAppointmentDTO();
-    }
+    @NotEmpty List<SCar> getCars();
+
+    @NotNull SAppointment getNewAppointment(final boolean withTasks);
+
+    @NotNull SAppointment getNewAppointment(@Min(value = 0) final int taskCounts);
+
+    @NotNull Event addNewTask(@NotNull final SAppointment appointment, final Event event);
+
+    @NotNull Event addNewTask(@NotNull final SAppointment appointment, @NotNull SAppointmentTask task);
+
+    @NotNull SAppointment removeTask(@NotNull final SAppointment appointment, final String position);
 }

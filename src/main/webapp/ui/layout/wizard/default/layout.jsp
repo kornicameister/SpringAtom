@@ -43,7 +43,7 @@
     <div class="x-clear"></div>
 </div>
 <script type="text/javascript">
-    var el = ['${nextAction}', '${cancelAction}', '${finishAction}', '${previousAction}'];
+    var el = ['${nextAction}', '${previousAction}'];
     $.each(el, function (index, val) {
         Spring.addDecoration(new Spring.AjaxEventDecoration({
             elementId: val,
@@ -56,4 +56,14 @@
             }
         }));
     });
+    Spring.addDecoration(new Spring.AjaxEventDecoration({
+        elementId: '${cancelAction}',
+        event    : 'onclick',
+        formId   : '${formID}'
+    }));
+    Spring.addDecoration(new Spring.AjaxEventDecoration({
+        elementId: '${finishAction}',
+        event    : 'onclick',
+        formId   : '${formID}'
+    }));
 </script>
