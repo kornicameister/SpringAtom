@@ -66,15 +66,15 @@
 }
 
 .x-button-add {
-    background : #30BA4D;
+    background : #59A1BA;
 }
 
 .x-button-add:hover {
-    background : #0AA82A;
+    background : #4B6EA8;
 }
 
 .x-button-add:active {
-    background : #008002;
+    background : #00FBFF;
 }
 
 .x-button-remove {
