@@ -81,6 +81,10 @@ public class SPerson
         this.lastName = lastName;
     }
 
+    public String getIdentity() {
+        return String.format("%s %s", this.firstName, this.lastName);
+    }
+
     @Override
     public List<SContact> getContacts() {
         return ImmutableList.copyOf(this.contacts);

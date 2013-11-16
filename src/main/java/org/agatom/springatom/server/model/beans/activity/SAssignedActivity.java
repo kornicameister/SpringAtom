@@ -50,6 +50,9 @@ abstract public class SAssignedActivity<PK extends Serializable>
 
     @Override
     public SUser getAssignee() {
+        if (this.assignee == null) {
+            this.assignee = new SUser();
+        }
         return this.assignee;
     }
 

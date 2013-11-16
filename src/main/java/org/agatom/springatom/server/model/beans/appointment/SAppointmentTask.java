@@ -19,7 +19,6 @@ package org.agatom.springatom.server.model.beans.appointment;
 
 import org.agatom.springatom.server.model.beans.PersistentObject;
 import org.agatom.springatom.server.model.types.appointment.AppointmentTaskType;
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -44,7 +43,6 @@ public class SAppointmentTask
     @Column(name = "sat_task", nullable = false, length = 444)
     private String              task;
     @Type(type = "org.hibernate.type.EnumType")
-    @NaturalId(mutable = true)
     @Enumerated(value = EnumType.STRING)
     @Column(name = "sat_type", updatable = true, unique = false, length = 50, nullable = false)
     private AppointmentTaskType type;
@@ -72,6 +70,10 @@ public class SAppointmentTask
 
     public AppointmentTaskType getType() {
         return type;
+    }
+
+    public SAppointmentTask setType(final String type) {
+        return this.setType(AppointmentTaskType.valueOf(type));
     }
 
     public SAppointmentTask setType(final AppointmentTaskType type) {

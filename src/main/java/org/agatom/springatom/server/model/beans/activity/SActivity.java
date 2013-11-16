@@ -61,6 +61,9 @@ abstract public class SActivity<PK extends Serializable>
 
     @Override
     public SUser getReporter() {
+        if (this.reporter == null) {
+            this.reporter = new SUser();
+        }
         return reporter;
     }
 

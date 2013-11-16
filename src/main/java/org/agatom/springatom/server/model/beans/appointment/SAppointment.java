@@ -18,24 +18,20 @@
 package org.agatom.springatom.server.model.beans.appointment;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.beans.activity.SAssignedActivity;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.hibernate.annotations.Index;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
-import org.joda.time.ReadableDuration;
-import org.joda.time.ReadableInterval;
+import org.joda.time.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 /**
  * {@code SAppointment} is the business object describing the event.
@@ -51,46 +47,42 @@ import java.util.Set;
 @AttributeOverride(name = "id", column = @Column(name = "idSAppointment", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SAppointment
         extends SAssignedActivity<Long>
-implements Iterable<SAppointmentTask> {
-    public static final String TABLE_NAME  = "appointment";
-    public static final String ENTITY_NAME = "SAppointment";
+        implements Iterable<SAppointmentTask> {
+    public static final  String TABLE_NAME       = "appointment";
+    public static final  String ENTITY_NAME      = "SAppointment";
     private static final String DATE_TIME_TYPE   = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
     private static final long   serialVersionUID = -3158182089097228777L;
     @Index(name = "sa_begin")
     @Type(type = DATE_TIME_TYPE)
     @Column(name = "begin", nullable = false)
     @NotNull(message = MSG.BEGIN_NULL_MSG)
-    private DateTime begin;
+    private DateTime               begin;
     @Index(name = "sa_end")
     @Type(type = DATE_TIME_TYPE)
     @Column(name = "end", nullable = false)
     @NotNull(message = MSG.END_NULL_MSG)
-    private DateTime end;
+    private DateTime               end;
     @Size(min = 1, message = MSG.NO_TASK_MSG)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "appointment", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<SAppointmentTask> tasks = Sets.newHashSet();
+    private List<SAppointmentTask> tasks;
     @NotNull(message = MSG.CAR_NULL_MSG)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "car", referencedColumnName = "idScar")
-    private SCar car;
+    private SCar                   car;
 
-    public Set<SAppointmentTask> getTasks() {
-        if (this.tasks == null) {
-            this.tasks = Sets.newHashSet();
-        }
+    public List<SAppointmentTask> getTasks() {
+        this.requireTaskList();
         return tasks;
     }
 
     public SAppointment setTasks(final Collection<SAppointmentTask> tasks) {
-        this.tasks = Sets.newHashSet(tasks);
+        this.tasks = Lists.newArrayList(tasks);
         return this;
     }
 
     public SAppointment addTask(final Collection<SAppointmentTask> tasks) {
-        if (this.tasks == null) {
-            this.tasks = Sets.newHashSet();
-        }
+        this.requireTaskList();
         for (final SAppointmentTask task : tasks) {
             if (!this.tasks.contains(task)) {
                 this.tasks.add(task.setAppointment(this));
@@ -99,16 +91,23 @@ implements Iterable<SAppointmentTask> {
         return this;
     }
 
+    private void requireTaskList() {
+        if (this.tasks == null) {
+            this.tasks = Lists.newLinkedList();
+        }
+    }
+
     public SAppointment removeTask(final SAppointmentTask... tasks) {
         if (this.tasks == null) {
-            this.tasks = Sets.newHashSet();
+            return this;
         }
         this.tasks.removeAll(Lists.newArrayList(tasks));
         return this;
     }
 
     public DateTime getBegin() {
-        return begin;
+        this.requireBeginDate();
+        return this.begin.toDateTime();
     }
 
     public SAppointment setBegin(final DateTime begin) {
@@ -117,7 +116,8 @@ implements Iterable<SAppointmentTask> {
     }
 
     public DateTime getEnd() {
-        return end;
+        this.requireEndDate();
+        return this.end.toDateTime();
     }
 
     public SAppointment setEnd(final DateTime end) {
@@ -130,8 +130,8 @@ implements Iterable<SAppointmentTask> {
     }
 
     public SAppointment setInterval(final ReadableInterval duration) {
-        this.begin = duration.getStart();
-        this.end = duration.getEnd();
+        this.setBegin(duration.getStart());
+        this.setEnd(duration.getEnd());
         return this;
     }
 
@@ -146,12 +146,77 @@ implements Iterable<SAppointmentTask> {
     }
 
     public SCar getCar() {
+        if (this.car == null) {
+            this.car = new SCar();
+        }
         return this.car;
     }
 
     public SAppointment setCar(final SCar car) {
         this.car = car;
         return this;
+    }
+
+    public LocalTime getBeginTime() {
+        this.requireBeginDate();
+        return this.begin.toLocalTime();
+    }
+
+    public SAppointment setBeginTime(final LocalTime localTime) {
+        this.requireBeginDate();
+        final MutableDateTime mutableDateTime = this.begin.toMutableDateTime();
+        mutableDateTime.setTime(localTime.toDateTimeToday());
+        this.begin = mutableDateTime.toDateTime();
+        return this;
+    }
+
+    public LocalTime getEndTime() {
+        this.requireEndDate();
+        return this.end.toLocalTime();
+    }
+
+    public SAppointment setEndTime(final LocalTime localTime) {
+        this.requireEndDate();
+        final MutableDateTime mutableDateTime = this.end.toMutableDateTime();
+        mutableDateTime.setTime(localTime.toDateTimeToday());
+        this.end = mutableDateTime.toDateTime();
+        return this;
+    }
+
+    public LocalDate getBeginDate() {
+        return this.getBegin().toLocalDate();
+    }
+
+    public SAppointment setBeginDate(final LocalDate localDate) {
+        this.requireBeginDate();
+        final MutableDateTime mutableDateTime = this.begin.toMutableDateTime();
+        mutableDateTime.setDate(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth());
+        this.begin = mutableDateTime.toDateTime();
+        return this;
+    }
+
+    public LocalDate getEndDate() {
+        return this.getEnd().toLocalDate();
+    }
+
+    public SAppointment setEndDate(final LocalDate localDate) {
+        this.requireEndDate();
+        final MutableDateTime mutableDateTime = this.end.toMutableDateTime();
+        mutableDateTime.setDate(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth());
+        this.end = mutableDateTime.toDateTime();
+        return this;
+    }
+
+    private void requireEndDate() {
+        if (this.end == null) {
+            this.end = DateTime.now();
+        }
+    }
+
+    private void requireBeginDate() {
+        if (this.begin == null) {
+            this.begin = DateTime.now();
+        }
     }
 
     @Override

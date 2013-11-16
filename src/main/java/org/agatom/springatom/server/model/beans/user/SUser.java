@@ -17,12 +17,15 @@
 
 package org.agatom.springatom.server.model.beans.user;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.user.authority.SAuthority;
 import org.agatom.springatom.server.model.beans.user.authority.SUserAuthority;
 import org.agatom.springatom.server.model.beans.user.embeddable.SUserCredentials;
+import org.agatom.springatom.server.model.types.user.SRole;
 import org.agatom.springatom.server.model.types.user.SSecuredUser;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -30,6 +33,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.springframework.security.core.GrantedAuthority;
 
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
@@ -154,11 +158,27 @@ public class SUser
 
     @Override
     public boolean hasAuthorities(final Collection<? extends GrantedAuthority> roles) {
-        final Set<SAuthority> rolesIn = Sets.newHashSet();
+        final Set<SRole> rolesIn = Sets.newHashSet();
         for (SUserAuthority userToRole : this.roles) {
-            rolesIn.add(userToRole.getAuthority());
+            rolesIn.add(userToRole.getAuthority().getRole());
         }
-        return rolesIn.containsAll(roles);
+        return FluentIterable.from(rolesIn).filter(
+                new Predicate<SRole>() {
+                    @Override
+                    public boolean apply(@Nullable final SRole input) {
+                        boolean result = false;
+                        for (final GrantedAuthority authority : roles) {
+                            if (authority instanceof SAuthority) {
+                                result = ((SAuthority) authority).getRole().equals(input);
+                                if (result) {
+                                    break;
+                                }
+                            }
+                        }
+                        return result;
+                    }
+                }
+        ).size() > 0;
     }
 
     public void setPassword(final String password) {
