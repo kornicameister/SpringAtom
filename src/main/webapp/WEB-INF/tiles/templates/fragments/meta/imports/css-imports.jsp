@@ -30,5 +30,4 @@
 
 <link rel="stylesheet" media="all" href="<s:url value="/static/lib/alertify/themes/alertify.core.css"/>"/>
 <link rel="stylesheet" media="all" href="<s:url value="/static/lib/alertify/themes/alertify.default.css"/>"/>
-<link type="text/css" rel="stylesheet" href="<s:url value="/static/dijit/themes/dijit.css" />"/>
 <link type="text/css" rel="stylesheet" href="<s:url value="/static/dijit/themes/soria/soria.css" />"/>

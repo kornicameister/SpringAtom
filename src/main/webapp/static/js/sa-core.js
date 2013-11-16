@@ -119,6 +119,16 @@
         );
     };
     SA.core.showError = function (text) {
+        if (text instanceof jQuery) {
+            if (text.length == 0) {
+                return;
+            }
+            var msg = "";
+            $.each(text, function (index, val) {
+                msg += '<p>' + $(val).html() + "</p>";
+            });
+            text = msg;
+        }
         alertify.error(
             '<span style="font-weight: bold">' + text + '</span>'
         );
