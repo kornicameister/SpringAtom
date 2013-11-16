@@ -36,6 +36,7 @@
     <context:component-scan base-package="org.agatom.springatom.webmvc"/>
     <mvc:annotation-driven validator="validator"
                            conversion-service="springAtomConversionService"
+                           ignoreDefaultModelOnRedirect="true"
                            enableMatrixVariables="true"/>
     <!--suppress SpringModelInspection -->
     <mvc:resources mapping="/static/**"
@@ -43,14 +44,50 @@
                    location="/static/,classpath:/META-INF/web-resources/,classpath:/META-INF/resources/webjars/"/>
     <mvc:default-servlet-handler/>
 
+    <bean id="jodaDtff" class="org.springframework.format.datetime.joda.DateTimeFormatterFactory">
+        <property name="pattern" value="YYYY-MM-dd"/>
+    </bean>
+    <bean id="jodaTff" class="org.springframework.format.datetime.joda.DateTimeFormatterFactory">
+        <property name="pattern" value="HH:mm"/>
+    </bean>
+
     <bean id="springAtomConversionService"
-          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+          class="org.springframework.format.support.FormattingConversionServiceFactoryBean"
+          depends-on="jodaDtff,jodaTff"
+          lazy-init="false">
         <property name="registerDefaultFormatters" value="true"/>
+        <property name="formatterRegistrars">
+            <set>
+                <bean class="org.springframework.format.datetime.joda.JodaTimeFormatterRegistrar">
+                    <property name="dateFormatter">
+                        <bean factory-bean="jodaDtff" factory-method="createDateTimeFormatter"/>
+                    </property>
+                    <property name="timeFormatter">
+                        <bean factory-bean="jodaTff" factory-method="createDateTimeFormatter"/>
+                    </property>
+                </bean>
+            </set>
+        </property>
         <property name="converters">
             <set>
                 <bean class="org.agatom.springatom.webmvc.converters.SSecurityAuthorityEnumConverted"/>
             </set>
         </property>
+        <property name="formatters">
+            <set>
+                <bean class="org.springframework.format.datetime.DateFormatter">
+                    <property name="pattern" value="YYYY-MM-dd"/>
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="domainClassConverter"
+          class="org.springframework.data.repository.support.DomainClassConverter"
+          lazy-init="false"
+          primary="true"
+          depends-on="springAtomConversionService">
+        <constructor-arg ref="springAtomConversionService"/>
     </bean>
 
 </beans>

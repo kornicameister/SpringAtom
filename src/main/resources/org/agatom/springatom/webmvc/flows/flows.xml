@@ -54,6 +54,10 @@
     </bean>
     <bean id="modelViewAppender" class="org.agatom.springatom.webmvc.flows.SWFModelViewListener"/>
 
+    <bean id="webflowConversionService" class="org.springframework.binding.convert.service.DefaultConversionService">
+        <constructor-arg ref="springAtomConversionService"/>
+    </bean>
+
     <webflow:flow-registry id="flowRegistry"
                            base-path="/ui"
                            flow-builder-services="flowBuilderServices">
@@ -62,6 +66,7 @@
 
     <webflow:flow-builder-services id="flowBuilderServices"
                                    view-factory-creator="mvcViewFactoryCreator"
+                                   conversion-service="webflowConversionService"
                                    development="true"
                                    validator="validator"/>
 
