@@ -26,7 +26,6 @@ import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
 import org.agatom.springatom.server.model.beans.appointment.SFreeSlot;
 import org.agatom.springatom.server.model.beans.user.SUser;
-import org.agatom.springatom.server.model.dto.SAppointmentTaskDTO;
 import org.agatom.springatom.server.service.domain.SAppointmentService;
 import org.agatom.springatom.server.service.domain.SUserService;
 import org.joda.time.Duration;
@@ -451,4 +450,6 @@ public class SAppointmentServiceImplTest
             this.tasks = tasks;
         }
     }
+
+    private class SAppointmentTaskDTO {}
 }
