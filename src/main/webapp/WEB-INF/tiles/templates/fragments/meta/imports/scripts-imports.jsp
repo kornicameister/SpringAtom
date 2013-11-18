@@ -24,9 +24,12 @@
 <c:set var="staticSa" value="/static/js"/>
 <c:set var="notyPath" value="${staticLib}/noty/2.1.0"/>
 
+<jsp:useBean id="lang" scope="request" type="java.util.Locale"/>
+
 <script type="text/javascript" src="<s:url value="${webjars}/jquery/2.0.3/jquery.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/mmenu/3.2.1/jquery.mmenu.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${webjars}/momentjs/2.2.1/min/moment.min.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${webjars}/momentjs/2.2.1/lang/${lang.language}.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/tinycon.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/midway.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/alertify/alertify.min.js"/>"></script>

@@ -49,5 +49,7 @@ public interface SAppointmentWizardService {
 
     @NotNull Event addNewTask(@NotNull final SAppointment appointment, @NotNull SAppointmentTask task);
 
+    @NotNull SAppointmentTask getNewTask();
+
     @NotNull SAppointment removeTask(@NotNull final SAppointment appointment, final String position);
 }

@@ -78,6 +78,19 @@
             $.fn.doesExist = function () {
                 return $(this).length > 0;
             };
+            $.urlParam = function (name, decode) {
+                var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+                if (results == null) {
+                    return '';
+                }
+                else {
+                    var result = results[1] || 0;
+                    if (decode === true) {
+                        result = decodeURIComponent(result);
+                    }
+                    return result;
+                }
+            }
         }
     };
 

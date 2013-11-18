@@ -126,6 +126,11 @@ public class SAppointmentWizardServiceImpl
     }
 
     @Override
+    public SAppointmentTask getNewTask() {
+        return new SAppointmentTask();
+    }
+
+    @Override
     public SAppointment removeTask(@NotNull final SAppointment appointment, final String pos) {
         final Integer position = Integer.valueOf(pos);
         final List<SAppointmentTask> tasks = appointment.getTasks();
