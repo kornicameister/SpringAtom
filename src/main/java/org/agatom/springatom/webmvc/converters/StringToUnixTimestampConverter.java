@@ -15,57 +15,31 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.dto;
+package org.agatom.springatom.webmvc.converters;
+
+import com.google.common.base.Preconditions;
+import org.agatom.springatom.shared.UnixTimestamp;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.convert.converter.ConditionalConverter;
+import org.springframework.core.convert.converter.Converter;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SAppointmentTaskDTO
-        implements DTO {
-    final private String type;
-    final private String task;
-
-    public SAppointmentTaskDTO(final String type, final String task) {
-        this.type = type;
-        this.task = task;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getTask() {
-        return task;
+public class StringToUnixTimestampConverter
+        implements Converter<String, UnixTimestamp>,
+                   ConditionalConverter {
+    @Override
+    public UnixTimestamp convert(final String source) {
+        Preconditions.checkNotNull(source);
+        return new UnixTimestamp(Long.parseLong(source));
     }
 
     @Override
-    public int hashCode() {
-        int result = type.hashCode();
-        result = 31 * result + task.hashCode();
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SAppointmentTaskDTO)) {
-            return false;
-        }
-
-        final SAppointmentTaskDTO that = (SAppointmentTaskDTO) o;
-
-        return task.equals(that.task) && type.equals(that.type);
-    }
-
-    @Override
-    public String toString() {
-        return "SAppointmentTaskDTO{" +
-                "type=" + type +
-                ", task='" + task + '\'' +
-                "} " + super.toString();
+    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+        return sourceType.getType().isAssignableFrom(String.class)
+                && targetType.getType().isAssignableFrom(UnixTimestamp.class);
     }
 }

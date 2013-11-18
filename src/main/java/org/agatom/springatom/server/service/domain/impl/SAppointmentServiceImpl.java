@@ -37,6 +37,7 @@ import org.agatom.springatom.server.repository.repositories.car.SCarRepository;
 import org.agatom.springatom.server.repository.repositories.user.SUserRepository;
 import org.agatom.springatom.server.service.domain.SAppointmentService;
 import org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException;
+import org.agatom.springatom.server.service.support.exceptions.SecurityViolationServiceException;
 import org.agatom.springatom.server.service.support.exceptions.ServiceException;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
@@ -46,6 +47,7 @@ import org.joda.time.ReadableInterval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -201,10 +203,35 @@ public class SAppointmentServiceImpl
     @Override
     @Transactional(rollbackFor = IllegalArgumentException.class)
     public List<SAppointment> findBetween(final DateTime startDate, final DateTime endDate) {
-        checkArgument(startDate.isBefore(endDate), ERROR_MESSAGE_SD_GT_ED_MSG);
+        try {
+            return this.findBetween(startDate, endDate, false);
+        } catch (SecurityViolationServiceException ignore) {
+        }
+        return Lists.newArrayList();
+    }
+
+    @Override
+    public List<SAppointment> findBetween(final DateTime startDate, final DateTime endDate, final boolean currentUserOnly) throws
+            SecurityViolationServiceException {
+        checkArgument(endDate.isAfter(startDate), ERROR_MESSAGE_SD_GT_ED_MSG);
+        LOGGER.debug("/findBetween");
         final DateTimePath<DateTime> begin = QSAppointment.sAppointment.begin;
         final DateTimePath<DateTime> end = QSAppointment.sAppointment.end;
-        return (List<SAppointment>) this.repository.findAll(begin.goe(startDate).and(end.loe(endDate)));
+        final BooleanExpression expression = begin.goe(startDate).and(end.loe(endDate));
+
+        if (currentUserOnly) {
+            final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (principal instanceof SUser) {
+                expression.and(QSAppointment.sAppointment.reporter.eq((SUser) principal));
+            } else {
+                throw new SecurityViolationServiceException(
+                        SAppointment.class,
+                        "Requested for list of appointment for current user but no such user was found in the context"
+                );
+            }
+        }
+
+        return (List<SAppointment>) this.repository.findAll(expression);
     }
 
     @Override

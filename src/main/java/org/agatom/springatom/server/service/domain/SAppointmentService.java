@@ -56,6 +56,9 @@ public interface SAppointmentService
 
     @NotNull List<SAppointment> findBetween(final DateTime startDate, final DateTime endDate);
 
+    @NotNull List<SAppointment> findBetween(final DateTime startDate, final DateTime endDate, boolean currentUserOnly) throws
+            ServiceException;
+
     @NotNull List<SAppointment> findLater(final DateTime dateTime);
 
     @NotNull List<SAppointment> findEarlier(final DateTime dateTime);

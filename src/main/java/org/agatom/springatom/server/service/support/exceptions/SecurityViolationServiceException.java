@@ -15,15 +15,18 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.dto;
+package org.agatom.springatom.server.service.support.exceptions;
 
-import java.io.Serializable;
+import org.springframework.data.domain.Persistable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface DTO
-        extends Serializable {
+public class SecurityViolationServiceException
+        extends ServiceException {
+    public SecurityViolationServiceException(final Class<? extends Persistable> target, final String message) {
+        super(target, message);
+    }
 }

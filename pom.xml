@@ -74,7 +74,7 @@
         <spring-data-jpa.version>1.5.0.BUILD-SNAPSHOT</spring-data-jpa.version>
         <spring-data-envers.version>0.1.0.RELEASE</spring-data-envers.version>
         <spring-data-rest-webmvc.version>2.0.0.BUILD-SNAPSHOT</spring-data-rest-webmvc.version>
-        <spring-hateoas.version>0.7.0.RELEASE</spring-hateoas.version>
+        <spring.hateoas.version>0.7.0.RELEASE</spring.hateoas.version>
         <!-- spring -->
 
         <!-- servlet and jsp -->
@@ -247,6 +247,13 @@
             </exclusions>
         </dependency>
         <!--spring data -->
+        <!-- spring hetoas-->
+        <dependency>
+            <groupId>org.springframework.hateoas</groupId>
+            <artifactId>spring-hateoas</artifactId>
+            <version>${spring.hateoas.version}</version>
+        </dependency>
+        <!-- spring hetoas-->
         <!-- spring core -->
         <dependency>
             <groupId>org.springframework</groupId>

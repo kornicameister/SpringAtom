@@ -1,4 +1,6 @@
 <%@ page import="org.agatom.springatom.server.model.beans.appointment.SAppointment" %>
+<%@ page import="org.springframework.http.MediaType" %>
+<%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~
@@ -31,8 +33,13 @@
 <s:message code="date.days.short" var="rawShortDays" scope="page"/>
 <c:set var="monthNames" scope="page" value="${fun:split(rawMonthNames, ',')}"/>
 
-<s:message code="<%=SAppointment.class.getName()%>" var="domainName"/>
+<c:set var="domainClassName" value="<%=SAppointment.class.getName()%>"/>
+<s:message code="${domainClassName}" var="domainName"/>
 <s:message code="sa.msg.objectCreated" var="objectCreatedMsg" arguments="${domainName}"/>
+
+<s:url value="/data/appointment/feed" var="jsonFeed"/>
+<c:set var="jsonFeedMethod" value="<%=RequestMethod.POST.toString().toLowerCase()%>"/>
+<c:set var="jsonFeedContentType" value="<%=MediaType.APPLICATION_FORM_URLENCODED_VALUE%>"/>
 
 <script type="text/javascript" src="<s:url value='/static/lib/fullcalendar/fullcalendar.js' htmlEscape="true"/>"></script>
 <script type="text/javascript" id="calendar-loader">
@@ -53,18 +60,56 @@
                 center: 'title',
                 right : 'month,agendaWeek,agendaDay'
             },
-            axisFormat         : 'HH:mm',
+            axisFormat         : 'HH:mm',           // localize from RB
             columnFormat       : {
-                month: 'ddd',    // Mon
-                week : 'ddd M/d', // Mon 9/7
-                day  : 'dddd M/d'  // Monday 9/7
+                month: 'ddd',    // Mon             // localize from RB
+                week : 'ddd M/d', // Mon 9/7        // localize from RB
+                day  : 'dddd M/d'  // Monday 9/7    // localize from RB
             },
+            eventSources       : [
+                {
+                    url               : '${jsonFeed}',
+                    method            : '${jsonFeedMethod}',
+                    contentType       : '${jsonFeedContentType}',
+                    cache             : true,
+                    data              : {
+                        domainClass: '${domainClassName}'
+                    },
+                    eventDataTransform: function (eventData) {
+                        console.log(eventData);
+                        var begin = moment(eventData['start']).unix();
+                        var end = moment(eventData['end']).unix();
+                        var url = '', urlIndex = -1;
+
+                        $.each(eventData['links'], function (it, value) {
+                            if (value['rel'] == 'self') {
+                                url = value['href'];
+                                urlIndex = it;
+                            }
+                            return url !== '';
+                        });
+
+                        delete eventData['links'][urlIndex];
+
+                        return {
+                            id    : eventData['id'],
+                            start : begin,
+                            end   : end,
+                            allDay: false,
+                            url   : url,
+                            links : eventData['links'],
+                            title : eventData['title']
+                        }
+                    }
+                }
+            ],
             defaultEventMinutes: 30,
-            allDayText         : 'Caly dzien',
+            allDayText         : 'Caly dzien',      // localize from RB
             monthNames         : monthNames,
             dayNames           : dayNames,
             dayNamesShort      : dayNamesShort,
             monthNamesShort    : monthNamesShort,
+            defaultView        : 'agendaDay',
             weekends           : false,
             weekNumbers        : true,
             firstDay           : 1,
@@ -76,6 +121,13 @@
             selectHelper       : true,
             selectable         : true,
             editable           : true,
+            loading            : function (isLoading, viewName) {
+                if (isLoading) {
+                    alertify.log(viewName.name + ' is loading...');
+                } else {
+                    alertify.success(viewName.name + ' loaded');
+                }
+            },
             dayClick           : function (date, allDay, jsEvent, view) {
                 $('#dddd').click();
             },
@@ -84,45 +136,12 @@
                 console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
                 console.log('View: ' + view.name);
             },
-            eventRender        : function (event, element) {
-                SA.core.showSuccess('${objectCreatedMsg}' + ' - ' + event.title);
+            eventRender        : function (event) {
+                if (event['_justPersisted']) {
+                    SA.core.showSuccess('${objectCreatedMsg}' + ' - ' + event.title);
+                }
             }
         });
 
-    });
-</script>
-<script type="text/javascript" id="event-appender-from-uri">
-    var cache = {};
-    $(function () {
-        var action = $.urlParam('action', true);
-        console.log('Action found=' + action);
-
-        function parse(_dd) {
-            return $.fullCalendar.parseDate(moment(_dd, ['DD.MM.YY HH:mm', 'YYYY-MM-YY'], true).unix());
-        }
-
-        if (action === 'finish') {
-            var eventId = $.urlParam('eventId', true),
-                    eventBegin = $.urlParam('eventBegin', true),
-                    eventEnd = $.urlParam('eventEnd', true);
-            if (eventId && eventBegin && eventEnd) {
-
-                if (cache[eventId]) {
-                    return;
-                }
-
-                var event = {
-                    id    : eventId,
-                    start : parse(eventBegin),
-                    end   : parse(eventEnd),
-                    allDay: false,
-                    title : 'Appointment=' + decodeURIComponent(eventId)
-                };
-
-                $('#calendar').fullCalendar('renderEvent', event, true);
-
-                cache[eventId] = true;
-            }
-        }
     });
 </script>

@@ -15,74 +15,30 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.dto.appointment;
-
-import com.google.common.base.Objects;
-import org.agatom.springatom.server.model.dto.DTO;
-import org.joda.time.DateTime;
+package org.agatom.springatom.webmvc.exceptions;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SAppointmentDTO
-        implements DTO {
-    private static final long serialVersionUID = 1013016925151868926L;
-    private DateTime begin;
-    private DateTime end;
-    private String   reporter;
-    private String   assignee;
-    private String   car;
+public class ControllerTierException
+        extends Exception {
 
-    public DateTime getBegin() {
-        return begin;
+    private static final String MSG_PATTERN_1 = "ControllerTierException=\n\t=>%s\n";
+
+    public ControllerTierException() {
     }
 
-    public void setBegin(final DateTime begin) {
-        this.begin = begin;
+    public ControllerTierException(final String message) {
+        super(String.format(MSG_PATTERN_1, message));
     }
 
-    public DateTime getEnd() {
-        return end;
+    public ControllerTierException(final Throwable cause) {
+        super(cause);
     }
 
-    public void setEnd(final DateTime end) {
-        this.end = end;
-    }
-
-    public String getReporter() {
-        return reporter;
-    }
-
-    public void setReporter(final String reporter) {
-        this.reporter = reporter;
-    }
-
-    public String getAssignee() {
-        return assignee;
-    }
-
-    public void setAssignee(final String assignee) {
-        this.assignee = assignee;
-    }
-
-    public String getCar() {
-        return car;
-    }
-
-    public void setCar(final String car) {
-        this.car = car;
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(begin)
-                      .addValue(end)
-                      .addValue(reporter)
-                      .addValue(assignee)
-                      .addValue(car)
-                      .toString();
+    public ControllerTierException(final String message, final Throwable cause) {
+        super(String.format("ControllerTierException=\n\t=>%s\n", message), cause);
     }
 }

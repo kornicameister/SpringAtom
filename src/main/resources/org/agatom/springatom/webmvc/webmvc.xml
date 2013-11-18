@@ -37,7 +37,20 @@
     <mvc:annotation-driven validator="validator"
                            conversion-service="springAtomConversionService"
                            ignoreDefaultModelOnRedirect="true"
-                           enableMatrixVariables="true"/>
+                           enableMatrixVariables="true">
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="org.springframework.http.converter.json.JacksonObjectMapperFactoryBean">
+                        <property name="failOnEmptyBeans" value="false"/>
+                        <property name="autoDetectGettersSetters" value="true"/>
+                        <property name="indentOutput" value="false"/>
+                    </bean>
+                </property>
+                <property name="prettyPrint" value="false"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
     <!--suppress SpringModelInspection -->
     <mvc:resources mapping="/static/**"
                    cache-period="10"
@@ -71,6 +84,7 @@
         <property name="converters">
             <set>
                 <bean class="org.agatom.springatom.webmvc.converters.SSecurityAuthorityEnumConverted"/>
+                <bean class="org.agatom.springatom.webmvc.converters.StringToUnixTimestampConverter"/>
             </set>
         </property>
         <property name="formatters">
