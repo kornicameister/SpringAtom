@@ -60,11 +60,11 @@
                 center: 'title',
                 right : 'month,agendaWeek,agendaDay'
             },
-            axisFormat         : 'HH:mm',           // localize from RB
+            axisFormat         : 'HH:mm',           // TODO: localize from RB
             columnFormat       : {
-                month: 'ddd',    // Mon             // localize from RB
-                week : 'ddd M/d', // Mon 9/7        // localize from RB
-                day  : 'dddd M/d'  // Monday 9/7    // localize from RB
+                month: 'ddd',    // Mon             // TODO: localize from RB
+                week : 'ddd M/d', // Mon 9/7        // TODO: localize from RB
+                day  : 'dddd M/d'  // Monday 9/7    // TODO: localize from RB
             },
             eventSources       : [
                 {
