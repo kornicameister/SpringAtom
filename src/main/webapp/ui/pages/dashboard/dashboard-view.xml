@@ -16,29 +16,24 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-
 <!DOCTYPE tiles-definitions PUBLIC
-        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
-        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+        "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+        "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 
 <tiles-definitions>
 
-    <definition name="abstract_navigator" template="/ui/navigator/navigator.jsp">
-        <put-attribute name="navigator.secured" value="ui.navigator.secured"/>
-        <put-attribute name="navigator.free" value="ui.navigator.free"/>
+    <definition name="springatom.tiles.dashboard.cars" extends="ui.core.Page">
+        <put-attribute name="content" value="/ui/pages/dashboard/cars/panel.jsp"/>
     </definition>
 
-    <definition name="ui.navigator.free" template="/ui/navigator/menus/free_navigation.jsp"/>
+    <definition name="springatom.tiles.dashboard.calendar" extends="ui.core.Page">
+        <put-attribute name="content" value="/ui/pages/dashboard/calendar/panel.jsp"/>
+        <put-attribute name="css.more" value="/ui/pages/dashboard/calendar/stylesheets.jsp"/>
+        <put-attribute name="js.more" value="/ui/pages/dashboard/calendar/scripts.jsp"/>
+    </definition>
 
-    <definition name="ui.navigator.secured" template="/ui/navigator/secured_navigation.jsp">
-        <put-attribute name="dashboard"
-                       value="/ui/navigator/menus/dashboard_navigation.jsp"/>
-        <put-attribute name="garage"
-                       value="/ui/navigator/menus/garage_navigation.jsp"/>
-        <put-attribute name="boss"
-                       value="/ui/navigator/menus/boss_navigation.jsp"/>
-        <put-attribute name="admin"
-                       value="/ui/navigator/menus/admin_navigation.jsp"/>
+    <definition name="springatom.tiles.dashboard.reports" extends="ui.core.Page">
+        <put-attribute name="content" value="/ui/pages/dashboard/reports/panel.jsp"/>
     </definition>
 
 </tiles-definitions>

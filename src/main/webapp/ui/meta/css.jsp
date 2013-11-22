@@ -15,26 +15,20 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<head>
-    <jsp:useBean id="lang" scope="request" type="java.util.Locale"/>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="${lang.language}"/>
-    <meta name="author" content="kornicameister@gmail.com"/>
-    <meta name="robots" content="noindex, nofollow"/>
-    <meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes">
+<link rel="stylesheet" media="all" href="<s:theme code="application" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.auth" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.content.header" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.navigator.mmenu" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.navigator.mmenu.extra" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.fonts.fontsAwesome" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.forms" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.modals" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.buttons" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application.wizards" htmlEscape="true" />">
 
-    <title>
-        <jsp:useBean id="pageTitleBean"
-                     scope="request"
-                     type="org.agatom.springatom.web.view.bean.SViewTitle">
-        </jsp:useBean>
-        <c:out value="${pageTitleBean.paramValue}" default="[SA]::SpringAtom"/>
-    </title>
-
-    <tiles:insertAttribute name="stylesheets"/>
-    <tiles:insertAttribute name="stylesheets.extra"/>
-    <tiles:insertAttribute name="scripts"/>
-    <tiles:insertAttribute name="scripts.extra"/>
-</head>
+<link rel="stylesheet" media="all" href="<s:url value="/static/lib/alertify/themes/alertify.core.css"/>"/>
+<link rel="stylesheet" media="all" href="<s:url value="/static/lib/alertify/themes/alertify.default.css"/>"/>
+<link type="text/css" rel="stylesheet" href="<s:url value="/static/dijit/themes/soria/soria.css" />"/>

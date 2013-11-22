@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(value = "/app")
 public class SVTilesViewController
         extends SVDefaultController {
-    public static final String CONTROLLER_NAME = "sa.controller.view.TilesController";
+    public static final String CONTROLLER_NAME = "TilesControllerViewResolver";
 
     public SVTilesViewController() {
         super(CONTROLLER_NAME);

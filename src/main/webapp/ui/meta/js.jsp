@@ -18,6 +18,7 @@
 <%@page autoFlush="true" language="java" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 
 <c:set var="webjars" value="/static"/>
 <c:set var="staticLib" value="/static/lib"/>

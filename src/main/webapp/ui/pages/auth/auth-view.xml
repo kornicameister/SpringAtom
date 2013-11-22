@@ -16,16 +16,44 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-
 <!DOCTYPE tiles-definitions PUBLIC
         "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
         "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 
 <tiles-definitions>
 
-    <definition name="ui.layout.wizard.DefaultLayout" template="/ui/layout/wizard/default/layout.jsp">
-        <put-attribute name="wiz.header" value=""/>
-        <put-attribute name="wiz.content" value=""/>
+    <definition name="springatom.tiles.auth.login" extends="ui.core.Page">
+        <put-attribute name="content" value="/ui/pages/auth/login.jsp"/>
+        <put-attribute name="mode" value="standalone"/>
+    </definition>
+
+    <definition name="springatom.tiles.auth.logout" extends="ui.core.Page">
+        <put-attribute name="content" value="/ui/pages/auth/logout.jsp"/>
+        <put-attribute name="mode" value="standalone"/>
+    </definition>
+
+    <definition name="springatom.tiles.auth.login.failed" extends="springatom.tiles.auth.login">
+        <put-attribute name="error" value="/ui/pages/auth/error_login_failed.jsp"/>
+    </definition>
+
+    <definition name="springatom.tiles.auth.access.denied" extends="springatom.tiles.auth.login">
+        <put-attribute name="error" value="/ui/pages/auth/error_access_is_denied.jsp"/>
+    </definition>
+
+    <definition name="springatom.tiles.auth.forgotten.password" extends="ui.core.Page">
+        <put-attribute name="content" value="/ui/pages/auth/forgotten_password.jsp"/>
+    </definition>
+
+    <definition name="springatom.tiles.auth.login.embedded" template="/ui/pages/auth/login.jsp">
+        <put-attribute name="mode" value="embedded"/>
+    </definition>
+
+    <definition name="springatom.tiles.auth.logout.embedded" template="/ui/pages/auth/logoutEmbedded.jsp">
+        <put-attribute name="mode" value="embedded"/>
+    </definition>
+
+    <definition name="springatom.tiles.auth.register" extends="ui.core.Page">
+        <put-attribute name="content" value="/ui/pages/auth/register.jsp"/>
     </definition>
 
 </tiles-definitions>

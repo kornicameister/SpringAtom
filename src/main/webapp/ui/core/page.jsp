@@ -15,41 +15,35 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@ page session="true"
-         language="java"
-         contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
-
-<%@ taglib prefix="c"
-           uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="tiles"
-           uri="http://tiles.apache.org/tags-tiles" %>
-<%@ taglib prefix="form"
-           uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="s"
-           uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="security"
-           uri="http://www.springframework.org/security/tags" %>
+<%@ page session="true" language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 
 <!DOCTYPE html>
 <html>
-<tiles:insertAttribute name="head"/>
+<head>
+    <tiles:insertAttribute name="head"/>
+    <tiles:insertAttribute name="css" flush="true"/>
+    <tiles:insertAttribute name="css.more" ignore="true"/>
+</head>
 <body>
 <div id="page">
     <div class="content-wrapper midway-vertical midway-horizontal">
-        <%@ include file="fragments/header.jspf" %>
-        <tiles:insertAttribute name="content-header"/>
+        <header id="header" class="main">
+            <s:message code="label.dashboard.header" htmlEscape="true" var="headerLabel"/>
+            <p>${headerLabel}</p>
+        </header>
+        <tiles:insertAttribute name="header"/>
         <div class="content">
-            <div id="content">
-                <tiles:insertAttribute name="content"/>
-            </div>
-            <div class="extra midway-horizontal">
-                <tiles:insertAttribute name="extra"/>
-            </div>
+            <tiles:insertAttribute name="content"/>
         </div>
-        <%@ include file="fragments/footer.jspf" %>
+        <footer id="footer" class="main">
+            <p>Footer goes here</p>
+        </footer>
     </div>
     <tiles:insertAttribute name="navigator"/>
 </div>
 </body>
+<tiles:insertAttribute name="js" flush="true"/>
+<tiles:insertAttribute name="js.more" ignore="true"/>
 </html>

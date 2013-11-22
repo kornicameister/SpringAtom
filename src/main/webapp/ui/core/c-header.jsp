@@ -15,12 +15,33 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<i class="icon-color icon-help">File</i>
-<ul>
-    <li>
-        <a href="#">Export</a>
-    </li>
-    <li>
-        <a href="#">Import</a>
-    </li>
-</ul>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
+<s:message code="label.dashboard.header.search.button" htmlEscape="true" var="buttonLabel"/>
+
+<section class="x-content-header">
+    <div class="x-breadcrumb">
+        <jsp:useBean id="breadcrumbPath" scope="request" type="org.agatom.springatom.web.breadcrumbs.beans.SBreadcrumbPath"/>
+        <span class="x-breadcrumb-element">
+            <span class="x-crumb"><a href="#">Home</a></span>
+            <span class="x-breadcrumb-connector"></span>
+        </span>
+    </div>
+    <div class="x-search">
+        <form:form method="post"
+                   action="/app/search/global"
+                   commandName="searchCommandBean"
+                   autocomplete="true"
+                   cssClass="x-search-form-global">
+            <s:message code="tooltip.dashboard.header.search" var="phrase_title" htmlEscape="true"/>
+            <form:input path="phrase"
+                        title="${phrase_title}"
+                        autocomplete="true"
+                        maxlength="20"/>
+            <form:button value="${buttonLabel}">
+                <i class="icon-search icon-large icon-color"></i>
+            </form:button>
+        </form:form>
+    </div>
+</section>

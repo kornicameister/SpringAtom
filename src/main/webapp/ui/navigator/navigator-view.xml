@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
   ~                                                                                               ~
@@ -15,31 +16,24 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:p="http://www.springframework.org/schema/p"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="ajaxViewResolver"
-          class="org.springframework.js.ajax.AjaxUrlBasedViewResolver"
-          p:order="0">
-        <property name="viewClass" value="org.springframework.webflow.mvc.view.FlowAjaxTilesView"/>
-        <property name="cache" value="true"/>
-        <property name="cacheUnresolved" value="true"/>
-        <property name="redirectContextRelative" value="true"/>
-        <property name="exposePathVariables" value="true"/>
-    </bean>
-    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
-        <property name="definitions">
-            <list>
-                <value>/ui/**/*view*</value>
-            </list>
-        </property>
-        <property name="checkRefresh" value="true"/>
-        <property name="validateDefinitions" value="true"/>
-        <property name="useMutableTilesContainer" value="true"/>
-        <property name="preparerFactoryClass"
-                  value="org.springframework.web.servlet.view.tiles2.SpringBeanPreparerFactory"/>
-    </bean>
-</beans>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+    <definition name="ui.nav.Navigator" template="/ui/navigator/navigator.jsp">
+        <put-attribute name="navigator.secured">
+            <definition template="/ui/navigator/secured_navigation.jsp">
+                <put-attribute name="dashboard" value="/ui/navigator/menus/dashboard_navigation.jsp"/>
+                <put-attribute name="garage" value="/ui/navigator/menus/garage_navigation.jsp"/>
+                <put-attribute name="boss" value="/ui/navigator/menus/boss_navigation.jsp"/>
+                <put-attribute name="admin" value="/ui/navigator/menus/admin_navigation.jsp"/>
+            </definition>
+        </put-attribute>
+        <put-attribute name="navigator.free" value="/ui/navigator/menus/free_navigation.jsp"/>
+    </definition>
+
+
+</tiles-definitions>
