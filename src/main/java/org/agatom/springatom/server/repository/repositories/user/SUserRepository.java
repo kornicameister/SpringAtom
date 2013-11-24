@@ -17,10 +17,15 @@
 
 package org.agatom.springatom.server.repository.repositories.user;
 
+import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.repository.SRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.RepositoryDefinition;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
  * @author kornicameister
@@ -29,8 +34,38 @@ import org.springframework.data.repository.RepositoryDefinition;
  */
 
 @Qualifier(value = SUserRepository.REPO_NAME)
+@RestResource(rel = SUserRepository.REST_REPO_REL, path = SUserRepository.REST_REPO_PATH)
 @RepositoryDefinition(domainClass = SUser.class, idClass = Long.class)
 public interface SUserRepository
         extends SRepository<SUser, Long, Integer> {
-    String REPO_NAME = "UserRepo";
+    String REPO_NAME      = "UserRepo";
+    String REST_REPO_PATH = "user";
+    String REST_REPO_REL  = "rest.user";
+
+    @RestResource(rel = "byPersonIdentityContaining", path = "identity_contains")
+    Page<SUser> findByPersonLastNameContainingOrPersonFirstNameContaining(
+            @Param("lastName") final String lastName,
+            @Param("firstName") final String firstName,
+            Pageable pageable);
+
+    @RestResource(rel = "byPersonMail", path = "mail")
+    SUser findByPersonPrimaryMail(
+            @Param("mail") final String mail
+    );
+
+    @RestResource(rel = "byPerson", path = "person")
+    SUser findByPerson(
+            @Param("person") final SPerson person
+    );
+
+    @RestResource(rel = "byLogin", path = "login")
+    SUser findByCredentialsUsername(
+            @Param("login") final String login
+    );
+
+    @RestResource(rel = "byLoginContaining", path = "login_contains")
+    Page<SUser> findByCredentialsUsernameContaining(
+            @Param("login") final String login,
+            final Pageable pageable
+    );
 }

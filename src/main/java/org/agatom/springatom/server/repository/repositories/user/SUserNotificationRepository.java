@@ -17,10 +17,16 @@
 
 package org.agatom.springatom.server.repository.repositories.user;
 
+import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.beans.user.notification.SUserNotification;
 import org.agatom.springatom.server.repository.SBasicRepository;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.RepositoryDefinition;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
  * @author kornicameister
@@ -28,8 +34,69 @@ import org.springframework.data.repository.RepositoryDefinition;
  * @since 0.0.1
  */
 @Qualifier(value = SUserNotificationRepository.REPO_NAME)
+@RestResource(rel = SUserNotificationRepository.REST_REPO_REL, path = SUserNotificationRepository.REST_REPO_PATH)
 @RepositoryDefinition(domainClass = SUserNotification.class, idClass = Long.class)
 public interface SUserNotificationRepository
         extends SBasicRepository<SUserNotification, Long> {
-    String REPO_NAME = "UserNotificationsRepo";
+    String REPO_NAME      = "UserNotificationsRepo";
+    String REST_REPO_REL  = "rest.user.notification";
+    String REST_REPO_PATH = "user_notification";
+
+    @RestResource(rel = "byUser", path = "user")
+    Page<SUserNotification> findByUserOrderByUserCredentialsDesc(
+            @Param("user") final SUser user,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byRead", path = "read")
+    Page<SUserNotification> findByReadTrue(
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byUnread", path = "unread")
+    Page<SUserNotification> findByReadFalse(
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byReadAndSentBefore", path = "readAndSentBefore")
+    Page<SUserNotification> findByReadTrueAndSentBefore(
+            @Param("date") final DateTime time,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byReadAndSentAfter", path = "readAndSentAfter")
+    Page<SUserNotification> findByReadTrueAndSentAfter(
+            @Param("date") final DateTime time,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byUnreadAndSentAfter", path = "unreadAndSentAfter")
+    Page<SUserNotification> findByReadFalseAndSentAfter(
+            @Param("date") final DateTime time,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byUnreadAndSentBefore", path = "unreadAndSentBefore")
+    Page<SUserNotification> findByReadFalseAndSentBefore(
+            @Param("date") final DateTime time,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byReadAndSentBetween", path = "readAndSentBetween")
+    Page<SUserNotification> findByReadTrueAndSentBetween(
+            @Param("date") final DateTime time,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byUnreadAndSentBetween", path = "unreadAndSentBetween")
+    Page<SUserNotification> findByReadFalseAndSentBetween(
+            @Param("date") final DateTime time,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byUnreadForUser", path = "unreadByUser")
+    Page<SUserNotification> findByReadFalseAndUser(
+            @Param("user") final SUser user,
+            final Pageable pageable
+    );
 }
