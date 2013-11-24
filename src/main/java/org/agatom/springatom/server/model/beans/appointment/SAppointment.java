@@ -20,7 +20,6 @@ package org.agatom.springatom.server.model.beans.appointment;
 import com.google.common.collect.Lists;
 import org.agatom.springatom.server.model.beans.activity.SAssignedActivity;
 import org.agatom.springatom.server.model.beans.car.SCar;
-import org.hibernate.annotations.Index;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
@@ -52,12 +51,10 @@ public class SAppointment
     public static final  String ENTITY_NAME      = "SAppointment";
     private static final String DATE_TIME_TYPE   = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
     private static final long   serialVersionUID = -3158182089097228777L;
-    @Index(name = "sa_begin")
     @Type(type = DATE_TIME_TYPE)
     @Column(name = "begin", nullable = false)
     @NotNull(message = MSG.BEGIN_NULL_MSG)
     private DateTime               begin;
-    @Index(name = "sa_end")
     @Type(type = DATE_TIME_TYPE)
     @Column(name = "end", nullable = false)
     @NotNull(message = MSG.END_NULL_MSG)

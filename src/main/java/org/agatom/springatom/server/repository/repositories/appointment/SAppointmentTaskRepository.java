@@ -17,10 +17,16 @@
 
 package org.agatom.springatom.server.repository.repositories.appointment;
 
+import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
+import org.agatom.springatom.server.model.types.appointment.AppointmentTaskType;
 import org.agatom.springatom.server.repository.SBasicRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.RepositoryDefinition;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
  * @author kornicameister
@@ -29,8 +35,17 @@ import org.springframework.data.repository.RepositoryDefinition;
  */
 
 @Qualifier(SAppointmentTaskRepository.REPO_NAME)
+@RestResource(rel = SAppointmentTaskRepository.REST_REPO_REL, path = SAppointmentTaskRepository.REST_REPO_PATH)
 @RepositoryDefinition(domainClass = SAppointmentTask.class, idClass = Long.class)
 public interface SAppointmentTaskRepository
         extends SBasicRepository<SAppointmentTask, Long> {
-    String REPO_NAME = "AppointmentTaskRepo";
+    String REPO_NAME      = "AppointmentTaskRepo";
+    String REST_REPO_REL  = "rest.appointment.task";
+    String REST_REPO_PATH = "appointment_tasks";
+
+    Page<SAppointmentTask> findByAppointment(@Param(value = "appointment") SAppointment appointment, Pageable pageable);
+
+    Page<SAppointmentTask> findByTaskContaining(@Param(value = "task") String taskLike, Pageable pageable);
+
+    Page<SAppointmentTask> findByType(@Param(value = "type") AppointmentTaskType type, Pageable pageable);
 }

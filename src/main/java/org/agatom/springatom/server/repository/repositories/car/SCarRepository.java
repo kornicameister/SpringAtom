@@ -20,15 +20,82 @@ package org.agatom.springatom.server.repository.repositories.car;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.repository.SRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.RepositoryDefinition;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Qualifier("CarRepository")
+@Qualifier(SCarRepository.REPO_NAME)
+@RestResource(rel = SCarRepository.REST_REPO_REL, path = SCarRepository.REST_REPO_PATH)
 @RepositoryDefinition(domainClass = SCar.class, idClass = Long.class)
 public interface SCarRepository
         extends SRepository<SCar, Long, Integer> {
+    String REST_REPO_PATH = "car";
+    String REST_REPO_REL  = "rest.car";
+    String REPO_NAME      = "CarRepository";
+
+    @RestResource(rel = "byLicencePlate", path = "lp_equal")
+    SCar findByLicencePlate(
+            @Param(value = "lp") final String licencePlate
+    );
+
+    @RestResource(rel = "byLicencePlateStarting", path = "lp_starts")
+    Page<SCar> findByLicencePlateStartingWith(
+            @Param(value = "lp") final String licencePlate,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byLicencePlateEnding", path = "lp_ends")
+    Page<SCar> findByLicencePlateEndingWith(
+            @Param(value = "lp") final String licencePlate,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byLicencePlateContaining", path = "lp_contains")
+    Page<SCar> findByLicencePlateContaining(
+            @Param(value = "lp") final String licencePlate,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byBrand", path = "brand")
+    Page<SCar> findByCarMasterManufacturingDataBrand(
+            @Param(value = "brand") final String brand,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byModel", path = "model")
+    Page<SCar> findByCarMasterManufacturingDataModel(
+            @Param(value = "model") final String model,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byBrandAndModel", path = "brandAndModel")
+    Page<SCar> findByCarMasterManufacturingDataBrandAndCarMasterManufacturingDataModel(
+            @Param(value = "brand") final String brand,
+            @Param(value = "model") final String model,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byOwnerLastName", path = "ownerLastName")
+    Page<SCar> findByOwnerPersonLastNameContaining(
+            @Param(value = "ownerLastName") final String lastName,
+            final Pageable pageable
+    );
+
+    @RestResource(rel = "byVinNumber", path = "vin")
+    SCar findByVinNumber(
+            @Param(value = "vin") final String vinNumber
+    );
+
+    @RestResource(rel = "byVinNumberContaining", path = "vin_contains")
+    Page<SCar> findByVinNumberContaining(
+            @Param(value = "vin") final String vinNumber,
+            final Pageable pageable
+    );
 }

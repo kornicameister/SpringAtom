@@ -17,10 +17,15 @@
 
 package org.agatom.springatom.server.repository.repositories.appointment;
 
+import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.server.model.beans.appointment.SAppointmentIssue;
-import org.agatom.springatom.server.repository.SBasicRepository;
+import org.agatom.springatom.server.repository.repositories.issue.SAbstractIssueRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.RepositoryDefinition;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
  * {@code SAppointmentRepository} supports CRUD operations, backend with {@link org.springframework.data.jpa.repository.support.Querydsl}
@@ -32,8 +37,13 @@ import org.springframework.data.repository.RepositoryDefinition;
  */
 
 @Qualifier(value = SAppointmentIssueRepository.REPO_NAME)
+@RestResource(rel = SAppointmentIssueRepository.REST_REPO_REL, path = SAppointmentIssueRepository.REST_REPO_PATH)
 @RepositoryDefinition(domainClass = SAppointmentIssue.class, idClass = Long.class)
 public interface SAppointmentIssueRepository
-        extends SBasicRepository<SAppointmentIssue, Long> {
-    String REPO_NAME = "SAppointmentIssueRepository";
+        extends SAbstractIssueRepository<SAppointmentIssue> {
+    String REPO_NAME      = "SAppointmentIssueRepository";
+    String REST_REPO_REL  = "rest.appointment.issue";
+    String REST_REPO_PATH = "appointment_issues";
+
+    Page<SAppointmentIssue> findByAppointment(@Param(value = "appointment") SAppointment appointment, Pageable pageable);
 }
