@@ -67,7 +67,7 @@
         <!-- logging -->
 
         <!-- spring -->
-        <spring.version>4.0.0.BUILD-SNAPSHOT</spring.version>
+        <spring.version>3.2.5.RELEASE</spring.version>
         <spring-webflow.version>2.4.0.M1</spring-webflow.version>
         <spring-security.version>3.2.0.CI-SNAPSHOT</spring-security.version>
         <spring-js-resources.version>2.3.2.RELEASE</spring-js-resources.version>
