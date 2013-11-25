@@ -191,7 +191,7 @@
         cfg = $.extend(defaults, cfg);
 
         $.ajax({
-            url        : '/data/lang/read',
+            url        : '/app/data/lang/read',
             type       : 'POST',
             contentType: "application/json",
             data       : JSON.stringify({

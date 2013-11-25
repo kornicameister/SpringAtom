@@ -92,8 +92,8 @@
     </view-state>
 
     <end-state id="success"
-               view="externalRedirect:/app/dashboard/calendar?action=#{currentEvent.id}&amp;eventId=#{appointment.id}&amp;eventBegin=#{appointment.begin.toDateTimeISO()}&amp;eventEnd=#{appointment.end.toDateTimeISO()}"/>
+               view="externalRedirect:/dashboard/calendar?action=#{currentEvent.id}&amp;eventId=#{appointment.id}&amp;eventBegin=#{appointment.begin.toDateTimeISO()}&amp;eventEnd=#{appointment.end.toDateTimeISO()}"/>
     <end-state id="cancel"
-               view="externalRedirect:/app/dashboard/calendar?action=#{currentEvent.id}"/>
+               view="externalRedirect:/dashboard/calendar?action=#{currentEvent.id}"/>
 
 </flow>

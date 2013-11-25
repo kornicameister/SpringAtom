@@ -17,17 +17,16 @@
 
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<head>
-    <jsp:useBean id="lang" scope="request" type="java.util.Locale"/>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="${lang.language}"/>
-    <meta name="author" content="kornicameister@gmail.com"/>
-    <meta name="robots" content="noindex, nofollow"/>
-    <meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes">
+<jsp:useBean id="lang" scope="request" type="java.util.Locale"/>
 
-    <title>
-        <jsp:useBean id="pageTitleBean" scope="request" type="org.agatom.springatom.web.view.bean.SViewTitle"/>
-        <c:out value="${pageTitleBean.paramValue}" default="[SA]::SpringAtom"/>
-    </title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="${lang.language}"/>
+<meta name="author" content="kornicameister@gmail.com"/>
+<meta name="robots" content="noindex, nofollow"/>
+<meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes">
 
-</head>
+<title>
+    <jsp:useBean id="pageTitleBean" scope="request" type="org.agatom.springatom.web.view.bean.SViewTitle"/>
+    <c:out value="${pageTitleBean.paramValue}" default="[SA]::SpringAtom"/>
+</title>
+

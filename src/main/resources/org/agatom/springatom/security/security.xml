@@ -31,7 +31,7 @@
     <!-- static content -->
 
     <http name="security-filter" pattern="/**" auto-config="true" use-expressions="true" access-denied-page="/app/auth/access/denied">
-        <intercept-url pattern="/app*" access="permitAll()"/>
+        <intercept-url pattern="/app/*" access="permitAll()"/>
         <!--<intercept-url pattern="/app/admin*" access="hasRole('ROLE_ADMIN')"/>-->
         <!--<intercept-url pattern="/app/secured*" access="hasAnyRole('ROLE_ADMIN','ROLE_MECHANIC')"/>-->
 
@@ -45,14 +45,14 @@
         <form-login login-page="/app/auth/login"
                     authentication-failure-url="/app/auth/failed"
                     login-processing-url="/app/auth/login.do"
-                    default-target-url="/app?action=login&amp;status=true"
+                    default-target-url="/app/?action=login&amp;status=true"
                     username-parameter="ares"
                     password-parameter="athena"
                     always-use-default-target="false"/>
         <logout logout-url="/app/auth/logout"
                 invalidate-session="true"
                 delete-cookies="JSESSIONID"
-                logout-success-url="/app?action=logout&amp;status=true"/>
+                logout-success-url="/app/?action=logout&amp;status=true"/>
         <anonymous enabled="true" granted-authority="ROLE_DATA_ACCESS" key="anonymous"/>
         <remember-me use-secure-cookie="true"
                      user-service-ref="SUserService"

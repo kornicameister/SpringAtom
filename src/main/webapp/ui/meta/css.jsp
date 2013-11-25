@@ -17,6 +17,9 @@
 
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:set var="staticResources" value="/app/static"/>
 
 <link rel="stylesheet" media="all" href="<s:theme code="application" htmlEscape="true" />">
 <link rel="stylesheet" media="all" href="<s:theme code="application.auth" htmlEscape="true" />">
@@ -29,6 +32,6 @@
 <link rel="stylesheet" media="all" href="<s:theme code="application.buttons" htmlEscape="true" />">
 <link rel="stylesheet" media="all" href="<s:theme code="application.wizards" htmlEscape="true" />">
 
-<link rel="stylesheet" media="all" href="<s:url value="/static/lib/alertify/themes/alertify.core.css"/>"/>
-<link rel="stylesheet" media="all" href="<s:url value="/static/lib/alertify/themes/alertify.default.css"/>"/>
-<link type="text/css" rel="stylesheet" href="<s:url value="/static/dijit/themes/soria/soria.css" />"/>
+<link rel="stylesheet" media="all" href="<s:url value="${staticResources}/lib/alertify/themes/alertify.core.css"/>"/>
+<link rel="stylesheet" media="all" href="<s:url value="${staticResources}/lib/alertify/themes/alertify.default.css"/>"/>
+<link type="text/css" rel="stylesheet" href="<s:url value="${staticResources}/dijit/themes/soria/soria.css" />"/>

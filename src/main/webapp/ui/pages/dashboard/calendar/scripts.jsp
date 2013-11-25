@@ -37,11 +37,11 @@
 <s:message code="${domainClassName}" var="domainName"/>
 <s:message code="sa.msg.objectCreated" var="objectCreatedMsg" arguments="${domainName}"/>
 
-<s:url value="/data/appointment/feed" var="jsonFeed"/>
+<s:url value="/app/data/appointment/feed" var="jsonFeed"/>
 <c:set var="jsonFeedMethod" value="<%=RequestMethod.POST.toString().toLowerCase()%>"/>
 <c:set var="jsonFeedContentType" value="<%=MediaType.APPLICATION_FORM_URLENCODED_VALUE%>"/>
 
-<script type="text/javascript" src="<s:url value='/static/lib/fullcalendar/fullcalendar.js' htmlEscape="true"/>"></script>
+<script type="text/javascript" src="<s:url value='/app/static/lib/fullcalendar/fullcalendar.js' htmlEscape="true"/>"></script>
 <script type="text/javascript" id="calendar-loader">
     $(function () {
         Spring.addDecoration(new Spring.AjaxEventDecoration({ elementId: 'dddd', event: 'onclick', popup: true, params: { mode: "embedded"} }));

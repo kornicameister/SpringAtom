@@ -19,7 +19,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
-<a href="<s:url value="/wizard/NewAppointment"/>" id="dddd">AAAAAAA</a>
+<a href="<s:url value="/app/wizard/NewAppointment"/>" id="dddd">AAAAAAA</a>
 <section class="x-calendar">
     <div id="calendar"></div>
 </section>

@@ -23,8 +23,8 @@
 <li class="active">
     <s:message code="label.nav.index" var="indexLabel" htmlEscape="true"/>
     <s:message code="tooltip.nav" arguments="${indexLabel}" var="indexTooltip" htmlEscape="true"/>
-    <a href="<s:url value="/app" htmlEscape="true"/>" title="${indexTooltip}">
-        <i class="icon-desktop icon-color"></i>${indexLabel}
+    <a href="<s:url value="/app/" htmlEscape="true"/>" title="${indexTooltip}">
+    <i class="icon-desktop icon-color"></i>${indexLabel}
     </a>
 </li>
 <li>

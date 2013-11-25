@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 
 @Controller(value = SVTilesViewController.CONTROLLER_NAME)
-@RequestMapping(value = "/app")
 public class SVTilesViewController
         extends SVDefaultController {
     public static final String CONTROLLER_NAME = "TilesControllerViewResolver";
@@ -34,7 +33,7 @@ public class SVTilesViewController
         super(CONTROLLER_NAME);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getIndexPage() {
         return "springatom.tiles.index";
     }
