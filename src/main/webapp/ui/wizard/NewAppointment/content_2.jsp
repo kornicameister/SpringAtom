@@ -107,5 +107,8 @@
         if (box.has('.error-entry')) {
             SA.core.showError(box.children());
         }
+        $('#' + '${requestScope.formID}' + '-' + '${flowRequestContext.currentState.id}')
+                .addClass('selected')
+                .removeClass('disabled');
     })
 </script>

@@ -33,3 +33,10 @@
     <form id="${requestScope.formID}" action="${flowExecutionUrl}" class="x-form">
     </form>
 </div>
+<script>
+    $(function () {
+        $('#' + '${requestScope.formID}' + '-' + '${flowRequestContext.currentState.id}')
+                .addClass('selected')
+                .removeClass('disabled');
+    });
+</script>

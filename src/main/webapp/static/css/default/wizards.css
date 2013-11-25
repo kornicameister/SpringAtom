@@ -117,7 +117,7 @@
 }
 
 /* x-wizard-header Element Style */
-.x-wizard ul.x-wizard-header li a {
+.x-wizard ul.x-wizard-header li span {
     display               : block;
     position              : relative;
     float                 : left;
@@ -132,7 +132,7 @@
     z-index               : 99;
 }
 
-.x-wizard ul.x-wizard-header li a .stepNumber {
+.x-wizard ul.x-wizard-header li span .stepNumber {
     position   : relative;
     float      : left;
     width      : 30px;
@@ -141,7 +141,7 @@
     font       : bold 45px Verdana, Arial, Helvetica, sans-serif;
 }
 
-.x-wizard ul.x-wizard-header li a .stepDesc {
+.x-wizard ul.x-wizard-header li span .stepDesc {
     position   : relative;
     display    : block;
     float      : left;
@@ -151,11 +151,11 @@
     font       : bold 20px Verdana, Arial, Helvetica, sans-serif;
 }
 
-.x-wizard ul.x-wizard-header li a .stepDesc small {
+.x-wizard ul.x-wizard-header li span .stepDesc small {
     font : normal 12px Verdana, Arial, Helvetica, sans-serif;
 }
 
-.x-wizard ul.x-wizard-header li a.selected {
+.x-wizard ul.x-wizard-header li span.selected {
     color              : #F8F8F8;
     background         : #00A2D3;
     border             : #00A2D3;
@@ -165,12 +165,12 @@
     box-shadow         : 1px 5px 10px #888888;
 }
 
-.x-wizard ul.x-wizard-header li a.selected:hover {
+.x-wizard ul.x-wizard-header li span.selected:hover {
     color      : #F8F8F8;
     background : #535497;
 }
 
-.x-wizard ul.x-wizard-header li a.done {
+.x-wizard ul.x-wizard-header li span.done {
     position   : relative;
     color      : #FFFFFF;
     background : #000CC6;
@@ -178,31 +178,31 @@
     z-index    : 99;
 }
 
-.x-wizard ul.x-wizard-header li a.done:hover {
+.x-wizard ul.x-wizard-header li span.done:hover {
     color      : #5A5655;
     background : #000CC6;
     border     : 1px solid #5A5655;
 }
 
-.x-wizard ul.x-wizard-header li a.disabled {
+.x-wizard ul.x-wizard-header li span.disabled {
     color      : #CCCCCC;
     background : #F8F8F8;
     border     : 1px solid #CCCCCC;
     cursor     : text;
 }
 
-.x-wizard ul.x-wizard-header li a.disabled:hover {
+.x-wizard ul.x-wizard-header li span.disabled:hover {
     color      : #CCCCCC;
     background : #F8F8F8;
 }
 
-.x-wizard ul.x-wizard-header li a.error {
+.x-wizard ul.x-wizard-header li span.error {
     color      : #6C6C6C !important;
     background : #F08F75 !important;
     border     : 1px solid #FB3500 !important;
 }
 
-.x-wizard ul.x-wizard-header li a.error:hover {
+.x-wizard ul.x-wizard-header li span.error:hover {
     color : #000000 !important;
 }
 

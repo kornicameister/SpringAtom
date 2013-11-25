@@ -19,29 +19,29 @@
 
 <%-- todo processing which steps is currently active and so on --%>
 <li>
-    <a href="#step-1" class="selected">
+    <span id="${requestScope.formID}-step1" class="selected">
         <label class="stepNumber">1</label>
         <span class="stepDesc">
             <p><s:message code="wizard.step.label" arguments="1"/></p>
             <small><s:message code="wizard.newAppointment.step1.desc"/></small>
         </span>
-    </a>
+    </span>
 </li>
 <li>
-    <a href="#step-2" class="disabled">
+    <span id="${requestScope.formID}-step2" class="disabled">
         <label class="stepNumber">2</label>
         <span class="stepDesc">
             <p><s:message code="wizard.step.label" arguments="2"/></p>
             <small><s:message code="wizard.newAppointment.step2.desc"/></small>
         </span>
-    </a>
+    </span>
 </li>
 <li>
-    <a href="#step-3" class="disabled">
+    <span id="${requestScope.formID}-step3" class="disabled">
         <label class="stepNumber">3</label>
         <span class="stepDesc">
             <p><s:message code="wizard.step.label" arguments="3"/></p>
             <small><s:message code="wizard.newAppointment.step2.desc"/></small>
         </span>
-    </a>
+    </span>
 </li>
