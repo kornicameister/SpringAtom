@@ -20,6 +20,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
 <%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
 <div id="sa-wizard-step-body" class="content">
@@ -103,24 +104,6 @@
         </div>
     </form:form>
 </div>
-<%@ taglib prefix="swf" uri="http://www.example.org/sa/swf" %>
-<script type="text/javascript">
-    $(function () {
-        var box = $('#error-box');
-        if (box.has('.error-entry')) {
-            SA.core.showError(box.children());
-        }
-
-        <swf:transitions state="${flowRequestContext.currentState}" var="transitions"/>
-        SA.wizard.applyActionVisibility({
-            container: 'div.x-wizard-actions',
-            selector : 'button',
-            actions  : JSON.parse('${transitions}'),
-            first    : true
-        });
-
-        $('#' + '${requestScope.formID}' + '-' + '${flowRequestContext.currentState.id}')
-                .addClass('selected')
-                .removeClass('disabled');
-    })
-</script>
+<swf:applyActionsState forState="${flowRequestContext.currentState}"/>
+<swf:applyStepsState forState="${flowRequestContext.currentState}"/>
+<swf:renderErrors forState="${flowRequestContext.currentState}"/>

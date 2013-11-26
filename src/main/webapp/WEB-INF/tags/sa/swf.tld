@@ -42,4 +42,40 @@
         </attribute>
     </tag>
 
+    <tag>
+        <description>
+            Tags resolves all states either being predecessors or successors of the state
+            given as attribute. Which states will be resolved depends on the value of the
+            variable type.
+        </description>
+        <name>states</name>
+        <tag-class>org.agatom.springatom.webmvc.flows.tags.PredecessorSuccessorResolverTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>
+                ViewState for which the states will be resolved
+            </description>
+            <name>state</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>org.springframework.webflow.engine.ViewState</type>
+        </attribute>
+        <attribute>
+            <description>
+                It can be one of the following values:
+                - predecessors
+                - successors
+            </description>
+            <name>type</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <name>var</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
 </taglib>

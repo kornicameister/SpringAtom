@@ -1,3 +1,5 @@
+<%@ tag import="org.apache.log4j.Logger" %>
+<%@ tag import="org.springframework.webflow.engine.Flow" %>
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~
@@ -15,36 +17,20 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
+<%@ attribute name="flow" type="org.springframework.webflow.definition.FlowDefinition" %>
+<%@ attribute name="index" type="java.lang.Short" description="Index of the state" %>
+<%@ attribute name="var" type="java.lang.String" description="target variable in the pageContext" %>
 
-<swf:stateIdAt flow="${flowRequestContext.activeFlow}" index="0" var="state1"/>
-<swf:stateIdAt flow="${flowRequestContext.activeFlow}" index="1" var="state2"/>
-<swf:stateIdAt flow="${flowRequestContext.activeFlow}" index="2" var="state3"/>
-<li>
-    <span id="wiz-step-${state1}" class="disabled">
-        <label class="stepNumber">1</label>
-        <span class="stepDesc">
-            <p><s:message code="wizard.step.label" arguments="1"/></p>
-            <small><s:message code="wizard.newAppointment.step1.desc"/></small>
-        </span>
-    </span>
-</li>
-<li>
-    <span id="wiz-step-${state2}" class="disabled">
-        <label class="stepNumber">2</label>
-        <span class="stepDesc">
-            <p><s:message code="wizard.step.label" arguments="2"/></p>
-            <small><s:message code="wizard.newAppointment.step2.desc"/></small>
-        </span>
-    </span>
-</li>
-<li>
-    <span id="wiz-step-${state3}" class="disabled">
-        <label class="stepNumber">3</label>
-        <span class="stepDesc">
-            <p><s:message code="wizard.step.label" arguments="3"/></p>
-            <small><s:message code="wizard.newAppointment.step2.desc"/></small>
-        </span>
-    </span>
-</li>
+<%
+    final Flow flowDef = (Flow) flow;
+    final String[] stateIds = flowDef.getStateIds();
+    try {
+        if (index >= stateIds.length) {
+            throw new ArrayIndexOutOfBoundsException(index);
+        }
+        final String stateId = stateIds[index];
+        request.setAttribute(var, stateId);
+    } catch (Exception e) {
+        Logger.getLogger("org.agatom.springatom.tags.swf.stateIdAt").error(e);
+    }
+%>

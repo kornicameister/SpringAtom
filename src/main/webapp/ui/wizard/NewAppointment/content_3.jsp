@@ -19,6 +19,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
 
 <s:message code="button.next.short" var="nextButton"/>
 <s:message code="button.previous.short" var="previousButton"/>
@@ -33,19 +34,6 @@
     <form id="${requestScope.formID}" action="${flowExecutionUrl}" class="x-form">
     </form>
 </div>
-<%@ taglib prefix="swf" uri="http://www.example.org/sa/swf" %>
-<script>
-    $(function () {
-        <swf:transitions state="${flowRequestContext.currentState}" var="transitions"/>
-        SA.wizard.applyActionVisibility({
-            container: 'div.x-wizard-actions',
-            selector : 'button',
-            actions  : JSON.parse('${transitions}'),
-            first    : true
-        });
-
-        $('#' + '${requestScope.formID}' + '-' + '${flowRequestContext.currentState.id}')
-                .addClass('selected')
-                .removeClass('disabled');
-    });
-</script>
+<swf:applyActionsState forState="${flowRequestContext.currentState}"/>
+<swf:applyStepsState forState="${flowRequestContext.currentState}"/>
+<swf:renderErrors forState="${flowRequestContext.currentState}"/>

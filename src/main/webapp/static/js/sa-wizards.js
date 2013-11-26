@@ -240,7 +240,44 @@
      * @param cfg
      */
     SA.wizard.applyStepsState = function (cfg) {
+        var state = cfg['currentState'];
+        var availableStates = cfg['availableStates'];
+        var headerSelector = cfg['headerSelector'];
+        var headerContent = $(headerSelector).find('li');
 
+        $.each(headerContent, function (it, li) {
+            li = $(li);
+            var spanEl = $(li.find('span:first-child'));
+            var spanId = spanEl.attr('id');
+
+            // is current state ?
+            if (spanId === state) {
+                spanEl.toggleClass('disabled', false);
+                spanEl.toggleClass('enabled', false);
+                spanEl.toggleClass('selected', true);
+            } else {
+                // complete uncompleted predecessors
+                var predecessors = availableStates['predecessors'];
+                $.each(predecessors, function (it, predecessorSpan) {
+                    var el = $('span#' + SA.wizard.genStepHeaderId(predecessorSpan));
+                    el.removeClass('selected');
+                    el.addClass('done');
+                });
+                // make available successor available
+                var successors = availableStates['successors'];
+                $.each(successors, function (it, successorsSpan) {
+                    var el = $('span#' + SA.wizard.genStepHeaderId(successorsSpan));
+                    el.removeClass('disabled');
+                    el.addClass('enabled');
+                });
+            }
+
+            spanEl.removeClass('error');
+        });
+    };
+
+    SA.wizard.genStepHeaderId = function (val) {
+        return SA.core.genId(val, 'wiz-step');
     }
 
 }(window.SA = window.SA || {}, jQuery));

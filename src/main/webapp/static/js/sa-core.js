@@ -249,6 +249,10 @@
         return bundleCache[key];
     };
 
+    SA.core.genId = function (val, prefix) {
+        return prefix + '-' + val;
+    };
+
     (function () {
         console.log('Initializing SA.core');
         priv.initNotificiationSystem();

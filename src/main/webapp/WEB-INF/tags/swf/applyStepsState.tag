@@ -15,36 +15,20 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
+<%@ taglib prefix="swf" uri="http://www.example.org/sa/swf" %>
+<%@ tag description="This tags simplifies reapplying state of the header. In other words it does recognize the current state and decide which status
+is the most appropriate for the header" %>
+<%@ attribute name="forState"
+              required="true"
+              rtexprvalue="true"
+              type="org.springframework.webflow.definition.StateDefinition"
+              description="Current state" %>
 
-<swf:stateIdAt flow="${flowRequestContext.activeFlow}" index="0" var="state1"/>
-<swf:stateIdAt flow="${flowRequestContext.activeFlow}" index="1" var="state2"/>
-<swf:stateIdAt flow="${flowRequestContext.activeFlow}" index="2" var="state3"/>
-<li>
-    <span id="wiz-step-${state1}" class="disabled">
-        <label class="stepNumber">1</label>
-        <span class="stepDesc">
-            <p><s:message code="wizard.step.label" arguments="1"/></p>
-            <small><s:message code="wizard.newAppointment.step1.desc"/></small>
-        </span>
-    </span>
-</li>
-<li>
-    <span id="wiz-step-${state2}" class="disabled">
-        <label class="stepNumber">2</label>
-        <span class="stepDesc">
-            <p><s:message code="wizard.step.label" arguments="2"/></p>
-            <small><s:message code="wizard.newAppointment.step2.desc"/></small>
-        </span>
-    </span>
-</li>
-<li>
-    <span id="wiz-step-${state3}" class="disabled">
-        <label class="stepNumber">3</label>
-        <span class="stepDesc">
-            <p><s:message code="wizard.step.label" arguments="3"/></p>
-            <small><s:message code="wizard.newAppointment.step2.desc"/></small>
-        </span>
-    </span>
-</li>
+<swf:states state="${forState}" type="all" var="states"/>
+<script type="text/javascript">
+    SA.wizard.applyStepsState({
+        currentState   : SA.wizard.genStepHeaderId('${forState.id}'),
+        availableStates: JSON.parse('${states}'),
+        headerSelector : '.x-wizard-header'
+    });
+</script>

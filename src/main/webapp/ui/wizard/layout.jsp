@@ -28,8 +28,8 @@
 
 <div id="${wizardID}" class="x-wizard">
     <div class="x-clear"></div>
-    <ul class="x-wizard-header">
-        <tiles:insertAttribute name="wiz.header" ignore="false" flush="false"/>
+    <ul id="${wizardID}-header" class="x-wizard-header">
+    <tiles:insertAttribute name="wiz.header" ignore="false" flush="false"/>
     </ul>
     <div class="x-wizard-steps">
         <tiles:insertAttribute name="wiz.content" ignore="false" flush="true"/>

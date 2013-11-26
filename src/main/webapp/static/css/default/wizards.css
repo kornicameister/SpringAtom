@@ -196,6 +196,14 @@
     background : #F8F8F8;
 }
 
+.x-wizard ul.x-wizard-header li span.enabled {
+    position   : relative;
+    color      : #FFFFFF;
+    background : #0CC600;
+    border     : 1px solid #008002;
+    z-index    : 99;
+}
+
 .x-wizard ul.x-wizard-header li span.error {
     color      : #6C6C6C !important;
     background : #F08F75 !important;
