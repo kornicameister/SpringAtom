@@ -70,7 +70,6 @@
         <spring.version>3.2.5.RELEASE</spring.version>
         <spring-webflow.version>2.4.0.M1</spring-webflow.version>
         <spring-security.version>3.2.0.CI-SNAPSHOT</spring-security.version>
-        <spring-js-resources.version>2.3.2.RELEASE</spring-js-resources.version>
         <spring-data-commons.version>1.7.0.BUILD-SNAPSHOT</spring-data-commons.version>
         <spring-data-jpa.version>1.5.0.BUILD-SNAPSHOT</spring-data-jpa.version>
         <spring-data-envers.version>0.2.0.BUILD-SNAPSHOT</spring-data-envers.version>

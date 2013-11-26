@@ -202,6 +202,45 @@
     $.fn.dynamicList = function (cfg) {
         cfg['formId'] = this.attr('id');
         return new SA.wizard.DynamicListHelper(cfg);
+    };
+
+    /**
+     * //TODO missing jsDoc
+     * @param cfg
+     */
+    SA.wizard.applyActionVisibility = function (cfg) {
+        var actionsContainer = cfg['container'];
+        var actionsElement = cfg['selector'] || 'button';
+        var availableActions = cfg['actions'];
+        var firstStep = cfg['first'] || false;
+        var actions = {};
+
+        $.each(availableActions, function (it, val) {
+            actions[val] = true;
+        });
+
+        var buttons = $(actionsContainer).find(actionsElement);
+        $.each(buttons, function (it, val) {
+            var buttonAsJQ = $(val);
+            var buttonId = buttonAsJQ.attr('id');
+            if (actions[buttonId]) {
+                buttonAsJQ.fadeIn();
+            } else {
+                if (!firstStep) {
+                    buttonAsJQ.fadeOut();
+                } else {
+                    buttonAsJQ.hide();
+                }
+            }
+        });
+    };
+
+    /**
+     * //TODO missing jsDoc
+     * @param cfg
+     */
+    SA.wizard.applyStepsState = function (cfg) {
+
     }
 
 }(window.SA = window.SA || {}, jQuery));

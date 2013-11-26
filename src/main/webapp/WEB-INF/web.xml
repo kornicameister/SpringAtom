@@ -151,6 +151,13 @@
     </session-config>
     <!-- session -->
 
+    <jsp-config>
+        <taglib>
+            <taglib-uri>http://www.example.org/sa/swf</taglib-uri>
+            <taglib-location>/WEB-INF/tags/sa/swf.tld</taglib-location>
+        </taglib>
+    </jsp-config>
+
     <welcome-file-list>
         <welcome-file>index.jps</welcome-file>
     </welcome-file-list>

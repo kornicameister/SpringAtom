@@ -101,12 +101,22 @@
         </div>
     </form:form>
 </div>
+<%@ taglib prefix="swf" uri="http://www.example.org/sa/swf" %>
 <script type="text/javascript">
     $(function () {
         var box = $('#error-box');
         if (box.has('.error-entry')) {
             SA.core.showError(box.children());
         }
+
+        <swf:transitions state="${flowRequestContext.currentState}" var="transitions"/>
+        SA.wizard.applyActionVisibility({
+            container: 'div.x-wizard-actions',
+            selector : 'button',
+            actions  : JSON.parse('${transitions}'),
+            first    : true
+        });
+
         $('#' + '${requestScope.formID}' + '-' + '${flowRequestContext.currentState.id}')
                 .addClass('selected')
                 .removeClass('disabled');

@@ -33,8 +33,17 @@
     <form id="${requestScope.formID}" action="${flowExecutionUrl}" class="x-form">
     </form>
 </div>
+<%@ taglib prefix="swf" uri="http://www.example.org/sa/swf" %>
 <script>
     $(function () {
+        <swf:transitions state="${flowRequestContext.currentState}" var="transitions"/>
+        SA.wizard.applyActionVisibility({
+            container: 'div.x-wizard-actions',
+            selector : 'button',
+            actions  : JSON.parse('${transitions}'),
+            first    : true
+        });
+
         $('#' + '${requestScope.formID}' + '-' + '${flowRequestContext.currentState.id}')
                 .addClass('selected')
                 .removeClass('disabled');
