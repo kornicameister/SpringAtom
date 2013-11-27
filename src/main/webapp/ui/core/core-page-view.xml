@@ -30,8 +30,6 @@
         <put-attribute name="header" value="/ui/core/c-header.jsp"/>
         <!-- to override by concrete page -->
         <put-attribute name="content" value=""/>
-        <put-attribute name="js.more" value=""/>
-        <put-attribute name="css.more" value=""/>
         <!-- to override by concrete page -->
     </definition>
 

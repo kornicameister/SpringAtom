@@ -111,6 +111,7 @@
         <webjars.moment.version>2.4.0</webjars.moment.version>
         <webjars.font-awesome.version>4.0.3</webjars.font-awesome.version>
         <webjars.select2.version>3.4.3</webjars.select2.version>
+        <webjars.fullcalendar.version>1.6.4</webjars.fullcalendar.version>
         <!-- web jars -->
 
         <!-- testing -->
@@ -446,6 +447,11 @@
             <groupId>org.webjars</groupId>
             <artifactId>select2</artifactId>
             <version>${webjars.select2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>fullcalendar</artifactId>
+            <version>${webjars.fullcalendar.version}</version>
         </dependency>
         <!-- webjars -->
 

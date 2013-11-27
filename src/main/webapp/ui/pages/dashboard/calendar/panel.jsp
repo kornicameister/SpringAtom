@@ -23,3 +23,4 @@
 <section class="x-calendar">
     <div id="calendar"></div>
 </section>
+<%@ include file="scripts.jsp" %>

@@ -1,6 +1,3 @@
-<%@ page import="org.agatom.springatom.server.model.beans.appointment.SAppointment" %>
-<%@ page import="org.springframework.http.MediaType" %>
-<%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~
@@ -17,6 +14,9 @@
   ~ You should have received a copy of the GNU General Public License                            ~
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
+<%@ page import="org.agatom.springatom.server.model.beans.appointment.SAppointment" %>
+<%@ page import="org.springframework.http.MediaType" %>
+<%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -41,7 +41,6 @@
 <c:set var="jsonFeedMethod" value="<%=RequestMethod.POST.toString().toLowerCase()%>"/>
 <c:set var="jsonFeedContentType" value="<%=MediaType.APPLICATION_FORM_URLENCODED_VALUE%>"/>
 
-<script type="text/javascript" src="<s:url value='/app/static/lib/fullcalendar/fullcalendar.js' htmlEscape="true"/>"></script>
 <script type="text/javascript" id="calendar-loader">
     $(function () {
         Spring.addDecoration(new Spring.AjaxEventDecoration({ elementId: 'dddd', event: 'onclick', popup: true, params: { mode: "embedded"} }));

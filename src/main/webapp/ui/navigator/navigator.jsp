@@ -29,12 +29,4 @@
             <tiles:insertAttribute name="navigator.secured"/>
         </c:if>
     </ul>
-    <c:choose>
-        <c:when test="${!userAuthenticated}">
-            <tiles:insertDefinition name="springatom.tiles.auth.login.embedded"/>
-        </c:when>
-        <c:otherwise>
-            <tiles:insertDefinition name="springatom.tiles.auth.logout.embedded"/>
-        </c:otherwise>
-    </c:choose>
 </nav>

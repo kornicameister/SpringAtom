@@ -34,4 +34,7 @@
 
 <link rel="stylesheet" media="all" href="<s:url value="${staticResources}/lib/alertify/themes/alertify.core.css"/>"/>
 <link rel="stylesheet" media="all" href="<s:url value="${staticResources}/lib/alertify/themes/alertify.default.css"/>"/>
-<link type="text/css" rel="stylesheet" href="<s:url value="${staticResources}/dijit/themes/soria/soria.css" />"/>
+<link rel="stylesheet" media="all" href="<s:url value="${staticResources}/dijit/themes/soria/soria.css" />"/>
+<link rel="stylesheet" media="all" href="<s:url value="${staticResources}/fullcalendar/1.6.4/fullcalendar.css"/>"/>
+<link rel="stylesheet" media="print" href="<s:url value="${staticResources}/fullcalendar/1.6.4/fullcalendar.print.css"/>"/>
+<link rel="stylesheet" media="all" href="<s:url value="/app/static/css/fullcalendar-extra.css"/>"/>

@@ -24,7 +24,7 @@
 <head>
     <tiles:insertAttribute name="head"/>
     <tiles:insertAttribute name="css" flush="true"/>
-    <tiles:insertAttribute name="css.more" ignore="true"/>
+    <tiles:insertAttribute name="js" flush="true"/>
 </head>
 <body>
 <div id="page">
@@ -44,6 +44,4 @@
     <tiles:insertAttribute name="navigator"/>
 </div>
 </body>
-<tiles:insertAttribute name="js" flush="true"/>
-<tiles:insertAttribute name="js.more" ignore="true"/>
 </html>

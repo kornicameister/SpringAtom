@@ -28,8 +28,6 @@
 
     <definition name="springatom.tiles.dashboard.calendar" extends="ui.core.Page">
         <put-attribute name="content" value="/ui/pages/dashboard/calendar/panel.jsp"/>
-        <put-attribute name="css.more" value="/ui/pages/dashboard/calendar/stylesheets.jsp"/>
-        <put-attribute name="js.more" value="/ui/pages/dashboard/calendar/scripts.jsp"/>
     </definition>
 
     <definition name="springatom.tiles.dashboard.reports" extends="ui.core.Page">

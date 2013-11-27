@@ -26,17 +26,20 @@
 <jsp:useBean id="lang" scope="request" type="java.util.Locale"/>
 
 <script type="text/javascript" src="<s:url value="${staticResources}/jquery/2.0.3/jquery.min.js"/>"></script>
-<script type="text/javascript" src="<s:url value="${staticLib}/mmenu/3.2.1/jquery.mmenu.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/momentjs/2.4.0/min/moment.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/momentjs/2.4.0/lang/${lang.language}.js"/>"></script>
+<script type="text/javascript" src="<s:url value='${staticResources}/fullcalendar/1.6.4/fullcalendar.min.js'/>"></script>
+<script type="text/javascript" src="<s:url value="${staticResources}/dojo/dojo.js" />"></script>
+<script type="text/javascript" src="<s:url value="${staticResources}/spring/Spring.js.uncompressed.js" />"></script>
+<script type="text/javascript" src="<s:url value="${staticResources}/spring/Spring-Dojo.js.uncompressed.js" />"></script>
+
+<script type="text/javascript" src="<s:url value="${staticLib}/mmenu/3.2.1/jquery.mmenu.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/tinycon.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/midway.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/alertify/alertify.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/spin.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/simpleModal.min.js"/>"></script>
-<script type="text/javascript" src="<s:url value="${staticResources}/dojo/dojo.js" />"></script>
-<script type="text/javascript" src="<s:url value="${staticResources}/spring/Spring.js.uncompressed.js" />"></script>
-<script type="text/javascript" src="<s:url value="${staticResources}/spring/Spring-Dojo.js.uncompressed.js" />"></script>
+
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-mmenu.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-auth.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-core.js"/>"></script>
