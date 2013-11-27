@@ -112,6 +112,7 @@
         <webjars.font-awesome.version>4.0.3</webjars.font-awesome.version>
         <webjars.select2.version>3.4.3</webjars.select2.version>
         <webjars.fullcalendar.version>1.6.4</webjars.fullcalendar.version>
+        <webjars.spin-js.version>1.3.0</webjars.spin-js.version>
         <!-- web jars -->
 
         <!-- testing -->
@@ -452,6 +453,11 @@
             <groupId>org.webjars</groupId>
             <artifactId>fullcalendar</artifactId>
             <version>${webjars.fullcalendar.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>spin-js</artifactId>
+            <version>${webjars.spin-js.version}</version>
         </dependency>
         <!-- webjars -->
 
