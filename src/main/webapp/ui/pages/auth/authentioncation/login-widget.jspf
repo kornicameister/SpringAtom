@@ -15,16 +15,40 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@page session="true" trimDirectiveWhitespaces="true" pageEncoding="UTF-8" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
-<%@taglib prefix="s.f" uri="http://www.springframework.org/tags/form" %>
+<s:url value="/app/auth/login.do" var="securityCheckLogin"/>
+<form:form name="auth"
+           action="${securityCheckLogin}"
+           htmlEscape="true"
+           autocomplete="true"
+           method="post"
+           acceptCharset="UTF-8"
+           cssClass="x-login-form">
+    <div id="inputs">
+        <p><s:message code="label.auth.login"/>
+            <input type="text"
+                   name="ares"
+                   id="username"
+                   placeholder="<s:message code="sa.msg.login.prompt"/>"
+                   autofocus
+                   class="x-input"
+                   required>
+        </p>
 
-<jsp:element name="section">
-    <jsp:attribute name="class" trim="true">
-        <c:out value="authForm logout"/>
-    </jsp:attribute>
-    <jsp:attribute name="id" trim="true">
-        <c:out value="authFormWrapper"/>
-    </jsp:attribute>
-</jsp:element>
+        <p>
+            <s:message code="label.auth.password"/>
+            <input type="password"
+                   name="athena"
+                   id="password"
+                   placeholder="<s:message code="sa.msg.password.prompt"/>"
+                   class="x-input"
+                   required>
+        </p>
+    </div>
+    <div class="actions">
+        <p><input type="submit" class="login-button" value="<s:message code="button.login"/>"></p>
+
+        <p><a href="<s:url value="/app/auth/forgotten/password"/>"><s:message code="sa.msg.forgotPassword"/></a></p>
+
+        <p><a href="<s:url value="/app/auth/register"/>"><s:message code="sa.msg.register"/></a></p>
+    </div>
+</form:form>

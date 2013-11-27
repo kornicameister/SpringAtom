@@ -15,20 +15,12 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@page session="true" trimDirectiveWhitespaces="true" pageEncoding="UTF-8" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
-<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
-
-<section id="login-section" class="auth login">
-    <div id="login-form" class="x-auth-widget">
-        <h1 class="x-auth-widget-header">
-            <s:message code="label.authentication.loginAction"/>
-        </h1>
-        <%@ include file="authentioncation/login-widget.jspf" %>
-    </div>
-    <div id="forgot-password-form" class="x-auth-widget x-hidden">
-        <%@ include file="authentioncation/password-widget.jspf" %>
-    </div>
-</section>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<div id="login-action" class="auth-action login-action">
+    <span class="label"><s:message code="label.authentication.loggedAs"/></span>
+    <s:message code="label.authentication.anonymousUser"/>
+    <a href="<s:url value="/app/auth/login"/>" title="<s:message code="button.login"/>">
+        <i class="fa fa-lock fa-color"></i>
+    </a>
+</div>

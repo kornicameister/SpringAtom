@@ -177,3 +177,7 @@ div.x-clear {
     line-height : 0;
     visibility  : hidden;
 }
+
+.x-hidden {
+    display : none;
+}

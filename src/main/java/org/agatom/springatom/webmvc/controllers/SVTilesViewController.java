@@ -19,7 +19,6 @@ package org.agatom.springatom.webmvc.controllers;
 
 import org.agatom.springatom.webmvc.core.SVDefaultController;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -63,11 +62,6 @@ public class SVTilesViewController
         return "springatom.tiles.auth.access.denied";
     }
 
-    @RequestMapping(value = "/auth/forgotten/password", method = RequestMethod.GET)
-    public String getForgottenPasswordPage() {
-        return "springatom.tiles.auth.forgotten.password";
-    }
-
     @RequestMapping(value = "/auth/register", method = RequestMethod.GET)
     public String getRegisterPage() {
         return "springatom.tiles.auth.register";
@@ -79,7 +73,7 @@ public class SVTilesViewController
     }
 
     @RequestMapping(value = "/dashboard/calendar", method = RequestMethod.GET)
-    public String getCalendarPage(final ModelMap modelMap) throws Exception {
+    public String getCalendarPage() throws Exception {
         return "springatom.tiles.dashboard.calendar";
     }
 

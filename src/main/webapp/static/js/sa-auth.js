@@ -16,27 +16,12 @@
  **************************************************************************************************/
 
 $(document).ready(function () {
-    var internal = {
-        hideEmbeddedLoginForm : function () {
-            var $form = $('.login-embedded-form');
-            if ($form.length === 0) {
-                return;
-            }
-            if ($form.is(":visible")) {
-                $form.hide();
-            }
+    $('.auth-action').find('a').find('i').hover(
+        function () {
+            $('.auth-action').find('a').find('i').addClass('fa-spin');
         },
-        hideEmbeddedLogoutForm: function () {
-            var $form = $('.logout-embedded-form');
-            if ($form.length === 0) {
-                return;
-            }
-            if ($form.is(":visible")) {
-                $form.hide();
-            }
+        function () {
+            $('.auth-action').find('a').find('i').removeClass('fa-spin');
         }
-    };
-
-    internal.hideEmbeddedLoginForm();
-    internal.hideEmbeddedLogoutForm();
+    );
 });

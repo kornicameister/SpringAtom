@@ -103,23 +103,6 @@
                 opacity     : 20,
                 overlayCss  : {
                     backgroundColor: "#246485"
-                },
-                onOpen      : function (dialog) {
-                    dialog.overlay.fadeIn('slow', function () {
-                        dialog.data.hide();
-                        dialog.container.fadeIn('slow', function () {
-                            dialog.data.slideDown('slow');
-                        });
-                    });
-                },
-                onClose     : function (dialog) {
-                    dialog.data.fadeOut('slow', function () {
-                        dialog.container.hide('slow', function () {
-                            dialog.overlay.slideUp('slow', function () {
-                                $.modal.close();
-                            });
-                        });
-                    });
                 }
             })
         } else {
