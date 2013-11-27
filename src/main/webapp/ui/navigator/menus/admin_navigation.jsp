@@ -22,7 +22,7 @@
     <s:message code="tooltip.nav" arguments="${adminDbLabel}" var="adminDbLabelTooltip"
                htmlEscape="true"/>
     <a href="<s:url value="/app/admin/db" htmlEscape="true"/>" title="${adminDbLabelTooltip}">
-        <i class="icon-archive icon-color"></i>${adminDbLabel}
+        <i class="fa fa-archive fa-color"></i>${adminDbLabel}
     </a>
 </li>
 <li>
@@ -31,6 +31,6 @@
                htmlEscape="true"/>
     <a href="<s:url value="/app/admin/language" htmlEscape="true"/>"
        title="${adminLanguageTooltip}">
-        <i class="icon-flag icon-color"></i>${adminLanguage}
+        <i class="fa fa-flag fa-color"></i>${adminLanguage}
     </a>
 </li>

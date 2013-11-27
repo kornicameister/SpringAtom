@@ -40,7 +40,7 @@ html.mm-opening .mm-page {
     height : 40px;
 }
 
-.mm-menu li a [class^="icon-"] {
+.mm-menu li a [class^="fa"] {
     margin : 0 35px 0 -22px;
 }
 

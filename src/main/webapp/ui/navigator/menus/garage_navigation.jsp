@@ -18,7 +18,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <li>
-    <i class="icon-color mm-submenu-icon icon-magnet"></i>
+    <i class="fa fa-color mm-submenu-icon fa-magnet"></i>
     <a href="#">
         <s:message code="label.nav.management"/>
     </a>
@@ -30,7 +30,7 @@
                        htmlEscape="true"/>
             <li>
                 <a href="${clientsUrl}" title="${clientsTooltip}">
-                    <i class="icon-truck icon-color"></i>${clientsLabel}
+                    <i class="fa fa-users fa-color"></i>${clientsLabel}
                 </a>
             </li>
         </security:authorize>
@@ -41,7 +41,7 @@
                        htmlEscape="true"/>
             <li>
                 <a href="${carsUrl}" title="${carsTooltip}">
-                    <i class="icon-truck icon-color"></i>${carsLabel}
+                    <i class="fa fa-truck fa-color"></i>${carsLabel}
                 </a>
             </li>
         </security:authorize>

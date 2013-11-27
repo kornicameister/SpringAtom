@@ -18,7 +18,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <li>
-    <i class="icon-color icon-dashboard mm-submenu-icon"></i>
+    <i class="fa fa-color fa-dashboard mm-submenu-icon"></i>
     <a href="#">
         <s:message code="label.nav.dashboard"/>
     </a>
@@ -32,7 +32,7 @@
                        htmlEscape="true"/>
             <li>
                 <a href="${carsUrl}" title="${carsTooltip}">
-                    <i class="icon-truck icon-color"></i>${carsLabel}
+                    <i class="fa fa-truck fa-color"></i>${carsLabel}
                 </a>
             </li>
         </security:authorize>
@@ -46,7 +46,7 @@
                        htmlEscape="true"/>
             <li>
                 <a href="${calendarUrl}" title="${calendarTooltip}">
-                    <i class="icon-calendar icon-color"></i>${calendarLabel}
+                    <i class="fa fa-calendar fa-color"></i>${calendarLabel}
                 </a>
             </li>
         </security:authorize>
@@ -60,7 +60,7 @@
                        htmlEscape="true"/>
             <li>
                 <a href="${reportsUrl}" title="${reportsTooltip}">
-                    <i class="icon-briefcase icon-color"></i>${reportsLabel}
+                    <i class="fa fa-briefcase fa-color"></i>${reportsLabel}
                 </a>
             </li>
         </security:authorize>
