@@ -18,23 +18,34 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <li>
-    <i class="fa fa-color mm-submenu-icon fa-magnet"></i>
+    <i class="fa fa-color fa-dashboard mm-submenu-icon"></i>
     <a href="#">
-        <s:message code="label.nav.management"/>
+        <s:message code="label.nav.dashboard"/>
     </a>
     <ul>
-        <s:url value="/app/dashboard/garage/clients" htmlEscape="true" var="clientsUrl"/>
-        <security:authorize url="${clientsUrl}">
-            <s:message code="label.nav.clients" var="clientsLabel" htmlEscape="true"/>
-            <s:message code="tooltip.nav" arguments="${clientsLabel}" var="clientsTooltip"
+        <s:url value="/app/dashboard/calendar" htmlEscape="true" var="calendarUrl"/>
+        <security:authorize url="${calendarUrl}">
+            <s:message code="label.nav.calendar" var="calendarLabel" htmlEscape="true"/>
+            <s:message code="tooltip.nav" arguments="${calendarLabel}" var="calendarTooltip"
                        htmlEscape="true"/>
             <li>
-                <a href="${clientsUrl}" title="${clientsTooltip}">
-                    <i class="fa fa-users fa-color"></i>${clientsLabel}
+                <a href="${calendarUrl}" title="${calendarTooltip}">
+                    <i class="fa fa-calendar fa-color"></i>${calendarLabel}
                 </a>
             </li>
         </security:authorize>
-        <s:url value="/app/dashboard/garage/cars" htmlEscape="true" var="carsUrl"/>
+        <s:url value="/app/dashboard/reports" htmlEscape="true" var="reportsUrl"/>
+        <security:authorize url="${reportsUrl}">
+            <s:message code="label.nav.reports" var="reportsLabel" htmlEscape="true"/>
+            <s:message code="tooltip.nav" arguments="${reportsLabel}" var="reportsTooltip"
+                       htmlEscape="true"/>
+            <li>
+                <a href="${reportsUrl}" title="${reportsTooltip}">
+                    <i class="fa fa-briefcase fa-color"></i>${reportsLabel}
+                </a>
+            </li>
+        </security:authorize>
+        <s:url value="/app/dashboard/cars" htmlEscape="true" var="carsUrl"/>
         <security:authorize url="${carsUrl}">
             <s:message code="label.nav.cars" var="carsLabel" htmlEscape="true"/>
             <s:message code="tooltip.nav" arguments="${carsLabel}" var="carsTooltip"
@@ -42,6 +53,17 @@
             <li>
                 <a href="${carsUrl}" title="${carsTooltip}">
                     <i class="fa fa-truck fa-color"></i>${carsLabel}
+                </a>
+            </li>
+        </security:authorize>
+        <s:url value="/app/dashboard/clients" htmlEscape="true" var="clientsUrl"/>
+        <security:authorize url="${clientsUrl}">
+            <s:message code="label.nav.clients" var="clientsLabel" htmlEscape="true"/>
+            <s:message code="tooltip.nav" arguments="${clientsLabel}" var="clientsTooltip"
+                       htmlEscape="true"/>
+            <li>
+                <a href="${clientsUrl}" title="${clientsTooltip}">
+                    <i class="fa fa-users fa-color"></i>${clientsLabel}
                 </a>
             </li>
         </security:authorize>

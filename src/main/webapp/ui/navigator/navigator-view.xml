@@ -22,18 +22,5 @@
         "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 
 <tiles-definitions>
-
-    <definition name="ui.nav.Navigator" template="/ui/navigator/navigator.jsp">
-        <put-attribute name="navigator.secured">
-            <definition template="/ui/navigator/secured_navigation.jsp">
-                <put-attribute name="dashboard" value="/ui/navigator/menus/dashboard_navigation.jsp"/>
-                <put-attribute name="garage" value="/ui/navigator/menus/garage_navigation.jsp"/>
-                <put-attribute name="boss" value="/ui/navigator/menus/boss_navigation.jsp"/>
-                <put-attribute name="admin" value="/ui/navigator/menus/admin_navigation.jsp"/>
-            </definition>
-        </put-attribute>
-        <put-attribute name="navigator.free" value="/ui/navigator/menus/free_navigation.jsp"/>
-    </definition>
-
-
+    <definition name="ui.nav.Navigator" template="/ui/navigator/navigator.jsp"/>
 </tiles-definitions>
