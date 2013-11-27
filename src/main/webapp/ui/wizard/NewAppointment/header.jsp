@@ -16,13 +16,20 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
 
-<swf:stateIdAt flow="${flowRequestContext.activeFlow}" index="0" var="state1"/>
-<swf:stateIdAt flow="${flowRequestContext.activeFlow}" index="1" var="state2"/>
-<swf:stateIdAt flow="${flowRequestContext.activeFlow}" index="2" var="state3"/>
+<swf:stepId flow="${flowRequestContext.activeFlow}" index="0" var="state1"/>
+<swf:stepId flow="${flowRequestContext.activeFlow}" index="1" var="state2"/>
+<swf:stepId flow="${flowRequestContext.activeFlow}" index="2" var="state3"/>
+<swf:isStepRequired stateId="${state1}" var="state1Required"/>
+<swf:isStepRequired stateId="${state2}" var="state2Required"/>
+<swf:isStepRequired stateId="${state3}" var="state3Required"/>
 <li>
     <span id="wiz-step-${state1}" class="disabled">
+        <c:if test="${state1Required}">
+            <i class="fa fa-star"></i>
+        </c:if>
         <label class="stepNumber">1</label>
         <span class="stepDesc">
             <p><s:message code="wizard.step.label" arguments="1"/></p>
@@ -32,6 +39,9 @@
 </li>
 <li>
     <span id="wiz-step-${state2}" class="disabled">
+        <c:if test="${state2Required}">
+            <i class="fa fa-star"></i>
+        </c:if>
         <label class="stepNumber">2</label>
         <span class="stepDesc">
             <p><s:message code="wizard.step.label" arguments="2"/></p>
@@ -41,6 +51,9 @@
 </li>
 <li>
     <span id="wiz-step-${state3}" class="disabled">
+        <c:if test="${state3Required}">
+            <i class="fa fa-star"></i>
+        </c:if>
         <label class="stepNumber">3</label>
         <span class="stepDesc">
             <p><s:message code="wizard.step.label" arguments="3"/></p>

@@ -214,6 +214,11 @@
     color : #000000 !important;
 }
 
+.x-wizard ul.x-wizard-header li i {
+    position : relative;
+    display  : inline-block;
+}
+
 .x-wizard .buttonNext {
     display               : block;
     float                 : right;

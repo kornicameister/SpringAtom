@@ -21,21 +21,11 @@
       xmlns="http://www.springframework.org/schema/webflow"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-    <var name="finishButtonAction" class="java.lang.String"/>
-    <var name="nextButtonAction" class="java.lang.String"/>
-    <var name="previousButtonAction" class="java.lang.String"/>
-    <var name="cancelButtonAction" class="java.lang.String"/>
-
     <on-start>
-        <set name="finishButtonAction" value="'_eventId_finish'"/>
-        <set name="nextButtonAction" value="'_eventId_next'"/>
-        <set name="previousButtonAction" value="'_eventId_previous'"/>
-        <set name="cancelButtonAction" value="'_eventId_cancel'"/>
-
-        <evaluate expression="finishButtonAction" result="flowScope.finishAction"/>
-        <evaluate expression="nextButtonAction" result="flowScope.nextAction"/>
-        <evaluate expression="previousButtonAction" result="flowScope.previousAction"/>
-        <evaluate expression="cancelButtonAction" result="flowScope.cancelAction"/>
+        <evaluate expression="WizardFinishEvent.eventName" result="flowScope.finishAction"/>
+        <evaluate expression="WizardCancelEvent.eventName" result="flowScope.cancelAction"/>
+        <evaluate expression="WizardNextEvent.eventName" result="flowScope.nextAction"/>
+        <evaluate expression="WizardPreviousEvent.eventName" result="flowScope.previousAction"/>
     </on-start>
 
 </flow>

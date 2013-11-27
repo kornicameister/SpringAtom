@@ -240,40 +240,28 @@
      * @param cfg
      */
     SA.wizard.applyStepsState = function (cfg) {
-        var state = cfg['currentState'];
-        var availableStates = cfg['availableStates'];
-        var headerSelector = cfg['headerSelector'];
-        var headerContent = $(headerSelector).find('li');
+        var state = SA.wizard.genStepHeaderId(cfg['stateId']);
+        var descriptor = cfg['descriptor'];
+        var header = $(cfg['headerSelector']);
 
-        $.each(headerContent, function (it, li) {
-            li = $(li);
-            var spanEl = $(li.find('span:first-child'));
-            var spanId = spanEl.attr('id');
+        var stateSpanNode = $(header.find('li').find('span#' + state));
+        stateSpanNode.removeClass('disabled');
+        stateSpanNode.removeClass('enabled');
+        stateSpanNode.removeClass('done');
+        stateSpanNode.removeClass('error');
+        stateSpanNode.addClass('selected');
 
-            // is current state ?
-            if (spanId === state) {
-                spanEl.toggleClass('disabled', false);
-                spanEl.toggleClass('enabled', false);
-                spanEl.toggleClass('selected', true);
-            } else {
-                // complete uncompleted predecessors
-                var predecessors = availableStates['predecessors'];
-                $.each(predecessors, function (it, predecessorSpan) {
-                    var el = $('span#' + SA.wizard.genStepHeaderId(predecessorSpan));
-                    el.removeClass('selected');
-                    el.addClass('done');
-                });
-                // make available successor available
-                var successors = availableStates['successors'];
-                $.each(successors, function (it, successorsSpan) {
-                    var el = $('span#' + SA.wizard.genStepHeaderId(successorsSpan));
-                    el.removeClass('disabled');
-                    el.addClass('enabled');
-                });
-            }
-
-            spanEl.removeClass('error');
+        $.each(descriptor['predecessors'], function (it, predecessorSpan) {
+            var el = $('span#' + SA.wizard.genStepHeaderId(predecessorSpan));
+            el.removeClass('selected');
+            el.addClass('done');
         });
+        $.each(descriptor['successors'], function (it, successorsSpan) {
+            var el = $('span#' + SA.wizard.genStepHeaderId(successorsSpan));
+            el.removeClass('disabled');
+            el.addClass('enabled');
+        });
+
     };
 
     SA.wizard.genStepHeaderId = function (val) {

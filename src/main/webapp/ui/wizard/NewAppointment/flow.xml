@@ -27,6 +27,12 @@
     <on-start>
         <evaluate expression="'NewAppointmentWizard'" result="flowScope.wizardID"/>
         <evaluate expression="'NewAppointmentWizardForm'" result="flowScope.formID"/>
+        <evaluate expression="WizardConfiguration.requiredStepsHolder" result="flowScope.requiredSteps"/>
+
+        <!--init required steps-->
+        <evaluate expression="flowScope.requiredSteps.add('step1')"/>
+        <evaluate expression="flowScope.requiredSteps.add('step2')"/>
+        <!--init requires steps-->
     </on-start>
 
     <view-state id="step1" view="ui.wizard.NewAppointment.1" model="appointment" popup="true">

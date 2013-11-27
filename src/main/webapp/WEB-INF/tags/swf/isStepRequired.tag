@@ -15,15 +15,13 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@ taglib prefix="swf" uri="http://www.example.org/sa/swf" %>
-<%@ tag description="This tags simplifies reapplying state of the header. In other words it does recognize the current state and decide which status
-is the most appropriate for the header" %>
-<%@ attribute name="forState"
-              required="true"
-              rtexprvalue="true"
-              type="org.springframework.webflow.definition.StateDefinition"
-              description="Current state" %>
-<swf:states state="${forState}" type="all" var="states"/>
-<script type="text/javascript" id="${forState}-applyStepsState" defer="defer">
-    SA.wizard.applyStepsState({stateId: '${forState.id}', descriptor: JSON.parse('${states}'), headerSelector: '.x-wizard-header'});
-</script>
+<%@ attribute name="stateId" type="java.lang.String" rtexprvalue="true" description="ID of the state" %>
+<%@ attribute name="var" type="java.lang.String" description="target variable in the pageContext" %>
+<%@ tag import="org.agatom.springatom.webmvc.flows.wizard.support.WizardRequiresStepsHolder" %>
+<%@ tag import="org.springframework.webflow.execution.RequestContextHolder" %>
+<%
+    final WizardRequiresStepsHolder requiredSteps = RequestContextHolder.getRequestContext()
+                                                                        .getFlowScope()
+                                                                        .get("requiredSteps", WizardRequiresStepsHolder.class);
+    request.setAttribute(var, requiredSteps.has(stateId));
+%>

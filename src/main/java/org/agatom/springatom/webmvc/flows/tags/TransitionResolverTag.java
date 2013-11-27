@@ -18,37 +18,37 @@
 package org.agatom.springatom.webmvc.flows.tags;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import org.agatom.springatom.webmvc.flows.wizard.events.WizardEvent;
+import org.agatom.springatom.webmvc.flows.wizard.ui.WizardHeaderDescriptor;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.web.servlet.tags.RequestContextAwareTag;
 import org.springframework.webflow.engine.Flow;
+import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.ViewState;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class PredecessorSuccessorResolverTag
+public class TransitionResolverTag
         extends RequestContextAwareTag {
-    private static final Logger LOGGER = Logger.getLogger(PredecessorSuccessorResolverTag.class);
-    private String          var;
-    private ViewState       state;
-    private AssociationType type;
+    private static final Logger LOGGER = Logger.getLogger(TransitionResolverTag.class);
+    private WizardEvent    wizardPreviousEvent;
+    private WizardEvent    wizardNextEvent;
+    private String         var;
+    private ViewState      state;
+    private TransitionType type;
 
     public void setState(final ViewState state) {
         this.state = state;
     }
 
     public void setType(final String type) {
-        this.type = AssociationType.valueOf(type.toUpperCase());
+        this.type = TransitionType.valueOf(type.toUpperCase());
     }
 
     public void setVar(final String var) {
@@ -57,29 +57,50 @@ public class PredecessorSuccessorResolverTag
 
     @Override
     protected int doStartTagInternal() throws Exception {
+        this.wizardPreviousEvent = (WizardEvent) this.getRequestContext().getWebApplicationContext()
+                                                     .getBean("WizardPreviousEvent");
+        this.wizardNextEvent = (WizardEvent) this.getRequestContext().getWebApplicationContext()
+                                                 .getBean("WizardNextEvent");
+
         final Flow owner = (Flow) this.state.getOwner();
         final String[] stateIds = owner.getStateIds();
         final int thisStatePosition = this.calculatePosition(stateIds);
-        final Map<String, List<String>> result = this.initializeResultMap();
+        final WizardHeaderDescriptor descriptor = new WizardHeaderDescriptor(this.state.getId());
 
         this.logDoStartTag(stateIds);
         {
             for (int position = 0 ; position < stateIds.length ; position++) {
-                final AssociationType decision = this.getSide(thisStatePosition, position);
-                if (this.isIncluded(decision) && this.isTransitionable(stateIds[position], owner)) {
-                    result.get(decision.toString().toLowerCase()).add(stateIds[position]);
+                if (position == thisStatePosition) {
+                    continue;
+                }
+                final WizardEvent side = this.getSide(thisStatePosition, position);
+                if (this.isIncluded(side) && this.isAccessible(stateIds[position], owner)) {
+                    switch (side.getName()) {
+                        case "previous":
+                            descriptor.addPredecessor(stateIds[position]);
+                            break;
+                        default:
+                            descriptor.addSuccessor(stateIds[position]);
+                    }
                 }
             }
         }
-        this.logDoStartTagResult(result);
+        this.logDoStartTagResult(descriptor);
 
-        this.pageContext.setAttribute(this.var, new JSONObject(result).toString());
+        this.pageContext.setAttribute(this.var, new JSONObject(descriptor).toString());
         return EVAL_BODY_INCLUDE;
     }
 
-    private boolean isTransitionable(final String stateId, final Flow owner) {
+    private boolean isAccessible(final String stateId, final Flow owner) {
         try {
-            return owner.getTransitionableState(stateId) != null;
+            boolean isAccessible = owner.getTransitionableState(stateId) != null;
+            // is available as successors
+            Transition transition = (Transition) this.state.getTransition(this.wizardNextEvent.getName());
+            if (!isAccessible) {
+                // or maybe as predecessor
+                transition = (Transition) this.state.getTransition(this.wizardPreviousEvent.getName());
+            }
+            return transition != null && transition.getTargetStateId().equals(stateId);
         } catch (Exception ignore) {
         }
         return false;
@@ -97,36 +118,23 @@ public class PredecessorSuccessorResolverTag
         return index;
     }
 
-    private boolean isIncluded(final AssociationType decision) {
-        return decision != null && (this.type.equals(AssociationType.ALL) || decision.equals(this.type));
+    private boolean isIncluded(final WizardEvent side) {
+        return side != null && (this.type.equals(TransitionType.ALL) || side.getName().equals(this.type.action));
     }
 
-    private AssociationType getSide(final int thisStatePosition, final int otherStatePosition) {
+    private WizardEvent getSide(final int thisStatePosition, final int otherStatePosition) {
         if (otherStatePosition > thisStatePosition) {
-            return AssociationType.SUCCESSORS;
+            return wizardNextEvent;
         } else if (otherStatePosition < thisStatePosition) {
-            return AssociationType.PREDECESSORS;
+            return wizardPreviousEvent;
         }
         return null;
     }
 
-    private void logDoStartTagResult(final Map<String, List<String>> result) {
+    private void logDoStartTagResult(final WizardHeaderDescriptor result) {
         LOGGER.trace(String.format("ViewState -> %s", this.state.getId()));
         LOGGER.trace("predecessor/successor -> %s");
-        for (final String key : result.keySet()) {
-            LOGGER.trace(String.format("\ttype=%s --> items=%s", key, result.get(key)));
-        }
-    }
-
-    private HashMap<String, List<String>> initializeResultMap() {
-        final HashMap<String, List<String>> map = Maps.newHashMap();
-        if (this.type.equals(AssociationType.ALL)) {
-            map.put(AssociationType.PREDECESSORS.toString().toLowerCase(), Lists.<String>newLinkedList());
-            map.put(AssociationType.SUCCESSORS.toString().toLowerCase(), Lists.<String>newLinkedList());
-        } else {
-            map.put(this.type.toString().toLowerCase(), Lists.<String>newLinkedList());
-        }
-        return map;
+        LOGGER.trace(String.format("\n\t%s", result));
     }
 
     private void logDoStartTag(final String[] stateIds) {
@@ -144,9 +152,14 @@ public class PredecessorSuccessorResolverTag
                       .toString();
     }
 
-    private enum AssociationType {
-        ALL,
-        PREDECESSORS,
-        SUCCESSORS
+    private enum TransitionType {
+        ALL(null),
+        PREDECESSORS("previous"),
+        SUCCESSORS("next");
+        private final String action;
+
+        TransitionType(final String action) {
+            this.action = action;
+        }
     }
 }
