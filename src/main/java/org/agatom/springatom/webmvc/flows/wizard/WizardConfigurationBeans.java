@@ -21,14 +21,12 @@ import org.agatom.springatom.webmvc.flows.wizard.events.WizardEvents;
 import org.agatom.springatom.webmvc.flows.wizard.support.WizardRequiresStepsHolder;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Configuration(value = "WizardConfiguration")
 public class WizardConfigurationBeans {
 
     @Bean(name = "WizardEvents", autowire = Autowire.BY_TYPE)
