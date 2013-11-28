@@ -22,17 +22,11 @@
 
 <tiles-definitions>
 
-    <definition name="springatom.tiles.dashboard.cars" extends="ui.core.Page">
-        <put-attribute name="content" value="/ui/pages/dashboard/cars/panel.jsp"/>
+    <definition name="springatom.tiles.garage.lifts" extends="ui.core.Page">
+        <put-attribute name="content" value="/ui/pages/garage/lifts/panel.jsp"/>
     </definition>
-    <definition name="springatom.tiles.dashboard.calendar" extends="ui.core.Page">
-        <put-attribute name="content" value="/ui/pages/dashboard/calendar/panel.jsp"/>
-    </definition>
-    <definition name="springatom.tiles.dashboard.reports" extends="ui.core.Page">
-        <put-attribute name="content" value="/ui/pages/dashboard/reports/panel.jsp"/>
-    </definition>
-    <definition name="springatom.tiles.dashboard.clients" extends="ui.core.Page">
-        <put-attribute name="content" value="/ui/pages/dashboard/clients/panel.jsp"/>
+    <definition name="springatom.tiles.garage.mechanics" extends="ui.core.Page">
+        <put-attribute name="content" value="/ui/pages/garage/mechanics/panel.jsp"/>
     </definition>
 
 </tiles-definitions>

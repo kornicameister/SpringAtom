@@ -16,12 +16,6 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
 <%@ page language="java" session="true" trimDirectiveWhitespaces="true" %>
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<section id="x-dashboard" class="dashboard mechanics">
 
-<a href="<s:url value="/app/wizard/NewAppointment"/>" id="dddd">AAAAAAA</a>
-<section class="x-calendar">
-    <div id="calendar"></div>
 </section>
-<%@ include file="scripts.jsp" %>
