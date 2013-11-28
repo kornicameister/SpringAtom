@@ -17,68 +17,33 @@
 
 package org.agatom.springatom.webmvc.controllers;
 
-import org.agatom.springatom.webmvc.core.SVDefaultController;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import com.google.common.collect.Maps;
+import org.apache.log4j.Logger;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.servlet.mvc.AbstractUrlViewController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
+import java.util.Properties;
 
 
-@Controller(value = SVTilesViewController.CONTROLLER_NAME)
 public class SVTilesViewController
-        extends SVDefaultController {
-    public static final String CONTROLLER_NAME = "TilesControllerViewResolver";
+        extends AbstractUrlViewController {
+    private static final Logger              LOGGER = Logger.getLogger(SVTilesViewController.class);
+    private final        Map<String, String> urlMap = Maps.newHashMap();
 
-    public SVTilesViewController() {
-        super(CONTROLLER_NAME);
+    @Override
+    protected String getViewNameForRequest(final HttpServletRequest request) {
+        final String path = this.getUrlPathHelper().getLookupPathForRequest(request);
+        if (this.urlMap.containsKey(path)) {
+            final String viewName = this.urlMap.get(path);
+            LOGGER.info(String.format("For path %s resolved view %s", path, viewName));
+            return viewName;
+        }
+        return null;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String getIndexPage() {
-        return "springatom.tiles.index";
-    }
-
-    @RequestMapping(value = "/reports", method = RequestMethod.GET)
-    public String getFreeReportsPage() {
-        return "springatom.tiles.reports";
-    }
-
-    @RequestMapping(value = "/about", method = RequestMethod.GET)
-    public String getAboutPage() {
-        return "springatom.tiles.about";
-    }
-
-    @RequestMapping(value = "/auth/login", method = RequestMethod.GET)
-    public String getLoginPage() {
-        return "springatom.tiles.auth.login";
-    }
-
-    @RequestMapping(value = "/auth/failed", method = RequestMethod.GET)
-    public String getLoginFailedPage() {
-        return "springatom.tiles.auth.login.failed";
-    }
-
-    @RequestMapping(value = "/auth/access/denied")
-    public String getAccessDeniedPage() {
-        return "springatom.tiles.auth.access.denied";
-    }
-
-    @RequestMapping(value = "/auth/register", method = RequestMethod.GET)
-    public String getRegisterPage() {
-        return "springatom.tiles.auth.register";
-    }
-
-    @RequestMapping(value = "/dashboard/cars", method = RequestMethod.GET)
-    public String getCarsPage() throws Exception {
-        return "springatom.tiles.dashboard.cars";
-    }
-
-    @RequestMapping(value = "/dashboard/calendar", method = RequestMethod.GET)
-    public String getCalendarPage() throws Exception {
-        return "springatom.tiles.dashboard.calendar";
-    }
-
-    @RequestMapping(value = "/dashboard/reports", method = RequestMethod.GET)
-    public String getReportsPage() throws Exception {
-        return "springatom.tiles.dashboard.reports";
+    public void setMappings(Properties mappings) {
+        CollectionUtils.mergePropertiesIntoMap(mappings, this.urlMap);
     }
 }
