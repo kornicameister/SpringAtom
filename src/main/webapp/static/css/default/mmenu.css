@@ -57,9 +57,9 @@ html.mm-opening .mm-page {
 }
 
 .mm-menu li > a[class="mm-subopen"] + a {
-    position     : relative;
-    float        : right;
-    margin-right : 51%;
+    position : absolute;
+    left     : 31px;
+    top      : 1px;
 }
 
 .mm-menu .mm-search {
