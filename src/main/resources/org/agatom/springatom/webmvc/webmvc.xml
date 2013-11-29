@@ -104,4 +104,34 @@
         <constructor-arg ref="springAtomConversionService"/>
     </bean>
 
+    <bean id="tilesViewController" class="org.agatom.springatom.webmvc.controllers.SVTilesViewController">
+        <property name="cacheSeconds" value="120"/>
+        <property name="urlDecode" value="true"/>
+        <property name="synchronizeOnSession" value="true"/>
+        <property name="requireSession" value="false"/>
+        <property name="supportedMethods">
+            <array>
+                <value>GET</value>
+            </array>
+        </property>
+        <property name="mappings">
+            <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+                <property name="locations">
+                    <array>
+                        <value>classpath:org/agatom/springatom/webmvc/url-mapping.properties</value>
+                    </array>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="urlMaps" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="alwaysUseFullPath" value="true"/>
+        <property name="defaultHandler" ref="tilesViewController"/>
+        <property name="urlMap">
+            <map key-type="java.lang.String" value-type="org.springframework.web.servlet.mvc.Controller">
+                <entry key="/app/*" value-ref="tilesViewController"/>
+            </map>
+        </property>
+    </bean>
+
 </beans>
