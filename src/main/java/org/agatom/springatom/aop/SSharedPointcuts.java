@@ -32,7 +32,7 @@ public class SSharedPointcuts {
     protected void inServiceLayer() {
     }
 
-    @Pointcut("within(org.agatom.springatom.webmvc.servlet..*)")
+    @Pointcut("within(org.agatom.springatom.webmvc.controllers..*)")
     protected void inController() {
     }
 
