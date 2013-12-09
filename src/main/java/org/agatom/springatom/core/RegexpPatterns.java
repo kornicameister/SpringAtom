@@ -15,58 +15,22 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.shared;
+package org.agatom.springatom.core;
 
-import com.google.common.base.Objects;
-import org.joda.time.DateTime;
-
-import java.io.Serializable;
-import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
+ * {@code RegexpPatterns} is a locale for custom patterns that may be used in the application.
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class UnixTimestamp
-        implements Serializable {
-    private DateTime time;
+public class RegexpPatterns {
+    public static final String BIG_FIRST_LETTER_PATTERN = "^([A-Z]|[0-9]).*$";
 
-    public UnixTimestamp(final long ts) {
-        this.setTime(ts);
-    }
-
-    public DateTime getTime() {
-        return time;
-    }
-
-    public void setTime(final long ts) {
-        this.time = new DateTime(TimeUnit.SECONDS.toMillis(ts));
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(time);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        UnixTimestamp that = (UnixTimestamp) o;
-
-        return Objects.equal(this.time, that.time);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(time)
-                      .toString();
+    public static boolean matches(final String value, final String regex) {
+        final Pattern pattern = Pattern.compile(regex);
+        return pattern.matcher(value).matches();
     }
 }

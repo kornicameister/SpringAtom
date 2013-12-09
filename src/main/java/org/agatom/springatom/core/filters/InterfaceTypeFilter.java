@@ -15,22 +15,30 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.shared;
+package org.agatom.springatom.core.filters;
 
-import java.util.regex.Pattern;
+import org.springframework.core.type.classreading.MetadataReader;
+import org.springframework.core.type.classreading.MetadataReaderFactory;
+import org.springframework.core.type.filter.AssignableTypeFilter;
+
+import java.io.IOException;
 
 /**
- * {@code RegexpPatterns} is a locale for custom patterns that may be used in the application.
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class RegexpPatterns {
-    public static final String BIG_FIRST_LETTER_PATTERN = "^([A-Z]|[0-9]).*$";
+public class InterfaceTypeFilter
+        extends AssignableTypeFilter {
+    public InterfaceTypeFilter(final Class<?> targetType) {
+        super(targetType);
+    }
 
-    public static boolean matches(final String value, final String regex) {
-        final Pattern pattern = Pattern.compile(regex);
-        return pattern.matcher(value).matches();
+    @Override
+    public boolean match(
+            final MetadataReader metadataReader,
+            final MetadataReaderFactory metadataReaderFactory) throws IOException {
+        return metadataReader.getClassMetadata().isInterface()
+                && super.match(metadataReader, metadataReaderFactory);
     }
 }
