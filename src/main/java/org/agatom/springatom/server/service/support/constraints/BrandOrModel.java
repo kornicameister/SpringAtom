@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.server.service.support.constraints;
 
-import org.agatom.springatom.shared.RegexpPatterns;
+import org.agatom.springatom.core.RegexpPatterns;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Constraint;

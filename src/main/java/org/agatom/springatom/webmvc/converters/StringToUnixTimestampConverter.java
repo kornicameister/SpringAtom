@@ -18,7 +18,7 @@
 package org.agatom.springatom.webmvc.converters;
 
 import com.google.common.base.Preconditions;
-import org.agatom.springatom.shared.UnixTimestamp;
+import org.agatom.springatom.core.UnixTimestamp;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalConverter;
 import org.springframework.core.convert.converter.Converter;

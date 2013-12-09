@@ -25,7 +25,7 @@ import javax.persistence.Embeddable;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
-import static org.agatom.springatom.shared.RegexpPatterns.BIG_FIRST_LETTER_PATTERN;
+import static org.agatom.springatom.core.RegexpPatterns.BIG_FIRST_LETTER_PATTERN;
 
 /**
  * @author kornicamaister
