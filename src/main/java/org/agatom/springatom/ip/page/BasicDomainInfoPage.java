@@ -15,33 +15,38 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.controllers.ip;
+package org.agatom.springatom.ip.page;
 
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
+import org.agatom.springatom.ip.DomainInfoPage;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Controller(value = InfoPageController.CONTROLLER_NAME)
-@RequestMapping(value = "/ip")
-public class InfoPageController {
-    public static final  String CONTROLLER_NAME = "infoPageController";
-    private static final String VIEW_NAME       = "springatom.tiles.ip.InfoPage";
-    private static final Logger LOGGER          = Logger.getLogger(InfoPageController.class);
+public abstract class BasicDomainInfoPage
+        extends BasicInfoPage
+        implements DomainInfoPage {
+    private Class<?> domainClass;
+    private Class<?> repositoryClass;
 
-    @RequestMapping(value = "/{domainClass}/{id}", method = RequestMethod.GET)
-    public ModelAndView getInfoPage(
-            @PathVariable("domainClass") String domainClass,
-            @PathVariable("id") String id
-    ) {
-        LOGGER.debug(String.format("/getInfoPage/domain=%s/id=%s", domainClass, id));
-        return new ModelAndView(VIEW_NAME);
+    @Override
+    public Class<?> getDomainClass() {
+        return this.domainClass;
+    }
+
+    @Override
+    public void setDomainClass(final Class<?> domain) {
+        this.domainClass = domain;
+    }
+
+    @Override
+    public Class<?> getRepositoryClass() {
+        return this.repositoryClass;
+    }
+
+    @Override
+    public void setRepositoryClass(final Class<?> repository) {
+        this.repositoryClass = repository;
     }
 }
