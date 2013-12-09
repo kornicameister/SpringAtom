@@ -19,6 +19,8 @@ package org.agatom.springatom.ip.config;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.agatom.springatom.core.filters.AllTypeFilter;
+import org.agatom.springatom.core.filters.InterfaceTypeFilter;
 import org.agatom.springatom.ip.DomainInfoPage;
 import org.agatom.springatom.ip.DomainInfoPageResource;
 import org.agatom.springatom.ip.InfoPage;
@@ -27,16 +29,10 @@ import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.type.classreading.MetadataReader;
-import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
-import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.data.repository.util.ClassUtils;
-import org.springframework.util.Assert;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -95,40 +91,4 @@ class InfoPageComponentProvider
         return isNonRepositoryInterface && isTopLevelType;
     }
 
-    private static class InterfaceTypeFilter
-            extends AssignableTypeFilter {
-        public InterfaceTypeFilter(final Class<?> targetType) {
-            super(targetType);
-        }
-
-        @Override
-        public boolean match(
-                final MetadataReader metadataReader,
-                final MetadataReaderFactory metadataReaderFactory) throws IOException {
-            return metadataReader.getClassMetadata().isInterface()
-                    && super.match(metadataReader, metadataReaderFactory);
-        }
-    }
-
-    private static class AllTypeFilter
-            implements TypeFilter {
-
-        private final List<TypeFilter> delegates;
-
-        public AllTypeFilter(final List<TypeFilter> delegates) {
-            Assert.notNull(delegates);
-            this.delegates = delegates;
-        }
-
-        public boolean match(
-                final MetadataReader metadataReader,
-                final MetadataReaderFactory metadataReaderFactory) throws IOException {
-            for (final TypeFilter filter : delegates) {
-                if (!filter.match(metadataReader, metadataReaderFactory)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-    }
 }
