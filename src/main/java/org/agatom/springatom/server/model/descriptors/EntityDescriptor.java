@@ -18,7 +18,7 @@
 package org.agatom.springatom.server.model.descriptors;
 
 import org.agatom.springatom.server.model.descriptors.properties.BasicPropertyDescriptor;
-import org.agatom.springatom.server.model.descriptors.properties.ManyToOnePropertyyDescriptor;
+import org.agatom.springatom.server.model.descriptors.properties.ManyToOnePropertyDescriptor;
 import org.agatom.springatom.server.model.descriptors.properties.OneToManyPropertyDescriptor;
 import org.agatom.springatom.server.model.descriptors.properties.SystemPropertyDescriptor;
 
@@ -39,7 +39,7 @@ public interface EntityDescriptor<X> {
 
     Set<OneToManyPropertyDescriptor> getOneToManyProperties();
 
-    Set<ManyToOnePropertyyDescriptor> getManyToOneProperties();
+    Set<ManyToOnePropertyDescriptor> getManyToOneProperties();
 
     Set<SystemPropertyDescriptor> getSystemProperties();
 

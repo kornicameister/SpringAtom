@@ -20,12 +20,13 @@ package org.agatom.springatom.server.model.descriptors.descriptor;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.properties.BasicPropertyDescriptor;
-import org.agatom.springatom.server.model.descriptors.properties.ManyToOnePropertyyDescriptor;
+import org.agatom.springatom.server.model.descriptors.properties.ManyToOnePropertyDescriptor;
 import org.agatom.springatom.server.model.descriptors.properties.OneToManyPropertyDescriptor;
 import org.agatom.springatom.server.model.descriptors.properties.SystemPropertyDescriptor;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.Set;
 
@@ -79,9 +80,9 @@ public class EntityTypeDescriptor<X>
     public Set<OneToManyPropertyDescriptor> getOneToManyProperties() {
         if (!this.attributes.hasProperties(OneToManyPropertyDescriptor.class)) {
             final Set<OneToManyPropertyDescriptor> pds = Sets.newHashSet();
-            final Set<? extends SingularAttribute<? super X, ?>> attributeSet = this.entityType.getSingularAttributes();
+            final Set<PluralAttribute<? super X, ?, ?>> attributeSet = this.entityType.getPluralAttributes();
 
-            for (final SingularAttribute<?, ?> attribute : attributeSet) {
+            for (final PluralAttribute<? super X, ?, ?> attribute : attributeSet) {
                 if (attribute.getPersistentAttributeType().equals(Attribute.PersistentAttributeType.ONE_TO_MANY)) {
                     pds.add(new OneToManyPropertyDescriptor(attribute));
                 }
@@ -93,14 +94,14 @@ public class EntityTypeDescriptor<X>
     }
 
     @Override
-    public Set<ManyToOnePropertyyDescriptor> getManyToOneProperties() {
-        if (!this.attributes.hasProperties(ManyToOnePropertyyDescriptor.class)) {
-            final Set<ManyToOnePropertyyDescriptor> pds = Sets.newHashSet();
+    public Set<ManyToOnePropertyDescriptor> getManyToOneProperties() {
+        if (!this.attributes.hasProperties(ManyToOnePropertyDescriptor.class)) {
+            final Set<ManyToOnePropertyDescriptor> pds = Sets.newHashSet();
             final Set<? extends SingularAttribute<? super X, ?>> attributeSet = this.entityType.getSingularAttributes();
 
             for (final SingularAttribute<?, ?> attribute : attributeSet) {
                 if (attribute.getPersistentAttributeType().equals(Attribute.PersistentAttributeType.MANY_TO_ONE)) {
-                    pds.add(new ManyToOnePropertyyDescriptor(attribute));
+                    pds.add(new ManyToOnePropertyDescriptor(attribute));
                 }
             }
 

@@ -17,17 +17,63 @@
 
 package org.agatom.springatom.server.model.descriptors.properties;
 
-import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.*;
+import java.lang.reflect.Member;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class OneToManyPropertyDescriptor
-        extends BasicPropertyDescriptor {
+public class OneToManyPropertyDescriptor {
 
-    public OneToManyPropertyDescriptor(final SingularAttribute<?, ?> attribute) {
-        super(attribute);
+    private final PluralAttribute<?, ?, ?> attribute;
+
+    public OneToManyPropertyDescriptor(final PluralAttribute<?, ?, ?> attribute) {
+        this.attribute = attribute;
+    }
+
+    public PluralAttribute.CollectionType getCollectionType() {
+        return attribute.getCollectionType();
+    }
+
+    public boolean isAssociation() {
+        return attribute.isAssociation();
+    }
+
+    public Member getJavaMember() {
+        return attribute.getJavaMember();
+    }
+
+    public Bindable.BindableType getBindableType() {
+        return attribute.getBindableType();
+    }
+
+    public String getName() {
+        return attribute.getName();
+    }
+
+    public Class<?> getBindableJavaType() {
+        return attribute.getBindableJavaType();
+    }
+
+    public Attribute.PersistentAttributeType getPersistentAttributeType() {
+        return attribute.getPersistentAttributeType();
+    }
+
+    public Type<?> getElementType() {
+        return attribute.getElementType();
+    }
+
+    public boolean isCollection() {
+        return attribute.isCollection();
+    }
+
+    public ManagedType<?> getDeclaringType() {
+        return attribute.getDeclaringType();
+    }
+
+    public Class<?> getJavaType() {
+        return attribute.getJavaType();
     }
 }

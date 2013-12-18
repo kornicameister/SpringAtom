@@ -20,7 +20,7 @@ package org.agatom.springatom.server.model.descriptors.descriptor;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.descriptors.properties.BasicPropertyDescriptor;
-import org.agatom.springatom.server.model.descriptors.properties.ManyToOnePropertyyDescriptor;
+import org.agatom.springatom.server.model.descriptors.properties.ManyToOnePropertyDescriptor;
 import org.agatom.springatom.server.model.descriptors.properties.OneToManyPropertyDescriptor;
 import org.agatom.springatom.server.model.descriptors.properties.SystemPropertyDescriptor;
 
@@ -36,17 +36,17 @@ import java.util.Set;
 
 class AttributesHolder {
 
-    private Set<BasicPropertyDescriptor>      basic     = Sets.newHashSet();
-    private Set<OneToManyPropertyDescriptor>  oneToMany = Sets.newHashSet();
-    private Set<ManyToOnePropertyyDescriptor> manyToOne = Sets.newHashSet();
-    private Set<SystemPropertyDescriptor>     system    = Sets.newHashSet();
-    private Map<Class<?>, Set<?>>             internal  = Maps.newHashMap();
+    private Set<BasicPropertyDescriptor>     basic     = Sets.newHashSet();
+    private Set<OneToManyPropertyDescriptor> oneToMany = Sets.newHashSet();
+    private Set<ManyToOnePropertyDescriptor> manyToOne = Sets.newHashSet();
+    private Set<SystemPropertyDescriptor>    system    = Sets.newHashSet();
+    private Map<Class<?>, Set<?>>            internal  = Maps.newHashMap();
 
     AttributesHolder() {
         super();
         this.internal.put(BasicPropertyDescriptor.class, this.basic);
         this.internal.put(OneToManyPropertyDescriptor.class, this.oneToMany);
-        this.internal.put(ManyToOnePropertyyDescriptor.class, this.manyToOne);
+        this.internal.put(ManyToOnePropertyDescriptor.class, this.manyToOne);
         this.internal.put(SystemPropertyDescriptor.class, this.system);
     }
 
@@ -62,7 +62,7 @@ class AttributesHolder {
         return Collections.unmodifiableSet(this.system);
     }
 
-    Set<ManyToOnePropertyyDescriptor> getManyToOneProperties() {
+    Set<ManyToOnePropertyDescriptor> getManyToOneProperties() {
         return Collections.unmodifiableSet(this.manyToOne);
     }
 
@@ -82,7 +82,7 @@ class AttributesHolder {
         this.system.addAll(pds);
     }
 
-    public void addAllManyToOneProperties(final Set<ManyToOnePropertyyDescriptor> pds) {
+    public void addAllManyToOneProperties(final Set<ManyToOnePropertyDescriptor> pds) {
         this.manyToOne.addAll(pds);
     }
 }

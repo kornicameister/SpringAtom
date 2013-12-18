@@ -67,12 +67,16 @@ public class DynamicEntityDescriptorReader
     @SuppressWarnings("unchecked")
     public <X> EntityDescriptor<X> getDefinition(final Class<X> xClass, final boolean initialize) {
         LOGGER.trace(String.format("/getDefinition => xClass -> %s\tinitialize -> %s", ClassUtils.getShortName(xClass), initialize));
+        if (this.cache.containsKey(xClass)) {
+            return (EntityDescriptor<X>) this.cache.get(xClass);
+        }
         final EntityType<?> entityType = this.getEntityType(xClass);
         if (entityType != null) {
             final EntityDescriptor<?> descriptor = new EntityTypeDescriptor<>(entityType);
             if (initialize) {
                 descriptor.initialize();
             }
+            this.cache.put(xClass, descriptor);
             return (EntityDescriptor<X>) descriptor;
         }
         return null;

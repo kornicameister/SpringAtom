@@ -24,10 +24,10 @@ import javax.persistence.metamodel.SingularAttribute;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class ManyToOnePropertyyDescriptor
+public class ManyToOnePropertyDescriptor
         extends BasicPropertyDescriptor {
 
-    public ManyToOnePropertyyDescriptor(final SingularAttribute<?, ?> attribute) {
+    public ManyToOnePropertyDescriptor(final SingularAttribute<?, ?> attribute) {
         super(attribute);
     }
 }
