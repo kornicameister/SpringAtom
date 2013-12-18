@@ -34,8 +34,8 @@ import java.io.IOException;
  * @since 0.0.1
  */
 
-public class OXMHelper {
-    private static final Logger LOGGER = Logger.getLogger(OXMHelper.class);
+public class OXMLEngine {
+    private static final Logger LOGGER = Logger.getLogger(OXMLEngine.class);
     protected Marshaller   marshaller;
     protected Unmarshaller unmarshaller;
 
