@@ -15,26 +15,21 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.ip.config;
+package org.agatom.springatom.ip;
 
-import org.agatom.springatom.ip.SInfoPage;
-import org.springframework.context.ApplicationContextAware;
-
-import java.util.Set;
+import org.springframework.data.repository.Repository;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface InfoPageConfigurationSource
-        extends ApplicationContextAware {
+public interface SDomainInfoPage
+        extends SInfoPage {
+    Class<?> getDomainClass();
 
-    Set<Class<?>> getAllInfoPageClasses();
+    Class<? extends Repository> getRepositoryClass();
 
-    SInfoPage getFromDomain(final Class<?> domainClass);
+    void setRepositoryClass(final Class<? extends Repository> repositoryClass);
 
-    SInfoPage getFromPath(final String path);
-
-    SInfoPage getFromRel(String rel);
 }

@@ -19,16 +19,18 @@ package org.agatom.springatom.ip.page;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
-import org.agatom.springatom.ip.InfoPage;
+import org.agatom.springatom.ip.SInfoPage;
 import org.springframework.util.Assert;
 
 /**
+ * {@code BasicInfoPage} is a default implementation for {@link org.agatom.springatom.ip.SInfoPage} interface
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 abstract public class BasicInfoPage
-        implements InfoPage {
+        implements SInfoPage {
     private String path;
     private String rel;
 
@@ -52,7 +54,7 @@ abstract public class BasicInfoPage
 
     @Override
     @SuppressWarnings("NullableProblems")
-    public int compareTo(final InfoPage infoPage) {
+    public int compareTo(final SInfoPage infoPage) {
         Assert.notNull(infoPage);
         return ComparisonChain
                 .start()

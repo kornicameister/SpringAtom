@@ -17,6 +17,10 @@
 
 package org.agatom.springatom.ip.config;
 
+import org.agatom.springatom.component.config.ComponentModuleConfiguration;
+import org.agatom.springatom.core.module.AbstractModuleConfiguration;
+import org.agatom.springatom.ip.annotation.DomainInfoPage;
+import org.agatom.springatom.ip.annotation.InfoPage;
 import org.agatom.springatom.ip.mapping.InfoPageMappings;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
@@ -34,21 +38,33 @@ import org.springframework.context.annotation.*;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Lazy(false)
-@Configuration(value = "InfoPageConfiguration")
-@PropertySource(value = "classpath:org/agatom/springatom/webmvc/webmvc.properties")
-public class InfoPageMVCConfiguration
+@Configuration(value = InfoPageModuleConfiguration.MODULE_NAME)
+@PropertySource(value = "classpath:org/agatom/springatom/ip/infopage.properties")
+@ComponentScan(
+        nameGenerator = ComponentModuleConfiguration.NameGen.class,
+        basePackages = {
+                "org.agatom.springatom"
+        },
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(value = InfoPage.class, type = FilterType.ANNOTATION),
+                @ComponentScan.Filter(value = DomainInfoPage.class, type = FilterType.ANNOTATION)
+        }
+)
+public class InfoPageModuleConfiguration
+        extends AbstractModuleConfiguration
         implements BeanFactoryAware,
                    ApplicationContextAware {
-    private static final Logger LOGGER = Logger.getLogger(InfoPageMVCConfiguration.class);
+    protected static final String MODULE_NAME = "InfoPageConfiguration";
+    private static final   Logger LOGGER      = Logger.getLogger(InfoPageModuleConfiguration.class);
     private ListableBeanFactory beanFactory;
     private ApplicationContext  applicationContext;
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     public InfoPageMappings getInfoPageMapping() {
+        this.logRegistering(InfoPageMappings.class, LOGGER);
         final InfoPageMappings mappings = new InfoPageMappings();
-        mappings.setBeanFactory(this.beanFactory);
         mappings.setInfoPageConfigurationSource(this.getInfoPageConfigurationSource());
         return mappings;
     }
@@ -56,12 +72,14 @@ public class InfoPageMVCConfiguration
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     public InfoPageComponentProvider getInfoPageComponentProvider() {
+        this.logRegistering(InfoPageComponentProvider.class, LOGGER);
         return new InfoPageComponentProvider();
     }
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     public InfoPageAwareBeanPostProcessor getInfoPagePostProcessor() {
+        this.logRegistering(InfoPageAwareBeanPostProcessor.class, LOGGER);
         final InfoPageAwareBeanPostProcessor processor = new InfoPageAwareBeanPostProcessor();
         processor.setBeanFactory(this.beanFactory);
         processor.setBasePackage(this.applicationContext.getEnvironment().getProperty("springatom.infoPages.basePackage"));
@@ -70,7 +88,8 @@ public class InfoPageMVCConfiguration
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public InfoPageConfigurationSourceImpl getInfoPageConfigurationSource() {
+    public InfoPageConfigurationSource getInfoPageConfigurationSource() {
+        this.logRegistering(InfoPageConfigurationSource.class, LOGGER);
         final InfoPageConfigurationSourceImpl source = new InfoPageConfigurationSourceImpl()
                 .setProvider(this.getInfoPageComponentProvider())
                 .setBasePackage(this.applicationContext.getEnvironment().getProperty("springatom.infoPages.basePackage"));
@@ -92,4 +111,5 @@ public class InfoPageMVCConfiguration
     public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
+
 }

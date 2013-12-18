@@ -15,24 +15,21 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.ip;
+package org.agatom.springatom.core.processors;
 
-import org.springframework.stereotype.Component;
+import org.springframework.beans.PropertyValues;
+import org.springframework.beans.factory.BeanFactoryAware;
 
-import java.lang.annotation.*;
+import java.beans.PropertyDescriptor;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component
-@Documented
-@Inherited
-@Target(value = {ElementType.TYPE})
-@Retention(value = RetentionPolicy.RUNTIME)
-public @interface InfoPageResource {
-    String path() default "";
+public interface AnnotationBeanPostProcessor
+        extends BeanFactoryAware {
+    PropertyValues postProcessOverAnnotation(PropertyValues pvs, PropertyDescriptor[] pds, String beanName);
 
-    String rel() default "";
+    Object resolveValueFromAnnotation(String pdName, String beanName);
 }

@@ -20,13 +20,17 @@ package org.agatom.springatom.ip;
 import java.io.Serializable;
 
 /**
+ * {@code SInfoPage} describes given <pre>InfoPage</pre> as a web resource
+ * by association with variables such as path (which is a URI under which
+ * table will be accessible) and a rel (to provide fixed id-like field)
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface InfoPage
+public interface SInfoPage
         extends Serializable,
-                Comparable<InfoPage> {
+                Comparable<SInfoPage> {
     String getPath();
 
     String getRel();

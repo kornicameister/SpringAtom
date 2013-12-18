@@ -22,13 +22,15 @@ package org.agatom.springatom.ip;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class InfoPageConstants {
+public final class InfoPageConstants {
 
-    public static final String INFOPAGE_RESOURCE_NAME     = "_ip";
-    public static final String INFOPAGE_REST_CONTENT_LINK = "_ip_rest_content_link";
+    public static final String INFOPAGE_REST_CONTENT_LINK       = "ipRestLink";
+    public static final String INFOPAGE_VIEW_DATA_TEMPLATE_LINK = "ipDataView";
+    public static final String INFOPAGE_PAGE                    = "ipInfoPage";
+    public static final String INFOPAGE_CONTENT                 = "ipContent";
+    public static final String INFOPAGE_COMPONENT               = "ipComponent";
+    public static final String INFOPAGE_BUILDER                 = "ipBuilder";
 
     private InfoPageConstants() {
     }
-
-
 }

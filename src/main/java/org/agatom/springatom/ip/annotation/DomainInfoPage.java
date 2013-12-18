@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.ip;
+package org.agatom.springatom.ip.annotation;
 
 import org.springframework.data.repository.Repository;
 import org.springframework.stereotype.Component;
@@ -32,8 +32,11 @@ import java.lang.annotation.*;
 @Inherited
 @Target(value = {ElementType.TYPE})
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface DomainInfoPageResource {
-    Class<? extends Repository<?, ?>> repositoryClass();
+public @interface DomainInfoPage {
 
-    Class<?> domainClass();
+    String path() default "";
+
+    String rel() default "";
+
+    Class<? extends Repository<?, ?>> repositoryClass();
 }

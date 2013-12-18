@@ -20,10 +20,11 @@ package org.agatom.springatom.ip.config;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.agatom.springatom.ip.DomainInfoPageResource;
-import org.agatom.springatom.ip.InfoPage;
-import org.agatom.springatom.ip.InfoPageResource;
+import org.agatom.springatom.ip.SInfoPage;
+import org.agatom.springatom.ip.annotation.DomainInfoPage;
+import org.agatom.springatom.ip.annotation.InfoPage;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -34,6 +35,7 @@ import org.springframework.util.ClassUtils;
 
 import javax.annotation.Nullable;
 import java.beans.Introspector;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,9 +46,17 @@ import java.util.Set;
  */
 class InfoPageConfigurationSourceImpl
         implements InfoPageConfigurationSource {
-    public static final  String DOMAIN_KEY = "domainClass";
-    public static final  String PATH_KEY   = "path";
-    private static final Logger LOGGER     = Logger.getLogger(InfoPageConfigurationSource.class);
+    private static final Logger            LOGGER                      = Logger.getLogger(InfoPageConfigurationSource.class);
+    private static final List<String>      ANNOTATION_TYPES            = Lists.newArrayList(
+            InfoPage.class.getName(),
+            DomainInfoPage.class.getName()
+    );
+    private static final Predicate<String> ANNOTATION_LOOKUP_PREDICATE = new Predicate<String>() {
+        @Override
+        public boolean apply(@Nullable final String input) {
+            return ANNOTATION_TYPES.contains(input);
+        }
+    };
     private InfoPageComponentProvider provider;
     private String                    basePackage;
     private ApplicationContext        applicationContext;
@@ -69,43 +79,9 @@ class InfoPageConfigurationSourceImpl
     }
 
     @Override
-    public InfoPage getFromDomain(final Class<?> domainClass) {
+    public SInfoPage getFromDomain(final Class<?> domainClass) {
         LOGGER.debug(String.format("/getFromDomain => %s", domainClass));
-        final Set<BeanDefinition> components = this.getBeanDefinitionsFailFast();
-        final String annotationType = DomainInfoPageResource.class.getName();
-        final Optional<BeanDefinition> beanDefinitionOptional = FluentIterable
-                .from(components)
-                .firstMatch(new Predicate<BeanDefinition>() {
-                    @Override
-                    public boolean apply(@Nullable final BeanDefinition input) {
-                        if (input != null && input instanceof ScannedGenericBeanDefinition) {
-                            final ScannedGenericBeanDefinition beanDefinition = (ScannedGenericBeanDefinition) input;
-                            final AnnotationMetadata metadata = beanDefinition.getMetadata();
-
-                            if (!metadata.getAnnotationTypes().contains(annotationType)) {
-                                throw new RuntimeException(String
-                                        .format("No %s annotation found over bean %s", annotationType, input.getBeanClassName()));
-                            }
-
-                            final Map<String, Object> annotationAttributes = metadata.getAnnotationAttributes(annotationType);
-                            final Class<?> domainClassName = (Class<?>) annotationAttributes.get(DOMAIN_KEY);
-
-                            return domainClassName != null && domainClassName.equals(domainClass);
-                        }
-                        return false;
-                    }
-                });
-
-        LOGGER.trace(String.format("Resolved possible definition under => %s", beanDefinitionOptional));
-        if (beanDefinitionOptional.isPresent()) {
-            final BeanDefinition definition = beanDefinitionOptional.get();
-            if (definition != null) {
-                LOGGER.trace(String.format("Found definition for %s", domainClass));
-                return this.resolveInfoPage(definition);
-            }
-        }
-
-        return null;
+        return this.getInternal(domainClass.getName(), CRITERIA.DOMAIN);
     }
 
     @Override
@@ -123,10 +99,19 @@ class InfoPageConfigurationSourceImpl
     }
 
     @Override
-    public InfoPage getFromPath(final String path) {
+    public SInfoPage getFromPath(final String path) {
         LOGGER.debug(String.format("/getFromPath => %s", path));
+        return this.getInternal(path, CRITERIA.PATH);
+    }
+
+    @Override
+    public SInfoPage getFromRel(final String rel) {
+        LOGGER.debug(String.format("/getFromRel => %s", rel));
+        return this.getInternal(rel, CRITERIA.REL);
+    }
+
+    private SInfoPage getInternal(final String query, final CRITERIA criteria) {
         final Set<BeanDefinition> components = this.getBeanDefinitionsFailFast();
-        final String annotationType = InfoPageResource.class.getName();
         final Optional<BeanDefinition> beanDefinitionOptional = FluentIterable
                 .from(components)
                 .firstMatch(new Predicate<BeanDefinition>() {
@@ -136,15 +121,17 @@ class InfoPageConfigurationSourceImpl
                             final ScannedGenericBeanDefinition beanDefinition = (ScannedGenericBeanDefinition) input;
                             final AnnotationMetadata metadata = beanDefinition.getMetadata();
 
-                            if (!metadata.getAnnotationTypes().contains(annotationType)) {
+                            final Optional<String> annotationPresent = FluentIterable.from(metadata.getAnnotationTypes())
+                                                                                     .firstMatch(ANNOTATION_LOOKUP_PREDICATE);
+                            if (!annotationPresent.isPresent()) {
                                 throw new RuntimeException(String
-                                        .format("No %s annotation found over bean %s", annotationType, input.getBeanClassName()));
+                                        .format("No %s annotation found over bean %s", ANNOTATION_TYPES, input.getBeanClassName()));
                             }
 
-                            final Map<String, Object> annotationAttributes = metadata.getAnnotationAttributes(annotationType);
-                            final String pathValue = (String) annotationAttributes.get(PATH_KEY);
+                            final Map<String, Object> annotationAttributes = metadata.getAnnotationAttributes(annotationPresent.get());
+                            final String pathValue = (String) annotationAttributes.get(criteria.key);
 
-                            return pathValue != null && pathValue.equals(path);
+                            return pathValue != null && pathValue.equals(query);
                         }
                         return false;
                     }
@@ -154,7 +141,7 @@ class InfoPageConfigurationSourceImpl
         if (beanDefinitionOptional.isPresent()) {
             final BeanDefinition definition = beanDefinitionOptional.get();
             if (definition != null) {
-                LOGGER.trace(String.format("Found definition for %s", path));
+                LOGGER.trace(String.format("Found definition for %s", query));
                 return this.resolveInfoPage(definition);
             }
         }
@@ -170,8 +157,19 @@ class InfoPageConfigurationSourceImpl
         return components;
     }
 
-    private InfoPage resolveInfoPage(final BeanDefinition definition) {
+    private SInfoPage resolveInfoPage(final BeanDefinition definition) {
         final String shortClassName = ClassUtils.getShortName(definition.getBeanClassName());
-        return (InfoPage) this.applicationContext.getBean(Introspector.decapitalize(shortClassName));
+        return (SInfoPage) this.applicationContext.getBean(Introspector.decapitalize(shortClassName));
+    }
+
+    private static enum CRITERIA {
+        DOMAIN("domainClass"),
+        REL("rel"),
+        PATH("path");
+        private final String key;
+
+        CRITERIA(final String key) {
+            this.key = key;
+        }
     }
 }

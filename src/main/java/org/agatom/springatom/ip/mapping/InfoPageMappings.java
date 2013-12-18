@@ -17,18 +17,13 @@
 
 package org.agatom.springatom.ip.mapping;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.agatom.springatom.ip.DomainInfoPage;
-import org.agatom.springatom.ip.InfoPage;
+import org.agatom.springatom.ip.SDomainInfoPage;
+import org.agatom.springatom.ip.SInfoPage;
 import org.agatom.springatom.ip.config.InfoPageConfigurationSource;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.data.repository.Repository;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,44 +34,80 @@ import java.util.Set;
  */
 
 public class InfoPageMappings
-        implements BeanFactoryAware,
-                   Iterable<Class<?>> {
-    private final Map<Class<?>, InfoPage>     domainToPageCache           = Maps.newHashMap();
-    private final Map<String, InfoPage>       pathToPageCache             = Maps.newHashMap();
-    private final List<String>                infoPageBeanNames           = Lists.newLinkedList();
-    private       ListableBeanFactory         beanFactory                 = null;
+        implements Iterable<Class<?>> {
+    // caches
+    private final Map<Class<?>, SInfoPage> domainToPageCache     = Maps.newHashMap();
+    private final Map<Class<?>, SInfoPage> repositoryToPageCache = Maps.newHashMap();
+    private final Map<String, SInfoPage>   relToPageCache        = Maps.newHashMap();
+    private final Map<String, SInfoPage>   pathToPageCache       = Maps.newHashMap();
     private       InfoPageConfigurationSource infoPageConfigurationSource = null;
 
-    public DomainInfoPage getInfoPageForDomain(final Class<?> domainClass) {
-        if (this.domainToPageCache.containsKey(domainClass)) {
-            return (DomainInfoPage) this.domainToPageCache.get(domainClass);
+    /**
+     * Caches the page in several cache repositories to support
+     * faster load in the next requests.
+     * <p/>
+     * Works for either {@link org.agatom.springatom.ip.SInfoPage}
+     * or {@link org.agatom.springatom.ip.SDomainInfoPage}
+     *
+     * @param page
+     *         to be cached
+     */
+    private void cache(final SInfoPage page) {
+        this.pathToPageCache.put(page.getPath(), page);
+        this.relToPageCache.put(page.getRel(), page);
+        if (page instanceof SDomainInfoPage) {
+            final SDomainInfoPage infoPage = (SDomainInfoPage) page;
+            this.domainToPageCache.put(infoPage.getDomainClass(), page);
+            this.repositoryToPageCache.put(infoPage.getRepositoryClass(), page);
         }
-        final InfoPage infoPage = this.infoPageConfigurationSource.getFromDomain(domainClass);
-        if (infoPage != null) {
-            this.domainToPageCache.put(domainClass, infoPage);
-            return (DomainInfoPage) infoPage;
-        }
-        return null;
     }
 
-    public InfoPage getInfoPageForPath(final String path) {
-        if (this.pathToPageCache.containsKey(path)) {
-            return this.pathToPageCache.get(path);
+    public SInfoPage getInfoPageForRel(final String rel) {
+        if (this.relToPageCache.containsKey(rel)) {
+            return this.relToPageCache.get(rel);
         }
-        final InfoPage infoPage = this.infoPageConfigurationSource.getFromPath(path);
+        final SInfoPage infoPage = this.infoPageConfigurationSource.getFromRel(rel);
         if (infoPage != null) {
-            this.pathToPageCache.put(path, infoPage);
+            this.cache(infoPage);
             return infoPage;
         }
         return null;
     }
 
-    public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = (ListableBeanFactory) beanFactory;
+    public SDomainInfoPage getInfoPageForDomain(final Class<?> domainClass) {
+        if (this.domainToPageCache.containsKey(domainClass)) {
+            return (SDomainInfoPage) this.domainToPageCache.get(domainClass);
+        }
+        final SInfoPage infoPage = this.infoPageConfigurationSource.getFromDomain(domainClass);
+        if (infoPage != null) {
+            this.cache(infoPage);
+            return (SDomainInfoPage) infoPage;
+        }
+        return null;
     }
 
-    public InfoPageConfigurationSource getInfoPageConfigurationSource() {
-        return infoPageConfigurationSource;
+    public SInfoPage getInfoPageForPath(final String path) {
+        if (this.pathToPageCache.containsKey(path)) {
+            return this.pathToPageCache.get(path);
+        }
+        final SInfoPage infoPage = this.infoPageConfigurationSource.getFromPath(path);
+        if (infoPage != null) {
+            this.cache(infoPage);
+            return infoPage;
+        }
+        return null;
+    }
+
+    public SDomainInfoPage getDomainInfoPageForRestPath(final String path) {
+        return null;
+    }
+
+    public SDomainInfoPage getDomainInfoPageForRepository(final Class<? extends Repository<?, ?>> repoClazz) {
+        return null;
+    }
+
+    public boolean hasInfoPageForDomain(final String domain) {
+        return this.getInfoPageForPath(domain) != null;
     }
 
     public void setInfoPageConfigurationSource(final InfoPageConfigurationSource ipcs) {

@@ -17,21 +17,9 @@
 
 package org.agatom.springatom.ip.config;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.PropertyValues;
-import org.springframework.beans.factory.BeanFactory;
+import org.agatom.springatom.core.processors.AbstractAnnotationBeanPostProcessorAdapter;
+import org.agatom.springatom.ip.SInfoPage;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
-import org.springframework.context.annotation.ScannedGenericBeanDefinition;
-import org.springframework.core.type.AnnotationMetadata;
-
-import java.beans.PropertyDescriptor;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author kornicameister
@@ -40,67 +28,17 @@ import java.util.Set;
  */
 
 class InfoPageAwareBeanPostProcessor
-        extends InstantiationAwareBeanPostProcessorAdapter
+        extends AbstractAnnotationBeanPostProcessorAdapter
         implements BeanFactoryAware {
-    private static final Logger LOGGER = Logger.getLogger(InfoPageAwareBeanPostProcessor.class);
-    private ConfigurableListableBeanFactory context;
-    private String                          basePackage;
-
-    @Override
-    public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
-        if (beanFactory instanceof ConfigurableListableBeanFactory) {
-            this.context = (ConfigurableListableBeanFactory) beanFactory;
-        }
-    }
+    private String basePackage;
 
     public void setBasePackage(final String basePackage) {
         this.basePackage = basePackage;
     }
 
     @Override
-    public PropertyValues postProcessPropertyValues(PropertyValues pvs, final PropertyDescriptor[] pds, final Object bean, final String beanName) throws
-            BeansException {
-        if (this.isInPackage(bean.getClass().getName())) {
-            LOGGER.trace(String.format("/postProcessPropertyValues for bean => %s", beanName));
-            pvs = this.postProcessOverAnnotation(pvs, pds, beanName);
-        }
-        return pvs;
-    }
-
-    private PropertyValues postProcessOverAnnotation(final PropertyValues pvs, final PropertyDescriptor[] pds, final String beanName) {
-        final MutablePropertyValues values = new MutablePropertyValues(pvs);
-        for (final PropertyDescriptor pd : pds) {
-            final String pdName = pd.getName();
-            final Object propertyValue = this.resolveValueFromAnnotation(pdName, beanName);
-            if (propertyValue != null) {
-                values.addPropertyValue(pdName, propertyValue);
-            }
-        }
-        return values;
-    }
-
-    private Object resolveValueFromAnnotation(final String pdName, final String beanName) {
-        LOGGER.trace(String.format("/resolveValueFromAnnotation \n\tproperty=>%s\n\tbean=>%s", pdName, beanName));
-
-        final BeanDefinition beanDefinition = this.context.getBeanDefinition(beanName);
-        AnnotationMetadata metadata = null;
-        Object value = null;
-
-        if (beanDefinition instanceof ScannedGenericBeanDefinition) {
-            final ScannedGenericBeanDefinition definition = (ScannedGenericBeanDefinition) beanDefinition;
-            metadata = definition.getMetadata();
-        }
-        if (metadata != null) {
-            final Set<String> annotationTypes = metadata.getAnnotationTypes();
-            for (final String annotationType : annotationTypes) {
-                final Map<String, Object> annotationAttributes = metadata.getAnnotationAttributes(annotationType);
-                value = annotationAttributes.get(pdName);
-                if (value != null) {
-                    break;
-                }
-            }
-        }
-        return value;
+    protected boolean isProcessable(final Object bean) {
+        return this.isInPackage(bean.getClass().getName()) || bean instanceof SInfoPage;
     }
 
     private boolean isInPackage(final String name) {

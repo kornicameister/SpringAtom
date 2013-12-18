@@ -15,26 +15,24 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.ip.config;
+package org.agatom.springatom.ip.annotation;
 
-import org.agatom.springatom.ip.SInfoPage;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
-import java.util.Set;
+import java.lang.annotation.*;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface InfoPageConfigurationSource
-        extends ApplicationContextAware {
+@Component
+@Documented
+@Inherited
+@Target(value = {ElementType.TYPE})
+@Retention(value = RetentionPolicy.RUNTIME)
+public @interface InfoPage {
+    String path() default "";
 
-    Set<Class<?>> getAllInfoPageClasses();
-
-    SInfoPage getFromDomain(final Class<?> domainClass);
-
-    SInfoPage getFromPath(final String path);
-
-    SInfoPage getFromRel(String rel);
+    String rel() default "";
 }

@@ -21,10 +21,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.agatom.springatom.core.filters.AllTypeFilter;
 import org.agatom.springatom.core.filters.InterfaceTypeFilter;
-import org.agatom.springatom.ip.DomainInfoPage;
-import org.agatom.springatom.ip.DomainInfoPageResource;
-import org.agatom.springatom.ip.InfoPage;
-import org.agatom.springatom.ip.InfoPageResource;
+import org.agatom.springatom.ip.SDomainInfoPage;
+import org.agatom.springatom.ip.SInfoPage;
+import org.agatom.springatom.ip.annotation.DomainInfoPage;
+import org.agatom.springatom.ip.annotation.InfoPage;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.AnnotationConfigUtils;
@@ -47,23 +47,23 @@ class InfoPageComponentProvider
 
     public InfoPageComponentProvider() {
         super(false);
-        super.addIncludeFilter(new InterfaceTypeFilter(InfoPage.class));
-        super.addIncludeFilter(new InterfaceTypeFilter(DomainInfoPage.class));
-        super.addIncludeFilter(new AnnotationTypeFilter(InfoPageResource.class, true, true));
-        super.addIncludeFilter(new AnnotationTypeFilter(DomainInfoPageResource.class, true, true));
+        super.addIncludeFilter(new InterfaceTypeFilter(SInfoPage.class));
+        super.addIncludeFilter(new InterfaceTypeFilter(SDomainInfoPage.class));
+        super.addIncludeFilter(new AnnotationTypeFilter(InfoPage.class, true, true));
+        super.addIncludeFilter(new AnnotationTypeFilter(DomainInfoPage.class, true, true));
     }
 
     @Override
     public void addIncludeFilter(final TypeFilter includeFilter) {
         super.addIncludeFilter(new AllTypeFilter(Lists.newArrayList(
                 includeFilter,
-                new InterfaceTypeFilter(InfoPage.class),
-                new InterfaceTypeFilter(DomainInfoPage.class)
+                new InterfaceTypeFilter(SInfoPage.class),
+                new InterfaceTypeFilter(SDomainInfoPage.class)
         )));
         super.addIncludeFilter(new AllTypeFilter(Lists.newArrayList(
                 includeFilter,
-                new AnnotationTypeFilter(InfoPageResource.class),
-                new AnnotationTypeFilter(DomainInfoPageResource.class)
+                new AnnotationTypeFilter(InfoPage.class),
+                new AnnotationTypeFilter(DomainInfoPage.class)
         )));
     }
 
