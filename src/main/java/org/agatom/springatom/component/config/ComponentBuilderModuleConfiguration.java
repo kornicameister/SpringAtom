@@ -21,6 +21,7 @@ import org.agatom.springatom.component.builders.ComponentBuilders;
 import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.core.module.AbstractModuleConfiguration;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -52,6 +53,8 @@ public class ComponentBuilderModuleConfiguration
     private static final   Logger LOGGER      = Logger.getLogger(ComponentBuilderModuleConfiguration.class);
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private BeanFactory        beanFactory;
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -66,6 +69,7 @@ public class ComponentBuilderModuleConfiguration
         this.logRegistering(ComponentBuilders.class, LOGGER);
         final ComponentBuilderRepository builders = new ComponentBuilderRepository();
         builders.setApplicationContext(this.applicationContext);
+        builders.setBeanFactory(this.beanFactory);
         return builders;
     }
 

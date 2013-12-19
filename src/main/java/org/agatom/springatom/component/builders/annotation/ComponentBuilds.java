@@ -42,4 +42,11 @@ public @interface ComponentBuilds {
 
     Class<?> builds();
 
+    Produces produces() default Produces.PAGE_COMPONENT;
+
+    public static enum Produces {
+        PAGE_COMPONENT,
+        TABLE_COMPONENT
+    }
+
 }

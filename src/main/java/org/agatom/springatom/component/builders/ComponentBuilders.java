@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.component.builders;
 
+import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.context.request.WebRequest;
 
@@ -26,5 +27,18 @@ import org.springframework.web.context.request.WebRequest;
  * @since 0.0.1
  */
 public interface ComponentBuilders {
-    ComponentBuilder<?> getBuilder(Class<?> target, final ModelMap modelMap, final WebRequest request);
+
+    ComponentBuilder<?> getBuilder(final String componentId, final ModelMap modelMap, final WebRequest request);
+
+    ComponentBuilder<?> getBuilder(final Class<?> target, final ModelMap modelMap, final WebRequest request);
+
+    ComponentBuilder<?> getBuilder(final Class<?> target, final ComponentBuilds.Produces produces, final ModelMap modelMap, final WebRequest request);
+
+    boolean hasBuilder(Class<?> target);
+
+    boolean hasBuilder(Class<?> target, ComponentBuilds.Produces produces);
+
+    String getBuilderId(Class<?> target);
+
+    String getBuilderId(Class<?> target, ComponentBuilds.Produces produces);
 }
