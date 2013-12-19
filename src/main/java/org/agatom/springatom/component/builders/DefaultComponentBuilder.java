@@ -28,7 +28,7 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 abstract public class DefaultComponentBuilder<COMP extends Serializable>
-        implements SComponentBuilder<COMP> {
+        implements ComponentBuilder<COMP> {
 
     private Class<?>             target;
     private String               id;

@@ -18,7 +18,7 @@
 package org.agatom.springatom.component.config;
 
 import org.agatom.springatom.component.builders.ComponentBuilders;
-import org.agatom.springatom.component.builders.annotation.ComponentBuilder;
+import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.core.module.AbstractModuleConfiguration;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -43,7 +43,7 @@ import java.util.Map;
                 ComponentBuilderModuleConfiguration.PACKAGE
         },
         useDefaultFilters = false,
-        includeFilters = @ComponentScan.Filter(value = ComponentBuilder.class, type = FilterType.ANNOTATION)
+        includeFilters = @ComponentScan.Filter(value = ComponentBuilds.class, type = FilterType.ANNOTATION)
 )
 public class ComponentBuilderModuleConfiguration
         extends AbstractModuleConfiguration {
@@ -79,7 +79,7 @@ public class ComponentBuilderModuleConfiguration
     public static class NameGen
             extends AnnotationBeanNameGenerator {
 
-        private static final String  ANNOTATION_TYPE        = ComponentBuilder.class.getName();
+        private static final String  ANNOTATION_TYPE        = ComponentBuilds.class.getName();
         private static final boolean CLASS_VALUES_AS_STRING = false;
 
         @Override

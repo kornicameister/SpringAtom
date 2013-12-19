@@ -15,26 +15,31 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.component.builders;
+package org.agatom.springatom.component.builders.annotation;
 
-import org.agatom.springatom.component.data.ComponentDataRequest;
-import org.agatom.springatom.component.data.ComponentDataResponse;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
+import java.lang.annotation.*;
 
 /**
+ * {@code ComponentBuilder} is an annotation that marks annotated bean as capable
+ * of producing definition of a component.
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SComponentBuilder<COMP extends Serializable> {
-    COMP getDefinition();
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Inherited
+@Documented
+@Target(value = {ElementType.TYPE})
+@Retention(value = RetentionPolicy.RUNTIME)
+public @interface ComponentBuilds {
+    String id();
 
-    String getId();
+    Class<?> builds();
 
-    Class<?> getTarget();
-
-    ComponentDataResponse getData();
-
-    void init(ComponentDataRequest componentDataRequest);
 }

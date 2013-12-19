@@ -15,44 +15,26 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.component.elements;
+package org.agatom.springatom.component.builders;
 
-import com.google.common.collect.Sets;
-import org.agatom.springatom.component.SDefaultComponent;
-import org.agatom.springatom.component.SEmbeddableComponent;
+import org.agatom.springatom.component.data.ComponentDataRequest;
+import org.agatom.springatom.component.data.ComponentDataResponse;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class SContentComponent<T extends SEmbeddableComponent>
-        extends SDefaultComponent
-        implements Iterable<T> {
-    protected Set<T> content = Sets.newTreeSet();
+public interface ComponentBuilder<COMP extends Serializable> {
+    COMP getDefinition();
 
-    public Set<T> getContent() {
-        return content;
-    }
+    String getId();
 
-    public void setContent(final Set<T> content) {
-        this.content = content;
-    }
+    Class<?> getTarget();
 
-    public boolean addContent(final T t) {
-        t.setPosition(this.content.size());
-        return content.add(t);
-    }
+    ComponentDataResponse getData();
 
-    public boolean removeContent(final Object o) {
-        return content.remove(o);
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return content.iterator();
-    }
+    void init(ComponentDataRequest componentDataRequest);
 }

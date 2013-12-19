@@ -26,5 +26,5 @@ import org.springframework.web.context.request.WebRequest;
  * @since 0.0.1
  */
 public interface ComponentBuilders {
-    SComponentBuilder<?> getBuilder(Class<?> target, final ModelMap modelMap, final WebRequest request);
+    ComponentBuilder<?> getBuilder(Class<?> target, final ModelMap modelMap, final WebRequest request);
 }

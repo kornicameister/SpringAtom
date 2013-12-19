@@ -17,8 +17,8 @@
 
 package org.agatom.springatom.component.config;
 
-import org.agatom.springatom.component.builders.SComponentBuilder;
-import org.agatom.springatom.component.builders.annotation.ComponentBuilder;
+import org.agatom.springatom.component.builders.ComponentBuilder;
+import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.core.processors.AbstractAnnotationBeanPostProcessorAdapter;
 import org.agatom.springatom.ip.SDomainInfoPage;
 import org.agatom.springatom.ip.component.builder.DomainInfoPageComponentBuilder;
@@ -40,11 +40,13 @@ import java.util.Map;
 class ComponentBuilderPostProcessor
         extends AbstractAnnotationBeanPostProcessorAdapter {
 
-    private static final Logger LOGGER = Logger.getLogger(ComponentBuilderPostProcessor.class);
+    private static final Logger LOGGER       = Logger.getLogger(ComponentBuilderPostProcessor.class);
+    private static final String BUILDS       = "builds";
+    private static final String DOMAIN_CLASS = "domainClass";
 
     @Override
     protected boolean isProcessable(final Object bean) {
-        return bean instanceof SComponentBuilder;
+        return bean instanceof ComponentBuilder;
     }
 
     @Override
@@ -57,11 +59,11 @@ class ComponentBuilderPostProcessor
             if (ClassUtils.isAssignable(DomainInfoPageComponentBuilder.class, beanClass)) {
                 final AnnotationMetadata metadata = definition.getMetadata();
                 if (metadata != null) {
-                    final Map<String, Object> attributes = metadata.getAnnotationAttributes(ComponentBuilder.class.getName());
-                    final Class<?> target = (Class<?>) attributes.get("target");
+                    final Map<String, Object> attributes = metadata.getAnnotationAttributes(ComponentBuilds.class.getName());
+                    final Class<?> target = (Class<?>) attributes.get(BUILDS);
                     final Object targetBean = this.contextFactory.getBean(target);
                     if (targetBean instanceof SDomainInfoPage) {
-                        values.add("domainClass", ((SDomainInfoPage) targetBean).getDomain());
+                        values.add(DOMAIN_CLASS, ((SDomainInfoPage) targetBean).getDomain());
                     }
                 }
             }

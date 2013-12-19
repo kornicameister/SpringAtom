@@ -17,16 +17,22 @@
 
 package org.agatom.springatom.component;
 
-import java.io.Serializable;
-
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SComponent
-        extends Serializable {
-    String getTitle();
+abstract public class DefaultComponent
+        implements Component {
+    protected String title;
 
-    void setTitle(final String title);
+    @Override
+    public String getTitle() {
+        return this.title;
+    }
+
+    @Override
+    public void setTitle(final String title) {
+        this.title = title;
+    }
 }

@@ -19,7 +19,7 @@ package org.agatom.springatom.component.config;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.agatom.springatom.component.builders.annotation.ComponentBuilder;
+import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.core.filters.AllTypeFilter;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -43,7 +43,7 @@ class ComponentBuilderProvider
 
     public ComponentBuilderProvider() {
         super(false);
-        super.addIncludeFilter(new AnnotationTypeFilter(ComponentBuilder.class, true, true));
+        super.addIncludeFilter(new AnnotationTypeFilter(ComponentBuilds.class, true, true));
         this.setResourcePattern(String.format("**/*%s.class", "ComponentBuilder"));
     }
 
@@ -51,7 +51,7 @@ class ComponentBuilderProvider
     public void addIncludeFilter(final TypeFilter includeFilter) {
         super.addIncludeFilter(new AllTypeFilter(Lists.newArrayList(
                 includeFilter,
-                new AnnotationTypeFilter(ComponentBuilder.class)
+                new AnnotationTypeFilter(ComponentBuilds.class)
         )));
     }
 

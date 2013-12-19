@@ -20,9 +20,9 @@ package org.agatom.springatom.component.config;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import org.agatom.springatom.component.builders.ComponentBuilder;
 import org.agatom.springatom.component.builders.ComponentBuilders;
-import org.agatom.springatom.component.builders.SComponentBuilder;
-import org.agatom.springatom.component.builders.annotation.ComponentBuilder;
+import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.component.data.ComponentDataRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
@@ -48,8 +48,8 @@ class ComponentBuilderRepository
     private ApplicationContext context;
 
     @Override
-    public SComponentBuilder<?> getBuilder(final Class<?> target, final ModelMap modelMap, final WebRequest request) {
-        final Map<String, Object> beansWithAnnotation = this.context.getBeansWithAnnotation(ComponentBuilder.class);
+    public ComponentBuilder<?> getBuilder(final Class<?> target, final ModelMap modelMap, final WebRequest request) {
+        final Map<String, Object> beansWithAnnotation = this.context.getBeansWithAnnotation(ComponentBuilds.class);
         final boolean classValuesAsString = true;
 
         final Optional<Object> beanDefinitionOptional = FluentIterable
@@ -58,8 +58,8 @@ class ComponentBuilderRepository
                     @Override
                     public boolean apply(@Nullable final Object input) {
                         if (input != null) {
-                            if (input.getClass().isAnnotationPresent(ComponentBuilder.class)) {
-                                final Annotation ann = input.getClass().getAnnotation(ComponentBuilder.class);
+                            if (input.getClass().isAnnotationPresent(ComponentBuilds.class)) {
+                                final Annotation ann = input.getClass().getAnnotation(ComponentBuilds.class);
                                 final Map<String, Object> annotationAttributes = AnnotationUtils.getAnnotationAttributes(
                                         ann,
                                         classValuesAsString,
@@ -80,7 +80,7 @@ class ComponentBuilderRepository
             final Object builder = beanDefinitionOptional.get();
             if (builder != null) {
                 LOGGER.trace(String.format("Found builder for target %s", target));
-                final SComponentBuilder<?> componentBuilder = (SComponentBuilder<?>) builder;
+                final ComponentBuilder<?> componentBuilder = (ComponentBuilder<?>) builder;
                 componentBuilder.init(new ComponentDataRequest(modelMap, request));
                 return componentBuilder;
             }
@@ -95,7 +95,7 @@ class ComponentBuilderRepository
     }
 
     private static enum CRITERIA {
-        TARGET("target"),
+        TARGET("builds"),
         ID("id");
         private final String key;
 

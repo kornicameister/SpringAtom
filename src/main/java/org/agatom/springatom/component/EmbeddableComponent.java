@@ -24,9 +24,9 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SEmbeddableComponent
+public interface EmbeddableComponent
         extends Serializable,
-                Comparable<SEmbeddableComponent> {
+                Comparable<EmbeddableComponent> {
     int getPosition();
 
     void setPosition(int position);

@@ -15,24 +15,59 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.component;
+package org.agatom.springatom.component.elements;
+
+import org.agatom.springatom.component.EmbeddableComponent;
+import org.agatom.springatom.component.meta.LayoutType;
+import org.agatom.springatom.component.meta.PanelType;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class SDefaultComponent
-        implements SComponent {
-    protected String title;
+public class PanelComponent<T extends EmbeddableComponent>
+        extends ContentComponent<T>
+        implements EmbeddableComponent {
+    protected int        position = -1;
+    protected PanelType  type     = null;
+    protected LayoutType layout   = null;
 
     @Override
-    public String getTitle() {
-        return this.title;
+    public int getPosition() {
+        return position;
     }
 
     @Override
-    public void setTitle(final String title) {
-        this.title = title;
+    public void setPosition(final int position) {
+        this.position = position;
+    }
+
+    public PanelType getType() {
+        return type;
+    }
+
+    public PanelComponent setType(final PanelType type) {
+        this.type = type;
+        return this;
+    }
+
+    public LayoutType getLayout() {
+        if (this.layout == null) {
+            this.layout = LayoutType.VERTICAL;
+        }
+        return layout;
+    }
+
+    public PanelComponent setLayout(final LayoutType layout) {
+        this.layout = layout;
+        return this;
+    }
+
+    @Override
+    public int compareTo(final @Nonnull EmbeddableComponent panel) {
+        return Integer.compare(this.position, panel.getPosition());
     }
 }

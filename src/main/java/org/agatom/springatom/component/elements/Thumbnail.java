@@ -17,57 +17,76 @@
 
 package org.agatom.springatom.component.elements;
 
-import org.agatom.springatom.component.SEmbeddableComponent;
-import org.agatom.springatom.component.meta.LayoutType;
-import org.agatom.springatom.component.meta.PanelType;
-
-import javax.annotation.Nonnull;
+import com.google.common.base.Objects;
+import org.agatom.springatom.component.DefaultComponent;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SPanelComponent<T extends SEmbeddableComponent>
-        extends SContentComponent<T>
-        implements SEmbeddableComponent {
-    protected int        position = -1;
-    protected PanelType  type     = null;
-    protected LayoutType layout   = null;
+public class Thumbnail
+        extends DefaultComponent {
+    private String href    = null;
+    private String alt     = null;
+    private String tooltip = null;
 
-    @Override
-    public int getPosition() {
-        return position;
+    public String getHref() {
+        return href;
     }
 
-    @Override
-    public void setPosition(final int position) {
-        this.position = position;
-    }
-
-    public PanelType getType() {
-        return type;
-    }
-
-    public SPanelComponent setType(final PanelType type) {
-        this.type = type;
+    public Thumbnail setHref(final String href) {
+        this.href = href;
         return this;
     }
 
-    public LayoutType getLayout() {
-        if (this.layout == null) {
-            this.layout = LayoutType.VERTICAL;
+    public String getAlt() {
+        return alt;
+    }
+
+    public Thumbnail setAlt(final String alt) {
+        this.alt = alt;
+        return this;
+    }
+
+    public String getTooltip() {
+        return tooltip;
+    }
+
+    public Thumbnail setTooltip(final String tooltip) {
+        this.tooltip = tooltip;
+        return this;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(href, alt, tooltip, title);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
-        return layout;
-    }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    public SPanelComponent setLayout(final LayoutType layout) {
-        this.layout = layout;
-        return this;
+        Thumbnail that = (Thumbnail) o;
+
+        return Objects.equal(this.href, that.href) &&
+                Objects.equal(this.alt, that.alt) &&
+                Objects.equal(this.tooltip, that.tooltip) &&
+                Objects.equal(this.title, that.title);
     }
 
     @Override
-    public int compareTo(final @Nonnull SEmbeddableComponent panel) {
-        return Integer.compare(this.position, panel.getPosition());
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(href)
+                      .addValue(alt)
+                      .addValue(tooltip)
+                      .addValue(title)
+                      .toString();
     }
 }

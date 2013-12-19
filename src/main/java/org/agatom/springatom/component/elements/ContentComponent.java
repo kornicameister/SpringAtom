@@ -17,76 +17,42 @@
 
 package org.agatom.springatom.component.elements;
 
-import com.google.common.base.Objects;
-import org.agatom.springatom.component.SDefaultComponent;
+import com.google.common.collect.Sets;
+import org.agatom.springatom.component.DefaultComponent;
+import org.agatom.springatom.component.EmbeddableComponent;
+
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SThumbnail
-        extends SDefaultComponent {
-    private String href    = null;
-    private String alt     = null;
-    private String tooltip = null;
+abstract public class ContentComponent<T extends EmbeddableComponent>
+        extends DefaultComponent
+        implements Iterable<T> {
+    protected Set<T> content = Sets.newTreeSet();
 
-    public String getHref() {
-        return href;
+    public Set<T> getContent() {
+        return content;
     }
 
-    public SThumbnail setHref(final String href) {
-        this.href = href;
-        return this;
+    public void setContent(final Set<T> content) {
+        this.content = content;
     }
 
-    public String getAlt() {
-        return alt;
+    public boolean addContent(final T t) {
+        t.setPosition(this.content.size());
+        return content.add(t);
     }
 
-    public SThumbnail setAlt(final String alt) {
-        this.alt = alt;
-        return this;
-    }
-
-    public String getTooltip() {
-        return tooltip;
-    }
-
-    public SThumbnail setTooltip(final String tooltip) {
-        this.tooltip = tooltip;
-        return this;
+    public boolean removeContent(final Object o) {
+        return content.remove(o);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(href, alt, tooltip, title);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        SThumbnail that = (SThumbnail) o;
-
-        return Objects.equal(this.href, that.href) &&
-                Objects.equal(this.alt, that.alt) &&
-                Objects.equal(this.tooltip, that.tooltip) &&
-                Objects.equal(this.title, that.title);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(href)
-                      .addValue(alt)
-                      .addValue(tooltip)
-                      .addValue(title)
-                      .toString();
+    public Iterator<T> iterator() {
+        return content.iterator();
     }
 }
