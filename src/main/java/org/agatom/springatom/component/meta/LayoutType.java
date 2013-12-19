@@ -15,21 +15,14 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.ip.resource;
-
-import org.agatom.springatom.ip.InfoPage;
-import org.springframework.hateoas.Resource;
+package org.agatom.springatom.component.meta;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class InfoPageResource
-        extends Resource<InfoPage> {
-
-    public InfoPageResource(final InfoPage content) {
-        super(content);
-    }
-
+public enum LayoutType {
+    VERTICAL,
+    HORIZONTAL
 }
