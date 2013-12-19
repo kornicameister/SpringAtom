@@ -31,5 +31,5 @@ public interface EntityDescriptorReader
                 BeanFactoryAware {
     <X> EntityDescriptor<X> getDefinition(final Class<X> xClass);
 
-    <X> EntityDescriptor<?> getDefinition(final Class<X> xClass, boolean initialize);
+    <X> EntityDescriptor<X> getDefinition(final Class<X> xClass, boolean initialize);
 }

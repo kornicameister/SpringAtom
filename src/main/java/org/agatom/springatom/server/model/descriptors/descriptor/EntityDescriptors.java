@@ -33,6 +33,10 @@ public class EntityDescriptors {
     }
 
     public <X> EntityDescriptor<X> getDomainDescriptor(final Class<X> xClass) {
-        return this.reader.getDefinition(xClass);
+        return this.reader.getDefinition(xClass, false);
+    }
+
+    public String getDomainEntityName(final Class<?> xClass) {
+        return this.reader.getDefinition(xClass, false).getEntityType().getName();
     }
 }
