@@ -17,22 +17,27 @@
 
 package org.agatom.springatom.webmvc.controllers;
 
-import org.agatom.springatom.ip.DomainInfoPage;
-import org.agatom.springatom.ip.InfoPage;
+import org.agatom.springatom.component.builders.ComponentBuilders;
 import org.agatom.springatom.ip.InfoPageConstants;
+import org.agatom.springatom.ip.SDomainInfoPage;
+import org.agatom.springatom.ip.SInfoPage;
+import org.agatom.springatom.ip.component.builder.InfoPageComponentBuilder;
 import org.agatom.springatom.ip.mapping.InfoPageMappings;
-import org.agatom.springatom.ip.resource.InfoPageResource;
+import org.agatom.springatom.webmvc.data.DataBean;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * @author kornicameister
@@ -42,46 +47,76 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller(value = SVInfoPageController.CONTROLLER_NAME)
 @RequestMapping(value = "/ip")
 public class SVInfoPageController {
-    public static final  String CONTROLLER_NAME = "IPController";
-    private static final String VIEW_NAME       = "springatom.tiles.ip.InfoPage";
-    private static final Logger LOGGER          = Logger.getLogger(SVInfoPageController.class);
+    public static final  String CONTROLLER_NAME  = "IPController";
+    private static final String VIEW_NAME        = "springatom.tiles.ip.InfoPage";
+    private static final String DOMAIN_VIEW_NAME = "springatom.tiles.ip.DomainInfoPage";
+    private static final String DATA_VIEW_NAME   = "springatom.tiles.ip.DataRenderer";
+    private static final Logger LOGGER           = Logger.getLogger(SVInfoPageController.class);
     @Autowired
-    private InfoPageMappings infoPageMappings;
+    private InfoPageMappings  infoPageMappings;
+    @Autowired
+    private ComponentBuilders builders;
 
-    @RequestMapping(value = "/{domain}/{id}", method = RequestMethod.GET)
-    public ModelAndView getInfoPage(@PathVariable("domain") String domain, @PathVariable("id") Long id) throws InfoPageNotFoundException {
-        LOGGER.debug(String.format("/getFromDomain/domainClass=%s/id=%s", domain, id));
+    @RequestMapping(value = "/{path}/{id}", method = RequestMethod.GET)
+    public ModelAndView getInfoPageView(@PathVariable("path") final String path,
+                                        @PathVariable("id") final Long id) throws InfoPageNotFoundException {
+        LOGGER.debug(String.format("/getInfoPageView/path=%s/id=%s", path, id));
+        final SInfoPage page = this.getInfoPageForPath(path);
+        if (page != null) {
+            LOGGER.trace(String.format("Resolved infoPage => %s for path => %s", page, path));
+            final ModelMap modelMap = new ModelMap();
 
-        final ModelMap modelMap = new ModelMap();
-        final InfoPage infoPageForPath = infoPageMappings.getInfoPageForPath(domain);
+            modelMap.put(InfoPageConstants.INFOPAGE_PAGE, page);
+            modelMap.put(InfoPageConstants.INFOPAGE_VIEW_DATA_TEMPLATE_LINK, this.getViewDataTemplateLink());
 
-        if (infoPageForPath != null) {
-            LOGGER.trace(String.format("Resolved infoPage => %s for path => %s", infoPageForPath, domain));
-            final InfoPageResource infoPage = this.createResource(infoPageForPath, id);
-            modelMap.put(InfoPageConstants.INFOPAGE_RESOURCE_NAME, infoPage);
-            return new ModelAndView(VIEW_NAME, modelMap);
+            return new ModelAndView(
+                    this.getViewForPage(page),
+                    modelMap
+            );
         }
-
-        throw new InfoPageNotFoundException(domain);
+        throw new InfoPageNotFoundException(path);
     }
 
-    private InfoPageResource createResource(final InfoPage ip, final Long id) {
-        final InfoPageResource infoPageResource = new InfoPageResource(ip);
-        if (ip instanceof DomainInfoPage) {
-            final DomainInfoPage domainInfoPage = (DomainInfoPage) ip;
-            final Class<?> repositoryClass = domainInfoPage.getRepositoryClass();
-            if (repositoryClass.isAnnotationPresent(RestResource.class)) {
-                final RestResource annotation = repositoryClass.getAnnotation(RestResource.class);
-                final String path = annotation.path();
-                infoPageResource.add(new Link(String.format("/rest/%s/%d", path, id), InfoPageConstants.INFOPAGE_REST_CONTENT_LINK));
-            }
+    @RequestMapping(
+            value = "/template/render",
+            method = RequestMethod.POST,
+            produces = {MediaType.TEXT_HTML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ModelAndView getInfoPageViewData(@RequestBody final DataBean data, final WebRequest request) throws InfoPageNotFoundException {
+        LOGGER.trace(String.format("/getInfoPageViewData -> data=%s, request=%s", data, request));
+        final String rel = data.get("infopage").getValue();
+        final SInfoPage page = this.infoPageMappings.getInfoPageForRel(rel);
+
+        if (page != null) {
+            final InfoPageComponentBuilder builder = (InfoPageComponentBuilder) this.builders
+                    .getBuilder(
+                            page.getClass(),
+                            data.toModelMap(),
+                            request
+                    );
+            return new ModelAndView(DATA_VIEW_NAME, new ModelMap(InfoPageConstants.INFOPAGE_BUILDER, builder));
         }
-        return infoPageResource;
+
+        throw new InfoPageNotFoundException(rel);
+    }
+
+    private String getViewDataTemplateLink() throws InfoPageNotFoundException {
+        return linkTo(methodOn(SVInfoPageController.class).getInfoPageViewData(null, null)).withRel("dummy").getHref();
+    }
+
+    private SInfoPage getInfoPageForPath(final String domain) {
+        LOGGER.debug(String.format("/getInfoPageForPath/domain=%s", domain));
+        return infoPageMappings.getInfoPageForPath(domain);
+    }
+
+    private String getViewForPage(final SInfoPage page) {
+        return page instanceof SDomainInfoPage ? DOMAIN_VIEW_NAME : VIEW_NAME;
     }
 
     @ResponseBody
     @ExceptionHandler({InfoPageNotFoundException.class})
-    public ResponseEntity<?> handleNPE(InfoPageNotFoundException ipnfe) {
+    public ResponseEntity<?> handleInfoPageNotFound(InfoPageNotFoundException ipnfe) {
         LOGGER.error(ipnfe.getMessage());
         return new ResponseEntity<>(ipnfe, HttpStatus.NOT_FOUND);
     }
