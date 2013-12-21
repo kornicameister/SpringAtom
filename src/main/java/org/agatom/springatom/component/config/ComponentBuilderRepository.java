@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.component.config;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Maps;
 import org.agatom.springatom.component.builders.ComponentBuilder;
@@ -72,16 +73,22 @@ class ComponentBuilderRepository
                     final ComponentBuilds.Produces producesType = (ComponentBuilds.Produces) AnnotationUtils
                             .getValue(beanClazz.getAnnotation(ComponentBuilds.class), CRITERIA.PRODUCES.key);
 
-                    this.holderMap.put(beanName, new DefinitionHolder(builds, producesType));
-
+                    final DefinitionHolder holder = new DefinitionHolder(builds, producesType);
+                    this.holderMap.put(beanName, holder);
+                    LOGGER.trace(String.format("/readBuilders -> %s", holder));
                 }
             }
         }
     }
 
     @Override
+    public ComponentBuilder<?> getBuilder(final String componentId) {
+        return (ComponentBuilder<?>) this.context.getBean(componentId);
+    }
+
+    @Override
     public ComponentBuilder<?> getBuilder(final String componentId, final ModelMap modelMap, final WebRequest request) {
-        final ComponentBuilder<?> builder = (ComponentBuilder<?>) this.context.getBean(componentId);
+        final ComponentBuilder<?> builder = this.getBuilder(componentId);
         if (builder != null) {
             LOGGER.trace(String.format("Found builder for target %s", componentId));
             builder.init(new ComponentDataRequest(modelMap, request));
@@ -165,6 +172,14 @@ class ComponentBuilderRepository
         @Override
         public int compareTo(@Nonnull final DefinitionHolder o) {
             return ComparisonChain.start().compare(this.builds.getName(), o.builds.getName()).compare(this.produces, o.produces).result();
+        }
+
+        @Override
+        public String toString() {
+            return Objects.toStringHelper(this)
+                          .addValue(builds)
+                          .addValue(produces)
+                          .toString();
         }
     }
 }

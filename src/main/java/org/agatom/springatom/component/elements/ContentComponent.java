@@ -18,7 +18,6 @@
 package org.agatom.springatom.component.elements;
 
 import com.google.common.collect.Sets;
-import org.agatom.springatom.component.DefaultComponent;
 import org.agatom.springatom.component.EmbeddableComponent;
 
 import java.util.Iterator;

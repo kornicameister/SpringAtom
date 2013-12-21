@@ -15,24 +15,58 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.component;
+package org.agatom.springatom.component.elements.table;
+
+import com.google.common.base.Objects;
+import org.agatom.springatom.component.elements.ContentComponent;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class DefaultComponent
-        implements Component {
-    protected String title;
+public class TableComponent
+        extends ContentComponent<TableColumnComponent> {
+    protected String  tableId    = null;
+    protected int     rowsOnPage = 10;
+    protected boolean filterable = true;
 
-    @Override
-    public String getTitle() {
-        return this.title;
+    public String getTableId() {
+        return tableId;
+    }
+
+    public TableComponent setTableId(final String tableId) {
+        this.tableId = tableId;
+        return this;
     }
 
     @Override
-    public void setTitle(final String title) {
-        this.title = title;
+    public int hashCode() {
+        return Objects.hashCode(tableId);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TableComponent that = (TableComponent) o;
+
+        return Objects.equal(this.tableId, that.tableId);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(tableId)
+                      .addValue(rowsOnPage)
+                      .addValue(filterable)
+                      .addValue(content)
+                      .addValue(title)
+                      .toString();
     }
 }

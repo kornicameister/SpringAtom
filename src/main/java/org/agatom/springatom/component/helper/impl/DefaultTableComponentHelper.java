@@ -15,80 +15,48 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.component.data;
+package org.agatom.springatom.component.helper.impl;
 
-import com.google.common.base.Objects;
-
-import java.io.Serializable;
+import org.agatom.springatom.component.elements.table.DandelionTableComponent;
+import org.agatom.springatom.component.elements.table.TableColumnComponent;
+import org.agatom.springatom.component.elements.table.TableComponent;
+import org.agatom.springatom.component.helper.TableComponentHelper;
+import org.springframework.hateoas.Link;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class ComponentDataResponse<V>
-implements Serializable {
+public class DefaultTableComponentHelper
+        extends DefaultComponentHelper
+        implements TableComponentHelper {
 
-    private Class<?> clazz;
-    private V value;
-    private DataType type;
-
-    public Class<?> getClazz() {
-        return clazz;
-    }
-
-    public V getValue() {
-        return value;
-    }
-
-    public ComponentDataResponse setValue(final V value) {
-        this.value = value;
-        this.clazz = value.getClass();
-        return this;
-    }
-
-    public DataType getType() {
-        return type;
-    }
-
-    public ComponentDataResponse setType(final DataType type) {
-        this.type = type;
-        return this;
+    @Override
+    public Link getInfoPageLink(String path, Long id) {
+        return new Link(String.format("/app/ip/%s/%d", path, id)).withRel(String.format("infopage.%s", path));
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(clazz, value, type);
+    public DandelionTableComponent newDandelionTable(final String tableId, final String builderId) {
+        return (DandelionTableComponent) new DandelionTableComponent()
+                .setUrl(this.getTableLink(tableId, builderId))
+                .setTableId(tableId);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        ComponentDataResponse that = (ComponentDataResponse) o;
-
-        return Objects.equal(this.clazz, that.clazz) &&
-                Objects.equal(this.value, that.value) &&
-                Objects.equal(this.type, that.type);
+    public Link getTableLink(final String tableId, final String builderId) {
+        return new Link(String.format("/app/tableBuilder/data/%s", builderId)).withRel(tableId);
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(clazz)
-                      .addValue(value)
-                      .addValue(type)
-                      .toString();
+    public TableColumnComponent newTableColumn(final TableComponent cmp, final String path, final String rbKey) {
+        final TableColumnComponent column = new TableColumnComponent();
+        column.setProperty(path);
+        column.setTitleKey(rbKey);
+        column.setTitle(this.entitleFromMessageKey(column));
+        cmp.addContent(column);
+        return column;
     }
 
-    public static enum DataType {
-        VALUE,
-        COLLECTION,
-        LINK
-    }
 }

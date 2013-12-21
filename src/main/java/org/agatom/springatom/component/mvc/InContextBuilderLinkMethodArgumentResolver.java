@@ -15,80 +15,35 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.component.data;
+package org.agatom.springatom.component.mvc;
 
-import com.google.common.base.Objects;
+import org.agatom.springatom.component.elements.value.InContextBuilderLink;
+import org.springframework.core.MethodParameter;
+import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.io.Serializable;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class ComponentDataResponse<V>
-implements Serializable {
-
-    private Class<?> clazz;
-    private V value;
-    private DataType type;
-
-    public Class<?> getClazz() {
-        return clazz;
-    }
-
-    public V getValue() {
-        return value;
-    }
-
-    public ComponentDataResponse setValue(final V value) {
-        this.value = value;
-        this.clazz = value.getClass();
-        return this;
-    }
-
-    public DataType getType() {
-        return type;
-    }
-
-    public ComponentDataResponse setType(final DataType type) {
-        this.type = type;
-        return this;
+public class InContextBuilderLinkMethodArgumentResolver
+        implements HandlerMethodArgumentResolver {
+    @Override
+    public boolean supportsParameter(final MethodParameter parameter) {
+        return parameter.getParameterType().isAssignableFrom(InContextBuilderLink.class);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(clazz, value, type);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        ComponentDataResponse that = (ComponentDataResponse) o;
-
-        return Objects.equal(this.clazz, that.clazz) &&
-                Objects.equal(this.value, that.value) &&
-                Objects.equal(this.type, that.type);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(clazz)
-                      .addValue(value)
-                      .addValue(type)
-                      .toString();
-    }
-
-    public static enum DataType {
-        VALUE,
-        COLLECTION,
-        LINK
+    public Object resolveArgument(final MethodParameter parameter,
+                                  final ModelAndViewContainer mavContainer,
+                                  final NativeWebRequest webRequest,
+                                  final WebDataBinderFactory binderFactory) throws
+            Exception {
+        return InContextBuilderLink.fromRequest((HttpServletRequest) webRequest.getNativeRequest());
     }
 }

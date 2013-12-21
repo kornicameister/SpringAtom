@@ -18,17 +18,21 @@
 package org.agatom.springatom.component.builders.table;
 
 import org.agatom.springatom.component.builders.DefaultComponentBuilder;
-
-import java.io.Serializable;
+import org.agatom.springatom.component.elements.table.TableComponent;
+import org.agatom.springatom.component.helper.TableComponentHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * {@code TableComponentBuilder} provides generic functionality for all the implementing classes
- * that eases and helps to build a table component.
+ * that eases and helps to build a table component {@link org.agatom.springatom.component.elements.table.TableComponent}.
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class TableComponentBuilder<COMP extends Serializable>
+abstract public class TableComponentBuilder<COMP extends TableComponent>
         extends DefaultComponentBuilder<COMP> {
+
+    @Autowired
+    protected TableComponentHelper helper;
 }

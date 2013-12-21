@@ -19,6 +19,8 @@ package org.agatom.springatom.component.config;
 
 import org.agatom.springatom.component.builders.ComponentBuilders;
 import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
+import org.agatom.springatom.component.helper.impl.DefaultComponentHelper;
+import org.agatom.springatom.component.helper.impl.DefaultTableComponentHelper;
 import org.agatom.springatom.core.module.AbstractModuleConfiguration;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.BeanFactory;
@@ -28,7 +30,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
@@ -80,6 +81,20 @@ public class ComponentBuilderModuleConfiguration
         return new ComponentBuilderProvider();
     }
 
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public DefaultComponentHelper getDefaultComponentHelper() {
+        this.logRegistering(DefaultComponentHelper.class, LOGGER);
+        return new DefaultComponentHelper();
+    }
+
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public DefaultTableComponentHelper getDefaultTableComponentHelper() {
+        this.logRegistering(DefaultTableComponentHelper.class, LOGGER);
+        return new DefaultTableComponentHelper();
+    }
+
     public static class NameGen
             extends AnnotationBeanNameGenerator {
 
@@ -91,8 +106,7 @@ public class ComponentBuilderModuleConfiguration
             final AnnotationMetadata metadata = annotatedDef.getMetadata();
             if (metadata.hasAnnotation(ANNOTATION_TYPE)) {
                 final Map<String, Object> annotationAttributes = metadata.getAnnotationAttributes(ANNOTATION_TYPE, CLASS_VALUES_AS_STRING);
-                final String id = (String) annotationAttributes.get("id");
-                return String.format("cp%s", StringUtils.capitalize(id));
+                return (String) annotationAttributes.get("id");
             }
             return super.determineBeanNameFromAnnotation(annotatedDef);
         }

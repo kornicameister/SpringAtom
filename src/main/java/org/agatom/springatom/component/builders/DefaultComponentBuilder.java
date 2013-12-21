@@ -32,22 +32,20 @@ abstract public class DefaultComponentBuilder<COMP extends Serializable>
 
     private Class<?>             target;
     private String               id;
+    private COMP                 definition;
     private ComponentDataRequest dataRequest;
 
     @Override
-    public ComponentDataResponse getData() {
-        return this.getData(this.dataRequest);
+    public final COMP getDefinition() {
+        if (this.definition == null) {
+            this.definition = this.buildDefinition();
+        }
+        return this.definition;
     }
-
-    protected abstract ComponentDataResponse getData(final ComponentDataRequest dataRequest);
 
     @Override
     public final String getId() {
         return this.id;
-    }
-
-    public final void setId(final String id) {
-        this.id = id;
     }
 
     @Override
@@ -60,9 +58,22 @@ abstract public class DefaultComponentBuilder<COMP extends Serializable>
     }
 
     @Override
+    public ComponentDataResponse getData() {
+        return this.buildData(this.dataRequest);
+    }
+
+    @Override
     public void init(final ComponentDataRequest dataRequest) {
         this.dataRequest = dataRequest;
     }
+
+    public final void setId(final String id) {
+        this.id = id;
+    }
+
+    protected abstract COMP buildDefinition();
+
+    protected abstract ComponentDataResponse buildData(final ComponentDataRequest dataRequest);
 
     public ComponentDataRequest getDataRequest() {
         return dataRequest;

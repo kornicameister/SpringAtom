@@ -28,6 +28,8 @@ import org.springframework.web.context.request.WebRequest;
  */
 public interface ComponentBuilders {
 
+    ComponentBuilder<?> getBuilder(final String componentId);
+
     ComponentBuilder<?> getBuilder(final String componentId, final ModelMap modelMap, final WebRequest request);
 
     ComponentBuilder<?> getBuilder(final Class<?> target, final ModelMap modelMap, final WebRequest request);
@@ -41,4 +43,5 @@ public interface ComponentBuilders {
     String getBuilderId(Class<?> target);
 
     String getBuilderId(Class<?> target, ComponentBuilds.Produces produces);
+
 }

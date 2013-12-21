@@ -15,80 +15,18 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.component.data;
+package org.agatom.springatom.component.helper;
 
-import com.google.common.base.Objects;
-
-import java.io.Serializable;
+import org.agatom.springatom.core.util.Localized;
+import org.springframework.hateoas.Link;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class ComponentDataResponse<V>
-implements Serializable {
+public interface ComponentHelper {
+    String entitleFromMessageKey(final Localized localized);
 
-    private Class<?> clazz;
-    private V value;
-    private DataType type;
-
-    public Class<?> getClazz() {
-        return clazz;
-    }
-
-    public V getValue() {
-        return value;
-    }
-
-    public ComponentDataResponse setValue(final V value) {
-        this.value = value;
-        this.clazz = value.getClass();
-        return this;
-    }
-
-    public DataType getType() {
-        return type;
-    }
-
-    public ComponentDataResponse setType(final DataType type) {
-        this.type = type;
-        return this;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(clazz, value, type);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        ComponentDataResponse that = (ComponentDataResponse) o;
-
-        return Objects.equal(this.clazz, that.clazz) &&
-                Objects.equal(this.value, that.value) &&
-                Objects.equal(this.type, that.type);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(clazz)
-                      .addValue(value)
-                      .addValue(type)
-                      .toString();
-    }
-
-    public static enum DataType {
-        VALUE,
-        COLLECTION,
-        LINK
-    }
+    Link getBuilderLink();
 }

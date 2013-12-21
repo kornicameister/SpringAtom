@@ -18,14 +18,13 @@
 package org.agatom.springatom.component.elements;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.component.DefaultComponent;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class Thumbnail
+public class ThumbnailComponent
         extends DefaultComponent {
     private String href    = null;
     private String alt     = null;
@@ -35,7 +34,7 @@ public class Thumbnail
         return href;
     }
 
-    public Thumbnail setHref(final String href) {
+    public ThumbnailComponent setHref(final String href) {
         this.href = href;
         return this;
     }
@@ -44,7 +43,7 @@ public class Thumbnail
         return alt;
     }
 
-    public Thumbnail setAlt(final String alt) {
+    public ThumbnailComponent setAlt(final String alt) {
         this.alt = alt;
         return this;
     }
@@ -53,7 +52,7 @@ public class Thumbnail
         return tooltip;
     }
 
-    public Thumbnail setTooltip(final String tooltip) {
+    public ThumbnailComponent setTooltip(final String tooltip) {
         this.tooltip = tooltip;
         return this;
     }
@@ -72,7 +71,7 @@ public class Thumbnail
             return false;
         }
 
-        Thumbnail that = (Thumbnail) o;
+        ThumbnailComponent that = (ThumbnailComponent) o;
 
         return Objects.equal(this.href, that.href) &&
                 Objects.equal(this.alt, that.alt) &&
