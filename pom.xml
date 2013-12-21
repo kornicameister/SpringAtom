@@ -74,7 +74,7 @@
         <spring-data-jpa.version>1.5.0.BUILD-SNAPSHOT</spring-data-jpa.version>
         <spring-data-envers.version>0.2.0.BUILD-SNAPSHOT</spring-data-envers.version>
         <spring-data-rest-webmvc.version>2.0.0.BUILD-SNAPSHOT</spring-data-rest-webmvc.version>
-        <spring.hateoas.version>0.8.0.RELEASE</spring.hateoas.version>
+        <spring.hateoas.version>0.9.0.BUILD-SNAPSHOT</spring.hateoas.version>
         <!-- spring -->
 
         <!-- servlet and jsp -->
@@ -135,7 +135,7 @@
         <castor.version>1.2</castor.version>
         <xercesImpl.version>2.11.0</xercesImpl.version>
         <joor.version>0.9.3</joor.version>
-        <dandelion-datatables.version>0.9.2</dandelion-datatables.version>
+        <dandelion-datatables.version>0.9.3</dandelion-datatables.version>
         <aopalliance.version>1.0</aopalliance.version>
         <tiles.version>2.2.2</tiles.version>
         <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
@@ -173,6 +173,11 @@
         <dependency>
             <groupId>com.github.dandelion</groupId>
             <artifactId>datatables-jsp</artifactId>
+            <version>${dandelion-datatables.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dandelion</groupId>
+            <artifactId>datatables-spring3</artifactId>
             <version>${dandelion-datatables.version}</version>
         </dependency>
         <dependency>
@@ -813,6 +818,11 @@
                     <url>http://localhost:8080/</url>
                     <server>TomcatServer</server>
                     <path>/</path>
+                    <fork>false</fork>
+                    <failOnError>true</failOnError>
+                    <systemProperties>
+                        <JAVA_OPTS>-Xms256m -Xmx512m -XX:MaxPermSize=256m</JAVA_OPTS>
+                    </systemProperties>
                 </configuration>
             </plugin>
         </plugins>
