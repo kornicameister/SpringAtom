@@ -33,7 +33,12 @@
     <import resource="flows/flows.xml"/>
     <import resource="interceptors/interceptors.xml"/>
 
-    <context:component-scan base-package="org.agatom.springatom.webmvc"/>
+    <context:component-scan base-package="org.agatom.springatom.webmvc">
+        <context:exclude-filter type="annotation" expression="org.agatom.springatom.component.builders.annotation.ComponentBuilds"/>
+        <context:exclude-filter type="annotation" expression="org.agatom.springatom.ip.annotation.InfoPage"/>
+        <context:exclude-filter type="annotation" expression="org.agatom.springatom.ip.annotation.DomainInfoPage"/>
+    </context:component-scan>
+
     <mvc:annotation-driven validator="validator"
                            conversion-service="springAtomConversionService"
                            ignoreDefaultModelOnRedirect="true"
@@ -50,11 +55,15 @@
                 <property name="prettyPrint" value="false"/>
             </bean>
         </mvc:message-converters>
+        <mvc:argument-resolvers>
+            <bean class="com.github.dandelion.datatables.extras.spring3.ajax.DatatablesCriteriasMethodArgumentResolver"/>
+            <bean class="org.agatom.springatom.component.mvc.InContextBuilderLinkMethodArgumentResolver"/>
+        </mvc:argument-resolvers>
     </mvc:annotation-driven>
     <!--suppress SpringModelInspection -->
     <mvc:resources mapping="/static/**"
                    cache-period="10"
-                   location="/static/,classpath:/META-INF/web-resources/,classpath:/META-INF/resources/webjars/"/>
+                   location="/static/,classpath:/META-INF/web-resources/,classpath:/META-INF/resources/webjars/,classpath:/datatables/"/>
     <mvc:default-servlet-handler/>
 
     <bean id="jodaDtff" class="org.springframework.format.datetime.joda.DateTimeFormatterFactory">
@@ -85,6 +94,7 @@
             <set>
                 <bean class="org.agatom.springatom.webmvc.converters.SSecurityAuthorityEnumConverted"/>
                 <bean class="org.agatom.springatom.webmvc.converters.StringToUnixTimestampConverter"/>
+                <bean class="org.agatom.springatom.webmvc.converters.IntervalToStringConverter"/>
             </set>
         </property>
         <property name="formatters">
@@ -103,5 +113,6 @@
           depends-on="springAtomConversionService">
         <constructor-arg ref="springAtomConversionService"/>
     </bean>
+
 
 </beans>
