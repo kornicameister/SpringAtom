@@ -15,13 +15,11 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.infopages;
+package org.agatom.springatom.webmvc.pages.infopage;
 
-import org.agatom.springatom.ip.DomainInfoPageResource;
-import org.agatom.springatom.ip.InfoPageResource;
+import org.agatom.springatom.ip.annotation.DomainInfoPage;
 import org.agatom.springatom.ip.page.BasicDomainInfoPage;
 import org.agatom.springatom.server.model.beans.car.SCar;
-import org.agatom.springatom.server.repository.repositories.car.SCarRepository;
 
 /**
  * @author kornicameister
@@ -29,9 +27,12 @@ import org.agatom.springatom.server.repository.repositories.car.SCarRepository;
  * @since 0.0.1
  */
 
-@InfoPageResource(path = SCarInfoPage.PATH, rel = SCarInfoPage.REL)
-@DomainInfoPageResource(domainClass = SCar.class, repositoryClass = SCarRepository.class)
-public class SCarInfoPage
+@DomainInfoPage(
+        path = CarInfoPage.PATH,
+        rel = CarInfoPage.REL,
+        domain = SCar.class
+)
+public class CarInfoPage
         extends BasicDomainInfoPage {
     protected static final transient String PATH = "car";
     protected static final transient String REL  = "ip.car";

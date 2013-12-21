@@ -15,13 +15,11 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.infopages;
+package org.agatom.springatom.webmvc.pages.infopage;
 
-import org.agatom.springatom.ip.DomainInfoPageResource;
-import org.agatom.springatom.ip.InfoPageResource;
+import org.agatom.springatom.ip.annotation.DomainInfoPage;
 import org.agatom.springatom.ip.page.BasicDomainInfoPage;
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
-import org.agatom.springatom.server.repository.repositories.appointment.SAppointmentRepository;
 
 /**
  * @author kornicameister
@@ -29,9 +27,12 @@ import org.agatom.springatom.server.repository.repositories.appointment.SAppoint
  * @since 0.0.1
  */
 
-@InfoPageResource(path = SAppointmentInfoPage.PATH, rel = SAppointmentInfoPage.REL)
-@DomainInfoPageResource(domainClass = SAppointment.class, repositoryClass = SAppointmentRepository.class)
-public class SAppointmentInfoPage
+@DomainInfoPage(
+        path = AppointmentInfoPage.PATH,
+        rel = AppointmentInfoPage.REL,
+        domain = SAppointment.class
+)
+public class AppointmentInfoPage
         extends BasicDomainInfoPage {
     protected static final transient String REL  = "ip.appointment";
     protected static final transient String PATH = "appointment";
