@@ -1,0 +1,100 @@
+/**************************************************************************************************
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ *                                                                                                *
+ * [SpringAtom] is free software: you can redistribute it and/or modify                           *
+ * it under the terms of the GNU General Public License as published by                           *
+ * the Free Software Foundation, either version 3 of the License, or                              *
+ * (at your option) any later version.                                                            *
+ *                                                                                                *
+ * [SpringAtom] is distributed in the hope that it will be useful,                                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
+ * GNU General Public License for more details.                                                   *
+ *                                                                                                *
+ * You should have received a copy of the GNU General Public License                              *
+ * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
+ **************************************************************************************************/
+
+/* infopage*/
+.x-info-page {
+    width : 99%;
+}
+
+/* infopage*/
+
+/* panels */
+.x-ip-panel {
+    display       : block;
+    width         : 90%;
+    padding-top   : 10px;
+    margin        : 0 auto;
+    align-content : center;
+}
+
+.x-ip-panel .x-ip-panel-title {
+    background    : #00A2D3 !important;
+    font-size     : larger;
+    border-radius : 10px;
+    text-align    : center;
+    height        : 25px;
+    padding-top   : 5px;
+}
+
+.x-ip-panel .x-ip-panel-title i {
+    margin-right : 5px;
+}
+
+.x-ip-panel .x-ip-panel-content {
+    border        : 1px solid #000CC6;
+    margin        : 5px;
+    padding       : 2px;
+    border-radius : 10px;
+}
+
+.x-ip-panel .x-layout-vertical > .x-ip-attr[data-displayas="value"],
+.x-ip-panel .x-layout-vertical > .x-ip-attr[data-displayas="infopage"] {
+    display : flex;
+}
+
+.x-ip-attr-value {
+    font-weight : lighter;
+    font        : monospace;
+}
+
+.x-ip-panel .x-layout-horizontal > .x-ip-attr {
+    display : block;
+}
+
+/* panels */
+
+/* content */
+.x-ip-attr {
+    width : 95%;
+}
+
+.x-ip-attr-label {
+    width       : 150px;
+    font-weight : bolder;
+    color       : #000CC6;
+}
+
+.x-ip-attr-label:after {
+    content : ': ';
+}
+
+/* content */
+
+a.x-infopage-link {
+    text-align     : center;
+    vertical-align : middle;
+    margin-left    : 9px;
+}
+
+.x-table-idColumn {
+    width : 15px;
+}
+
+.x-table-infoPageColumn {
+    width      : 10px;
+    text-align : center;
+}
