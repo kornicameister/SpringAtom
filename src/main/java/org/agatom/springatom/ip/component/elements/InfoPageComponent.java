@@ -15,28 +15,39 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.ip.annotation;
+package org.agatom.springatom.ip.component.elements;
 
-import org.springframework.data.domain.Persistable;
-import org.springframework.stereotype.Component;
-
-import java.lang.annotation.*;
+import com.google.common.base.Objects;
+import org.agatom.springatom.component.elements.ContentComponent;
+import org.agatom.springatom.component.elements.ThumbnailComponent;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component
-@Documented
-@Inherited
-@Target(value = {ElementType.TYPE})
-@Retention(value = RetentionPolicy.RUNTIME)
-public @interface DomainInfoPage {
 
-    String path() default "";
+public class InfoPageComponent
+        extends ContentComponent<InfoPagePanelComponent> {
+    private ThumbnailComponent thumbnail = null;
 
-    String rel() default "";
+    public ThumbnailComponent getThumbnail() {
+        return thumbnail;
+    }
 
-    Class<? extends Persistable<?>> domain();
+    public void setThumbnail(final ThumbnailComponent thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public int getPanelsCount() {
+        return this.content.size();
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(thumbnail)
+                      .addValue(content)
+                      .toString();
+    }
 }

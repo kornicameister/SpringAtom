@@ -15,28 +15,38 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.ip.annotation;
+package org.agatom.springatom.ip.component.helper;
 
-import org.springframework.data.domain.Persistable;
-import org.springframework.stereotype.Component;
-
-import java.lang.annotation.*;
+import org.agatom.springatom.component.helper.ComponentHelper;
+import org.agatom.springatom.component.meta.LayoutType;
+import org.agatom.springatom.ip.component.elements.InfoPageComponent;
+import org.agatom.springatom.ip.component.elements.InfoPagePanelComponent;
+import org.agatom.springatom.ip.component.elements.attributes.InfoPageAttributeComponent;
+import org.agatom.springatom.ip.component.elements.meta.AttributeDisplayAs;
+import org.springframework.hateoas.Link;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component
-@Documented
-@Inherited
-@Target(value = {ElementType.TYPE})
-@Retention(value = RetentionPolicy.RUNTIME)
-public @interface DomainInfoPage {
+public interface InfoPageComponentHelper
+        extends ComponentHelper {
+    Link getInfoPageLink(String path, Long id);
 
-    String path() default "";
+    InfoPagePanelComponent newBasicPanel(InfoPageComponent cmp, LayoutType layout);
 
-    String rel() default "";
+    InfoPagePanelComponent newOneToManyPanel(InfoPageComponent cmp, LayoutType layout);
 
-    Class<? extends Persistable<?>> domain();
+    InfoPagePanelComponent newManyToOnePanel(InfoPageComponent cmp, LayoutType layout);
+
+    InfoPagePanelComponent newSystemPanel(InfoPageComponent cmp, LayoutType layout);
+
+    InfoPageAttributeComponent newValueAttribute(InfoPagePanelComponent panel, String path, String entityName);
+
+    InfoPageAttributeComponent newLinkAttribute(InfoPagePanelComponent panel, String path, String entityName);
+
+    InfoPageAttributeComponent newTableAttribute(InfoPagePanelComponent panel, String path, String entityName);
+
+    InfoPageAttributeComponent newAttribute(InfoPagePanelComponent panel, String path, String messageKey, AttributeDisplayAs displayAs);
 }

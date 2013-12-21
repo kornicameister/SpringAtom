@@ -24,12 +24,11 @@ package org.agatom.springatom.ip;
  */
 public final class InfoPageConstants {
 
-    public static final String INFOPAGE_REST_CONTENT_LINK       = "ipRestLink";
     public static final String INFOPAGE_VIEW_DATA_TEMPLATE_LINK = "ipDataView";
     public static final String INFOPAGE_PAGE                    = "ipInfoPage";
-    public static final String INFOPAGE_CONTENT                 = "ipContent";
-    public static final String INFOPAGE_COMPONENT               = "ipComponent";
     public static final String INFOPAGE_BUILDER                 = "ipBuilder";
+    public static final String TABLE_COMPONENT_BUILDER          = "ipTableBuilder";
+    public static final String INFOPAGE_PARAMS                  = "ipParams";
 
     private InfoPageConstants() {
     }

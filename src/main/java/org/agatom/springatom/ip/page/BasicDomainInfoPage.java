@@ -18,8 +18,6 @@
 package org.agatom.springatom.ip.page;
 
 import org.agatom.springatom.ip.SDomainInfoPage;
-import org.springframework.data.repository.Repository;
-import org.springframework.data.repository.RepositoryDefinition;
 
 /**
  * @author kornicameister
@@ -29,26 +27,14 @@ import org.springframework.data.repository.RepositoryDefinition;
 public abstract class BasicDomainInfoPage
         extends BasicInfoPage
         implements SDomainInfoPage {
-    private Class<?>                    domainClass;
-    private Class<? extends Repository> repositoryClass;
+    private Class<?> domain;
 
     @Override
-    public Class<?> getDomainClass() {
-        return this.domainClass;
+    public Class<?> getDomain() {
+        return this.domain;
     }
 
-    @Override
-    public Class<? extends Repository> getRepositoryClass() {
-        return this.repositoryClass;
+    public void setDomain(final Class<?> domain) {
+        this.domain = domain;
     }
-
-    @Override
-    public void setRepositoryClass(final Class<? extends Repository> repository) {
-        this.repositoryClass = repository;
-        if (this.repositoryClass.isAnnotationPresent(RepositoryDefinition.class)) {
-            final RepositoryDefinition def = this.repositoryClass.getAnnotation(RepositoryDefinition.class);
-            this.domainClass = def.domainClass();
-        }
-    }
-
 }

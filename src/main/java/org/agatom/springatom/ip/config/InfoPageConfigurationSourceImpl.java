@@ -79,12 +79,6 @@ class InfoPageConfigurationSourceImpl
     }
 
     @Override
-    public SInfoPage getFromDomain(final Class<?> domainClass) {
-        LOGGER.debug(String.format("/getFromDomain => %s", domainClass));
-        return this.getInternal(domainClass.getName(), CRITERIA.DOMAIN);
-    }
-
-    @Override
     public Set<Class<?>> getAllInfoPageClasses() {
         final Set<BeanDefinition> components = this.getBeanDefinitionsFailFast();
         final Set<Class<?>> classes = Sets.newHashSetWithExpectedSize(components.size());
@@ -96,6 +90,12 @@ class InfoPageConfigurationSourceImpl
             }
         }
         return classes;
+    }
+
+    @Override
+    public SInfoPage getFromDomain(final Class<?> domainClass) {
+        LOGGER.debug(String.format("/getFromDomain => %s", domainClass));
+        return this.getInternal(domainClass.getName(), CRITERIA.DOMAIN);
     }
 
     @Override
@@ -128,7 +128,7 @@ class InfoPageConfigurationSourceImpl
                                         .format("No %s annotation found over bean %s", ANNOTATION_TYPES, input.getBeanClassName()));
                             }
 
-                            final Map<String, Object> annotationAttributes = metadata.getAnnotationAttributes(annotationPresent.get());
+                            final Map<String, Object> annotationAttributes = metadata.getAnnotationAttributes(annotationPresent.get(), true);
                             final String pathValue = (String) annotationAttributes.get(criteria.key);
 
                             return pathValue != null && pathValue.equals(query);
@@ -163,7 +163,7 @@ class InfoPageConfigurationSourceImpl
     }
 
     private static enum CRITERIA {
-        DOMAIN("domainClass"),
+        DOMAIN("domain"),
         REL("rel"),
         PATH("path");
         private final String key;

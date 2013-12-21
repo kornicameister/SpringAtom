@@ -15,28 +15,46 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.ip.annotation;
+package org.agatom.springatom.ip.component.elements.meta;
 
-import org.springframework.data.domain.Persistable;
-import org.springframework.stereotype.Component;
-
-import java.lang.annotation.*;
+import org.agatom.springatom.core.util.Localized;
 
 /**
+ * {@code PanelHolds} provides information about what type of attributes
+ * is held in the particular {@link org.agatom.springatom.ip.component.elements.InfoPagePanelComponent}
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component
-@Documented
-@Inherited
-@Target(value = {ElementType.TYPE})
-@Retention(value = RetentionPolicy.RUNTIME)
-public @interface DomainInfoPage {
+public enum PanelHolds
+        implements Localized {
+    BASIC_ATTRIBUTES {
+        @Override
+        public String getMessageKey() {
+            return Constants.PREFIX + ".basic";
+        }
+    },
+    ONE_TO_MANY_ATTRIBUTES {
+        @Override
+        public String getMessageKey() {
+            return Constants.PREFIX + ".oneToMany";
+        }
+    },
+    MANY_TO_ONE_ATTRIBUTES {
+        @Override
+        public String getMessageKey() {
+            return Constants.PREFIX + ".manyToOne";
+        }
+    },
+    SYSTEM_ATTRIBUTES {
+        @Override
+        public String getMessageKey() {
+            return Constants.PREFIX + ".system";
+        }
+    };
 
-    String path() default "";
-
-    String rel() default "";
-
-    Class<? extends Persistable<?>> domain();
+    private static class Constants {
+        private static final String PREFIX = "springatom.attributes";
+    }
 }

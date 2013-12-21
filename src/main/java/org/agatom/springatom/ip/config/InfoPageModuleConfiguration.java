@@ -17,10 +17,12 @@
 
 package org.agatom.springatom.ip.config;
 
-import org.agatom.springatom.component.config.ComponentModuleConfiguration;
+import org.agatom.springatom.component.config.ComponentBuilderModuleConfiguration;
 import org.agatom.springatom.core.module.AbstractModuleConfiguration;
 import org.agatom.springatom.ip.annotation.DomainInfoPage;
 import org.agatom.springatom.ip.annotation.InfoPage;
+import org.agatom.springatom.ip.component.helper.InfoPageComponentHelper;
+import org.agatom.springatom.ip.component.helper.impl.DefaultInfoPageComponentHelper;
 import org.agatom.springatom.ip.mapping.InfoPageMappings;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
@@ -41,7 +43,7 @@ import org.springframework.context.annotation.*;
 @Configuration(value = InfoPageModuleConfiguration.MODULE_NAME)
 @PropertySource(value = "classpath:org/agatom/springatom/ip/infopage.properties")
 @ComponentScan(
-        nameGenerator = ComponentModuleConfiguration.NameGen.class,
+        nameGenerator = ComponentBuilderModuleConfiguration.NameGen.class,
         basePackages = {
                 "org.agatom.springatom"
         },
@@ -95,6 +97,13 @@ public class InfoPageModuleConfiguration
                 .setBasePackage(this.applicationContext.getEnvironment().getProperty("springatom.infoPages.basePackage"));
         source.setApplicationContext(this.applicationContext);
         return source;
+    }
+
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public InfoPageComponentHelper getInfoPageComponentHelper() {
+        this.logRegistering(DefaultInfoPageComponentHelper.class, LOGGER);
+        return new DefaultInfoPageComponentHelper();
     }
 
     @Override

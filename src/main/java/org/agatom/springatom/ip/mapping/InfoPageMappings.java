@@ -36,10 +36,9 @@ import java.util.Set;
 public class InfoPageMappings
         implements Iterable<Class<?>> {
     // caches
-    private final Map<Class<?>, SInfoPage> domainToPageCache     = Maps.newHashMap();
-    private final Map<Class<?>, SInfoPage> repositoryToPageCache = Maps.newHashMap();
-    private final Map<String, SInfoPage>   relToPageCache        = Maps.newHashMap();
-    private final Map<String, SInfoPage>   pathToPageCache       = Maps.newHashMap();
+    private final Map<Class<?>, SInfoPage>    domainToPageCache           = Maps.newHashMap();
+    private final Map<String, SInfoPage>      relToPageCache              = Maps.newHashMap();
+    private final Map<String, SInfoPage>      pathToPageCache             = Maps.newHashMap();
     private       InfoPageConfigurationSource infoPageConfigurationSource = null;
 
     /**
@@ -57,8 +56,7 @@ public class InfoPageMappings
         this.relToPageCache.put(page.getRel(), page);
         if (page instanceof SDomainInfoPage) {
             final SDomainInfoPage infoPage = (SDomainInfoPage) page;
-            this.domainToPageCache.put(infoPage.getDomainClass(), page);
-            this.repositoryToPageCache.put(infoPage.getRepositoryClass(), page);
+            this.domainToPageCache.put(infoPage.getDomain(), page);
         }
     }
 

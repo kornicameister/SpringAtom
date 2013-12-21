@@ -15,28 +15,15 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.ip.annotation;
-
-import org.springframework.data.domain.Persistable;
-import org.springframework.stereotype.Component;
-
-import java.lang.annotation.*;
+package org.agatom.springatom.ip.component.elements.meta;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component
-@Documented
-@Inherited
-@Target(value = {ElementType.TYPE})
-@Retention(value = RetentionPolicy.RUNTIME)
-public @interface DomainInfoPage {
-
-    String path() default "";
-
-    String rel() default "";
-
-    Class<? extends Persistable<?>> domain();
+public enum AttributeDisplayAs {
+    VALUE,
+    TABLE,
+    INFOPAGE
 }

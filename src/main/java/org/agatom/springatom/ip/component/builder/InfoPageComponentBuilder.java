@@ -15,28 +15,33 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.ip.annotation;
+package org.agatom.springatom.ip.component.builder;
 
-import org.springframework.data.domain.Persistable;
-import org.springframework.stereotype.Component;
-
-import java.lang.annotation.*;
+import org.agatom.springatom.component.builders.DefaultComponentBuilder;
+import org.agatom.springatom.ip.component.elements.InfoPageComponent;
+import org.agatom.springatom.ip.component.elements.InfoPagePanelComponent;
+import org.agatom.springatom.ip.component.elements.attributes.InfoPageAttributeComponent;
+import org.agatom.springatom.ip.component.helper.InfoPageComponentHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component
-@Documented
-@Inherited
-@Target(value = {ElementType.TYPE})
-@Retention(value = RetentionPolicy.RUNTIME)
-public @interface DomainInfoPage {
+abstract public class InfoPageComponentBuilder
+        extends DefaultComponentBuilder<InfoPageComponent> {
 
-    String path() default "";
+    @Autowired
+    protected InfoPageComponentHelper helper;
 
-    String rel() default "";
-
-    Class<? extends Persistable<?>> domain();
+    public InfoPageAttributeComponent getAttributeForPath(final String key) {
+        final InfoPageComponent definition = this.getDefinition();
+        for (final InfoPagePanelComponent component : definition.getContent()) {
+            if (component.containsAttributeForPath(key)) {
+                return component.getAttributeForPath(key);
+            }
+        }
+        return null;
+    }
 }

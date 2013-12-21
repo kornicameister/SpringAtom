@@ -17,8 +17,6 @@
 
 package org.agatom.springatom.ip;
 
-import org.springframework.data.repository.Repository;
-
 /**
  * @author kornicameister
  * @version 0.0.1
@@ -26,10 +24,5 @@ import org.springframework.data.repository.Repository;
  */
 public interface SDomainInfoPage
         extends SInfoPage {
-    Class<?> getDomainClass();
-
-    Class<? extends Repository> getRepositoryClass();
-
-    void setRepositoryClass(final Class<? extends Repository> repositoryClass);
-
+    Class<?> getDomain();
 }
