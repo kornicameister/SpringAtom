@@ -33,6 +33,7 @@
 <script type="text/javascript" src="<s:url value="${staticResources}/dojo/dojo.js" />"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/spring/Spring.js.uncompressed.js" />"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/spring/Spring-Dojo.js.uncompressed.js" />"></script>
+<script type="text/javascript" src="<s:url value="${staticResources}/sources/js/jquery.dataTables.min.js" />"></script>
 
 <script type="text/javascript" src="<s:url value="${staticLib}/mmenu/3.2.1/jquery.mmenu.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/tinycon.min.js"/>"></script>
@@ -45,3 +46,4 @@
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-core.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-breadcrumb.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-wizards.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticSa}/sa-infopage.js"/>"></script>

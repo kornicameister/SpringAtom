@@ -38,3 +38,5 @@
 <link rel="stylesheet" media="all" href="<s:url value="${staticResources}/fullcalendar/1.6.4/fullcalendar.css"/>"/>
 <link rel="stylesheet" media="print" href="<s:url value="${staticResources}/fullcalendar/1.6.4/fullcalendar.print.css"/>"/>
 <link rel="stylesheet" media="all" href="<s:url value="/app/static/css/fullcalendar-extra.css"/>"/>
+<link rel="stylesheet" media="all" href="<s:url value="/app/static/css/infopages.css"/>"/>
+<link rel="stylesheet" media="all" href="<s:url value="${staticResources}/sources/css/jquery.dataTables.css" />"/>
