@@ -17,8 +17,12 @@
 
 package org.agatom.springatom.component.builders;
 
+import com.google.common.base.Objects;
+import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
+import org.agatom.springatom.component.builders.exception.ComponentException;
 import org.agatom.springatom.component.data.ComponentDataRequest;
 import org.agatom.springatom.component.data.ComponentDataResponse;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 
@@ -29,19 +33,14 @@ import java.io.Serializable;
  */
 abstract public class DefaultComponentBuilder<COMP extends Serializable>
         implements ComponentBuilder<COMP> {
+    protected Logger logger = this.getLogger();
+    private String                   id;
+    private Class<?>                 builds;
+    private ComponentBuilds.Produces produces;
+    private COMP                     definition;
+    private ComponentDataRequest     dataRequest;
 
-    private Class<?>             target;
-    private String               id;
-    private COMP                 definition;
-    private ComponentDataRequest dataRequest;
-
-    @Override
-    public final COMP getDefinition() {
-        if (this.definition == null) {
-            this.definition = this.buildDefinition();
-        }
-        return this.definition;
-    }
+    protected abstract Logger getLogger();
 
     @Override
     public final String getId() {
@@ -49,17 +48,31 @@ abstract public class DefaultComponentBuilder<COMP extends Serializable>
     }
 
     @Override
-    public final Class<?> getTarget() {
-        return this.target;
-    }
-
-    public final void setTarget(final Class<?> clazz) {
-        this.target = clazz;
+    public Class<?> getBuilds() {
+        return builds;
     }
 
     @Override
-    public ComponentDataResponse getData() {
+    public ComponentBuilds.Produces getProduces() {
+        return produces;
+    }
+
+    public final void setProduces(final ComponentBuilds.Produces produces) {
+        this.produces = produces;
+    }
+
+    @Override
+    public ComponentDataResponse getData() throws ComponentException {
         return this.buildData(this.dataRequest);
+    }
+
+    @Override
+    public final COMP getDefinition() throws ComponentException {
+        if (this.definition == null) {
+            this.definition = this.buildDefinition();
+            logger.info(String.format("%s has definition %s", this.id, this.definition));
+        }
+        return this.definition;
     }
 
     @Override
@@ -67,15 +80,25 @@ abstract public class DefaultComponentBuilder<COMP extends Serializable>
         this.dataRequest = dataRequest;
     }
 
+    public final void setBuilds(final Class<?> clazz) {
+        this.builds = clazz;
+    }
+
     public final void setId(final String id) {
         this.id = id;
     }
 
-    protected abstract COMP buildDefinition();
+    protected abstract COMP buildDefinition() throws ComponentException;
 
-    protected abstract ComponentDataResponse buildData(final ComponentDataRequest dataRequest);
+    protected abstract ComponentDataResponse buildData(final ComponentDataRequest dataRequest) throws ComponentException;
 
-    public ComponentDataRequest getDataRequest() {
-        return dataRequest;
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(builds)
+                      .addValue(id)
+                      .addValue(definition)
+                      .addValue(dataRequest)
+                      .toString();
     }
 }

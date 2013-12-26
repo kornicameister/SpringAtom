@@ -15,35 +15,22 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.component.mvc;
+package org.agatom.springatom.component.builders;
 
-import org.agatom.springatom.component.elements.value.InContextBuilderLink;
-import org.springframework.core.MethodParameter;
-import org.springframework.web.bind.support.WebDataBinderFactory;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.method.support.ModelAndViewContainer;
+import org.agatom.springatom.server.repository.SBasicRepository;
+import org.springframework.data.domain.Persistable;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class InContextBuilderLinkMethodArgumentResolver
-        implements HandlerMethodArgumentResolver {
-    @Override
-    public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.getParameterType().isAssignableFrom(InContextBuilderLink.class);
-    }
+public interface EntityAware<Y extends Persistable<?>>
+        extends Serializable {
 
-    @Override
-    public Object resolveArgument(final MethodParameter parameter,
-                                  final ModelAndViewContainer mavContainer,
-                                  final NativeWebRequest webRequest,
-                                  final WebDataBinderFactory binderFactory) throws
-            Exception {
-        return InContextBuilderLink.fromRequest((HttpServletRequest) webRequest.getNativeRequest());
-    }
+    void setEntity(Class<Y> entity);
+
+    void setRepository(final SBasicRepository<Y, Serializable> repository);
 }

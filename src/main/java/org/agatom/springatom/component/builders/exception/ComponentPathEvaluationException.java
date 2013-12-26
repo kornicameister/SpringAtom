@@ -15,31 +15,25 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.component.builders;
-
-import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
-import org.agatom.springatom.component.builders.exception.ComponentException;
-import org.agatom.springatom.component.data.ComponentDataRequest;
-import org.agatom.springatom.component.data.ComponentDataResponse;
-
-import java.io.Serializable;
+package org.agatom.springatom.component.builders.exception;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentBuilder<COMP extends Serializable> {
+public class ComponentPathEvaluationException
+        extends ComponentException {
 
-    String getId();
+    public ComponentPathEvaluationException(final String message) {
+        super(message);
+    }
 
-    Class<?> getBuilds();
+    public ComponentPathEvaluationException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 
-    ComponentBuilds.Produces getProduces();
-
-    ComponentDataResponse getData() throws ComponentException;
-
-    COMP getDefinition() throws ComponentException;
-
-    void init(ComponentDataRequest componentDataRequest);
+    public ComponentPathEvaluationException(final Throwable cause) {
+        super(cause);
+    }
 }

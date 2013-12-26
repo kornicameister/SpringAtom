@@ -18,19 +18,24 @@
 package org.agatom.springatom.component.config;
 
 import org.agatom.springatom.component.builders.ComponentBuilder;
-import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
+import org.agatom.springatom.component.builders.EntityAware;
+import org.agatom.springatom.component.builders.annotation.EntityBased;
 import org.agatom.springatom.core.processors.AbstractAnnotationBeanPostProcessorAdapter;
-import org.agatom.springatom.ip.SDomainInfoPage;
-import org.agatom.springatom.ip.component.builder.DomainInfoPageComponentBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValues;
+import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.ScannedGenericBeanDefinition;
-import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.data.repository.RepositoryDefinition;
+import org.springframework.data.repository.support.Repositories;
 import org.springframework.util.ClassUtils;
 
+import javax.annotation.PostConstruct;
 import java.beans.PropertyDescriptor;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author kornicameister
@@ -40,9 +45,16 @@ import java.util.Map;
 class ComponentBuilderPostProcessor
         extends AbstractAnnotationBeanPostProcessorAdapter {
 
-    private static final Logger LOGGER       = Logger.getLogger(ComponentBuilderPostProcessor.class);
-    private static final String BUILDS       = "builds";
-    private static final String DOMAIN_CLASS = "domainClass";
+    private static final Logger       LOGGER          = Logger.getLogger(ComponentBuilderPostProcessor.class);
+    private static final String       ENTITY_KEY      = "entity";
+    private static final String       ENTITY_REPO_KEY = "repository";
+    private              Repositories repositories    = null;
+
+    @PostConstruct
+    private void initRepositories() {
+        this.repositories = new Repositories(this.contextFactory);
+        LOGGER.trace(String.format("initRepositories -> %s", this.repositories));
+    }
 
     @Override
     protected boolean isProcessable(final Object bean) {
@@ -56,22 +68,47 @@ class ComponentBuilderPostProcessor
             final ScannedGenericBeanDefinition definition = (ScannedGenericBeanDefinition) this.contextFactory.getBeanDefinition(beanName);
 
             final Class<?> beanClass = Class.forName(definition.getBeanClassName());
-            if (ClassUtils.isAssignable(DomainInfoPageComponentBuilder.class, beanClass)) {
-                final AnnotationMetadata metadata = definition.getMetadata();
-                if (metadata != null) {
-                    final Map<String, Object> attributes = metadata.getAnnotationAttributes(ComponentBuilds.class.getName());
-                    final Class<?> target = (Class<?>) attributes.get(BUILDS);
-                    final Object targetBean = this.contextFactory.getBean(target);
-                    if (targetBean instanceof SDomainInfoPage) {
-                        values.add(DOMAIN_CLASS, ((SDomainInfoPage) targetBean).getDomain());
+            final Set<Class> interfacesForClassAsSet = ClassUtils.getAllInterfacesForClassAsSet(beanClass);
+
+            if (interfacesForClassAsSet.contains(EntityAware.class) && beanClass.isAnnotationPresent(EntityBased.class)) {
+                final Map<String, Object> attributes = AnnotationUtils.getAnnotationAttributes(beanClass.getAnnotation(EntityBased.class));
+
+                if (attributes.containsKey(ENTITY_KEY)) {
+                    final Class<?> entityClass = (Class<?>) attributes.get(ENTITY_KEY);
+                    final Object repositoryFor = this.repositories.getRepositoryFor(entityClass);
+
+                    if (repositoryFor != null) {
+                        values.add(ENTITY_KEY, entityClass);
+                        values.add(ENTITY_REPO_KEY, repositoryFor);
+
+                        LOGGER.trace(String.format("%s is %s, hence added properties [%s]",
+                                beanName,
+                                ClassUtils.getShortName(EntityBased.class),
+                                Arrays.toString(new String[]{ENTITY_KEY, ENTITY_REPO_KEY}))
+                        );
+
+                    } else {
+                        throw new BeanInitializationException(
+                                String.format("%s is %s but there is no matching %s for %s",
+                                        beanName,
+                                        ClassUtils.getShortName(EntityBased.class),
+                                        ClassUtils.getShortName(RepositoryDefinition.class),
+                                        ClassUtils.getShortName(entityClass)
+                                )
+                        );
                     }
+
                 }
+
+            } else {
+                LOGGER.warn(String
+                        .format("%s in not applicable for processing in context of %s", beanName, ClassUtils.getShortName(EntityBased.class)));
             }
 
             return super.postProcessOverAnnotation(values, pds, beanName);
         } catch (Exception e) {
             LOGGER.trace(e);
         }
-        return this.postProcessOverAnnotation(pvs, pds, beanName);
+        return super.postProcessOverAnnotation(pvs, pds, beanName);
     }
 }

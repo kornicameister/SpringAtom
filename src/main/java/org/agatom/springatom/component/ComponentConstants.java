@@ -15,31 +15,16 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.component.builders;
-
-import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
-import org.agatom.springatom.component.builders.exception.ComponentException;
-import org.agatom.springatom.component.data.ComponentDataRequest;
-import org.agatom.springatom.component.data.ComponentDataResponse;
-
-import java.io.Serializable;
+package org.agatom.springatom.component;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentBuilder<COMP extends Serializable> {
-
-    String getId();
-
-    Class<?> getBuilds();
-
-    ComponentBuilds.Produces getProduces();
-
-    ComponentDataResponse getData() throws ComponentException;
-
-    COMP getDefinition() throws ComponentException;
-
-    void init(ComponentDataRequest componentDataRequest);
+public class ComponentConstants {
+    public static final String CONTEXT_KEY   = "contextKey";
+    public static final String CONTEXT_CLASS = "contextClass";
+    public static final String BUILDER_ID    = "builderId";
+    public static final String REQUEST_BEAN  = "componentRequest";
 }

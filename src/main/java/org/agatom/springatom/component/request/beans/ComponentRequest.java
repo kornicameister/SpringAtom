@@ -15,14 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.component.elements.value;
+package org.agatom.springatom.component.request.beans;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.component.ComponentValue;
-import org.joor.Reflect;
-import org.springframework.hateoas.Link;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 
 /**
@@ -30,58 +26,42 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class InContextBuilderLink
-        implements ComponentValue {
-    private final Serializable contextKey;
-    private final Class<?>     contextClass;
-    private final String       builderId;
-    private final Link         link;
+public class ComponentRequest
+        implements Serializable {
+    protected String   contextKey;
+    protected String   builderId;
+    protected Class<?> contextClass;
 
-    public InContextBuilderLink(final String builderId,
-                                final Class<?> contextClass,
-                                final Serializable contextKey,
-                                final Link link) {
-        this.builderId = builderId;
-        this.contextClass = contextClass;
-        this.contextKey = contextKey;
-        this.link = link;
-    }
-
-    public static InContextBuilderLink fromRequest(final HttpServletRequest request) {
-        if (request != null) {
-            return new InContextBuilderLink(
-                    request.getParameter(Parameters.BUILDER_ID),
-                    (Class<?>) Reflect.on(request.getParameter(Parameters.CONTEXT_CLASS)).get(),
-                    request.getParameter(Parameters.CONTEXT_KEY),
-                    null
-            );
-        }
-        return null;
-    }
-
-    public Serializable getContextKey() {
+    public String getContextKey() {
         return contextKey;
     }
 
-    public Class<?> getContextClass() {
-        return contextClass;
-    }
-
-    public String getContextClassName() {
-        return contextClass.getName();
+    public ComponentRequest setContextKey(final String contextKey) {
+        this.contextKey = contextKey;
+        return this;
     }
 
     public String getBuilderId() {
         return builderId;
     }
 
-    public Link getLink() {
-        return this.link;
+    public ComponentRequest setBuilderId(final String builderId) {
+        this.builderId = builderId;
+        return this;
+    }
+
+    public Class<?> getContextClass() {
+        return contextClass;
+    }
+
+    public ComponentRequest setContextClass(final Class<?> contextClass) {
+        this.contextClass = contextClass;
+        return this;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(builderId, contextClass, contextKey);
+        return Objects.hashCode(contextKey, builderId, contextClass);
     }
 
     @Override
@@ -93,25 +73,19 @@ public class InContextBuilderLink
             return false;
         }
 
-        InContextBuilderLink that = (InContextBuilderLink) o;
+        ComponentRequest that = (ComponentRequest) o;
 
-        return Objects.equal(this.builderId, that.builderId) &&
-                Objects.equal(this.contextClass, that.contextClass) &&
-                Objects.equal(this.contextKey, that.contextKey);
+        return Objects.equal(this.contextKey, that.contextKey) &&
+                Objects.equal(this.builderId, that.builderId) &&
+                Objects.equal(this.contextClass, that.contextClass);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
+                      .addValue(contextKey)
                       .addValue(builderId)
                       .addValue(contextClass)
-                      .addValue(contextKey)
                       .toString();
-    }
-
-    public static class Parameters {
-        public static final String CONTEXT_KEY   = "contextKey";
-        public static final String CONTEXT_CLASS = "contextClass";
-        public static final String BUILDER_ID    = "builderId";
     }
 }
