@@ -70,9 +70,14 @@ abstract public class DefaultComponentBuilder<COMP extends Serializable>
     public final COMP getDefinition() throws ComponentException {
         if (this.definition == null) {
             this.definition = this.buildDefinition();
+            this.postProcessDefinition(definition);
             logger.info(String.format("%s has definition %s", this.id, this.definition));
         }
         return this.definition;
+    }
+
+    protected void postProcessDefinition(final COMP definition) {
+
     }
 
     @Override

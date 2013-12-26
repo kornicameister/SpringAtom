@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.ip.component.builder;
 
+import com.google.common.collect.Lists;
 import org.agatom.springatom.component.builders.ComponentBuilders;
 import org.agatom.springatom.component.builders.EntityAware;
 import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
@@ -26,22 +27,33 @@ import org.agatom.springatom.component.data.ComponentDataRequest;
 import org.agatom.springatom.component.data.ComponentDataResponse;
 import org.agatom.springatom.component.elements.value.BuilderLink;
 import org.agatom.springatom.component.elements.value.DelegatedLink;
+import org.agatom.springatom.component.meta.LayoutType;
 import org.agatom.springatom.core.invoke.InvokeUtils;
 import org.agatom.springatom.ip.SEntityInfoPage;
+import org.agatom.springatom.ip.component.elements.InfoPageComponent;
+import org.agatom.springatom.ip.component.elements.InfoPagePanelComponent;
 import org.agatom.springatom.ip.component.elements.attributes.InfoPageAttributeComponent;
+import org.agatom.springatom.ip.component.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.ip.data.EntityInfoPageResponse;
 import org.agatom.springatom.ip.mapping.InfoPageMappings;
+import org.agatom.springatom.server.model.beans.PersistentVersionedObject;
+import org.agatom.springatom.server.model.beans.car.SCar;
+import org.agatom.springatom.server.model.beans.car.SCarMaster;
+import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
 import org.agatom.springatom.server.repository.SBasicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
+import org.springframework.hateoas.Link;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.PluralAttribute;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -70,6 +82,13 @@ abstract public class EntityInfoPageComponentBuilder<Y extends Persistable<?>>
     @Override
     public void setRepository(final SBasicRepository<Y, Serializable> repository) {
         this.repository = repository;
+    }
+
+    @Override
+    protected void postProcessDefinition(final InfoPageComponent definition) {
+        if (ClassUtils.isAssignable(PersistentVersionedObject.class, this.entity)) {
+            this.populateSystemPanel(this.helper.newSystemPanel(definition, LayoutType.VERTICAL));
+        }
     }
 
     @Override
@@ -116,16 +135,25 @@ abstract public class EntityInfoPageComponentBuilder<Y extends Persistable<?>>
                                 final PluralAttribute<?, ?, ?> entityAttribute = (PluralAttribute<?, ?, ?>) getEntityAttribute(path);
                                 final Class<?> javaType = entityAttribute.getElementType().getJavaType();
                                 if (componentBuilders.hasBuilder(javaType, ComponentBuilds.Produces.TABLE_COMPONENT)) {
-                                    final String builderId = componentBuilders.getBuilderId(
-                                            javaType,
-                                            ComponentBuilds.Produces.TABLE_COMPONENT
-                                    );
-                                    value = new BuilderLink(
-                                            builderId,
-                                            object.getClass(),
-                                            object.getId(),
-                                            helper.getBuilderLink()
-                                    );
+                                    final String builderId = componentBuilders.getBuilderId(javaType, ComponentBuilds.Produces.TABLE_COMPONENT);
+                                    final Link builderLink = helper.getBuilderLink();
+
+                                    final Object contextValue = InvokeUtils.invokeGetter(object, path.split("\\.")[0]);
+                                    if (!ClassUtils.isAssignable(Persistable.class, contextValue.getClass())) {
+                                        value = new BuilderLink(
+                                                builderId,
+                                                object.getClass(),
+                                                object.getId(),
+                                                builderLink
+                                        );
+                                    } else {
+                                        value = new BuilderLink(
+                                                builderId,
+                                                contextValue.getClass(),
+                                                ((Persistable<?>) contextValue).getId(),
+                                                builderLink
+                                        );
+                                    }
                                 }
                             }
                         }
@@ -133,6 +161,8 @@ abstract public class EntityInfoPageComponentBuilder<Y extends Persistable<?>>
                 }
 
                 if (value == null) {
+                    logger.trace(String
+                            .format("path %s does not correspond to any property of %s", path, ClassUtils.getShortName(object.getClass())));
                     value = "???";
                 }
 
@@ -142,7 +172,16 @@ abstract public class EntityInfoPageComponentBuilder<Y extends Persistable<?>>
         }.setValue(object);
     }
 
-    protected abstract String getInfoPageLinkLabel(final Persistable<?> value);
+    protected String getInfoPageLinkLabel(final Persistable<?> value) {
+        if (value instanceof SCarMaster) {
+            return InvokeUtils.invokeGetter(value, "manufacturingData.identity", String.class);
+        } else if (value instanceof SUser) {
+            return InvokeUtils.invokeGetter(value, "person.identity", String.class);
+        } else if (value instanceof SCar) {
+            return InvokeUtils.invokeGetter(value, "licencePlate", String.class);
+        }
+        return null;
+    }
 
     protected EntityDescriptor<Y> getEntityDescriptor() {
         return this.descriptors.getEntityDescriptor(this.entity);
@@ -152,16 +191,43 @@ abstract public class EntityInfoPageComponentBuilder<Y extends Persistable<?>>
         return this.getEntityDescriptor().getEntityType().getName();
     }
 
-    public Attribute<? super Y, ?> getEntityAttribute(final String path) {
-        final EntityType<Y> entityType = getEntityDescriptor().getEntityType();
-        Attribute<? super Y, ?> attribute = null;
+    protected Attribute<?, ?> getEntityAttribute(final String path) {
+        EntityType<?> entityType = getEntityDescriptor().getEntityType();
+        Attribute<?, ?> attribute = null;
         try {
-            attribute = entityType.getAttribute(path);
+            final List<String> paths = Lists.newArrayListWithExpectedSize(1);
+            if (path.contains(".")) {
+                paths.addAll(Lists.newArrayList(StringUtils.split(path, ".")));
+            } else {
+                paths.add(path);
+            }
+            if (paths.size() == 1) {
+                attribute = entityType.getAttribute(path);
+            } else {
+                for (int i = 0 ; i < paths.size() ; i++) {
+                    final String nestedPath = paths.get(i);
+                    attribute = entityType.getAttribute(nestedPath);
+                    if (i != paths.size() - 1) {
+                        entityType = this.descriptors.getEntityDescriptor(attribute.getJavaType()).getEntityType();
+                    }
+                }
+            }
         } finally {
             if (attribute != null) {
                 this.logger.trace(String.format("%s has no attribute %s", entityType.getName(), path));
             }
         }
         return attribute;
+    }
+
+    private void populateSystemPanel(final InfoPagePanelComponent panel) {
+        if (!panel.isSystemAttributesHolder()) {
+            return;
+        }
+        this.helper.newAttribute(panel, "version", "persistentversionableobject.version", AttributeDisplayAs.VALUE);
+        this.helper.newAttribute(panel, "createdBy", "persistentversionableobject.createdBy", AttributeDisplayAs.INFOPAGE);
+        this.helper.newAttribute(panel, "createdDate", "persistentversionableobject.createdDate", AttributeDisplayAs.VALUE);
+        this.helper.newAttribute(panel, "lastModifiedBy", "persistentversionableobject.lastModifiedBy", AttributeDisplayAs.INFOPAGE);
+        this.helper.newAttribute(panel, "lastModifiedDate", "persistentversionableobject.lastModifiedDate", AttributeDisplayAs.VALUE);
     }
 }

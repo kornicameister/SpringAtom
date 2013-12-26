@@ -26,6 +26,7 @@ import org.agatom.springatom.component.ComponentConstants;
 import org.agatom.springatom.component.builders.DefaultComponentBuilder;
 import org.agatom.springatom.component.builders.EntityAware;
 import org.agatom.springatom.component.builders.exception.ComponentException;
+import org.agatom.springatom.component.builders.exception.ComponentPathEvaluationException;
 import org.agatom.springatom.component.builders.exception.ComponentTableException;
 import org.agatom.springatom.component.data.ComponentDataRequest;
 import org.agatom.springatom.component.data.ComponentDataResponse;
@@ -79,43 +80,46 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
 
             logger.debug(String.format("/buildData -> %s=%s", ComponentConstants.REQUEST_BEAN, dc));
 
-            final Predicate predicate = this.getPredicate(Long.valueOf(dc.getContextKey()));
+            final Predicate predicate = this.getPredicate(dc);
             final long countInContext = this.repository.count(predicate);
-
-            final Page<Y> all = this.repository.findAll(
-                    predicate,
-                    this.getPageable(countInContext, dc.getPageSize(), dc.getSortingColumnDefs())
-            );
-
             final List<Map<String, Object>> data = Lists.newArrayList();
+            if (countInContext != 0) {
+                final Page<Y> all = this.repository.findAll(
+                        predicate,
+                        this.getPageable(countInContext, dc.getPageSize(), dc.getSortingColumnDefs())
+                );
 
-            for (final Y object : all) {
-                this.logger.trace(String.format("processing object %s=%s", ClassUtils.getShortName(object.getClass()), object.getId()));
-                final Map<String, Object> map = Maps.newHashMap();
-                for (ColumnDef columnDef : dc.getColumnDefs()) {
-                    this.logger.trace(String.format("processing column %s", columnDef.getName()));
+                for (final Y object : all) {
+                    this.logger.trace(String.format("processing object %s=%s", ClassUtils.getShortName(object.getClass()), object.getId()));
+                    final Map<String, Object> map = Maps.newHashMap();
+                    for (ColumnDef columnDef : dc.getColumnDefs()) {
+                        this.logger.trace(String.format("processing column %s", columnDef.getName()));
 
-                    final String path = columnDef.getName();
-                    Object value = InvokeUtils.invokeGetter(object, path);
-                    if (value == null) {
-                        value = this.handleDynamicColumn(object, path);
+                        final String path = columnDef.getName();
+                        Object value = InvokeUtils.invokeGetter(object, path);
+                        if (value == null) {
+                            value = this.handleDynamicColumn(object, path);
+                        }
+                        if (value != null) {
+                            value = this.handleColumnConversion(object, value, path);
+                        } else {
+                            value = "???";
+                        }
+                        map.put(path, value);
+
+                        this.logger.trace(String.format("processed column %s to %s", columnDef.getName(), value));
                     }
-                    if (value == null) {
-                        value = "???";
+                    if (!map.isEmpty()) {
+                        data.add(map);
                     }
-                    map.put(path, value);
+                }
 
-                    this.logger.trace(String.format("processed column %s to %s", columnDef.getName(), value));
-                }
-                if (!map.isEmpty()) {
-                    data.add(map);
-                }
             }
-
             this.logger.debug(String.format("%s returning data %s", this.getId(), data));
 
             ComponentDataResponse<DataSet<Map<String, Object>>> response = new ComponentDataResponse<>();
             response.setValue(new DataSet<>(data, (long) data.size(), countInContext));
+
             return response;
         } else {
             throw new ComponentTableException(String
@@ -123,6 +127,77 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
         }
     }
 
+    /**
+     * Method handles converting found {@code value} for {@code path} if necessary.
+     * If value was found using path but there is a requirement to retrieve another value for it,
+     * this method can be easily overridden hence give the possibility to override old value
+     *
+     * @param object
+     *         current object being processed
+     * @param value
+     *         current value found for {@code path}
+     * @param path
+     *         current path
+     *
+     * @return new/old value for {@code path}
+     */
+    protected Object handleColumnConversion(final Y object, final Object value, final String path) {
+        return value;
+    }
+
+    /**
+     * Using passed {@link org.agatom.springatom.component.request.beans.ComponentTableRequest} method
+     * constructs {@link com.mysema.query.types.Predicate} for the {@link org.springframework.data.repository.Repository}
+     *
+     * @param dc
+     *         current request data holder
+     *
+     * @return valid predicate
+     *
+     * @throws ComponentPathEvaluationException
+     *         if predicate was impossible to built
+     */
+    private Predicate getPredicate(final ComponentTableRequest dc) throws ComponentPathEvaluationException {
+        final Predicate predicate = this.getPredicate(Long.valueOf(dc.getContextKey()), dc.getContextClass());
+        if (predicate == null) {
+            throw new ComponentPathEvaluationException(String
+                    .format("failed to evaluate %s for contextClass=%s", ClassUtils.getShortName(Predicate.class), ClassUtils
+                            .getShortName(dc.getContextClass())));
+        }
+        logger.debug(String.format("processing with predicate %s", predicate));
+        return predicate;
+    }
+
+    /**
+     * Internal method for {@link org.agatom.springatom.component.builders.table.TableComponentBuilder}'s that extends this base class
+     *
+     * @param contextKey
+     *         value set in another {@link org.agatom.springatom.component.builders.ComponentBuilder} which is most likely the {@link
+     *         org.springframework.data.domain.Persistable#getId()} of a {@code contextClass}
+     * @param contextClass
+     *         points to a {@link java.lang.Class} correlating to the {@code contextKey}
+     *
+     * @return valid {@link com.mysema.query.types.Predicate} or null
+     *
+     * @see org.agatom.springatom.component.builders.table.TableComponentBuilder#getPredicate(org.agatom.springatom.component.request.beans.ComponentTableRequest)
+     */
+    protected abstract Predicate getPredicate(final Long contextKey, final Class<?> contextClass);
+
+    /**
+     * If value for current {@code path} was not found (therefore was null) this method will be called to retrieve value
+     * for given {@code path} as for <b>dynamic column</b>.
+     * In other words such pair <b>@{code path}</b> and <b>column</b> can be considered as <b>calculable attribute</b>
+     *
+     * @param object
+     *         current object being processed
+     * @param path
+     *         current path
+     *
+     * @return value for path or null
+     *
+     * @see org.agatom.springatom.component.builders.table.TableComponentBuilder#handleColumnConversion(org.springframework.data.domain.Persistable,
+     * Object, String)
+     */
     protected abstract Object handleDynamicColumn(final Y object, final String path);
 
     protected PageRequest getPageable(final long totalObjects, final int pageSize, final List<ColumnDef> sort) {
@@ -152,5 +227,4 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
         }
     }
 
-    protected abstract Predicate getPredicate(final Long contextKey);
 }
