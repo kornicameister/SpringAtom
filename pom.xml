@@ -195,6 +195,11 @@
             <artifactId>datatables-export-poi-ooxml</artifactId>
             <version>${dandelion-datatables.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.dandelion</groupId>
+            <artifactId>datatables-compression-yui</artifactId>
+            <version>${dandelion-datatables.version}</version>
+        </dependency>
         <!--dandelion-->
 
         <!-- tiles -->
