@@ -82,6 +82,10 @@ public class SCarMasterManufacturingData
         return this;
     }
 
+    public String getIdentity() {
+        return String.format("%s %s", this.brand, this.model);
+    }
+
     @Override
     public int hashCode() {
         int result = brand != null ? brand.hashCode() : 0;

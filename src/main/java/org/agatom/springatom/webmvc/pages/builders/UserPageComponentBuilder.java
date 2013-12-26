@@ -24,9 +24,11 @@ import org.agatom.springatom.ip.component.builder.EntityInfoPageComponentBuilder
 import org.agatom.springatom.ip.component.elements.InfoPageComponent;
 import org.agatom.springatom.ip.component.elements.InfoPagePanelComponent;
 import org.agatom.springatom.ip.component.elements.meta.AttributeDisplayAs;
-import org.agatom.springatom.server.model.beans.car.SCar;
-import org.agatom.springatom.webmvc.pages.infopage.CarInfoPage;
+import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.service.domain.SCarService;
+import org.agatom.springatom.webmvc.pages.infopage.UserInfoPage;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author kornicameister
@@ -34,31 +36,35 @@ import org.apache.log4j.Logger;
  * @since 0.0.1
  */
 
-@EntityBased(entity = SCar.class)
-@ComponentBuilds(id = "carInfopage", builds = CarInfoPage.class)
-public class CarInfoPageComponentBuilder
-        extends EntityInfoPageComponentBuilder<SCar> {
+@EntityBased(entity = SUser.class)
+@ComponentBuilds(id = "userInfopage", builds = UserInfoPage.class)
+public class UserPageComponentBuilder
+        extends EntityInfoPageComponentBuilder<SUser> {
+
+    @Autowired
+    private SCarService carService;
+
     @Override
     protected Logger getLogger() {
-        return Logger.getLogger(CarInfoPageComponentBuilder.class);
+        return Logger.getLogger(UserPageComponentBuilder.class);
     }
 
     @Override
     protected InfoPageComponent buildDefinition() {
         final InfoPageComponent cmp = new InfoPageComponent();
         this.populateBasicPanel(helper.newBasicPanel(cmp, LayoutType.VERTICAL));
-        this.populateInfoPagePanel(helper.newManyToOnePanel(cmp, LayoutType.VERTICAL));
+        this.populateTablePanel(helper.newOneToManyPanel(cmp, LayoutType.VERTICAL));
         return cmp;
     }
 
-    private void populateInfoPagePanel(final InfoPagePanelComponent panel) {
-        this.helper.newLinkAttribute(panel, "carMaster", this.getEntityName());
-        this.helper.newLinkAttribute(panel, "owner", this.getEntityName());
+    private void populateTablePanel(final InfoPagePanelComponent panel) {
+        this.helper.newAttribute(panel, "person.contacts", "sperson.contacts", AttributeDisplayAs.TABLE);
     }
 
     private void populateBasicPanel(final InfoPagePanelComponent panel) {
         this.helper.newAttribute(panel, "id", "persistentobject.id", AttributeDisplayAs.VALUE);
-        this.helper.newValueAttribute(panel, "licencePlate", this.getEntityName());
-        this.helper.newValueAttribute(panel, "vinNumber", this.getEntityName());
+        this.helper.newValueAttribute(panel, "credentials.username", this.getEntityName());
+        this.helper.newAttribute(panel, "person.primaryMail", "sperson.primarymail", AttributeDisplayAs.EMAIL);
+        this.helper.newAttribute(panel, "person.identity", "sperson.identity", AttributeDisplayAs.VALUE);
     }
 }

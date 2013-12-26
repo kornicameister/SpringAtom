@@ -1,87 +1,73 @@
 /**************************************************************************************************
-  * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
-  *                                                                                                *
-  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
-  * it under the terms of the GNU General Public License as published by                           *
-  * the Free Software Foundation, either version 3 of the License, or                              *
-  * (at your option) any later version.                                                            *
-  *                                                                                                *
-  * [SpringAtom] is distributed in the hope that it will be useful,                                *
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
-  * GNU General Public License for more details.                                                   *
-  *                                                                                                *
-  * You should have received a copy of the GNU General Public License                              *
-  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
-  **************************************************************************************************/
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ *                                                                                                *
+ * [SpringAtom] is free software: you can redistribute it and/or modify                           *
+ * it under the terms of the GNU General Public License as published by                           *
+ * the Free Software Foundation, either version 3 of the License, or                              *
+ * (at your option) any later version.                                                            *
+ *                                                                                                *
+ * [SpringAtom] is distributed in the hope that it will be useful,                                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
+ * GNU General Public License for more details.                                                   *
+ *                                                                                                *
+ * You should have received a copy of the GNU General Public License                              *
+ * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
+ **************************************************************************************************/
 
 package org.agatom.springatom.webmvc.pages.builders;
 
 import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
- import org.agatom.springatom.component.builders.annotation.EntityBased;
- import org.agatom.springatom.component.meta.LayoutType;
- import org.agatom.springatom.core.invoke.InvokeUtils;
- import org.agatom.springatom.ip.component.builder.EntityInfoPageComponentBuilder;
- import org.agatom.springatom.ip.component.elements.InfoPageComponent;
- import org.agatom.springatom.ip.component.elements.InfoPagePanelComponent;
- import org.agatom.springatom.ip.component.elements.meta.AttributeDisplayAs;
- import org.agatom.springatom.server.model.beans.appointment.SAppointment;
- import org.agatom.springatom.server.model.beans.car.SCar;
- import org.agatom.springatom.server.model.beans.user.SUser;
- import org.agatom.springatom.webmvc.pages.infopage.AppointmentInfoPage;
- import org.apache.log4j.Logger;
- import org.springframework.data.domain.Persistable;
+import org.agatom.springatom.component.builders.annotation.EntityBased;
+import org.agatom.springatom.component.meta.LayoutType;
+import org.agatom.springatom.ip.component.builder.EntityInfoPageComponentBuilder;
+import org.agatom.springatom.ip.component.elements.InfoPageComponent;
+import org.agatom.springatom.ip.component.elements.InfoPagePanelComponent;
+import org.agatom.springatom.ip.component.elements.meta.AttributeDisplayAs;
+import org.agatom.springatom.server.model.beans.appointment.SAppointment;
+import org.agatom.springatom.webmvc.pages.infopage.AppointmentInfoPage;
+import org.apache.log4j.Logger;
 
 /**
-  * @author kornicameister
-  * @version 0.0.1
-  * @since 0.0.1
-  */
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
 
- @EntityBased(entity = SAppointment.class)
- @ComponentBuilds(id = "appointmentInfopage", builds = AppointmentInfoPage.class)
- public class AppointmentInfoPageComponentBuilder
-         extends EntityInfoPageComponentBuilder<SAppointment> {
+@EntityBased(entity = SAppointment.class)
+@ComponentBuilds(id = "appointmentInfopage", builds = AppointmentInfoPage.class)
+public class AppointmentInfoPageComponentBuilder
+        extends EntityInfoPageComponentBuilder<SAppointment> {
 
-     @Override
-     protected Logger getLogger() {
-         return Logger.getLogger(AppointmentInfoPageComponentBuilder.class);
-     }
+    @Override
+    protected Logger getLogger() {
+        return Logger.getLogger(AppointmentInfoPageComponentBuilder.class);
+    }
 
-     @Override
-     protected InfoPageComponent buildDefinition() {
-         final InfoPageComponent cmp = new InfoPageComponent();
-         this.populateBasicPanel(helper.newBasicPanel(cmp, LayoutType.VERTICAL));
-         this.populateTablePanel(helper.newOneToManyPanel(cmp, LayoutType.VERTICAL));
-         this.populateInfoPagePanel(helper.newManyToOnePanel(cmp, LayoutType.VERTICAL));
-         return cmp;
-     }
+    @Override
+    protected InfoPageComponent buildDefinition() {
+        final InfoPageComponent cmp = new InfoPageComponent();
+        this.populateBasicPanel(helper.newBasicPanel(cmp, LayoutType.VERTICAL));
+        this.populateTablePanel(helper.newOneToManyPanel(cmp, LayoutType.VERTICAL));
+        this.populateInfoPagePanel(helper.newManyToOnePanel(cmp, LayoutType.VERTICAL));
+        return cmp;
+    }
 
-     @Override
-     protected String getInfoPageLinkLabel(final Persistable<?> value) {
-         if (value instanceof SCar) {
-             return InvokeUtils.invokeGetter(value, "licencePlate", String.class);
-         } else if (value instanceof SUser) {
-             return InvokeUtils.invokeGetter(value, "person.identity", String.class);
-         }
-         return null;
-     }
+    private void populateInfoPagePanel(final InfoPagePanelComponent panel) {
+        this.helper.newLinkAttribute(panel, "car", this.getEntityName());
+        this.helper.newLinkAttribute(panel, "assignee", this.getEntityName());
+        this.helper.newLinkAttribute(panel, "reporter", this.getEntityName());
+    }
 
-     private void populateInfoPagePanel(final InfoPagePanelComponent panel) {
-         this.helper.newLinkAttribute(panel, "car", this.getEntityName());
-         this.helper.newLinkAttribute(panel, "assignee", this.getEntityName());
-         this.helper.newLinkAttribute(panel, "reporter", this.getEntityName());
-     }
+    private void populateBasicPanel(final InfoPagePanelComponent panel) {
+        this.helper.newAttribute(panel, "id", "persistentobject.id", AttributeDisplayAs.VALUE);
+        this.helper.newValueAttribute(panel, "begin", this.getEntityName());
+        this.helper.newValueAttribute(panel, "end", this.getEntityName());
+        this.helper.newValueAttribute(panel, "interval", this.getEntityName());
+        this.helper.newValueAttribute(panel, "assigned", this.getEntityName());
+    }
 
-     private void populateBasicPanel(final InfoPagePanelComponent panel) {
-         this.helper.newAttribute(panel, "id", "persistentobject.id", AttributeDisplayAs.VALUE);
-         this.helper.newValueAttribute(panel, "begin", this.getEntityName());
-         this.helper.newValueAttribute(panel, "end", this.getEntityName());
-         this.helper.newValueAttribute(panel, "interval", this.getEntityName());
-         this.helper.newValueAttribute(panel, "assigned", this.getEntityName());
-     }
-
-     private void populateTablePanel(final InfoPagePanelComponent panel) {
-         this.helper.newTableAttribute(panel, "tasks", this.getEntityName());
-     }
- }
+    private void populateTablePanel(final InfoPagePanelComponent panel) {
+        this.helper.newTableAttribute(panel, "tasks", this.getEntityName());
+    }
+}

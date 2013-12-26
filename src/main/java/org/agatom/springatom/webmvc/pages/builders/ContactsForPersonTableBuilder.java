@@ -22,11 +22,11 @@ import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.component.builders.annotation.EntityBased;
 import org.agatom.springatom.component.builders.table.TableComponentBuilder;
 import org.agatom.springatom.component.elements.table.DandelionTableComponent;
-import org.agatom.springatom.ip.mapping.InfoPageMappings;
-import org.agatom.springatom.server.model.beans.appointment.QSAppointmentTask;
-import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
+import org.agatom.springatom.server.model.beans.person.QSPersonContact;
+import org.agatom.springatom.server.model.beans.person.SPerson;
+import org.agatom.springatom.server.model.beans.person.SPersonContact;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -34,32 +34,31 @@ import org.springframework.util.StringUtils;
  * @version 0.0.1
  * @since 0.0.1
  */
-@EntityBased(entity = SAppointmentTask.class)
+@EntityBased(entity = SPersonContact.class)
 @ComponentBuilds(
-        id = AppointmentTaskTableBuilder.BUILDER_ID,
-        builds = SAppointmentTask.class,
+        id = ContactsForPersonTableBuilder.BUILDER_ID,
+        builds = SPersonContact.class,
         produces = ComponentBuilds.Produces.TABLE_COMPONENT
 )
-public class AppointmentTaskTableBuilder
-        extends TableComponentBuilder<DandelionTableComponent, SAppointmentTask> {
+public class ContactsForPersonTableBuilder
+        extends TableComponentBuilder<DandelionTableComponent, SPersonContact> {
 
-    protected static final String BUILDER_ID = "appointmentTaskTableBuilder";
-    private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointmentTask.ENTITY_NAME));
-    private static final   Logger LOGGER     = Logger.getLogger(AppointmentTaskTableBuilder.class);
-    @Autowired
-    private InfoPageMappings pageMappings;
+    protected static final String BUILDER_ID = "contactsForPersonTableBuilder";
+    private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SPersonContact.ENTITY_NAME));
+    private static final   Logger LOGGER     = Logger.getLogger(ContactsForPersonTableBuilder.class);
 
     @Override
-    protected DandelionTableComponent buildDefinition() {
-        final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
-        this.helper.newTableColumn(component, "id", "persistentobject.id");
-        this.helper.newTableColumn(component, "type", "sappointment.task.type");
-        this.helper.newTableColumn(component, "task", "sappointment.task.task").setSortable(false);
-        return component;
+    protected Object handleDynamicColumn(final SPersonContact object, final String path) {
+        return null;
     }
 
     @Override
-    protected Object handleDynamicColumn(final SAppointmentTask object, final String path) {
+    protected Predicate getPredicate(final Long id, final Class<?> contextClass) {
+        if (ClassUtils.isAssignable(SPerson.class, contextClass)) {
+            return QSPersonContact.sPersonContact.assigned.id.eq(id);
+        } else if (ClassUtils.isAssignable(SPersonContact.class, contextClass)) {
+            return QSPersonContact.sPersonContact.id.eq(id);
+        }
         return null;
     }
 
@@ -69,7 +68,11 @@ public class AppointmentTaskTableBuilder
     }
 
     @Override
-    protected Predicate getPredicate(final Long appointmentId, final Class<?> contextClass) {
-        return QSAppointmentTask.sAppointmentTask.appointment.id.eq(appointmentId);
+    protected DandelionTableComponent buildDefinition() {
+        final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
+        this.helper.newTableColumn(component, "id", "persistentobject.id");
+        this.helper.newTableColumn(component, "contact", "scontact.contact");
+        this.helper.newTableColumn(component, "type", "scontact.type");
+        return component;
     }
 }
