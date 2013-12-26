@@ -32,11 +32,11 @@ public class EntityDescriptors {
         this.reader = reader;
     }
 
-    public <X> EntityDescriptor<X> getDomainDescriptor(final Class<X> xClass) {
+    public <X> EntityDescriptor<X> getEntityDescriptor(final Class<X> xClass) {
         return this.reader.getDefinition(xClass, false);
     }
 
-    public String getDomainEntityName(final Class<?> xClass) {
+    public String getEntityName(final Class<?> xClass) {
         return this.reader.getDefinition(xClass, false).getEntityType().getName();
     }
 }
