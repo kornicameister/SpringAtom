@@ -35,18 +35,12 @@ import java.util.concurrent.TimeUnit;
  */
 @Aspect
 @SuppressWarnings("UnusedDeclaration")
-public class SSystemArchitecture {
-    private static final Logger LOGGER = Logger.getLogger(SSystemArchitecture.class);
+public class PublicMethodCallMonitor {
+    private static final Logger LOGGER = Logger.getLogger(PublicMethodCallMonitor.class);
 
-    @Around("org.agatom.springatom.aop.SSharedPointcuts.inServiceLayer() " +
+    @Around("org.agatom.springatom.aop.SSharedPointcuts.inSpringAtom() " +
             "&& org.agatom.springatom.aop.SSharedPointcuts.publicMethod()")
-    protected Object logServicePublicMethod(final ProceedingJoinPoint pjp) throws Throwable {
-        return this.logMethodCallAround(pjp);
-    }
-
-    @Around("org.agatom.springatom.aop.SSharedPointcuts.inController() " +
-            "&& org.agatom.springatom.aop.SSharedPointcuts.publicMethod()")
-    protected Object logControllerPublicMethod(final ProceedingJoinPoint pjp) throws Throwable {
+    protected Object publicMethodCall(final ProceedingJoinPoint pjp) throws Throwable {
         return this.logMethodCallAround(pjp);
     }
 
@@ -58,7 +52,7 @@ public class SSystemArchitecture {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(String.format(
                     "%s collected:\n\tsignature=%s,\n\targs=%s,\n\tkind=%s,\n\tsourceLocation=%s\n\tstaticPart=%s,\n\ttarget=%s,\n\treturns=%s,\n\ttime=%dms",
-                    SSystemArchitecture.class.getSimpleName(),
+                    PublicMethodCallMonitor.class.getSimpleName(),
                     pjp.getSignature(),
                     Arrays.toString(pjp.getArgs()),
                     pjp.getKind(),

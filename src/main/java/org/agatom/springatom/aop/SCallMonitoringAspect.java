@@ -31,7 +31,7 @@ import org.springframework.util.StopWatch;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Aspect
+@Aspect(value = "callMonitor")
 @ManagedResource("springatom:type=CallMonitor")
 public class SCallMonitoringAspect {
     private static final Logger  LOGGER              = Logger.getLogger(SCallMonitoringAspect.class);

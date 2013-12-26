@@ -39,4 +39,12 @@ public class SSharedPointcuts {
     @Pointcut("execution(public * *(..))")
     protected void publicMethod() {
     }
+
+    @Pointcut("execution(protected * *(..))")
+    protected void protectedMethod() {
+    }
+
+    @Pointcut("within(org.agatom.springatom..*)")
+    protected void inSpringAtom() {
+    }
 }

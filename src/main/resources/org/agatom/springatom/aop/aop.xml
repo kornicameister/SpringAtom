@@ -25,20 +25,16 @@
        http://www.springframework.org/schema/aop
        http://www.springframework.org/schema/aop/spring-aop.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/context/spring-context.xsd"
+       default-lazy-init="false">
 
     <aop:aspectj-autoproxy>
         <aop:include name="callMonitor"/>
     </aop:aspectj-autoproxy>
 
-    <bean id="callMonitor"
-          class="org.agatom.springatom.aop.SCallMonitoringAspect"/>
-    <bean id="sharedPointcuts"
-          lazy-init="false"
-          class="org.agatom.springatom.aop.SSharedPointcuts"/>
-    <bean id="systemArchitecture"
-          lazy-init="false"
-          class="org.agatom.springatom.aop.SSystemArchitecture"/>
+    <context:component-scan base-package="org.agatom.springatom" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.aspectj.lang.annotation.Aspect"/>
+    </context:component-scan>
 
     <!-- validator -->
     <bean id="validator"
