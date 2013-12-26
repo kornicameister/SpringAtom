@@ -107,7 +107,7 @@ public class InvokeUtils {
         if (property.contains(".")) {
             props.addAll(
                     Lists.newArrayList(
-                            StringUtils.trimArrayElements(StringUtils.split(property.trim(), "."))
+                            StringUtils.trimArrayElements(StringUtils.delimitedListToStringArray(property.trim(), "."))
                     )
             );
         } else {
