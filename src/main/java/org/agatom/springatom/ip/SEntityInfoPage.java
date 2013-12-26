@@ -15,26 +15,14 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.ip.page;
-
-import org.agatom.springatom.ip.SDomainInfoPage;
+package org.agatom.springatom.ip;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public abstract class BasicDomainInfoPage
-        extends BasicInfoPage
-        implements SDomainInfoPage {
-    private Class<?> domain;
-
-    @Override
-    public Class<?> getDomain() {
-        return this.domain;
-    }
-
-    public void setDomain(final Class<?> domain) {
-        this.domain = domain;
-    }
+public interface SEntityInfoPage
+        extends SInfoPage {
+    Class<?> getDomain();
 }

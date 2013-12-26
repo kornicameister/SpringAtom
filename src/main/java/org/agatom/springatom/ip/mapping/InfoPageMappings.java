@@ -18,10 +18,9 @@
 package org.agatom.springatom.ip.mapping;
 
 import com.google.common.collect.Maps;
-import org.agatom.springatom.ip.SDomainInfoPage;
+import org.agatom.springatom.ip.SEntityInfoPage;
 import org.agatom.springatom.ip.SInfoPage;
 import org.agatom.springatom.ip.config.InfoPageConfigurationSource;
-import org.springframework.data.repository.Repository;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -46,7 +45,7 @@ public class InfoPageMappings
      * faster load in the next requests.
      * <p/>
      * Works for either {@link org.agatom.springatom.ip.SInfoPage}
-     * or {@link org.agatom.springatom.ip.SDomainInfoPage}
+     * or {@link org.agatom.springatom.ip.SEntityInfoPage}
      *
      * @param page
      *         to be cached
@@ -54,8 +53,8 @@ public class InfoPageMappings
     private void cache(final SInfoPage page) {
         this.pathToPageCache.put(page.getPath(), page);
         this.relToPageCache.put(page.getRel(), page);
-        if (page instanceof SDomainInfoPage) {
-            final SDomainInfoPage infoPage = (SDomainInfoPage) page;
+        if (page instanceof SEntityInfoPage) {
+            final SEntityInfoPage infoPage = (SEntityInfoPage) page;
             this.domainToPageCache.put(infoPage.getDomain(), page);
         }
     }
@@ -72,14 +71,14 @@ public class InfoPageMappings
         return null;
     }
 
-    public SDomainInfoPage getInfoPageForDomain(final Class<?> domainClass) {
+    public SEntityInfoPage getInfoPageForEntity(final Class<?> domainClass) {
         if (this.domainToPageCache.containsKey(domainClass)) {
-            return (SDomainInfoPage) this.domainToPageCache.get(domainClass);
+            return (SEntityInfoPage) this.domainToPageCache.get(domainClass);
         }
         final SInfoPage infoPage = this.infoPageConfigurationSource.getFromDomain(domainClass);
         if (infoPage != null) {
             this.cache(infoPage);
-            return (SDomainInfoPage) infoPage;
+            return (SEntityInfoPage) infoPage;
         }
         return null;
     }
@@ -93,14 +92,6 @@ public class InfoPageMappings
             this.cache(infoPage);
             return infoPage;
         }
-        return null;
-    }
-
-    public SDomainInfoPage getDomainInfoPageForRestPath(final String path) {
-        return null;
-    }
-
-    public SDomainInfoPage getDomainInfoPageForRepository(final Class<? extends Repository<?, ?>> repoClazz) {
         return null;
     }
 

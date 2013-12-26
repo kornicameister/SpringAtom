@@ -15,14 +15,23 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.ip;
+package org.agatom.springatom.ip.data;
+
+import org.agatom.springatom.component.builders.exception.ComponentException;
+import org.agatom.springatom.component.data.ComponentDataResponse;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SDomainInfoPage
-        extends SInfoPage {
-    Class<?> getDomain();
+abstract public class EntityInfoPageResponse
+extends ComponentDataResponse<Object> {
+
+    public EntityInfoPageResponse() {
+        this.setType(DataType.VALUE);
+    }
+
+    public abstract Object getValueForPath(String path) throws ComponentException;
+
 }

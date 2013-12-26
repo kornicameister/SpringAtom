@@ -15,22 +15,26 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.ip.data;
+package org.agatom.springatom.ip.page;
 
-import org.agatom.springatom.component.data.ComponentDataResponse;
+import org.agatom.springatom.ip.SEntityInfoPage;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class EntityDataResponse
-        extends ComponentDataResponse<Object> {
+public abstract class BasicEntityInfoPage
+extends BasicInfoPage
+        implements SEntityInfoPage {
+    private Class<?> domain;
 
-    public EntityDataResponse() {
-        this.setType(DataType.VALUE);
+    @Override
+    public Class<?> getDomain() {
+        return this.domain;
     }
 
-    public abstract Object getValueForPath(String path);
-
+    public void setDomain(final Class<?> domain) {
+        this.domain = domain;
+    }
 }

@@ -19,7 +19,7 @@ package org.agatom.springatom.webmvc.controllers;
 
 import org.agatom.springatom.component.builders.ComponentBuilders;
 import org.agatom.springatom.ip.InfoPageConstants;
-import org.agatom.springatom.ip.SDomainInfoPage;
+import org.agatom.springatom.ip.SEntityInfoPage;
 import org.agatom.springatom.ip.SInfoPage;
 import org.agatom.springatom.ip.component.builder.InfoPageComponentBuilder;
 import org.agatom.springatom.ip.mapping.InfoPageMappings;
@@ -111,7 +111,7 @@ public class SVInfoPageController {
     }
 
     private String getViewForPage(final SInfoPage page) {
-        return page instanceof SDomainInfoPage ? DOMAIN_VIEW_NAME : VIEW_NAME;
+        return page instanceof SEntityInfoPage ? DOMAIN_VIEW_NAME : VIEW_NAME;
     }
 
     @ResponseBody

@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.agatom.springatom.core.filters.AllTypeFilter;
 import org.agatom.springatom.core.filters.InterfaceTypeFilter;
-import org.agatom.springatom.ip.SDomainInfoPage;
+import org.agatom.springatom.ip.SEntityInfoPage;
 import org.agatom.springatom.ip.SInfoPage;
 import org.agatom.springatom.ip.annotation.DomainInfoPage;
 import org.agatom.springatom.ip.annotation.InfoPage;
@@ -48,7 +48,7 @@ class InfoPageComponentProvider
     public InfoPageComponentProvider() {
         super(false);
         super.addIncludeFilter(new InterfaceTypeFilter(SInfoPage.class));
-        super.addIncludeFilter(new InterfaceTypeFilter(SDomainInfoPage.class));
+        super.addIncludeFilter(new InterfaceTypeFilter(SEntityInfoPage.class));
         super.addIncludeFilter(new AnnotationTypeFilter(InfoPage.class, true, true));
         super.addIncludeFilter(new AnnotationTypeFilter(DomainInfoPage.class, true, true));
     }
@@ -58,7 +58,7 @@ class InfoPageComponentProvider
         super.addIncludeFilter(new AllTypeFilter(Lists.newArrayList(
                 includeFilter,
                 new InterfaceTypeFilter(SInfoPage.class),
-                new InterfaceTypeFilter(SDomainInfoPage.class)
+                new InterfaceTypeFilter(SEntityInfoPage.class)
         )));
         super.addIncludeFilter(new AllTypeFilter(Lists.newArrayList(
                 includeFilter,
