@@ -98,6 +98,11 @@ public class DefaultInfoPageComponentHelper
     }
 
     @Override
+    public InfoPageAttributeComponent newEmailAttribute(final InfoPagePanelComponent panel, final String path, final String entityName) {
+        return this.newAttribute(panel, path, String.format("%s.%s", entityName.toLowerCase(), path.toLowerCase()), AttributeDisplayAs.EMAIL);
+    }
+
+    @Override
     public InfoPageAttributeComponent newTableAttribute(final InfoPagePanelComponent panel, final String path, final String entityName) {
         return this.newAttribute(panel, path, String.format("%s.%s", entityName.toLowerCase(), path.toLowerCase()), AttributeDisplayAs.TABLE);
     }

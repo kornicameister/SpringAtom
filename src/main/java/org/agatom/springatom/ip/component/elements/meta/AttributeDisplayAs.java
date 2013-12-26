@@ -25,5 +25,6 @@ package org.agatom.springatom.ip.component.elements.meta;
 public enum AttributeDisplayAs {
     VALUE,
     TABLE,
-    INFOPAGE
+    INFOPAGE,
+    EMAIL
 }

@@ -46,6 +46,8 @@ public interface InfoPageComponentHelper
 
     InfoPageAttributeComponent newLinkAttribute(InfoPagePanelComponent panel, String path, String entityName);
 
+    InfoPageAttributeComponent newEmailAttribute(InfoPagePanelComponent panel, String path, String entityName);
+
     InfoPageAttributeComponent newTableAttribute(InfoPagePanelComponent panel, String path, String entityName);
 
     InfoPageAttributeComponent newAttribute(InfoPagePanelComponent panel, String path, String messageKey, AttributeDisplayAs displayAs);

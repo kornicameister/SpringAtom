@@ -1,4 +1,3 @@
-<%@ tag import="org.agatom.springatom.component.elements.value.DelegatedLink" %>
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~
@@ -16,20 +15,5 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@ attribute name="link" rtexprvalue="true" required="true" type="java.lang.Object" %>
-
-<%
-    if (link instanceof DelegatedLink) {
-        final DelegatedLink htmlLink = (DelegatedLink) link;
-        final String href = htmlLink.getHref();
-        final String rel = htmlLink.getRel();
-        final String label = htmlLink.getLabel();
-%>
-<a id="<%=rel%>" href="<%=href%>" class="x-infopage-link" rel="<%=rel%>"><i
-        class="fa fa-external-link fa-color-black fa-fw"></i><%=label%>
-</a>
-<%
-    } else {
-        out.write(link.toString());
-    }
-%>
+<%@ attribute name="link" rtexprvalue="true" required="true" type="java.lang.String" %>
+<a href="mailto:${link}">${link}</a>

@@ -52,6 +52,7 @@
 }
 
 .x-ip-panel .x-layout-vertical > .x-ip-attr[data-displayas="value"],
+.x-ip-panel .x-layout-vertical > .x-ip-attr[data-displayas="email"],
 .x-ip-panel .x-layout-vertical > .x-ip-attr[data-displayas="infopage"] {
     display : flex;
 }

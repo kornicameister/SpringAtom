@@ -51,7 +51,15 @@
 
         <div class="x-ip-panel-content x-layout-${fn:toLowerCase(panel.layout)} ">
             <c:forEach items="${panel.attributes}" var="attr" varStatus="itAttr">
-                <p id="${attr.path}-holder" class="x-ip-attr" data-displayAs="${fn:toLowerCase(attr.displayAs)}">
+                <c:choose>
+                    <c:when test="${fn:containsIgnoreCase(attr.path,'.')}">
+                        <c:set var="attrHolderId" value="${fn:replace(attr.path,'.' ,'-')}-holder" scope="page"/>
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="attrHolderId" value="${attr.path}-holder" scope="page"/>
+                    </c:otherwise>
+                </c:choose>
+                <p id="${attrHolderId}" class="x-ip-attr" data-displayAs="${fn:toLowerCase(attr.displayAs)}">
                     <span class="x-ip-attr-label">${attr.title}</span>
                         <span class="x-ip-attr-value">
                             <c:if test="${attr.valueAttribute}">
@@ -61,7 +69,7 @@
                                 <s:eval expression="data.getValueForPath(attr.path)" var="builderContextLink" scope="page"/>
                                 <script>
                                     $(function () {
-                                        $('#' + '${attr.path}-holder').find('span.x-ip-attr-value').loadBuilderView({
+                                        $('#' + '${attrHolderId}').find('span.x-ip-attr-value').loadBuilderView({
                                             url : '${builderContextLink.link.href}',
                                             data: {
                                                 contextKey  : '${builderContextLink.contextKey}',
@@ -75,6 +83,10 @@
                             <c:if test="${attr.infoPageAttribute}">
                                 <s:eval expression="data.getValueForPath(attr.path)" scope="page" var="_link"/>
                                 <ip:renderInfoPageLink link="${_link}"/>
+                            </c:if>
+                            <c:if test="${attr.emailAttribute}">
+                                <s:eval expression="data.getValueForPath(attr.path)" scope="page" var="_link"/>
+                                <ip:renderEmail link="${_link}"/>
                             </c:if>
                         </span>
                 </p>

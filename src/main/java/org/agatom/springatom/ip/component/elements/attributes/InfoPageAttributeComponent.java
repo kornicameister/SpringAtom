@@ -65,6 +65,10 @@ public class InfoPageAttributeComponent
         return this.displayAs.equals(AttributeDisplayAs.INFOPAGE);
     }
 
+    public boolean isEmailAttribute() {
+        return this.displayAs.equals(AttributeDisplayAs.EMAIL);
+    }
+
     public boolean isTableAttribute() {
         return this.displayAs.equals(AttributeDisplayAs.TABLE);
     }

@@ -133,7 +133,16 @@
     };
 
     window.renderInfoPageLink = function (data) {
-        return infoPageHrefTemplate.replace('{href}', data);
+        if (!data) {
+            return '?';
+        }
+        if (jQuery.isPlainObject(data) && data['href']) {
+            return infoPageHrefTemplate.replace('{href}', data['href']);
+        } else if (typeof data === 'string' && data !== '???') {
+            return infoPageHrefTemplate.replace('{href}', data);
+        } else {
+            return '?';
+        }
     };
     window.renderValue = function (data) {
         return data;
