@@ -18,7 +18,7 @@
 package org.agatom.springatom.webmvc.pages.infopage;
 
 import org.agatom.springatom.ip.annotation.DomainInfoPage;
-import org.agatom.springatom.ip.page.BasicDomainInfoPage;
+import org.agatom.springatom.ip.page.BasicEntityInfoPage;
 import org.agatom.springatom.server.model.beans.car.SCar;
 
 /**
@@ -33,7 +33,7 @@ import org.agatom.springatom.server.model.beans.car.SCar;
         domain = SCar.class
 )
 public class CarInfoPage
-        extends BasicDomainInfoPage {
+        extends BasicEntityInfoPage {
     protected static final transient String PATH = "car";
     protected static final transient String REL  = "ip.car";
 }

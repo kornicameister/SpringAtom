@@ -18,20 +18,30 @@
 package org.agatom.springatom.webmvc.pages.builders;
 
 import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
+import org.agatom.springatom.component.builders.annotation.EntityBased;
 import org.agatom.springatom.component.data.ComponentDataRequest;
 import org.agatom.springatom.component.data.ComponentDataResponse;
 import org.agatom.springatom.ip.component.builder.InfoPageComponentBuilder;
 import org.agatom.springatom.ip.component.elements.InfoPageComponent;
+import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.webmvc.pages.infopage.CarInfoPage;
+import org.apache.log4j.Logger;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+
+@EntityBased(entity = SCar.class)
 @ComponentBuilds(id = "carInfopage", builds = CarInfoPage.class)
 public class CarInfoPageComponentBuilder
         extends InfoPageComponentBuilder {
+    @Override
+    protected Logger getLogger() {
+        return Logger.getLogger(CarInfoPageComponentBuilder.class);
+    }
+
     @Override
     protected InfoPageComponent buildDefinition() {
         return null;

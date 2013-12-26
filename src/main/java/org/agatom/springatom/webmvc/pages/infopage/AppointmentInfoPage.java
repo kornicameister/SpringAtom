@@ -18,7 +18,7 @@
 package org.agatom.springatom.webmvc.pages.infopage;
 
 import org.agatom.springatom.ip.annotation.DomainInfoPage;
-import org.agatom.springatom.ip.page.BasicDomainInfoPage;
+import org.agatom.springatom.ip.page.BasicEntityInfoPage;
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 
 /**
@@ -33,7 +33,7 @@ import org.agatom.springatom.server.model.beans.appointment.SAppointment;
         domain = SAppointment.class
 )
 public class AppointmentInfoPage
-        extends BasicDomainInfoPage {
+        extends BasicEntityInfoPage {
     protected static final transient String REL  = "ip.appointment";
     protected static final transient String PATH = "appointment";
 }

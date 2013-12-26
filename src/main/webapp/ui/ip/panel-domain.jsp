@@ -23,7 +23,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<jsp:useBean id="ipInfoPage" scope="request" type="org.agatom.springatom.ip.SDomainInfoPage"/>
+<jsp:useBean id="ipInfoPage" scope="request" type="org.agatom.springatom.ip.SEntityInfoPage"/>
 <jsp:useBean id="ipDataView" scope="request" type="java.lang.String"/>
 
 <c:set var="dos" value="ip-${ipInfoPage.domain.simpleName}"/>

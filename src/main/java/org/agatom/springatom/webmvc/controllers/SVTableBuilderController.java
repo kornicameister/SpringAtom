@@ -18,16 +18,15 @@
 package org.agatom.springatom.webmvc.controllers;
 
 import com.github.dandelion.datatables.core.ajax.DataSet;
-import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
-import com.github.dandelion.datatables.extras.spring3.ajax.DatatablesParams;
+import org.agatom.springatom.component.ComponentConstants;
 import org.agatom.springatom.component.builders.ComponentBuilder;
 import org.agatom.springatom.component.builders.ComponentBuilders;
 import org.agatom.springatom.component.builders.table.TableComponentBuilder;
-import org.agatom.springatom.component.data.ComponentDataResponse;
-import org.agatom.springatom.component.elements.value.InContextBuilderLink;
+import org.agatom.springatom.component.request.beans.ComponentTableRequest;
 import org.agatom.springatom.ip.InfoPageConstants;
 import org.agatom.springatom.webmvc.data.DataBean;
+import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
@@ -62,7 +61,7 @@ public class SVTableBuilderController {
         LOGGER.info(String.format("/getTable -> builder=%s", builderId));
         final ComponentBuilder<?> builder = this.builders.getBuilder(builderId);
         if (builder != null && builder instanceof TableComponentBuilder) {
-            LOGGER.trace(String.format("Found builder %s:%s:%s", builderId, builder.getId(), builder.getTarget()));
+            LOGGER.trace(String.format("Found builder %s:%s:%s", builderId, builder.getId(), builder.getBuilds()));
         }
         return new ModelAndView(VIEW_NAME, new ModelMap("builder", builder));
     }
@@ -78,33 +77,33 @@ public class SVTableBuilderController {
         LOGGER.info(String.format("/getTable -> builder=%s", builderId));
         final ComponentBuilder<?> builder = this.builders.getBuilder(builderId);
         if (builder != null && builder instanceof TableComponentBuilder) {
-            LOGGER.trace(String.format("Found builder %s:%s:%s", builderId, builder.getId(), builder.getTarget()));
+            LOGGER.trace(String.format("Found builder %s:%s:%s", builderId, builder.getId(), builder.getBuilds()));
+
+            final ModelMap modelMap = new ModelMap(InfoPageConstants.TABLE_COMPONENT_BUILDER, builder);
+            modelMap.addAttribute(InfoPageConstants.INFOPAGE_PARAMS, data.toModelMap());
+
+            return new ModelAndView(VIEW_NAME, modelMap);
         }
-
-        final ModelMap modelMap = new ModelMap(InfoPageConstants.TABLE_COMPONENT_BUILDER, builder);
-        modelMap.addAttribute(InfoPageConstants.INFOPAGE_PARAMS, data.toModelMap());
-
-        return new ModelAndView(VIEW_NAME, modelMap);
+        return null; // TODO exception to be added
     }
 
     @ResponseBody
     @RequestMapping(value = "/data/{id}")
-    public DatatablesResponse getData(
+    public DatatablesResponse getBuilderData(
             @PathVariable("id") final String builderId,
-            final @DatatablesParams DatatablesCriterias criterias,
-            final InContextBuilderLink contextLink,
-            final WebRequest request) {
-        LOGGER.info(String.format("/getTable -> builder=%s, criterias=%s", builderId, criterias));
+            final ComponentTableRequest tableRequest,
+            final WebRequest request) throws ControllerTierException {
+        LOGGER.info(String.format("/getBuilderData -> builder=%s, tableRequest=%s", builderId, tableRequest));
 
-        final ModelMap map = new ModelMap("dandelionCriterias", criterias);
-        map.put("contextLink", contextLink);
-
-        final ComponentBuilder<?> builder = this.builders.getBuilder(builderId, map, request);
-
-        if (builder != null && builder instanceof TableComponentBuilder) {
-            LOGGER.trace(String.format("Found builder %s:%s:%s", builderId, builder.getId(), builder.getTarget()));
-            final ComponentDataResponse<?> data = (ComponentDataResponse<?>) builder.getData();
-            return DatatablesResponse.build((DataSet) data.getValue(), criterias);
+        final ComponentBuilder<?> builder = this.builders.getBuilder(builderId, new ModelMap(ComponentConstants.REQUEST_BEAN, tableRequest), request);
+        try {
+            if (builder != null && builder instanceof TableComponentBuilder) {
+                LOGGER.trace(String.format("Found builder %s:%s:%s", builderId, builder.getId(), builder.getBuilds()));
+                return DatatablesResponse.build((DataSet) builder.getData().getValue(), tableRequest.getCriterias());
+            }
+        } catch (Exception e) {
+            LOGGER.error("/getBuilderData threw exception", e);
+            throw new ControllerTierException(e);
         }
         return null;
     }

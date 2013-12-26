@@ -18,6 +18,7 @@
 package org.agatom.springatom.ip.component.builder;
 
 import org.agatom.springatom.component.builders.DefaultComponentBuilder;
+import org.agatom.springatom.component.builders.exception.ComponentException;
 import org.agatom.springatom.ip.component.elements.InfoPageComponent;
 import org.agatom.springatom.ip.component.elements.InfoPagePanelComponent;
 import org.agatom.springatom.ip.component.elements.attributes.InfoPageAttributeComponent;
@@ -35,7 +36,7 @@ abstract public class InfoPageComponentBuilder
     @Autowired
     protected InfoPageComponentHelper helper;
 
-    public InfoPageAttributeComponent getAttributeForPath(final String key) {
+    public InfoPageAttributeComponent getAttributeForPath(final String key) throws ComponentException {
         final InfoPageComponent definition = this.getDefinition();
         for (final InfoPagePanelComponent component : definition.getContent()) {
             if (component.containsAttributeForPath(key)) {
