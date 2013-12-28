@@ -57,7 +57,7 @@
         <label class="stepNumber">3</label>
         <span class="stepDesc">
             <p><s:message code="wizard.step.label" arguments="3"/></p>
-            <small><s:message code="wizard.newAppointment.step2.desc"/></small>
+            <small><s:message code="wizard.newAppointment.step3.desc"/></small>
         </span>
     </span>
 </li>
