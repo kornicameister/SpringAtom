@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.beans.PersistentContactable;
+import org.agatom.springatom.server.model.types.ReportableEntity;
 import org.agatom.springatom.server.model.types.contact.SContact;
 import org.agatom.springatom.server.model.types.contact.SMultiContactable;
 import org.hibernate.annotations.BatchSize;
@@ -44,6 +45,7 @@ import java.util.Set;
 
 @Entity(name = "SPerson")
 @Table(name = "SPerson", uniqueConstraints = {@UniqueConstraint(columnNames = "primaryMail")})
+@ReportableEntity
 @AttributeOverride(name = "id", column = @Column(name = "idSPerson", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 @Inheritance(strategy = InheritanceType.JOINED)
 @Audited(auditParents = PersistentContactable.class)

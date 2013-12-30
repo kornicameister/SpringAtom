@@ -123,4 +123,9 @@ public class EntityTypeDescriptor<X>
     public Class<X> getJavaClass() {
         return this.entityType.getJavaType();
     }
+
+    @Override
+    public String getJavaClassName() {
+        return this.entityType.getJavaType().getName();
+    }
 }

@@ -19,6 +19,7 @@ package org.agatom.springatom.server.model.beans.car;
 
 import org.agatom.springatom.server.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.types.ReportableEntity;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -35,6 +36,7 @@ import javax.validation.constraints.NotNull;
  */
 @Table(name = SCar.TABLE_NAME)
 @Entity(name = SCar.ENTITY_NAME)
+@ReportableEntity
 @AttributeOverride(name = "id", column = @Column(name = "idSCar", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SCar
         extends PersistentVersionedObject {

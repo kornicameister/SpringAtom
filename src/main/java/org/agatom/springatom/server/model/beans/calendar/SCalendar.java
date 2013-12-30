@@ -19,6 +19,7 @@ package org.agatom.springatom.server.model.beans.calendar;
 
 import org.agatom.springatom.server.model.beans.PersistentObject;
 import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.types.ReportableEntity;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -40,6 +41,7 @@ import java.awt.*;
 
 @Table(name = SCalendar.TABLE_NAME)
 @Entity(name = SCalendar.ENTITY_NAME)
+@ReportableEntity
 @AttributeOverride(name = "id", column = @Column(name = "id_user_calendar", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SCalendar
         extends PersistentObject<Long> {

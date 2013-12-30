@@ -29,4 +29,6 @@ public interface SlimEntityDescriptor<X>
     String getName();
 
     Class<X> getJavaClass();
+
+    String getJavaClassName();
 }

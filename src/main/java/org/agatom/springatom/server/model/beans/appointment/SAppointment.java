@@ -20,6 +20,7 @@ package org.agatom.springatom.server.model.beans.appointment;
 import com.google.common.collect.Lists;
 import org.agatom.springatom.server.model.beans.activity.SAssignedActivity;
 import org.agatom.springatom.server.model.beans.car.SCar;
+import org.agatom.springatom.server.model.types.ReportableEntity;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
@@ -43,6 +44,7 @@ import java.util.List;
  */
 @Table(name = SAppointment.TABLE_NAME)
 @Entity(name = SAppointment.ENTITY_NAME)
+@ReportableEntity
 @AttributeOverride(name = "id", column = @Column(name = "idSAppointment", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SAppointment
         extends SAssignedActivity<Long>

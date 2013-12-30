@@ -25,6 +25,7 @@ import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.user.authority.SAuthority;
 import org.agatom.springatom.server.model.beans.user.authority.SUserAuthority;
 import org.agatom.springatom.server.model.beans.user.embeddable.SUserCredentials;
+import org.agatom.springatom.server.model.types.ReportableEntity;
 import org.agatom.springatom.server.model.types.user.SRole;
 import org.agatom.springatom.server.model.types.user.SSecuredUser;
 import org.hibernate.annotations.OnDelete;
@@ -59,6 +60,7 @@ import java.util.Set;
                 updatable = false,
                 nullable = false)
 )
+@ReportableEntity
 public class SUser
         extends PersistentVersionedObject
         implements SSecuredUser {

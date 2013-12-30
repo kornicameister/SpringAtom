@@ -15,35 +15,27 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.beans.appointment;
+package org.agatom.springatom.server.model.types;
 
-import org.agatom.springatom.server.model.beans.issue.SIssue;
-import org.agatom.springatom.server.model.types.ReportableEntity;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import javax.persistence.*;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * @author kornicamaister
+ * {@code Reportable} is a marker annotation which designated annotated object
+ * as available for reports
+ *
+ * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = SAppointmentIssue.ENTITY_NAME)
-@ReportableEntity
-@DiscriminatorValue(value = "appointment")
-public class SAppointmentIssue
-        extends SIssue {
-    public static final  String ENTITY_NAME      = "SAppointmentIssue";
-    private static final long   serialVersionUID = 8658810841216821601L;
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "sai_app", referencedColumnName = "idSAppointment", updatable = false)
-    private SAppointment appointment;
 
-    public SAppointment getAppointment() {
-        return appointment;
-    }
-
-    public SAppointmentIssue setAppointment(final SAppointment appointment) {
-        this.appointment = appointment;
-        return this;
-    }
+@Documented
+@Target(value = TYPE)
+@Retention(value = RUNTIME)
+public @interface ReportableEntity {
 }
+

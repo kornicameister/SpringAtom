@@ -18,6 +18,7 @@
 package org.agatom.springatom.server.model.beans.person;
 
 import org.agatom.springatom.server.model.beans.contact.SAbstractContact;
+import org.agatom.springatom.server.model.types.ReportableEntity;
 import org.hibernate.envers.AuditJoinTable;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
@@ -37,6 +38,7 @@ import javax.persistence.*;
                 name = "spersoncontact_history"
         )
 )
+@ReportableEntity
 @DiscriminatorValue("person")
 public class SPersonContact
         extends SAbstractContact<SPerson> {

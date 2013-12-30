@@ -20,6 +20,7 @@ package org.agatom.springatom.server.model.beans.car;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.beans.PersistentObject;
 import org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData;
+import org.agatom.springatom.server.model.types.ReportableEntity;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
@@ -34,6 +35,7 @@ import java.util.Set;
  */
 @Table(name = SCarMaster.TABLE_NAME)
 @Entity(name = SCarMaster.ENTITY_NAME)
+@ReportableEntity
 @AttributeOverride(name = "id", column = @Column(name = "idSCarMaster", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SCarMaster
         extends PersistentObject<Long> {

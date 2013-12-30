@@ -18,6 +18,7 @@
 package org.agatom.springatom.server.model.beans.appointment;
 
 import org.agatom.springatom.server.model.beans.PersistentObject;
+import org.agatom.springatom.server.model.types.ReportableEntity;
 import org.agatom.springatom.server.model.types.appointment.AppointmentTaskType;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
@@ -32,6 +33,7 @@ import javax.persistence.*;
  */
 @Table(name = SAppointmentTask.TABLE_NAME)
 @Entity(name = SAppointmentTask.ENTITY_NAME)
+@ReportableEntity
 @AttributeOverride(name = "id", column = @Column(name = "idSAppointmentTask", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SAppointmentTask
         extends PersistentObject<Long> {

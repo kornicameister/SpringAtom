@@ -47,6 +47,11 @@ public class SlimEntityTypeDescriptor<X>
     }
 
     @Override
+    public String getJavaClassName() {
+        return this.javaClass.getName();
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hashCode(javaClass, name);
     }

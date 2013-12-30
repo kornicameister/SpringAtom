@@ -19,6 +19,7 @@ package org.agatom.springatom.server.model.beans.user.notification;
 
 import org.agatom.springatom.server.model.beans.notification.SAbstractNotification;
 import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.types.ReportableEntity;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -30,6 +31,7 @@ import javax.persistence.*;
  * @since 0.0.1
  */
 @Entity(name = SUserNotification.ENTITY_NAME)
+@ReportableEntity
 @DiscriminatorValue(value = "sun")
 public class SUserNotification
         extends SAbstractNotification {

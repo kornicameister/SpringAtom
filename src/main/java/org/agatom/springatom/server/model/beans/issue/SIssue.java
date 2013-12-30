@@ -18,6 +18,7 @@
 package org.agatom.springatom.server.model.beans.issue;
 
 import org.agatom.springatom.server.model.beans.activity.SAssignedActivity;
+import org.agatom.springatom.server.model.types.ReportableEntity;
 import org.agatom.springatom.server.model.types.issue.Issue;
 import org.agatom.springatom.server.model.types.issue.IssueType;
 import org.hibernate.annotations.Type;
@@ -36,6 +37,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity(name = SIssue.ENTITY_NAME)
 @Table(name = SIssue.TABLE_NAME)
+@ReportableEntity
 @AttributeOverride(name = "id", column = @Column(name = "idSIssue", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = SIssue.ISSUE_TYPE, discriminatorType = DiscriminatorType.STRING)
