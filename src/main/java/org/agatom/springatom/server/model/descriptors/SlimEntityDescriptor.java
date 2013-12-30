@@ -15,25 +15,18 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.descriptors.reader;
+package org.agatom.springatom.server.model.descriptors;
 
-import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.context.ApplicationContextAware;
-
-import java.util.Set;
+import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface EntityDescriptorReader
-        extends ApplicationContextAware,
-                BeanFactoryAware {
-    Set<EntityDescriptor<?>> getDefinitions();
+public interface SlimEntityDescriptor<X>
+        extends Serializable {
+    String getName();
 
-    <X> EntityDescriptor<X> getDefinition(final Class<X> xClass);
-
-    <X> EntityDescriptor<X> getDefinition(final Class<X> xClass, boolean initialize);
+    Class<X> getJavaClass();
 }

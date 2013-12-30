@@ -20,7 +20,6 @@ package org.agatom.springatom.server.model.descriptors;
 import org.agatom.springatom.server.model.descriptors.properties.BasicPropertyDescriptor;
 import org.agatom.springatom.server.model.descriptors.properties.ManyToOnePropertyDescriptor;
 import org.agatom.springatom.server.model.descriptors.properties.OneToManyPropertyDescriptor;
-import org.agatom.springatom.server.model.descriptors.properties.SystemPropertyDescriptor;
 
 import javax.persistence.metamodel.EntityType;
 import java.util.Set;
@@ -30,10 +29,9 @@ import java.util.Set;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface EntityDescriptor<X> {
+public interface EntityDescriptor<X>
+        extends SlimEntityDescriptor<X> {
     EntityType<X> getEntityType();
-
-    String getLocalizedName();
 
     Set<BasicPropertyDescriptor> getBasicProperties();
 
@@ -41,7 +39,7 @@ public interface EntityDescriptor<X> {
 
     Set<ManyToOnePropertyDescriptor> getManyToOneProperties();
 
-    Set<SystemPropertyDescriptor> getSystemProperties();
+    boolean isAbstract();
 
-    void initialize();
+    boolean isVersionable();
 }

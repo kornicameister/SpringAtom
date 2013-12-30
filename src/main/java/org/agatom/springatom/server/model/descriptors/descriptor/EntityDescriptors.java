@@ -17,8 +17,14 @@
 
 package org.agatom.springatom.server.model.descriptors.descriptor;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
+import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.reader.EntityDescriptorReader;
+
+import javax.annotation.Nullable;
+import java.util.Set;
 
 /**
  * @author kornicameister
@@ -38,5 +44,29 @@ public class EntityDescriptors {
 
     public String getEntityName(final Class<?> xClass) {
         return this.reader.getDefinition(xClass, false).getEntityType().getName();
+    }
+
+    public Set<EntityDescriptor<?>> getDescriptors(final boolean includeSuperclasses) {
+        final Set<EntityDescriptor<?>> definitions = this.reader.getDefinitions();
+        for (final EntityDescriptor<?> descriptor : definitions) {
+            if (descriptor.isAbstract() && !includeSuperclasses) {
+                definitions.remove(descriptor);
+            }
+        }
+        return definitions;
+    }
+
+    public Set<SlimEntityDescriptor<?>> getSlimDescriptors(final boolean includeSuperclasses) {
+        final Set<EntityDescriptor<?>> descriptors = this.getDescriptors(includeSuperclasses);
+        return FluentIterable.from(descriptors)
+                             .transform(new Function<EntityDescriptor<?>, SlimEntityDescriptor<?>>() {
+                                 @Nullable
+                                 @Override
+                                 public SlimEntityDescriptor<?> apply(@Nullable final EntityDescriptor<?> input) {
+                                     assert input != null;
+                                     return new SlimEntityTypeDescriptor<>(input.getName(), input.getJavaClass());
+                                 }
+                             })
+                             .toSet();
     }
 }

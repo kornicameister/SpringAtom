@@ -15,25 +15,62 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.descriptors.reader;
+package org.agatom.springatom.server.model.descriptors.descriptor;
 
-import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.context.ApplicationContextAware;
-
-import java.util.Set;
+import com.google.common.base.Objects;
+import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
+import org.springframework.util.ClassUtils;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface EntityDescriptorReader
-        extends ApplicationContextAware,
-                BeanFactoryAware {
-    Set<EntityDescriptor<?>> getDefinitions();
+public class SlimEntityTypeDescriptor<X>
+        implements SlimEntityDescriptor<X> {
+    private final Class<X> javaClass;
+    private final String   name;
 
-    <X> EntityDescriptor<X> getDefinition(final Class<X> xClass);
+    public SlimEntityTypeDescriptor(final String name, final Class<X> javaClass) {
+        this.javaClass = javaClass;
+        this.name = name;
+    }
 
-    <X> EntityDescriptor<X> getDefinition(final Class<X> xClass, boolean initialize);
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public Class<X> getJavaClass() {
+        return this.javaClass;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(javaClass, name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SlimEntityTypeDescriptor that = (SlimEntityTypeDescriptor) o;
+
+        return Objects.equal(this.javaClass, that.javaClass) &&
+                Objects.equal(this.name, that.name);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(name)
+                      .addValue(ClassUtils.getShortName(javaClass))
+                      .toString();
+    }
 }

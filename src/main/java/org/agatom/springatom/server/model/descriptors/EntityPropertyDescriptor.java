@@ -19,6 +19,7 @@ package org.agatom.springatom.server.model.descriptors;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.ManagedType;
+import java.io.Serializable;
 import java.lang.reflect.Member;
 
 /**
@@ -26,7 +27,8 @@ import java.lang.reflect.Member;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface EntityPropertyDescriptor {
+public interface EntityPropertyDescriptor
+        extends Serializable {
     String getName();
 
     Attribute.PersistentAttributeType getPersistentAttributeType();

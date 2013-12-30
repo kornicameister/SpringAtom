@@ -22,12 +22,10 @@ import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.properties.BasicPropertyDescriptor;
 import org.agatom.springatom.server.model.descriptors.properties.ManyToOnePropertyDescriptor;
 import org.agatom.springatom.server.model.descriptors.properties.OneToManyPropertyDescriptor;
-import org.agatom.springatom.server.model.descriptors.properties.SystemPropertyDescriptor;
+import org.springframework.data.jpa.domain.AbstractAuditable;
+import org.springframework.util.ClassUtils;
 
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.PluralAttribute;
-import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.*;
 import java.util.Set;
 
 /**
@@ -37,9 +35,8 @@ import java.util.Set;
  */
 public class EntityTypeDescriptor<X>
         implements EntityDescriptor<X> {
-    private EntityType<X>    entityType    = null;
-    private AttributesHolder attributes    = new AttributesHolder();
-    private String           localizedName = null;
+    private EntityType<X>    entityType = null;
+    private AttributesHolder attributes = new AttributesHolder();
 
     public EntityTypeDescriptor(final EntityType<X> entityType) {
         this.entityType = entityType;
@@ -48,15 +45,6 @@ public class EntityTypeDescriptor<X>
     @Override
     public EntityType<X> getEntityType() {
         return entityType;
-    }
-
-    @Override
-    public String getLocalizedName() {
-        return this.localizedName;
-    }
-
-    public void setLocalizedName(final String localizedName) {
-        this.localizedName = localizedName;
     }
 
     @Override
@@ -111,36 +99,28 @@ public class EntityTypeDescriptor<X>
     }
 
     @Override
-    public Set<SystemPropertyDescriptor> getSystemProperties() {
-        if (!this.attributes.hasProperties(SystemPropertyDescriptor.class)) {
-//            final Set<? super SystemPropertyDescriptor> pds = Sets.newHashSet();
-//
-//            Set<SingularAttribute<? super X, ?>> attributeSet;
-//            IdentifiableType<? super X> type = this.entityType;
-//
-//            do {
-//                // resolve block
-//                attributeSet = this.entityType.getSingularAttributes();
-//                if (attributeSet != null && attributeSet.size() > 0) {
-//                    for (final SingularAttribute<?, ?> attribute : attributeSet) {
-//                        if (!attribute.isAssociation()) {
-//                            pds.add(new SystemPropertyDescriptor(attribute));
-//                        }
-//                    }
-//                }
-//                // resoulve block
-//            } while ((type = type.getSupertype()) != null);
-//
-//            this.attributes.addSystemProperties(pds);
-        }
-        return this.attributes.getSystemProperties();
+    public boolean isAbstract() {
+        return this.entityType.getPersistenceType().equals(Type.PersistenceType.MAPPED_SUPERCLASS);
     }
 
     @Override
+    public boolean isVersionable() {
+        return ClassUtils.isAssignable(AbstractAuditable.class, this.entityType.getJavaType());
+    }
+
     public void initialize() {
         this.getBasicProperties();
-        this.getSystemProperties();
         this.getOneToManyProperties();
         this.getManyToOneProperties();
+    }
+
+    @Override
+    public String getName() {
+        return this.entityType.getName();
+    }
+
+    @Override
+    public Class<X> getJavaClass() {
+        return this.entityType.getJavaType();
     }
 }

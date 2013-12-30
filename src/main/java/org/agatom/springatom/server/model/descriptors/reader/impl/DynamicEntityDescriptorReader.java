@@ -18,6 +18,7 @@
 package org.agatom.springatom.server.model.descriptors.reader.impl;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityTypeDescriptor;
 import org.agatom.springatom.server.model.descriptors.reader.EntityDescriptorReader;
@@ -32,6 +33,7 @@ import org.springframework.util.ClassUtils;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * {@code DynamicDescriptorReader} is reader designed to read {@link org.agatom.springatom.server.model.descriptors.EntityDescriptor} dynamically
@@ -59,6 +61,21 @@ public class DynamicEntityDescriptorReader
     }
 
     @Override
+    public Set<EntityDescriptor<?>> getDefinitions() {
+        final Set<EntityDescriptor<?>> descriptors = Sets.newHashSet();
+        final Set<EntityType<?>> entities = this.metamodel.getEntities();
+        for (final EntityType<?> entityType : entities) {
+            final Class<?> javaType = entityType.getJavaType();
+            if (javaType != null) {
+                descriptors.add(this.getDefinition(javaType, false));
+            } else {
+                LOGGER.warn(String.format("%s return null javaType...skipping", entityType.getName()));
+            }
+        }
+        return descriptors;
+    }
+
+    @Override
     public <X> EntityDescriptor<X> getDefinition(final Class<X> xClass) {
         return this.getDefinition(xClass, true);
     }
@@ -72,7 +89,7 @@ public class DynamicEntityDescriptorReader
         }
         final EntityType<?> entityType = this.getEntityType(xClass);
         if (entityType != null) {
-            final EntityDescriptor<?> descriptor = new EntityTypeDescriptor<>(entityType);
+            final EntityTypeDescriptor<?> descriptor = new EntityTypeDescriptor<>(entityType);
             if (initialize) {
                 descriptor.initialize();
             }
