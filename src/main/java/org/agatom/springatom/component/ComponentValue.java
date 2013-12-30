@@ -17,10 +17,13 @@
 
 package org.agatom.springatom.component;
 
+import java.io.Serializable;
+
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentValue {
+public interface ComponentValue
+        extends Serializable {
 }
