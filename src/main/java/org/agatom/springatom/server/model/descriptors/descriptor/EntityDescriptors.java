@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -21,13 +21,16 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
+import org.agatom.springatom.server.model.descriptors.EntityDescriptorColumn;
 import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.reader.EntityDescriptorReader;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
+import javax.persistence.metamodel.Attribute;
 import java.util.Set;
 
 /**
@@ -42,15 +45,11 @@ public class EntityDescriptors {
         this.reader = reader;
     }
 
-    public EntityDescriptor<?> getEntityDescriptor(String className) {
-        if (className.startsWith("class")) {
-            final String[] classes = className.split("class");
-            className = classes[1].trim();
-        }
-        final String cleanedClassName = StringUtils.trimAllWhitespace(className);
+    public EntityDescriptor<?> getDescriptor(final String className) {
+        final String cleanedClassName = this.cleanClassName(className);
         if (!ClassUtils.isPresent(className, this.getClass().getClassLoader())) {
             final Optional<EntityDescriptor<?>> optional = FluentIterable
-                    .from(this.getDescriptors(true))
+                    .from(this.reader.getDefinitions())
                     .firstMatch(new Predicate<EntityDescriptor<?>>() {
                         @Override
                         public boolean apply(@Nullable final EntityDescriptor<?> input) {
@@ -61,47 +60,74 @@ public class EntityDescriptors {
             if (optional.isPresent()) {
                 return optional.get();
             } else {
-                // TODO add exception
                 return null;
             }
         }
-        return this.getEntityDescriptor(ClassUtils.resolveClassName(className, this.getClass().getClassLoader()));
+        return this.getDescriptor(ClassUtils.resolveClassName(className, this.getClass().getClassLoader()));
     }
 
-    public SlimEntityDescriptor<?> getSlimEntityDescriptor(final String className) {
-        final EntityDescriptor<?> entityDescriptor = this.getEntityDescriptor(className);
-        return new SlimEntityTypeDescriptor<>(entityDescriptor.getName(), entityDescriptor.getJavaClass());
-    }
-
-    public <X> EntityDescriptor<X> getEntityDescriptor(final Class<X> xClass) {
+    public <X> EntityDescriptor<X> getDescriptor(final Class<X> xClass) {
         return this.reader.getDefinition(xClass, false);
+    }
+
+    public Set<EntityDescriptor<?>> getDescriptors() {
+        return this.reader.getDefinitions();
+    }
+
+    public Set<SlimEntityDescriptor<?>> getSlimDescriptors() {
+        final Set<EntityDescriptor<?>> descriptors = this.getDescriptors();
+        return FluentIterable
+                .from(descriptors)
+                .transform(new Function<EntityDescriptor<?>, SlimEntityDescriptor<?>>() {
+                    @Nullable
+                    @Override
+                    public SlimEntityDescriptor<?> apply(@Nullable final EntityDescriptor<?> input) {
+                        assert input != null;
+                        return new SlimEntityTypeDescriptor<>(input.getName(), input.getJavaClass());
+                    }
+                })
+                .toSet();
+    }
+
+    public SlimEntityDescriptor<?> getSlimDescriptor(final String className) {
+
+        final String cleanedClassName = this.cleanClassName(className);
+        final ClassLoader classLoader = this.getClass().getClassLoader();
+
+        if (ClassUtils.isPresent(cleanedClassName, classLoader)) {
+            final Class<?> resolvedClass = ClassUtils.resolveClassName(cleanedClassName, classLoader);
+            return this.getSlimDescriptor(resolvedClass);
+        } else {
+            return null;
+        }
+    }
+
+    public <X> SlimEntityDescriptor<X> getSlimDescriptor(final Class<X> javaClass) {
+        final EntityDescriptor<X> entityDescriptor = this.getDescriptor(javaClass);
+        return new SlimEntityTypeDescriptor<>(entityDescriptor.getName(), entityDescriptor.getJavaClass());
     }
 
     public String getEntityName(final Class<?> xClass) {
         return this.reader.getDefinition(xClass, false).getEntityType().getName();
     }
 
-    public Set<EntityDescriptor<?>> getDescriptors(final boolean includeSuperclasses) {
-        final Set<EntityDescriptor<?>> definitions = this.reader.getDefinitions();
-        for (final EntityDescriptor<?> descriptor : definitions) {
-            if (descriptor.isAbstract() && !includeSuperclasses) {
-                definitions.remove(descriptor);
-            }
+    public <X> Set<EntityDescriptorColumn<X>> getColumns(final Class<X> javaClass) {
+        final EntityDescriptor<X> descriptor = this.getDescriptor(javaClass);
+        final Set<Attribute<? super X, ?>> attributes = descriptor.getEntityType().getAttributes();
+        final Set<EntityDescriptorColumn<X>> columns = Sets.newLinkedHashSet();
+        for (final Attribute<? super X, ?> attribute : attributes) {
+            columns.add(new EntityTypeDescriptorColumn<X>().setName(attribute.getName())
+                                                           .setColumnClass(attribute.getJavaType())
+                                                           .setEntityDescriptor(descriptor));
         }
-        return definitions;
+        return columns;
     }
 
-    public Set<SlimEntityDescriptor<?>> getSlimDescriptors(final boolean includeSuperclasses) {
-        final Set<EntityDescriptor<?>> descriptors = this.getDescriptors(includeSuperclasses);
-        return FluentIterable.from(descriptors)
-                             .transform(new Function<EntityDescriptor<?>, SlimEntityDescriptor<?>>() {
-                                 @Nullable
-                                 @Override
-                                 public SlimEntityDescriptor<?> apply(@Nullable final EntityDescriptor<?> input) {
-                                     assert input != null;
-                                     return new SlimEntityTypeDescriptor<>(input.getName(), input.getJavaClass());
-                                 }
-                             })
-                             .toSet();
+    private String cleanClassName(String className) {
+        if (className.startsWith("class")) {
+            final String[] classes = className.split("class");
+            className = classes[1].trim();
+        }
+        return StringUtils.trimAllWhitespace(className);
     }
 }

@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -18,8 +18,6 @@
 package org.agatom.springatom.server.model.descriptors.reader;
 
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.context.ApplicationContextAware;
 
 import java.util.Set;
 
@@ -28,9 +26,7 @@ import java.util.Set;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface EntityDescriptorReader
-        extends ApplicationContextAware,
-                BeanFactoryAware {
+public interface EntityDescriptorReader {
     Set<EntityDescriptor<?>> getDefinitions();
 
     <X> EntityDescriptor<X> getDefinition(final Class<X> xClass);

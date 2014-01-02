@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -17,17 +17,13 @@
 
 package org.agatom.springatom.server.model.descriptors;
 
+import org.agatom.springatom.core.module.AbstractModuleConfiguration;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
 import org.agatom.springatom.server.model.descriptors.reader.EntityDescriptorReader;
 import org.agatom.springatom.server.model.descriptors.reader.impl.DynamicEntityDescriptorReader;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.ListableBeanFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.*;
 
 import javax.persistence.EntityManagerFactory;
@@ -44,36 +40,24 @@ import javax.persistence.EntityManagerFactory;
         basePackages = {"org.agatom.springatom.server.model.descriptors.descriptor"}
 )
 public class DomainDescriptorModuleConfig
-        implements BeanFactoryAware,
-                   ApplicationContextAware {
-    private ListableBeanFactory  factoryContext;
-    private ApplicationContext   applicationContext;
+        extends AbstractModuleConfiguration {
+    private static final Logger LOGGER = Logger.getLogger(DomainDescriptorModuleConfig.class);
     @Autowired
     private EntityManagerFactory manager;
-
-    @Override
-    public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
-    @Override
-    public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
-        this.factoryContext = (ListableBeanFactory) beanFactory;
-    }
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     public EntityDescriptorReader getDomainTypeReader() {
+        this.logRegistering(DynamicEntityDescriptorReader.class, LOGGER);
         final DynamicEntityDescriptorReader reader = new DynamicEntityDescriptorReader();
         reader.setMetamodel(this.manager.getMetamodel());
-        reader.setBeanFactory(this.factoryContext);
-        reader.setApplicationContext(this.applicationContext);
         return reader;
     }
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     public EntityDescriptors getEntityDescriptors() {
+        this.logRegistering(EntityDescriptors.class, LOGGER);
         final EntityDescriptors entityDescriptors = new EntityDescriptors();
         entityDescriptors.setReader(this.getDomainTypeReader());
         return entityDescriptors;

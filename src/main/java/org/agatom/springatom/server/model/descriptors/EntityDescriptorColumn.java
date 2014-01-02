@@ -24,11 +24,11 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SlimEntityDescriptor<X>
+public interface EntityDescriptorColumn<X>
         extends Serializable {
     String getName();
 
-    Class<X> getJavaClass();
+    Class<?> getColumnClass();
 
-    String getJavaClassName();
+    SlimEntityDescriptor<X> getEntityDescriptor();
 }
