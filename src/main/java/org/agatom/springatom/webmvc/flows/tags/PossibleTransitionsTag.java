@@ -35,8 +35,8 @@ public class PossibleTransitionsTag
         extends RequestContextAwareTag {
 
     public static final String EVENT_ID_S = "_eventId_%s";
-    private String          var;
-    private StateDefinition state;
+    protected String          var;
+    protected StateDefinition state;
 
     public void setState(final StateDefinition state) {
         this.state = state;
