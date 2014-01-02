@@ -16,14 +16,17 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
 <%@ taglib prefix="swf" uri="http://www.example.org/sa/swf" %>
-<%@ tag description="This tags simplifies reapplying state of the header. In other words it does recognize the current state and decide which status
-is the most appropriate for the header" %>
+
+<%----%>
+<%@ tag description="Tag checks if given state contains any other actions[transitions] other than these defined in WizardEvents" %>
 <%@ attribute name="forState"
               required="true"
               rtexprvalue="true"
               type="org.springframework.webflow.definition.StateDefinition"
               description="Current state" %>
-<swf:stateNeighbours state="${forState}" type="all" var="states"/>
-<script type="text/javascript" id="${forState}-applyStepsState" defer="defer">
-    SA.wizard.applyStepsState({stateId: '${forState.id}', descriptor: JSON.parse('${states}'), headerSelector: '.x-wizard-header'});
+<%----%>
+
+<swf:dynamicTransitions state="${forState}" flow="${flowRequestContext.activeFlow}" var="transitions"/>
+<script type="text/javascript" id="${flowRequestContext.currentState.id}-dynamicAction-applier-script">
+    SA.wizard.applyDynamicActions({container: 'div.x-wizard-actions', actions: JSON.parse('${transitions}')});
 </script>
