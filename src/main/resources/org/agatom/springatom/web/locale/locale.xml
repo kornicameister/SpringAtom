@@ -27,6 +27,7 @@
                 <value>classpath:org/agatom/springatom/web/locale/format</value>
                 <value>classpath:org/agatom/springatom/web/locale/messages</value>
                 <value>classpath:org/agatom/springatom/web/locale/domainObjects</value>
+                <value>classpath:org/agatom/springatom/web/locale/wizards</value>
             </array>
         </property>
         <property name="cacheSeconds" value="60"/>
