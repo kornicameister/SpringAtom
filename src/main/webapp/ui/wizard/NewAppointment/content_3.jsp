@@ -25,15 +25,12 @@
 <s:message code="button.previous.short" var="previousButton"/>
 <s:message code="button.ok" var="finishButton"/>
 
-<div id="sa-wizard-step-body" class="content">
-    <h2 class="stepTitle">
-        <s:message code="wizard.newAppointment.title" var="title"/>
-        <s:message code="wizard.step.title" arguments="${title},3" argumentSeparator=","/>
-    </h2>
-
+<div id="sa-wizard-step-body" class="x-wizard-content">
+    <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
     <form id="${requestScope.formID}" action="${flowExecutionUrl}" class="x-form">
     </form>
 </div>
-<swf:applyActionsState forState="${flowRequestContext.currentState}"/>
+<swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
+<swf:getActions forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>
 <swf:renderErrors forState="${flowRequestContext.currentState}"/>

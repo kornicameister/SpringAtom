@@ -24,24 +24,20 @@
 <%@ page import="org.agatom.springatom.server.model.types.appointment.AppointmentTaskType" %>
 <%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
-<div id="sa-wizard-step-body" class="content">
-    <h2 class="stepTitle">
-        <s:message code="wizard.newAppointment.title" var="title"/>
-        <s:message code="wizard.step.title" arguments="${title},2" argumentSeparator=","/>
-    </h2>
+<div id="sa-wizard-step-body" class="x-wizard-content">
+    <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
 
     <form:form id="${requestScope.formID}"
                action="${flowExecutionUrl}"
                modelAttribute="newTask"
                method="<%=RequestMethod.POST.toString().toLowerCase()%>"
-               title="${title}"
                cssClass="x-form">
         <fieldset>
-            <legend><s:message code="wizard.newAppointment.tl.label"/></legend>
+            <legend><s:message code="wizard.NewAppointmentWizard.tl.label"/></legend>
             <div class="x-multiple-input">
                 <div class="x-inputs">
                     <ul id="tasks-container">
-                        <s:message code="wizard.newAppointment.tl.taskType.placeholder" var="placeholder"/>
+                        <s:message code="wizard.NewAppointmentWizard.tl.taskType.placeholder" var="placeholder"/>
                         <li id="0" data-role="task">
                             <form:select id="${requestScope.formID}-type"
                                          items="<%= AppointmentTaskType.values()%>"
@@ -102,6 +98,7 @@
         </div>
     </form:form>
 </div>
-<swf:applyActionsState forState="${flowRequestContext.currentState}"/>
+<swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
+<swf:getActions forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>
 <swf:renderErrors forState="${flowRequestContext.currentState}"/>

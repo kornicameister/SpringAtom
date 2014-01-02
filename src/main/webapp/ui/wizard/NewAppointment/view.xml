@@ -23,7 +23,6 @@
 <tiles-definitions>
 
     <definition name="ui.wizard.NewAppointment.*" extends="ui.layout.wizard.DefaultLayout">
-        <put-attribute name="wiz.header" value="/ui/wizard/NewAppointment/header.jsp"/>
         <put-attribute name="wiz.content" value="/ui/wizard/NewAppointment/content_{1}.jsp"/>
     </definition>
 

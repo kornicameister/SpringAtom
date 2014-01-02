@@ -23,41 +23,37 @@
 <%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
 <%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
-<div id="sa-wizard-step-body" class="content">
-    <h2 class="stepTitle">
-        <s:message code="wizard.newAppointment.title" var="title"/>
-        <s:message code="wizard.step.title" arguments="${title},1" argumentSeparator=","/>
-    </h2>
+<div id="sa-wizard-step-body" class="x-wizard-content">
+    <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
 
     <form:form id="${requestScope.formID}"
                action="${flowExecutionUrl}"
                commandName="appointment"
                method="<%=RequestMethod.POST.toString().toLowerCase()%>"
-               title="${title}"
                cssClass="x-form">
         <fieldset>
-            <legend><s:message code="wizard.newAppointment.tf.label"/></legend>
+            <legend><s:message code="wizard.NewAppointmentWizard.tf.label"/></legend>
             <p>
-                <label class="x-form-label" title="<s:message code="wizard.newAppointment.tf.begin.label"/>">
-                    <span><s:message code="wizard.newAppointment.tf.begin.label"/></span>
+                <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tf.begin.label"/>">
+                    <span><s:message code="wizard.NewAppointmentWizard.tf.begin.label"/></span>
                     <form:input id="${requestScope.formID}-begin-date" htmlEscape="true" cssClass="x-input" type="date" path="beginDate"/>
                     <form:input id="${requestScope.formID}-begin-time" htmlEscape="true" cssClass="x-input" type="time" path="beginTime"/>
                 </label>
             </p>
 
             <p>
-                <label class="x-form-label" title="<s:message code="wizard.newAppointment.tf.end.label"/>">
-                    <span><s:message code="wizard.newAppointment.tf.end.label"/></span>
+                <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tf.end.label"/>">
+                    <span><s:message code="wizard.NewAppointmentWizard.tf.end.label"/></span>
                     <form:input id="${requestScope.formID}-end-date" htmlEscape="true" cssClass="x-input" type="date" path="endDate"/>
                     <form:input id="${requestScope.formID}-end-time" htmlEscape="true" cssClass="x-input" type="time" path="endTime"/>
                 </label>
             </p>
         </fieldset>
         <fieldset>
-            <legend><s:message code="wizard.newAppointment.tt.label"/></legend>
+            <legend><s:message code="wizard.NewAppointmentWizard.tt.label"/></legend>
             <p>
-                <label class="x-form-label" title="<s:message code="wizard.newAppointment.tt.reporter.label"/>">
-                    <span><s:message code="wizard.newAppointment.tt.reporter.label"/></span>
+                <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tt.reporter.label"/>">
+                    <span><s:message code="wizard.NewAppointmentWizard.tt.reporter.label"/></span>
                     <form:select id="${requestScope.formID}-repoter"
                                  htmlEscape="true"
                                  cssClass="x-input x-input-select"
@@ -69,9 +65,9 @@
             </p>
 
             <p>
-                <label class="x-form-label" title="<s:message code="wizard.newAppointment.tt.assignee.label"/>">
-                    <span><s:message code="wizard.newAppointment.tt.assignee.label"/></span>
-                    <s:message code="wizard.newAppointment.tt.assignee.placeholder" var="assigneePlaceholder"/>
+                <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tt.assignee.label"/>">
+                    <span><s:message code="wizard.NewAppointmentWizard.tt.assignee.label"/></span>
+                    <s:message code="wizard.NewAppointmentWizard.tt.assignee.placeholder" var="assigneePlaceholder"/>
                     <form:select id="${requestScope.formID}-assignee"
                                  htmlEscape="true"
                                  cssClass="x-input x-input-select"
@@ -85,9 +81,9 @@
             </p>
 
             <p>
-                <label class="x-form-label" title="<s:message code="wizard.newAppointment.tt.car.label"/>">
-                    <span><s:message code="wizard.newAppointment.tt.car.label"/></span>
-                    <s:message code="wizard.newAppointment.tt.car.placeholder" var="carPlaceholder"/>
+                <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tt.car.label"/>">
+                    <span><s:message code="wizard.NewAppointmentWizard.tt.car.label"/></span>
+                    <s:message code="wizard.NewAppointmentWizard.tt.car.placeholder" var="carPlaceholder"/>
                     <form:select id="${requestScope.formID}-car"
                                  htmlEscape="true"
                                  cssClass="x-input x-input-select"
@@ -104,6 +100,7 @@
         </div>
     </form:form>
 </div>
-<swf:applyActionsState forState="${flowRequestContext.currentState}"/>
+<swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
+<swf:getActions forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>
 <swf:renderErrors forState="${flowRequestContext.currentState}"/>
