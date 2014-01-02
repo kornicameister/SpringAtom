@@ -15,39 +15,48 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.locale;
+package org.agatom.springatom.web.locale.aop;
 
-import org.agatom.springatom.core.util.LocalizationAware;
-import org.agatom.springatom.core.util.Localized;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
-import org.springframework.context.MessageSource;
+import org.apache.log4j.Logger;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 
-import java.util.Locale;
+import java.util.Arrays;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SMessageSource
-        extends MessageSource {
+// TODO not working currently -> investigate
+@Aspect(value = "messageSourceValidator")
+public class MessageSourceAOP {
 
-    <LA extends LocalizationAware> LA localize(final LA localizationAware, final Locale locale);
+    private static final Logger LOGGER = Logger.getLogger(MessageSourceAOP.class);
 
-    String getMessage(final Localized localized, final Locale locale);
+    @Pointcut(value = "execution(* get*(..)) && bean(messageSource)")
+    private void mainPointcut() {
+    }
 
-    String getMessage(final String key, final Locale locale);
+    @Pointcut(value = "args(keys,..)")
+    private void keysAsArray(final String[] keys) {
+    }
 
-    SLocalizedMessages getLocalizedMessages(final Locale locale);
+    @Pointcut(value = "args(key,..)")
+    private void keyAsSingle(final String key) {
+    }
 
-    SLocalizedMessages getLocalizedMessages(final String[] keys, final Locale locale, final boolean usePattern);
+    @Around(value = "mainPointcut() && keysAsArray(keys)", argNames = "pjp,keys")
+    public Object validateMultipleKeys(final ProceedingJoinPoint pjp, final String[] keys) throws Throwable {
+        LOGGER.trace(String.format("/validateMultipleKeys %s [%s]", pjp.getSignature().getName(), Arrays.toString(keys)));
+        return pjp.proceed();
+    }
 
-    SLocalizedMessage getLocalizedMessage(final String key, final Locale locale);
-
-
-    public enum StorageMode {
-        SINGLE,
-        COMBINED
+    @Around(value = "mainPointcut() && keyAsSingle(key)", argNames = "pjp,key")
+    public Object validateSingleKey(final ProceedingJoinPoint pjp, final String key) throws Throwable {
+        LOGGER.trace(String.format("/validateSingleKey %s [%s]", pjp.getSignature().getName(), key));
+        return pjp.proceed();
     }
 }

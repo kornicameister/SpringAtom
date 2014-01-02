@@ -19,11 +19,14 @@ package org.agatom.springatom.web.locale.impl;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import org.agatom.springatom.core.util.LocalizationAware;
+import org.agatom.springatom.core.util.Localized;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.locale.beans.SLocale;
 import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
 import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
@@ -40,16 +43,23 @@ public class SMessageSourceImpl
         implements SMessageSource {
 
     @Override
-    public String getMessage(final String key, final Locale locale) {
-        return this.getMessage(key, null, locale);
+    public <LA extends LocalizationAware> LA localize(final LA localizationAware, final Locale locale) {
+        final String messageKey = localizationAware.getMessageKey();
+        final String msg = this.getMessage(messageKey, locale);
+        if (StringUtils.hasText(msg)) {
+            localizationAware.setValueForMessageKey(msg);
+        }
+        return localizationAware;
     }
 
     @Override
-    public SLocalizedMessage getLocalizedMessage(final String key, final Locale locale) {
-        return new SLocalizedMessage()
-                .setKey(key)
-                .setMessage(this.getMessage(key, locale))
-                .setLocale(SLocale.fromLocale(locale));
+    public String getMessage(final Localized localized, final Locale locale) {
+        return this.getMessage(localized.getMessageKey(), locale);
+    }
+
+    @Override
+    public String getMessage(final String key, final Locale locale) {
+        return this.getMessage(key, null, locale);
     }
 
     @Override
@@ -91,6 +101,14 @@ public class SMessageSourceImpl
         }
 
         return messages;
+    }
+
+    @Override
+    public SLocalizedMessage getLocalizedMessage(final String key, final Locale locale) {
+        return new SLocalizedMessage()
+                .setKey(key)
+                .setMessage(this.getMessage(key, locale))
+                .setLocale(SLocale.fromLocale(locale));
     }
 
     /**
