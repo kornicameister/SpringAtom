@@ -71,7 +71,7 @@
                                    validator="validator"/>
 
     <webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
-        <webflow:flow-execution-repository max-executions="5"/>
+        <webflow:flow-execution-repository max-executions="5" max-execution-snapshots="5"/>
         <webflow:flow-execution-listeners>
             <webflow:listener ref="modelViewAppender"/>
             <webflow:listener ref="persistenceListener"/>

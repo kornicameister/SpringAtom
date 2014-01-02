@@ -35,7 +35,7 @@
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
         <property name="definitions">
             <list>
-                <value>/ui/**/*view*</value>
+                <value>/ui/**/*view*.xml</value>
             </list>
         </property>
         <property name="checkRefresh" value="true"/>
