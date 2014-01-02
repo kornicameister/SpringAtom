@@ -50,8 +50,8 @@
 
     </on-start>
 
-    <view-state id="entity" view="ui.wizard.NewReport.PickEntity" popup="true">
-        <on-render>
+    <view-state id="entity" view="ui.wizard.NewReportWizard.PickEntity" popup="true">
+    <on-render>
             <evaluate expression="pickEntityFormAction.setupForm"/>
         </on-render>
         <transition on="next" bind="true" validate="true" to="pickColumns">
@@ -62,8 +62,8 @@
         </transition>
     </view-state>
 
-    <view-state id="pickColumns" view="ui.wizard.NewReport.PickColumns" popup="true">
-        <on-render>
+    <view-state id="pickColumns" view="ui.wizard.NewReportWizard.PickColumns" popup="true">
+    <on-render>
             <evaluate expression="pickColumnsFormAction.setupForm"/>
         </on-render>
 
@@ -76,8 +76,8 @@
         </transition>
     </view-state>
 
-    <view-state id="moreEntitiesAndColumns" view="ui.wizard.NewReport.MoreEntitiesAndColumns" popup="true">
-        <on-entry>
+    <view-state id="moreEntitiesAndColumns" view="ui.wizard.NewReportWizard.MoreEntitiesAndColumns" popup="true">
+    <on-entry>
             <evaluate expression="reportWizard.report" result="viewScope.report"/>
         </on-entry>
         <transition on="next" to="reportDescription" history="invalidate"/>
@@ -86,8 +86,8 @@
         </transition>
     </view-state>
 
-    <view-state id="reportDescription" view="ui.wizard.NewReport.ReportDescription" popup="true">
-        <on-entry>
+    <view-state id="reportDescription" view="ui.wizard.NewReportWizard.ReportDescription" popup="true">
+    <on-entry>
             <evaluate expression="reportDescriptionFormAction.setupForm"/>
         </on-entry>
         <transition on="next" to="reportOverview" validate="true" bind="true" history="invalidate">
@@ -98,8 +98,8 @@
         </transition>
     </view-state>
 
-    <view-state id="reportOverview" view="ui.wizard.NewReport.ReportOverview">
-        <transition on="finish" to="finish">
+    <view-state id="reportOverview" view="ui.wizard.NewReportWizard.ReportOverview">
+    <transition on="finish" to="finish">
             <evaluate expression="reportWizard.saveReport(flowRequestContext)"/>
         </transition>
         <transition on="finishAndGenerate" to="finish">

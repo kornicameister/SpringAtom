@@ -34,7 +34,7 @@
             <s:message code="reports.actions"/>
         </header>
         <ul>
-            <s:url value="/app/wizard/NewReport" htmlEscape="true" var="newReportActionUrl"/>
+            <s:url value="/app/wizard/NewReportWizard" htmlEscape="true" var="newReportActionUrl"/>
             <security:authorize url="${newReportActionUrl}">
                 <s:message code="reports.actions.NewReportWizard" var="newReportActionLabel" htmlEscape="true"/>
                 <s:message code="tooltip.nav" arguments="${newReportActionLabel}" var="newReportActionLabelTooltip"

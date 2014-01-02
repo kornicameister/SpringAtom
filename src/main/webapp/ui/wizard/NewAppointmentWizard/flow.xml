@@ -35,8 +35,8 @@
         <!--init requires steps-->
     </on-start>
 
-    <view-state id="step1" view="ui.wizard.NewAppointment.1" model="appointment" popup="true">
-        <binder>
+    <view-state id="step1" view="ui.wizard.NewAppointmentWizard.1" model="appointment" popup="true">
+    <binder>
             <binding property="car" required="true"/>
             <binding property="assignee" required="true"/>
             <binding property="reporter" required="true"/>
@@ -57,8 +57,8 @@
         <transition on="cancel" to="cancel" history="invalidate" bind="false"/>
     </view-state>
 
-    <view-state id="step2" view="ui.wizard.NewAppointment.2" model="newTask" popup="true">
-        <binder>
+    <view-state id="step2" view="ui.wizard.NewAppointmentWizard.2" model="newTask" popup="true">
+    <binder>
             <binding property="task" required="false"/>
             <binding property="type" required="true"/>
         </binder>
@@ -82,8 +82,8 @@
         <transition on="cancel" to="cancel" history="invalidate"/>
     </view-state>
 
-    <view-state id="step3" view="ui.wizard.NewAppointment.3" popup="true">
-        <on-entry>
+    <view-state id="step3" view="ui.wizard.NewAppointmentWizard.3" popup="true">
+    <on-entry>
             <evaluate expression="flowScope.appointment"
                       result="viewScope.finalResultAppointment"
                       result-type="org.agatom.springatom.server.model.beans.appointment.SAppointment"/>

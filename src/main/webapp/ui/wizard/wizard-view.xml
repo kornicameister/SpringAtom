@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                  ~
   ~                                                                                               ~
   ~ [SpringAtom] is free software: you can redistribute it and/or modify                          ~
   ~ it under the terms of the GNU General Public License as published by                          ~
@@ -16,14 +16,20 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
+
 <!DOCTYPE tiles-definitions PUBLIC
         "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
         "tiles-config_2_1.dtd">
 
 <tiles-definitions>
 
-    <definition name="ui.wizard.NewReport.*" extends="ui.layout.wizard.DefaultLayout">
-        <put-attribute name="wiz.content" value="/ui/wizard/NewReport/content_{1}.jsp"/>
+    <definition name="ui.layout.wizard.DefaultLayout" template="/ui/wizard/layout.jsp">
+        <put-attribute name="wiz.header" value="/ui/wizard/header.jsp"/>
+        <put-attribute name="wiz.content" value=""/>
+    </definition>
+
+    <definition name="ui.wizard.*.*" extends="ui.layout.wizard.DefaultLayout">
+        <put-attribute name="wiz.content" value="/ui/wizard/{1}/content_{2}.jsp"/>
     </definition>
 
 </tiles-definitions>
