@@ -28,7 +28,7 @@
     <tiles:insertAttribute name="css" flush="true"/>
     <tiles:insertAttribute name="js" flush="true"/>
 </head>
-<body>
+<body class="tundra">
 <div id="page">
     <div class="content-wrapper midway-vertical midway-horizontal">
         <header id="header" class="main">

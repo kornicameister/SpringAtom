@@ -63,6 +63,8 @@
     -moz-appearance       : none;
     appearance            : none;
     cursor                : pointer;
+    min-width             : 100px !important;
+    width                 : auto !important;
 }
 
 /*
@@ -114,9 +116,12 @@ textarea.x-input-textarea-fixed {
 }
 
 label.x-form-label span {
-    color       : #2B72D5;
-    font-weight : bolder;
-    margin-left : 5px;
+    color          : #2B72D5;
+    font-weight    : bolder;
+    margin-left    : 5px;
+    vertical-align : top;
+    min-width      : 80px;
+    width          : auto !important;
 }
 
 label.x-form-label span:after {

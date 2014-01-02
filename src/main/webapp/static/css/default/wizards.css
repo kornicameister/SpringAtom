@@ -21,56 +21,35 @@
     margin                : 0;
     padding               : 5px;
     overflow              : visible;
-    float                 : left;
     width                 : 980px; /* */
     -moz-border-radius    : 10px;
     -webkit-border-radius : 10px;
-    background            : rgba(255, 255, 255, 0.9);
 }
 
 .x-wizard .x-wizard-steps {
-    display  : block;
-    position : relative;
-    margin   : 0;
-    padding  : 0;
-    border   : 0 solid #CCCCCC;
-    overflow : hidden;
-    clear    : right;
-    height   : 300px;
+    display : block;
+    margin  : 0;
 }
 
-.x-wizard .x-wizard-steps div.content {
-    display               : block;
-    position              : absolute;
-    float                 : left;
+.x-wizard .x-wizard-steps .x-wizard-content {
     margin                : 0;
     padding               : 5px;
     border                : 1px solid #CCCCCC;
     font                  : normal 12px Verdana, Arial, Helvetica, sans-serif;
     color                 : #5A5655;
     background-color      : #F8F8F8;
-    height                : 300px;
     text-align            : left;
-    overflow              : auto;
-    z-index               : 88;
     -webkit-border-radius : 5px;
     -moz-border-radius    : 5px;
-    width                 : 720px;
-    clear                 : both;
+    height                : 100%;
 }
 
 .x-wizard div.x-wizard-actions {
-    display    : block;
-    position   : relative;
     margin     : 3px 0;
     padding    : 0;
-    color      : #5A5655;
     height     : 40px;
     text-align : center;
-    overflow   : auto;
-    z-index    : 88;
     clear      : both;
-
 }
 
 .x-wizard .x-wizard-steps .stepTitle {
@@ -104,7 +83,8 @@
     padding    : 0;
     margin     : 5px 10px 0 0;
     border     : 0 solid #CCCCCC;
-    background : transparent; /*#EEEEEE */
+    background : transparent; /*#EEEEEE */;
+    min-height : 250px;
 }
 
 .x-wizard ul.x-wizard-header li {
@@ -124,7 +104,7 @@
     margin                : 0;
     padding               : 3px;
     height                : 70px;
-    width                 : 230px;
+    width                 : 240px;
     text-decoration       : none;
     outline-style         : none;
     -moz-border-radius    : 5px;
@@ -219,7 +199,7 @@
     display  : inline-block;
 }
 
-.x-wizard .buttonNext {
+.x-wizard .x-wizard-action {
     display               : block;
     float                 : right;
     margin                : 5px 3px 0 3px;
@@ -234,6 +214,16 @@
     border                : 1px solid #5A5655;
     -moz-border-radius    : 5px;
     -webkit-border-radius : 5px;
+}
+
+.x-wizard .x-wizard-dynamic-action {
+    width : auto !important;
+}
+
+.x-wizard .buttonFinish,
+.x-wizard .buttonCancel,
+.x-wizard .buttonPrevious,
+.x-wizard .buttonNext, {
 }
 
 .x-wizard .buttonDisabled {
@@ -241,41 +231,6 @@
     background-color : #CCCCCC !important;
     border           : 1px solid #CCCCCC !important;
     cursor           : text;
-}
-
-.x-wizard .buttonPrevious {
-    display               : block;
-    float                 : right;
-    margin                : 5px 3px 0 3px;
-    padding               : 5px;
-    text-decoration       : none;
-    text-align            : center;
-    font                  : bold 13px Verdana, Arial, Helvetica, sans-serif;
-    width                 : 100px;
-    color                 : #FFFFFF;
-    outline-style         : none;
-    background-color      : #5A5655;
-    border                : 1px solid #5A5655;
-    -moz-border-radius    : 5px;
-    -webkit-border-radius : 5px;
-}
-
-.x-wizard .buttonFinish,
-.x-wizard .buttonCancel {
-    display               : block;
-    float                 : right;
-    margin                : 5px 3px 0 3px;
-    padding               : 5px;
-    text-decoration       : none;
-    text-align            : center;
-    font                  : bold 13px Verdana, Arial, Helvetica, sans-serif;
-    width                 : 100px;
-    color                 : #FFFFFF;
-    outline-style         : none;
-    background-color      : #5A5655;
-    border                : 1px solid #5A5655;
-    -moz-border-radius    : 5px;
-    -webkit-border-radius : 5px;
 }
 
 .x-wizard .buttonCancel {

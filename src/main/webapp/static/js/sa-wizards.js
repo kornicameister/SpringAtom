@@ -235,6 +235,30 @@
         });
     };
 
+    SA.wizard.applyDynamicActions = function (cfg) {
+        var actionsContainer = cfg['container'];
+        var availableActions = cfg['actions'];
+        var actions = {};
+
+        var buttons = $(actionsContainer);
+        if (buttons.find('.x-wizard-dynamic-action').length > 1) {
+            buttons.find('.x-wizard-dynamic-action').remove();
+        }
+
+        $.each(availableActions, function (it, val) {
+            var button = $('<button></button>');
+            button = button.html(val['labelName']);
+            button = button
+                .attr('id', val['eventName'])
+                .attr('type', 'submit')
+                .attr('name', val['eventName'])
+                .attr('class', 'x-wizard-action x-wizard-dynamic-action');
+            buttons.prepend(
+                button
+            );
+        });
+    };
+
     /**
      * //TODO missing jsDoc
      * @param cfg
@@ -266,6 +290,89 @@
 
     SA.wizard.genStepHeaderId = function (val) {
         return SA.core.genId(val, 'wiz-step');
+    };
+
+    SA.wizard.applyWebFlowDecorators = function (el, formId) {
+        console.log('Applying WF decorator over elements > ' + el);
+        $.each(el, function (index, val) {
+            Spring.addDecoration(new Spring.AjaxEventDecoration({
+                elementId: val,
+                event    : 'onclick',
+                formId   : formId
+            }));
+        });
+        var not = $('.x-wizard-actions').find('button').not(function (index) {
+            var id = $(this).attr('id');
+            var match = false;
+            $.each(el, function (index, val) {
+                if (id === val) {
+                    match = true;
+                    return false;
+                }
+                return true;
+            });
+            return match;
+        });
+        console.log('Applying AWF decorator over elements > ' + not);
+        not.each(function (index, val) {
+            console.log('Applying WF decorator over > ' + $(val).attr('id'));
+            Spring.addDecoration(new Spring.AjaxEventDecoration({
+                elementId: $(val).attr('id'),
+                event    : 'onclick',
+                formId   : formId,
+                popup    : true,
+                params   : {
+                    fragments: 'wiz.content',
+                    mode     : "embedded"
+                }
+            }));
+        })
+    };
+
+    SA.wizard.decorateWizard = function (cfg) {
+        var wizardId = cfg['wizardId'];
+        var wizardHeaderId = cfg['wizardHeaderId'];
+        var wizardContentId = cfg['wizardContentId'];
+        var wizardActionsId = cfg['wizardActionsId'];
+
+        var decorations = [];
+
+        decorations.push(new Spring.ElementDecoration({
+            elementId  : wizardId,
+            widgetType : "dijit.layout.BorderContainer",
+            widgetAttrs: {
+                title        : $('#' + wizardId).attr('title'),
+                gutters      : true,
+                liveSplitters: true
+            }
+        }));
+        decorations.push(new Spring.ElementDecoration({
+            elementId  : wizardHeaderId,
+            widgetType : "dijit.layout.ContentPane",
+            widgetAttrs: {
+                region: 'leading'
+            }
+        }));
+        decorations.push(new Spring.ElementDecoration({
+            elementId  : wizardContentId,
+            widgetType : "dijit.layout.ContentPane",
+            widgetAttrs: {
+                region: 'center'
+            }
+        }));
+        decorations.push(new Spring.ElementDecoration({
+            elementId  : wizardActionsId,
+            widgetType : "dijit.layout.ContentPane",
+            widgetAttrs: {
+                region: 'bottom'
+            }
+        }));
+
+        console.log(wizardId + ' with ' + decorations.length + ' decorations');
+
+        $.each(decorations, function (index, val) {
+            Spring.addDecoration(val);
+        });
     }
 
 }(window.SA = window.SA || {}, jQuery));
