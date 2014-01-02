@@ -24,7 +24,7 @@
 <tiles-definitions>
 
     <definition name="ui.layout.wizard.DefaultLayout" template="/ui/wizard/layout.jsp">
-        <put-attribute name="wiz.header" value=""/>
+        <put-attribute name="wiz.header" value="/ui/wizard/header.jsp"/>
         <put-attribute name="wiz.content" value=""/>
     </definition>
 
