@@ -30,6 +30,14 @@ public class ServiceException
     private static final String MSG_PATTERN_2    = "For target=%s exception occurred";
     private static final long   serialVersionUID = 5939562098957474953L;
 
+    public ServiceException(final String message) {
+        super(message);
+    }
+
+    public ServiceException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
     public ServiceException(final Class<? extends Persistable> target,
                             final String message) {
         super(String.format(MSG_PATTERN, target, message));
@@ -52,5 +60,9 @@ public class ServiceException
                             final boolean enableSuppression,
                             final boolean writableStackTrace) {
         super(String.format(MSG_PATTERN, target, message), cause, enableSuppression, writableStackTrace);
+    }
+
+    public ServiceException(final Throwable cause) {
+        super(cause);
     }
 }

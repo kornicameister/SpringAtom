@@ -184,7 +184,7 @@ abstract public class EntityInfoPageComponentBuilder<Y extends Persistable<?>>
     }
 
     protected EntityDescriptor<Y> getEntityDescriptor() {
-        return this.descriptors.getEntityDescriptor(this.entity);
+        return this.descriptors.getDescriptor(this.entity);
     }
 
     protected String getEntityName() {
@@ -208,7 +208,7 @@ abstract public class EntityInfoPageComponentBuilder<Y extends Persistable<?>>
                     final String nestedPath = paths.get(i);
                     attribute = entityType.getAttribute(nestedPath);
                     if (i != paths.size() - 1) {
-                        entityType = this.descriptors.getEntityDescriptor(attribute.getJavaType()).getEntityType();
+                        entityType = this.descriptors.getDescriptor(attribute.getJavaType()).getEntityType();
                     }
                 }
             }
