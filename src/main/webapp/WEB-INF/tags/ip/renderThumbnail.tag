@@ -16,7 +16,7 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@ attribute name="thubmnail" type="org.agatom.springatom.component.elements.ThumbnailComponent" required="true" %>
+<%@ attribute name="thubmnail" type="org.agatom.springatom.web.component.elements.ThumbnailComponent" required="true" %>
 
 <c:choose>
     <c:when test="${thubmnail == null}">

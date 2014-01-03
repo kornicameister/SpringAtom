@@ -19,12 +19,12 @@ package org.agatom.springatom.webmvc.controllers;
 
 import com.github.dandelion.datatables.core.ajax.DataSet;
 import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
-import org.agatom.springatom.component.ComponentConstants;
-import org.agatom.springatom.component.builders.ComponentBuilder;
-import org.agatom.springatom.component.builders.ComponentBuilders;
-import org.agatom.springatom.component.builders.table.TableComponentBuilder;
-import org.agatom.springatom.component.request.beans.ComponentTableRequest;
-import org.agatom.springatom.ip.InfoPageConstants;
+import org.agatom.springatom.web.component.ComponentConstants;
+import org.agatom.springatom.web.component.builders.ComponentBuilder;
+import org.agatom.springatom.web.component.builders.ComponentBuilders;
+import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
+import org.agatom.springatom.web.component.request.beans.ComponentTableRequest;
+import org.agatom.springatom.web.infopages.InfoPageConstants;
 import org.agatom.springatom.webmvc.data.DataBean;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;

@@ -17,15 +17,15 @@
 
 package org.agatom.springatom.webmvc.pages.builders;
 
-import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
-import org.agatom.springatom.component.builders.annotation.EntityBased;
-import org.agatom.springatom.component.meta.LayoutType;
-import org.agatom.springatom.ip.component.builder.EntityInfoPageComponentBuilder;
-import org.agatom.springatom.ip.component.elements.InfoPageComponent;
-import org.agatom.springatom.ip.component.elements.InfoPagePanelComponent;
-import org.agatom.springatom.ip.component.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.service.domain.SCarService;
+import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
+import org.agatom.springatom.web.component.builders.annotation.EntityBased;
+import org.agatom.springatom.web.component.meta.LayoutType;
+import org.agatom.springatom.web.infopages.component.builder.EntityInfoPageComponentBuilder;
+import org.agatom.springatom.web.infopages.component.elements.InfoPageComponent;
+import org.agatom.springatom.web.infopages.component.elements.InfoPagePanelComponent;
+import org.agatom.springatom.web.infopages.component.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.webmvc.pages.infopage.UserInfoPage;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

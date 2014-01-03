@@ -18,15 +18,13 @@
 package org.agatom.springatom.webmvc.pages.builders;
 
 import com.mysema.query.types.Predicate;
-import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
-import org.agatom.springatom.component.builders.annotation.EntityBased;
-import org.agatom.springatom.component.builders.table.TableComponentBuilder;
-import org.agatom.springatom.component.elements.table.DandelionTableComponent;
-import org.agatom.springatom.ip.mapping.InfoPageMappings;
 import org.agatom.springatom.server.model.beans.appointment.QSAppointmentTask;
 import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
+import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
+import org.agatom.springatom.web.component.builders.annotation.EntityBased;
+import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
+import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 /**
@@ -46,8 +44,6 @@ public class AppointmentTaskTableBuilder
     protected static final String BUILDER_ID = "appointmentTaskTableBuilder";
     private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointmentTask.ENTITY_NAME));
     private static final   Logger LOGGER     = Logger.getLogger(AppointmentTaskTableBuilder.class);
-    @Autowired
-    private InfoPageMappings pageMappings;
 
     @Override
     protected DandelionTableComponent buildDefinition() {

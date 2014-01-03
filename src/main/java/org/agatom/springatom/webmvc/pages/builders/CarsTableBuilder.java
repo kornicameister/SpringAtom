@@ -18,15 +18,15 @@
 package org.agatom.springatom.webmvc.pages.builders;
 
 import com.mysema.query.types.Predicate;
-import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
-import org.agatom.springatom.component.builders.annotation.EntityBased;
-import org.agatom.springatom.component.builders.table.TableComponentBuilder;
-import org.agatom.springatom.component.elements.table.DandelionTableComponent;
-import org.agatom.springatom.component.elements.value.DelegatedLink;
-import org.agatom.springatom.ip.SEntityInfoPage;
-import org.agatom.springatom.ip.mapping.InfoPageMappings;
 import org.agatom.springatom.server.model.beans.car.QSCar;
 import org.agatom.springatom.server.model.beans.car.SCar;
+import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
+import org.agatom.springatom.web.component.builders.annotation.EntityBased;
+import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
+import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
+import org.agatom.springatom.web.component.elements.value.DelegatedLink;
+import org.agatom.springatom.web.infopages.SEntityInfoPage;
+import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;

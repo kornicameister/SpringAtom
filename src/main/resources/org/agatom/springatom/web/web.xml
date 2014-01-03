@@ -28,5 +28,13 @@
 
     <import resource="locale/locale.xml"/>
     <import resource="theme/theme.xml"/>
+    <import resource="flows/flows.xml"/>
+
+    <context:annotation-config/>
+    <!-- configurations -->
+    <bean class="org.agatom.springatom.web.infopages.config.InfoPageModuleConfiguration"/>
+    <bean class="org.agatom.springatom.web.component.config.ComponentBuilderModuleConfiguration"
+          depends-on="org.agatom.springatom.web.infopages.config.InfoPageModuleConfiguration"/>
+    <!-- configurations -->
 
 </beans>

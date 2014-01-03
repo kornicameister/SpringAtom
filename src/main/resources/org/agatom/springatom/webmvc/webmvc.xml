@@ -30,13 +30,12 @@
 
 
     <import resource="tiles/tiles.xml"/>
-    <import resource="flows/flows.xml"/>
     <import resource="interceptors/interceptors.xml"/>
 
     <context:component-scan base-package="org.agatom.springatom.webmvc">
-        <context:exclude-filter type="annotation" expression="org.agatom.springatom.component.builders.annotation.ComponentBuilds"/>
-        <context:exclude-filter type="annotation" expression="org.agatom.springatom.ip.annotation.InfoPage"/>
-        <context:exclude-filter type="annotation" expression="org.agatom.springatom.ip.annotation.DomainInfoPage"/>
+        <context:exclude-filter type="annotation" expression="org.agatom.springatom.web.component.builders.annotation.ComponentBuilds"/>
+        <context:exclude-filter type="annotation" expression="org.agatom.springatom.web.infopages.annotation.InfoPage"/>
+        <context:exclude-filter type="annotation" expression="org.agatom.springatom.web.infopages.annotation.DomainInfoPage"/>
     </context:component-scan>
 
     <mvc:annotation-driven validator="validator"
@@ -57,7 +56,7 @@
         </mvc:message-converters>
         <mvc:argument-resolvers>
             <bean class="com.github.dandelion.datatables.extras.spring3.ajax.DatatablesCriteriasMethodArgumentResolver"/>
-            <bean class="org.agatom.springatom.component.request.ComponentRequestMethodArgumentResolver"/>
+            <bean class="org.agatom.springatom.web.component.request.ComponentRequestMethodArgumentResolver"/>
         </mvc:argument-resolvers>
     </mvc:annotation-driven>
     <!--suppress SpringModelInspection -->

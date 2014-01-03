@@ -17,12 +17,12 @@
 
 package org.agatom.springatom.webmvc.controllers;
 
-import org.agatom.springatom.component.builders.ComponentBuilders;
-import org.agatom.springatom.ip.InfoPageConstants;
-import org.agatom.springatom.ip.SEntityInfoPage;
-import org.agatom.springatom.ip.SInfoPage;
-import org.agatom.springatom.ip.component.builder.InfoPageComponentBuilder;
-import org.agatom.springatom.ip.mapping.InfoPageMappings;
+import org.agatom.springatom.web.component.builders.ComponentBuilders;
+import org.agatom.springatom.web.infopages.InfoPageConstants;
+import org.agatom.springatom.web.infopages.SEntityInfoPage;
+import org.agatom.springatom.web.infopages.SInfoPage;
+import org.agatom.springatom.web.infopages.component.builder.InfoPageComponentBuilder;
+import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
 import org.agatom.springatom.webmvc.data.DataBean;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;

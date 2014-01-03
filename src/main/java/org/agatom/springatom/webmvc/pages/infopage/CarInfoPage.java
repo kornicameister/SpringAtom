@@ -17,9 +17,9 @@
 
 package org.agatom.springatom.webmvc.pages.infopage;
 
-import org.agatom.springatom.ip.annotation.DomainInfoPage;
-import org.agatom.springatom.ip.page.BasicEntityInfoPage;
 import org.agatom.springatom.server.model.beans.car.SCar;
+import org.agatom.springatom.web.infopages.annotation.DomainInfoPage;
+import org.agatom.springatom.web.infopages.page.BasicEntityInfoPage;
 
 /**
  * @author kornicameister

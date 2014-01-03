@@ -32,7 +32,7 @@
             the StateDefinition set as @param=state
         </description>
         <name>transitions</name>
-        <tag-class>org.agatom.springatom.webmvc.flows.tags.PossibleTransitionsTag</tag-class>
+        <tag-class>org.agatom.springatom.web.flows.tags.PossibleTransitionsTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>state</name>
@@ -54,7 +54,7 @@
             Refer to bean WizardEvents that instantiates a fixed set of WizardEvent beans
         </description>
         <name>dynamicTransitions</name>
-        <tag-class>org.agatom.springatom.webmvc.flows.tags.DynamicTransitionsTag</tag-class>
+        <tag-class>org.agatom.springatom.web.flows.tags.DynamicTransitionsTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>state</name>
@@ -76,12 +76,12 @@
 
     <tag>
         <description>
-        Tags resolves all states either being predecessors or successors of the state
+            Tags resolves all states either being predecessors or successors of the state
             given as attribute. Which states will be resolved depends on the value of the
             variable type.
         </description>
         <name>stateNeighbours</name>
-        <tag-class>org.agatom.springatom.webmvc.flows.tags.TransitionResolverTag</tag-class>
+        <tag-class>org.agatom.springatom.web.flows.tags.TransitionResolverTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <description>
@@ -117,7 +117,7 @@
             JSON object
         </description>
         <name>states</name>
-        <tag-class>org.agatom.springatom.webmvc.flows.tags.AllStatesOfWebflow</tag-class>
+        <tag-class>org.agatom.springatom.web.flows.tags.AllStatesOfWebflow</tag-class>
         <body-content>JSP</body-content>
         <attribute>
             <description>The FlowDefinition to get states from</description>
@@ -136,7 +136,7 @@
             Otherwise when @param=flow is set the @param=stateId becomes required
         </description>
         <name>stateId</name>
-        <tag-class>org.agatom.springatom.webmvc.flows.tags.StateIdTag</tag-class>
+        <tag-class>org.agatom.springatom.web.flows.tags.StateIdTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <description>

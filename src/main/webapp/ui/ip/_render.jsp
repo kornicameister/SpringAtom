@@ -21,13 +21,13 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<jsp:useBean id="ipBuilder" scope="request" type="org.agatom.springatom.ip.component.builder.EntityInfoPageComponentBuilder"/>
+<jsp:useBean id="ipBuilder" scope="request" type="org.agatom.springatom.web.infopages.component.builder.EntityInfoPageComponentBuilder"/>
 
 <s:eval expression="ipBuilder.definition" var="definition" scope="page"/>
-<jsp:useBean id="definition" class="org.agatom.springatom.ip.component.elements.InfoPageComponent" scope="page"/>
+<jsp:useBean id="definition" class="org.agatom.springatom.web.infopages.component.elements.InfoPageComponent" scope="page"/>
 
 <s:eval expression="ipBuilder.data" var="data" scope="page"/>
-<jsp:useBean id="data" type="org.agatom.springatom.ip.data.EntityInfoPageResponse" scope="page"/>
+<jsp:useBean id="data" type="org.agatom.springatom.web.infopages.data.EntityInfoPageResponse" scope="page"/>
 
 <c:forEach items="${definition.content}" var="panel" varStatus="it">
     <ip:renderThumbnail thubmnail="${definition.thumbnail}"/>

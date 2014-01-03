@@ -1,4 +1,4 @@
-<%@ page import="org.agatom.springatom.ip.InfoPageConstants" %>
+<%@ page import="org.agatom.springatom.web.infopages.InfoPageConstants" %>
 <%@ page import="java.util.Map" %>
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
@@ -25,10 +25,10 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<jsp:useBean id="ipTableBuilder" scope="request" type="org.agatom.springatom.component.builders.table.TableComponentBuilder"/>
+<jsp:useBean id="ipTableBuilder" scope="request" type="org.agatom.springatom.web.component.builders.table.TableComponentBuilder"/>
 
 <s:eval expression="ipTableBuilder.definition" var="def" scope="page"/>
-<jsp:useBean id="def" class="org.agatom.springatom.component.elements.table.DandelionTableComponent" scope="page"/>
+<jsp:useBean id="def" class="org.agatom.springatom.web.component.elements.table.DandelionTableComponent" scope="page"/>
 
 <c:set var="extraParamsMethodName" value="_js_${fn:toLowerCase(def.tableId)}" scope="page"/>
 

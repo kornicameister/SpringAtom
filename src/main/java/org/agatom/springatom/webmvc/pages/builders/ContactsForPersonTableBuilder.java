@@ -18,13 +18,13 @@
 package org.agatom.springatom.webmvc.pages.builders;
 
 import com.mysema.query.types.Predicate;
-import org.agatom.springatom.component.builders.annotation.ComponentBuilds;
-import org.agatom.springatom.component.builders.annotation.EntityBased;
-import org.agatom.springatom.component.builders.table.TableComponentBuilder;
-import org.agatom.springatom.component.elements.table.DandelionTableComponent;
 import org.agatom.springatom.server.model.beans.person.QSPersonContact;
 import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.person.SPersonContact;
+import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
+import org.agatom.springatom.web.component.builders.annotation.EntityBased;
+import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
+import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
 import org.apache.log4j.Logger;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
