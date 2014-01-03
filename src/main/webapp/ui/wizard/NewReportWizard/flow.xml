@@ -51,8 +51,8 @@
     </on-start>
 
     <view-state id="entity" view="ui.wizard.NewReportWizard.PickEntity" popup="true">
-    <on-render>
-            <evaluate expression="pickEntityFormAction.setupForm"/>
+        <on-render>
+        <evaluate expression="pickEntityFormAction.setupForm"/>
         </on-render>
         <transition on="next" bind="true" validate="true" to="pickColumns">
             <evaluate expression="pickEntityFormAction.bindAndValidate"/>
@@ -63,8 +63,8 @@
     </view-state>
 
     <view-state id="pickColumns" view="ui.wizard.NewReportWizard.PickColumns" popup="true">
-    <on-render>
-            <evaluate expression="pickColumnsFormAction.setupForm"/>
+        <on-render>
+        <evaluate expression="pickColumnsFormAction.setupForm"/>
         </on-render>
 
         <transition on="next" to="moreEntitiesAndColumns" validate="true" bind="true">
@@ -77,8 +77,8 @@
     </view-state>
 
     <view-state id="moreEntitiesAndColumns" view="ui.wizard.NewReportWizard.MoreEntitiesAndColumns" popup="true">
-    <on-entry>
-            <evaluate expression="reportWizard.report" result="viewScope.report"/>
+        <on-entry>
+        <evaluate expression="reportWizard.report" result="viewScope.report"/>
         </on-entry>
         <transition on="next" to="reportDescription" history="invalidate"/>
         <transition on="previous" to="pickColumns" history="discard">
@@ -87,8 +87,8 @@
     </view-state>
 
     <view-state id="reportDescription" view="ui.wizard.NewReportWizard.ReportDescription" popup="true">
-    <on-entry>
-            <evaluate expression="reportDescriptionFormAction.setupForm"/>
+        <on-entry>
+        <evaluate expression="reportDescriptionFormAction.setupForm"/>
         </on-entry>
         <transition on="next" to="reportOverview" validate="true" bind="true" history="invalidate">
             <evaluate expression="reportDescriptionFormAction.bindAndValidate"/>
@@ -99,16 +99,16 @@
     </view-state>
 
     <view-state id="reportOverview" view="ui.wizard.NewReportWizard.ReportOverview">
-    <transition on="finish" to="finish">
-            <evaluate expression="reportWizard.saveReport(flowRequestContext)"/>
+        <transition on="finish" to="reportReady">
+            <evaluate expression="finishReportAction.saveReport"/>
         </transition>
-        <transition on="finishAndGenerate" to="finish">
-            <evaluate expression="reportWizard.saveAndGenerateReport(flowRequestContext)"/>
+        <transition on="finishAndGenerate" to="reportReady">
+            <evaluate expression="finishReportAction.saveAndGenerateReport"/>
         </transition>
         <transition on="cancel" to="cancel" history="invalidate" bind="false"/>
     </view-state>
 
-    <end-state id="finish"
+    <end-state id="reportReady"
                view="externalRedirect:/dashboard/reports?wizard=#{flowScope.wizardID}&amp;action=#{currentEvent.id}&amp;report=#{reportWizard.report.name}">
         <output name="report" value="reportWizard.report"/>
     </end-state>

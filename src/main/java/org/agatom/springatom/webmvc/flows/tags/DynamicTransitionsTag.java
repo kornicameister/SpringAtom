@@ -28,10 +28,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.util.ClassUtils;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
-import org.springframework.webflow.engine.Flow;
-import org.springframework.webflow.engine.Transition;
-import org.springframework.webflow.engine.TransitionSet;
-import org.springframework.webflow.engine.TransitionableState;
+import org.springframework.webflow.engine.*;
 import org.springframework.webflow.engine.support.DefaultTransitionCriteria;
 import org.springframework.webflow.execution.RequestContextHolder;
 
@@ -76,7 +73,8 @@ public class DynamicTransitionsTag
                     css.add(this.entitle(
                             new WizardDynamicEvent(new WizardEvent().init(criteriaAsString))
                                     .setWizardId(holder.getString("wizardID"))
-                                    .setStateId(this.state.getId()),
+                                    .setStateId(this.state.getId())
+                                    .setFinish(ClassUtils.isAssignable(EndState.class, this.flow.getState(ts.getTargetStateId()).getClass())),
                             messageSource,
                             locale
                     ));

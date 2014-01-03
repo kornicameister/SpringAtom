@@ -18,6 +18,7 @@
 package org.agatom.springatom.webmvc.flows.wizard.rbuilder.form;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
@@ -27,7 +28,6 @@ import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptorColumn;
 import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
-import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.webmvc.flows.wizard.AbstractWizard;
 import org.agatom.springatom.webmvc.flows.wizard.rbuilder.bean.ReportableBean;
@@ -37,11 +37,8 @@ import org.agatom.springatom.webmvc.flows.wizard.rbuilder.exception.ReportBuilde
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.binding.message.MessageBuilder;
-import org.springframework.binding.message.MessageContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Role;
 import org.springframework.context.annotation.Scope;
@@ -51,8 +48,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
-import org.springframework.webflow.action.EventFactorySupport;
-import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.annotation.Nullable;
@@ -85,9 +80,6 @@ public class ReportWizard
     private              EntityDescriptors                            entityDescriptors = null;
     @Autowired
     private              SMessageSource                               messageSource     = null;
-    @Autowired
-    @Qualifier(value = SReportRepository.REPO_NAME)
-    private              SReportRepository                            reportRepository  = null;
 
     @Override
     public void init(final RequestContext context) {
@@ -128,10 +120,6 @@ public class ReportWizard
         return this;
     }
 
-    public Map<ReportableEntity, Set<ReportableColumn>> getEntityToColumns() {
-        return this.entityToColumns;
-    }
-
     public Map<ReportableEntity, Set<ReportableColumn>> getEntityToColumnForReport() {
         final Map<ReportableEntity, Set<ReportableColumn>> picked = Maps.newTreeMap();
         final int size = this.report.getEntities().size();
@@ -162,46 +150,6 @@ public class ReportWizard
         return (ReportableBean) this.cache.get(id);
     }
 
-    public Event saveReport(final RequestContext flowContext) {
-        LOGGER.debug(String.format("/saveReport reportWizard=%s,context=%s", this, flowContext));
-
-        final MessageContext messageContext = flowContext.getMessageContext();
-        final Locale locale = LocaleContextHolder.getLocale();
-        final EventFactorySupport eventFactorySupport = new EventFactorySupport();
-
-        eventFactorySupport.setResultAttributeName("report");
-        eventFactorySupport.setErrorEventId("reportOverview");
-        eventFactorySupport.setSuccessEventId("success");
-
-        try {
-            final SReport report = this.reportRepository.save(this.getReportForSave());
-            if (report != null && !report.isNew()) {
-                LOGGER.info(String.format("Persisted new report => %s", report));
-                messageContext.addMessage(new MessageBuilder()
-                        .info()
-                        .source(this)
-                        .arg(report)
-                        .defaultText(
-                                this.messageSource.getMessage(
-                                        "wizard.NewReportWizard.info.s",
-                                        new Object[]{report.getName()},
-                                        locale
-                                )
-                        )
-                        .build()
-                );
-            }
-            this.report = report;
-            return eventFactorySupport.success(this, report);
-        } catch (Exception persistException) {
-            LOGGER.fatal(persistException);
-            return eventFactorySupport.error(this, new ReportBuilderServiceException(persistException));
-        }
-    }
-
-    public Event saveAndGenerateReport(final RequestContext flowContext) {
-        return this.saveReport(flowContext);
-    }
 
     private <X extends Identifiable<Integer>> void putToCache(final Collection<X> entities) {
         for (final Identifiable<Integer> identifiable : entities) {
@@ -285,4 +233,10 @@ public class ReportWizard
         return this.getEntities().iterator();
     }
 
+    public ReportWizard setSavedReport(final SReport report) {
+        Preconditions.checkNotNull(report);
+        Preconditions.checkArgument(!report.isNew());
+        this.report = report;
+        return this;
+    }
 }

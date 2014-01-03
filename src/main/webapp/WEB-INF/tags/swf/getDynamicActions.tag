@@ -28,5 +28,5 @@
 
 <swf:dynamicTransitions state="${forState}" flow="${flowRequestContext.activeFlow}" var="transitions"/>
 <script type="text/javascript" id="${flowRequestContext.currentState.id}-dynamicAction-applier-script">
-    SA.wizard.applyDynamicActions({container: 'div.x-wizard-actions', actions: JSON.parse('${transitions}')});
+    SA.wizard.applyDynamicActions({formId: '${requestScope.formID}', container: 'div.x-wizard-actions', actions: JSON.parse('${transitions}')});
 </script>

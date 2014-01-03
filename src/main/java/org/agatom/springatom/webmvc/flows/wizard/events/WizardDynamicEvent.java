@@ -36,6 +36,7 @@ public class WizardDynamicEvent
     private       String      stateId;
     private       String      wizardId;
     private       String      labelName;
+    private       boolean     isFinish;
 
     public WizardDynamicEvent(final WizardEvent wizardEvent) {
         this.event = wizardEvent;
@@ -74,6 +75,15 @@ public class WizardDynamicEvent
     public WizardDynamicEvent setLabelName(final String labelName) {
         this.labelName = labelName;
         return this;
+    }
+
+    public WizardDynamicEvent setFinish(final boolean isFinish) {
+        this.isFinish = isFinish;
+        return this;
+    }
+
+    public boolean isFinish() {
+        return isFinish;
     }
 
     @Override
