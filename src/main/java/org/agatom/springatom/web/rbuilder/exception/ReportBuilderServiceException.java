@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,38 +15,28 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizard.support;
+package org.agatom.springatom.web.rbuilder.exception;
 
-import com.google.common.collect.Sets;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-
-import java.io.Serializable;
-import java.util.Set;
+import org.agatom.springatom.server.service.support.exceptions.ServiceException;
+import org.springframework.data.domain.Persistable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Scope(value = BeanDefinition.SCOPE_PROTOTYPE)
-public class WizardRequiresStepsHolder
-        implements Serializable {
-    private Set<String> requiredStepsIds = Sets.newLinkedHashSet();
+public class ReportBuilderServiceException
+        extends ServiceException {
 
-    public Set<String> getRequiredStepsIds() {
-        return requiredStepsIds;
+    public ReportBuilderServiceException(final Throwable cause) {
+        super(cause);
     }
 
-    public boolean add(final String step) {
-        return this.requiredStepsIds.add(step);
+    public ReportBuilderServiceException(final String message) {
+        super(message);
     }
 
-    public boolean remove(final Object step) {
-        return this.requiredStepsIds.remove(step);
-    }
-
-    public boolean has(final String stateId) {
-        return this.requiredStepsIds.contains(stateId);
+    public ReportBuilderServiceException(final Class<? extends Persistable> target, final String message) {
+        super(target, message);
     }
 }

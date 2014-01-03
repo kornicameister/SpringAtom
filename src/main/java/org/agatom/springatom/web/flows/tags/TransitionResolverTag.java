@@ -18,8 +18,8 @@
 package org.agatom.springatom.web.flows.tags;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.web.flows.wizard.events.WizardEvent;
-import org.agatom.springatom.web.flows.wizard.ui.WizardHeaderDescriptor;
+import org.agatom.springatom.web.flows.wizards.events.WizardEvent;
+import org.agatom.springatom.web.flows.wizards.support.WizardHeaderDescriptor;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.web.servlet.tags.RequestContextAwareTag;

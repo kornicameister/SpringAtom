@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizard.rbuilder.form;
+package org.agatom.springatom.web.flows.wizards.wizard.rbuilder;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -28,12 +28,12 @@ import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptorColumn;
 import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
-import org.agatom.springatom.web.flows.wizard.AbstractWizard;
-import org.agatom.springatom.web.flows.wizard.rbuilder.bean.ReportableBean;
-import org.agatom.springatom.web.flows.wizard.rbuilder.bean.ReportableColumn;
-import org.agatom.springatom.web.flows.wizard.rbuilder.bean.ReportableEntity;
-import org.agatom.springatom.web.flows.wizard.rbuilder.exception.ReportBuilderServiceException;
+import org.agatom.springatom.web.flows.wizards.wizard.AbstractWizard;
 import org.agatom.springatom.web.locale.SMessageSource;
+import org.agatom.springatom.web.rbuilder.bean.ReportableBean;
+import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
+import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
+import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;

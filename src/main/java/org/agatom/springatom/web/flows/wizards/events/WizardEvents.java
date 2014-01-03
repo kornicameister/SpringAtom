@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizard.events;
+package org.agatom.springatom.web.flows.wizards.events;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;

@@ -43,7 +43,7 @@
                     <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.entity.pickColumnsForEntity"/>">
                         <c:set var="reportableEntity" scope="page" value="${entry.key}"/>
                         <jsp:useBean id="reportableEntity" scope="page"
-                                     class="org.agatom.springatom.web.flows.wizard.rbuilder.bean.ReportableEntity"/>
+                                     class="org.agatom.springatom.web.rbuilder.bean.ReportableEntity"/>
                         <span>
                             <s:message code="wizard.NewReportWizard.pickColumns.forEntity" arguments="${reportableEntity.label}"/>
                         </span>

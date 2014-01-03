@@ -15,13 +15,13 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizard.rbuilder.form.actions;
+package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
-import org.agatom.springatom.web.flows.wizard.rbuilder.exception.ReportBuilderServiceException;
-import org.agatom.springatom.web.flows.wizard.rbuilder.form.ReportWizard;
+import org.agatom.springatom.web.flows.wizards.wizard.rbuilder.ReportWizard;
 import org.agatom.springatom.web.locale.SMessageSource;
+import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,10 +51,10 @@ import java.util.Locale;
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Component(value = "finishReportAction")
-public class FinishAction
+public class FinishMultiAction
         extends MultiAction {
 
-    private static final Logger LOGGER = Logger.getLogger(FinishAction.class);
+    private static final Logger LOGGER = Logger.getLogger(FinishMultiAction.class);
     @Autowired
     @Qualifier(SReportRepository.REPO_NAME)
     private SReportRepository reportRepository;

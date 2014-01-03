@@ -17,7 +17,7 @@
 
 <%@ attribute name="stateId" type="java.lang.String" rtexprvalue="true" description="ID of the state" %>
 <%@ attribute name="var" type="java.lang.String" description="target variable in the pageContext" %>
-<%@ tag import="org.agatom.springatom.web.flows.wizard.support.WizardRequiresStepsHolder" %>
+<%@ tag import="org.agatom.springatom.web.flows.wizards.support.WizardRequiresStepsHolder" %>
 <%@ tag import="org.springframework.webflow.execution.RequestContextHolder" %>
 <%
     final WizardRequiresStepsHolder requiredSteps = RequestContextHolder.getRequestContext()

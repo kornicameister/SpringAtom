@@ -15,17 +15,17 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizard.events;
+package org.agatom.springatom.web.flows.wizards.events;
 
 import org.agatom.springatom.core.util.Localized;
 import org.agatom.springatom.web.beans.WebBean;
 
 /**
- * {@code WizardDynamicEvent} is a decorator over regular {@link org.agatom.springatom.web.flows.wizard.events.WizardEvent}
+ * {@code WizardDynamicEvent} is a decorator over regular {@link org.agatom.springatom.web.flows.wizards.events.WizardEvent}
  *
  * @author kornicameister
  * @version 0.0.1
- * @see org.agatom.springatom.web.flows.wizard.events.WizardEvent
+ * @see org.agatom.springatom.web.flows.wizards.events.WizardEvent
  * @since 0.0.1
  */
 public class WizardDynamicEvent

@@ -15,70 +15,36 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizard.ui;
+package org.agatom.springatom.web.flows.wizards.events;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
-import org.agatom.springatom.web.beans.WebBean;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
-import java.util.List;
+import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class WizardHeaderDescriptor
-        implements WebBean {
-    private static final String BEAN_ID = "wiz_header_descriptor";
-    private final String       state;
-    private       List<String> successors;
-    private       List<String> predecessors;
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public final class WizardEvent
+        implements Serializable {
+    private String name;
+    private String eventName;
 
-    public WizardHeaderDescriptor(final String state) {
-        this.state = state;
-        this.successors = Lists.newLinkedList();
-        this.predecessors = Lists.newLinkedList();
+    public String getName() {
+        return name;
     }
 
-    public String getState() {
-        return state;
-    }
-
-    public List<String> getSuccessors() {
-        return successors;
-    }
-
-    public WizardHeaderDescriptor setSuccessors(final List<String> successors) {
-        this.successors = successors;
-        return this;
-    }
-
-    public List<String> getPredecessors() {
-        return predecessors;
-    }
-
-    public WizardHeaderDescriptor setPredecessors(final List<String> predecessors) {
-        this.predecessors = predecessors;
-        return this;
-    }
-
-    public boolean addSuccessor(final String successor) {
-        return successors.add(successor);
-    }
-
-    public boolean addPredecessor(final String successor) {
-        return predecessors.add(successor);
-    }
-
-    @Override
-    public String getBeanId() {
-        return BEAN_ID;
+    public String getEventName() {
+        return eventName;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(state, successors, predecessors);
+        return Objects.hashCode(name, eventName);
     }
 
     @Override
@@ -90,19 +56,23 @@ public class WizardHeaderDescriptor
             return false;
         }
 
-        WizardHeaderDescriptor that = (WizardHeaderDescriptor) o;
+        WizardEvent that = (WizardEvent) o;
 
-        return Objects.equal(this.state, that.state) &&
-                Objects.equal(this.successors, that.successors) &&
-                Objects.equal(this.predecessors, that.predecessors);
+        return Objects.equal(this.name, that.name) &&
+                Objects.equal(this.eventName, that.eventName);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                      .addValue(state)
-                      .addValue(successors)
-                      .addValue(predecessors)
+                      .addValue(name)
+                      .addValue(eventName)
                       .toString();
+    }
+
+    public WizardEvent init(final String name) {
+        this.name = name;
+        this.eventName = String.format("_eventId_%s", name);
+        return this;
     }
 }

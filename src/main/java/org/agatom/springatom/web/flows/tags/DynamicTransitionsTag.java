@@ -19,9 +19,9 @@ package org.agatom.springatom.web.flows.tags;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import org.agatom.springatom.web.flows.wizard.events.WizardDynamicEvent;
-import org.agatom.springatom.web.flows.wizard.events.WizardEvent;
-import org.agatom.springatom.web.flows.wizard.events.WizardEvents;
+import org.agatom.springatom.web.flows.wizards.events.WizardDynamicEvent;
+import org.agatom.springatom.web.flows.wizards.events.WizardEvent;
+import org.agatom.springatom.web.flows.wizards.events.WizardEvents;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.json.JSONArray;
 import org.springframework.context.i18n.LocaleContextHolder;

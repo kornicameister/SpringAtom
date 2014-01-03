@@ -15,27 +15,35 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizard;
+package org.agatom.springatom.web.flows.wizards.support;
 
-import org.agatom.springatom.web.flows.wizard.events.WizardEvents;
-import org.agatom.springatom.web.flows.wizard.support.WizardRequiresStepsHolder;
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.context.annotation.Bean;
+import com.google.common.collect.Sets;
+
+import java.io.Serializable;
+import java.util.Set;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class WizardConfigurationBeans {
+public class WizardRequiresStepsHolder
+        implements Serializable {
+    private Set<String> requiredStepsIds = Sets.newLinkedHashSet();
 
-    @Bean(name = "WizardEvents", autowire = Autowire.BY_TYPE)
-    public WizardEvents getEvents() {
-        return new WizardEvents();
+    public Set<String> getRequiredStepsIds() {
+        return requiredStepsIds;
     }
 
-    @Bean
-    public WizardRequiresStepsHolder getRequiredStepsHolder() {
-        return new WizardRequiresStepsHolder();
+    public boolean add(final String step) {
+        return this.requiredStepsIds.add(step);
+    }
+
+    public boolean remove(final Object step) {
+        return this.requiredStepsIds.remove(step);
+    }
+
+    public boolean has(final String stateId) {
+        return this.requiredStepsIds.contains(stateId);
     }
 }

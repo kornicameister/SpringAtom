@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizard.rbuilder.bean;
+package org.agatom.springatom.web.rbuilder.bean;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;

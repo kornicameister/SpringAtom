@@ -15,10 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizard.rbuilder.form.actions;
+package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 
 import org.agatom.springatom.server.model.beans.report.SReport;
-import org.agatom.springatom.web.flows.wizard.rbuilder.form.ReportWizard;
+import org.agatom.springatom.web.flows.wizards.wizard.rbuilder.ReportWizard;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

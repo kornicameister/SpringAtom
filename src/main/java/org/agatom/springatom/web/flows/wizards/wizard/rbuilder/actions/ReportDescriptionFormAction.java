@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizard.rbuilder.form.actions;
+package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 
 import com.google.common.base.Preconditions;
 import org.agatom.springatom.server.model.beans.report.SReport;

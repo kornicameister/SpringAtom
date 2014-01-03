@@ -79,8 +79,4 @@
         </webflow:flow-execution-listeners>
     </webflow:flow-executor>
 
-    <bean id="wizardConfiguration"
-          name="WizardConfiguration"
-          class="org.agatom.springatom.web.flows.wizard.WizardConfigurationBeans"/>
-
 </beans>

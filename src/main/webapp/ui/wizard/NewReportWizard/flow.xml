@@ -28,7 +28,7 @@
     <on-start>
         <evaluate expression="'NewReportWizard'" result="flowScope.wizardID"/>
         <evaluate expression="'NewReportWizardForm'" result="flowScope.formID"/>
-        <evaluate expression="WizardConfiguration.requiredStepsHolder" result="flowScope.requiredSteps"/>
+        <evaluate expression="new org.agatom.springatom.web.flows.wizards.support.WizardRequiresStepsHolder()" result="flowScope.requiredSteps"/>
 
         <!--init required steps-->
         <evaluate expression="flowScope.requiredSteps.add('entity')"/>
@@ -52,7 +52,7 @@
 
     <view-state id="entity" view="ui.wizard.NewReportWizard.PickEntity" popup="true">
         <on-render>
-        <evaluate expression="pickEntityFormAction.setupForm"/>
+            <evaluate expression="pickEntityFormAction.setupForm"/>
         </on-render>
         <transition on="next" bind="true" validate="true" to="pickColumns">
             <evaluate expression="pickEntityFormAction.bindAndValidate"/>
@@ -64,7 +64,7 @@
 
     <view-state id="pickColumns" view="ui.wizard.NewReportWizard.PickColumns" popup="true">
         <on-render>
-        <evaluate expression="pickColumnsFormAction.setupForm"/>
+            <evaluate expression="pickColumnsFormAction.setupForm"/>
         </on-render>
 
         <transition on="next" to="moreEntitiesAndColumns" validate="true" bind="true">
@@ -78,7 +78,7 @@
 
     <view-state id="moreEntitiesAndColumns" view="ui.wizard.NewReportWizard.MoreEntitiesAndColumns" popup="true">
         <on-entry>
-        <evaluate expression="reportWizard.report" result="viewScope.report"/>
+            <evaluate expression="reportWizard.report" result="viewScope.report"/>
         </on-entry>
         <transition on="next" to="reportDescription" history="invalidate"/>
         <transition on="previous" to="pickColumns" history="discard">
@@ -88,7 +88,7 @@
 
     <view-state id="reportDescription" view="ui.wizard.NewReportWizard.ReportDescription" popup="true">
         <on-entry>
-        <evaluate expression="reportDescriptionFormAction.setupForm"/>
+            <evaluate expression="reportDescriptionFormAction.setupForm"/>
         </on-entry>
         <transition on="next" to="reportOverview" validate="true" bind="true" history="invalidate">
             <evaluate expression="reportDescriptionFormAction.bindAndValidate"/>

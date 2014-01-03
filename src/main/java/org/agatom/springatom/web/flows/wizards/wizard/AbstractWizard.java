@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,46 +15,43 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizard.rbuilder.bean;
+package org.agatom.springatom.web.flows.wizards.wizard;
 
-import org.agatom.springatom.core.util.LocalizationAware;
-import org.springframework.hateoas.Identifiable;
-
-import java.io.Serializable;
+import com.google.common.base.Objects;
+import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.web.beans.WebBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.webflow.execution.RequestContext;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public abstract class ReportableBean
-        implements Serializable,
-                   Identifiable<Integer>,
-                   LocalizationAware {
-    private static int GEN_ID_SEED = 0;
-    protected       String  label;
-    protected final Integer id;
+abstract public class AbstractWizard
+        implements WebBean,
+                   InitializingBean {
+    private static final String DEFAULT_TITLE = "NewWizard";
+    protected String title;
+    protected SUser  createdBy;
 
-    protected ReportableBean() {
-        this.id = ReportableBean.GEN_ID_SEED++;
+    public String getTitle() {
+        return title;
+    }
+
+    public SUser getCreatedBy() {
+        return createdBy;
+    }
+
+    public void init(final RequestContext context) {
+        this.title = context.getRequestParameters().get("title", AbstractWizard.DEFAULT_TITLE);
     }
 
     @Override
-    public Integer getId() {
-        return id;
-    }
-
-    @Override
-    public void setValueForMessageKey(final String msg) {
-        this.label = msg;
-    }
-
-    public ReportableBean setLabel(final String label) {
-        this.label = label;
-        return this;
-    }
-
-    public String getLabel() {
-        return label;
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(title)
+                      .addValue(createdBy)
+                      .toString();
     }
 }
