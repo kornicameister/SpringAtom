@@ -73,6 +73,9 @@
             <c:if test="${fn:contains(col.property, 'infopage')}">
                 <c:set var="cssClass" value="x-table-infoPageColumn"/>
             </c:if>
+            <c:if test="${fn:contains(col.property, 'action')}">
+                <c:set var="cssClass" value="x-table-actionColumn"/>
+            </c:if>
             <dt:column title="${col.title}"
                        property="${col.property}"
                        visible="${col.visible}"

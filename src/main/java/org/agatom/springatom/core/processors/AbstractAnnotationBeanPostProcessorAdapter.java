@@ -22,6 +22,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
@@ -40,10 +41,22 @@ import java.util.Set;
 // TODO implement AnnotationBeanUtils !!!!
 public abstract class AbstractAnnotationBeanPostProcessorAdapter
         extends InstantiationAwareBeanPostProcessorAdapter
-        implements AnnotationBeanPostProcessor {
+        implements AnnotationBeanPostProcessor,
+                   InitializingBean {
 
-    private static final Logger LOGGER = Logger.getLogger(AbstractAnnotationBeanPostProcessorAdapter.class);
+    protected Logger                          logger;
     protected ConfigurableListableBeanFactory contextFactory;
+
+    @Override
+    public final void afterPropertiesSet() throws Exception {
+        this.logger = this.getLogger();
+        this.initProcessor();
+    }
+
+    protected void initProcessor() {
+    }
+
+    protected abstract Logger getLogger();
 
     protected abstract boolean isProcessable(Object bean);
 
@@ -56,9 +69,9 @@ public abstract class AbstractAnnotationBeanPostProcessorAdapter
     public final PropertyValues postProcessPropertyValues(PropertyValues pvs, final PropertyDescriptor[] pds, final Object bean, final String beanName) throws
             BeansException {
         if (this.isProcessable(bean)) {
-            LOGGER.debug(String.format("/postProcessPropertyValues for bean => %s", beanName));
+            logger.debug(String.format("/postProcessPropertyValues for bean => %s", beanName));
             pvs = this.postProcessOverAnnotation(pvs, pds, beanName);
-            LOGGER.debug(String.format("/postProcessPropertyValues for bean finished => %s", beanName));
+            logger.debug(String.format("/postProcessPropertyValues for bean finished => %s", beanName));
         }
         return pvs;
     }
@@ -78,7 +91,7 @@ public abstract class AbstractAnnotationBeanPostProcessorAdapter
 
     @Override
     public Object resolveValueFromAnnotation(final String pdName, final String beanName) {
-        LOGGER.trace(String.format("/resolveValueFromAnnotation \n\tproperty=>%s\n\tbean=>%s", pdName, beanName));
+        logger.trace(String.format("/resolveValueFromAnnotation \n\tproperty=>%s\n\tbean=>%s", pdName, beanName));
 
         final BeanDefinition beanDefinition = this.contextFactory.getBeanDefinition(beanName);
         AnnotationMetadata metadata = null;

@@ -33,8 +33,8 @@ import org.agatom.springatom.web.component.builders.exception.ComponentException
 import org.agatom.springatom.web.component.builders.exception.ComponentPathEvaluationException;
 import org.agatom.springatom.web.component.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.data.ComponentDataResponse;
-import org.agatom.springatom.web.component.elements.value.BuilderLink;
-import org.agatom.springatom.web.component.elements.value.DelegatedLink;
+import org.agatom.springatom.web.component.elements.link.BuilderLink;
+import org.agatom.springatom.web.component.elements.link.DelegatedLink;
 import org.agatom.springatom.web.component.meta.LayoutType;
 import org.agatom.springatom.web.infopages.SEntityInfoPage;
 import org.agatom.springatom.web.infopages.component.elements.InfoPageComponent;

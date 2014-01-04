@@ -22,6 +22,7 @@ import com.github.dandelion.datatables.core.ajax.DataSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mysema.query.types.Predicate;
+import com.mysema.query.types.path.EntityPathBase;
 import org.agatom.springatom.core.invoke.InvokeUtils;
 import org.agatom.springatom.server.repository.SBasicRepository;
 import org.agatom.springatom.web.component.ComponentConstants;
@@ -36,6 +37,7 @@ import org.agatom.springatom.web.component.elements.table.TableComponent;
 import org.agatom.springatom.web.component.helper.TableComponentHelper;
 import org.agatom.springatom.web.component.request.beans.ComponentTableRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Persistable;
@@ -60,6 +62,8 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
 
     @Autowired
     protected TableComponentHelper              helper;
+    @Autowired
+    protected ApplicationContext                context;
     protected Class<Y>                          entity;
     protected SBasicRepository<Y, Serializable> repository;
 
@@ -81,13 +85,10 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
             logger.debug(String.format("/buildData -> %s=%s", ComponentConstants.REQUEST_BEAN, dc));
 
             final Predicate predicate = this.getPredicate(dc);
-            final long countInContext = this.repository.count(predicate);
+            final long countInContext = predicate != null ? this.repository.count(predicate) : this.repository.count();
             final List<Map<String, Object>> data = Lists.newArrayList();
             if (countInContext != 0) {
-                final Page<Y> all = this.repository.findAll(
-                        predicate,
-                        this.getPageable(countInContext, dc.getPageSize(), dc.getSortingColumnDefs())
-                );
+                final Page<Y> all = this.getAllEntities(dc, predicate, countInContext);
 
                 for (final Y object : all) {
                     this.logger.trace(String.format("processing object %s=%s", ClassUtils.getShortName(object.getClass()), object.getId()));
@@ -127,6 +128,15 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
         }
     }
 
+    private Page<Y> getAllEntities(final ComponentTableRequest dc, final Predicate predicate, final long countInContext) {
+        final PageRequest pageable = this.getPageable(countInContext, dc.getPageSize(), dc.getSortingColumnDefs());
+        if (predicate != null) {
+            return this.repository.findAll(predicate, pageable);
+        } else {
+            return this.repository.findAll(pageable);
+        }
+    }
+
     /**
      * Method handles converting found {@code value} for {@code path} if necessary.
      * If value was found using path but there is a requirement to retrieve another value for it,
@@ -158,6 +168,28 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
      *         if predicate was impossible to built
      */
     private Predicate getPredicate(final ComponentTableRequest dc) throws ComponentPathEvaluationException {
+        if (!this.isInContext(dc)) {
+            this.logger.debug("No context detected...looking for matching QueryDSL");
+            final String shortName = ClassUtils.getShortName(this.entity);
+            final ClassLoader classLoader = this.getClass().getClassLoader();
+            final String qClassName = String.format("%s.%s", ClassUtils.getPackageName(this.entity), String.format("Q%s", shortName));
+            try {
+                if (ClassUtils.isPresent(qClassName, classLoader)) {
+                    final Class<?> qClass = ClassUtils.resolveClassName(qClassName, classLoader);
+                    if (ClassUtils.isAssignable(EntityPathBase.class, qClass)) {
+                        // safe to return null
+                        this.logger.debug(String.format("No context detect and found matching QueryDSL=>%s", qClassName));
+                        return null;
+                    }
+                }
+                throw new IllegalStateException(String.format(
+                        "%s does not correspond to any QueryDSL class => %s", shortName, qClassName
+                ));
+            } catch (Exception e) {
+                throw new ComponentPathEvaluationException(String
+                        .format("failed to evaluate %s [no context]", ClassUtils.getShortName(Predicate.class)), e);
+            }
+        }
         final Predicate predicate = this.getPredicate(Long.valueOf(dc.getContextKey()), dc.getContextClass());
         if (predicate == null) {
             throw new ComponentPathEvaluationException(String
@@ -166,6 +198,18 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
         }
         logger.debug(String.format("processing with predicate %s", predicate));
         return predicate;
+    }
+
+    /**
+     * Method checks if table builder was called in some specific context
+     *
+     * @param dc
+     *         current request data holder
+     *
+     * @return true if in context, false otherwise
+     */
+    private boolean isInContext(final ComponentTableRequest dc) {
+        return (dc.getContextKey() != null && !dc.getContextKey().isEmpty()) && (dc.getContextClass() != null);
     }
 
     /**

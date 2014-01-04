@@ -1,4 +1,4 @@
-<%@ tag import="org.agatom.springatom.web.component.elements.value.DelegatedLink" %>
+<%@ tag import="org.agatom.springatom.web.component.elements.link.DelegatedLink" %>
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~

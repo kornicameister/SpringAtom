@@ -52,11 +52,15 @@ public class DefaultTableComponentHelper
     @Override
     public TableColumnComponent newTableColumn(final TableComponent cmp, final String path, final String rbKey) {
         final TableColumnComponent column = new TableColumnComponent();
+        this.initColumn(cmp, path, rbKey, column);
+        return column;
+    }
+
+    private void initColumn(final TableComponent cmp, final String path, final String rbKey, final TableColumnComponent column) {
         column.setProperty(path);
         column.setTitleKey(rbKey);
         column.setTitle(this.entitleFromMessageKey(column));
         cmp.addContent(column);
-        return column;
     }
 
 }

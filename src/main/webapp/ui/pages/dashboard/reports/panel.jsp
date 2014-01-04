@@ -23,6 +23,10 @@
         <header>
             <s:message code="reports.savedReports"/>
         </header>
+        <div id="reportsBuilder-savedReport"></div>
+        <script type="text/javascript" defer="defer" async="async">
+            $('#reportsBuilder-savedReport').loadBuilderView({url: '/app/tableBuilder/reportsSlimTableBuilder'});
+        </script>
     </div>
     <div>
         <header>

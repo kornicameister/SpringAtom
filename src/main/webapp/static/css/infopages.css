@@ -99,3 +99,8 @@ a.x-infopage-link {
     width      : 10px;
     text-align : center;
 }
+
+.x-table-actionColumn {
+    width      : 10px;
+    text-align : center;
+}

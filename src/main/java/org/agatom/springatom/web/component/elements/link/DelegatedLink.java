@@ -15,83 +15,45 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.elements.value;
+package org.agatom.springatom.web.component.elements.link;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.web.component.ComponentValue;
 import org.springframework.hateoas.Link;
-
-import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class BuilderLink
+public class DelegatedLink
         implements ComponentValue {
-    private final Serializable contextKey;
-    private final Class<?>     contextClass;
-    private final String       builderId;
-    private final Link         link;
+    private final Link   link;
+    private       String label;
 
-    public BuilderLink(final String builderId,
-                       final Class<?> contextClass,
-                       final Serializable contextKey,
-                       final Link link) {
-        this.builderId = builderId;
-        this.contextClass = contextClass;
-        this.contextKey = contextKey;
+    public DelegatedLink(final Link link) {
         this.link = link;
     }
 
-    public Serializable getContextKey() {
-        return contextKey;
+    public String getLabel() {
+        return label;
     }
 
-    public Class<?> getContextClass() {
-        return contextClass;
+    public DelegatedLink withLabel(final String label) {
+        this.label = label;
+        return this;
     }
 
-    public String getContextClassName() {
-        return contextClass.getName();
+    public String getHref() {
+        return link.getHref();
     }
 
-    public String getBuilderId() {
-        return builderId;
+    public String getRel() {
+        return link.getRel();
     }
 
-    public Link getLink() {
-        return this.link;
+    public DelegatedLink withRel(final String rel) {
+        link.withRel(rel);
+        return this;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(builderId, contextClass, contextKey);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        BuilderLink that = (BuilderLink) o;
-
-        return Objects.equal(this.builderId, that.builderId) &&
-                Objects.equal(this.contextClass, that.contextClass) &&
-                Objects.equal(this.contextKey, that.contextKey);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(builderId)
-                      .addValue(contextClass)
-                      .addValue(contextKey)
-                      .toString();
-    }
 }

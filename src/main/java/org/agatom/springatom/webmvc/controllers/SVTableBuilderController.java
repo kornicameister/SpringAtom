@@ -54,7 +54,7 @@ public class SVTableBuilderController {
 
     @RequestMapping(
             value = "/{id}",
-            method = RequestMethod.GET,
+            method = {RequestMethod.GET, RequestMethod.POST},
             produces = {MediaType.TEXT_HTML_VALUE}
     )
     public ModelAndView getTableBuilder(@PathVariable("id") final String builderId) {
@@ -63,7 +63,7 @@ public class SVTableBuilderController {
         if (builder != null && builder instanceof TableComponentBuilder) {
             LOGGER.trace(String.format("Found builder %s:%s:%s", builderId, builder.getId(), builder.getBuilds()));
         }
-        return new ModelAndView(VIEW_NAME, new ModelMap("builder", builder));
+        return new ModelAndView(VIEW_NAME, new ModelMap(InfoPageConstants.TABLE_COMPONENT_BUILDER, builder));
     }
 
     @RequestMapping(

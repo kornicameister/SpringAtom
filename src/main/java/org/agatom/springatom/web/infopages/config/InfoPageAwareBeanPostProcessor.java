@@ -19,6 +19,7 @@ package org.agatom.springatom.web.infopages.config;
 
 import org.agatom.springatom.core.processors.AbstractAnnotationBeanPostProcessorAdapter;
 import org.agatom.springatom.web.infopages.SInfoPage;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
@@ -34,6 +35,11 @@ class InfoPageAwareBeanPostProcessor
 
     public void setBasePackage(final String basePackage) {
         this.basePackage = basePackage;
+    }
+
+    @Override
+    protected Logger getLogger() {
+        return Logger.getLogger(InfoPageAwareBeanPostProcessor.class);
     }
 
     @Override

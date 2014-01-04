@@ -76,7 +76,9 @@ public class ComponentRequestMethodArgumentResolver
         final ComponentTableRequest request = new ComponentTableRequest();
         request.setCriterias(DatatablesCriterias.getFromRequest(webRequest));
         request.setBuilderId(webRequest.getParameter(ComponentConstants.BUILDER_ID));
-        request.setContextClass((Class<?>) Reflect.on(webRequest.getParameter(ComponentConstants.CONTEXT_CLASS)).get());
+        if (webRequest.getParameter(ComponentConstants.CONTEXT_CLASS) != null) {
+            request.setContextClass((Class<?>) Reflect.on(webRequest.getParameter(ComponentConstants.CONTEXT_CLASS)).get());
+        }
         request.setContextKey(webRequest.getParameter(ComponentConstants.CONTEXT_KEY));
         return request;
     }

@@ -57,6 +57,11 @@ class ComponentBuilderPostProcessor
     }
 
     @Override
+    protected Logger getLogger() {
+        return LOGGER;
+    }
+
+    @Override
     protected boolean isProcessable(final Object bean) {
         return bean instanceof ComponentBuilder;
     }

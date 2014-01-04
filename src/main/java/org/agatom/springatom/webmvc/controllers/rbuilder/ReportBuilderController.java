@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,38 +15,27 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.builders.annotation;
+package org.agatom.springatom.webmvc.controllers.rbuilder;
 
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import java.lang.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * {@code ComponentBuilder} is an annotation that marks annotated bean as capable
- * of producing definition of a component.
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Inherited
-@Documented
-@Target(value = {ElementType.TYPE})
-@Retention(value = RetentionPolicy.RUNTIME)
-public @interface ComponentBuilds {
-    String id();
+@Controller(value = ReportBuilderController.CONTROLLER_NAME)
+@RequestMapping(value = "/reportBuilder")
+public class ReportBuilderController {
+    public static final String CONTROLLER_NAME = "reportBuilderController";
 
-    Class<?> builds();
-
-    Produces produces() default Produces.PAGE_COMPONENT;
-
-    public static enum Produces {
-        PAGE_COMPONENT,
-        TABLE_COMPONENT
+    @ResponseBody
+    @RequestMapping(value = "/generate/{reportId}")
+    public String generateReport(@PathVariable("reportId") final Long reportId) {
+        return "generated";
     }
 
 }
