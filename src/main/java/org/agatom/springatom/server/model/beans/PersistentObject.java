@@ -24,8 +24,11 @@ import com.google.common.reflect.TypeToken;
 import org.agatom.springatom.server.model.types.PersistentBean;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.springframework.util.ClassUtils;
 
+import javax.annotation.Nonnull;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.MappedSuperclass;
@@ -78,15 +81,26 @@ abstract public class PersistentObject<PK extends Serializable>
                     .isAssignableFrom(Long.class);
         }
     };
-    private static final long serialVersionUID = -6950914229850313642L;
+    private static final long                     serialVersionUID = -6950914229850313642L;
 
     public PersistentObject() {
         super();
     }
 
     @Override
-    public int compareTo(
-            final PersistentObject<PK> pObject) {
+    @Transient
+    public String getMessageKey() {
+        return ClassUtils.getShortName(this.getClass()).toLowerCase(LocaleContextHolder.getLocale());
+    }
+
+    @Override
+    @Transient
+    public String asString() {
+        return String.format("%s=%s", ClassUtils.getShortName(this.getClass()), this.getId());
+    }
+
+    @Override
+    public int compareTo(@Nonnull final PersistentObject<PK> pObject) {
         return ComparisonChain
                 .start()
                 .compare(this.getId(), pObject.getId(), ID_COMPARATOR)

@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,59 +15,33 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.beans;
+package org.agatom.springatom.webmvc.converters;
 
-import org.agatom.springatom.server.model.beans.user.SUser;
-import org.agatom.springatom.server.model.types.PersistentVersionedBean;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.data.jpa.domain.AbstractAuditable;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import com.google.common.base.Preconditions;
+import org.agatom.springatom.core.util.StringAdaptable;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.convert.converter.ConditionalConverter;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.ClassUtils;
-
-import javax.annotation.Nonnull;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-import javax.validation.constraints.Min;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@MappedSuperclass
-@EntityListeners(value = AuditingEntityListener.class)
-abstract public class PersistentVersionedObject
-        extends AbstractAuditable<SUser, Long>
-        implements PersistentVersionedBean {
-    private static final long serialVersionUID = -3113664043161581649L;
-    @Version
-    private Long version;
-
-    public PersistentVersionedObject() {
-        super();
+public class StringAdaptableConverter
+        implements Converter<StringAdaptable, String>,
+                   ConditionalConverter {
+    @Override
+    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+        return ClassUtils.isAssignable(String.class, targetType.getType()) && (ClassUtils
+                .isAssignable(StringAdaptable.class, ClassUtils.getUserClass(sourceType
+                        .getType())));
     }
 
     @Override
-    @Transient
-    public String getMessageKey() {
-        return ClassUtils.getShortName(this.getClass()).toLowerCase(LocaleContextHolder.getLocale());
-    }
-
-    @Override
-    @Transient
-    public String asString() {
-        return String.format("%s=%s[%d]", ClassUtils.getShortName(this.getClass()), this.getId(), this.version);
-    }
-
-    @Override
-    public Long getVersion() {
-        return this.version;
-    }
-
-    @Override
-    public void setVersion(@Nonnull @Min(value = 0) final Long version) {
-        this.version = version;
+    public String convert(final StringAdaptable source) {
+        Preconditions.checkNotNull(source, "Target can not be null");
+        return source.asString();
     }
 }

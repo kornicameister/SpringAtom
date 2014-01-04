@@ -17,6 +17,9 @@
 
 package org.agatom.springatom.server.model.types;
 
+import javax.annotation.Nonnull;
+import javax.validation.constraints.Min;
+
 /**
  * {@code PersistentVersionedBean} is common interface for all beans in <b>SpringAtom</b>.
  * with focus on revisions.
@@ -30,4 +33,5 @@ public interface PersistentVersionedBean
 
     Long getVersion();
 
+    void setVersion(@Nonnull @Min(value = 0) final Long version);
 }

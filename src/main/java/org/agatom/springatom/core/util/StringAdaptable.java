@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,21 +15,13 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types;
-
-import org.agatom.springatom.core.util.Localized;
-import org.agatom.springatom.core.util.StringAdaptable;
+package org.agatom.springatom.core.util;
 
 /**
- * {@code PersistentBean} is common interface for all beans in <b>SpringAtom</b>.
- * The main of goal for it is to provide general functionality applicable for the beans.
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface PersistentBean
-        extends StringAdaptable,
-                Localized {
-
+public interface StringAdaptable {
+    String asString();
 }
