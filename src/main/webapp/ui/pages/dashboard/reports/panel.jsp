@@ -24,8 +24,14 @@
             <s:message code="reports.savedReports"/>
         </header>
         <div id="reportsBuilder-savedReport"></div>
+        <s:eval expression="@ComponentBuilders.componentBuilders.getBuilderId(
+                    T(org.agatom.springatom.server.model.beans.report.SReport),
+                    T(org.agatom.springatom.web.component.builders.annotation.ComponentBuilds$Produces).TABLE_COMPONENT
+                )"
+                var="builderId"
+                scope="page"/>
         <script type="text/javascript" defer="defer" async="async">
-            $('#reportsBuilder-savedReport').loadBuilderView({url: '/app/tableBuilder/reportsSlimTableBuilder'});
+            $('#reportsBuilder-savedReport').loadBuilderView({url: '/app/tableBuilder/${builderId}'});
         </script>
     </div>
     <div>

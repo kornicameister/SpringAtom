@@ -88,3 +88,8 @@
 
     </dt:table>
 </s:escapeBody>
+<script type="text/javascript">
+    $(function () {
+        $('#' + '${def.tableId}').tableActions();
+    })
+</script>

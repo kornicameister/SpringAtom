@@ -21,8 +21,9 @@
         SA.infopage = {};
     }
 
-    var infoPageHrefTemplate = '<a href="{href}" class="x-infopage-link"><i class="fa fa-info-circle fa-color-black"></i></a>'
-    var infoPageHrefTemplateWithName = '<a href="{href}" class="x-infopage-link"><i class="fa fa-info-circle fa-color-black">{name}</i></a>'
+    var infoPageHrefTemplate = '<a href="{href}" class="x-infopage-link"><i class="fa fa-info-circle fa-color-black"></i></a>';
+    var actionLinkTemplate = '<button id="{id}" data-href="{href}" data-method="{method}" class="x-action-link"><i class="fa fa-lg fa-magic fa-color-black"></i></button>';
+    var infoPageHrefTemplateWithName = '<a href="{href}" class="x-infopage-link"><i class="fa fa-info-circle fa-color-black">{name}</i></a>';
 
     function loadContent(dataUrl, callback) {
         return $.ajax({
@@ -144,11 +145,47 @@
             return '?';
         }
     };
+    var _actions = {};
+
+    function getAction(href) {
+        return _actions[href];
+    }
+
+    window.renderTableAction = function (data) {
+        if (jQuery.isPlainObject(data)) {
+            return actionLinkTemplate
+                .replace('{id}', data['id'])
+                .replace('{method}', data['type'])
+                .replace('{href}', data['url']);
+        }
+        return '';
+    };
     window.renderValue = function (data) {
         return data;
     };
     window.renderInfoPageLinkWithName = function (data, name) {
         return infoPageHrefTemplateWithName.replace('{href}', data).replace('{name}', name);
+    };
+
+    $.fn.tableActions = function () {
+        $(this).click(function (event) {
+            var target = $(event.target).parent();
+            if (target.hasClass('x-action-link')) {
+                event.stopPropagation();
+                $.ajax({
+                    url    : target.attr('data-href'),
+                    method : target.attr('data-method'),
+                    success: function (data) {
+                        console.log('Success ' + JSON.stringify(data));
+                    },
+                    failure: function (data) {
+                        console.log('Failure ' + JSON.stringify(data));
+                    }
+                });
+                return false;
+            }
+            return true;
+        });
     };
 
     // export

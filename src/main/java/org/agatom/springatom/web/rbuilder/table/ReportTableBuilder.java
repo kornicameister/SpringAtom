@@ -1,0 +1,104 @@
+/**************************************************************************************************
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
+ *                                                                                                *
+ * [SpringAtom] is free software: you can redistribute it and/or modify                           *
+ * it under the terms of the GNU General Public License as published by                           *
+ * the Free Software Foundation, either version 3 of the License, or                              *
+ * (at your option) any later version.                                                            *
+ *                                                                                                *
+ * [SpringAtom] is distributed in the hope that it will be useful,                                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
+ * GNU General Public License for more details.                                                   *
+ *                                                                                                *
+ * You should have received a copy of the GNU General Public License                              *
+ * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
+ **************************************************************************************************/
+
+package org.agatom.springatom.web.rbuilder.table;
+
+import com.mysema.query.types.Predicate;
+import org.agatom.springatom.server.model.beans.report.QSReport;
+import org.agatom.springatom.server.model.beans.report.SReport;
+import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
+import org.agatom.springatom.web.action.JQueryAjaxCallDescriptor;
+import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
+import org.agatom.springatom.web.component.builders.annotation.EntityBased;
+import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
+import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
+import org.apache.log4j.Logger;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+/**
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+@EntityBased(entity = SReport.class)
+@ComponentBuilds(
+        id = ReportTableBuilder.BUILDER_ID,
+        builds = SReport.class,
+        produces = ComponentBuilds.Produces.TABLE_COMPONENT
+)
+public class ReportTableBuilder
+        extends TableComponentBuilder<DandelionTableComponent, SReport> {
+
+    public static final  String BUILDER_ID = "reportTableBuilder";
+    private static final String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SReport.ENTITY_NAME));
+    private static final Logger LOGGER     = Logger.getLogger(ReportTableBuilder.class);
+
+    @Override
+    protected DandelionTableComponent buildDefinition() {
+        final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
+        this.helper.newTableColumn(component, "id", "persistentobject.id");
+        this.helper.newTableColumn(component, "name", "sreport.name");
+        this.helper.newTableColumn(component, "description", "sreport.description").setSortable(false);
+        this.helper.newTableColumn(component, "entities-size", "sreport.entities.count").setSortable(false).setFilterable(false);
+        this.helper.newTableColumn(component, "generate-action", "reports.actions.generate")
+                   .setRenderFunctionName("renderTableAction")
+                   .setSortable(false)
+                   .setFilterable(false);
+        this.helper.newTableColumn(component, "delete-action", "reports.actions.delete")
+                   .setRenderFunctionName("renderTableAction")
+                   .setSortable(false)
+                   .setFilterable(false);
+        return component;
+    }
+
+    @Override
+    protected Object handleDynamicColumn(final SReport object, final String path) {
+        switch (path) {
+            case "entities-size": {
+                return object.getEntities().size();
+            }
+            case "generate-action": {
+                return new JQueryAjaxCallDescriptor()
+                        .setUrl(String.format("/app/reportBuilder/generate/%d", object.getId()))
+                        .setType(RequestMethod.GET)
+                        .setCache(true);
+            }
+            case "delete-action": {
+                return new JQueryAjaxCallDescriptor()
+                        .setUrl(String.format("/rest/%s/%d", SReportRepository.REST_REPO_PATH, object.getId()))
+                        .setType(RequestMethod.DELETE)
+                        .setCache(false);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    protected Logger getLogger() {
+        return LOGGER;
+    }
+
+    @Override
+    protected Predicate getPredicate(final Long reportId, final Class<?> contextClass) {
+        if (!ClassUtils.isAssignable(SReport.class, contextClass)) {
+            return null;
+        }
+        return QSReport.sReport.id.eq(reportId);
+    }
+}
