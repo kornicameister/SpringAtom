@@ -94,6 +94,7 @@
                 <bean class="org.agatom.springatom.webmvc.converters.SSecurityAuthorityEnumConverted"/>
                 <bean class="org.agatom.springatom.webmvc.converters.StringToUnixTimestampConverter"/>
                 <bean class="org.agatom.springatom.webmvc.converters.IntervalToStringConverter"/>
+                <bean class="org.agatom.springatom.webmvc.converters.StringAdaptableConverter"/>
             </set>
         </property>
         <property name="formatters">

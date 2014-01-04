@@ -20,7 +20,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-<import resource="org/agatom/springatom/web/web.xml"/>
+    <import resource="org/agatom/springatom/web/web.xml"/>
     <import resource="org/agatom/springatom/webmvc/webmvc.xml"/>
 
 </beans>
