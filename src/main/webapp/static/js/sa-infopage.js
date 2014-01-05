@@ -22,7 +22,7 @@
     }
 
     var infoPageHrefTemplate = '<a href="{href}" class="x-infopage-link"><i class="fa fa-info-circle fa-color-black"></i></a>';
-    var actionLinkTemplate = '<button id="{id}" data-href="{href}" data-method="{method}" class="x-action-link"><i class="fa fa-lg fa-magic fa-color-black"></i></button>';
+    var actionLinkTemplate = '<button id="{id}" data-href="{href}" data-method="{method}" data-mode="{mode}" class="x-action-link"><i class="fa fa-lg fa-magic fa-color-black"></i></button>';
     var infoPageHrefTemplateWithName = '<a href="{href}" class="x-infopage-link"><i class="fa fa-info-circle fa-color-black">{name}</i></a>';
 
     function loadContent(dataUrl, callback) {
@@ -156,6 +156,7 @@
             return actionLinkTemplate
                 .replace('{id}', data['id'])
                 .replace('{method}', data['type'])
+                .replace('{mode}', data['mode'])
                 .replace('{href}', data['url']);
         }
         return '';
@@ -171,18 +172,26 @@
         $(this).click(function (event) {
             var target = $(event.target).parent();
             if (target.hasClass('x-action-link')) {
-                event.stopPropagation();
-                $.ajax({
-                    url    : target.attr('data-href'),
-                    method : target.attr('data-method'),
-                    success: function (data) {
-                        console.log('Success ' + JSON.stringify(data));
-                    },
-                    failure: function (data) {
-                        console.log('Failure ' + JSON.stringify(data));
-                    }
-                });
-                return false;
+                if (target.attr('data-mode') === 'ajaxAction') {
+                    event.stopPropagation();
+                    $.ajax({
+                        url    : target.attr('data-href'),
+                        method : target.attr('data-method'),
+                        success: function (data) {
+                            console.log('Success ' + JSON.stringify(data));
+                        },
+                        failure: function (data) {
+                            console.log('Failure ' + JSON.stringify(data));
+                        }
+                    });
+                    return false;
+                } else if (target.attr('data-mode') === 'linkAction') {
+                    window.location = target.attr('data-href');
+                    return true;
+                } else if (target.attr('data-mode') === 'downloadAction') {
+                    window.location = target.attr('data-href');
+                    return true;
+                }
             }
             return true;
         });

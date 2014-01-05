@@ -18,9 +18,12 @@
 package org.agatom.springatom.web.action;
 
 import com.google.common.base.Objects;
-import org.springframework.hateoas.Identifiable;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Role;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.MediaType;
-import org.springframework.util.ClassUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
@@ -28,48 +31,45 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class JQueryAjaxCallDescriptor
-        implements Identifiable<String> {
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Component(value = "ajaxAction")
+@Role(value = BeanDefinition.ROLE_SUPPORT)
+public class AjaxAction
+        extends LinkAction {
     private boolean       async       = Boolean.TRUE;
     private boolean       cache       = Boolean.FALSE;
     private Object        data        = null;
     private MediaType     contentType = MediaType.APPLICATION_JSON;
     private MediaType     dataType    = MediaType.APPLICATION_JSON;
     private RequestMethod type        = RequestMethod.POST;
-    private String        url         = null;
 
-    public JQueryAjaxCallDescriptor setAsync(final boolean async) {
+    public AjaxAction setAsync(final boolean async) {
         this.async = async;
         return this;
     }
 
-    public JQueryAjaxCallDescriptor setCache(final boolean cache) {
+    public AjaxAction setCache(final boolean cache) {
         this.cache = cache;
         return this;
     }
 
-    public JQueryAjaxCallDescriptor setData(final Object data) {
+    public AjaxAction setData(final Object data) {
         this.data = data;
         return this;
     }
 
-    public JQueryAjaxCallDescriptor setContentType(final MediaType contentType) {
+    public AjaxAction setContentType(final MediaType contentType) {
         this.contentType = contentType;
         return this;
     }
 
-    public JQueryAjaxCallDescriptor setDataType(final MediaType dataType) {
+    public AjaxAction setDataType(final MediaType dataType) {
         this.dataType = dataType;
         return this;
     }
 
-    public JQueryAjaxCallDescriptor setType(final RequestMethod type) {
+    public AjaxAction setType(final RequestMethod type) {
         this.type = type;
-        return this;
-    }
-
-    public JQueryAjaxCallDescriptor setUrl(final String url) {
-        this.url = url;
         return this;
     }
 
@@ -97,11 +97,6 @@ public class JQueryAjaxCallDescriptor
         return type;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
@@ -124,7 +119,7 @@ public class JQueryAjaxCallDescriptor
             return false;
         }
 
-        JQueryAjaxCallDescriptor that = (JQueryAjaxCallDescriptor) o;
+        AjaxAction that = (AjaxAction) o;
 
         return Objects.equal(this.async, that.async) &&
                 Objects.equal(this.cache, that.cache) &&
@@ -139,10 +134,5 @@ public class JQueryAjaxCallDescriptor
     public int hashCode() {
         return Objects.hashCode(async, cache, data, contentType, dataType, type,
                 url);
-    }
-
-    @Override
-    public String getId() {
-        return String.format("%s-%d", ClassUtils.getShortName(this.getClass()), this.hashCode());
     }
 }
