@@ -17,18 +17,17 @@
 
 package org.agatom.springatom.web.rbuilder.service.impl;
 
-import ar.com.fdvs.dj.core.DJConstants;
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
 import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
-import ar.com.fdvs.dj.domain.constants.GroupLayout;
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
-import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.export.JRXlsAbstractExporterParameter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
 import org.agatom.springatom.core.invoke.InvokeUtils;
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.model.types.report.ReportColumn;
@@ -39,6 +38,7 @@ import org.agatom.springatom.server.service.support.exceptions.ServiceException;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation;
 import org.agatom.springatom.web.rbuilder.service.ReportBuilderService;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -48,10 +48,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.format.support.FormattingConversionService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.jasperreports.JasperReportsUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -118,25 +120,33 @@ public class ReportBuilderServiceImpl
         try {
             final DynamicReport dynamicReport = this.buildReport(report);
 
-            final SBasicRepository repositoryFor = (SBasicRepository) this.repositories.getRepositoryFor(report.getEntities().get(0).getClazz());
-
             final Map<String, Object> params = Maps.newHashMap();
-            params.put("dynamicReportDs", findAllAndConvert(repositoryFor, report.getEntities().get(0).getColumns()));
             final JasperReport jasperReport = DynamicJasperHelper.generateJasperReport(dynamicReport, new ClassicLayoutManager(), params);
 
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, (JRDataSource) null);
-
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            this.exportToXLS(jasperPrint, baos);
-
-            final String fileName = "SalesReport.xls";
-            response.setHeader("Content-Disposition", "inline; filename=" + fileName);
+            response.setHeader("Content-Disposition", String.format("inline; filename=report-%s-%s-%s.xls",
+                    DateTime.now(),
+                    report.getName(),
+                    SecurityContextHolder.getContext().getAuthentication().getName())
+            );
             response.setContentType("application/vnd.ms-excel");
+            JasperReportsUtils.renderAsXls(
+                    jasperReport,
+                    params,
+                    this.getConvertedDataSource(report),
+                    baos,
+                    this.getParams()
+            );
             response.setContentLength(baos.size());
             this.write(response, baos);
         } catch (Exception generateException) {
             throw new ServiceException(SReport.class, String.format("Failed to generate report for id=%d", reportId), generateException);
         }
+    }
+
+    private List<?> getConvertedDataSource(final SReport report) {
+        final SBasicRepository repositoryFor = (SBasicRepository) this.repositories.getRepositoryFor(report.getEntities().get(0).getClazz());
+        return this.findAllAndConvert(repositoryFor, report.getEntities().get(0).getColumns());
     }
 
     private List<?> findAllAndConvert(final SBasicRepository<?, ?> repositoryFor, final List<ReportColumn> columns) {
@@ -160,75 +170,50 @@ public class ReportBuilderServiceImpl
     }
 
     private DynamicReport buildReport(final SReport report) throws Exception {
-        final FastReportBuilder parentReportBuilder = new FastReportBuilder();
-        parentReportBuilder.setIgnorePagination(true)
-                           .setMargins(0, 0, 0, 0)
-                           .setWhenNoDataAllSectionNoDetail()
-                           .setUseFullPageWidth(true);
-        parentReportBuilder.setReportName(report.getName());
-        parentReportBuilder.setReportLocale(LocaleContextHolder.getLocale());
-        parentReportBuilder.setSubtitle(report.getDescription());
-
+        final FastReportBuilder builder = new FastReportBuilder();
+        builder.setIgnorePagination(true)
+               .setMargins(0, 0, 0, 0)
+               .setWhenNoDataAllSectionNoDetail()
+               .setUseFullPageWidth(true)
+               .setReportName(String.format("%s - %s", report.getName(), SecurityContextHolder.getContext().getAuthentication().getName()))
+               .setReportLocale(LocaleContextHolder.getLocale())
+               .setTitle(report.getName())
+               .setSubtitle(report.getDescription());
         try {
-            parentReportBuilder.addConcatenatedReport(this.buildLayout(report.getEntities()),
-                    new ClassicLayoutManager(), "dynamicReportDs",
-                    DJConstants.DATA_SOURCE_ORIGIN_PARAMETER,
-                    DJConstants.DATA_SOURCE_TYPE_COLLECTION);
+
+            for (final ReportEntity entity : report.getEntities()) {
+                for (final ReportColumn column : entity.getColumns()) {
+                    builder.addColumn(column.getColumnName(), column.getPropertyName(), String.class, 50);
+                }
+            }
+
+            builder.setPrintColumnNames(true)
+                   .setIgnorePagination(true)
+                   .setMargins(0, 0, 0, 0)
+                   .setUseFullPageWidth(true);
+
+            return builder.build();
         } catch (Exception e) {
             LOGGER.error("Unable to concat child report");
             throw e;
         }
-        return parentReportBuilder.build();
+
     }
 
-    private void exportToXLS(JasperPrint jp, ByteArrayOutputStream baos) throws JRException {
-        // Create a JRXlsExporter instance
-        JRXlsExporter exporter = new JRXlsExporter();
-
-        // Here we assign the parameters jp and baos to the exporter
-        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, baos);
-
-        // Excel specific parameters
-        // Check the Jasper (not DynamicJasper) docs for a description of these settings. Most are
-        // self-documenting
-        exporter.setParameter(JRXlsAbstractExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
-        exporter.setParameter(JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
-        exporter.setParameter(JRXlsAbstractExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
-
-        // Retrieve the exported report in XLS format
-        exporter.exportReport();
+    private Map<JRExporterParameter, Object> getParams() throws JRException {
+        final Map<JRExporterParameter, Object> params = Maps.newHashMap();
+        params.put(JRXlsAbstractExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
+        params.put(JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
+        params.put(JRXlsAbstractExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
+        return params;
     }
 
-    private DynamicReport buildLayout(final List<ReportEntity> entities) throws Exception {
-        final FastReportBuilder builder = new FastReportBuilder();
-
-        for (final ReportEntity entity : entities) {
-            builder.addGroups(entities.indexOf(entity), GroupLayout.VALUE_IN_HEADER_AND_FOR_EACH);
-            builder.setTitle(entity.getName());
-            for (final ReportColumn column : entity.getColumns()) {
-                builder.addColumn(column.getColumnName(), column.getPropertyName(), String.class, 50);
-            }
-        }
-
-        builder.setPrintColumnNames(true)
-               .setIgnorePagination(true)
-               .setMargins(0, 0, 0, 0)
-               .setUseFullPageWidth(true);
-
-        return builder.build();
-    }
-
-    private void write(HttpServletResponse response, ByteArrayOutputStream baos) {
-        LOGGER.debug("Writing report to the stream");
+    private void write(final HttpServletResponse response, final ByteArrayOutputStream baos) {
+        LOGGER.debug(String.format("Writing report=%d to the stream", baos.size()));
         try {
-            // Retrieve the output stream
-            ServletOutputStream outputStream = response.getOutputStream();
-            // Write to the output stream
+            final ServletOutputStream outputStream = response.getOutputStream();
             baos.writeTo(outputStream);
-            // Flush the stream
             outputStream.flush();
-
         } catch (Exception e) {
             LOGGER.error("Unable to write report to the output stream");
         }

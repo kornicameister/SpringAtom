@@ -21,7 +21,8 @@ import com.mysema.query.types.Predicate;
 import org.agatom.springatom.server.model.beans.report.QSReport;
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
-import org.agatom.springatom.web.action.JQueryAjaxCallDescriptor;
+import org.agatom.springatom.web.action.AjaxAction;
+import org.agatom.springatom.web.action.DownloadAction;
 import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.web.component.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
@@ -74,16 +75,13 @@ public class ReportTableBuilder
                 return object.getEntities().size();
             }
             case "generate-action": {
-                return new JQueryAjaxCallDescriptor()
-                        .setUrl(String.format("/app/reportBuilder/generate/%d", object.getId()))
-                        .setType(RequestMethod.GET)
-                        .setCache(true);
+                return this.context.getBean(DownloadAction.class).setUrl(String.format("/app/reportBuilder/generate/%d", object.getId()));
             }
             case "delete-action": {
-                return new JQueryAjaxCallDescriptor()
-                        .setUrl(String.format("/rest/%s/%d", SReportRepository.REST_REPO_PATH, object.getId()))
-                        .setType(RequestMethod.DELETE)
-                        .setCache(false);
+                return this.context.getBean(AjaxAction.class)
+                                   .setType(RequestMethod.DELETE)
+                                   .setCache(false)
+                                   .setUrl(String.format("/rest/%s/%d", SReportRepository.REST_REPO_PATH, object.getId()));
             }
         }
         return null;
