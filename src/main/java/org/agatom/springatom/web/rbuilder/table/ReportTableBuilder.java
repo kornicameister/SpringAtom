@@ -22,15 +22,20 @@ import org.agatom.springatom.server.model.beans.report.QSReport;
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
 import org.agatom.springatom.web.action.AjaxAction;
-import org.agatom.springatom.web.action.DownloadAction;
+import org.agatom.springatom.web.action.PopupAction;
 import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.web.component.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
+import org.agatom.springatom.web.component.builders.table.exception.DynamicColumnResolutionException;
 import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
+import org.agatom.springatom.webmvc.controllers.rbuilder.ReportBuilderController;
 import org.apache.log4j.Logger;
+import org.springframework.hateoas.Link;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 /**
  * @author kornicameister
@@ -69,22 +74,35 @@ public class ReportTableBuilder
     }
 
     @Override
-    protected Object handleDynamicColumn(final SReport object, final String path) {
+    protected Object handleDynamicColumn(final SReport object, final String path) throws DynamicColumnResolutionException {
+        Object retValue = super.handleDynamicColumn(object, path);
+        if (retValue != null) {
+            return retValue;
+        }
         switch (path) {
             case "entities-size": {
-                return object.getEntities().size();
+                retValue = object.getEntities().size();
             }
+            break;
             case "generate-action": {
-                return this.context.getBean(DownloadAction.class).setUrl(String.format("/app/reportBuilder/generate/%d", object.getId()));
+                try {
+                    final Link link = linkTo(ReportBuilderController.class).slash(object.getId()).withSelfRel();
+                    retValue = new PopupAction().setType(RequestMethod.POST)
+                                                .setUrl(link.getHref());
+                } catch (Exception exception) {
+                    final String message = String.format("Error in creating link over path=%s", path);
+                    this.logger.error(message, exception);
+                    throw new DynamicColumnResolutionException(message, exception);
+                }
             }
+            break;
             case "delete-action": {
-                return this.context.getBean(AjaxAction.class)
-                                   .setType(RequestMethod.DELETE)
-                                   .setCache(false)
-                                   .setUrl(String.format("/rest/%s/%d", SReportRepository.REST_REPO_PATH, object.getId()));
+                retValue = new AjaxAction().setType(RequestMethod.DELETE)
+                                           .setCache(false)
+                                           .setUrl(String.format("/rest/%s/%d", SReportRepository.REST_REPO_PATH, object.getId()));
             }
         }
-        return null;
+        return retValue;
     }
 
     @Override
