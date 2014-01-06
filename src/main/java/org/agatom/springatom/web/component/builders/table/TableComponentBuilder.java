@@ -89,7 +89,7 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
         super.postProcessDefinition(definition);
         if (this.pageMappings.getInfoPageForEntity(this.entity) != null) {
             this.helper.newTableColumn(definition, "infopage", "persistentobject.infopage")
-                       .setRenderFunctionName("renderInfoPageLink")
+                       .setRenderFunctionName("renderTableAction")
                        .setSortable(false);
         }
     }
@@ -281,9 +281,8 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
                             infoPage.getPath(),
                             Long.parseLong(String.valueOf(object.getId()))
                     );
-                    return this.context.getBean(LinkAction.class)
-                                       .setLabel(ClassUtils.getShortName(this.entity.getName()))
-                                       .setUrl(link);
+                    return new LinkAction().setLabel(ClassUtils.getShortName(this.entity.getName()))
+                                           .setUrl(link);
                 }
             }
         }

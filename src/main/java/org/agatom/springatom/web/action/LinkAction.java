@@ -17,14 +17,8 @@
 
 package org.agatom.springatom.web.action;
 
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Role;
-import org.springframework.context.annotation.Scope;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.hateoas.Identifiable;
 import org.springframework.hateoas.Link;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -33,9 +27,7 @@ import org.springframework.util.StringUtils;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Component(value = "linkAction")
-@Role(value = BeanDefinition.ROLE_SUPPORT)
+
 public class LinkAction
         implements Identifiable<String> {
     protected String url   = null;
@@ -64,7 +56,7 @@ public class LinkAction
     }
 
     public String getMode() {
-        return StringUtils.uncapitalize((String) AnnotationUtils.getValue(this.getClass().getAnnotation(Component.class)));
+        return StringUtils.uncapitalize(ClassUtils.getShortName(this.getClass()));
     }
 
     @Override

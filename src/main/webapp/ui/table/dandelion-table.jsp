@@ -49,6 +49,9 @@
             }
         %>
     }
+    function onTableInitAction() {
+        $('#' + '${def.tableId}').componentActions();
+    }
 </script>
 
 <s:escapeBody javaScriptEscape="false" htmlEscape="false">
@@ -86,10 +89,7 @@
                        cssClass="${cssClass}"/>
         </c:forEach>
 
+        <dt:callback type="init" function="onTableInitAction"/>
+
     </dt:table>
 </s:escapeBody>
-<script type="text/javascript">
-    $(function () {
-        $('#' + '${def.tableId}').tableActions();
-    })
-</script>

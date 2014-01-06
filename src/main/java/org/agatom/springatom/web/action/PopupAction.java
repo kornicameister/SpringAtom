@@ -17,11 +17,6 @@
 
 package org.agatom.springatom.web.action;
 
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Role;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
@@ -29,9 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Component(value = "popupAction")
-@Role(value = BeanDefinition.ROLE_SUPPORT)
+
 public class PopupAction
         extends LinkAction {
     private RequestMethod type;
