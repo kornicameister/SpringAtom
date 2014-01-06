@@ -21,7 +21,14 @@ import org.agatom.springatom.web.component.elements.table.DandelionTableComponen
 import org.agatom.springatom.web.component.elements.table.TableColumnComponent;
 import org.agatom.springatom.web.component.elements.table.TableComponent;
 import org.agatom.springatom.web.component.helper.TableComponentHelper;
+import org.agatom.springatom.webmvc.controllers.SVInfoPageController;
+import org.agatom.springatom.webmvc.controllers.SVTableBuilderController;
+import org.apache.log4j.Logger;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * @author kornicameister
@@ -32,8 +39,17 @@ public class DefaultTableComponentHelper
         extends DefaultComponentHelper
         implements TableComponentHelper {
 
+    private static final Logger LOGGER = Logger.getLogger(DefaultTableComponentHelper.class);
+
     @Override
     public Link getInfoPageLink(String path, Long id) {
+        try {
+            return linkTo(SVInfoPageController.class).slash(path).slash(id).withSelfRel();
+        } catch (Exception linkRetrievalException) {
+            LOGGER.trace(String.format("Could not have resolved link to InfoPage[path=%s,id=%d] using %s", path, id, ControllerLinkBuilder.class),
+                    linkRetrievalException
+            );
+        }
         return new Link(String.format("/app/ip/%s/%d", path, id)).withRel(String.format("infopage.%s", path));
     }
 
@@ -46,6 +62,17 @@ public class DefaultTableComponentHelper
 
     @Override
     public Link getTableLink(final String tableId, final String builderId) {
+        try {
+            return linkTo(methodOn(SVTableBuilderController.class).getBuilderData(builderId, null, null)).withRel(tableId);
+        } catch (Exception linkRetrievalException) {
+            LOGGER.trace(
+                    String.format("Could not have resolved link to TableBuilder[builderId=%s,tableId=%s] using %s",
+                            builderId,
+                            tableId,
+                            ControllerLinkBuilder.class
+                    )
+            );
+        }
         return new Link(String.format("/app/tableBuilder/data/%s", builderId)).withRel(tableId);
     }
 

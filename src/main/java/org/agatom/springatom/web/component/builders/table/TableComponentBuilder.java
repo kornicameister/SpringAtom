@@ -25,23 +25,28 @@ import com.mysema.query.types.Predicate;
 import com.mysema.query.types.path.EntityPathBase;
 import org.agatom.springatom.core.invoke.InvokeUtils;
 import org.agatom.springatom.server.repository.SBasicRepository;
+import org.agatom.springatom.web.action.LinkAction;
 import org.agatom.springatom.web.component.ComponentConstants;
 import org.agatom.springatom.web.component.builders.DefaultComponentBuilder;
 import org.agatom.springatom.web.component.builders.EntityAware;
 import org.agatom.springatom.web.component.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.builders.exception.ComponentPathEvaluationException;
 import org.agatom.springatom.web.component.builders.exception.ComponentTableException;
+import org.agatom.springatom.web.component.builders.table.exception.DynamicColumnResolutionException;
 import org.agatom.springatom.web.component.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.data.ComponentDataResponse;
 import org.agatom.springatom.web.component.elements.table.TableComponent;
 import org.agatom.springatom.web.component.helper.TableComponentHelper;
 import org.agatom.springatom.web.component.request.beans.ComponentTableRequest;
+import org.agatom.springatom.web.infopages.SEntityInfoPage;
+import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.Link;
 import org.springframework.util.ClassUtils;
 
 import java.io.Serializable;
@@ -64,6 +69,8 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
     protected TableComponentHelper              helper;
     @Autowired
     protected ApplicationContext                context;
+    @Autowired
+    private   InfoPageMappings                  pageMappings;
     protected Class<Y>                          entity;
     protected SBasicRepository<Y, Serializable> repository;
 
@@ -78,53 +85,76 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
     }
 
     @Override
+    protected void postProcessDefinition(final COMP definition) {
+        super.postProcessDefinition(definition);
+        if (this.pageMappings.getInfoPageForEntity(this.entity) != null) {
+            this.helper.newTableColumn(definition, "infopage", "persistentobject.infopage")
+                       .setRenderFunctionName("renderInfoPageLink")
+                       .setSortable(false);
+        }
+    }
+
+    @Override
     protected ComponentDataResponse buildData(final ComponentDataRequest dataRequest) throws ComponentException {
-        final ComponentTableRequest dc = (ComponentTableRequest) dataRequest.getValues().get(ComponentConstants.REQUEST_BEAN);
-        if (dc != null) {
+        try {
+            final ComponentTableRequest dc = (ComponentTableRequest) dataRequest.getValues().get(ComponentConstants.REQUEST_BEAN);
+            if (dc != null) {
 
-            logger.debug(String.format("/buildData -> %s=%s", ComponentConstants.REQUEST_BEAN, dc));
+                logger.debug(String.format("/buildData -> %s=%s", ComponentConstants.REQUEST_BEAN, dc));
 
-            final Predicate predicate = this.getPredicate(dc);
-            final long countInContext = predicate != null ? this.repository.count(predicate) : this.repository.count();
-            final List<Map<String, Object>> data = Lists.newArrayList();
-            if (countInContext != 0) {
-                final Page<Y> all = this.getAllEntities(dc, predicate, countInContext);
+                final Predicate predicate = this.getPredicate(dc);
+                final long countInContext = predicate != null ? this.repository.count(predicate) : this.repository.count();
+                final List<Map<String, Object>> data = Lists.newArrayList();
+                if (countInContext != 0) {
+                    final Page<Y> all = this.getAllEntities(dc, predicate, countInContext);
 
-                for (final Y object : all) {
-                    this.logger.trace(String.format("processing object %s=%s", ClassUtils.getShortName(object.getClass()), object.getId()));
-                    final Map<String, Object> map = Maps.newHashMap();
-                    for (ColumnDef columnDef : dc.getColumnDefs()) {
-                        this.logger.trace(String.format("processing column %s", columnDef.getName()));
+                    for (final Y object : all) {
+                        this.logger.trace(String.format("Processing object %s=%s", ClassUtils.getShortName(object.getClass()), object.getId()));
+                        final Map<String, Object> map = Maps.newHashMap();
+                        for (ColumnDef columnDef : dc.getColumnDefs()) {
+                            this.logger.trace(String.format("Processing column %s", columnDef.getName()));
 
-                        final String path = columnDef.getName();
-                        Object value = InvokeUtils.invokeGetter(object, path);
-                        if (value == null) {
-                            value = this.handleDynamicColumn(object, path);
+                            final String path = columnDef.getName();
+                            Object value = InvokeUtils.invokeGetter(object, path);
+                            if (value == null) {
+                                value = this.handleDynamicColumn(object, path);
+                            }
+                            if (value != null) {
+                                this.logger
+                                        .debug(String.format("Resolved value for dynamic column=%s from object=%s to value=%s", path, object, value));
+                                value = this.handleColumnConversion(object, value, path);
+                            } else {
+                                this.logger.warn(String.format("Could not have resolved value for dynamic column=%s from object=%s", path, object));
+                                value = "???";
+                            }
+                            map.put(path, value);
+
+                            this.logger.trace(String.format("processed column %s to %s", columnDef.getName(), value));
                         }
-                        if (value != null) {
-                            value = this.handleColumnConversion(object, value, path);
-                        } else {
-                            value = "???";
+                        if (!map.isEmpty()) {
+                            data.add(map);
                         }
-                        map.put(path, value);
+                    }
 
-                        this.logger.trace(String.format("processed column %s to %s", columnDef.getName(), value));
-                    }
-                    if (!map.isEmpty()) {
-                        data.add(map);
-                    }
                 }
+                this.logger.debug(String.format("%s returning data %s", this.getId(), data));
 
+                ComponentDataResponse<DataSet<Map<String, Object>>> response = new ComponentDataResponse<>();
+                response.setValue(new DataSet<>(data, (long) data.size(), countInContext));
+
+                return response;
+            } else {
+                throw new ComponentTableException(String
+                        .format("%s - could not locate %s in passed %s", this.getId(), ComponentConstants.REQUEST_BEAN, dataRequest));
             }
-            this.logger.debug(String.format("%s returning data %s", this.getId(), data));
-
-            ComponentDataResponse<DataSet<Map<String, Object>>> response = new ComponentDataResponse<>();
-            response.setValue(new DataSet<>(data, (long) data.size(), countInContext));
-
-            return response;
-        } else {
-            throw new ComponentTableException(String
-                    .format("%s - could not locate %s in passed %s", this.getId(), ComponentConstants.REQUEST_BEAN, dataRequest));
+        } catch (ComponentException exception) {
+            final String message = String.format("/buildData threw ComponentException during evaluation from %s", dataRequest);
+            this.logger.error(message, exception);
+            throw new ComponentTableException(message, exception);
+        } catch (Exception exception) {
+            final String message = String.format("/buildData threw Exception during evaluation from %s", dataRequest);
+            this.logger.error(message, exception);
+            throw new ComponentTableException(message, exception);
         }
     }
 
@@ -242,7 +272,23 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
      * @see org.agatom.springatom.web.component.builders.table.TableComponentBuilder#handleColumnConversion(org.springframework.data.domain.Persistable,
      * Object, String)
      */
-    protected abstract Object handleDynamicColumn(final Y object, final String path);
+    protected Object handleDynamicColumn(final Y object, final String path) throws DynamicColumnResolutionException {
+        switch (path) {
+            case "infopage": {
+                final SEntityInfoPage infoPage = this.pageMappings.getInfoPageForEntity(this.entity);
+                if (infoPage != null) {
+                    final Link link = helper.getInfoPageLink(
+                            infoPage.getPath(),
+                            Long.parseLong(String.valueOf(object.getId()))
+                    );
+                    return this.context.getBean(LinkAction.class)
+                                       .setLabel(ClassUtils.getShortName(this.entity.getName()))
+                                       .setUrl(link);
+                }
+            }
+        }
+        return null;
+    }
 
     protected PageRequest getPageable(final long totalObjects, final int pageSize, final List<ColumnDef> sort) {
         final int pageNumber = this.getPageNumber(totalObjects, pageSize);

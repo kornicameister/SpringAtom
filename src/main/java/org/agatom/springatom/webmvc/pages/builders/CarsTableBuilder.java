@@ -23,14 +23,10 @@ import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.web.component.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
-import org.agatom.springatom.web.component.elements.link.DelegatedLink;
 import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
-import org.agatom.springatom.web.infopages.SEntityInfoPage;
 import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -64,24 +60,6 @@ public class CarsTableBuilder
     }
 
     @Override
-    protected Object handleDynamicColumn(final SCar object, final String path) {
-        switch (path) {
-            case "infopage": {
-                final SEntityInfoPage domain = this.pageMappings.getInfoPageForEntity(SCar.class);
-                if (domain != null) {
-                    final Link link = helper.getInfoPageLink(
-                            domain.getPath(),
-                            Long.parseLong(String.valueOf(object.getId()))
-                    );
-                    return new DelegatedLink(link).withLabel(ClassUtils.getShortName(SCar.class));
-                }
-            }
-            break;
-        }
-        return null;
-    }
-
-    @Override
     protected Predicate getPredicate(final Long id, final Class<?> contextClass) {
         return QSCar.sCar.carMaster.id.eq(id);
     }
@@ -95,7 +73,6 @@ public class CarsTableBuilder
     protected DandelionTableComponent buildDefinition() {
         final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
         this.helper.newTableColumn(component, "id", "persistentobject.id");
-        this.helper.newTableColumn(component, "infopage", "persistentobject.infopage").setRenderFunctionName("renderInfoPageLink").setSortable(false);
         this.helper.newTableColumn(component, "owner", "scar.owner");
         this.helper.newTableColumn(component, "licencePlate", "scar.licenceplate");
         this.helper.newTableColumn(component, "vinNumber", "scar.vinnumber");

@@ -48,11 +48,6 @@ public class ContactsForPersonTableBuilder
     private static final   Logger LOGGER     = Logger.getLogger(ContactsForPersonTableBuilder.class);
 
     @Override
-    protected Object handleDynamicColumn(final SPersonContact object, final String path) {
-        return null;
-    }
-
-    @Override
     protected Predicate getPredicate(final Long id, final Class<?> contextClass) {
         if (ClassUtils.isAssignable(SPerson.class, contextClass)) {
             return QSPersonContact.sPersonContact.assigned.id.eq(id);

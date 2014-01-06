@@ -55,11 +55,6 @@ public class AppointmentTaskTableBuilder
     }
 
     @Override
-    protected Object handleDynamicColumn(final SAppointmentTask object, final String path) {
-        return null;
-    }
-
-    @Override
     protected Logger getLogger() {
         return LOGGER;
     }
