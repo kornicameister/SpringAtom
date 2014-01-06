@@ -21,12 +21,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Role;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.hateoas.Identifiable;
-import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @author kornicameister
@@ -34,41 +30,18 @@ import org.springframework.util.StringUtils;
  * @since 0.0.1
  */
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Component(value = "linkAction")
+@Component(value = "popupAction")
 @Role(value = BeanDefinition.ROLE_SUPPORT)
-public class LinkAction
-        implements Identifiable<String> {
-    protected String url   = null;
-    protected String label = null;
+public class PopupAction
+        extends LinkAction {
+    private RequestMethod type;
 
-    public LinkAction setLabel(final String label) {
-        this.label = label;
+    public PopupAction setType(final RequestMethod type) {
+        this.type = type;
         return this;
     }
 
-    public String getLabel() {
-        return label;
-    }
-
-    public LinkAction setUrl(final String url) {
-        this.url = url;
-        return this;
-    }
-
-    public LinkAction setUrl(final Link link) {
-        return this.setUrl(link.getHref());
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getMode() {
-        return StringUtils.uncapitalize((String) AnnotationUtils.getValue(this.getClass().getAnnotation(Component.class)));
-    }
-
-    @Override
-    public String getId() {
-        return String.format("%s-%d", ClassUtils.getShortName(this.getClass()), Math.abs(this.hashCode()));
+    public RequestMethod getType() {
+        return type;
     }
 }

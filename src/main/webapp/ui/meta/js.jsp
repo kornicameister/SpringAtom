@@ -46,4 +46,4 @@
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-core.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-breadcrumb.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-wizards.js"/>"></script>
-<script type="text/javascript" src="<s:url value="${staticSa}/sa-infopage.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticSa}/sa-components.js"/>"></script>

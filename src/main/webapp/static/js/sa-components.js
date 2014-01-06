@@ -129,6 +129,7 @@
                 viewContent = $(viewContent);
                 container.append(viewContent);
                 maskContainer(container, false);
+                $(container).componentActions();
             }
         );
     };
@@ -168,7 +169,30 @@
         return infoPageHrefTemplateWithName.replace('{href}', data).replace('{name}', name);
     };
 
-    $.fn.tableActions = function () {
+    $.fn.componentActions = function () {
+
+        $(this).find('.x-action-link').each(function (it, value) {
+            value = $(value);
+            if (value.hasClass('x-action-link') && value.attr('data-mode') === 'popupAction') {
+                var hiddenForm = $('<form></form>');
+                hiddenForm.attr('class', 'x-hidden')
+                    .attr('id', value.attr('id') + '-form')
+                    .attr('method', value.attr('data-method'))
+                    .attr('action', value.attr('data-href'));
+                value.append(hiddenForm);
+
+                Spring.addDecoration(new Spring.AjaxEventDecoration({
+                    elementId: value.attr('id'),
+                    formId   : hiddenForm.attr('id'),
+                    event    : 'onclick',
+                    popup    : true,
+                    params   : {
+                        mode: "embedded"
+                    }
+                }));
+            }
+        });
+
         $(this).click(function (event) {
             var target = $(event.target).parent();
             if (target.hasClass('x-action-link')) {
