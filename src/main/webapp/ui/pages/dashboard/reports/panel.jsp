@@ -19,6 +19,17 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 
 <section id="reportBuilder">
+    <aside>
+        <s:url value="/app/wizard/NewReportWizard" htmlEscape="true" var="newReportActionUrl"/>
+        <security:authorize url="${newReportActionUrl}">
+            <s:message code="reports.actions.NewReportWizard" var="newReportActionLabel" htmlEscape="true"/>
+            <s:message code="tooltip.nav" arguments="${newReportActionLabel}" var="newReportActionLabelTooltip"
+                       htmlEscape="true"/>
+            <a id="${newReportActionLabel}" href="${newReportActionUrl}" title="${newReportActionLabelTooltip}">
+                <i class="fa fa-calendar fa-color"></i>${newReportActionLabel}
+            </a>
+        </security:authorize>
+    </aside>
     <div>
         <header>
             <s:message code="reports.savedReports"/>
@@ -34,35 +45,6 @@
             $('#reportsBuilder-savedReport').loadBuilderView({url: '/app/tableBuilder/${builderId}'});
         </script>
     </div>
-    <div>
-        <header>
-            <s:message code="reports.selectedReport.summary"/>
-        </header>
-    </div>
-    <aside>
-        <header>
-            <s:message code="reports.actions"/>
-        </header>
-        <ul>
-            <s:url value="/app/wizard/NewReportWizard" htmlEscape="true" var="newReportActionUrl"/>
-            <security:authorize url="${newReportActionUrl}">
-                <s:message code="reports.actions.NewReportWizard" var="newReportActionLabel" htmlEscape="true"/>
-                <s:message code="tooltip.nav" arguments="${newReportActionLabel}" var="newReportActionLabelTooltip"
-                           htmlEscape="true"/>
-                <li>
-                    <a id="${newReportActionLabel}" href="${newReportActionUrl}" title="${newReportActionLabelTooltip}">
-                        <i class="fa fa-calendar fa-color"></i>${newReportActionLabel}
-                    </a>
-                </li>
-            </security:authorize>
-            <li>
-                <s:message code="reports.actions.delete"/>
-            </li>
-            <li>
-                <s:message code="reports.actions.generate"/>
-            </li>
-        </ul>
-    </aside>
 </section>
 <script type="text/javascript">
     $(function () {
