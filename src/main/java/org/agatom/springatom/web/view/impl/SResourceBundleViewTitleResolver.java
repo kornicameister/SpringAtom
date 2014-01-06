@@ -46,6 +46,9 @@ public class SResourceBundleViewTitleResolver
 
     @Override
     public SViewTitle getViewTitle(final String viewName) {
+        if (viewName == null) {
+            return new SViewTitle();
+        }
         SViewTitle viewTitle = null;
         for (final String key : this.keys) {
             if (viewTitle != null) {

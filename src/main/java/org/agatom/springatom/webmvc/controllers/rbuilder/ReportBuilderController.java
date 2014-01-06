@@ -17,16 +17,33 @@
 
 package org.agatom.springatom.webmvc.controllers.rbuilder;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
+import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.service.support.exceptions.ServiceException;
+import org.agatom.springatom.web.locale.SMessageSource;
+import org.agatom.springatom.web.rbuilder.ReportRepresentation;
+import org.agatom.springatom.web.rbuilder.ReportRepresentation.Representation;
 import org.agatom.springatom.web.rbuilder.service.ReportBuilderService;
+import org.agatom.springatom.webmvc.ViewHelper;
+import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
+import java.util.Set;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * @author kornicameister
@@ -37,16 +54,70 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = "/reportBuilder")
 public class ReportBuilderController {
     public static final  String CONTROLLER_NAME = "reportBuilderController";
-    private static final String VIEW_NAME       = "springatom.tiles.dashboard.reports.Generate";
+    private static final String VIEW_NAME = "springatom.tiles.dashboard.reports.Download";
+    private static final Logger LOGGER    = Logger.getLogger(ReportBuilderController.class);
 
     @Autowired
     private ReportBuilderService service;
+    @Autowired
+    private SMessageSource messageSource;
 
-    @RequestMapping(value = "/generate/{reportId}")
-    public ModelAndView generateReport(@PathVariable("reportId") final Long reportId, final HttpServletResponse response) throws ServiceException {
-        this.service.getAvailableRepresentations();
-        this.service.generateReport(reportId, response);
-        return new ModelAndView(VIEW_NAME, new ModelMap());
+    @RequestMapping(value = "/{reportId}")
+    public ModelAndView buildReport(@PathVariable("reportId") final Long reportId, final ModelMap modelMap, final HttpServletResponse response) throws
+            ControllerTierException {
+        try {
+            final SReport report = this.service.getReport(reportId);
+            final Map<String, ReportRepresentation> availableRepresentations = this.service.getAvailableRepresentations();
+
+            LOGGER.info(String.format("/buildReport report=%s :: formats=%s", report, availableRepresentations));
+
+            modelMap.put("report", report);
+            modelMap.put("representations", availableRepresentations);
+            modelMap.put("links", this.createDownloadLinks(availableRepresentations.keySet(), report));
+            modelMap.put("title", this.messageSource
+                    .getMessage("sa.msg.download.what", new Object[]{report.getName()}, LocaleContextHolder.getLocale()));
+
+            ViewHelper.asDojoModal(response);
+
+            return new ModelAndView(VIEW_NAME, modelMap);
+        } catch (Exception se) {
+            final String message = String.format("/buildReport threw exception during processing report=%d", reportId);
+            LOGGER.error(message, se);
+            throw new ControllerTierException(message, se);
+        }
+    }
+
+    @RequestMapping(value = "/download/{reportName}")
+    public ModelAndView downloadReport(@PathVariable("reportName") String reportName) throws ServiceException {
+        LOGGER.info(String.format("/downloadReport name=%s", reportName));
+        return this.downloadReportInFormat(reportName, Representation.EXCEL.getId());
+    }
+
+    @RequestMapping(value = "/download/{reportName}/{format}")
+    public ModelAndView downloadReportInFormat(@PathVariable("reportName") String reportName,
+                                               @PathVariable("format") String format) throws ServiceException {
+        LOGGER.info(String.format("/downloadReportInFormat name=%s :: format=%s", reportName, format));
+        return new ModelAndView(
+                this.service.getReportName(reportName),
+                this.service.getReportParameters(reportName, format)
+        );
+    }
+
+    private Map<String, Link> createDownloadLinks(final Set<String> availableRepresentations, final SReport report) {
+        return FluentIterable.from(availableRepresentations)
+                             .toMap(new Function<String, Link>() {
+                                 @Nullable
+                                 @Override
+                                 public Link apply(@Nullable final String format) {
+                                     try {
+                                         return linkTo(methodOn(ReportBuilderController.class).downloadReportInFormat(report.getName(), format))
+                                                 .withRel(format);
+                                     } catch (Exception e) {
+                                         LOGGER.warn(String.format("Failed to generate link report=%s/format=%s", report.getName(), format));
+                                     }
+                                     return null;
+                                 }
+                             });
     }
 
 }

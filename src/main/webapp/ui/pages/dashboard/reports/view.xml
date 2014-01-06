@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                  ~
   ~                                                                                               ~
   ~ [SpringAtom] is free software: you can redistribute it and/or modify                          ~
   ~ it under the terms of the GNU General Public License as published by                          ~
@@ -22,14 +22,10 @@
 
 <tiles-definitions>
 
-    <definition name="springatom.tiles.dashboard.cars" extends="ui.core.Page">
-        <put-attribute name="content" value="/ui/pages/dashboard/cars/panel.jsp"/>
+    <definition name="springatom.tiles.dashboard.reports" extends="ui.core.Page">
+        <put-attribute name="content" value="/ui/pages/dashboard/reports/panel.jsp"/>
     </definition>
-    <definition name="springatom.tiles.dashboard.calendar" extends="ui.core.Page">
-        <put-attribute name="content" value="/ui/pages/dashboard/calendar/panel.jsp"/>
-    </definition>
-    <definition name="springatom.tiles.dashboard.clients" extends="ui.core.Page">
-        <put-attribute name="content" value="/ui/pages/dashboard/clients/panel.jsp"/>
-    </definition>
+    <definition name="springatom.tiles.dashboard.reports.Download"
+                template="/ui/pages/dashboard/reports/download_report.jsp"/>
 
 </tiles-definitions>
