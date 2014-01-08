@@ -15,9 +15,9 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.beans.report.setting;
+package org.agatom.springatom.server.model.beans.report;
 
-import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,32 +26,31 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
- * {@code SReportStringSetting} takes any {@link java.lang.String} as the value
- * for given {@link org.agatom.springatom.server.model.beans.report.setting.SReportSetting}
+ * {@code SReportNumberSetting} supports any type of a {@link java.lang.Number} derived classes
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = SReportStringSetting.ENTITY_NAME)
-@Table(name = SReportStringSetting.TABLE_NAME)
+@Entity(name = SReportNumberSetting.ENTITY_NAME)
+@Table(name = SReportNumberSetting.TABLE_NAME)
 @PrimaryKeyJoinColumn(name = "idSReportSetting")
-public class SReportStringSetting
-        extends SReportSetting<String> {
+public class SReportNumberSetting
+        extends SReportSetting<Number> {
     private static final long   serialVersionUID = -1700305423116775408L;
-    public static final  String ENTITY_NAME      = "SReportStringSetting";
-    public static final  String TABLE_NAME       = "reports_settings_string";
+    public static final  String ENTITY_NAME      = "SReportNumberSetting";
+    public static final  String TABLE_NAME       = "reports_settings_number";
     @NotNull
-    @Length(min = 3, max = 200)
-    @Column(name = "report_setting_string_value", unique = false, updatable = true, insertable = true, length = 300)
-    private String value;
+    @Range(min = Long.MIN_VALUE, max = Long.MAX_VALUE)
+    @Column(name = "report_setting_number_val", unique = false, updatable = true, insertable = true)
+    private Number value;
 
     @Override
-    public String getValue() {
+    public Number getValue() {
         return this.value;
     }
 
-    public SReportStringSetting setValue(final String value) {
+    public SReportNumberSetting setValue(final Number value) {
         this.value = value;
         return this;
     }

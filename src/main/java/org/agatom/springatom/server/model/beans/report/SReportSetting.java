@@ -15,12 +15,11 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.beans.report.setting;
+package org.agatom.springatom.server.model.beans.report;
 
 import org.agatom.springatom.server.model.beans.PersistentObject;
-import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.model.types.report.Report;
-import org.agatom.springatom.server.model.types.report.setting.ReportSetting;
+import org.agatom.springatom.server.model.types.report.ReportSetting;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -28,14 +27,14 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * {@code SReportSetting} is a placeholder for settings specified for {@link org.agatom.springatom.server.model.beans.report.setting.SReportSetting#report}.
+ * {@code SReportSetting} is a placeholder for settings specified for {@link SReportSetting#report}.
  * This class defines the name and the associated report but it does not specify what kind of the value will property take.
  * <p/>
  * In order to create types property use:
  * <ul>
- * <li>{@link java.lang.String} -> {@link org.agatom.springatom.server.model.beans.report.setting.SReportStringSetting}</li>
- * <li>{@link java.lang.Number} -> {@link org.agatom.springatom.server.model.beans.report.setting.SReportNumberSetting}</li>
- * <li>{@link java.lang.Boolean} -> {@link org.agatom.springatom.server.model.beans.report.setting.SReportBooleanSetting}</li>
+ * <li>{@link java.lang.String} -> {@link SReportStringSetting}</li>
+ * <li>{@link java.lang.Number} -> {@link SReportNumberSetting}</li>
+ * <li>{@link java.lang.Boolean} -> {@link SReportBooleanSetting}</li>
  * </ul>
  *
  * @author kornicameister
@@ -46,7 +45,7 @@ import java.io.Serializable;
 @Entity(name = SReportSetting.ENTITY_NAME)
 @AttributeOverride(name = "id", column = @Column(name = "idSReportSetting", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 @Inheritance(strategy = InheritanceType.JOINED)
-abstract public class SReportSetting<HOLDS extends Serializable>
+abstract class SReportSetting<HOLDS extends Serializable>
         extends PersistentObject<Long>
         implements ReportSetting<HOLDS> {
     private static final   long   serialVersionUID = -1700305423116775408L;

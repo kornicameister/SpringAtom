@@ -17,13 +17,8 @@
 
 package org.agatom.springatom.server.model.types.report;
 
-import org.agatom.springatom.server.model.beans.report.setting.SReportSetting;
-import org.agatom.springatom.server.model.types.report.entity.ReportEntity;
-import org.agatom.springatom.server.model.types.report.resource.ReportResource;
-
 import javax.annotation.Nonnull;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,17 +37,11 @@ public interface Report
 
     String getSubtitle();
 
-    List<ReportEntity> getEntities();
-
-    Set<SReportSetting<?>> getSettings();
+    Set<ReportSetting<?>> getSettings();
 
     Map<String, Serializable> getSettingsAsMap();
 
     Serializable getSetting(String key);
-
-    boolean hasEntity(Class<?> javaClass);
-
-    boolean hasEntities();
 
     boolean hasSetting(@Nonnull String key);
 

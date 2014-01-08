@@ -15,20 +15,45 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.report.resource;
+package org.agatom.springatom.server.model.beans.report;
 
-import java.io.Serializable;
+import org.hibernate.validator.constraints.Length;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
+ * {@code SReportStringSetting} takes any {@link java.lang.String} as the value
+ * for given {@link SReportSetting}
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ReportResource
-        extends Serializable {
-    String getFilename();
+@Entity(name = SReportStringSetting.ENTITY_NAME)
+@Table(name = SReportStringSetting.TABLE_NAME)
+@PrimaryKeyJoinColumn(name = "idSReportSetting")
+public class SReportStringSetting
+        extends SReportSetting<String> {
+    private static final long   serialVersionUID = -1700305423116775408L;
+    public static final  String ENTITY_NAME      = "SReportStringSetting";
+    public static final  String TABLE_NAME       = "reports_settings_string";
+    @NotNull
+    @Length(min = 3, max = 200)
+    @Column(name = "report_setting_string_value", unique = false, updatable = true, insertable = true, length = 300)
+    private String value;
 
-    String getExtension();
+    @Override
+    public String getValue() {
+        return this.value;
+    }
 
-    String getPath();
+    public SReportStringSetting setValue(final String value) {
+        this.value = value;
+        return this;
+    }
+
 }

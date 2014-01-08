@@ -18,7 +18,7 @@
 package org.agatom.springatom.server.model.beans.report;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.server.model.types.report.resource.ReportResource;
+import org.agatom.springatom.server.model.types.report.ReportResource;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.StringUtils;
 
@@ -36,29 +36,54 @@ import javax.validation.constraints.NotNull;
     private static final long serialVersionUID = -4655265596984988537L;
 
     @NotNull
-    @Length(min = 5, max = 200)
-    @Column(name = "report_path", nullable = false, unique = false, updatable = true, insertable = true, length = 200)
-    protected String reportPath;
+    @Length(min = 5, max = 300)
+    @Column(name = "report_jasper_path", nullable = false, unique = false, updatable = true, insertable = true, length = 300)
+    protected String jasperPath;
+    @NotNull
+    @Length(min = 5, max = 300)
+    @Column(name = "report_cfg_path", nullable = false, unique = false, updatable = true, insertable = true, length = 300)
+    protected String configurationPath;
 
-    public SReportResource setReportPath(final String reportPath) {
-        this.reportPath = reportPath;
+    public SReportResource setJasperPath(final String reportPath) {
+        this.jasperPath = reportPath;
+        return this;
+    }
+
+    public SReportResource setConfigurationPath(final String configurationPath) {
+        this.configurationPath = configurationPath;
         return this;
     }
 
     @Override
-    public String getFilename() {
-        return StringUtils.getFilename(reportPath);
+    public String getJasperFilename() {
+        return StringUtils.getFilename(this.jasperPath);
     }
 
     @Override
-    public String getExtension() {
-        return StringUtils.getFilenameExtension(reportPath);
+    public String getJasperExtension() {
+        return StringUtils.getFilenameExtension(this.jasperPath);
     }
 
     @Override
-    public String getPath() {
-        return this.reportPath;
+    public String getJasperPath() {
+        return this.jasperPath;
     }
+
+    @Override
+    public String getConfigurationPath() {
+        return this.configurationPath;
+    }
+
+    @Override
+    public String getConfigurationFilename() {
+        return StringUtils.getFilename(this.configurationPath);
+    }
+
+    @Override
+    public String getConfigurationExtension() {
+        return StringUtils.getFilenameExtension(this.configurationPath);
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -71,11 +96,20 @@ import javax.validation.constraints.NotNull;
 
         SReportResource that = (SReportResource) o;
 
-        return Objects.equal(this.reportPath, that.reportPath);
+        return Objects.equal(this.jasperPath, that.jasperPath) &&
+                Objects.equal(this.configurationPath, that.configurationPath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(reportPath);
+        return Objects.hashCode(jasperPath, configurationPath);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(jasperPath)
+                      .addValue(configurationPath)
+                      .toString();
     }
 }

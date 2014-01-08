@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.report.column;
+package org.agatom.springatom.server.model.types.report;
 
 import java.io.Serializable;
 
@@ -24,9 +24,17 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ReportColumn
+public interface ReportResource
         extends Serializable {
-    String getColumnName();
+    String getJasperPath();
 
-    Class<?> getColumnClass();
+    String getJasperFilename();
+
+    String getJasperExtension();
+
+    String getConfigurationPath();
+
+    String getConfigurationFilename();
+
+    String getConfigurationExtension();
 }

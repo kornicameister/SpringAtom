@@ -18,39 +18,26 @@
 package org.agatom.springatom.server.model.beans.report;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.beans.PersistentVersionedObject;
-import org.agatom.springatom.server.model.beans.report.column.SReportColumn;
-import org.agatom.springatom.server.model.beans.report.entity.SReportEntity;
-import org.agatom.springatom.server.model.beans.report.links.entity.SReportEntityLink;
-import org.agatom.springatom.server.model.beans.report.setting.SReportBooleanSetting;
-import org.agatom.springatom.server.model.beans.report.setting.SReportNumberSetting;
-import org.agatom.springatom.server.model.beans.report.setting.SReportSetting;
-import org.agatom.springatom.server.model.beans.report.setting.SReportStringSetting;
 import org.agatom.springatom.server.model.support.EntityColumn;
 import org.agatom.springatom.server.model.types.report.Report;
-import org.agatom.springatom.server.model.types.report.column.ReportColumnLink;
-import org.agatom.springatom.server.model.types.report.entity.ReportEntity;
-import org.agatom.springatom.server.model.types.report.entity.ReportEntityLink;
-import org.agatom.springatom.server.model.types.report.resource.ReportResource;
+import org.agatom.springatom.server.model.types.report.ReportResource;
+import org.agatom.springatom.server.model.types.report.ReportSetting;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -58,7 +45,6 @@ import java.util.Set;
  * {@code SReport} describes {@code report} by specyfying following properties:
  * <ul>
  * <li>mandatory {@link org.agatom.springatom.server.model.beans.report.SReport#title}</li>
- * <li>mandatory {@link org.agatom.springatom.server.model.beans.report.SReport#entities}</li>
  * <li>mandatory {@link org.agatom.springatom.server.model.beans.report.SReport#resource}</li>
  * <li>optional {@link org.agatom.springatom.server.model.beans.report.SReport#subtitle}</li>
  * <li>optional {@link org.agatom.springatom.server.model.beans.report.SReport#description}</li>
@@ -92,10 +78,6 @@ public class SReport
     protected               String                    description;
     @Embedded
     protected               SReportResource           resource;
-    @NotNull
-    @Size(min = 1, message = MSG.NO_ENTITIES_IN_REPORT)
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    protected               List<SReportEntityLink>   entities;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "report", cascade = CascadeType.DETACH)
     @OnDelete(action = OnDeleteAction.CASCADE)
     protected               Set<SReportSetting<?>>    settings;
@@ -127,24 +109,17 @@ public class SReport
     }
 
     @Override
-    public List<ReportEntity> getEntities() {
-        this.requireEntities();
-        return FluentIterable.from(this.entities)
-                             .transform(new Function<SReportEntityLink, ReportEntity>() {
-                                 @Nullable
-                                 @Override
-                                 public ReportEntity apply(@Nullable final SReportEntityLink input) {
-                                     assert input != null;
-                                     return input.getReportEntity();
-                                 }
-                             })
-                             .toList();
-    }
-
-    @Override
-    public Set<SReportSetting<?>> getSettings() {
+    public Set<ReportSetting<?>> getSettings() {
         this.requireSettings();
-        return this.settings;
+        return FluentIterable
+                .from(this.settings)
+                .transform(new Function<SReportSetting<?>, ReportSetting<?>>() {
+                    @Nullable
+                    @Override
+                    public ReportSetting<?> apply(@Nullable final SReportSetting<?> input) {
+                        return input;
+                    }
+                }).toSet();
     }
 
     @Override
@@ -165,29 +140,6 @@ public class SReport
     }
 
     @Override
-    public boolean hasEntity(final Class<?> javaClass) {
-        this.requireEntities();
-        return FluentIterable
-                .from(this.entities)
-                .filter(new Predicate<ReportEntityLink>() {
-                    @Override
-                    public boolean apply(@Nullable final ReportEntityLink input) {
-                        return input != null
-                                && input.getReportEntity() != null
-                                && input.getReportEntity().getEntityClass() != null
-                                && input.getReportEntity().getEntityClass().equals(javaClass);
-                    }
-                })
-                .first()
-                .isPresent();
-    }
-
-    @Override
-    public boolean hasEntities() {
-        return this.entities != null && !this.entities.isEmpty();
-    }
-
-    @Override
     public boolean hasSetting(@Nonnull final String key) {
         return this.getSettingsAsMap().containsKey(key);
     }
@@ -198,7 +150,7 @@ public class SReport
     }
 
     public SReport setResource(final String reportPath) {
-        this.resource = new SReportResource().setReportPath(reportPath);
+        this.resource = new SReportResource().setJasperPath(reportPath);
         return this;
     }
 
@@ -215,36 +167,6 @@ public class SReport
     public SReport setSubtitle(final String subtitle) {
         this.subtitle = subtitle;
         return this;
-    }
-
-    public SReport setEntities(final List<SReportEntity> entities) {
-        for (final SReportEntity entity : entities) {
-            this.addEntity(entity);
-        }
-        return this;
-    }
-
-    public SReportEntityLink addEntity(final SReportEntity entity) {
-        return this.addEntity(SReportEntityLink.newSReportEntityLink(this, entity));
-    }
-
-    public SReportEntityLink addEntity(final SReportEntityLink entityLink) {
-        Assert.isInstanceOf(
-                SReportEntityLink.class,
-                entityLink,
-                String.format("%s is not valid instance of %s",
-                        entityLink,
-                        ClassUtils.getShortName(SReportEntityLink.class))
-        );
-        this.requireEntities();
-        if (this.entities.add(entityLink)) {
-            return entityLink;
-        }
-        throw new IllegalStateException(String.format("Failed to append new %s", entityLink));
-    }
-
-    public ReportColumnLink addColumn(final SReportEntity entity, final SReportColumn reportColumn) {
-        return this.addEntity(entity).addColumn(reportColumn);
     }
 
     public SReportSetting<?> putSetting(final SReportSetting<?> setting) {
@@ -275,12 +197,6 @@ public class SReport
             ));
         }
         return this.putSetting(setting);
-    }
-
-    private void requireEntities() {
-        if (this.entities == null) {
-            this.entities = Lists.newArrayList();
-        }
     }
 
     private void requireSettings() {

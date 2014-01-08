@@ -15,44 +15,19 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.beans.report.setting;
+package org.agatom.springatom.server.model.types.report;
 
-import org.hibernate.validator.constraints.Range;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
- * {@code SReportNumberSetting} supports any type of a {@link java.lang.Number} derived classes
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = SReportNumberSetting.ENTITY_NAME)
-@Table(name = SReportNumberSetting.TABLE_NAME)
-@PrimaryKeyJoinColumn(name = "idSReportSetting")
-public class SReportNumberSetting
-        extends SReportSetting<Number> {
-    private static final long   serialVersionUID = -1700305423116775408L;
-    public static final  String ENTITY_NAME      = "SReportNumberSetting";
-    public static final  String TABLE_NAME       = "reports_settings_number";
-    @NotNull
-    @Range(min = Long.MIN_VALUE, max = Long.MAX_VALUE)
-    @Column(name = "report_setting_number_val", unique = false, updatable = true, insertable = true)
-    private Number value;
+public interface ReportSetting<HOLDS extends Serializable> {
+    String getName();
 
-    @Override
-    public Number getValue() {
-        return this.value;
-    }
+    HOLDS getValue();
 
-    public SReportNumberSetting setValue(final Number value) {
-        this.value = value;
-        return this;
-    }
-
+    Report getReport();
 }
