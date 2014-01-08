@@ -22,10 +22,7 @@ import org.agatom.springatom.server.model.types.report.entity.ReportEntity;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -47,7 +44,12 @@ import javax.validation.constraints.NotNull;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Table(name = SReportEntity.TABLE_NAME)
+@Table(name = SReportEntity.TABLE_NAME,
+        uniqueConstraints = @UniqueConstraint(
+                name = "reportEntity_clazz_unique",
+                columnNames = "reportEntity_clazz"
+        )
+)
 @Entity(name = SReportEntity.ENTITY_NAME)
 @AttributeOverride(name = "id", column = @Column(name = "idSReportEntity", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SReportEntity
@@ -57,9 +59,9 @@ public class SReportEntity
     public static final  String ENTITY_NAME      = "SReportEntity";
     private static final long   serialVersionUID = 7086049728517905122L;
     @NotNull
+    @NaturalId
     @Length(min = 10, max = 300)
-    @NaturalId(mutable = false)
-    @Column(name = "reportEntity_clazz", nullable = false, length = 300, unique = true)
+    @Column(name = "reportEntity_clazz", nullable = false, unique = true, updatable = false, length = 300)
     protected Class<?> clazz;
 
     public Class<?> getEntityClass() {

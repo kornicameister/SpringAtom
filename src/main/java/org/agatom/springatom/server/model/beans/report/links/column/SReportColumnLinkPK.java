@@ -49,10 +49,10 @@ import java.io.Serializable;
                    Comparable<SReportColumnLinkPK> {
 
     private static final long serialVersionUID = 7415537324216369079L;
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "pk_reports_rcl_re", referencedColumnName = "idSReportEntity")
     private SReportEntity reportEntity;
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "pk_reports_rcl_c", referencedColumnName = "idSReportColumn")
     private SReportColumn reportColumn;
 

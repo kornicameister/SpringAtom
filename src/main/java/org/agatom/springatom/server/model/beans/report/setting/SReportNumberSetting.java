@@ -20,8 +20,9 @@ package org.agatom.springatom.server.model.beans.report.setting;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -32,14 +33,16 @@ import javax.validation.constraints.NotNull;
  * @since 0.0.1
  */
 @Entity(name = SReportNumberSetting.ENTITY_NAME)
-@DiscriminatorValue(value = "number")
+@Table(name = SReportNumberSetting.TABLE_NAME)
+@PrimaryKeyJoinColumn(name = "idSReportSetting")
 public class SReportNumberSetting
         extends SReportSetting<Number> {
     private static final long   serialVersionUID = -1700305423116775408L;
     public static final  String ENTITY_NAME      = "SReportNumberSetting";
+    public static final  String TABLE_NAME       = "reports_settings_number";
     @NotNull
     @Range(min = Long.MIN_VALUE, max = Long.MAX_VALUE)
-    @Column(name = "report_setting_number_val", nullable = false, unique = false, updatable = true, insertable = true)
+    @Column(name = "report_setting_number_val", unique = false, updatable = true, insertable = true)
     private Number value;
 
     @Override

@@ -19,7 +19,6 @@ package org.agatom.springatom.server.model.beans.report.column;
 
 import org.agatom.springatom.server.model.beans.PersistentObject;
 import org.agatom.springatom.server.model.types.report.column.ReportColumn;
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.AttributeOverride;
@@ -48,8 +47,7 @@ public class SReportColumn
     private String   columnName;
     @NotNull
     @Length(min = 10, max = 300)
-    @NaturalId(mutable = false)
-    @Column(name = "reportColumn_clazz", nullable = false, insertable = true, unique = true, updatable = false, length = 300)
+    @Column(name = "reportColumn_clazz", nullable = false, updatable = false, length = 300)
     private Class<?> columnClass;
 
     public SReportColumn setColumnName(final String propertyName) {

@@ -18,8 +18,9 @@
 package org.agatom.springatom.server.model.beans.report.setting;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -35,13 +36,15 @@ import javax.validation.constraints.NotNull;
  */
 
 @Entity(name = SReportBooleanSetting.ENTITY_NAME)
-@DiscriminatorValue(value = "boolean")
+@Table(name = SReportBooleanSetting.TABLE_NAME)
+@PrimaryKeyJoinColumn(name = "idSReportSetting")
 public class SReportBooleanSetting
         extends SReportSetting<Boolean> {
     private static final long   serialVersionUID = -1700305423116775408L;
     public static final  String ENTITY_NAME      = "SReportBooleanSetting";
+    public static final  String TABLE_NAME       = "reports_settings_boolean";
     @NotNull
-    @Column(name = "report_setting_boolean_val", nullable = false, unique = false, updatable = true, insertable = true)
+    @Column(name = "report_setting_boolean_val", unique = false, updatable = true, insertable = true)
     private Boolean value;
 
     @Override

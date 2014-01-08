@@ -45,15 +45,13 @@ import java.io.Serializable;
 @Table(name = SReportSetting.TABLE_NAME)
 @Entity(name = SReportSetting.ENTITY_NAME)
 @AttributeOverride(name = "id", column = @Column(name = "idSReportSetting", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = SReportSetting.HOLDS_TYPE_COL, discriminatorType = DiscriminatorType.STRING)
+@Inheritance(strategy = InheritanceType.JOINED)
 abstract public class SReportSetting<HOLDS extends Serializable>
         extends PersistentObject<Long>
         implements ReportSetting<HOLDS> {
-    private static final long   serialVersionUID = -1700305423116775408L;
-    public static final  String TABLE_NAME       = "reports_settings";
-    public static final  String ENTITY_NAME      = "SReportSetting";
-    public static final  String HOLDS_TYPE_COL   = "report_setting_holds";
+    private static final   long   serialVersionUID = -1700305423116775408L;
+    protected static final String TABLE_NAME       = "reports_settings";
+    protected static final String ENTITY_NAME      = "SReportSetting";
     @NotNull
     @Length(min = 3, max = 200)
     @Column(name = "report_setting_name", nullable = false, unique = false, updatable = true, insertable = true, length = 200)

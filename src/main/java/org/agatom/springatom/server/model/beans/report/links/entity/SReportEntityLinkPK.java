@@ -45,10 +45,10 @@ import java.io.Serializable;
 @Embeddable class SReportEntityLinkPK
         implements Serializable {
     private static final long serialVersionUID = 7327536301126954327L;
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "pk_reports_rel_r", referencedColumnName = "idSReport")
     private SReport       report;
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "pk_reports_rel_re", referencedColumnName = "idSReportEntity")
     private SReportEntity reportEntity;
 
