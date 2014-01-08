@@ -15,32 +15,42 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.report;
+package org.agatom.springatom.server.model.beans.report.setting;
 
-import org.agatom.springatom.server.model.beans.report.SReportColumn;
+import org.hibernate.validator.constraints.Length;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 
 /**
+ * {@code SReportStringSetting} takes any {@link java.lang.String} as the value
+ * for given {@link org.agatom.springatom.server.model.beans.report.setting.SReportSetting}
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ReportColumn {
-    SReportColumn setReportEntity(ReportEntity report);
+@Entity(name = SReportStringSetting.ENTITY_NAME)
+@DiscriminatorValue(value = "string")
+public class SReportStringSetting
+        extends SReportSetting<String> {
+    private static final long   serialVersionUID = -1700305423116775408L;
+    public static final  String ENTITY_NAME      = "SReportStringSetting";
+    @NotNull
+    @Length(min = 3, max = 200)
+    @Column(name = "report_setting_string_value", nullable = false, unique = false, updatable = true, insertable = true, length = 300)
+    private String value;
 
-    ReportEntity getReportEntity();
+    @Override
+    public String getValue() {
+        return this.value;
+    }
 
-    String getEntityName();
-
-    String getColumnName();
-
-    ReportColumn setColumnName(String columnName);
-
-    String getPropertyName();
-
-    ReportColumn setPropertyName(String propertyName);
-
-    Class<?> getPropertyClass();
-
-    ReportColumn setPropertyClass(Class<?> columnClazz);
+    public SReportStringSetting setValue(final String value) {
+        this.value = value;
+        return this;
+    }
 
 }

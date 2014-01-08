@@ -29,10 +29,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.ClassUtils;
 
 import javax.annotation.Nonnull;
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -41,6 +38,7 @@ import java.util.Comparator;
  * @version 0.0.1
  * @since 0.0.1
  */
+@Cacheable(value = true)
 @DynamicInsert
 @DynamicUpdate
 @MappedSuperclass

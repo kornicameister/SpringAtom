@@ -15,42 +15,41 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.report;
+package org.agatom.springatom.server.model.beans.report.setting;
 
-import org.agatom.springatom.server.model.beans.report.SReport;
-import org.agatom.springatom.server.model.beans.report.SReportEntity;
+import org.hibernate.validator.constraints.Range;
 
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 
 /**
+ * {@code SReportNumberSetting} supports any type of a {@link java.lang.Number} derived classes
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ReportEntity {
-    String getName();
+@Entity(name = SReportNumberSetting.ENTITY_NAME)
+@DiscriminatorValue(value = "number")
+public class SReportNumberSetting
+        extends SReportSetting<Number> {
+    private static final long   serialVersionUID = -1700305423116775408L;
+    public static final  String ENTITY_NAME      = "SReportNumberSetting";
+    @NotNull
+    @Range(min = Long.MIN_VALUE, max = Long.MAX_VALUE)
+    @Column(name = "report_setting_number_val", nullable = false, unique = false, updatable = true, insertable = true)
+    private Number value;
 
-    SReportEntity setName(String name);
+    @Override
+    public Number getValue() {
+        return this.value;
+    }
 
-    Class<?> getClazz();
+    public SReportNumberSetting setValue(final Number value) {
+        this.value = value;
+        return this;
+    }
 
-    SReportEntity setClazz(Class<?> clazz);
-
-    SReport getReport();
-
-    SReportEntity setReport(SReport report);
-
-    List<ReportColumn> getColumns();
-
-    ReportEntity setColumns(final List<ReportColumn> columns);
-
-    ReportColumn addColumn(final ReportColumn column);
-
-    boolean hasColumn(final String columnName);
-
-    boolean hasColumn(final Class<?> columnClazz);
-
-    boolean hasColumns();
-
-    void clearColumns();
 }

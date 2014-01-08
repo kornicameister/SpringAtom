@@ -15,32 +15,26 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.report;
+package org.agatom.springatom.server.model.types.report.column;
 
 import org.agatom.springatom.server.model.types.report.entity.ReportEntity;
-import org.agatom.springatom.server.model.types.report.resource.ReportResource;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface Report
+public interface ReportColumnLink
         extends Serializable {
-    ReportResource getResource();
+    ReportEntity getReportEntityLink();
 
-    String getDescription();
+    ReportColumn getReportColumn();
 
-    String getTitle();
+    String getHeader();
 
-    String getSubtitle();
+    Long getWidth();
 
-    List<ReportEntity> getEntities();
-
-    boolean hasEntity(Class<?> javaClass);
-
-    boolean hasEntities();
+    Class<?> getType();
 }

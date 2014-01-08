@@ -15,14 +15,17 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.beans.report;
+package org.agatom.springatom.server.model.beans.report.column;
 
 import org.agatom.springatom.server.model.beans.PersistentObject;
-import org.agatom.springatom.server.model.types.report.ReportColumn;
-import org.agatom.springatom.server.model.types.report.ReportEntity;
+import org.agatom.springatom.server.model.types.report.column.ReportColumn;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.*;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -32,41 +35,26 @@ import javax.validation.constraints.NotNull;
  */
 @Table(name = SReportColumn.TABLE_NAME)
 @Entity(name = SReportColumn.ENTITY_NAME)
-@AttributeOverride(name = "id", column = @Column(name = "rc_id", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
+@AttributeOverride(name = "id", column = @Column(name = "idSReportColumn", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SReportColumn
         extends PersistentObject<Long>
         implements ReportColumn {
-    public static final String TABLE_NAME  = "report_columns";
-    public static final String ENTITY_NAME = "SReportColumn";
-    @Length(max = 50, min = 1)
+    public static final  String TABLE_NAME       = "reports_c";
+    public static final  String ENTITY_NAME      = "SReportColumn";
+    private static final long   serialVersionUID = 2086990797761876723L;
     @NotNull
-    @Column(name = "rc_columnName", nullable = false, length = 50)
-    private   String       columnName;
-    @Length(max = 50, min = 1)
-    @Column(name = "rc_propertyName", nullable = false, length = 50)
-    private   String       propertyName;
+    @Length(max = 50)
+    @Column(name = "reportColumn_name", nullable = false, updatable = false, length = 50)
+    private String   columnName;
     @NotNull
-    @Column(name = "rc_propertyClazz", nullable = false, length = 300)
-    private   Class<?>     propertyClass;
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = SReportEntity.class)
-    @JoinColumn(name = "re_reportEntity", referencedColumnName = "re_id", updatable = false)
-    protected ReportEntity reportEntity;
+    @Length(min = 10, max = 300)
+    @NaturalId(mutable = false)
+    @Column(name = "reportColumn_clazz", nullable = false, insertable = true, unique = true, updatable = false, length = 300)
+    private Class<?> columnClass;
 
-    @Override
-    public SReportColumn setReportEntity(final ReportEntity report) {
-        this.reportEntity = report;
+    public SReportColumn setColumnName(final String propertyName) {
+        this.columnName = propertyName;
         return this;
-    }
-
-    @Override
-    public ReportEntity getReportEntity() {
-        return reportEntity;
-    }
-
-    @Override
-    public String getEntityName() {
-        return this.reportEntity.getName();
     }
 
     @Override
@@ -75,30 +63,12 @@ public class SReportColumn
     }
 
     @Override
-    public ReportColumn setColumnName(final String columnName) {
-        this.columnName = columnName;
-        return this;
+    public Class<?> getColumnClass() {
+        return columnClass;
     }
 
-    @Override
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    @Override
-    public ReportColumn setPropertyName(final String propertyName) {
-        this.propertyName = propertyName;
-        return this;
-    }
-
-    @Override
-    public Class<?> getPropertyClass() {
-        return propertyClass;
-    }
-
-    @Override
-    public ReportColumn setPropertyClass(final Class<?> columnClazz) {
-        this.propertyClass = columnClazz;
+    public SReportColumn setPropertyClass(final Class<?> columnClazz) {
+        this.columnClass = columnClazz;
         return this;
     }
 }

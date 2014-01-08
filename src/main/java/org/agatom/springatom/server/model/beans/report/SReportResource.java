@@ -15,32 +15,67 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.report;
+package org.agatom.springatom.server.model.beans.report;
 
-import org.agatom.springatom.server.model.types.report.entity.ReportEntity;
+import com.google.common.base.Objects;
 import org.agatom.springatom.server.model.types.report.resource.ReportResource;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.util.StringUtils;
 
-import java.io.Serializable;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface Report
-        extends Serializable {
-    ReportResource getResource();
+@Embeddable class SReportResource
+        implements ReportResource {
+    private static final long serialVersionUID = -4655265596984988537L;
 
-    String getDescription();
+    @NotNull
+    @Length(min = 5, max = 200)
+    @Column(name = "report_path", nullable = false, unique = false, updatable = true, insertable = true, length = 200)
+    protected String reportPath;
 
-    String getTitle();
+    public SReportResource setReportPath(final String reportPath) {
+        this.reportPath = reportPath;
+        return this;
+    }
 
-    String getSubtitle();
+    @Override
+    public String getFilename() {
+        return StringUtils.getFilename(reportPath);
+    }
 
-    List<ReportEntity> getEntities();
+    @Override
+    public String getExtension() {
+        return StringUtils.getFilenameExtension(reportPath);
+    }
 
-    boolean hasEntity(Class<?> javaClass);
+    @Override
+    public String getPath() {
+        return this.reportPath;
+    }
 
-    boolean hasEntities();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SReportResource that = (SReportResource) o;
+
+        return Objects.equal(this.reportPath, that.reportPath);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(reportPath);
+    }
 }
