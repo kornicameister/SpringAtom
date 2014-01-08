@@ -41,7 +41,7 @@ import org.springframework.context.annotation.*;
  * @since 0.0.1
  */
 @Configuration(value = InfoPageModuleConfiguration.MODULE_NAME)
-@PropertySource(value = "classpath:org/agatom/springatom/ip/infopage.properties")
+@PropertySource(value = "classpath:org/agatom/springatom/web/infopages/infopage.properties")
 @ComponentScan(
         nameGenerator = ComponentBuilderModuleConfiguration.NameGen.class,
         basePackages = {
