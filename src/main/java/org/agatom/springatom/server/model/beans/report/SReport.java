@@ -83,24 +83,28 @@ public class SReport
     @Length(min = 5, max = 50)
     @NaturalId(mutable = false)
     @Column(name = "report_title", nullable = false, unique = true, updatable = false, length = 50)
-    protected         String                    title;
+    protected               String                    title;
     @Length(min = 5, max = 50)
     @Column(name = "report_subtitle", nullable = true, insertable = true, updatable = true, length = 50)
-    protected         String                    subtitle;
+    protected               String                    subtitle;
     @Length(max = 200)
     @Column(name = "report_description", nullable = true, updatable = true, insertable = true, length = 200)
-    protected         String                    description;
+    protected               String                    description;
     @Embedded
-    protected         SReportResource           resource;
+    protected               SReportResource           resource;
     @NotNull
     @Size(min = 1, message = MSG.NO_ENTITIES_IN_REPORT)
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    protected         List<SReportEntityLink>   entities;
+    protected               List<SReportEntityLink>   entities;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "report", cascade = CascadeType.DETACH)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    protected         Set<SReportSetting<?>>    settings;
+    protected               Set<SReportSetting<?>>    settings;
     @Transient
-    private transient Map<String, Serializable> mappedSettings;
+    private final transient Map<String, Serializable> mappedSettings;
+
+    public SReport() {
+        this.mappedSettings = Maps.newHashMap();
+    }
 
     @Override
     public ReportResource getResource() {
@@ -146,12 +150,11 @@ public class SReport
     @Override
     public Map<String, Serializable> getSettingsAsMap() {
         this.getSettings();
-        if (this.mappedSettings == null) {
-            final Map<String, Serializable> map = Maps.newHashMap();
-            for (final SReportSetting<?> setting : this.settings) {
-                map.put(setting.getName(), setting.getValue());
-            }
-            this.mappedSettings = map;
+        if (this.settings.size() != this.mappedSettings.size()) {
+            this.mappedSettings.clear();
+        }
+        for (final SReportSetting<?> setting : this.settings) {
+            this.mappedSettings.put(setting.getName(), setting.getValue());
         }
         return this.mappedSettings;
     }
@@ -247,6 +250,7 @@ public class SReport
     public SReportSetting<?> putSetting(final SReportSetting<?> setting) {
         this.requireSettings();
         this.settings.add(setting.setReport(this));
+        this.mappedSettings.put(setting.getName(), setting.getValue());
         return setting;
     }
 
