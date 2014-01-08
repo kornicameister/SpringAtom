@@ -21,11 +21,16 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.server.model.beans.report.column.SReportColumn;
 import org.agatom.springatom.server.model.beans.report.entity.SReportEntity;
 import org.agatom.springatom.server.model.beans.report.links.entity.SReportEntityLink;
+import org.agatom.springatom.server.model.beans.report.setting.SReportBooleanSetting;
+import org.agatom.springatom.server.model.beans.report.setting.SReportNumberSetting;
 import org.agatom.springatom.server.model.beans.report.setting.SReportSetting;
+import org.agatom.springatom.server.model.beans.report.setting.SReportStringSetting;
 import org.agatom.springatom.server.model.support.EntityColumn;
 import org.agatom.springatom.server.model.types.report.Report;
 import org.agatom.springatom.server.model.types.report.column.ReportColumnLink;
@@ -39,11 +44,14 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -75,22 +83,24 @@ public class SReport
     @Length(min = 5, max = 50)
     @NaturalId(mutable = false)
     @Column(name = "report_title", nullable = false, unique = true, updatable = false, length = 50)
-    protected String                  title;
+    protected         String                    title;
     @Length(min = 5, max = 50)
     @Column(name = "report_subtitle", nullable = true, insertable = true, updatable = true, length = 50)
-    protected String                  subtitle;
+    protected         String                    subtitle;
     @Length(max = 200)
     @Column(name = "report_description", nullable = true, updatable = true, insertable = true, length = 200)
-    protected String                  description;
+    protected         String                    description;
     @Embedded
-    protected SReportResource         resource;
+    protected         SReportResource           resource;
     @NotNull
     @Size(min = 1, message = MSG.NO_ENTITIES_IN_REPORT)
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    protected List<SReportEntityLink> entities;
+    protected         List<SReportEntityLink>   entities;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "report", cascade = CascadeType.DETACH)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    protected Set<SReportSetting>     settings;
+    protected         Set<SReportSetting<?>>    settings;
+    @Transient
+    private transient Map<String, Serializable> mappedSettings;
 
     @Override
     public ReportResource getResource() {
@@ -128,6 +138,30 @@ public class SReport
     }
 
     @Override
+    public Set<SReportSetting<?>> getSettings() {
+        this.requireSettings();
+        return this.settings;
+    }
+
+    @Override
+    public Map<String, Serializable> getSettingsAsMap() {
+        this.getSettings();
+        if (this.mappedSettings == null) {
+            final Map<String, Serializable> map = Maps.newHashMap();
+            for (final SReportSetting<?> setting : this.settings) {
+                map.put(setting.getName(), setting.getValue());
+            }
+            this.mappedSettings = map;
+        }
+        return this.mappedSettings;
+    }
+
+    @Override
+    public Serializable getSetting(final String key) {
+        return this.getSettingsAsMap().get(key);
+    }
+
+    @Override
     public boolean hasEntity(final Class<?> javaClass) {
         this.requireEntities();
         return FluentIterable
@@ -148,6 +182,16 @@ public class SReport
     @Override
     public boolean hasEntities() {
         return this.entities != null && !this.entities.isEmpty();
+    }
+
+    @Override
+    public boolean hasSetting(@Nonnull final String key) {
+        return this.getSettingsAsMap().containsKey(key);
+    }
+
+    @Override
+    public boolean hasSettings() {
+        return this.settings != null && !this.settings.isEmpty();
     }
 
     public SReport setResource(final String reportPath) {
@@ -200,9 +244,44 @@ public class SReport
         return this.addEntity(entity).addColumn(reportColumn);
     }
 
+    public SReportSetting<?> putSetting(final SReportSetting<?> setting) {
+        this.requireSettings();
+        this.settings.add(setting.setReport(this));
+        return setting;
+    }
+
+    public <VAL extends Serializable> SReportSetting<?> putSetting(final String key, final VAL value) throws IllegalArgumentException {
+        final Class<? extends Serializable> valueClass = value.getClass();
+        SReportSetting<?> setting = null;
+        if (ClassUtils.isAssignable(String.class, valueClass)) {
+            setting = new SReportStringSetting().setValue((String) value).setName(key);
+        } else if (ClassUtils.isAssignable(Number.class, valueClass)) {
+            setting = new SReportNumberSetting().setValue((Number) value).setName(key);
+        } else if (ClassUtils.isAssignable(Boolean.class, valueClass)) {
+            setting = new SReportBooleanSetting().setValue((Boolean) value).setName(key);
+        }
+        if (setting == null) {
+            throw new IllegalArgumentException(String.format("%s is not assignable to any of following types = [%s]",
+                    ClassUtils.getShortName(valueClass),
+                    Lists.newArrayList(
+                            ClassUtils.getShortName(String.class),
+                            ClassUtils.getShortName(Number.class),
+                            ClassUtils.getShortName(Boolean.class)
+                    )
+            ));
+        }
+        return this.putSetting(setting);
+    }
+
     private void requireEntities() {
         if (this.entities == null) {
             this.entities = Lists.newArrayList();
+        }
+    }
+
+    private void requireSettings() {
+        if (this.settings == null) {
+            this.settings = Sets.newHashSet();
         }
     }
 
