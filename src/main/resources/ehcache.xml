@@ -15,58 +15,30 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<ehcache
-        updateCheck="true"
-        monitoring="autodetect"
-        dynamicConfig="true">
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true" monitoring="autodetect"
+         dynamicConfig="true">
 
     <diskStore path="java.io.tmpdir/springatom"/>
 
-    <defaultCache
-            maxElementsInMemory="10"
-            eternal="true"
-            overflowToDisk="true"
-            diskSpoolBufferSizeMB="30"
-            maxElementsOnDisk="1000000"
-            diskPersistent="true"
-            diskExpiryThreadIntervalSeconds="120"
-            memoryStoreEvictionPolicy="LRU"
-            />
-    <cache
-            name="org.hibernate.cache.internal.StandardQueryCache"
-            maxElementsInMemory="2"
-            eternal="true"
-            timeToLiveSeconds="120"
-            overflowToDisk="true"/>
-    <cache
-            name="org.hibernate.cache.spi.UpdateTimestampsCache"
-            maxElementsInMemory="2"
-            eternal="true"
-            timeToLiveSeconds="120"
-            overflowToDisk="true"/>
-    <cache
-            name="org.hibernate.cache.StandardQueryCache"
-            maxElementsInMemory="2"
-            eternal="true"
-            timeToLiveSeconds="120"
-            overflowToDisk="true"/>
+    <defaultCache maxEntriesLocalHeap="10000" eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="120" diskSpoolBufferSizeMB="30"
+                  maxEntriesLocalDisk="10000000" diskExpiryThreadIntervalSeconds="120" memoryStoreEvictionPolicy="LRU">
+        <persistence strategy="localTempSwap"/>
+    </defaultCache>
 
     <!-- idle and live silently ignored-->
-    <cache name="typedata"
-           eternal="true"
-           timeToLiveSeconds="0"
-           maxElementsInMemory="2"
-           overflowToDisk="true"
-            />
     <cache name="cars"
-           eternal="true"
-           timeToLiveSeconds="0"
-           maxElementsInMemory="2"
+           timeToLiveSeconds="3600"
+           maxEntriesLocalHeap="200"
            overflowToDisk="true"/>
     <cache name="clients"
-           eternal="true"
-           timeToLiveSeconds="0"
-           maxElementsInMemory="2"
+           timeToLiveSeconds="3600"
+           maxEntriesLocalHeap="200"
            overflowToDisk="true"/>
+    <cache name="reports"
+           overflowToDisk="true"
+           diskPersistent="true"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           maxEntriesLocalHeap="20"/>
 
 </ehcache>

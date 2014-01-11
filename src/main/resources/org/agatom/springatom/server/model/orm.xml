@@ -54,25 +54,26 @@
                 <prop key="hibernate.use_sql_comments">${db.hibernate.use_sql_comments}</prop>
                 <prop key="hibernate.hbm2ddl.auto">${db.hibernate.hbm2ddl.auto}</prop>
                 <prop key="hibernate.bytecode.use_reflection_optimizer">${db.hibernate.use_reflection_optimizer}</prop>
-                <prop key="hibernate.transaction.flush_before_completion">
-                    ${db.hibernate.transaction.flush_before_completion}
-                </prop>
-                <prop key="hibernate.transaction.auto_close_session">${db.hibernate.transaction.auto_close_session}
-                </prop>
-                <prop key="hibernate.cache.use_minimal_puts">${db.hibernate.cache.use_minimal_puts}</prop>
+                <prop key="hibernate.transaction.flush_before_completion">${db.hibernate.transaction.flush_before_completion}</prop>
+                <prop key="hibernate.transaction.auto_close_session">${db.hibernate.transaction.auto_close_session}</prop>
                 <prop key="hibernate.connection.autocommit">${db.hibernate.connection.autocommit}</prop>
                 <prop key="org.hibernate.envers.revision_field_name">${db.hibernate.envers.revision_field_name}</prop>
-                <prop key="org.hibernate.envers.revision_type_field_name">
-                    ${db.hibernate.envers.revision_type_field_name}
-                </prop>
+                <prop key="org.hibernate.envers.revision_type_field_name">${db.hibernate.envers.revision_type_field_name}</prop>
                 <prop key="org.hibernate.envers.audit_table_suffix">${db.hibernate.envers.audit_table_suffix}</prop>
                 <prop key="hibernate.validator.apply_to_ddl">${db.hibernate.validator.apply_to_ddl}</prop>
-                <prop key="hibernate.validator.autoregister_listeners">
-                    ${db.hibernate.validator.autoregister_listeners}
-                </prop>
+                <prop key="hibernate.validator.autoregister_listeners">${db.hibernate.validator.autoregister_listeners}</prop>
                 <prop key="org.hibernate.envers.track_entities_changed_in_revision">true</prop>
                 <prop key="org.hibernate.envers.revision_on_collection_change">false</prop>
                 <prop key="jadira.usertype.autoRegisterUserTypes">true</prop>
+                <!-- hibernate caching-->
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.use_minimal_puts">${db.hibernate.cache.use_minimal_puts}</prop>
+                <prop key="hibernate.cache.use_query_cache">true</prop>
+                <!-- hibernate caching-->
+                <!-- stats -->
+                <prop key="hibernate.generate_statistics">true</prop>
+                <!-- stats -->
             </props>
         </property>
     </bean>

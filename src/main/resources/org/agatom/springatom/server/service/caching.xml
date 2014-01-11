@@ -26,15 +26,14 @@
       http://www.springframework.org/schema/cache/spring-cache.xsd">
 
     <!-- Ehcache library setup -->
-    <cache:annotation-driven cache-manager="cacheManager"
-                             proxy-target-class="false"
-                             mode="aspectj"/>
+    <cache:annotation-driven/>
+
     <bean id="cacheManager"
           class="org.springframework.cache.ehcache.EhCacheCacheManager"
-          lazy-init="true"
+          lazy-init="false"
           p:cacheManager-ref="ehcache"/>
     <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
           p:configLocation="classpath:ehcache.xml"
-          lazy-init="true"
+          lazy-init="false"
           p:shared="true"/>
 </beans>
