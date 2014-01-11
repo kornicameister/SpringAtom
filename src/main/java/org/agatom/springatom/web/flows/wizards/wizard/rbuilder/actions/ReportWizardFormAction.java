@@ -17,14 +17,15 @@
 
 package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 
-import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.web.flows.wizards.wizard.rbuilder.ReportWizard;
+import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.converter.ConditionalConverter;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.WebDataBinder;
@@ -49,8 +50,8 @@ abstract class ReportWizardFormAction
     protected ApplicationContext          applicationContext;
 
     protected ReportWizardFormAction() {
-        this.setFormObjectClass(SReport.class);
-        this.setFormObjectName(SReport.ENTITY_NAME);
+        this.setFormObjectClass(ReportConfiguration.class);
+        this.setFormObjectName(StringUtils.uncapitalize(ClassUtils.getShortName(ReportConfiguration.class)));
     }
 
     public final void init(final ReportWizard reportWizard) {
@@ -74,7 +75,7 @@ abstract class ReportWizardFormAction
 
     @Override
     protected Object getFormObject(final RequestContext context) throws Exception {
-        return this.reportWizard.getReport();
+        return this.reportWizard.getReportConfiguration();
     }
 
     protected abstract WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService);

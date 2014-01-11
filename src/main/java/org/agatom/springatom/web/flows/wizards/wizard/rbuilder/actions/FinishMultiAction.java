@@ -17,14 +17,13 @@
 
 package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 
-import org.agatom.springatom.server.model.beans.report.SReport;
-import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
+import org.agatom.springatom.server.model.types.report.Report;
+import org.agatom.springatom.server.service.domain.ReportBuilderService;
 import org.agatom.springatom.web.flows.wizards.wizard.rbuilder.ReportWizard;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.binding.message.MessageBuilder;
@@ -35,7 +34,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.webflow.action.EventFactorySupport;
-import org.springframework.webflow.action.MultiAction;
+import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -52,51 +51,46 @@ import java.util.Locale;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Component(value = "finishReportAction")
 public class FinishMultiAction
-        extends MultiAction {
+        implements Action {
 
     private static final Logger LOGGER = Logger.getLogger(FinishMultiAction.class);
     @Autowired
-    @Qualifier(SReportRepository.REPO_NAME)
-    private SReportRepository reportRepository;
+    private SMessageSource       messageSource;
     @Autowired
-    private SMessageSource    messageSource;
+    private ReportWizard         reportWizard;
     @Autowired
-    private ReportWizard      reportWizard;
+    private ReportBuilderService builderService;
 
-    public Event saveReport(final RequestContext flowContext) {
-        LOGGER.debug(String.format("/saveReport reportWizard=%s,context=%s", this, flowContext));
+    @Override
+    public Event execute(final RequestContext context) throws Exception {
+        LOGGER.debug(String.format("/saveReport reportWizard=%s,context=%s", this, context));
 
-        final MessageContext messageContext = flowContext.getMessageContext();
+        final MessageContext messageContext = context.getMessageContext();
         final Locale locale = LocaleContextHolder.getLocale();
         final EventFactorySupport eventFactorySupport = new EventFactorySupport();
 
         try {
-            final SReport report = this.reportRepository.save(this.reportWizard.getReportForSave());
-            if (report != null && !report.isNew()) {
-                LOGGER.info(String.format("Persisted new report => %s", report));
-                messageContext.addMessage(new MessageBuilder()
-                        .info()
-                        .source(report)
-                        .defaultText(
-                                this.messageSource.getMessage(
-                                        "wizard.NewReportWizard.info.s",
-                                        new Object[]{report.getName()},
-                                        locale
-                                )
-                        )
-                        .build()
-                );
-            }
-            this.reportWizard.setSavedReport(report);
+            final Report report = this.builderService.save(
+                    this.reportWizard.getReportConfiguration(),
+                    this.reportWizard.getReport()
+            );
+            LOGGER.info(String.format("Persisted new report => %s", report));
+            messageContext.addMessage(new MessageBuilder()
+                    .info()
+                    .source(report)
+                    .defaultText(
+                            this.messageSource.getMessage(
+                                    "wizard.NewReportWizard.info.s",
+                                    new Object[]{report.getTitle()},
+                                    locale
+                            )
+                    )
+                    .build()
+            );
             return eventFactorySupport.success(this, report);
         } catch (Exception persistException) {
             LOGGER.fatal(persistException);
             return eventFactorySupport.error(this, new ReportBuilderServiceException(persistException));
         }
     }
-
-    public Event saveAndGenerateReport(final RequestContext flowContext) {
-        return this.saveReport(flowContext);
-    }
-
 }

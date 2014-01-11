@@ -23,7 +23,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
 
-<%@ page import="org.agatom.springatom.server.model.beans.report.SReport" %>
+<%@ page import="org.agatom.springatom.web.rbuilder.ReportConfiguration" %>
+<%@ page import="org.springframework.util.ClassUtils" %>
+<%@ page import="org.springframework.util.StringUtils" %>
 <%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
 <div id="sa-wizard-step-body" class="x-wizard-content">
@@ -31,18 +33,32 @@
 
     <form:form id="${requestScope.formID}"
                action="${flowExecutionUrl}"
-               commandName="<%=SReport.ENTITY_NAME%>"
+               commandName="<%=StringUtils.uncapitalize(ClassUtils.getShortName(ReportConfiguration.class))%>"
                method="<%=RequestMethod.POST.toString().toLowerCase()%>"
                cssClass="x-form">
         <fieldset>
             <legend><s:message code="wizard.NewReportWizard.entity.describeReport"/></legend>
             <p>
-                <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.name"/>">
-                    <span><s:message code="wizard.NewReportWizard.report.name"/></span>
-                    <form:input id="${requestScope.formID}-name" htmlEscape="true" cssClass="x-input" path="name"/>
+                <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.title"/>">
+                    <span><s:message code="wizard.NewReportWizard.report.title"/></span>
+                    <form:input id="${requestScope.formID}-title" htmlEscape="true" cssClass="x-input" path="title"/>
                 </label>
                 <script type="text/javascript">
-                    var el = $('#' + '${requestScope.formID}-name');
+                    var el = $('#' + '${requestScope.formID}-title');
+                    Spring.addDecoration(new Spring.ElementDecoration({
+                        elementId  : el.attr('id'),
+                        widgetType : 'dijit.form.TextBox',
+                        widgetAttrs: {
+                            class: el.attr('class')
+                        }
+                    }))
+                </script>
+                <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.subtitle"/>">
+                    <span><s:message code="wizard.NewReportWizard.report.subtitle"/></span>
+                    <form:input id="${requestScope.formID}-subtitle" htmlEscape="true" cssClass="x-input" path="subtitle"/>
+                </label>
+                <script type="text/javascript">
+                    var el = $('#' + '${requestScope.formID}-subtitle');
                     Spring.addDecoration(new Spring.ElementDecoration({
                         elementId  : el.attr('id'),
                         widgetType : 'dijit.form.TextBox',

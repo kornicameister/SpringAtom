@@ -18,14 +18,11 @@
 package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import org.agatom.springatom.server.model.beans.report.SReport;
-import org.agatom.springatom.server.model.beans.report.SReportColumn;
-import org.agatom.springatom.server.model.types.report.Report;
-import org.agatom.springatom.server.model.types.report.ReportColumn;
-import org.agatom.springatom.server.model.types.report.ReportEntity;
+import com.google.common.collect.Sets;
+import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.ReportableBean;
 import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
+import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -36,6 +33,7 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -43,7 +41,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author kornicameister
@@ -79,29 +77,23 @@ public class PickColumnsFormAction
 
     @Override
     public Event resetForm(final RequestContext context) throws Exception {
-        final SReport report = this.reportWizard.getReport();
-        for (final ReportEntity entity : report.getEntities()) {
-            entity.clearColumns();
-        }
+        final ReportConfiguration report = this.reportWizard.getReportConfiguration();
+        Assert.notNull(report);
+        report.clearColumns();
         return success();
     }
 
     private abstract class BaseConverter
             extends MatcherConverter {
-        protected List<ReportColumn> doConvert(final List<String> list) {
+        protected Set<ReportableColumn> doConvert(final Set<String> list) {
             LOGGER.trace(String.format("converting with selected clazz=%s", list));
             Preconditions.checkNotNull(list);
             Preconditions.checkArgument(!list.isEmpty());
-            final List<ReportColumn> reportedColumns = Lists.newArrayList();
+            final Set<ReportableColumn> reportedColumns = Sets.newTreeSet();
             for (final String javaClassName : list) {
                 final ReportableBean bean = reportWizard.getReportableBean(Integer.valueOf(javaClassName));
                 if (ClassUtils.isAssignable(ReportableColumn.class, bean.getClass())) {
-                    final ReportableColumn reportableColumn = (ReportableColumn) bean;
-                    reportedColumns.add(new SReportColumn()
-                            .setColumnName(reportableColumn.getLabel())
-                            .setPropertyName(reportableColumn.getColumnName())
-                            .setPropertyClass(reportableColumn.getColumnClass())
-                    );
+                    reportedColumns.add((ReportableColumn) bean);
                 }
             }
             return reportedColumns;
@@ -112,35 +104,35 @@ public class PickColumnsFormAction
 
     private class StringArrayToReportColumnListConverter
             extends BaseConverter
-            implements Converter<String[], List<ReportColumn>> {
+            implements Converter<String[], Set<ReportableColumn>> {
 
         @Override
-        public List<ReportColumn> convert(final String[] attributes) {
-            return this.doConvert(Lists.newArrayList(attributes));
+        public Set<ReportableColumn> convert(final String[] attributes) {
+            return this.doConvert(Sets.newHashSet(attributes));
         }
 
         @Override
         public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
             final Class<?> sourceTypeClass = sourceType.getType();
             return ClassUtils.isAssignable(String[].class, sourceTypeClass)
-                    && ClassUtils.isAssignable(List.class, targetType.getType());
+                    && ClassUtils.isAssignable(Set.class, targetType.getType());
         }
     }
 
     private class StringToReportColumnListConverter
             extends BaseConverter
-            implements Converter<String, List<ReportColumn>> {
+            implements Converter<String, Set<ReportableColumn>> {
 
         @Override
-        public List<ReportColumn> convert(final String clazz) {
-            return this.doConvert(Lists.newArrayList(clazz));
+        public Set<ReportableColumn> convert(final String clazz) {
+            return this.doConvert(Sets.newHashSet(clazz));
         }
 
         @Override
         public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
             final Class<?> sourceTypeClass = sourceType.getType();
             return ClassUtils.isAssignable(String.class, sourceTypeClass)
-                    && ClassUtils.isAssignable(List.class, targetType.getType());
+                    && ClassUtils.isAssignable(Set.class, targetType.getType());
         }
     }
 
@@ -148,16 +140,16 @@ public class PickColumnsFormAction
             implements Validator {
         @Override
         public boolean supports(final Class<?> clazz) {
-            return ClassUtils.isAssignable(SReport.class, clazz);
+            return ClassUtils.isAssignable(ReportConfiguration.class, clazz);
         }
 
         @Override
         public void validate(final Object target, final Errors errors) {
             Preconditions.checkNotNull(target, "Target must not be null");
-            Preconditions.checkArgument(ClassUtils.isAssignable(Report.class, target.getClass()));
+            Preconditions.checkArgument(ClassUtils.isAssignable(ReportConfiguration.class, target.getClass()));
 
             final String shortName = ClassUtils.getShortName(AreColumnsSelectedForAllEntitiesValidator.class);
-            final Report targetReport = (Report) target;
+            final ReportConfiguration targetReport = (ReportConfiguration) target;
             boolean hasNoErrors = true;
 
             if (!targetReport.hasEntities()) {
@@ -165,18 +157,17 @@ public class PickColumnsFormAction
                 hasNoErrors = false;
             }
             if (hasNoErrors) {
-                for (final ReportEntity entity : ((Report) target).getEntities()) {
-                    if (!entity.hasColumns()) {
+                for (final ReportableEntity entity : targetReport.getEntities()) {
+                    if (!targetReport.hasColumn(entity)) {
                         errors.rejectValue("entities", "wizard.NewReportWizard.error.noColumnsSelectedForEntity", new Object[]{entity
                                 .getName()}, null);
-                        hasNoErrors = false;
                     }
                 }
             }
             LOGGER.trace(String.format("%s validated target=%s...valid=%s",
                     shortName,
                     target,
-                    hasNoErrors ? "true" : "false"
+                    errors.hasErrors() ? "true" : "false"
             ));
         }
     }

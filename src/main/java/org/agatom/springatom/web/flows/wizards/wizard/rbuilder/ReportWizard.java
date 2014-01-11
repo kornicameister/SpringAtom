@@ -18,7 +18,6 @@
 package org.agatom.springatom.web.flows.wizards.wizard.rbuilder;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
@@ -30,6 +29,7 @@ import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
 import org.agatom.springatom.web.flows.wizards.wizard.AbstractWizard;
 import org.agatom.springatom.web.locale.SMessageSource;
+import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.ReportableBean;
 import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
 import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
@@ -70,21 +70,24 @@ import java.util.*;
 public class ReportWizard
         extends AbstractWizard
         implements Iterable<ReportableEntity> {
-    private static final Logger                                       LOGGER            = Logger.getLogger(ReportWizard.class);
-    private static final String                                       BEAN_ID           = "reportDescriptor";
-    private              Set<ReportableEntity>                        entities          = Sets.newTreeSet();
-    private              Map<ReportableEntity, Set<ReportableColumn>> entityToColumns   = Maps.newTreeMap();
-    private              Map<Integer, Identifiable<Integer>>          cache             = Maps.newHashMap();
-    private              SReport                                      report            = null;
+    private static final Logger                                       LOGGER              = Logger.getLogger(ReportWizard.class);
+    private static final String                                       BEAN_ID             = "reportDescriptor";
+    private static final long                                         serialVersionUID    = -8974230926174261438L;
+    private              Set<ReportableEntity>                        entities            = Sets.newTreeSet();
+    private              Map<ReportableEntity, Set<ReportableColumn>> entityToColumns     = Maps.newTreeMap();
+    private              Map<Integer, Identifiable<Integer>>          cache               = Maps.newHashMap();
+    private              SReport                                      report              = null;
     @Autowired
-    private              EntityDescriptors                            entityDescriptors = null;
+    private              EntityDescriptors                            entityDescriptors   = null;
     @Autowired
-    private              SMessageSource                               messageSource     = null;
+    private              SMessageSource                               messageSource       = null;
+    private              ReportConfiguration                          reportConfiguration = null;
 
     @Override
     public void init(final RequestContext context) {
         super.init(context);
         this.report = null;
+        this.reportConfiguration = null;
     }
 
     @Override
@@ -95,19 +98,27 @@ public class ReportWizard
     }
 
     public SReport getReport() {
-        if (this.report == null) {
-            this.report = new SReport();
-            this.report.setCreatedBy(this.createdBy);
-            this.report.setCreatedAt(DateTime.now());
-            this.report.setCreatedDate(DateTime.now());
-        }
-        return report;
-    }
-
-    public SReport getReportForSave() {
+        this.report = new SReport();
+        this.report.setCreatedBy(this.createdBy);
+        this.report.setCreatedDate(DateTime.now());
         this.report.setLastModifiedBy(this.createdBy);
         this.report.setLastModifiedDate(DateTime.now());
+
+        this.report.setTitle(this.reportConfiguration.getTitle());
+        this.report.setDescription(this.reportConfiguration.getDescription());
+        this.report.setSubtitle(this.reportConfiguration.getSubtitle());
+        for (final String settingKey : this.reportConfiguration.getSettings().keySet()) {
+            this.report.putSetting(settingKey, this.reportConfiguration.getSettings().get(settingKey));
+        }
+
         return this.report;
+    }
+
+    public ReportConfiguration getReportConfiguration() {
+        if (this.reportConfiguration == null) {
+            this.reportConfiguration = new ReportConfiguration();
+        }
+        return this.reportConfiguration;
     }
 
     public Set<ReportableEntity> getEntities() {
@@ -122,10 +133,10 @@ public class ReportWizard
 
     public Map<ReportableEntity, Set<ReportableColumn>> getEntityToColumnForReport() {
         final Map<ReportableEntity, Set<ReportableColumn>> picked = Maps.newTreeMap();
-        final int size = this.report.getEntities().size();
+        final int size = this.reportConfiguration.getSize();
         int flag = 0;
         for (final ReportableEntity entity : this.entities) {
-            if (this.report.hasEntity(entity.getJavaClass())) {
+            if (this.reportConfiguration.hasEntity(entity.getJavaClass())) {
                 picked.put(entity, this.entityToColumns.get(entity));
                 flag++;
             }
@@ -149,7 +160,6 @@ public class ReportWizard
     public ReportableBean getReportableBean(final Integer id) {
         return (ReportableBean) this.cache.get(id);
     }
-
 
     private <X extends Identifiable<Integer>> void putToCache(final Collection<X> entities) {
         for (final Identifiable<Integer> identifiable : entities) {
@@ -197,7 +207,7 @@ public class ReportWizard
             final TreeSet<ReportableColumn> columns = Sets.newTreeSet();
             for (EntityDescriptorColumn<?> column : this.entityDescriptors.getColumns(entity.getJavaClass())) {
                 final ReportableColumn reportableColumn = new ReportableColumn()
-                        .setEntity(entity)
+                        .setPrefix(entity.getMessageKey())
                         .setColumnName(column.getName())
                         .setColumnClass(column.getColumnClass());
                 columns.add(this.messageSource.localize(reportableColumn, locale));
@@ -233,10 +243,7 @@ public class ReportWizard
         return this.getEntities().iterator();
     }
 
-    public ReportWizard setSavedReport(final SReport report) {
-        Preconditions.checkNotNull(report);
-        Preconditions.checkArgument(!report.isNew());
-        this.report = report;
-        return this;
+    public void reset() {
+        this.reportConfiguration = null;
     }
 }

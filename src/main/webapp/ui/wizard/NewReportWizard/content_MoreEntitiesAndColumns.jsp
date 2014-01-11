@@ -34,9 +34,9 @@
                cssClass="x-form">
         <fieldset>
             <legend><s:message code="wizard.NewReportWizard.addMoreEntitiesAndColumns"/></legend>
-            <jsp:useBean id="report" scope="request" type="org.agatom.springatom.server.model.beans.report.SReport"/>
+            <jsp:useBean id="reportConfiguration" scope="request" type="org.agatom.springatom.web.rbuilder.ReportConfiguration"/>
                 <%--TODO -> does not evaluate to valid html fragment--%>
-            <c:forEach items="${report.entities}" var="entity" varStatus="loop">
+            <c:forEach items="${reportConfiguration.entities}" var="entity" varStatus="loop">
                 <p id="${loop.index}">
                     <s:message code="wizard.NewReportWizard.info.entitySelected" arguments="${entity.name}"/>
                     with <s:eval expression="${entity.columns.size()}"/> columns

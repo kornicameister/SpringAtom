@@ -31,7 +31,8 @@ import org.springframework.webflow.execution.RequestContext;
 abstract public class AbstractWizard
         implements WebBean,
                    InitializingBean {
-    private static final String DEFAULT_TITLE = "NewWizard";
+    private static final String DEFAULT_TITLE    = "NewWizard";
+    private static final long   serialVersionUID = -1224480743925951112L;
     protected String title;
     protected SUser  createdBy;
 

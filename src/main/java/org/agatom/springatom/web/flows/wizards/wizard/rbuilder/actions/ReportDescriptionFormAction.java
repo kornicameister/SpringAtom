@@ -18,8 +18,7 @@
 package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 
 import com.google.common.base.Preconditions;
-import org.agatom.springatom.server.model.beans.report.SReport;
-import org.agatom.springatom.server.model.types.report.Report;
+import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
@@ -52,21 +51,14 @@ public class ReportDescriptionFormAction
     }
 
     @Override
-    public Event setupForm(final RequestContext context) throws Exception {
-        return super.setupForm(context);
-    }
-
-    @Override
     protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
-        binder.setRequiredFields(SReport.Columns.NAME.getName(), SReport.Columns.DESCRIPTION.getName());
+        binder.setIgnoreUnknownFields(true);
         return binder;
     }
 
     @Override
     public Event resetForm(final RequestContext context) throws Exception {
-        final SReport report = this.reportWizard.getReport();
-        report.setName(null);
-        report.setDescription(null);
+        this.reportWizard.reset();
         return success();
     }
 
@@ -75,13 +67,13 @@ public class ReportDescriptionFormAction
 
         @Override
         public boolean supports(final Class<?> clazz) {
-            return ClassUtils.isAssignable(SReport.class, clazz);
+            return ClassUtils.isAssignable(ReportConfiguration.class, clazz);
         }
 
         @Override
         public void validate(final Object target, final Errors errors) {
             Preconditions.checkNotNull(target, "Target must not be null");
-            Preconditions.checkArgument(ClassUtils.isAssignable(Report.class, target.getClass()));
+            Preconditions.checkArgument(ClassUtils.isAssignable(ReportConfiguration.class, target.getClass()));
             delegatedValidator.validate(target, errors);
         }
     }

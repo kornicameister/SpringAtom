@@ -78,7 +78,7 @@
 
     <view-state id="moreEntitiesAndColumns" view="ui.wizard.NewReportWizard.MoreEntitiesAndColumns" popup="true">
         <on-entry>
-            <evaluate expression="reportWizard.report" result="viewScope.report"/>
+            <evaluate expression="reportWizard.reportConfiguration" result="viewScope.reportConfiguration"/>
         </on-entry>
         <transition on="next" to="reportDescription" history="invalidate"/>
         <transition on="previous" to="pickColumns" history="discard">
@@ -100,16 +100,13 @@
 
     <view-state id="reportOverview" view="ui.wizard.NewReportWizard.ReportOverview">
         <transition on="finish" to="reportReady">
-            <evaluate expression="finishReportAction.saveReport"/>
-        </transition>
-        <transition on="finishAndGenerate" to="reportReady">
-            <evaluate expression="finishReportAction.saveAndGenerateReport"/>
+            <evaluate expression="finishReportAction.execute"/>
         </transition>
         <transition on="cancel" to="cancel" history="invalidate" bind="false"/>
     </view-state>
 
     <end-state id="reportReady"
-               view="externalRedirect:/dashboard/reports?wizard=#{flowScope.wizardID}&amp;action=#{currentEvent.id}&amp;report=#{reportWizard.report.name}">
+               view="externalRedirect:/dashboard/reports?wizard=#{flowScope.wizardID}&amp;action=#{currentEvent.id}&amp;report=#{reportWizard.report.title}">
         <output name="report" value="reportWizard.report"/>
     </end-state>
     <end-state id="cancel"

@@ -23,7 +23,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
 
-<%@ page import="org.agatom.springatom.server.model.beans.report.SReport" %>
+<%@ page import="org.agatom.springatom.web.rbuilder.ReportConfiguration" %>
+<%@ page import="org.springframework.util.ClassUtils" %>
+<%@ page import="org.springframework.util.StringUtils" %>
 <%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
 <div id="sa-wizard-step-body" class="x-wizard-content">
@@ -31,7 +33,7 @@
 
     <form:form id="${requestScope.formID}"
                action="${flowExecutionUrl}"
-               commandName="<%=SReport.ENTITY_NAME%>"
+               commandName="<%=StringUtils.uncapitalize(ClassUtils.getShortName(ReportConfiguration.class))%>"
                method="<%=RequestMethod.POST.toString().toLowerCase()%>"
                cssClass="x-form">
         <fieldset>

@@ -20,11 +20,8 @@ package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Lists;
-import org.agatom.springatom.server.model.beans.report.SReport;
-import org.agatom.springatom.server.model.beans.report.SReportEntity;
-import org.agatom.springatom.server.model.types.report.Report;
-import org.agatom.springatom.server.model.types.report.ReportEntity;
+import com.google.common.collect.Sets;
+import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.ReportableBean;
 import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
 import org.apache.log4j.Logger;
@@ -45,7 +42,6 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -91,7 +87,7 @@ public class PickEntityFormAction
         @Override
         public boolean apply(@Nullable final ReportableEntity input) {
             assert input != null;
-            return !reportWizard.getReport().hasEntity(input.getJavaClass());
+            return !reportWizard.getReportConfiguration().hasEntity(input.getJavaClass());
         }
     }
 
@@ -99,43 +95,39 @@ public class PickEntityFormAction
             implements Validator {
         @Override
         public boolean supports(final Class<?> clazz) {
-            return ClassUtils.isAssignable(SReport.class, clazz);
+            return ClassUtils.isAssignable(ReportConfiguration.class, clazz);
         }
 
         @Override
         public void validate(final Object target, final Errors errors) {
             Preconditions.checkNotNull(target, "Target must not be null");
-            Preconditions.checkArgument(ClassUtils.isAssignable(Report.class, target.getClass()));
+            Preconditions.checkArgument(ClassUtils.isAssignable(ReportConfiguration.class, target.getClass()));
 
             final String shortName = ClassUtils.getShortName(AreEntitiesSelectedForReportValidator.class);
-            final Report targetReport = (Report) target;
-            boolean hasNoErrors = true;
+            final ReportConfiguration targetReport = (ReportConfiguration) target;
 
             if (!targetReport.hasEntities()) {
                 errors.rejectValue("entities", "wizard.NewReportWizard.error.noEntitiesSelected");
-                hasNoErrors = false;
             }
             LOGGER.trace(String.format("%s validated target=%s...valid=%s",
                     shortName,
                     target,
-                    hasNoErrors ? "true" : "false"
+                    errors.hasErrors() ? "true" : "false"
             ));
         }
     }
 
     private abstract class BaseConverter
             extends MatcherConverter {
-        protected List<ReportEntity> doConvert(final List<String> list) {
+        protected Set<ReportableEntity> doConvert(final Set<String> list) {
             LOGGER.trace(String.format("converting with selected clazz=%s", list));
             Preconditions.checkNotNull(list);
             Preconditions.checkArgument(!list.isEmpty());
-            final List<ReportEntity> reportedEntities = Lists.newArrayList();
+            final Set<ReportableEntity> reportedEntities = Sets.newHashSet();
             for (final String javaClassName : list) {
                 final ReportableBean bean = reportWizard.getReportableBean(Integer.valueOf(javaClassName));
                 if (ClassUtils.isAssignable(ReportableEntity.class, bean.getClass())) {
-                    final Class<?> aClass = ((ReportableEntity) bean).getJavaClass();
-                    final String label = reportWizard.getEntity(aClass).getLabel();
-                    reportedEntities.add(new SReportEntity().setClazz(aClass).setName(label));
+                    reportedEntities.add((ReportableEntity) bean);
                 }
             }
             return reportedEntities;
@@ -146,35 +138,35 @@ public class PickEntityFormAction
 
     private class ClazzFieldListToReportEntityConverterList
             extends BaseConverter
-            implements Converter<String[], List<ReportEntity>> {
+            implements Converter<String[], Set<ReportableEntity>> {
 
         @Override
-        public List<ReportEntity> convert(final String[] attributes) {
-            return this.doConvert(Lists.newArrayList(attributes));
+        public Set<ReportableEntity> convert(final String[] attributes) {
+            return this.doConvert(Sets.newHashSet(attributes));
         }
 
         @Override
         public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
             final Class<?> sourceTypeClass = sourceType.getType();
             return ClassUtils.isAssignable(String[].class, sourceTypeClass)
-                    && ClassUtils.isAssignable(List.class, targetType.getType());
+                    && ClassUtils.isAssignable(Set.class, targetType.getType());
         }
     }
 
     private class ClazzFieldToReportEntityConverter
             extends BaseConverter
-            implements Converter<String, List<ReportEntity>> {
+            implements Converter<String, Set<ReportableEntity>> {
 
         @Override
-        public List<ReportEntity> convert(final String clazz) {
-            return this.doConvert(Lists.newArrayList(clazz));
+        public Set<ReportableEntity> convert(final String clazz) {
+            return this.doConvert(Sets.newHashSet(clazz));
         }
 
         @Override
         public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
             final Class<?> sourceTypeClass = sourceType.getType();
             return ClassUtils.isAssignable(String.class, sourceTypeClass)
-                    && ClassUtils.isAssignable(List.class, targetType.getType());
+                    && ClassUtils.isAssignable(Set.class, targetType.getType());
         }
     }
 

@@ -17,7 +17,7 @@
     <ul>
         <c:forEach items="${links}" var="linkEntry" varStatus="loop">
             <li id="${loop.index}">
-                <a href="${linkEntry.value.href}">
+                <a href="${linkEntry.value.href}" target="_blank" media="all">
                     <i class="fa fa-color-black fa-download fa-lg fa-spin"></i>
                     <c:if test="${linkEntry.key == csv.id}">
                         [${fn:toUpperCase(csv.id)}]
