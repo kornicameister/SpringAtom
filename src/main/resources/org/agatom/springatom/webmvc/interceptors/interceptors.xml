@@ -42,12 +42,8 @@
         <property name="titleResolver" ref="simpleTitleResolver"/>
         <property name="breadcrumbResolver" ref="breadcrumbResolver"/>
     </bean>
-    <bean id="localeChangeInterceptor" class="org.agatom.springatom.webmvc.interceptors.SServerConfiguredLocaleChangeInterceptor">
-        <property name="configure">
-            <array>
-                <value>paramName</value>
-            </array>
-        </property>
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="#{webProperties.getProperty('sa.locale.requestParam',T(java.lang.String))}"/>
     </bean>
     <bean id="themeChangeInterceptor"
           class="org.springframework.web.servlet.theme.ThemeChangeInterceptor">
