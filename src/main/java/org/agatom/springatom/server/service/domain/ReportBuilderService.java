@@ -22,7 +22,7 @@ import org.agatom.springatom.server.model.types.report.Report;
 import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation;
-import org.agatom.springatom.web.rbuilder.ReportWrapper;
+import org.agatom.springatom.web.rbuilder.ReportViewDescriptor;
 import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
 import org.hibernate.validator.constraints.Length;
 
@@ -54,5 +54,5 @@ public interface ReportBuilderService
     SReport getReport(@NotNull @Length(min = 1) final String title) throws ReportBuilderServiceException;
 
     @NotNull
-    ReportWrapper getReportWrapper(@Min(value = 1) final Long reportId, @NotNull final String format) throws ReportBuilderServiceException;
+    ReportViewDescriptor getReportWrapper(@Min(value = 1) final Long reportId, @NotNull final String format) throws ReportBuilderServiceException;
 }

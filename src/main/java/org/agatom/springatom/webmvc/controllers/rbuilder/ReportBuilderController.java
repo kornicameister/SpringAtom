@@ -20,11 +20,13 @@ package org.agatom.springatom.webmvc.controllers.rbuilder;
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import org.agatom.springatom.server.model.beans.report.SReport;
+import org.agatom.springatom.server.model.types.report.Report;
+import org.agatom.springatom.server.service.domain.ReportBuilderService;
 import org.agatom.springatom.server.service.support.exceptions.ServiceException;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation.Representation;
-import org.agatom.springatom.web.rbuilder.service.ReportBuilderService;
+import org.agatom.springatom.web.rbuilder.ReportViewDescriptor;
 import org.agatom.springatom.webmvc.ViewHelper;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
@@ -33,8 +35,11 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Nullable;
@@ -54,15 +59,15 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RequestMapping(value = "/reportBuilder")
 public class ReportBuilderController {
     public static final  String CONTROLLER_NAME = "reportBuilderController";
-    private static final String VIEW_NAME = "springatom.tiles.dashboard.reports.Download";
-    private static final Logger LOGGER    = Logger.getLogger(ReportBuilderController.class);
+    private static final String VIEW_NAME       = "springatom.tiles.dashboard.reports.Download";
+    private static final Logger LOGGER          = Logger.getLogger(ReportBuilderController.class);
 
     @Autowired
     private ReportBuilderService service;
     @Autowired
-    private SMessageSource messageSource;
+    private SMessageSource       messageSource;
 
-    @RequestMapping(value = "/{reportId}")
+    @RequestMapping(value = "/{reportId}", method = {RequestMethod.POST})
     public ModelAndView buildReport(@PathVariable("reportId") final Long reportId, final ModelMap modelMap, final HttpServletResponse response) throws
             ControllerTierException {
         try {
@@ -75,7 +80,7 @@ public class ReportBuilderController {
             modelMap.put("representations", availableRepresentations);
             modelMap.put("links", this.createDownloadLinks(availableRepresentations.keySet(), report));
             modelMap.put("title", this.messageSource
-                    .getMessage("sa.msg.download.what", new Object[]{report.getName()}, LocaleContextHolder.getLocale()));
+                    .getMessage("sa.msg.download.what", new Object[]{report.getTitle()}, LocaleContextHolder.getLocale()));
 
             ViewHelper.asDojoModal(response);
 
@@ -87,19 +92,35 @@ public class ReportBuilderController {
         }
     }
 
-    @RequestMapping(value = "/download/{reportName}")
-    public ModelAndView downloadReport(@PathVariable("reportName") String reportName) throws ServiceException {
-        LOGGER.info(String.format("/downloadReport name=%s", reportName));
-        return this.downloadReportInFormat(reportName, Representation.EXCEL.getId());
+    @ResponseBody
+    @RequestMapping(value = "/{reportId}", method = {RequestMethod.DELETE})
+    public Report deleteReport(@PathVariable("reportId") final Long reportId, final ModelMap modelMap) throws
+            ControllerTierException {
+        try {
+            final Report report = this.service.deleteReport(reportId);
+            modelMap.addAttribute(ClassUtils.getShortName(Report.class), report);
+            return report;
+        } catch (Exception se) {
+            final String message = String.format("/deleteReport threw exception during processing report=%d", reportId);
+            LOGGER.error(message, se);
+            throw new ControllerTierException(message, se);
+        }
     }
 
-    @RequestMapping(value = "/download/{reportName}/{format}")
-    public ModelAndView downloadReportInFormat(@PathVariable("reportName") String reportName,
-                                               @PathVariable("format") String format) throws ServiceException {
-        LOGGER.info(String.format("/downloadReportInFormat name=%s :: format=%s", reportName, format));
+    @RequestMapping(value = "/download/{reportId}")
+    public ModelAndView downloadReport(@PathVariable("reportId") final Long reportId) throws ServiceException {
+        LOGGER.info(String.format("/downloadReport name=%s", reportId));
+        return this.downloadReportInFormat(reportId, Representation.EXCEL.getId());
+    }
+
+    @RequestMapping(value = "/download/{reportId}/{format}")
+    public ModelAndView downloadReportInFormat(@PathVariable("reportId") final Long reportId,
+                                               @PathVariable("format") final String format) throws ServiceException {
+        LOGGER.info(String.format("/downloadReportInFormat name=%s :: format=%s", reportId, format));
+        final ReportViewDescriptor reportWrapper = this.service.getReportWrapper(reportId, format);
         return new ModelAndView(
-                this.service.getReportName(reportName),
-                this.service.getReportParameters(reportName, format)
+                reportWrapper.getViewName(),
+                reportWrapper.getParameters()
         );
     }
 
@@ -110,10 +131,10 @@ public class ReportBuilderController {
                                  @Override
                                  public Link apply(@Nullable final String format) {
                                      try {
-                                         return linkTo(methodOn(ReportBuilderController.class).downloadReportInFormat(report.getName(), format))
+                                         return linkTo(methodOn(ReportBuilderController.class).downloadReportInFormat(report.getId(), format))
                                                  .withRel(format);
                                      } catch (Exception e) {
-                                         LOGGER.warn(String.format("Failed to generate link report=%s/format=%s", report.getName(), format));
+                                         LOGGER.warn(String.format("Failed to generate link report=%s/format=%s", report.getTitle(), format));
                                      }
                                      return null;
                                  }

@@ -41,7 +41,7 @@ import org.agatom.springatom.server.repository.repositories.report.SReportReposi
 import org.agatom.springatom.server.service.domain.ReportBuilderService;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation;
-import org.agatom.springatom.web.rbuilder.ReportWrapper;
+import org.agatom.springatom.web.rbuilder.ReportViewDescriptor;
 import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
 import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
 import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
@@ -212,8 +212,9 @@ public class ReportBuilderServiceImpl
     }
 
     @Override
-    public ReportWrapper getReportWrapper(final Long reportId, final String format) throws ReportBuilderServiceException {
-        LOGGER.debug(String.format("Retrieving %s for pair=[reportId=%d,format=%s]", ClassUtils.getShortName(ReportWrapper.class), reportId, format));
+    public ReportViewDescriptor getReportWrapper(final Long reportId, final String format) throws ReportBuilderServiceException {
+        LOGGER.debug(String
+                .format("Retrieving %s for pair=[reportId=%d,format=%s]", ClassUtils.getShortName(ReportViewDescriptor.class), reportId, format));
         try {
             final SReport report = this.getReport(reportId);
             final File file = ResourceUtils.getFile(report.getResource().getConfigurationPath());
@@ -225,13 +226,13 @@ public class ReportBuilderServiceImpl
 
             final ModelMap reportParameters = this.getReportParameters(format, configuration);
 
-            return new ReportWrapper(
+            return new ReportViewDescriptor(
                     report.getResource().getJasperFilename(),
                     format,
                     reportParameters
             );
         } catch (Exception e) {
-            LOGGER.error(String.format("Failed to create %s", ClassUtils.getShortName(ReportWrapper.class)), e);
+            LOGGER.error(String.format("Failed to create %s", ClassUtils.getShortName(ReportViewDescriptor.class)), e);
             if (e instanceof ReportBuilderServiceException) {
                 throw (ReportBuilderServiceException) e;
             } else {

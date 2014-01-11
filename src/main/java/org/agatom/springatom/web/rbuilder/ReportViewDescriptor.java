@@ -15,33 +15,49 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.rbuilder.service;
+package org.agatom.springatom.web.rbuilder;
 
-import org.agatom.springatom.server.model.beans.report.SReport;
-import org.agatom.springatom.server.service.support.exceptions.ServiceException;
-import org.agatom.springatom.web.rbuilder.ReportRepresentation;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import com.google.common.base.Objects;
+import org.springframework.ui.ModelMap;
 
-import javax.annotation.Nonnull;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Min;
-import java.util.List;
+import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ReportBuilderService {
-    List<SReport> findAll();
+public class ReportViewDescriptor
+        implements Serializable {
+    private static final long serialVersionUID = -15235355484985353L;
+    private final String   format;
+    private       String   viewName;
+    private       ModelMap parameters;
 
-    Page<SReport> findAll(@Nonnull Pageable pageable);
+    public ReportViewDescriptor(final String viewName, final String format, final ModelMap parameters) {
+        this.viewName = viewName;
+        this.format = format;
+        this.parameters = parameters;
+    }
 
-    List<SReport> findAll(@Nonnull Sort sort);
+    public String getViewName() {
+        return viewName;
+    }
 
-    List<ReportRepresentation> getAvailableRepresentations();
+    public ModelMap getParameters() {
+        return parameters;
+    }
 
-    void generateReport(@Nonnull @Min(value = 1) final Long reportId, final HttpServletResponse response) throws ServiceException;
+    public String getFormat() {
+        return format;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                      .addValue(viewName)
+                      .addValue(format)
+                      .addValue(parameters)
+                      .toString();
+    }
 }
