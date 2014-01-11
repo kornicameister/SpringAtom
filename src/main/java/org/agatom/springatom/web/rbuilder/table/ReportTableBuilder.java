@@ -20,7 +20,6 @@ package org.agatom.springatom.web.rbuilder.table;
 import com.mysema.query.types.Predicate;
 import org.agatom.springatom.server.model.beans.report.QSReport;
 import org.agatom.springatom.server.model.beans.report.SReport;
-import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
 import org.agatom.springatom.web.action.AjaxAction;
 import org.agatom.springatom.web.action.PopupAction;
 import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
@@ -51,17 +50,18 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 public class ReportTableBuilder
         extends TableComponentBuilder<DandelionTableComponent, SReport> {
 
-    public static final  String BUILDER_ID = "reportTableBuilder";
-    private static final String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SReport.ENTITY_NAME));
-    private static final Logger LOGGER     = Logger.getLogger(ReportTableBuilder.class);
+    private static final   long   serialVersionUID = -4745941707048690321L;
+    private static final   String TABLE_ID         = String.format("%s%s", "table", StringUtils.uncapitalize(SReport.ENTITY_NAME));
+    private static final   Logger LOGGER           = Logger.getLogger(ReportTableBuilder.class);
+    protected static final String BUILDER_ID       = "reportTableBuilder";
 
     @Override
     protected DandelionTableComponent buildDefinition() {
         final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
         this.helper.newTableColumn(component, "id", "persistentobject.id");
-        this.helper.newTableColumn(component, "name", "sreport.name");
+        this.helper.newTableColumn(component, "title", "sreport.title");
+        this.helper.newTableColumn(component, "subtitle", "sreport.subtitle");
         this.helper.newTableColumn(component, "description", "sreport.description").setSortable(false);
-        this.helper.newTableColumn(component, "entities-size", "sreport.entities.count").setSortable(false).setFilterable(false);
         this.helper.newTableColumn(component, "generate-action", "reports.actions.generate")
                    .setRenderFunctionName("renderTableAction")
                    .setSortable(false)
@@ -80,10 +80,6 @@ public class ReportTableBuilder
             return retValue;
         }
         switch (path) {
-            case "entities-size": {
-                retValue = object.getEntities().size();
-            }
-            break;
             case "generate-action": {
                 try {
                     final Link link = linkTo(ReportBuilderController.class).slash(object.getId()).withSelfRel();
@@ -97,9 +93,15 @@ public class ReportTableBuilder
             }
             break;
             case "delete-action": {
-                retValue = new AjaxAction().setType(RequestMethod.DELETE)
-                                           .setCache(false)
-                                           .setUrl(String.format("/rest/%s/%d", SReportRepository.REST_REPO_PATH, object.getId()));
+                try {
+                    final Link link = linkTo(ReportBuilderController.class).slash(object.getId()).withSelfRel();
+                    retValue = new AjaxAction().setType(RequestMethod.DELETE)
+                                               .setUrl(link.getHref());
+                } catch (Exception exception) {
+                    final String message = String.format("Error in creating link over path=%s", path);
+                    this.logger.error(message, exception);
+                    throw new DynamicColumnResolutionException(message, exception);
+                }
             }
         }
         return retValue;
