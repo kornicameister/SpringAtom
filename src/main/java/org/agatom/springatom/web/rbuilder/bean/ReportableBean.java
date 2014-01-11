@@ -31,7 +31,8 @@ public abstract class ReportableBean
         implements Serializable,
                    Identifiable<Integer>,
                    LocalizationAware {
-    private static int GEN_ID_SEED = 0;
+    private static final long serialVersionUID = -8556431202961756939L;
+    private static       int  GEN_ID_SEED      = 0;
     protected       String  label;
     protected final Integer id;
 
@@ -50,7 +51,7 @@ public abstract class ReportableBean
     }
 
     public ReportableBean setLabel(final String label) {
-        this.label = label;
+        this.setValueForMessageKey(label);
         return this;
     }
 

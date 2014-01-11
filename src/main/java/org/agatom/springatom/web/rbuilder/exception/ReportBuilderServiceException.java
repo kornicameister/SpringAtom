@@ -28,6 +28,10 @@ import org.springframework.data.domain.Persistable;
 public class ReportBuilderServiceException
         extends ServiceException {
 
+    public ReportBuilderServiceException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
     public ReportBuilderServiceException(final Throwable cause) {
         super(cause);
     }

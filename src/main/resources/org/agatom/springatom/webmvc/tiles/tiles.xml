@@ -33,7 +33,7 @@
     </bean>
 
     <bean id="jasperReportsViewResolver"
-          class="org.agatom.springatom.webmvc.jasper.SJasperReportsViewResolver"
+          class="org.springframework.web.servlet.view.jasperreports.JasperReportsViewResolver"
           p:order="1">
         <property name="viewClass" value="org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView"/>
         <property name="cache" value="true"/>
@@ -42,9 +42,7 @@
         <property name="redirectContextRelative" value="true"/>
         <property name="exposePathVariables" value="true"/>
         <property name="prefix" value="classpath:org/agatom/springatom/jasper/"/>
-        <property name="suffix" value=".jasper"/>
         <property name="reportDataKey" value="dataSource"/>
-        <property name="formatDataKey" value="format"/>
     </bean>
 
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">

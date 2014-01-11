@@ -27,6 +27,9 @@ import org.agatom.springatom.server.model.support.EntityColumn;
 import org.agatom.springatom.server.model.types.report.Report;
 import org.agatom.springatom.server.model.types.report.ReportResource;
 import org.agatom.springatom.server.model.types.report.ReportSetting;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Typing;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -58,6 +61,7 @@ import java.util.Set;
 @Table(name = SReport.TABLE_NAME)
 @Entity(name = SReport.ENTITY_NAME)
 @AttributeOverride(name = "id", column = @Column(name = SReport.ID_COLUMN, nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
+@JsonSerialize(include = Inclusion.NON_NULL, typing = Typing.DYNAMIC)
 public class SReport
         extends PersistentVersionedObject
         implements Report {
@@ -149,8 +153,8 @@ public class SReport
         return this.settings != null && !this.settings.isEmpty();
     }
 
-    public SReport setResource(final String reportPath) {
-        this.resource = new SReportResource().setJasperPath(reportPath);
+    public SReport setResource(final String jasperPath, final String reportCfgPath) {
+        this.resource = new SReportResource().setJasperPath(jasperPath).setConfigurationPath(reportCfgPath);
         return this;
     }
 

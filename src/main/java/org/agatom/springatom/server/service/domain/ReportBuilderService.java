@@ -15,36 +15,44 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.jasper;
+package org.agatom.springatom.server.service.domain;
 
-import org.springframework.web.servlet.view.jasperreports.JasperReportsViewResolver;
+import org.agatom.springatom.server.model.beans.report.SReport;
+import org.agatom.springatom.server.model.types.report.Report;
+import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
+import org.agatom.springatom.web.rbuilder.ReportConfiguration;
+import org.agatom.springatom.web.rbuilder.ReportRepresentation;
+import org.agatom.springatom.web.rbuilder.ReportWrapper;
+import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SJasperReportsViewResolver
-        extends JasperReportsViewResolver {
 
-    private String reportDataKey;
-    private String formatDataKey;
+public interface ReportBuilderService
+        extends SService<SReport, Long, Integer, SReportRepository> {
 
-    @Override
-    public void setReportDataKey(final String reportDataKey) {
-        super.setReportDataKey(reportDataKey);
-        this.reportDataKey = reportDataKey;
-    }
+    @NotNull
+    Map<String, ReportRepresentation> getAvailableRepresentations();
 
-    public String getReportDataKey() {
-        return reportDataKey;
-    }
+    Report deleteReport(@NotNull @Min(value = 1) final Long pk) throws ReportBuilderServiceException;
 
-    public String getFormatDataKey() {
-        return formatDataKey;
-    }
+    @NotNull
+    Report save(@NotNull final ReportConfiguration reportConfiguration, @NotNull final SReport report) throws ReportBuilderServiceException;
 
-    public void setFormatDataKey(final String formatParamKey) {
-        this.formatDataKey = formatParamKey;
-    }
+    @NotNull
+    SReport getReport(@Min(value = 1) final Long reportId) throws ReportBuilderServiceException;
+
+    @NotNull
+    SReport getReport(@NotNull @Length(min = 1) final String title) throws ReportBuilderServiceException;
+
+    @NotNull
+    ReportWrapper getReportWrapper(@Min(value = 1) final Long reportId, @NotNull final String format) throws ReportBuilderServiceException;
 }

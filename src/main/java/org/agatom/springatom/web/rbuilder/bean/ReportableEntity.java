@@ -19,20 +19,33 @@ package org.agatom.springatom.web.rbuilder.bean;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Sets;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.util.ClassUtils;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Set;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportableEntity
         extends ReportableBean
         implements Comparable<ReportableEntity> {
-    private Class<?> javaClass;
-    private String   name;
+    private static final long serialVersionUID = -5864111277348030161L;
+    @Size(min = 1)
+    private Set<ReportableColumn> columns;
+    @NotNull
+    private Class<?>              javaClass;
+    @NotNull
+    @Length(min = 5, max = 50)
+    private String                name;
 
     public Class<?> getJavaClass() {
         return javaClass;
@@ -54,6 +67,38 @@ public class ReportableEntity
 
     public String getName() {
         return name;
+    }
+
+    public ReportableEntity setColumns(final Set<ReportableColumn> columns) {
+        this.columns = columns;
+        return this;
+    }
+
+    public Set<ReportableColumn> getColumns() {
+        if (this.columns == null) {
+            this.columns = Sets.newTreeSet();
+        }
+        return columns;
+    }
+
+    public ReportableEntity addColumn(final ReportableColumn reportableColumn) {
+        this.getColumns();
+        this.columns.add(reportableColumn);
+        return this;
+    }
+
+    public boolean hasColumn(final ReportableColumn reportableColumn) {
+        this.getColumns();
+        return this.columns.contains(reportableColumn);
+    }
+
+    public boolean hasColumns() {
+        this.getColumns();
+        return !this.columns.isEmpty();
+    }
+
+    public void clearColumns() {
+        this.columns.clear();
     }
 
     @Override

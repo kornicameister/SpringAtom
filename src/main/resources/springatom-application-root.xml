@@ -44,6 +44,60 @@
         <!-- exclude repositories, handled by jpa-->
     </context:component-scan>
 
+    <bean id="jacksonObjectFactoryBean" class="org.springframework.http.converter.json.JacksonObjectMapperFactoryBean">
+        <property name="failOnEmptyBeans" value="false"/>
+        <property name="autoDetectGettersSetters" value="true"/>
+        <property name="indentOutput" value="false"/>
+        <property name="featuresToEnable">
+            <array>
+
+            </array>
+        </property>
+        <property name="simpleDateFormat" value="YYYY-MM-dd"/>
+        <property name="autoDetectFields" value="true"/>
+    </bean>
+
+    <bean id="jodaDtff" class="org.springframework.format.datetime.joda.DateTimeFormatterFactory">
+        <property name="pattern" value="YYYY-MM-dd"/>
+    </bean>
+    <bean id="jodaTff" class="org.springframework.format.datetime.joda.DateTimeFormatterFactory">
+        <property name="pattern" value="HH:mm"/>
+    </bean>
+
+    <bean id="springAtomConversionService"
+          class="org.springframework.format.support.FormattingConversionServiceFactoryBean"
+          depends-on="jodaDtff,jodaTff"
+          lazy-init="false">
+        <property name="registerDefaultFormatters" value="true"/>
+        <property name="formatterRegistrars">
+            <set>
+                <bean class="org.springframework.format.datetime.joda.JodaTimeFormatterRegistrar">
+                    <property name="dateFormatter">
+                        <bean factory-bean="jodaDtff" factory-method="createDateTimeFormatter"/>
+                    </property>
+                    <property name="timeFormatter">
+                        <bean factory-bean="jodaTff" factory-method="createDateTimeFormatter"/>
+                    </property>
+                </bean>
+            </set>
+        </property>
+        <property name="converters">
+            <set>
+                <bean class="org.agatom.springatom.webmvc.converters.SSecurityAuthorityEnumConverted"/>
+                <bean class="org.agatom.springatom.webmvc.converters.StringToUnixTimestampConverter"/>
+                <bean class="org.agatom.springatom.webmvc.converters.IntervalToStringConverter"/>
+                <bean class="org.agatom.springatom.webmvc.converters.StringAdaptableConverter"/>
+            </set>
+        </property>
+        <property name="formatters">
+            <set>
+                <bean class="org.springframework.format.datetime.DateFormatter">
+                    <property name="pattern" value="YYYY-MM-dd"/>
+                </bean>
+            </set>
+        </property>
+    </bean>
+
     <bean id="webProperties"
           class="org.agatom.springatom.server.properties.SPropertiesHolder">
         <property name="locations">

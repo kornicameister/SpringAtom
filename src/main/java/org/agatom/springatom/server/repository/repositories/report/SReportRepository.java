@@ -20,8 +20,13 @@ package org.agatom.springatom.server.repository.repositories.report;
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.repository.SRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.repository.RepositoryDefinition;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.LockModeType;
 
 /**
  * @author kornicameister
@@ -36,4 +41,8 @@ public interface SReportRepository
     String REPO_NAME      = "reportsRepository";
     String REST_REPO_REL  = "rest.reports";
     String REST_REPO_PATH = "reports";
+
+    @Lock(value = LockModeType.READ)
+    @Transactional(rollbackFor = Exception.class)
+    SReport findByTitle(@Param(value = "title") final String title) throws Exception;
 }

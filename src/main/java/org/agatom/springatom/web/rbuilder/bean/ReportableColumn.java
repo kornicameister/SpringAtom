@@ -19,6 +19,7 @@ package org.agatom.springatom.web.rbuilder.bean;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import javax.annotation.Nonnull;
 
@@ -27,12 +28,24 @@ import javax.annotation.Nonnull;
  * @version 0.0.1
  * @since 0.0.1
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportableColumn
         extends ReportableBean
         implements Comparable<ReportableColumn> {
-    private ReportableEntity entity;
-    private String           columnName;
-    private Class<?>         columnClass;
+    private static final long serialVersionUID = 2600080347152145806L;
+    protected String   prefix;
+    protected String   columnName;
+    protected Class<?> columnClass;
+    protected Class<?> renderClass;
+
+    public ReportableColumn setPrefix(final String prefix) {
+        this.prefix = prefix;
+        return this;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
 
     public ReportableColumn setColumnClass(final Class<?> columnClass) {
         this.columnClass = columnClass;
@@ -41,15 +54,6 @@ public class ReportableColumn
 
     public Class<?> getColumnClass() {
         return columnClass;
-    }
-
-    public ReportableEntity getEntity() {
-        return entity;
-    }
-
-    public ReportableColumn setEntity(final ReportableEntity entity) {
-        this.entity = entity;
-        return this;
     }
 
     public String getColumnName() {
@@ -61,18 +65,28 @@ public class ReportableColumn
         return this;
     }
 
+    public Class<?> getRenderClass() {
+        if (this.renderClass == null) {
+            this.renderClass = String.class;
+        }
+        return this.renderClass;
+    }
+
+    public void setRenderClass(final Class<?> renderClass) {
+        this.renderClass = renderClass;
+    }
+
     @Override
     public int compareTo(@Nonnull final ReportableColumn column) {
         return ComparisonChain
                 .start()
-                .compare(this.entity, column.entity)
                 .compare(this.columnName, column.columnName)
                 .result();
     }
 
     @Override
     public String getMessageKey() {
-        return String.format("%s.%s", this.entity.getMessageKey(), this.columnName);
+        return String.format("%s.%s", this.prefix, this.columnName);
     }
 
     @Override
@@ -86,8 +100,7 @@ public class ReportableColumn
 
         ReportableColumn that = (ReportableColumn) o;
 
-        return Objects.equal(this.entity, that.entity) &&
-                Objects.equal(this.columnName, that.columnName) &&
+        return Objects.equal(this.columnName, that.columnName) &&
                 Objects.equal(this.label, that.label) &&
                 Objects.equal(this.columnClass, that.columnClass) &&
                 Objects.equal(this.id, that.id);
@@ -95,13 +108,12 @@ public class ReportableColumn
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(entity, columnName, label, id, columnClass);
+        return Objects.hashCode(columnName, label, id, columnClass);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                      .addValue(entity)
                       .addValue(columnName)
                       .addValue(label)
                       .addValue(id)
