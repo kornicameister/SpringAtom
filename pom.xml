@@ -67,7 +67,7 @@
         <!-- logging -->
 
         <!-- spring -->
-        <!-- TODO on hold for 4.0.0 -->
+        <!-- TODO 4.0.0 -->
         <spring.version>3.2.5.RELEASE</spring.version>
         <spring-webflow.version>2.4.0.M1</spring-webflow.version>
         <spring-security.version>3.2.1.CI-SNAPSHOT</spring-security.version>
@@ -76,6 +76,7 @@
         <spring-data-envers.version>0.2.0.BUILD-SNAPSHOT</spring-data-envers.version>
         <spring-data-rest-webmvc.version>2.0.0.BUILD-SNAPSHOT</spring-data-rest-webmvc.version>
         <spring.hateoas.version>0.9.0.BUILD-SNAPSHOT</spring.hateoas.version>
+        <!-- TODO 4.0.0 -->
         <!-- spring -->
 
         <!-- servlet and jsp -->
@@ -167,7 +168,7 @@
         </repository>
     </repositories>
 
-    <!-- TODO it will be used once all spring modules will be compatible with spring 4.0-->
+    <!-- TODO 4.0.0 -->
     <!--<dependencyManagement>-->
     <!--<dependencies>-->
     <!--<dependency>-->
@@ -179,6 +180,7 @@
     <!--</dependency>-->
     <!--</dependencies>-->
     <!--</dependencyManagement>-->
+    <!-- TODO 4.0.0 -->
 
     <dependencies>
 
