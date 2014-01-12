@@ -1,6 +1,14 @@
 Springatom
 ==========
 
+For additional information go to:
+- [VersionEye](https://www.versioneye.com/user/projects/52d30cebec13754cdb000072)
+- [Blimp](https://app.getblimp.com/springatom/springatom/goals/)
+- [Codeship](https://www.codeship.io/projects/4264)
+- [ReadTheDocs](http://springatom.readthedocs.org/en/latest/)
+- 
+
+
 New version of AgatomProject built entirely with JavaEE and Spring Framework...and ExtJS for client side support
 Old version, that was built entirely in Qt is still available [here](https://gitorious.org/agatomproject).
 
