@@ -6,7 +6,6 @@ For additional information go to:
 - [Blimp](https://app.getblimp.com/springatom/springatom/goals/)
 - [Codeship](https://www.codeship.io/projects/4264)
 - [ReadTheDocs](http://springatom.readthedocs.org/en/latest/)
-- 
 
 
 New version of AgatomProject built entirely with JavaEE and Spring Framework...and ExtJS for client side support
