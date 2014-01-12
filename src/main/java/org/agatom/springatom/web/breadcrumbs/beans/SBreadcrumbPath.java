@@ -29,8 +29,9 @@ import java.util.Set;
  */
 public class SBreadcrumbPath
         implements WebBean {
-    private static final String           BEAN_ID     = "breadcrumbPath";
-    private              Set<SBreadcrumb> breadcrumbs = new HashSet<>();
+    private static final String           BEAN_ID          = "breadcrumbPath";
+    private static final long             serialVersionUID = 1310718821671212848L;
+    private              Set<SBreadcrumb> breadcrumbs      = new HashSet<>();
 
     @Override
     public String getBeanId() {

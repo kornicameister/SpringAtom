@@ -39,14 +39,9 @@
     </context:component-scan>
 
     <mvc:annotation-driven validator="validator"
-                           conversion-service="springAtomConversionService"
-                           ignoreDefaultModelOnRedirect="true"
-                           enableMatrixVariables="true">
+                           conversion-service="springAtomConversionService">
         <mvc:message-converters register-defaults="true">
-            <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
-                <property name="objectMapper" ref="jacksonObjectFactoryBean"/>
-                <property name="prettyPrint" value="false"/>
-            </bean>
+            <ref bean="jackson2HttpMessageConverter"/>
         </mvc:message-converters>
         <mvc:argument-resolvers>
             <bean class="com.github.dandelion.datatables.extras.spring3.ajax.DatatablesCriteriasMethodArgumentResolver"/>

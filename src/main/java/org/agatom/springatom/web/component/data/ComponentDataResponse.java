@@ -29,6 +29,7 @@ import java.io.Serializable;
 public class ComponentDataResponse<V>
         implements Serializable {
 
+    private static final long serialVersionUID = 9081967321399989774L;
     private Class<?> clazz;
     private V        value;
     private DataType type;
@@ -41,7 +42,7 @@ public class ComponentDataResponse<V>
         return value;
     }
 
-    public ComponentDataResponse setValue(final V value) {
+    public ComponentDataResponse<V> setValue(final V value) {
         this.value = value;
         this.clazz = value.getClass();
         return this;
@@ -51,7 +52,7 @@ public class ComponentDataResponse<V>
         return type;
     }
 
-    public ComponentDataResponse setType(final DataType type) {
+    public ComponentDataResponse<V> setType(final DataType type) {
         this.type = type;
         return this;
     }
@@ -70,7 +71,7 @@ public class ComponentDataResponse<V>
             return false;
         }
 
-        ComponentDataResponse that = (ComponentDataResponse) o;
+        ComponentDataResponse<?> that = (ComponentDataResponse<?>) o;
 
         return Objects.equal(this.clazz, that.clazz) &&
                 Objects.equal(this.value, that.value) &&

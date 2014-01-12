@@ -35,8 +35,9 @@ public class DataBeanValue
                    Comparable<DataBeanValue>,
                    Identifiable<String> {
 
-    protected String key;
-    protected String value;
+    private static final long   serialVersionUID = 6148280377072447300L;
+    protected            String key              = null;
+    protected            String value            = null;
 
     public String getKey() {
         return key;

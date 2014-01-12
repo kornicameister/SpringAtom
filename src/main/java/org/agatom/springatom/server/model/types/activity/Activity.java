@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.server.model.types.activity;
 
-import org.agatom.springatom.server.model.beans.activity.SActivity;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.types.PersistentEmbeddable;
 import org.joda.time.DateTime;
@@ -32,9 +31,9 @@ public interface Activity
 
     SUser getReporter();
 
-    SActivity setReporter(SUser user);
+    Activity setReporter(SUser user);
 
     DateTime getAssigned();
 
-    SActivity setAssigned(DateTime assigned);
+    Activity setAssigned(DateTime assigned);
 }

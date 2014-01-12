@@ -35,6 +35,7 @@ import java.util.List;
 public class AllStatesOfWebflow
         extends RequestContextAwareTag {
 
+    private static final long serialVersionUID = -3389154492381887502L;
     private FlowDefinition flow;
 
     public void setFlow(final FlowDefinition flow) {

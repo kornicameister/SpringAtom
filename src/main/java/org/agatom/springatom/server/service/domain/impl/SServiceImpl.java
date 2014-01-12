@@ -46,7 +46,7 @@ import java.io.Serializable;
         isolation = Isolation.SERIALIZABLE,
         propagation = Propagation.SUPPORTS,
         rollbackFor = EntityInRevisionDoesNotExists.class)
-abstract class SServiceImpl<T extends Persistable, ID extends Serializable, N extends Number & Comparable<N>, R extends JpaRepository>
+abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, N extends Number & Comparable<N>, R extends JpaRepository<T, ID>>
         extends SBasicServiceImpl<T, ID, R>
         implements SService<T, ID, N, R> {
     private static final Logger LOGGER = Logger.getLogger(SServiceImpl.class);

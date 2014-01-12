@@ -39,8 +39,9 @@ import java.util.Set;
 public class DataBean
         implements WebBean,
                    Iterable<String> {
-    private static final String             BEAN_ID = "restDataBean";
-    private              Set<DataBeanValue> values  = Sets.newHashSet();
+    private static final String             BEAN_ID          = "restDataBean";
+    private static final long               serialVersionUID = -8852958687534065708L;
+    private              Set<DataBeanValue> values           = Sets.newHashSet();
 
     public Set<DataBeanValue> getValues() {
         return this.values;

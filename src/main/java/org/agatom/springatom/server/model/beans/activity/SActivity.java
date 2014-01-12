@@ -68,7 +68,7 @@ abstract public class SActivity<PK extends Serializable>
     }
 
     @Override
-    public SActivity setReporter(final SUser user) {
+    public Activity setReporter(final SUser user) {
         this.reporter = user;
         return this;
     }
@@ -79,7 +79,7 @@ abstract public class SActivity<PK extends Serializable>
     }
 
     @Override
-    public SActivity setAssigned(final DateTime assigned) {
+    public Activity setAssigned(final DateTime assigned) {
         this.assigned = assigned;
         return this;
     }

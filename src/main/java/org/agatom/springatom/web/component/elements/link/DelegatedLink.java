@@ -27,6 +27,7 @@ import org.springframework.hateoas.Link;
  */
 public class DelegatedLink
         implements ComponentValue {
+    private static final long serialVersionUID = 4641519789859558892L;
     private final Link   link;
     private       String label;
 

@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.server.model.beans.car.embeddable;
 
-import org.hibernate.annotations.Index;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Column;
@@ -36,7 +35,6 @@ import static org.agatom.springatom.core.RegexpPatterns.BIG_FIRST_LETTER_PATTERN
 public class SCarMasterManufacturingData
         implements Serializable {
     private static final long serialVersionUID = 545689870492641597L;
-    @Index(name = "scmmd_brand")
     @NotBlank
     @Pattern(regexp = BIG_FIRST_LETTER_PATTERN)
     @Column(nullable = false,
@@ -45,7 +43,6 @@ public class SCarMasterManufacturingData
             insertable = true,
             name = "brand")
     private String brand;
-    @Index(name = "scmmd_model")
     @NotBlank
     @Pattern(regexp = BIG_FIRST_LETTER_PATTERN)
     @Column(nullable = false,

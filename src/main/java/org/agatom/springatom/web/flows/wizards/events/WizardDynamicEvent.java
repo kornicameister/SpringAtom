@@ -31,7 +31,8 @@ import org.agatom.springatom.web.beans.WebBean;
 public class WizardDynamicEvent
         implements WebBean,
                    Localized {
-    private static final String BEAN_ID = "dynamicWizardAction";
+    private static final String BEAN_ID          = "dynamicWizardAction";
+    private static final long   serialVersionUID = -3951680406772922964L;
     private final WizardEvent event;
     private       String      stateId;
     private       String      wizardId;

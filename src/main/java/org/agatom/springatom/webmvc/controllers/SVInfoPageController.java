@@ -123,6 +123,8 @@ public class SVInfoPageController {
 
     public static class InfoPageNotFoundException
             extends ControllerTierException {
+        private static final long serialVersionUID = 7593096420157970914L;
+
         public InfoPageNotFoundException(final String domain) {
             super(String.format("InfoPage not found for domain => %s", domain));
         }

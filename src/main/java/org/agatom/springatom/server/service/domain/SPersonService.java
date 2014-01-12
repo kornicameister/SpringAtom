@@ -34,7 +34,7 @@ import java.util.List;
 public interface SPersonService
         extends SService<SPerson, Long, Integer, SPersonRepository> {
 
-    SContact newContactData(
+    SContact<SPerson> newContactData(
             @NotNull
             final String contact,
             final long assignTo,

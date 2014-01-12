@@ -28,6 +28,7 @@ import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
  */
 public class EntityTypeDescriptorColumn<X>
         implements EntityDescriptorColumn<X> {
+    private static final long serialVersionUID = 955310404047484434L;
     private String                  name;
     private Class<?>                columnClass;
     private SlimEntityDescriptor<X> entityDescriptor;
@@ -76,7 +77,7 @@ public class EntityTypeDescriptorColumn<X>
             return false;
         }
 
-        EntityTypeDescriptorColumn that = (EntityTypeDescriptorColumn) o;
+        EntityTypeDescriptorColumn<?> that = (EntityTypeDescriptorColumn<?>) o;
 
         return Objects.equal(this.name, that.name) &&
                 Objects.equal(this.columnClass, that.columnClass) &&

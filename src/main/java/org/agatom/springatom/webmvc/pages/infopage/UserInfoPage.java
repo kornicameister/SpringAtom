@@ -34,6 +34,7 @@ import org.agatom.springatom.web.infopages.page.BasicEntityInfoPage;
 )
 public class UserInfoPage
         extends BasicEntityInfoPage {
-    protected static final transient String PATH = "user";
-    protected static final transient String REL  = "ip.user";
+    protected static final transient String PATH             = "user";
+    protected static final transient String REL              = "ip.user";
+    private static final             long   serialVersionUID = 226389418395538218L;
 }

@@ -48,11 +48,11 @@ import java.util.List;
 public class SPersonServiceImpl
         extends SServiceImpl<SPerson, Long, Integer, SPersonRepository>
         implements SPersonService {
-    public static final String SERVICE_NAME = "SPersonService";
+    public static final String                              SERVICE_NAME         = "SPersonService";
     @Autowired
     @Qualifier("PersonContactService")
-    SPersonContactService personContactService;
-    private SRepository revRepo;
+    private             SPersonContactService               personContactService = null;
+    private             SRepository<SPerson, Long, Integer> revRepo              = null;
 
     @Override
     public void autoWireRepository(final SPersonRepository repo) {
@@ -65,15 +65,15 @@ public class SPersonServiceImpl
             isolation = Isolation.SERIALIZABLE,
             propagation = Propagation.SUPPORTS,
             rollbackFor = EntityDoesNotExistsServiceException.class)
-    public SContact newContactData(final String value, final long clientPk,
-                                   final SContact clientContact) throws EntityDoesNotExistsServiceException {
-        final SPerson client = (SPerson) this.revRepo.findOne(clientPk);
+    public SContact<SPerson> newContactData(final String value, final long clientPk,
+                                            final SContact clientContact) throws EntityDoesNotExistsServiceException {
+        final SPerson client = this.revRepo.findOne(clientPk);
 
         if (client == null) {
             throw new EntityDoesNotExistsServiceException(SPerson.class, clientPk);
         }
 
-        final SContact contact = new SPersonContact();
+        final SContact<SPerson> contact = new SPersonContact();
 
         contact.setContact(value);
         contact.setAssigned(client);
@@ -103,7 +103,7 @@ public class SPersonServiceImpl
     @Override
     @CacheEvict(value = "clients", key = "#email", beforeInvocation = true)
     public SPerson findByEmail(final String email) {
-        return (SPerson) this.revRepo.findOne(QSPerson.sPerson.primaryMail.eq(email));
+        return this.revRepo.findOne(QSPerson.sPerson.primaryMail.eq(email));
     }
 
 }

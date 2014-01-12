@@ -26,6 +26,8 @@ import javax.persistence.metamodel.SingularAttribute;
  */
 public class SystemPropertyDescriptor
         extends BasicPropertyDescriptor {
+    private static final long serialVersionUID = 3775651163181736999L;
+
     public SystemPropertyDescriptor(final SingularAttribute<?, ?> attribute) {
         super(attribute);
     }

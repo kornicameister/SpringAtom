@@ -37,7 +37,7 @@ public interface ComponentBuilder<COMP extends Serializable> {
 
     ComponentBuilds.Produces getProduces();
 
-    ComponentDataResponse getData() throws ComponentException;
+    ComponentDataResponse<?> getData() throws ComponentException;
 
     COMP getDefinition() throws ComponentException;
 

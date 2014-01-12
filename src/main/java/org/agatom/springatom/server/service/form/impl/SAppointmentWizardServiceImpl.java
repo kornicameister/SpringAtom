@@ -46,6 +46,7 @@ import org.springframework.webflow.execution.Event;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
@@ -144,7 +145,7 @@ public class SAppointmentWizardServiceImpl
             extends ServiceException {
         private static final long serialVersionUID = -2721658358817267557L;
 
-        public SAppointmentFormServiceException(final Class<? extends Persistable> target, final String message) {
+        public <T extends Persistable<ID>, ID extends Serializable> SAppointmentFormServiceException(final Class<T> target, final String message) {
             super(target, message);
         }
     }

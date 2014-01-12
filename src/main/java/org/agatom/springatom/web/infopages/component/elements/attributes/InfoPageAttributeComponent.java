@@ -34,10 +34,11 @@ public class InfoPageAttributeComponent
         extends DefaultComponent
         implements Localized,
                    EmbeddableComponent {
-    protected int                position   = -1;
-    protected String             path       = null;
-    protected AttributeDisplayAs displayAs  = null;
-    protected String             messageKey = null;
+    private static final long               serialVersionUID = -6698659446456215525L;
+    protected            int                position         = -1;
+    protected            String             path             = null;
+    protected            AttributeDisplayAs displayAs        = null;
+    protected            String             messageKey       = null;
 
     public String getPath() {
         return path;

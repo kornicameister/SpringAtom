@@ -30,7 +30,8 @@ import java.util.List;
  */
 public class ComponentTableRequest
         extends ComponentRequest {
-    private DatatablesCriterias criterias;
+    private static final long                serialVersionUID = 8662629050407736443L;
+    private              DatatablesCriterias criterias        = null;
 
     public DatatablesCriterias getCriterias() {
         return criterias;

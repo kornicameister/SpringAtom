@@ -43,6 +43,7 @@ import java.util.Locale;
 public class DynamicTransitionsTag
         extends PossibleTransitionsTag {
 
+    private static final long serialVersionUID = -6351231163581572743L;
     private Flow flow;
 
     public void setFlow(final FlowDefinition flowDefinition) {

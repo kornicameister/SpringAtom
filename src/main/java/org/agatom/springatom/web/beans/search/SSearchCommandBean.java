@@ -28,7 +28,8 @@ import org.agatom.springatom.web.beans.WebBean;
 public class SSearchCommandBean
         implements WebBean {
 
-    private static final String BEAN_ID = "searchCommandBean";
+    private static final String BEAN_ID          = "searchCommandBean";
+    private static final long   serialVersionUID = 3398125574712945412L;
     private String phrase;
 
     public String getPhrase() {

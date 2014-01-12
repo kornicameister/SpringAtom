@@ -19,6 +19,8 @@ package org.agatom.springatom.server.service.support.exceptions;
 
 import org.springframework.data.domain.Persistable;
 
+import java.io.Serializable;
+
 /**
  * @author kornicameister
  * @version 0.0.1
@@ -28,11 +30,11 @@ public class UnambiguousResultServiceException
         extends ServiceException {
     private static final long serialVersionUID = 4848594143713366276L;
 
-    public UnambiguousResultServiceException(final Class<? extends Persistable> target,
-                                             final Object attribute,
-                                             final Object value,
-                                             final Integer expected,
-                                             final Integer was) {
+    public <T extends Persistable<ID>, ID extends Serializable> UnambiguousResultServiceException(final Class<T> target,
+                                                                                                  final Object attribute,
+                                                                                                  final Object value,
+                                                                                                  final Integer expected,
+                                                                                                  final Integer was) {
         super(target, String
                 .format("For %s=%s query returned unambiguous findBetween, expected=%d, was=%s", attribute, value, expected, was));
     }

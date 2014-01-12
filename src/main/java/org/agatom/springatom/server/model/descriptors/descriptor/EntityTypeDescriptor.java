@@ -35,8 +35,9 @@ import java.util.Set;
  */
 public class EntityTypeDescriptor<X>
         implements EntityDescriptor<X> {
-    private EntityType<X>    entityType = null;
-    private AttributesHolder attributes = new AttributesHolder();
+    private static final long             serialVersionUID = -2920522446371170224L;
+    private              EntityType<X>    entityType       = null;
+    private              AttributesHolder attributes       = new AttributesHolder();
 
     public EntityTypeDescriptor(final EntityType<X> entityType) {
         this.entityType = entityType;

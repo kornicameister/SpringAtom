@@ -30,7 +30,8 @@ import org.agatom.springatom.web.beans.WebBean;
 
 public class SViewTitle
         implements WebBean {
-    private final static String BEAN_ID = "pageTitleBean";
+    private final static String BEAN_ID          = "pageTitleBean";
+    private static final long   serialVersionUID = 574303147624174474L;
     private String paramName;
     private String paramValue;
     private String viewKey;

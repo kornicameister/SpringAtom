@@ -28,6 +28,8 @@ import org.agatom.springatom.web.component.data.ComponentDataResponse;
 abstract public class EntityInfoPageResponse
         extends ComponentDataResponse<Object> {
 
+    private static final long serialVersionUID = 498203771574996398L;
+
     public EntityInfoPageResponse() {
         this.setType(DataType.VALUE);
     }

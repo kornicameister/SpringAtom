@@ -41,9 +41,10 @@ import org.springframework.util.StringUtils;
 public class AppointmentTaskTableBuilder
         extends TableComponentBuilder<DandelionTableComponent, SAppointmentTask> {
 
-    protected static final String BUILDER_ID = "appointmentTaskTableBuilder";
-    private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointmentTask.ENTITY_NAME));
-    private static final   Logger LOGGER     = Logger.getLogger(AppointmentTaskTableBuilder.class);
+    protected static final String BUILDER_ID       = "appointmentTaskTableBuilder";
+    private static final   String TABLE_ID         = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointmentTask.ENTITY_NAME));
+    private static final   Logger LOGGER           = Logger.getLogger(AppointmentTaskTableBuilder.class);
+    private static final   long   serialVersionUID = 585939608681695245L;
 
     @Override
     protected DandelionTableComponent buildDefinition() {

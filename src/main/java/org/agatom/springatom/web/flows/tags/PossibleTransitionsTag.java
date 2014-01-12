@@ -34,7 +34,8 @@ import org.springframework.webflow.engine.support.DefaultTransitionCriteria;
 public class PossibleTransitionsTag
         extends RequestContextAwareTag {
 
-    public static final String EVENT_ID_S = "_eventId_%s";
+    public static final  String EVENT_ID_S       = "_eventId_%s";
+    private static final long   serialVersionUID = -6092379285742740242L;
     protected String          var;
     protected StateDefinition state;
 

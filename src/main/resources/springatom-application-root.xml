@@ -44,15 +44,14 @@
         <!-- exclude repositories, handled by jpa-->
     </context:component-scan>
 
-    <bean id="jacksonObjectFactoryBean" class="org.springframework.http.converter.json.JacksonObjectMapperFactoryBean">
-        <property name="failOnEmptyBeans" value="false"/>
+    <bean id="jackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="objectMapper" ref="jackson2ObjectFactoryBean"/>
+        <property name="prettyPrint" value="false"/>
+    </bean>
+    <bean id="jackson2ObjectFactoryBean" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+    <property name="failOnEmptyBeans" value="false"/>
         <property name="autoDetectGettersSetters" value="true"/>
         <property name="indentOutput" value="false"/>
-        <property name="featuresToEnable">
-            <array>
-
-            </array>
-        </property>
         <property name="simpleDateFormat" value="YYYY-MM-dd"/>
         <property name="autoDetectFields" value="true"/>
     </bean>

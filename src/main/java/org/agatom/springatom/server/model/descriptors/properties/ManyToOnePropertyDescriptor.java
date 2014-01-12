@@ -27,6 +27,8 @@ import javax.persistence.metamodel.SingularAttribute;
 public class ManyToOnePropertyDescriptor
         extends BasicPropertyDescriptor {
 
+    private static final long serialVersionUID = -7114420767275680568L;
+
     public ManyToOnePropertyDescriptor(final SingularAttribute<?, ?> attribute) {
         super(attribute);
     }

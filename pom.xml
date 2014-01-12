@@ -67,9 +67,10 @@
         <!-- logging -->
 
         <!-- spring -->
+        <!-- TODO on hold for 4.0.0 -->
         <spring.version>3.2.5.RELEASE</spring.version>
         <spring-webflow.version>2.4.0.M1</spring-webflow.version>
-        <spring-security.version>3.2.0.CI-SNAPSHOT</spring-security.version>
+        <spring-security.version>3.2.1.CI-SNAPSHOT</spring-security.version>
         <spring-data-commons.version>1.7.0.BUILD-SNAPSHOT</spring-data-commons.version>
         <spring-data-jpa.version>1.5.0.BUILD-SNAPSHOT</spring-data-jpa.version>
         <spring-data-envers.version>0.2.0.BUILD-SNAPSHOT</spring-data-envers.version>
@@ -165,6 +166,19 @@
             </snapshots>
         </repository>
     </repositories>
+
+    <!-- TODO it will be used once all spring modules will be compatible with spring 4.0-->
+    <!--<dependencyManagement>-->
+    <!--<dependencies>-->
+    <!--<dependency>-->
+    <!--<groupId>org.springframework</groupId>-->
+    <!--<artifactId>spring-framework-bom</artifactId>-->
+    <!--<version>${spring.version}</version>-->
+    <!--<type>pom</type>-->
+    <!--<scope>import</scope>-->
+    <!--</dependency>-->
+    <!--</dependencies>-->
+    <!--</dependencyManagement>-->
 
     <dependencies>
 
@@ -599,6 +613,12 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j-log4j12.version}</version>
             <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>

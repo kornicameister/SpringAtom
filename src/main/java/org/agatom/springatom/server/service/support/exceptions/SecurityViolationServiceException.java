@@ -19,6 +19,8 @@ package org.agatom.springatom.server.service.support.exceptions;
 
 import org.springframework.data.domain.Persistable;
 
+import java.io.Serializable;
+
 /**
  * @author kornicameister
  * @version 0.0.1
@@ -26,7 +28,9 @@ import org.springframework.data.domain.Persistable;
  */
 public class SecurityViolationServiceException
         extends ServiceException {
-    public SecurityViolationServiceException(final Class<? extends Persistable> target, final String message) {
+    private static final long serialVersionUID = 622035483718925698L;
+
+    public <T extends Persistable<ID>, ID extends Serializable> SecurityViolationServiceException(final Class<T> target, final String message) {
         super(target, message);
     }
 }

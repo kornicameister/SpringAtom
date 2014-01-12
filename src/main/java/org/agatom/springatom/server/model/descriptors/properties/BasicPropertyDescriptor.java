@@ -28,6 +28,7 @@ import javax.persistence.metamodel.Type;
 public class BasicPropertyDescriptor
         extends AbstractPropertyDescriptor {
 
+    private static final long serialVersionUID = -2082514178668619298L;
     private final SingularAttribute<?, ?> attribute;
 
     public BasicPropertyDescriptor(final SingularAttribute<?, ?> attribute) {

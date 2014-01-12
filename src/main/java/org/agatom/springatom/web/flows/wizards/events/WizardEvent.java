@@ -31,6 +31,7 @@ import java.io.Serializable;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public final class WizardEvent
         implements Serializable {
+    private static final long serialVersionUID = 7927406578178789028L;
     private String name;
     private String eventName;
 

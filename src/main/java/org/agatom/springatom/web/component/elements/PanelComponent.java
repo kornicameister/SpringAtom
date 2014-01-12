@@ -31,9 +31,10 @@ import javax.annotation.Nonnull;
 public class PanelComponent<T extends EmbeddableComponent>
         extends ContentComponent<T>
         implements EmbeddableComponent {
-    protected int        position = -1;
-    protected PanelType  type     = null;
-    protected LayoutType layout   = null;
+    private static final long       serialVersionUID = 8998087479297251535L;
+    protected            int        position         = -1;
+    protected            PanelType  type             = null;
+    protected            LayoutType layout           = null;
 
     @Override
     public int getPosition() {
@@ -49,7 +50,7 @@ public class PanelComponent<T extends EmbeddableComponent>
         return type;
     }
 
-    public PanelComponent setType(final PanelType type) {
+    public PanelComponent<T> setType(final PanelType type) {
         this.type = type;
         return this;
     }
@@ -61,7 +62,7 @@ public class PanelComponent<T extends EmbeddableComponent>
         return layout;
     }
 
-    public PanelComponent setLayout(final LayoutType layout) {
+    public PanelComponent<T> setLayout(final LayoutType layout) {
         this.layout = layout;
         return this;
     }

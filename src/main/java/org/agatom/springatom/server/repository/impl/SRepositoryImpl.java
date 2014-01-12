@@ -24,6 +24,7 @@
 package org.agatom.springatom.server.repository.impl;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import org.agatom.springatom.server.repository.SRepository;
 import org.apache.log4j.Logger;
 import org.hibernate.envers.*;
@@ -61,8 +62,8 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
     private static final String ERROR_MESSAGE_PAGEABLE                 = "Pageable must not be null";
     private static final String ERROR_MESSAGE_REVISION                 = "Revision must not be null";
     private static final String ERROR_MESSAGE_REI                      = "RevisionEntityInformation must not be null";
-    private final RevisionEntityInformation revisionEntityInformation;
-    private final RevisionRepository        repository;
+    private final RevisionEntityInformation    revisionEntityInformation;
+    private final RevisionRepository<T, ID, N> repository;
 
     public SRepositoryImpl(final JpaEntityInformation<T, ID> entityInformation,
                            final RevisionEntityInformation revisionEntityInformation,
@@ -70,7 +71,7 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
         super(entityInformation, entityManager);
         Preconditions.checkArgument(revisionEntityInformation != null, ERROR_MESSAGE_REI);
         this.revisionEntityInformation = revisionEntityInformation;
-        this.repository = new EnversRevisionRepositoryImpl<T, ID, N>(entityInformation, revisionEntityInformation, entityManager);
+        this.repository = new EnversRevisionRepositoryImpl<>(entityInformation, revisionEntityInformation, entityManager);
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(String
                     .format("Created %s for arguments=[em=%s,ei=%s,rei=%s]", SRepositoryImpl.class
@@ -135,7 +136,7 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
         final Map<N, T> revisions = new HashMap<>(revisionNumbers.length);
         final Class<?> revisionEntityClass = this.revisionEntityInformation.getRevisionEntityClass();
         final Map<Number, Object> revisionEntities = (Map<Number, Object>) reader.findRevisions(revisionEntityClass,
-                new HashSet<Number>(Arrays.asList(revisionNumbers)));
+                new HashSet<Number>(Lists.newArrayList(revisionNumbers)));
 
         for (Number number : revisionNumbers) {
             revisions.put((N) number, reader.find(type, id, number));
@@ -196,7 +197,7 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
 
         final List<Object[]> resultList = auditQuery.getResultList();
         if (resultList.isEmpty()) {
-            return new Revisions(new ArrayList<>());
+            return new Revisions<>(Lists.<Revision<N, T>>newArrayList());
         }
 
         final List<Revision<N, T>> revisionList = new ArrayList<>();

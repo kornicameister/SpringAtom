@@ -34,6 +34,7 @@ import org.agatom.springatom.web.infopages.page.BasicEntityInfoPage;
 )
 public class AppointmentInfoPage
         extends BasicEntityInfoPage {
-    protected static final transient String REL  = "ip.appointment";
-    protected static final transient String PATH = "appointment";
+    protected static final transient String REL              = "ip.appointment";
+    protected static final transient String PATH             = "appointment";
+    private static final             long   serialVersionUID = -2123498541155334520L;
 }

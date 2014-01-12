@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class UnixTimestamp
         implements Serializable {
+    private static final long serialVersionUID = -2419335050409513828L;
     private DateTime time;
 
     public UnixTimestamp(final long ts) {

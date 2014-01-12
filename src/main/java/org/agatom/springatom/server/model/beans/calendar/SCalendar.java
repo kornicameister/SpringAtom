@@ -45,8 +45,9 @@ import java.awt.*;
 @AttributeOverride(name = "id", column = @Column(name = "id_user_calendar", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SCalendar
         extends PersistentObject<Long> {
-    public static final String TABLE_NAME  = "suser_calendar";
-    public static final String ENTITY_NAME = "org.springatom.calendar.SCalendar";
+    public static final  String TABLE_NAME       = "suser_calendar";
+    public static final  String ENTITY_NAME      = "org.springatom.calendar.SCalendar";
+    private static final long   serialVersionUID = -3784841008638697396L;
     /**
      * {@code name} is this calendar name assigned via {@link #owner}
      */

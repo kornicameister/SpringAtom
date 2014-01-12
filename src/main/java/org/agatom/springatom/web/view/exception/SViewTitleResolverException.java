@@ -24,6 +24,8 @@ package org.agatom.springatom.web.view.exception;
  */
 public class SViewTitleResolverException
         extends Exception {
+    private static final long serialVersionUID = -3476065773118826585L;
+
     public SViewTitleResolverException(final String message) {
         super("Key must contain character *");
     }

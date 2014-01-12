@@ -29,7 +29,8 @@ import org.agatom.springatom.web.component.elements.ThumbnailComponent;
 
 public class InfoPageComponent
         extends ContentComponent<InfoPagePanelComponent> {
-    private ThumbnailComponent thumbnail = null;
+    private static final long               serialVersionUID = -1693645505025410828L;
+    private              ThumbnailComponent thumbnail        = null;
 
     public ThumbnailComponent getThumbnail() {
         return thumbnail;

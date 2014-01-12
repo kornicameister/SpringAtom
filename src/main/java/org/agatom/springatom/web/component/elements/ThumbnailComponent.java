@@ -26,9 +26,10 @@ import com.google.common.base.Objects;
  */
 public class ThumbnailComponent
         extends DefaultComponent {
-    private String href    = null;
-    private String alt     = null;
-    private String tooltip = null;
+    private static final long   serialVersionUID = -5885377305838416274L;
+    private              String href             = null;
+    private              String alt              = null;
+    private              String tooltip          = null;
 
     public String getHref() {
         return href;

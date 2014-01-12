@@ -28,7 +28,10 @@
 
     <bean id="flowHandlerAdapter" class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
         <property name="flowExecutor" ref="flowExecutor"/>
-        <property name="saveOutputToFlashScopeOnRedirect" value="true"/>
+        <property name="useCacheControlHeader" value="true"/>
+        <property name="alwaysMustRevalidate" value="true"/>
+        <property name="cacheSeconds" value="360"/>
+        <property name="requireSession" value="true"/>
         <property name="flowUrlHandler" ref="flowUrlHandler"/>
         <property name="servletContext" ref="servletContext"/>
     </bean>

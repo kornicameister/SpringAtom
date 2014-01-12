@@ -27,14 +27,15 @@ import org.springframework.hateoas.Link;
  */
 public class DandelionTableComponent
         extends TableComponent {
-    protected Link    url                 = null;
-    protected boolean deferRender         = true;
-    protected boolean infoVisible         = true;
-    protected boolean processingIndicator = true;
-    protected boolean scrollCollapse      = false;
-    protected boolean scroll              = false;
-    protected boolean sortable            = true;
-    protected boolean stateful            = true;
+    private static final long    serialVersionUID    = 1822934065790049138L;
+    protected            Link    url                 = null;
+    protected            boolean deferRender         = true;
+    protected            boolean infoVisible         = true;
+    protected            boolean processingIndicator = true;
+    protected            boolean scrollCollapse      = false;
+    protected            boolean scroll              = false;
+    protected            boolean sortable            = true;
+    protected            boolean stateful            = true;
 
     public Link getUrl() {
         return url;

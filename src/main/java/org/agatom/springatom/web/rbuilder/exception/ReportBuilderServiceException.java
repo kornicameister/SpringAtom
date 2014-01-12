@@ -20,6 +20,8 @@ package org.agatom.springatom.web.rbuilder.exception;
 import org.agatom.springatom.server.service.support.exceptions.ServiceException;
 import org.springframework.data.domain.Persistable;
 
+import java.io.Serializable;
+
 /**
  * @author kornicameister
  * @version 0.0.1
@@ -27,6 +29,8 @@ import org.springframework.data.domain.Persistable;
  */
 public class ReportBuilderServiceException
         extends ServiceException {
+
+    private static final long serialVersionUID = -5282239784661658192L;
 
     public ReportBuilderServiceException(final String message, final Throwable cause) {
         super(message, cause);
@@ -40,7 +44,7 @@ public class ReportBuilderServiceException
         super(message);
     }
 
-    public ReportBuilderServiceException(final Class<? extends Persistable> target, final String message) {
+    public <T extends Persistable<ID>, ID extends Serializable> ReportBuilderServiceException(final Class<T> target, final String message) {
         super(target, message);
     }
 }

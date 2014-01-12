@@ -89,7 +89,7 @@ public class SVTableBuilderController {
 
     @ResponseBody
     @RequestMapping(value = "/data/{id}")
-    public DatatablesResponse getBuilderData(
+    public DatatablesResponse<?> getBuilderData(
             @PathVariable("id") final String builderId,
             final ComponentTableRequest tableRequest,
             final WebRequest request) throws ControllerTierException {
@@ -99,7 +99,7 @@ public class SVTableBuilderController {
         try {
             if (builder != null && builder instanceof TableComponentBuilder) {
                 LOGGER.trace(String.format("Found builder %s:%s:%s", builderId, builder.getId(), builder.getBuilds()));
-                return DatatablesResponse.build((DataSet) builder.getData().getValue(), tableRequest.getCriterias());
+                return DatatablesResponse.build((DataSet<?>) builder.getData().getValue(), tableRequest.getCriterias());
             }
         } catch (Exception e) {
             LOGGER.error("/getBuilderData threw exception", e);

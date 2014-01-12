@@ -28,6 +28,7 @@ import org.springframework.util.ClassUtils;
  */
 public class SlimEntityTypeDescriptor<X>
         implements SlimEntityDescriptor<X> {
+    private static final long serialVersionUID = 5735047201811977565L;
     private final Class<X> javaClass;
     private final String   name;
 
@@ -65,7 +66,7 @@ public class SlimEntityTypeDescriptor<X>
             return false;
         }
 
-        SlimEntityTypeDescriptor that = (SlimEntityTypeDescriptor) o;
+        SlimEntityTypeDescriptor<?> that = (SlimEntityTypeDescriptor<?>) o;
 
         return Objects.equal(this.javaClass, that.javaClass) &&
                 Objects.equal(this.name, that.name);

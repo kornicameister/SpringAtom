@@ -34,7 +34,8 @@ import org.springframework.webflow.engine.Flow;
  */
 public class StateIdTag
         extends RequestContextAwareTag {
-    private static final Logger LOGGER = Logger.getLogger(StateIdTag.class);
+    private static final Logger LOGGER           = Logger.getLogger(StateIdTag.class);
+    private static final long   serialVersionUID = -1317114256305704439L;
     private FlowDefinition  flow;
     private StateDefinition state;
     private Short           index;

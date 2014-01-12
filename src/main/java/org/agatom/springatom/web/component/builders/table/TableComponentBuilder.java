@@ -95,7 +95,7 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
     }
 
     @Override
-    protected ComponentDataResponse buildData(final ComponentDataRequest dataRequest) throws ComponentException {
+    protected ComponentDataResponse<?> buildData(final ComponentDataRequest dataRequest) throws ComponentException {
         try {
             final ComponentTableRequest dc = (ComponentTableRequest) dataRequest.getValues().get(ComponentConstants.REQUEST_BEAN);
             if (dc != null) {

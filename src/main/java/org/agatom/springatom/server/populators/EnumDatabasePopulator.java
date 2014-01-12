@@ -72,7 +72,7 @@ public class EnumDatabasePopulator
         Enum[] enums;
 
         try {
-            final Class clazzTarget = Class.forName(enumClazz);
+            final Class<?> clazzTarget = Class.forName(enumClazz);
             enums = (Enum[]) clazzTarget.getEnumConstants();
         } catch (ClassNotFoundException cnfe) {
             LOGGER.fatal(String.format("Failed to populate from %s", enumClazz), cnfe);
@@ -87,7 +87,7 @@ public class EnumDatabasePopulator
         final Statement stmt = connection.createStatement();
         try {
             int enumNumber = 0;
-            for (Enum enumSource : enums) {
+            for (Enum<?> enumSource : enums) {
                 final DatabaseEnumPopulable databasePopulate = (DatabaseEnumPopulable) enumSource;
 
                 if (!targetTable.equals(databasePopulate.getTable())) {

@@ -30,6 +30,7 @@ import java.io.Serializable;
  */
 public class BuilderLink
         implements ComponentValue {
+    private static final long serialVersionUID = -5825562954435267927L;
     private final Serializable contextKey;
     private final Class<?>     contextClass;
     private final String       builderId;

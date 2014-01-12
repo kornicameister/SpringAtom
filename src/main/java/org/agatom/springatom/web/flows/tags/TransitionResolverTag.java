@@ -36,7 +36,8 @@ import java.util.Arrays;
  */
 public class TransitionResolverTag
         extends RequestContextAwareTag {
-    private static final Logger LOGGER = Logger.getLogger(TransitionResolverTag.class);
+    private static final Logger LOGGER           = Logger.getLogger(TransitionResolverTag.class);
+    private static final long   serialVersionUID = 1681726382300723398L;
     private WizardEvent    wizardPreviousEvent;
     private WizardEvent    wizardNextEvent;
     private String         var;

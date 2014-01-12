@@ -35,6 +35,8 @@ import javax.servlet.jsp.JspTagException;
 public class WebflowTagEvaluationException
         extends JspTagException {
 
+    private static final long serialVersionUID = -3977227748867296477L;
+
     public WebflowTagEvaluationException(final String message) {
         super(message);
     }

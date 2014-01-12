@@ -30,7 +30,8 @@ import org.springframework.hateoas.ResourceSupport;
 public class CalendarEvent
         extends ResourceSupport
         implements WebBean {
-    private static final String BEAN_ID = "calendar_event";
+    private static final String BEAN_ID          = "calendar_event";
+    private static final long   serialVersionUID = -2274909215740956251L;
     @JsonProperty(value = "id")
     private Long     primaryKey;
     private String   title;

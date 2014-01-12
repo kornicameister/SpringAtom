@@ -41,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserPageComponentBuilder
         extends EntityInfoPageComponentBuilder<SUser> {
 
+    private static final long serialVersionUID = 582837130753512434L;
     @Autowired
     private SCarService carService;
 

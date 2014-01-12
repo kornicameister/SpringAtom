@@ -34,15 +34,16 @@ public class TableColumnComponent
         extends DefaultComponent
         implements EmbeddableComponent,
                    Localized {
-    protected String         title              = null;
-    protected String         property           = null;
-    protected Sort.Direction sortDirection      = Sort.Direction.ASC;
-    protected boolean        sortable           = true;
-    protected boolean        filterable         = false;
-    protected boolean        visible            = true;
-    private   int            position           = -1;
-    private   String         titleKey           = null;
-    private   String         renderFunctionName = "renderValue";
+    private static final long           serialVersionUID   = 1814716311674625618L;
+    protected            String         title              = null;
+    protected            String         property           = null;
+    protected            Sort.Direction sortDirection      = Sort.Direction.ASC;
+    protected            boolean        sortable           = true;
+    protected            boolean        filterable         = false;
+    protected            boolean        visible            = true;
+    private              int            position           = -1;
+    private              String         titleKey           = null;
+    private              String         renderFunctionName = "renderValue";
 
     public String getRenderFunctionName() {
         return renderFunctionName;

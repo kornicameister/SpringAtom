@@ -24,6 +24,8 @@ package org.agatom.springatom.web.component.builders.exception;
  */
 public class ComponentTableException
         extends ComponentException {
+    private static final long serialVersionUID = -5087620558468679894L;
+
     public ComponentTableException(final String message) {
         super(message);
     }

@@ -27,6 +27,8 @@ import org.agatom.springatom.web.component.builders.exception.ComponentTableExce
 public class DynamicColumnResolutionException
         extends ComponentTableException {
 
+    private static final long serialVersionUID = -6331209247827860887L;
+
     public DynamicColumnResolutionException(final String message) {
         super(message);
     }

@@ -34,6 +34,7 @@ import org.agatom.springatom.web.infopages.page.BasicEntityInfoPage;
 )
 public class CarInfoPage
         extends BasicEntityInfoPage {
-    protected static final transient String PATH = "car";
-    protected static final transient String REL  = "ip.car";
+    private static final             long   serialVersionUID = -210738839732876025L;
+    protected static final transient String PATH             = "car";
+    protected static final transient String REL              = "ip.car";
 }

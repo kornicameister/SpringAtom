@@ -30,7 +30,8 @@ import java.util.List;
  */
 public class WizardHeaderDescriptor
         implements WebBean {
-    private static final String BEAN_ID = "wiz_header_descriptor";
+    private static final String BEAN_ID          = "wiz_header_descriptor";
+    private static final long   serialVersionUID = -7624407546028312557L;
     private final String       state;
     private       List<String> successors;
     private       List<String> predecessors;

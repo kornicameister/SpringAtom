@@ -49,7 +49,7 @@ public class DefaultInfoPageComponentHelper
 
     @Override
     public InfoPagePanelComponent newBasicPanel(final InfoPageComponent cmp, LayoutType layout) {
-        final PanelComponent component = new InfoPagePanelComponent()
+        final PanelComponent<?> component = new InfoPagePanelComponent()
                 .setHolds(PanelHolds.BASIC_ATTRIBUTES)
                 .setType(PanelType.ATTRIBUTES)
                 .setLayout(layout);
@@ -59,7 +59,7 @@ public class DefaultInfoPageComponentHelper
 
     @Override
     public InfoPagePanelComponent newOneToManyPanel(final InfoPageComponent cmp, LayoutType layout) {
-        final PanelComponent component = new InfoPagePanelComponent()
+        final PanelComponent<?> component = new InfoPagePanelComponent()
                 .setHolds(PanelHolds.ONE_TO_MANY_ATTRIBUTES)
                 .setType(PanelType.TABLE)
                 .setLayout(layout);
@@ -69,7 +69,7 @@ public class DefaultInfoPageComponentHelper
 
     @Override
     public InfoPagePanelComponent newManyToOnePanel(final InfoPageComponent cmp, LayoutType layout) {
-        final PanelComponent component = new InfoPagePanelComponent()
+        final PanelComponent<?> component = new InfoPagePanelComponent()
                 .setHolds(PanelHolds.MANY_TO_ONE_ATTRIBUTES)
                 .setType(PanelType.ATTRIBUTES)
                 .setLayout(layout);
@@ -79,7 +79,7 @@ public class DefaultInfoPageComponentHelper
 
     @Override
     public InfoPagePanelComponent newSystemPanel(final InfoPageComponent cmp, LayoutType layout) {
-        final PanelComponent component = new InfoPagePanelComponent()
+        final PanelComponent<?> component = new InfoPagePanelComponent()
                 .setHolds(PanelHolds.SYSTEM_ATTRIBUTES)
                 .setType(PanelType.ATTRIBUTES)
                 .setLayout(layout);

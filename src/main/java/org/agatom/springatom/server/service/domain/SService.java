@@ -37,10 +37,10 @@ import java.io.Serializable;
  */
 
 public interface SService<
-        T extends Persistable,
+        T extends Persistable<ID>,
         ID extends Serializable,
         N extends Number & Comparable<N>,
-        R extends JpaRepository>
+        R extends JpaRepository<T, ID>>
         extends SBasicService<T, ID, R> {
 
     Revision<N, T> findFirstRevision(

@@ -34,11 +34,11 @@ public class EntityDoesNotExistsServiceException
     private static final String MSG_2            = "No entry exists for %s for ARGS=%s";
     private static final long   serialVersionUID = -7853712771424308741L;
 
-    public EntityDoesNotExistsServiceException(final Class<? extends Persistable> entityClazz, final Serializable pk) {
+    public <T extends Persistable<ID>, ID extends Serializable> EntityDoesNotExistsServiceException(final Class<T> entityClazz, final Serializable pk) {
         super(entityClazz, String.format(MSG_1, entityClazz.getName(), pk));
     }
 
-    public EntityDoesNotExistsServiceException(final Class<? extends Persistable> entityClazz, final Object... args) {
+    public <T extends Persistable<ID>, ID extends Serializable> EntityDoesNotExistsServiceException(final Class<T> entityClazz, final Object... args) {
         super(entityClazz, String.format(MSG_2, entityClazz.getName(), Arrays.deepToString(args)));
     }
 }

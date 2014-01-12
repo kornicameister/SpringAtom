@@ -68,12 +68,12 @@ abstract class SReportSetting<HOLDS extends Serializable>
         return report;
     }
 
-    public final SReportSetting setName(final String name) {
+    public final SReportSetting<HOLDS> setName(final String name) {
         this.name = name;
         return this;
     }
 
-    public final SReportSetting setReport(final SReport report) {
+    public final SReportSetting<HOLDS> setReport(final SReport report) {
         this.report = report;
         return this;
     }

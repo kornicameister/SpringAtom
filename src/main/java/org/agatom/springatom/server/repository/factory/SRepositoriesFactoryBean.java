@@ -89,9 +89,9 @@ public class SRepositoriesFactoryBean
                     .getDomainType());
             final Class<?> repositoryInterface = metadata.getRepositoryInterface();
             if (!SRepository.class.isAssignableFrom(repositoryInterface)) {
-                return new SBasicRepositoryImpl(entityInformation, entityManager);
+                return new SBasicRepositoryImpl<>(entityInformation, entityManager);
             }
-            return new SRepositoryImpl(entityInformation, revisionEntityInformation, entityManager);
+            return new SRepositoryImpl<>(entityInformation, revisionEntityInformation, entityManager);
         }
 
         @Override

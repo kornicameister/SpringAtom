@@ -27,9 +27,10 @@ import org.agatom.springatom.web.component.elements.ContentComponent;
  */
 public class TableComponent
         extends ContentComponent<TableColumnComponent> {
-    protected String  tableId    = null;
-    protected int     rowsOnPage = 10;
-    protected boolean filterable = true;
+    private static final long    serialVersionUID = 3527305242535311855L;
+    protected            String  tableId          = null;
+    protected            int     rowsOnPage       = 10;
+    protected            boolean filterable       = true;
 
     public String getTableId() {
         return tableId;

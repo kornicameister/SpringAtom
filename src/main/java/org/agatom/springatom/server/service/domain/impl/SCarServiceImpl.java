@@ -216,6 +216,8 @@ public class SCarServiceImpl
 
     public class InvalidOwnerException
             extends ServiceException {
+        private static final long serialVersionUID = 9104651445939425769L;
+
         public InvalidOwnerException(final SCar car, final SUser owner) {
             super(SCar.class, String.format("Owner for %s does not differ from current one %s", car, owner));
         }

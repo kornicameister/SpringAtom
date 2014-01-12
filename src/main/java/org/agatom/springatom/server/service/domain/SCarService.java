@@ -44,27 +44,32 @@ import java.util.List;
 
 public interface SCarService
         extends SService<SCar, Long, Integer, SCarRepository> {
-    @NotNull List<SCar> findByMaster(
+    @NotNull
+    List<SCar> findByMaster(
             @BrandOrModel
             final String brand,
             @BrandOrModel
             final String model);
 
-    @NotNull List<SCar> findByMaster(
+    @NotNull
+    List<SCar> findByMaster(
             @NotNull
             @NotEmpty
             final Long... masterId);
 
-    @NotNull SCarMaster findMaster(final long carId);
+    @NotNull
+    SCarMaster findMaster(final long carId);
 
-    @NotNull List<SCar> findBy(
+    @NotNull
+    List<SCar> findBy(
             @NotNull
             final SCarAttribute attribute,
             @NotNull
             final Object value) throws
             UnambiguousResultServiceException;
 
-    @NotNull SCar newCar(
+    @NotNull
+    SCar newCar(
             @BrandOrModel
             final String brand,
             @BrandOrModel
@@ -75,17 +80,16 @@ public interface SCarService
             final String vinNumber,
             final long ownerId) throws EntityDoesNotExistsServiceException;
 
-    @NotNull SCar newOwner(
-            final long idCar,
-            final long idClient) throws EntityDoesNotExistsServiceException, SCarServiceImpl.InvalidOwnerException;
+    @NotNull
+    SCar newOwner(final long idCar, final long idClient) throws EntityDoesNotExistsServiceException, SCarServiceImpl.InvalidOwnerException;
 
     public static enum SCarAttribute {
         LICENCE_PLATE(QSCar.sCar.licencePlate),
         OWNER(QSCar.sCar.owner.id),
         VIN_NUMBER(QSCar.sCar.vinNumber);
-        private final Path expression;
+        private final Path<?> expression;
 
-        SCarAttribute(final Path expression) {
+        SCarAttribute(final Path<?> expression) {
             this.expression = expression;
         }
 

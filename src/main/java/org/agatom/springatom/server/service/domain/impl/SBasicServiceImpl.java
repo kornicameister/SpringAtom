@@ -43,10 +43,10 @@ import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRED)
-abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable, R extends JpaRepository>
+abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializable, R extends JpaRepository<T, ID>>
         implements SBasicService<T, ID, R> {
     private static final Logger LOGGER = Logger.getLogger(SBasicServiceImpl.class);
-    private SBasicRepository basicRepository;
+    private SBasicRepository<T, ID> basicRepository;
 
     @Override
     public void autoWireRepository(final R repo) {
@@ -58,7 +58,7 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
 
     @Override
     public T findOne(final ID id) {
-        return (T) this.basicRepository.findOne(id);
+        return this.basicRepository.findOne(id);
     }
 
     @Override
@@ -76,7 +76,7 @@ abstract class SBasicServiceImpl<T extends Persistable, ID extends Serializable,
     public T save(final T persistable) {
         Preconditions
                 .checkArgument(persistable != null, "Persistable must not be null");
-        return (T) this.basicRepository.saveAndFlush(persistable);
+        return this.basicRepository.saveAndFlush(persistable);
     }
 
     @Override

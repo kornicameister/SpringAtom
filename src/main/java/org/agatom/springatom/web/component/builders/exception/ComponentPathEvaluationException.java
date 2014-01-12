@@ -25,6 +25,8 @@ package org.agatom.springatom.web.component.builders.exception;
 public class ComponentPathEvaluationException
         extends ComponentException {
 
+    private static final long serialVersionUID = 4322042989281394202L;
+
     public ComponentPathEvaluationException(final String message) {
         super(message);
     }

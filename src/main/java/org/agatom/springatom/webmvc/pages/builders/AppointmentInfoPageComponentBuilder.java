@@ -39,6 +39,8 @@ import org.apache.log4j.Logger;
 public class AppointmentInfoPageComponentBuilder
         extends EntityInfoPageComponentBuilder<SAppointment> {
 
+    private static final long serialVersionUID = 7743548253782408262L;
+
     @Override
     protected Logger getLogger() {
         return Logger.getLogger(AppointmentInfoPageComponentBuilder.class);

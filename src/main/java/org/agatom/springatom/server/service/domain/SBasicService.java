@@ -47,7 +47,7 @@ import java.util.List;
  */
 
 @Validated
-public interface SBasicService<T extends Persistable, ID extends Serializable, R extends JpaRepository> {
+public interface SBasicService<T extends Persistable<ID>, ID extends Serializable, R extends JpaRepository<T, ID>> {
     /**
      * Method implemented by services with {@link org.springframework.beans.factory.annotation.Autowired} annotation to
      * set the {@link org.springframework.data.jpa.repository.JpaRepository}
@@ -66,16 +66,19 @@ public interface SBasicService<T extends Persistable, ID extends Serializable, R
      *
      * @return the entity with the given {@code ID}
      */
-    @NotNull T findOne(ID id);
+    @NotNull
+    T findOne(ID id);
 
     /**
      * Returns all entities of the type for which {@code SBasicService} was defined (<b>domain class</b>)
      *
      * @return all entities of the {@code SBasicService}'s domain class
      */
-    @NotNull List<T> findAll();
+    @NotNull
+    List<T> findAll();
 
-    @NotNull Page<T> findAll(final Pageable pageable);
+    @NotNull
+    Page<T> findAll(final Pageable pageable);
 
     /**
      * Saves the {@code SBasicService}'s <b>domain class</b> object and returns its persisted version,
@@ -87,9 +90,10 @@ public interface SBasicService<T extends Persistable, ID extends Serializable, R
      *
      * @return persisted entity
      */
-    @NotNull T save(final
-                    @NotNull
-                    T persistable);
+    @NotNull
+    T save(final
+           @NotNull
+           T persistable);
 
     /**
      * Returns how many objects of {@code SBasicService}'s <b>domain class</b> exists
@@ -111,11 +115,13 @@ public interface SBasicService<T extends Persistable, ID extends Serializable, R
      */
     void deleteAll();
 
-    @NotNull T withFullLoad(
+    @NotNull
+    T withFullLoad(
             @NotNull
             T obj);
 
-    @NotNull List<T> withFullLoad(
+    @NotNull
+    List<T> withFullLoad(
             @NotNull
             Iterable<T> objects);
 }

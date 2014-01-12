@@ -40,7 +40,8 @@ public class ReportRepresentation
         implements Serializable,
                    Comparable<ReportRepresentation> {
 
-    private static Map<String, ReportRepresentation> REP = null;
+    private static final long                              serialVersionUID = 3606510385045622962L;
+    private static       Map<String, ReportRepresentation> REP              = null;
     private final String type;
     private final String key;
 

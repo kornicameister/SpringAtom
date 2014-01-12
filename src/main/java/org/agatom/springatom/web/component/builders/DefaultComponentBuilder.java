@@ -62,7 +62,7 @@ abstract public class DefaultComponentBuilder<COMP extends Serializable>
     }
 
     @Override
-    public ComponentDataResponse getData() throws ComponentException {
+    public ComponentDataResponse<?> getData() throws ComponentException {
         return this.buildData(this.dataRequest);
     }
 
@@ -95,7 +95,7 @@ abstract public class DefaultComponentBuilder<COMP extends Serializable>
 
     protected abstract COMP buildDefinition() throws ComponentException;
 
-    protected abstract ComponentDataResponse buildData(final ComponentDataRequest dataRequest) throws ComponentException;
+    protected abstract ComponentDataResponse<?> buildData(final ComponentDataRequest dataRequest) throws ComponentException;
 
     @Override
     public String toString() {

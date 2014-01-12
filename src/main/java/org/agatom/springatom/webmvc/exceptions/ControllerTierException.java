@@ -25,7 +25,8 @@ package org.agatom.springatom.webmvc.exceptions;
 public class ControllerTierException
         extends Exception {
 
-    private static final String MSG_PATTERN_1 = "ControllerTierException=\n\t=>%s\n";
+    private static final String MSG_PATTERN_1    = "ControllerTierException=\n\t=>%s\n";
+    private static final long   serialVersionUID = -61989976957896637L;
 
     public ControllerTierException() {
     }

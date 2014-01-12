@@ -19,6 +19,7 @@ package org.agatom.springatom.server.repository.exceptions;
 
 import org.springframework.data.domain.Persistable;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -31,9 +32,10 @@ import java.util.Arrays;
 
 public class EntityInRevisionDoesNotExists
         extends Exception {
-    private static final String MSG = "No entry exists for %s with revision=%s";
+    private static final String MSG              = "No entry exists for %s with revision=%s";
+    private static final long   serialVersionUID = -7403813105949944889L;
 
-    public EntityInRevisionDoesNotExists(final Class<? extends Persistable> entityClazz, final Object... revision) {
+    public <T extends Persistable<ID>, ID extends Serializable> EntityInRevisionDoesNotExists(final Class<T> entityClazz, final Object... revision) {
         this(String.format(MSG, entityClazz.getName(), Arrays.toString(revision)));
     }
 

@@ -92,11 +92,13 @@ abstract public class EntityInfoPageComponentBuilder<Y extends Persistable<?>>
     }
 
     @Override
-    protected ComponentDataResponse buildData(final ComponentDataRequest dataRequest) throws ComponentException {
+    protected ComponentDataResponse<?> buildData(final ComponentDataRequest dataRequest) throws ComponentException {
         final Long objectId = dataRequest.getLong("objectId");
         final Y object = this.repository.findOne(objectId);
         this.logger.trace(String.format("processing object %s=%s", ClassUtils.getShortName(object.getClass()), object.getId()));
         return new EntityInfoPageResponse() {
+            private static final long serialVersionUID = 5093004619980504166L;
+
             @Override
             public Object getValueForPath(final String path) throws ComponentException {
                 logger.trace(String.format("processing path %s", path));

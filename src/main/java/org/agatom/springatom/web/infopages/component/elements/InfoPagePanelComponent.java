@@ -33,8 +33,9 @@ import java.util.Set;
  */
 public class InfoPagePanelComponent
         extends PanelComponent<InfoPageAttributeComponent> {
-    private transient Map<String, InfoPageAttributeComponent> attributesPath = Maps.newHashMap();
-    private           PanelHolds                              holds          = null;
+    private static final long                                    serialVersionUID = 4239054882163081910L;
+    private transient    Map<String, InfoPageAttributeComponent> attributesPath   = Maps.newHashMap();
+    private              PanelHolds                              holds            = null;
 
     public InfoPageAttributeComponent getAttributeForPath(final String path) {
         return attributesPath.get(path);

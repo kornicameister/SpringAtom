@@ -19,6 +19,8 @@ package org.agatom.springatom.server.service.support.exceptions;
 
 import org.springframework.data.domain.Persistable;
 
+import java.io.Serializable;
+
 /**
  * @author kornicameister
  * @version 0.0.1
@@ -38,27 +40,27 @@ public class ServiceException
         super(message, cause);
     }
 
-    public ServiceException(final Class<? extends Persistable> target,
-                            final String message) {
+    public <T extends Persistable<ID>, ID extends Serializable> ServiceException(final Class<T> target,
+                                                                                 final String message) {
         super(String.format(MSG_PATTERN, target, message));
     }
 
-    public ServiceException(final Class<? extends Persistable> target,
-                            final String message,
-                            final Throwable cause) {
+    public <T extends Persistable<ID>, ID extends Serializable> ServiceException(final Class<T> target,
+                                                                                 final String message,
+                                                                                 final Throwable cause) {
         super(String.format(MSG_PATTERN, target, message), cause);
     }
 
-    public ServiceException(final Class<? extends Persistable> target,
-                            final Throwable cause) {
+    public <T extends Persistable<ID>, ID extends Serializable> ServiceException(final Class<T> target,
+                                                                                 final Throwable cause) {
         super(String.format(MSG_PATTERN_2, target), cause);
     }
 
-    public ServiceException(final Class<? extends Persistable> target,
-                            final String message,
-                            final Throwable cause,
-                            final boolean enableSuppression,
-                            final boolean writableStackTrace) {
+    public <T extends Persistable<ID>, ID extends Serializable> ServiceException(final Class<T> target,
+                                                                                 final String message,
+                                                                                 final Throwable cause,
+                                                                                 final boolean enableSuppression,
+                                                                                 final boolean writableStackTrace) {
         super(String.format(MSG_PATTERN, target, message), cause, enableSuppression, writableStackTrace);
     }
 

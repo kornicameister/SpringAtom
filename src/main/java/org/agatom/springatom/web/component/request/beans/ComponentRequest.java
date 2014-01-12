@@ -28,6 +28,7 @@ import java.io.Serializable;
  */
 public class ComponentRequest
         implements Serializable {
+    private static final long serialVersionUID = 8264945607694867245L;
     protected String   contextKey;
     protected String   builderId;
     protected Class<?> contextClass;

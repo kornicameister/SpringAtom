@@ -39,6 +39,8 @@ import org.apache.log4j.Logger;
 @ComponentBuilds(id = "carMasterInfopage", builds = CarMasterInfoPage.class)
 public class CarMasterInfoPageComponentBuilder
         extends EntityInfoPageComponentBuilder<SCar> {
+    private static final long serialVersionUID = 2958273340104815948L;
+
     @Override
     protected Logger getLogger() {
         return Logger.getLogger(CarMasterInfoPageComponentBuilder.class);

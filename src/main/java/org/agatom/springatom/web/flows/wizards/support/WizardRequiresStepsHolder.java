@@ -29,7 +29,8 @@ import java.util.Set;
  */
 public class WizardRequiresStepsHolder
         implements Serializable {
-    private Set<String> requiredStepsIds = Sets.newLinkedHashSet();
+    private static final long        serialVersionUID = -6208292242616190878L;
+    private              Set<String> requiredStepsIds = Sets.newLinkedHashSet();
 
     public Set<String> getRequiredStepsIds() {
         return requiredStepsIds;

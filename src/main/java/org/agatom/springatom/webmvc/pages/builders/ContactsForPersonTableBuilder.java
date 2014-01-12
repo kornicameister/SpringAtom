@@ -43,9 +43,10 @@ import org.springframework.util.StringUtils;
 public class ContactsForPersonTableBuilder
         extends TableComponentBuilder<DandelionTableComponent, SPersonContact> {
 
-    protected static final String BUILDER_ID = "contactsForPersonTableBuilder";
-    private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SPersonContact.ENTITY_NAME));
-    private static final   Logger LOGGER     = Logger.getLogger(ContactsForPersonTableBuilder.class);
+    protected static final String BUILDER_ID       = "contactsForPersonTableBuilder";
+    private static final   String TABLE_ID         = String.format("%s%s", "table", StringUtils.uncapitalize(SPersonContact.ENTITY_NAME));
+    private static final   Logger LOGGER           = Logger.getLogger(ContactsForPersonTableBuilder.class);
+    private static final   long   serialVersionUID = 1200427181233749340L;
 
     @Override
     protected Predicate getPredicate(final Long id, final Class<?> contextClass) {
