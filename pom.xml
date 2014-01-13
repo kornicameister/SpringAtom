@@ -68,7 +68,7 @@
 
         <!-- spring -->
         <!-- TODO 4.0.0 -->
-        <spring.version>3.2.5.RELEASE</spring.version>
+        <spring.version>3.2.7.BUILD-SNAPSHOT</spring.version>
         <spring-webflow.version>2.4.0.M1</spring-webflow.version>
         <spring-security.version>3.2.1.CI-SNAPSHOT</spring-security.version>
         <spring-data-commons.version>1.7.0.BUILD-SNAPSHOT</spring-data-commons.version>
