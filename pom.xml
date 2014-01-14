@@ -145,6 +145,7 @@
         <taglibs.standard.version>1.1.2</taglibs.standard.version>
         <asm.version>4.2</asm.version>
         <cglib.version>3.1</cglib.version>
+        <javassist.version>3.18.1-GA</javassist.version>
     </properties>
 
     <repositories>
@@ -168,6 +169,10 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>fdvsolution.public</id>
+            <url>http://archiva.fdvs.com.ar/repository/public1/</url>
+        </repository>
     </repositories>
 
     <!-- TODO 4.0.0 -->
@@ -190,7 +195,7 @@
         <dependency>
             <groupId>ar.com.fdvs</groupId>
             <artifactId>DynamicJasper</artifactId>
-            <version>3.0.13</version>
+            <version>5.0.0</version>
             <type>jar</type>
             <scope>compile</scope>
             <exclusions>
@@ -211,7 +216,7 @@
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>3.7.6</version>
+            <version>5.5.0</version>
             <type>jar</type>
             <scope>compile</scope>
             <exclusions>
@@ -234,6 +239,18 @@
                 <exclusion>
                     <artifactId>commons-logging</artifactId>
                     <groupId>commons-logging</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -296,6 +313,10 @@
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>jcl-over-slf4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jboss</groupId>
+                    <artifactId>javassist</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -645,6 +666,12 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -776,6 +803,11 @@
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
             <version>${asm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>${javassist.version}</version>
         </dependency>
         <!-- cglib -->
 
