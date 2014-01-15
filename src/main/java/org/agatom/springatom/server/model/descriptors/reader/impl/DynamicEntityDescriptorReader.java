@@ -55,7 +55,13 @@ public class DynamicEntityDescriptorReader
     }
 
     private EntityType<?> getEntityType(final Class<?> xClass) {
-        return this.metamodel.entity(xClass);
+        try {
+            return this.metamodel.entity(xClass);
+        } catch (Exception e) {
+            LOGGER.warn(String.format("Could not retrieve %s for %s, error is=\n%s", ClassUtils.getShortName(EntityType.class), ClassUtils
+                    .getShortName(xClass), e.getMessage()));
+        }
+        return null;
     }
 
     @Override
@@ -94,6 +100,7 @@ public class DynamicEntityDescriptorReader
             this.cache.put(xClass, descriptor);
             return (EntityDescriptor<X>) descriptor;
         }
+        LOGGER.trace(String.format("Could not retrieve %s for %s", ClassUtils.getShortName(EntityDescriptor.class), ClassUtils.getShortName(xClass)));
         return null;
     }
 }

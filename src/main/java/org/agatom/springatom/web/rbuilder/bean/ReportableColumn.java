@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.web.rbuilder.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -85,6 +86,7 @@ public class ReportableColumn
     }
 
     @Override
+    @JsonIgnore
     public String getMessageKey() {
         return String.format("%s.%s", this.prefix, this.columnName);
     }

@@ -17,6 +17,9 @@
 
 package org.agatom.springatom.server.model.beans.report;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize.Typing;
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
@@ -27,9 +30,6 @@ import org.agatom.springatom.server.model.support.EntityColumn;
 import org.agatom.springatom.server.model.types.report.Report;
 import org.agatom.springatom.server.model.types.report.ReportResource;
 import org.agatom.springatom.server.model.types.report.ReportSetting;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Typing;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -85,6 +85,16 @@ public class SReport
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "report", cascade = CascadeType.DETACH)
     @OnDelete(action = OnDeleteAction.CASCADE)
     protected               Set<SReportSetting<?>>    settings;
+    @JoinColumn(name = "reports_master_id")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected               SReport                   reportMaster;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH, mappedBy = "reportMaster")
+    protected               Set<SReport>              subReports;
+    @Column(name = "report_isDynamic", nullable = true, updatable = true, insertable = true)
+    protected               Boolean                   dynamic;
+    @NotNull
+    @Column(name = "report_class", nullable = false, updatable = true, insertable = true)
+    protected               Class<?>                  reportedClass;
     @Transient
     private final transient Map<String, Serializable> mappedSettings;
 
@@ -127,7 +137,7 @@ public class SReport
     }
 
     @Override
-    public Map<String, Serializable> getSettingsAsMap() {
+    public Map<String, Serializable> asMap() {
         this.getSettings();
         if (this.settings.size() != this.mappedSettings.size()) {
             this.mappedSettings.clear();
@@ -140,17 +150,77 @@ public class SReport
 
     @Override
     public Serializable getSetting(final String key) {
-        return this.getSettingsAsMap().get(key);
+        return this.asMap().get(key);
     }
 
     @Override
     public boolean hasSetting(@Nonnull final String key) {
-        return this.getSettingsAsMap().containsKey(key);
+        return this.asMap().containsKey(key);
     }
 
     @Override
     public boolean hasSettings() {
         return this.settings != null && !this.settings.isEmpty();
+    }
+
+    @Override
+    public Report getReportMaster() {
+        return reportMaster;
+    }
+
+    @Override
+    public Set<Report> getSubReports() {
+        this.requireSubReports();
+        return FluentIterable
+                .from(this.subReports)
+                .transform(new Function<SReport, Report>() {
+                    @Nullable
+                    @Override
+                    public Report apply(@Nullable final SReport input) {
+                        return input;
+                    }
+                })
+                .toSet();
+    }
+
+    @Override
+    public boolean isDynamic() {
+        if (this.dynamic == null) {
+            return false;
+        }
+        return this.dynamic;
+    }
+
+    @Override
+    public Class<?> getReportedClass() {
+        return this.reportedClass;
+    }
+
+    public SReport setReportedClass(final Class<?> reportedClass) {
+        this.reportedClass = reportedClass;
+        return this;
+    }
+
+    public SReport setReportMaster(final SReport reportMaster) {
+        this.reportMaster = reportMaster;
+        if (!reportMaster.hasSubReport(this)) {
+            reportMaster.putSubReport(this);
+        }
+        return this;
+    }
+
+    private boolean hasSubReport(final SReport report) {
+        return !this.equals(report) && (this.subReports != null && !this.subReports.contains(report));
+    }
+
+    public SReport setSubReports(final Set<SReport> subReports) {
+        this.subReports = subReports;
+        return this;
+    }
+
+    public SReport setDynamic(final Boolean dynamic) {
+        this.dynamic = dynamic;
+        return this;
     }
 
     public SReport setResource(final String jasperPath, final String reportCfgPath) {
@@ -170,6 +240,15 @@ public class SReport
 
     public SReport setSubtitle(final String subtitle) {
         this.subtitle = subtitle;
+        return this;
+    }
+
+    public SReport putSubReport(final SReport report) {
+        this.requireSubReports();
+        if (report.reportMaster == null || !report.reportMaster.equals(this)) {
+            report.setReportMaster(this);
+        }
+        this.subReports.add(report);
         return this;
     }
 
@@ -206,6 +285,12 @@ public class SReport
     private void requireSettings() {
         if (this.settings == null) {
             this.settings = Sets.newHashSet();
+        }
+    }
+
+    private void requireSubReports() {
+        if (this.subReports == null) {
+            this.subReports = Sets.newHashSet();
         }
     }
 

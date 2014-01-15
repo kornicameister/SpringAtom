@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.web.rbuilder;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -28,18 +29,15 @@ import org.agatom.springatom.web.beans.WebBean;
 import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
 import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.binding.collection.MapAdaptable;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author kornicameister
@@ -48,7 +46,9 @@ import java.util.Set;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportConfiguration
-        implements WebBean {
+        implements WebBean,
+                   Iterable<ReportableEntity>,
+                   MapAdaptable<String, ReportableEntity> {
     private static final String                    BEAN_ID          = "reportConfiguration";
     private static final Logger                    LOGGER           = Logger.getLogger(ReportConfiguration.class);
     private static final long                      serialVersionUID = 772657130362339934L;
@@ -209,5 +209,19 @@ public class ReportConfiguration
         return Objects.toStringHelper(this)
                       .addValue(entities)
                       .toString();
+    }
+
+    @Override
+    public Iterator<ReportableEntity> iterator() {
+        return this.entities.iterator();
+    }
+
+    @Override
+    public Map<String, ReportableEntity> asMap() {
+        final Map<String, ReportableEntity> entityMap = Maps.newLinkedHashMap();
+        for (final ReportableEntity entity : this.entities) {
+            entityMap.put(entity.getName(), entity);
+        }
+        return Collections.unmodifiableMap(entityMap);
     }
 }

@@ -26,9 +26,13 @@ import org.agatom.springatom.server.service.domain.SUserService;
 import org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.history.Revision;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -45,7 +49,7 @@ public class SUserServiceImpl
         extends SServiceImpl<SUser, Long, Integer, SUserRepository>
         implements SUserService {
     public static final String SERVICE_NAME = "SUserService";
-    private SUserRepository repository;
+    private SUserRepository   repository;
     @Autowired
     @Qualifier(value = "securedPasswordEncoder")
     private PasswordEncoder   passwordEncoder;
@@ -80,6 +84,17 @@ public class SUserServiceImpl
         final SPerson person = this.retrievePerson(personId);
 
         return null;
+    }
+
+    @Override
+    public SUser getAuthenticatedUser() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final Object principal = authentication.getPrincipal();
+        if (principal instanceof SUser) {
+            final Revision<Integer, SUser> latestRevision = this.findLatestRevision(((SUser) principal).getId());
+            return latestRevision.getEntity();
+        }
+        throw new SessionAuthenticationException(String.format("Principal\n\t[%s]\nis not authenticated", principal));
     }
 
     private SPerson retrievePerson(final long personId) throws EntityDoesNotExistsServiceException {

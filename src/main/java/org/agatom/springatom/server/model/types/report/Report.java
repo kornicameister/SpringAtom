@@ -17,9 +17,10 @@
 
 package org.agatom.springatom.server.model.types.report;
 
+import org.springframework.binding.collection.MapAdaptable;
+
 import javax.annotation.Nonnull;
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,7 +29,8 @@ import java.util.Set;
  * @since 0.0.1
  */
 public interface Report
-        extends Serializable {
+        extends Serializable,
+                MapAdaptable<String, Serializable> {
     ReportResource getResource();
 
     String getDescription();
@@ -39,11 +41,17 @@ public interface Report
 
     Set<ReportSetting<?>> getSettings();
 
-    Map<String, Serializable> getSettingsAsMap();
-
     Serializable getSetting(String key);
 
     boolean hasSetting(@Nonnull String key);
 
     boolean hasSettings();
+
+    Report getReportMaster();
+
+    Set<Report> getSubReports();
+
+    boolean isDynamic();
+
+    Class<?> getReportedClass();
 }

@@ -63,12 +63,16 @@ public interface SUserService
      *         if there is no {@link org.agatom.springatom.server.model.beans.person.SPerson} to be associated with the
      *         new {@link org.agatom.springatom.server.model.beans.user.SUser}
      */
-    @NotNull SUser registerNewUser(
+    @NotNull
+    SUser registerNewUser(
             @UserName
             final String userName,
             @Password
             final String password,
             @Min(value = 2, message = "Minimal SPerson#id is 2, 1 is reserved for internal application usage")
             final long personId) throws EntityDoesNotExistsServiceException;
+
+    @NotNull
+    SUser getAuthenticatedUser();
 
 }
