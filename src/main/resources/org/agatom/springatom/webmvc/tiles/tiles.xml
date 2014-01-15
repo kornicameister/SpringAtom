@@ -41,8 +41,8 @@
         <property name="cacheUnresolved" value="false"/>
         <property name="redirectContextRelative" value="true"/>
         <property name="exposePathVariables" value="true"/>
-        <property name="prefix" value="classpath:org/agatom/springatom/jasper/"/>
-        <property name="reportDataKey" value="dataSource"/>
+        <property name="prefix" value="#{webProperties.getProperty('reports.reportsPrefix',T(java.lang.String))}"/>
+        <property name="reportDataKey" value="#{webProperties.getProperty('reports.reportDataKey',T(java.lang.String))}"/>
     </bean>
 
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
