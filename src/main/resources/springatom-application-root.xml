@@ -24,6 +24,7 @@
        http://www.springframework.org/schema/context/spring-context.xsd"
        default-lazy-init="true">
 
+    <import resource="org/agatom/springatom/web/locale/locale.xml"/>
     <import resource="org/agatom/springatom/aop/aop.xml"/>
     <import resource="org/agatom/springatom/server/model/ds.xml"/>
     <import resource="org/agatom/springatom/server/populators/populators.xml"/>
@@ -49,7 +50,7 @@
         <property name="prettyPrint" value="false"/>
     </bean>
     <bean id="jackson2ObjectFactoryBean" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
-    <property name="failOnEmptyBeans" value="false"/>
+        <property name="failOnEmptyBeans" value="false"/>
         <property name="autoDetectGettersSetters" value="true"/>
         <property name="indentOutput" value="false"/>
         <property name="simpleDateFormat" value="YYYY-MM-dd"/>
