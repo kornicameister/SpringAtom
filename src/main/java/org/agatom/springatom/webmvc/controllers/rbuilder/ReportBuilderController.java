@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Nullable;
@@ -57,7 +58,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  */
 @Controller(value = ReportBuilderController.CONTROLLER_NAME)
 @RequestMapping(value = "/reportBuilder")
-public class ReportBuilderController {
+public class ReportBuilderController
+        extends WebApplicationObjectSupport {
     public static final  String CONTROLLER_NAME = "reportBuilderController";
     private static final String VIEW_NAME       = "springatom.tiles.dashboard.reports.Download";
     private static final Logger LOGGER          = Logger.getLogger(ReportBuilderController.class);
@@ -66,6 +68,8 @@ public class ReportBuilderController {
     private ReportBuilderService service;
     @Autowired
     private SMessageSource       messageSource;
+    @Autowired
+    private ReportViewDescriptor descriptor;
 
     @RequestMapping(value = "/{reportId}", method = {RequestMethod.POST})
     public ModelAndView buildReport(@PathVariable("reportId") final Long reportId, final ModelMap modelMap, final HttpServletResponse response) throws
@@ -117,10 +121,10 @@ public class ReportBuilderController {
     public ModelAndView downloadReportInFormat(@PathVariable("reportId") final Long reportId,
                                                @PathVariable("format") final String format) throws ServiceException {
         LOGGER.info(String.format("/downloadReportInFormat name=%s :: format=%s", reportId, format));
-        final ReportViewDescriptor reportWrapper = this.service.getReportWrapper(reportId, format);
+        this.service.getReportWrapper(reportId, format, this.descriptor);
         return new ModelAndView(
-                reportWrapper.getViewName(),
-                reportWrapper.getParameters()
+                this.descriptor.getViewName(),
+                this.descriptor.getParameters()
         );
     }
 

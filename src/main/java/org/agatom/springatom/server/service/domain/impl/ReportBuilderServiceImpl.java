@@ -19,27 +19,39 @@ package org.agatom.springatom.server.service.domain.impl;
 
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
+import ar.com.fdvs.dj.domain.AutoText;
 import ar.com.fdvs.dj.domain.DynamicReport;
-import ar.com.fdvs.dj.domain.builders.ColumnBuilderException;
-import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
+import ar.com.fdvs.dj.domain.builders.*;
+import ar.com.fdvs.dj.domain.constants.GroupLayout;
+import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
+import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.export.JRXlsAbstractExporterParameter;
 import net.sf.jasperreports.engine.util.JRSaver;
 import org.agatom.springatom.SpringAtom;
 import org.agatom.springatom.core.invoke.InvokeUtils;
-import org.agatom.springatom.server.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.server.model.beans.report.SReport;
+import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
+import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
 import org.agatom.springatom.server.model.types.report.Report;
 import org.agatom.springatom.server.model.types.report.ReportResource;
+import org.agatom.springatom.server.properties.SPropertiesHolder;
 import org.agatom.springatom.server.repository.SBasicRepository;
 import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
 import org.agatom.springatom.server.service.domain.ReportBuilderService;
+import org.agatom.springatom.server.service.domain.SUserService;
+import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation;
 import org.agatom.springatom.web.rbuilder.ReportViewDescriptor;
@@ -47,6 +59,7 @@ import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
 import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
 import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
@@ -63,19 +76,22 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ResourceUtils;
+import org.springframework.ui.jasperreports.JasperReportsUtils;
+import org.springframework.util.*;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
-import javax.validation.constraints.Size;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.EntityType;
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author kornicameister
@@ -87,17 +103,25 @@ import java.util.Set;
 public class ReportBuilderServiceImpl
         extends SServiceImpl<SReport, Long, Integer, SReportRepository>
         implements ReportBuilderService {
-    private static final Logger LOGGER       = Logger.getLogger(ReportBuilderServiceImpl.class);
     public static final  String SERVICE_NAME = "reportBuilderService";
-
+    private static final Logger LOGGER = Logger.getLogger(ReportBuilderServiceImpl.class);
+    private Repositories          repositories;
     private SReportRepository           repository;
+    private Cache<Object, Object> cache;
     @Autowired
     private ApplicationContext          applicationContext;
-    private Repositories                repositories;
     @Autowired(required = false)
     private FormattingConversionService conversionService;
     @Autowired(required = false)
     private ObjectMapper                jackson;
+    @Autowired(required = false)
+    private EntityDescriptors     entityDescriptors;
+    @Autowired(required = false)
+    private SUserService          userService;
+    @Autowired(required = false)
+    private SMessageSource        messageSource;
+    @Autowired(required = false)
+    private SPropertiesHolder     propertiesHolder;
 
     @Override
     @Autowired
@@ -109,6 +133,43 @@ public class ReportBuilderServiceImpl
     @PostConstruct
     protected void init() {
         this.repositories = new Repositories(this.applicationContext);
+        this.cache = CacheBuilder.<Thread, SUser>newBuilder()
+                                 .maximumSize(100)
+                                 .expireAfterAccess(5, TimeUnit.MINUTES)
+                                 .expireAfterWrite(5, TimeUnit.MINUTES)
+                                 .build();
+        Assert.notNull(this.cache);
+        this.cache.put(Thread.currentThread(), this.userService.getAuthenticatedUser());
+    }
+
+    @Override
+    public SReport newReport(@NotNull final String title, @NotNull final String subtitle, @NotNull final String description) {
+        return this.newReport(title, subtitle, description, Maps.<String, Serializable>newHashMap());
+    }
+
+    @Override
+    public SReport newReport(final String title, final String subtitle, final String description, final Map<String, Serializable> settings) {
+
+        final SReport report = new SReport();
+        final SUser authenticatedUser = this.getAuthenticatedUser();
+
+        report.setCreatedBy(authenticatedUser);
+        report.setCreatedDate(DateTime.now());
+        report.setLastModifiedBy(authenticatedUser);
+        report.setLastModifiedDate(DateTime.now());
+
+        report.setTitle(title);
+        report.setDescription(description);
+        report.setSubtitle(subtitle);
+        for (final String settingKey : settings.keySet()) {
+            final Serializable value = settings.get(settingKey);
+            if (value == null) {
+                continue;
+            }
+            report.putSetting(settingKey, value);
+        }
+
+        return report;
     }
 
     @Override
@@ -146,47 +207,83 @@ public class ReportBuilderServiceImpl
     }
 
     @Override
-    @Cacheable(value = "reports")
+    @Cacheable(value = "reports", key = "#reportConfiguration.title")
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRED, rollbackFor = ReportBuilderServiceException.class)
-    public Report save(final ReportConfiguration reportConfiguration, SReport report) throws ReportBuilderServiceException {
+    public Map<Long, Report> save(final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException {
         LOGGER.debug(String.format("Saving new report from %s=%s", ClassUtils.getShortName(ReportConfiguration.class), reportConfiguration));
         try {
-            Assert.notNull(report, String.format("%s has not set valid instance of %s",
-                    ClassUtils.getShortName(ReportConfiguration.class),
-                    ClassUtils.getShortName(SReport.class))
-            );
-            final JasperReport jasperReport = this.generateReport(report, reportConfiguration.getEntities());
-            report = this.save(this.saveCompiledReportToFile(
-                    report,
-                    jasperReport,
-                    this.getReportResource(report.getTitle()),
-                    reportConfiguration,
-                    this.getReportConfigurationResource(report.getTitle())
-            ));
-            Assert.isTrue(!report.isNew());
-            return report;
-        } catch (Exception e) {
-            LOGGER.error(String.format("Failed to save %s to file", report), e);
-            throw new ReportBuilderServiceException("Failed to persist new report", e);
+
+            long firstId = -1;
+            final SUser user = this.getAuthenticatedUser();
+            final Locale locale = LocaleContextHolder.getLocale();
+            final Map<Long, Report> reports = Maps.newLinkedHashMap();
+
+            SReport report = null;
+
+            for (final ReportableEntity entity : reportConfiguration.getEntities()) {
+                LOGGER.trace(String.format("Generating report instance for entity=%s", entity.getName()));
+
+                if (firstId == -1) {
+                    report = (SReport) this.newReport(reportConfiguration);
+                } else {
+                    Assert.notNull(report);
+                    report = this.newReport(
+                            this.messageSource.getMessage("wizard.NewReportWizard.dynamicReport.title",
+                                    new Object[]{String.format("%s_%d", entity.getName(), ((SReport) reports.get(firstId)).getId())},
+                                    locale
+                            ),
+                            this.messageSource.getMessage("wizard.NewReportWizard.dynamicReport.subtitle",
+                                    new Object[]{this.entityDescriptors.getDescriptor(entity.getJavaClass()).getEntityType().getName()},
+                                    locale
+                            ),
+                            this.messageSource.getMessage("wizard.NewReportWizard.dynamicReport.description",
+                                    new Object[]{DateTime.now(), user.getUsername()},
+                                    locale
+                            ),
+                            reportConfiguration.getSettings()
+                    );
+                    report.setReportMaster((SReport) reports.get(firstId));
+                    report.setDynamic(true);
+                }
+
+                report.setReportedClass(entity.getJavaClass());
+
+                final JasperReport jasperReport = this.generateReport(report, entity);
+                report = this.save(this.saveCompiledReportToFile(
+                        report,
+                        jasperReport,
+                        this.getReportResource(report),
+                        reportConfiguration,
+                        this.getReportConfigurationResource(report)
+                ));
+
+                Assert.isTrue(!report.isNew());
+                if (firstId == -1) {
+                    firstId = report.getId();
+                }
+                reports.put(report.getId(), report);
+            }
+
+            final SReport reportMaster = (SReport) reports.get(firstId);
+            final long finalFirstId = firstId;
+            final FluentIterable<Long> longs = FluentIterable.from(reports.keySet()).filter(new Predicate<Long>() {
+                @Override
+                public boolean apply(@Nullable final Long input) {
+                    return input != null && input != finalFirstId;
+                }
+            });
+            for (final Long reportId : longs) {
+                reportMaster.putSubReport((SReport) reports.get(reportId));
+            }
+            if (!longs.isEmpty()) {
+                this.save(reportMaster);
+            }
+
+            return reports;
+        } catch (Exception exception) {
+            LOGGER.error(String.format("Failed to save %s to file", reportConfiguration), exception);
+            throw new ReportBuilderServiceException("Failed to persist new report", exception);
         }
-    }
-
-    private SReport saveCompiledReportToFile(final SReport report, final JasperReport jasperReport,
-                                             final Resource jasperResource,
-                                             final ReportConfiguration reportConfiguration,
-                                             final Resource reportResource) throws
-            Exception {
-        Assert.notNull(jasperResource);
-        Assert.isTrue(!jasperResource.getFile().exists());
-        JRSaver.saveObject(jasperReport, jasperResource.getFile());
-        Assert.isTrue(jasperResource.getFile().setReadOnly());
-
-        Assert.notNull(reportResource);
-        Assert.isTrue(!reportResource.getFile().exists());
-        this.jackson.writeValue(reportResource.getFile(), reportConfiguration);
-        Assert.isTrue(reportResource.getFile().setReadOnly());
-
-        return report.setResource(jasperResource.getURL().getPath(), reportResource.getURL().getPath());
     }
 
     @Override
@@ -212,7 +309,8 @@ public class ReportBuilderServiceImpl
     }
 
     @Override
-    public ReportViewDescriptor getReportWrapper(final Long reportId, final String format) throws ReportBuilderServiceException {
+    public void getReportWrapper(final Long reportId, final String format, final ReportViewDescriptor descriptor) throws
+            ReportBuilderServiceException {
         LOGGER.debug(String
                 .format("Retrieving %s for pair=[reportId=%d,format=%s]", ClassUtils.getShortName(ReportViewDescriptor.class), reportId, format));
         try {
@@ -224,13 +322,11 @@ public class ReportBuilderServiceImpl
                     ReportConfiguration.class
             );
 
-            final ModelMap reportParameters = this.getReportParameters(format, configuration);
+            final ModelMap reportParameters = this.getReportParameters(format, configuration, report);
 
-            return new ReportViewDescriptor(
-                    report.getResource().getJasperFilename(),
-                    format,
-                    reportParameters
-            );
+            descriptor.setParameters(reportParameters)
+                      .setViewName(report.getResource().getJasperFilename())
+                      .setFormat(format);
         } catch (Exception e) {
             LOGGER.error(String.format("Failed to create %s", ClassUtils.getShortName(ReportViewDescriptor.class)), e);
             if (e instanceof ReportBuilderServiceException) {
@@ -241,15 +337,18 @@ public class ReportBuilderServiceImpl
         }
     }
 
-    private ModelMap getReportParameters(final String format, final ReportConfiguration configuration) throws ReportBuilderServiceException {
+    private ModelMap getReportParameters(final String format, final ReportConfiguration configuration, final SReport report) throws
+            ReportBuilderServiceException {
         if (!this.getAvailableRepresentations().containsKey(format)) {
             throw new ReportBuilderServiceException(SReport.class, String.format("%s is not available format to be used", format));
         }
         try {
             final ModelMap modelMap = new ModelMap();
 
-            modelMap.put("format", format);
-            modelMap.put("dataSource", this.getConvertedDataSource(configuration));
+            modelMap.putAll(this.getConvertedDataSources(configuration, report));
+            modelMap.put(this.propertiesHolder.getProperty("reports.reportFormatKey"), format);
+            modelMap.put(this.propertiesHolder.getProperty("reports.reportSubReportsKey"), this.extractSubReports(report));
+            modelMap.put(this.propertiesHolder.getProperty("reports.reportKey"), this.repository.detach(report));
 
             return modelMap;
         } catch (Exception exception) {
@@ -258,53 +357,232 @@ public class ReportBuilderServiceImpl
         }
     }
 
-    private JasperReport generateReport(@Nonnull final Report report, @Size(min = 1) final List<ReportableEntity> entities) {
-        LOGGER.trace(String.format("Generating report[%s] from pair=[\n\treport->%s\n\tentities->%s",
+    private Map<String, Object> getConvertedDataSources(final ReportConfiguration configuration, final SReport report) {
+
+        final String property = this.propertiesHolder.getProperty("reports.reportDataKey");
+        final Map<String, Object> map = Maps.newLinkedHashMap();
+        final Map<ReportableEntity, SBasicRepository<?, ?>> repositories = this.getRepositories(configuration);
+        final Map<ReportableEntity, SReport> dynamicEntitiesMap = this.getReportsDistribution(configuration, report);
+
+        for (final ReportableEntity entity : repositories.keySet()) {
+            final JRDataSource value = this.generateDataSource(repositories.get(entity), entity.getColumns());
+            String dataKey;
+            if (!dynamicEntitiesMap.get(entity).isDynamic()) {
+                dataKey = property;
+            } else {
+                dataKey = String.format("%s_%d", property, dynamicEntitiesMap.get(entity).getId());
+            }
+            map.put(dataKey, value);
+        }
+        return map;
+    }
+
+    private Map<ReportableEntity, SBasicRepository<?, ?>> getRepositories(final ReportConfiguration report) {
+        final Map<ReportableEntity, SBasicRepository<?, ?>> repositoryMap = Maps.newHashMap();
+        for (final ReportableEntity entity : report.getEntities()) {
+            final SBasicRepository<?, ?> repo = (SBasicRepository<?, ?>) this.repositories.getRepositoryFor(entity.getJavaClass());
+            Assert.notNull(repo);
+            repositoryMap.put(entity, repo);
+            LOGGER.trace(String.format("For entity=%s retrieved repository=%s", entity.getJavaClassName(), ClassUtils.getShortName(repo.getClass())));
+        }
+        return repositoryMap;
+    }
+
+    private JRDataSource generateDataSource(final SBasicRepository<?, ?> repositoryFor, final Set<ReportableColumn> columns) {
+        Assert.notNull(repositoryFor);
+        Assert.notEmpty(columns);
+
+        final List<?> all = repositoryFor.findAll();
+        final Function<Object, Object> transformationFunction = new Function<Object, Object>() {
+            @Nullable
+            @Override
+            public Object apply(@Nullable final Object input) {
+                assert input != null;
+                final Map<String, Object> map = Maps.newHashMap();
+                for (final ReportableColumn column : columns) {
+                    final Object object = InvokeUtils.invokeGetter(input, column.getColumnName());
+                    map.put(column.getColumnName(), conversionService.convert(object, column.getRenderClass()));
+                }
+                return map;
+            }
+        };
+        return JasperReportsUtils.convertReportData(FluentIterable.from(all).transform(transformationFunction).toSet());
+    }
+
+    private Map<ReportableEntity, SReport> getReportsDistribution(final ReportConfiguration configuration, final SReport report) {
+        Assert.isTrue(!report.isDynamic());
+
+        final Map<ReportableEntity, SReport> map = Maps.newHashMap();
+        final List<ReportableEntity> entities = configuration.getEntities();
+        final ReportableEntityPredicate entityPredicate = new ReportableEntityPredicate().setReport(report);
+        Optional<ReportableEntity> entityOptional = FluentIterable.from(entities).filter(entityPredicate).first();
+
+        Assert.isTrue(entityOptional.isPresent());
+        map.put(entityOptional.get(), report);
+
+        for (final Report dynamicReport : report.getSubReports()) {
+            final SReport sDynamicReport = (SReport) dynamicReport;
+            Assert.isTrue(sDynamicReport.isDynamic());
+
+            entityOptional = FluentIterable.from(entities).filter(entityPredicate.setReport(dynamicReport)).first();
+            Assert.isTrue(entityOptional.isPresent());
+            map.put(entityOptional.get(), sDynamicReport);
+        }
+        return map;
+    }
+
+    private Set<Report> extractSubReports(final SReport report) {
+        final Set<Report> subReports = report.getSubReports();
+        if (!CollectionUtils.isEmpty(subReports)) {
+            final Set<Report> subReportsDetached = Sets.newLinkedHashSetWithExpectedSize(subReports.size());
+            for (final Report subReport : subReports) {
+                final SReport tmp = this.repository.detach((SReport) subReport);
+                Assert.notNull(tmp);
+                Assert.isTrue(!tmp.isNew());
+                subReportsDetached.add(tmp);
+            }
+            return subReportsDetached;
+        }
+        return Sets.newHashSet();
+    }
+
+    private Report newReport(final ReportConfiguration reportConfiguration) {
+        return this.newReport(
+                reportConfiguration.getTitle(),
+                reportConfiguration.getSubtitle(),
+                reportConfiguration.getDescription(),
+                reportConfiguration.getSettings()
+        );
+    }
+
+    private SReport saveCompiledReportToFile(final SReport report, final JasperReport jasperReport,
+                                             final Resource jasperResource,
+                                             final ReportConfiguration reportConfiguration,
+                                             final Resource reportResource) throws
+            Exception {
+        Assert.notNull(jasperResource);
+        Assert.isTrue(!jasperResource.getFile().exists());
+        JRSaver.saveObject(jasperReport, jasperResource.getFile());
+        Assert.isTrue(jasperResource.getFile().setReadOnly());
+
+        Assert.notNull(reportResource);
+        Assert.isTrue(!reportResource.getFile().exists());
+        this.jackson.writeValue(reportResource.getFile(), reportConfiguration);
+        Assert.isTrue(reportResource.getFile().setReadOnly());
+
+        return report.setResource(jasperResource.getURL().getPath(), reportResource.getURL().getPath());
+    }
+
+    private JasperReport generateReport(final Report report, final ReportableEntity entity) throws
+            ClassNotFoundException, JRException, ColumnBuilderException, DJBuilderException {
+        LOGGER.trace(String.format("Generating report[%s] from pair=[\n\treport->%s\n\tentity->%s",
                 ClassUtils.getShortName(DynamicReport.class),
                 report,
-                entities)
+                entity)
         );
         final DynamicReport dynamicReport;
         try {
-            dynamicReport = this.buildReport(report, entities);
+            dynamicReport = this.buildReport(report, entity);
             return DynamicJasperHelper.generateJasperReport(dynamicReport, new ClassicLayoutManager(), Maps.newHashMap());
-        } catch (ClassNotFoundException | ColumnBuilderException | JRException e) {
-            LOGGER.error(String.format("Failed to generate report from %s", report), e);
+        } catch (DJBuilderException | ClassNotFoundException | ColumnBuilderException | JRException exception) {
+            LOGGER.error(String.format("Failed to generate report from %s", report), exception);
+            throw exception;
         }
-        return null;
     }
 
-    private DynamicReport buildReport(final Report report, final List<ReportableEntity> entities) throws ClassNotFoundException,
-            ColumnBuilderException {
+    private DynamicReport buildReport(final Report report, final ReportableEntity entity) throws ClassNotFoundException,
+            ColumnBuilderException, DJBuilderException {
         LOGGER.trace(String.format("Building report instance of %s from pair=[\n\treport->%s\n\tentities->%s",
                 ClassUtils.getShortName(FastReportBuilder.class),
                 report,
-                entities)
+                entity)
         );
+        final Integer margin = 20;
         final FastReportBuilder builder = new FastReportBuilder();
         builder.setIgnorePagination(true)
                .setMargins(0, 0, 0, 0)
                .setWhenNoDataAllSectionNoDetail()
                .setUseFullPageWidth(true)
-               .setReportName(String.format("%s - %s", report.getTitle(), ((PersistentVersionedObject) report).getCreatedBy().getUsername()))
+               .setReportName(String.format("%s - %s", report.getTitle(), this.getAuthenticatedUser().getUsername()))
                .setReportLocale(LocaleContextHolder.getLocale())
                .setTitle(report.getTitle())
                .setSubtitle(report.getSubtitle())
                .setPrintColumnNames(true)
-               .setIgnorePagination(true)
+               .setIgnorePagination(false)
                .setMargins(0, 0, 0, 0)
+               .setWhenNoDataAllSectionNoDetail()
+               .addAutoText(AutoText.AUTOTEXT_PAGE_X_OF_Y, AutoText.POSITION_FOOTER, AutoText.ALIGNMENT_CENTER)
+               .setDetailHeight(new Integer(15)).setLeftMargin(margin)
+               .setRightMargin(margin).setTopMargin(margin).setBottomMargin(margin)
                .setUseFullPageWidth(true);
-        for (final ReportableEntity entity : entities) {
-            for (final ReportableColumn column : entity.getColumns()) {
-                final String columnTitle = column.getLabel();
-                final String propertyName = column.getColumnName();
-                final Class<?> renderingAsClass = column.getRenderClass();
-                final int width = 50;
-                final boolean fixedWidth = false;
-                builder.addColumn(columnTitle, propertyName, renderingAsClass, width, fixedWidth);
+
+        for (final ReportableColumn column : entity.getColumns()) {
+            final AbstractColumn ac = ColumnBuilder.getNew()
+                                                   .setColumnProperty(column.getColumnName(), column.getRenderClass())
+                                                   .setTitle(column.getLabel())
+                                                   .setWidth(50)
+                                                   .build();
+            builder.addColumn(ac);
+            if (this.isGroupingColumn(entity, column)) {
+                final GroupBuilder groupBuilder = new GroupBuilder();
+
+                groupBuilder.setCriteriaColumn((PropertyColumn) ac)
+                            .setGroupLayout(GroupLayout.DEFAULT_WITH_HEADER);
+
+                builder.addGroup(groupBuilder.build());
             }
         }
+
         return builder.build();
+    }
+
+    private boolean isGroupingColumn(final ReportableEntity entity, final ReportableColumn column) {
+        final EntityDescriptor<?> descriptor = this.entityDescriptors.getDescriptor(entity.getJavaClass());
+        if (descriptor != null) {
+            final EntityType<?> entityType = descriptor.getEntityType();
+            final Attribute<?, ?> attribute = entityType.getAttribute(column.getColumnName());
+            return attribute != null && ClassUtils.isAssignable(Enum.class, attribute.getJavaType());
+        }
+        return false;
+    }
+
+    private Resource getReportResource(final SReport report) throws ReportBuilderServiceException {
+        final String corePackageName = String.format("%s/", ClassUtils.getPackageName(SpringAtom.class).replaceAll("\\.", "/"));
+        File file;
+        try {
+            file = ResourceUtils.getFile(String.format("classpath:%sjasper", corePackageName));
+        } catch (FileNotFoundException fnfe) {
+            file = this.createJasperHolderDirectory(corePackageName);
+        }
+        final FileSystemResource fileSystemResource = new FileSystemResource(file);
+        return this.getFileSystemResource(fileSystemResource, report, ResourceType.JASPER);
+    }
+
+    private Resource getReportConfigurationResource(final SReport report) throws ReportBuilderServiceException {
+        final String corePackageName = String.format("%s/", ClassUtils.getPackageName(SpringAtom.class).replaceAll("\\.", "/"));
+        File file;
+        try {
+            file = ResourceUtils.getFile(String.format("classpath:%sjasper", corePackageName));
+        } catch (FileNotFoundException fnfe) {
+            file = this.createJasperHolderDirectory(corePackageName);
+        }
+        final FileSystemResource fileSystemResource = new FileSystemResource(file);
+        return this.getFileSystemResource(fileSystemResource, report, ResourceType.JSON);
+    }
+
+    private FileSystemResource getFileSystemResource(final FileSystemResource fileSystemResource, final SReport report, final ResourceType resourceType) {
+        final String pathname = StringUtils.cleanPath(
+                String.format(LocaleContextHolder.getLocale(), "%s/%s.%s",
+                        fileSystemResource.getPath(),
+                        resourceType.getResourceName(this.calculateFileNameHashCode(report)),
+                        resourceType.toString().toLowerCase()
+                )
+        );
+        return new FileSystemResource(new File(pathname));
+    }
+
+    private String calculateFileNameHashCode(final SReport report) {
+        return StringUtils.trimAllWhitespace(report.getTitle());
     }
 
     private File createJasperHolderDirectory(final String corePackageName) throws ReportBuilderServiceException {
@@ -324,102 +602,50 @@ public class ReportBuilderServiceImpl
         }
     }
 
-    private List<?> getConvertedDataSource(final ReportConfiguration report) {
-        final Map<ReportableEntity, SBasicRepository<?, ?>> repositoryMap = Maps.newHashMap();
-        for (final ReportableEntity entity : report.getEntities()) {
-            final SBasicRepository<?, ?> repo = (SBasicRepository<?, ?>) this.repositories.getRepositoryFor(entity.getJavaClass());
-            Assert.notNull(repo);
-            repositoryMap.put(entity, repo);
-            LOGGER.trace(String.format("For entity=%s retrieved repository=%s", entity.getJavaClassName(), ClassUtils.getShortName(repo.getClass())));
+    private static enum ResourceType
+            implements ResourceTypeInterface {
+        JASPER {
+            public String getResourceName(final String fileName) {
+                return String.format("report_%s", fileName);
+            }
+        },
+        JSON {
+            public String getResourceName(final String fileName) {
+                return String.format("report_cfg_%s", fileName);
+            }
         }
-        final Map<ReportableEntity, List<?>> allAndConvert = this.findAllAndConvert(repositoryMap);
-        // TODO how to handle multiple selected entities
-        return FluentIterable.from(allAndConvert.values()).first().get();
     }
 
-    private Map<ReportableEntity, List<?>> findAllAndConvert(final Map<ReportableEntity, SBasicRepository<?, ?>> repositoryMap) {
-        Assert.notEmpty(repositoryMap.keySet());
-        final Map<ReportableEntity, List<?>> map = Maps.newHashMap();
-        for (final ReportableEntity entity : repositoryMap.keySet()) {
-            final List<?> converted = this.findAllAndConvert(repositoryMap.get(entity), entity.getColumns());
-            Assert.notNull(converted);
-            Assert.notEmpty(converted);
-            map.put(entity, converted);
-            LOGGER.trace(String.format("For entity=%s retrieved values=%d", entity.getJavaClassName(), converted.size()));
+    private SUser getAuthenticatedUser() {
+        final Thread key = Thread.currentThread();
+        Object ifPresent = this.cache.getIfPresent(key);
+
+        if (ifPresent == null) {
+            this.cache.invalidate(key);
+            ifPresent = this.userService.getAuthenticatedUser();
+            this.cache.put(key, ifPresent);
         }
-        return map;
+
+        return (SUser) ifPresent;
     }
 
-    private List<?> findAllAndConvert(final SBasicRepository<?, ?> repositoryFor, final Set<ReportableColumn> columns) {
-        Assert.notNull(repositoryFor);
-        Assert.notEmpty(columns);
-
-        final List<?> all = repositoryFor.findAll();
-        return FluentIterable
-                .from(all)
-                .transform(new Function<Object, Object>() {
-                    @Nullable
-                    @Override
-                    public Object apply(@Nullable final Object input) {
-                        assert input != null;
-                        final Map<String, Object> map = Maps.newHashMap();
-                        for (final ReportableColumn column : columns) {
-                            final Object object = InvokeUtils.invokeGetter(input, column.getColumnName());
-                            map.put(column.getColumnName(), conversionService.convert(object, column.getRenderClass()));
-                        }
-                        return map;
-                    }
-                })
-                .toList();
+    private static interface ResourceTypeInterface {
+        String getResourceName(final String fileName);
     }
 
-    private Map<JRExporterParameter, Object> getParams() throws JRException {
-        final Map<JRExporterParameter, Object> params = Maps.newHashMap();
-        params.put(JRXlsAbstractExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
-        params.put(JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
-        params.put(JRXlsAbstractExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
-        return params;
-    }
+    private static class ReportableEntityPredicate
+            implements Predicate<ReportableEntity> {
 
-    private Resource getReportResource(final String title) throws ReportBuilderServiceException {
-        final String corePackageName = String.format("%s/", ClassUtils.getPackageName(SpringAtom.class).replaceAll("\\.", "/"));
-        File file;
-        try {
-            file = ResourceUtils.getFile(String.format("classpath:%sjasper", corePackageName));
-        } catch (FileNotFoundException fnfe) {
-            file = this.createJasperHolderDirectory(corePackageName);
+        private Report report;
+
+        public ReportableEntityPredicate setReport(final Report report) {
+            this.report = report;
+            return this;
         }
-        final FileSystemResource fileSystemResource = new FileSystemResource(file);
-        return new FileSystemResource(
-                new File(String.format(LocaleContextHolder.getLocale(), "%s/%s.jasper",
-                        fileSystemResource.getPath(),
-                        this.getReportName(title)
-                ))
-        );
-    }
 
-    private Resource getReportConfigurationResource(final String title) throws ReportBuilderServiceException {
-        final String corePackageName = String.format("%s/", ClassUtils.getPackageName(SpringAtom.class).replaceAll("\\.", "/"));
-        File file;
-        try {
-            file = ResourceUtils.getFile(String.format("classpath:%sjasper", corePackageName));
-        } catch (FileNotFoundException fnfe) {
-            file = this.createJasperHolderDirectory(corePackageName);
+        @Override
+        public boolean apply(@Nullable final ReportableEntity input) {
+            return input != null && input.getJavaClass().equals(this.report.getReportedClass());
         }
-        final FileSystemResource fileSystemResource = new FileSystemResource(file);
-        return new FileSystemResource(
-                new File(String.format(LocaleContextHolder.getLocale(), "%s/%s.json",
-                        fileSystemResource.getPath(),
-                        this.getReportConfigurationName(title)
-                ))
-        );
-    }
-
-    private String getReportName(final String reportName) throws ReportBuilderServiceException {
-        return String.format("report_%s", reportName);
-    }
-
-    private String getReportConfigurationName(final String reportName) {
-        return String.format("report_cfg_%s", reportName);
     }
 }

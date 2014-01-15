@@ -18,7 +18,12 @@
 package org.agatom.springatom.web.rbuilder;
 
 import com.google.common.base.Objects;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Role;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.io.Serializable;
 
@@ -27,17 +32,29 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
+@Component
+@Scope(value = WebApplicationContext.SCOPE_SESSION)
+@Role(value = BeanDefinition.ROLE_APPLICATION)
 public class ReportViewDescriptor
         implements Serializable {
     private static final long serialVersionUID = -15235355484985353L;
-    private final String   format;
-    private       String   viewName;
-    private       ModelMap parameters;
+    private String   format;
+    private String   viewName;
+    private ModelMap parameters;
 
-    public ReportViewDescriptor(final String viewName, final String format, final ModelMap parameters) {
-        this.viewName = viewName;
+    public ReportViewDescriptor setFormat(final String format) {
         this.format = format;
+        return this;
+    }
+
+    public ReportViewDescriptor setViewName(final String viewName) {
+        this.viewName = viewName;
+        return this;
+    }
+
+    public ReportViewDescriptor setParameters(final ModelMap parameters) {
         this.parameters = parameters;
+        return this;
     }
 
     public String getViewName() {

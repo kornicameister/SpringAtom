@@ -28,6 +28,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -40,12 +41,23 @@ public interface ReportBuilderService
         extends SService<SReport, Long, Integer, SReportRepository> {
 
     @NotNull
+    Report newReport(@NotNull final String title,
+                     @NotNull final String subtitle,
+                     @NotNull final String description);
+
+    @NotNull
+    Report newReport(@NotNull final String title,
+                     @NotNull final String subtitle,
+                     @NotNull final String description,
+                     @NotNull final Map<String, Serializable> settings);
+
+    @NotNull
     Map<String, ReportRepresentation> getAvailableRepresentations();
 
     Report deleteReport(@NotNull @Min(value = 1) final Long pk) throws ReportBuilderServiceException;
 
     @NotNull
-    Report save(@NotNull final ReportConfiguration reportConfiguration, @NotNull final SReport report) throws ReportBuilderServiceException;
+    Map<Long, Report> save(@NotNull final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException;
 
     @NotNull
     SReport getReport(@Min(value = 1) final Long reportId) throws ReportBuilderServiceException;
@@ -53,6 +65,6 @@ public interface ReportBuilderService
     @NotNull
     SReport getReport(@NotNull @Length(min = 1) final String title) throws ReportBuilderServiceException;
 
-    @NotNull
-    ReportViewDescriptor getReportWrapper(@Min(value = 1) final Long reportId, @NotNull final String format) throws ReportBuilderServiceException;
+    void getReportWrapper(@Min(value = 1) final Long reportId, @NotNull final String format, final ReportViewDescriptor descriptor) throws
+            ReportBuilderServiceException;
 }
