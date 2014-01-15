@@ -22,7 +22,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptorColumn;
 import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
@@ -75,7 +74,6 @@ public class ReportWizard
     private              Set<ReportableEntity>                        entities            = Sets.newTreeSet();
     private              Map<ReportableEntity, Set<ReportableColumn>> entityToColumns     = Maps.newTreeMap();
     private              Map<Integer, Identifiable<Integer>>          cache               = Maps.newHashMap();
-    private              SReport                                      report              = null;
     @Autowired
     private              EntityDescriptors                            entityDescriptors   = null;
     @Autowired
@@ -85,7 +83,6 @@ public class ReportWizard
     @Override
     public void init(final RequestContext context) {
         super.init(context);
-        this.report = null;
         this.reportConfiguration = null;
     }
 
@@ -227,6 +224,5 @@ public class ReportWizard
 
     public void reset() {
         this.reportConfiguration = null;
-        this.report = null;
     }
 }
