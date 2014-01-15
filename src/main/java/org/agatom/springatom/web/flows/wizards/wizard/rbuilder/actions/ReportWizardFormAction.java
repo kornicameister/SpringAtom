@@ -40,25 +40,19 @@ import org.springframework.webflow.execution.RequestContext;
 abstract class ReportWizardFormAction
         extends FormAction {
 
-    private static final Logger                             LOGGER                   = Logger.getLogger(ReportWizardFormAction.class);
-    private static final Class<FormattingConversionService> CONVERSION_SERVICE_CLASS = FormattingConversionService.class;
-    private static final Class<LocalValidatorFactoryBean>   VALIDATOR_CLASS          = LocalValidatorFactoryBean.class;
-    protected FormattingConversionService conversionService;
-    protected LocalValidatorFactoryBean   delegatedValidator;
-    protected ReportWizard                reportWizard;
+    private static final Logger                      LOGGER             = Logger.getLogger(ReportWizardFormAction.class);
     @Autowired
-    protected ApplicationContext          applicationContext;
+    protected            FormattingConversionService conversionService  = null;
+    @Autowired
+    protected            LocalValidatorFactoryBean   delegatedValidator = null;
+    @Autowired
+    protected            ReportWizard                reportWizard       = null;
+    @Autowired
+    protected            ApplicationContext          applicationContext = null;
 
     protected ReportWizardFormAction() {
         this.setFormObjectClass(ReportConfiguration.class);
         this.setFormObjectName(StringUtils.uncapitalize(ClassUtils.getShortName(ReportConfiguration.class)));
-    }
-
-    public final void init(final ReportWizard reportWizard) {
-        this.reportWizard = reportWizard;
-        this.delegatedValidator = this.applicationContext.getBean(VALIDATOR_CLASS);
-        this.conversionService = this.applicationContext.getBean(CONVERSION_SERVICE_CLASS);
-        LOGGER.debug(String.format("%s - created for reportWizard=%s", ClassUtils.getShortName(this.getClass()), reportWizard));
     }
 
     @Override

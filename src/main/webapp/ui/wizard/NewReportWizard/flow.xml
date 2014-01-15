@@ -42,12 +42,6 @@
         <evaluate expression="reportWizard.init(flowRequestContext)"/>
         <!--init report descriptor-->
 
-        <!--init form actions-->
-        <evaluate expression="pickEntityFormAction.init(reportWizard)"/>
-        <evaluate expression="pickColumnsFormAction.init(reportWizard)"/>
-        <evaluate expression="reportDescriptionFormAction.init(reportWizard)"/>
-        <!--init form actions-->
-
     </on-start>
 
     <view-state id="entity" view="ui.wizard.NewReportWizard.PickEntity" popup="true">
@@ -57,9 +51,7 @@
         <transition on="next" bind="true" validate="true" to="pickColumns">
             <evaluate expression="pickEntityFormAction.bindAndValidate"/>
         </transition>
-        <transition on="cancel" to="cancel">
-            <evaluate expression="pickEntityFormAction.resetForm"/>
-        </transition>
+        <transition on="cancel" to="cancel"/>
     </view-state>
 
     <view-state id="pickColumns" view="ui.wizard.NewReportWizard.PickColumns" popup="true">
@@ -70,10 +62,10 @@
         <transition on="next" to="moreEntitiesAndColumns" validate="true" bind="true">
             <evaluate expression="pickColumnsFormAction.bindAndValidate"/>
         </transition>
-        <transition on="previous" to="entity" bind="false" validate="false"/>
-        <transition on="cancel" to="cancel" history="invalidate" bind="false">
+        <transition on="previous" to="entity" bind="false" validate="false">
             <evaluate expression="pickColumnsFormAction.resetForm"/>
         </transition>
+        <transition on="cancel" to="cancel"/>
     </view-state>
 
     <view-state id="moreEntitiesAndColumns" view="ui.wizard.NewReportWizard.MoreEntitiesAndColumns" popup="true">
@@ -82,7 +74,7 @@
         </on-entry>
         <transition on="next" to="reportDescription" history="invalidate"/>
         <transition on="previous" to="pickColumns" history="discard">
-            <evaluate expression="pickColumnsFormAction.resetForm"/>
+            <evaluate expression="reportWizard.reset()"/>
         </transition>
     </view-state>
 
@@ -93,23 +85,26 @@
         <transition on="next" to="reportOverview" validate="true" bind="true" history="invalidate">
             <evaluate expression="reportDescriptionFormAction.bindAndValidate"/>
         </transition>
-        <transition on="cancel" to="cancel" history="invalidate" bind="false">
-            <evaluate expression="reportDescriptionFormAction.resetForm"/>
-        </transition>
+        <transition on="cancel" to="cancel"/>
     </view-state>
 
     <view-state id="reportOverview" view="ui.wizard.NewReportWizard.ReportOverview">
         <transition on="finish" to="reportReady">
             <evaluate expression="finishReportAction.execute"/>
         </transition>
-        <transition on="cancel" to="cancel" history="invalidate" bind="false"/>
+        <transition on="cancel" to="cancel"/>
     </view-state>
 
     <end-state id="reportReady"
-               view="externalRedirect:/dashboard/reports?wizard=#{flowScope.wizardID}&amp;action=#{currentEvent.id}&amp;report=#{reportWizard.report.title}">
-        <output name="report" value="reportWizard.report"/>
-    </end-state>
+               view="externalRedirect:/dashboard/reports?wizard=#{flowScope.wizardID}&amp;action=#{currentEvent.id}"/>
     <end-state id="cancel"
                view="externalRedirect:/dashboard/reports?wizard=#{flowScope.wizardID}&amp;action=#{currentEvent.id}"/>
+
+    <on-end>
+        <evaluate expression="reportWizard.reset()"/>
+        <evaluate expression="reportDescriptionFormAction.resetForm"/>
+        <evaluate expression="pickEntityFormAction.resetForm"/>
+        <evaluate expression="pickColumnsFormAction.resetForm"/>
+    </on-end>
 
 </flow>

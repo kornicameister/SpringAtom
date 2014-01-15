@@ -35,10 +35,8 @@ import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
 import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
 import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Role;
 import org.springframework.context.annotation.Scope;
@@ -48,6 +46,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.annotation.Nullable;
@@ -65,7 +64,7 @@ import java.util.*;
 
 @Lazy
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(WebApplicationContext.SCOPE_SESSION)
 @Component(value = "reportWizard")
 public class ReportWizard
         extends AbstractWizard
@@ -95,23 +94,6 @@ public class ReportWizard
         this.createdBy = this.getCreator();
         this.setEntities(this.getReportableEntities());
         this.setEntityToColumns(this.getReportableColumns(this.entities));
-    }
-
-    public SReport getReport() {
-        this.report = new SReport();
-        this.report.setCreatedBy(this.createdBy);
-        this.report.setCreatedDate(DateTime.now());
-        this.report.setLastModifiedBy(this.createdBy);
-        this.report.setLastModifiedDate(DateTime.now());
-
-        this.report.setTitle(this.reportConfiguration.getTitle());
-        this.report.setDescription(this.reportConfiguration.getDescription());
-        this.report.setSubtitle(this.reportConfiguration.getSubtitle());
-        for (final String settingKey : this.reportConfiguration.getSettings().keySet()) {
-            this.report.putSetting(settingKey, this.reportConfiguration.getSettings().get(settingKey));
-        }
-
-        return this.report;
     }
 
     public ReportConfiguration getReportConfiguration() {
@@ -245,5 +227,6 @@ public class ReportWizard
 
     public void reset() {
         this.reportConfiguration = null;
+        this.report = null;
     }
 }

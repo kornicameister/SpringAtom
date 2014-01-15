@@ -25,7 +25,6 @@ import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
 import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Role;
 import org.springframework.context.annotation.Scope;
@@ -38,6 +37,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -50,7 +50,7 @@ import java.util.Set;
  */
 @Lazy
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(WebApplicationContext.SCOPE_SESSION)
 @Component(value = "pickColumnsFormAction")
 public class PickColumnsFormAction
         extends ReportWizardFormAction {

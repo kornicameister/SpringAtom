@@ -118,7 +118,7 @@
     SA.wizard.applyWebFlowDecorators = function (el, formId) {
         console.log('Applying WF decorator over elements > ' + el);
         $.each(el, function (index, val) {
-            console.log('Applying WF decorator over > ' + $(val).attr('id'));
+            console.log('Applying WF decorator over > ' + $('#' + val).attr('id'));
             applyFinishActionDecorator(val, formId);
         });
         var not = $('.x-wizard-actions').find('button').not(function (index) {
