@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,51 +15,34 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.rbuilder.bean;
+package org.agatom.springatom.server.model.descriptors;
 
-import org.agatom.springatom.core.util.LocalizationAware;
 import org.springframework.hateoas.Identifiable;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Set;
 
 /**
- * {@link org.agatom.springatom.web.rbuilder.bean.ReportableBean} is an abstract class which defines plain {@code JavaBean}
- * used in rendering information in {@link org.agatom.springatom.web.flows.wizards.wizard.rbuilder.ReportWizard}'s forms.
- * It is identified by {@link org.springframework.hateoas.Identifiable#getId()} where the id is calculated and defined by subclasses.
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public abstract class ReportableBean
-        implements Serializable,
-                   Identifiable<Integer>,
-                   LocalizationAware {
-    private static final long serialVersionUID = -8556431202961756939L;
-    protected String  label;
-    protected Integer id;
+public interface EntityAssociation
+        extends Serializable,
+                Identifiable<String> {
+    SlimEntityDescriptor<?> getMaster();
 
-    @Override
-    public Integer getId() {
-        if (this.id == null) {
-            this.id = this.calculateId();
-        }
-        return id;
-    }
+    Set<SlimEntityDescriptor<?>> getAssociations();
 
-    protected abstract Integer calculateId();
+    boolean containsAssociation(Class<?> clazz);
 
-    @Override
-    public void setValueForMessageKey(final String msg) {
-        this.label = msg;
-    }
+    boolean containsAssociation(SlimEntityDescriptor<?> association);
 
-    public ReportableBean setLabel(final String label) {
-        this.setValueForMessageKey(label);
-        return this;
-    }
+    <V extends SlimEntityDescriptor<?>> boolean containsAssociations(@NotNull Collection<V> associations);
 
-    public String getLabel() {
-        return label;
-    }
+    int size();
+
+    boolean isEmpty();
 }

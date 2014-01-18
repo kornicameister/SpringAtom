@@ -31,6 +31,7 @@ import java.lang.reflect.Member;
 abstract class AbstractPropertyDescriptor
         implements EntityPropertyDescriptor {
 
+    private static final long serialVersionUID = 1930984532936877108L;
     private final Attribute<?, ?> attribute;
 
     protected AbstractPropertyDescriptor(final Attribute<?, ?> attribute) {

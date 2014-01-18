@@ -147,4 +147,9 @@ public class ReportableEntity
                       .addValue(id)
                       .toString();
     }
+
+    @Override
+    protected Integer calculateId() {
+        return this.javaClass.hashCode();
+    }
 }

@@ -28,6 +28,12 @@
 <%@ page import="org.springframework.util.StringUtils" %>
 <%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
+<%--
+    PickEntity form is designated to handle selecting several entities.
+    Additional JavaScript code is designed to recalculate these entities
+    which can not be linked with the one just selected
+--%>
+
 <div id="sa-wizard-step-body" class="x-wizard-content">
     <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
 
@@ -55,14 +61,20 @@
         </div>
     </form:form>
     <script type="text/javascript" id="${requestScope.formID}-entity-decorator">
-        var el = $('#' + '${requestScope.formID}-entity');
-        Spring.addDecoration(new Spring.ElementDecoration({
-            elementId  : el.attr('id'),
-            widgetType : 'dijit.form.MultiSelect',
-            widgetAttrs: {
-                class: el.attr('class')
-            }
-        }))
+        $(function () {
+            SA.wizard.Helpers.NewReportWizard.setEntities('<s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(requestScope.associationInformation)" htmlEscape="false" javaScriptEscape="false"/>');
+            var el = $('#' + '${requestScope.formID}-entity');
+            Spring.addDecoration(new Spring.ElementDecoration({
+                elementId  : el.attr('id'),
+                widgetType : 'dijit.form.MultiSelect',
+                widgetAttrs: {
+                    class     : el.attr('class'),
+                    onChange  : SA.wizard.Helpers.NewReportWizard.onEntityPickRecalculateAssociation,
+                    onDblClick: SA.wizard.Helpers.NewReportWizard.onEntityPickResetAll
+                }
+            }));
+
+        });
     </script>
 </div>
 <swf:getDynamicActions forState="${flowRequestContext.currentState}"/>

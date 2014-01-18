@@ -21,6 +21,114 @@
         SA.wizard = {};
     }
 
+    SA.wizard.Helpers = {};
+
+    var helper = {};
+    helper.setEntities = function (data) {
+        console.log(data);
+        helper.entities = (function () {
+            var raw = jQuery.parseJSON(data);
+            var parsedData = {};
+            $.each(raw, function (it, value) {
+                parsedData[value['master']] = value['children'];
+            });
+            return parsedData;
+        }());
+    };
+    /**
+     * {@code onEntityPickRecalculateAssociation} is a handler for {@event dijit.form.MultiSelect#onChange}.
+     * Method hides entries from associated form select element that can not be
+     * linked (in further querying) with tables selected at the moment.
+     *
+     * @param selectedEntries - currently selected entities
+     */
+    helper.onEntityPickRecalculateAssociation = function (selectedEntries) {
+
+        /**
+         * Calculates map of children for selected entries, hence the options element in DOM
+         * that will remain visible
+         *
+         * @returns {{}}
+         */
+        var getAssociations = function () {
+            var entities = helper.entities,
+                map = {};
+            $.each(selectedEntries, function (index, value) {
+                var tmp = entities[value];
+                if (tmp) {
+                    map[value] = tmp;
+                }
+            });
+            return map;
+        };
+        var getExpandedAssociations = function () {
+            var array = [];
+            $.each(associations, function (master, children) {
+                $.map(children, function (value) {
+                    if (jQuery.inArray(array, value) === -1) {
+                        array.push(value);
+                    }
+                })
+            });
+            return array;
+        };
+        /**
+         *  Returns true if given option element was just selected
+         * @returns {boolean} true if selected, false otherwise
+         */
+        var getSelectedOptions = function () {
+            var option = $(this),
+                value = option.attr('value');
+            return jQuery.inArray(value, selectedEntries) !== -1;
+        };
+        /**
+         *
+         * @returns {boolean}
+         */
+        var getNotInAssociation = function () {
+            var option = $(this),
+                value = option.attr('value');
+            return jQuery.inArray(parseInt(value), expandedAssociations) === -1;
+        };
+
+        if (!jQuery.isArray(selectedEntries)) {
+            selectedEntries = [selectedEntries];
+        }
+
+        console.log('onEntityPickRecalculateAssociation with selectedEntries >>>' + JSON.stringify(selectedEntries));
+        var selectBox = $('#' + this.id),
+            entries = selectBox.find('option'),
+            associations = getAssociations(),
+            expandedAssociations = getExpandedAssociations();
+
+        var selected = entries.filter(getSelectedOptions),
+            notSelected = entries.not(selected),
+            notInAssociation = notSelected.filter(getNotInAssociation),
+            inAssociation = notSelected.not(notInAssociation);
+
+        // hide selected
+        if (notInAssociation) {
+            $.each(notInAssociation, function () {
+                $(this).attr('disabled', 'disabled');
+            });
+        }
+        // show notSelected
+        if (inAssociation) {
+            $.each(inAssociation, function () {
+                $(this).removeAttr('disabled');
+            });
+        }
+
+    };
+    helper.onEntityPickResetAll = function () {
+        var selectBox = $('#' + this.id),
+            entries = selectBox.find('option');
+        $.each(entries, function () {
+            $(this).removeAttr('disabled');
+        })
+    };
+    SA.wizard.Helpers.NewReportWizard = helper;
+
     /**
      * //TODO missing jsDoc
      * @param cfg

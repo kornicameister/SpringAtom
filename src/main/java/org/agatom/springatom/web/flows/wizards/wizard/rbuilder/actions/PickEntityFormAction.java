@@ -17,14 +17,20 @@
 
 package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Sets;
+import org.agatom.springatom.server.model.descriptors.EntityAssociation;
+import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
+import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.ReportableBean;
 import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
+import org.agatom.springatom.web.rbuilder.bean.ReportableEntityAssociation;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Role;
@@ -38,6 +44,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -55,7 +62,12 @@ import java.util.Set;
 @Component(value = "pickEntityFormAction")
 public class PickEntityFormAction
         extends ReportWizardFormAction {
-    private final static Logger LOGGER = Logger.getLogger(PickEntityFormAction.class);
+    private final static Logger LOGGER                  = Logger.getLogger(PickEntityFormAction.class);
+    private static final String ENTITIES                = "entities";
+    private static final String ASSOCIATION_INFORMATION = "associationInformation";
+
+    @Autowired
+    private EntityDescriptors entityDescriptors;
 
     public PickEntityFormAction() {
         super();
@@ -64,7 +76,9 @@ public class PickEntityFormAction
 
     @Override
     public Event setupForm(final RequestContext context) throws Exception {
-        context.getViewScope().put("entities", this.getUnselectedEntities());
+        final MutableAttributeMap<Object> scope = this.getFormObjectScope().getScope(context);
+        scope.put(ENTITIES, this.getUnselectedEntities());
+        scope.put(ASSOCIATION_INFORMATION, this.getAssociateInformation());
         return super.setupForm(context);
     }
 
@@ -76,10 +90,53 @@ public class PickEntityFormAction
         return binder;
     }
 
+    /**
+     * Returns all unselected entities, that were selected in previous displaying of this step
+     *
+     * @return {@link java.util.Set} of unselected entities (@link ReportableEntity}
+     */
     private Set<ReportableEntity> getUnselectedEntities() {
         return FluentIterable.from(this.reportWizard.getEntities())
                              .filter(new UnselectedEntityPredicate())
                              .toSet();
+    }
+
+    /**
+     * Calculates set of {@link org.agatom.springatom.web.rbuilder.bean.ReportableEntityAssociation} from values retrieved from
+     * {@link org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors#getAssociation(Class)} .
+     *
+     * @return {@link java.util.Set} of {@link org.agatom.springatom.web.rbuilder.bean.ReportableEntityAssociation}
+     */
+    private Set<ReportableEntityAssociation> getAssociateInformation() {
+        final Set<ReportableEntityAssociation> information = Sets.newHashSet();
+        for (ReportableEntity entity : this.reportWizard.getEntities()) {
+            final EntityAssociation association = this.entityDescriptors.getAssociation(entity.getJavaClass());
+            if (association == null) {
+                continue;
+            }
+            final Set<Long> children = FluentIterable
+                    .from(association.getAssociations())
+                    .transform(new Function<SlimEntityDescriptor<?>, Long>() {
+                        @Nullable
+                        @Override
+                        public Long apply(@Nullable final SlimEntityDescriptor<?> input) {
+                            if (input == null) {
+                                return null;
+                            }
+                            final ReportableEntity reportableEntity = reportWizard.getEntity(input.getJavaClass());
+                            if (reportableEntity == null) {
+                                return null;
+                            }
+                            return Long.valueOf(reportableEntity.getId());
+                        }
+                    })
+                    .toSet();
+            information.add(new ReportableEntityAssociation()
+                    .setMaster(Long.valueOf(entity.getId()))
+                    .setChildren(children)
+            );
+        }
+        return information;
     }
 
     private class UnselectedEntityPredicate
@@ -132,8 +189,6 @@ public class PickEntityFormAction
             }
             return reportedEntities;
         }
-
-
     }
 
     private class ClazzFieldListToReportEntityConverterList

@@ -20,18 +20,28 @@ package org.agatom.springatom.server.model.descriptors.descriptor;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Sets;
+import org.agatom.springatom.server.model.descriptors.EntityAssociation;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptorColumn;
 import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
+import org.agatom.springatom.server.model.descriptors.association.SimpleEntityAssociation;
+import org.agatom.springatom.server.model.descriptors.properties.ManyToOnePropertyDescriptor;
+import org.agatom.springatom.server.model.descriptors.properties.OneToManyPropertyDescriptor;
 import org.agatom.springatom.server.model.descriptors.reader.EntityDescriptorReader;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.persistence.metamodel.Attribute;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author kornicameister
@@ -39,7 +49,18 @@ import java.util.Set;
  * @since 0.0.1
  */
 public class EntityDescriptors {
-    private EntityDescriptorReader reader;
+    private EntityDescriptorReader             reader           = null;
+    private Cache<Class<?>, EntityAssociation> associationCache = null;
+
+    @PostConstruct
+    private void initialize() {
+        this.associationCache = CacheBuilder.<Class<?>, EntityAssociation>newBuilder()
+                                            .maximumSize(666)
+                                            .expireAfterAccess(60, TimeUnit.MINUTES)
+                                            .expireAfterWrite(60, TimeUnit.MINUTES)
+                                            .build();
+        Assert.notNull(this.associationCache);
+    }
 
     public void setReader(final EntityDescriptorReader reader) {
         this.reader = reader;
@@ -121,6 +142,40 @@ public class EntityDescriptors {
                                                            .setEntityDescriptor(descriptor));
         }
         return columns;
+    }
+
+    public Map<Class<?>, EntityAssociation> getAssociations() {
+        for (SlimEntityDescriptor<?> descriptor : this.getSlimDescriptors()) {
+            final Class<?> javaClass = descriptor.getJavaClass();
+            this.getAssociation(javaClass);
+        }
+        return this.associationCache.asMap();
+    }
+
+    public EntityAssociation getAssociation(final Class<?> clazz) {
+        final EntityAssociation entityAssociation = this.associationCache.getIfPresent(clazz);
+        if (entityAssociation == null) {
+            this.associationCache.invalidate(clazz);
+            return this.doGetAssociation(clazz);
+        }
+        return entityAssociation;
+    }
+
+    private EntityAssociation doGetAssociation(final Class<?> clazz) {
+        final EntityDescriptor<?> descriptor = this.getDescriptor(clazz);
+        final SimpleEntityAssociation association = new SimpleEntityAssociation();
+
+        association.setMaster(descriptor);
+        for (final ManyToOnePropertyDescriptor propertyDescriptor : descriptor.getManyToOneProperties()) {
+            association.addAssociation(this.getDescriptor(propertyDescriptor.getJavaType()));
+        }
+        for (final OneToManyPropertyDescriptor propertyDescriptor : descriptor.getOneToManyProperties()) {
+            association.addAssociation(this.getDescriptor(propertyDescriptor.getJavaType()));
+        }
+
+        this.associationCache.put(clazz, association);
+
+        return association;
     }
 
     private String cleanClassName(String className) {

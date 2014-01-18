@@ -17,21 +17,22 @@
 
 package org.agatom.springatom.server.model.descriptors.reader.impl;
 
-import com.google.common.collect.Maps;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityTypeDescriptor;
 import org.agatom.springatom.server.model.descriptors.reader.EntityDescriptorReader;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * {@code DynamicDescriptorReader} is reader designed to read {@link org.agatom.springatom.server.model.descriptors.EntityDescriptor} dynamically
@@ -44,11 +45,19 @@ import java.util.Set;
 @Qualifier(value = "dynamicDescriptorReader")
 public class DynamicEntityDescriptorReader
         implements EntityDescriptorReader {
-    private static final Logger                             LOGGER             = Logger.getLogger(DynamicEntityDescriptorReader.class);
-    private              Map<Class<?>, EntityDescriptor<?>> cache              = Maps.newHashMap();
-    private              Metamodel                          metamodel          = null;
-    private              ApplicationContext                 applicationContext = null;
-    private              ListableBeanFactory                factoryContext     = null;
+    private static final Logger                               LOGGER    = Logger.getLogger(DynamicEntityDescriptorReader.class);
+    private              Cache<Class<?>, EntityDescriptor<?>> cache     = null;
+    private              Metamodel                            metamodel = null;
+
+    @PostConstruct
+    private void initialize() {
+        this.cache = CacheBuilder.<Class<?>, EntityDescriptor<?>>newBuilder()
+                                 .maximumSize(200)
+                                 .expireAfterAccess(60, TimeUnit.MINUTES)
+                                 .expireAfterWrite(60, TimeUnit.MINUTES)
+                                 .build();
+        Assert.notNull(this.cache);
+    }
 
     public void setMetamodel(final Metamodel metamodel) {
         this.metamodel = metamodel;
@@ -88,8 +97,8 @@ public class DynamicEntityDescriptorReader
     @SuppressWarnings("unchecked")
     public <X> EntityDescriptor<X> getDefinition(final Class<X> xClass, final boolean initialize) {
         LOGGER.trace(String.format("/getDefinition => xClass -> %s\tinitialize -> %s", ClassUtils.getShortName(xClass), initialize));
-        if (this.cache.containsKey(xClass)) {
-            return (EntityDescriptor<X>) this.cache.get(xClass);
+        if (this.containsKey(xClass)) {
+            return (EntityDescriptor<X>) this.cache.getIfPresent(xClass);
         }
         final EntityType<?> entityType = this.getEntityType(xClass);
         if (entityType != null) {
@@ -102,5 +111,13 @@ public class DynamicEntityDescriptorReader
         }
         LOGGER.trace(String.format("Could not retrieve %s for %s", ClassUtils.getShortName(EntityDescriptor.class), ClassUtils.getShortName(xClass)));
         return null;
+    }
+
+    private <X> boolean containsKey(final Class<X> xClass) {
+        final boolean isPresent = this.cache.getIfPresent(xClass) != null;
+        if (!isPresent) {
+            this.cache.invalidate(xClass);
+        }
+        return isPresent;
     }
 }

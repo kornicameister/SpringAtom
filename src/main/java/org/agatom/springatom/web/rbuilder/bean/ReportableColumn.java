@@ -122,4 +122,9 @@ public class ReportableColumn
                       .addValue(columnClass)
                       .toString();
     }
+
+    @Override
+    protected Integer calculateId() {
+        return this.prefix.hashCode() * 31 * this.columnClass.hashCode();
+    }
 }
