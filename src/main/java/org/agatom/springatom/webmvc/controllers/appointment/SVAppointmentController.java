@@ -58,7 +58,7 @@ public class SVAppointmentController
     private static final Logger LOGGER          = Logger.getLogger(SVAppointmentController.class);
     @Autowired
     private SAppointmentService appointmentService;
-    @Value("${org.agatom.springatom.server.model.beans.appointment.SAppointment.currentUserOnly}")
+    @Value("#{T(java.lang.Boolean).valueOf(webProperties['org.agatom.springatom.server.model.beans.appointment.SAppointment.currentUserOnly']).booleanValue()}")
     private Boolean             currentUserOnly;
     @Autowired
     private SMessageSource      messageSource;
