@@ -46,7 +46,6 @@ import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
 import org.agatom.springatom.server.model.types.report.Report;
 import org.agatom.springatom.server.model.types.report.ReportResource;
-import org.agatom.springatom.server.properties.SPropertiesHolder;
 import org.agatom.springatom.server.repository.SBasicRepository;
 import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
 import org.agatom.springatom.server.service.domain.ReportBuilderService;
@@ -87,10 +86,7 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -104,10 +100,10 @@ public class ReportBuilderServiceImpl
         extends SServiceImpl<SReport, Long, Integer, SReportRepository>
         implements ReportBuilderService {
     public static final  String SERVICE_NAME = "reportBuilderService";
-    private static final Logger LOGGER = Logger.getLogger(ReportBuilderServiceImpl.class);
-    private Repositories          repositories;
+    private static final Logger LOGGER       = Logger.getLogger(ReportBuilderServiceImpl.class);
+    private Repositories                repositories;
     private SReportRepository           repository;
-    private Cache<Object, Object> cache;
+    private Cache<Object, Object>       cache;
     @Autowired
     private ApplicationContext          applicationContext;
     @Autowired(required = false)
@@ -115,13 +111,14 @@ public class ReportBuilderServiceImpl
     @Autowired(required = false)
     private ObjectMapper                jackson;
     @Autowired(required = false)
-    private EntityDescriptors     entityDescriptors;
+    private EntityDescriptors           entityDescriptors;
     @Autowired(required = false)
-    private SUserService          userService;
+    private SUserService                userService;
     @Autowired(required = false)
-    private SMessageSource        messageSource;
+    private SMessageSource              messageSource;
     @Autowired(required = false)
-    private SPropertiesHolder     propertiesHolder;
+    @Qualifier(value = "rbuilderProperties")
+    private Properties                  propertiesHolder;
 
     @Override
     @Autowired

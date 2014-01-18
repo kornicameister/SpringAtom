@@ -17,19 +17,18 @@
 
 package org.agatom.springatom.webmvc.interceptors;
 
-import org.agatom.springatom.server.SpringAtomServer;
 import org.agatom.springatom.web.beans.SWebBeanHelper;
 import org.agatom.springatom.web.beans.search.SSearchCommandBean;
 import org.agatom.springatom.web.breadcrumbs.SBreadcrumbResolver;
 import org.agatom.springatom.web.view.SViewTitleResolver;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -44,18 +43,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SCDRViewInterceptor
         extends HandlerInterceptorAdapter {
-    private static final Logger LOGGER                  = Logger.getLogger(SCDRViewInterceptor.class);
-    private static final String SA_LOCALE_REQUEST_PARAM = "sa.locale.requestParam";
-    @Autowired
-    private SpringAtomServer    server;
+    private static final Logger LOGGER = Logger.getLogger(SCDRViewInterceptor.class);
+    @Value(value = "#{webProperties['sa.locale.requestParam']}")
     private String              localeParamKey;
     private SViewTitleResolver  titleResolver;
     private SBreadcrumbResolver breadcrumbResolver;
-
-    @PostConstruct
-    private void init() {
-        this.localeParamKey = this.server.getProperty(SA_LOCALE_REQUEST_PARAM);
-    }
 
     @Override
     public void postHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler, final ModelAndView modelAndView) throws
@@ -63,9 +55,9 @@ public class SCDRViewInterceptor
         if (modelAndView != null && modelAndView.getModelMap() != null) {
             final ModelMap modelMap = modelAndView.getModelMap();
 
-            modelMap.put(this.localeParamKey, this.server.getServerLocale());
-            SWebBeanHelper.addToModelMap(modelMap, this.titleResolver.getViewTitle(modelAndView.getViewName()));
+            modelMap.put(this.localeParamKey, LocaleContextHolder.getLocale());
             SWebBeanHelper.addToModelMap(modelMap, new SSearchCommandBean());
+            SWebBeanHelper.addToModelMap(modelMap, this.titleResolver.getViewTitle(modelAndView.getViewName()));
             SWebBeanHelper.addToModelMap(modelMap, this.breadcrumbResolver.getBreadcrumbPath(modelAndView.getView()));
 
             if (LOGGER.isTraceEnabled()) {

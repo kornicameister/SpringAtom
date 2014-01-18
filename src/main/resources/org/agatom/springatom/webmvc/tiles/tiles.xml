@@ -41,8 +41,8 @@
         <property name="cacheUnresolved" value="false"/>
         <property name="redirectContextRelative" value="true"/>
         <property name="exposePathVariables" value="true"/>
-        <property name="prefix" value="#{webProperties.getProperty('reports.reportsPrefix',T(java.lang.String))}"/>
-        <property name="reportDataKey" value="#{webProperties.getProperty('reports.reportDataKey',T(java.lang.String))}"/>
+        <property name="prefix" value="#{rbuilderProperties['reports.reportsPrefix']}"/>
+        <property name="reportDataKey" value="#{rbuilderProperties['reports.reportDataKey']}"/>
     </bean>
 
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
@@ -67,15 +67,6 @@
             <array>
                 <value>GET</value>
             </array>
-        </property>
-        <property name="mappings">
-            <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-                <property name="locations">
-                    <array>
-                        <value>classpath:org/agatom/springatom/webmvc/url-mapping.properties</value>
-                    </array>
-                </property>
-            </bean>
         </property>
     </bean>
     <bean id="urlMaps" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">

@@ -19,9 +19,12 @@ package org.agatom.springatom.webmvc.controllers;
 
 import com.google.common.collect.Maps;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.mvc.AbstractUrlViewController;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Properties;
@@ -31,6 +34,15 @@ public class SVTilesViewController
         extends AbstractUrlViewController {
     private static final Logger              LOGGER = Logger.getLogger(SVTilesViewController.class);
     private final        Map<String, String> urlMap = Maps.newHashMap();
+
+    @Autowired
+    @Qualifier(value = "urlMappingsProperties")
+    private Properties mappings;
+
+    @PostConstruct
+    private void initializeMapping() {
+        CollectionUtils.mergePropertiesIntoMap(mappings, this.urlMap);
+    }
 
     @Override
     protected String getViewNameForRequest(final HttpServletRequest request) {
@@ -43,7 +55,4 @@ public class SVTilesViewController
         return null;
     }
 
-    public void setMappings(Properties mappings) {
-        CollectionUtils.mergePropertiesIntoMap(mappings, this.urlMap);
-    }
 }

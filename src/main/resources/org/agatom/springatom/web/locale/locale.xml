@@ -20,6 +20,7 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-lazy-init="false">
+
     <bean id="messageSource"
           class="org.agatom.springatom.web.locale.impl.SMessageSourceImpl">
         <property name="basenames">
@@ -31,12 +32,13 @@
                 <value>classpath:org/agatom/springatom/web/locale/wizards</value>
             </array>
         </property>
-        <property name="cacheSeconds" value="60"/>
-        <property name="defaultEncoding" value="UTF-8"/>
-        <property name="fileEncodings" value="UTF-8"/>
-        <property name="useCodeAsDefaultMessage" value="true"/>
+        <property name="cacheSeconds" value="#{webProperties['sa.locale.cacheSeconds']}"/>
+        <property name="defaultEncoding" value="#{webProperties['sa.locale.defaultEncoding']}"/>
+        <property name="fileEncodings" value="#{webProperties['sa.locale.fileEncodings']}"/>
+        <property name="useCodeAsDefaultMessage" value="#{webProperties['sa.locale.useCodeAsDefaultMessage']}"/>
     </bean>
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-        <property name="defaultLocale" value="pl_PL"/>
+        <property name="defaultLocale" value="#{webProperties['sa.locale.defaultLocale']}"/>
     </bean>
+
 </beans>

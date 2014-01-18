@@ -21,7 +21,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import org.agatom.springatom.core.UnixTimestamp;
-import org.agatom.springatom.server.SpringAtomServer;
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.server.service.domain.SAppointmentService;
 import org.agatom.springatom.web.beans.calendar.CalendarEvent;
@@ -31,6 +30,7 @@ import org.agatom.springatom.webmvc.core.SVDefaultController;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
@@ -54,13 +54,12 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @RequestMapping(value = "/data/appointment")
 public class SVAppointmentController
         extends SVDefaultController {
-    public static final  String CONTROLLER_NAME   = "AppointmentController";
-    private static final String CURRENT_USER_ONLY = "currentUserOnly";
-    private static final Logger LOGGER            = Logger.getLogger(SVAppointmentController.class);
+    public static final  String CONTROLLER_NAME = "AppointmentController";
+    private static final Logger LOGGER          = Logger.getLogger(SVAppointmentController.class);
     @Autowired
     private SAppointmentService appointmentService;
-    @Autowired
-    private SpringAtomServer    server;
+    @Value("${org.agatom.springatom.server.model.beans.appointment.SAppointment.currentUserOnly}")
+    private Boolean             currentUserOnly;
     @Autowired
     private SMessageSource      messageSource;
 
@@ -87,7 +86,7 @@ public class SVAppointmentController
             list = this.appointmentService.findBetween(
                     start.getTime(),
                     end.getTime(),
-                    server.getProperty(String.format("%s.%s", SAppointment.class.getName(), CURRENT_USER_ONLY), Boolean.class)
+                    this.currentUserOnly
             );
         } catch (Exception exception) {
             throw new ControllerTierException("Exception in processing /feed", exception);

@@ -18,7 +18,6 @@
 package org.agatom.springatom.webmvc.controllers;
 
 import com.google.common.collect.Sets;
-import org.agatom.springatom.server.SpringAtomServer;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.locale.beans.LocalizedMessageRequest;
 import org.agatom.springatom.web.locale.beans.SLocale;
@@ -27,6 +26,7 @@ import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
 import org.agatom.springatom.webmvc.core.SVDefaultController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -50,10 +50,12 @@ public class SVLocaleController
     public static final  String   CONTROLLER_NAME    = "sa.controller.data.lang.LocaleDataResolverController";
     private static final String[] IGNORED_KEYS       = {"_dc", "page", "start", "limit"};
     private static final Logger   LOGGER             = Logger.getLogger(SVLocaleController.class);
+    @Value(value = "${sa.locale.supports}")
+    private              String   appResources       = null;
+    @Value(value = "${sa.delimiter}")
+    private              String   delimiter          = null;
     @Autowired
-    protected SpringAtomServer server;
-    @Autowired
-    private   SMessageSource   messageSource;
+    private SMessageSource messageSource;
 
     protected SVLocaleController() {
         super(SVLocaleController.CONTROLLER_NAME);
@@ -73,9 +75,7 @@ public class SVLocaleController
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public Set<SLocale> getAvailableLocales() {
-        final String appResources = this.server.getProperty(SA_LOCALE_SUPPORTS);
-        final String delimiter = this.server.getDelimiter();
-        final Locale currentLocale = this.server.getServerLocale();
+        final Locale currentLocale = LocaleContextHolder.getLocale();
 
         final String[] array = appResources.split(delimiter);
         final Set<SLocale> locales = Sets.newHashSet();

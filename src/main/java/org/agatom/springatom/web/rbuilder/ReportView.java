@@ -22,7 +22,6 @@ import com.google.common.collect.Maps;
 import net.sf.jasperreports.engine.JasperReport;
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.model.types.report.Report;
-import org.agatom.springatom.server.properties.SPropertiesHolder;
 import org.springframework.beans.BeansException;
 import org.springframework.core.io.Resource;
 import org.springframework.ui.ModelMap;
@@ -38,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -54,13 +54,14 @@ public class ReportView
     private Map<String, JasperReport> subReports        = null;
     private List<String>              subReportDataKeys = null;
     private ModelMap                  parameters        = null;
-    private SPropertiesHolder         propertiesHolder  = null;
+    //    @Autowired
+//    @Qualifier(value = "rbuilderProperties")
+    private Properties                propertiesHolder  = null;
 
     @Override
     protected void onInit() {
         final ReportViewDescriptor reportViewDescriptor = this.getReportViewDescriptor();
         {
-            this.propertiesHolder = this.getWebApplicationContext().getBean(SPropertiesHolder.class);
             this.parameters = reportViewDescriptor.getParameters();
         }
         this.loadSubreports();

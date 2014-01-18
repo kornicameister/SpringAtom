@@ -28,10 +28,10 @@
 
     <bean id="flowHandlerAdapter" class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
         <property name="flowExecutor" ref="flowExecutor"/>
-        <property name="useCacheControlHeader" value="true"/>
-        <property name="alwaysMustRevalidate" value="true"/>
-        <property name="cacheSeconds" value="360"/>
-        <property name="requireSession" value="true"/>
+        <property name="useCacheControlHeader" value="#{flowProperties['sa.flows.handler.cache']}"/>
+        <property name="cacheSeconds" value="#{flowProperties['sa.flows.handler.cache.expiresAfterSeconds']}"/>
+        <property name="alwaysMustRevalidate" value="#{flowProperties['sa.flows.handler.revalidateAlways']}"/>
+        <property name="requireSession" value="#{flowProperties['sa.flows.handler.sessionRequired']}"/>
         <property name="flowUrlHandler" ref="flowUrlHandler"/>
         <property name="servletContext" ref="servletContext"/>
     </bean>
@@ -39,14 +39,14 @@
     <bean id="flowMappingHandler" class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
         <property name="order" value="-1"/>
         <property name="flowRegistry" ref="flowRegistry"/>
-        <property name="alwaysUseFullPath" value="false"/>
-        <property name="urlDecode" value="true"/>
+        <property name="alwaysUseFullPath" value="#{flowProperties['sa.flows.mapping.fullPath']}"/>
+        <property name="urlDecode" value="#{flowProperties['sa.flows.mapping.urlDecode']}"/>
         <property name="flowUrlHandler" ref="flowUrlHandler"/>
     </bean>
 
     <bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
         <property name="viewResolvers" ref="ajaxViewResolver"/>
-        <property name="useSpringBeanBinding" value="true"/>
+        <property name="useSpringBeanBinding" value="#{flowProperties['sa.flows.mvc.useSpringBinding']}"/>
     </bean>
 
     <bean id="securityFlowExecutionListener"
@@ -61,9 +61,7 @@
         <constructor-arg ref="springAtomConversionService"/>
     </bean>
 
-    <webflow:flow-registry id="flowRegistry"
-                           base-path="/ui"
-                           flow-builder-services="flowBuilderServices">
+    <webflow:flow-registry id="flowRegistry" base-path="/ui" flow-builder-services="flowBuilderServices">
         <webflow:flow-location-pattern value="/**/*flow*.xml"/>
     </webflow:flow-registry>
 
