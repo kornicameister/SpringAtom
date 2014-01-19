@@ -21,16 +21,16 @@
 
 <c:set var="staticResources" value="/app/static"/>
 
-<link rel="stylesheet" media="all" href="<s:theme code="application" htmlEscape="true" />">
-<link rel="stylesheet" media="all" href="<s:theme code="application.auth" htmlEscape="true" />">
-<link rel="stylesheet" media="all" href="<s:theme code="application.content.header" htmlEscape="true" />">
-<link rel="stylesheet" media="all" href="<s:theme code="application.navigator.mmenu" htmlEscape="true" />">
-<link rel="stylesheet" media="all" href="<s:theme code="application.navigator.mmenu.extra" htmlEscape="true" />">
-<link rel="stylesheet" media="all" href="<s:theme code="application.fonts.fontsAwesome" htmlEscape="true" />">
-<link rel="stylesheet" media="all" href="<s:theme code="application.forms" htmlEscape="true" />">
-<link rel="stylesheet" media="all" href="<s:theme code="application.modals" htmlEscape="true" />">
-<link rel="stylesheet" media="all" href="<s:theme code="application.buttons" htmlEscape="true" />">
-<link rel="stylesheet" media="all" href="<s:theme code="application.wizards" htmlEscape="true" />">
+<link rel="stylesheet" media="all" href="<s:theme code="application"/>">
+<link rel="stylesheet" media="all" href="<s:theme code="application.auth"/>">
+<link rel="stylesheet" media="all" href="<s:theme code="application.content.header"/>">
+<link rel="stylesheet" media="all" href="<s:theme code="application.navigator.mmenu"/>">
+<link rel="stylesheet" media="all" href="<s:theme code="application.navigator.mmenu.extra"/>">
+<link rel="stylesheet" media="all" href="<s:theme code="application.fonts.fontsAwesome"/>">
+<link rel="stylesheet" media="all" href="<s:theme code="application.forms"/>">
+<link rel="stylesheet" media="all" href="<s:theme code="application.modals"/>">
+<link rel="stylesheet" media="all" href="<s:theme code="application.buttons"/>">
+<link rel="stylesheet" media="all" href="<s:theme code="application.wizards"/>">
 
 <link rel="stylesheet" media="all" href="<s:url value="${staticResources}/lib/alertify/themes/alertify.core.css"/>"/>
 <link rel="stylesheet" media="all" href="<s:url value="${staticResources}/lib/alertify/themes/alertify.default.css"/>"/>

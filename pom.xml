@@ -68,8 +68,8 @@
 
         <!-- spring -->
         <!-- TODO 4.0.0 -->
-        <spring.version>3.2.7.BUILD-SNAPSHOT</spring.version>
-        <spring-webflow.version>2.4.0.M1</spring-webflow.version>
+        <spring.version>4.0.0.RELEASE</spring.version>
+        <spring-webflow.version>2.4.0.BUILD-SNAPSHOT</spring-webflow.version>
         <spring-security.version>3.2.1.CI-SNAPSHOT</spring-security.version>
         <spring-data-commons.version>1.7.0.BUILD-SNAPSHOT</spring-data-commons.version>
         <spring-data-jpa.version>1.5.0.BUILD-SNAPSHOT</spring-data-jpa.version>
@@ -87,7 +87,7 @@
         <!-- servlet and jsp -->
 
         <!-- mysema -->
-        <querydsl.version>3.2.4</querydsl.version>
+        <querydsl.version>3.3.0</querydsl.version>
         <!-- mysema -->
 
         <!-- joda -->
@@ -100,9 +100,9 @@
         <!-- joda -->
 
         <!-- hibernate -->
-        <hibernate.version>4.3.0.Beta5</hibernate.version>
+        <hibernate.version>4.3.0.Final</hibernate.version>
         <hibernate.annotations.version>3.5.6-Final</hibernate.annotations.version>
-        <hibernate.validator.version>4.3.1.Final</hibernate.validator.version>
+        <hibernate.validator.version>5.0.2.Final</hibernate.validator.version>
         <c3p0.version>0.9.5-pre5</c3p0.version>
         <ehcache.version>2.6.6</ehcache.version>
         <!-- hibernate -->
@@ -176,17 +176,17 @@
     </repositories>
 
     <!-- TODO 4.0.0 -->
-    <!--<dependencyManagement>-->
-    <!--<dependencies>-->
-    <!--<dependency>-->
-    <!--<groupId>org.springframework</groupId>-->
-    <!--<artifactId>spring-framework-bom</artifactId>-->
-    <!--<version>${spring.version}</version>-->
-    <!--<type>pom</type>-->
-    <!--<scope>import</scope>-->
-    <!--</dependency>-->
-    <!--</dependencies>-->
-    <!--</dependencyManagement>-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <!-- TODO 4.0.0 -->
 
     <dependencies>
@@ -276,6 +276,12 @@
             <groupId>com.github.dandelion</groupId>
             <artifactId>datatables-jsp</artifactId>
             <version>${dandelion-datatables.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.dandelion</groupId>
@@ -339,6 +345,14 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>jcl-over-slf4j</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -380,6 +394,10 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>jcl-over-slf4j</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!--spring data -->
@@ -388,43 +406,43 @@
             <groupId>org.springframework.hateoas</groupId>
             <artifactId>spring-hateoas</artifactId>
             <version>${spring.hateoas.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- spring hetoas-->
         <!-- spring core -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-expression</artifactId>
-            <version>${spring.version}</version>
         </dependency>
         <!-- spring core -->
         <!-- spring web -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
         </dependency>
         <!-- spring web -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <!-- aspectj -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
-            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -442,17 +460,14 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
-            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <!-- security -->
@@ -487,19 +502,16 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-            <version>${spring.version}</version>
         </dependency>
         <!-- context -->
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-oxm</artifactId>
-            <version>${spring.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-lang</groupId>
@@ -510,7 +522,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <version>${spring.version}</version>
         </dependency>
         <!-- spring -->
 
@@ -535,12 +546,22 @@
                     <groupId>org.hibernate.javax.persistence</groupId>
                     <artifactId>hibernate-jpa-2.0-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>com.mysema.querydsl</groupId>
             <artifactId>querydsl-collections</artifactId>
             <version>${querydsl.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- mysema -->
 
@@ -694,6 +715,10 @@
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!-- ehcache hibernate -->
@@ -763,7 +788,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -959,7 +983,6 @@
                     <path>/</path>
                     <fork>false</fork>
                     <failOnError>true</failOnError>
-                    <contextReloadable>true</contextReloadable>
                     <systemProperties>
                         <JAVA_OPTS>-Xms256m -Xmx512m -XX:MaxPermSize=256m</JAVA_OPTS>
                     </systemProperties>

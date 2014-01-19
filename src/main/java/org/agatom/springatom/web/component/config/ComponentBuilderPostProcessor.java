@@ -73,7 +73,7 @@ class ComponentBuilderPostProcessor
             final ScannedGenericBeanDefinition definition = (ScannedGenericBeanDefinition) this.contextFactory.getBeanDefinition(beanName);
 
             final Class<?> beanClass = Class.forName(definition.getBeanClassName());
-            final Set<Class> interfacesForClassAsSet = ClassUtils.getAllInterfacesForClassAsSet(beanClass);
+            final Set<Class<?>> interfacesForClassAsSet = ClassUtils.getAllInterfacesForClassAsSet(beanClass);
 
             if (interfacesForClassAsSet.contains(EntityAware.class) && beanClass.isAnnotationPresent(EntityBased.class)) {
                 final Map<String, Object> attributes = AnnotationUtils.getAnnotationAttributes(beanClass.getAnnotation(EntityBased.class));
