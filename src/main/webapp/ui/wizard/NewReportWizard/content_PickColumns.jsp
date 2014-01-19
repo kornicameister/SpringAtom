@@ -104,34 +104,6 @@
                     </label>
                 </p>
             </c:forEach>
-                <%--<c:forEach items="${entityToColumn}" varStatus="loop" var="entities">--%>
-                <%--<p>--%>
-                <%--<label class="x-form-label" title="<s:message code="wizard.NewReportWizard.entity.pickColumnsForEntity"/>">--%>
-                <%--<c:set var="reportableEntity" scope="page" value="${entities.key}"/>--%>
-                <%--<jsp:useBean id="reportableEntity" scope="page"--%>
-                <%--class="org.agatom.springatom.web.rbuilder.bean.ReportableEntity"/>--%>
-                <%--<span>--%>
-                <%--<s:message code="wizard.NewReportWizard.pickColumns.forEntity" arguments="${reportableEntity.label}"/>--%>
-                <%--</span>--%>
-                <%--<form:select id="${requestScope.formID}-${reportableEntity.name}-column-${loop.index}"--%>
-                <%--items="${entities.value}"--%>
-                <%--cssClass="x-input x-input-select"--%>
-                <%--itemLabel="label"--%>
-                <%--itemValue="id"--%>
-                <%--path="entities[${loop.index}].columns"/>--%>
-                <%--</label>--%>
-                <%--</p>--%>
-                <%--<script type="text/javascript" id="${requestScope.formID}-entity-decorator">--%>
-                <%--var el = $('#' + '${requestScope.formID}-${reportableEntity.name}-column-${loop.index}');--%>
-                <%--Spring.addDecoration(new Spring.ElementDecoration({--%>
-                <%--elementId  : el.attr('id'),--%>
-                <%--widgetType : 'dijit.form.MultiSelect',--%>
-                <%--widgetAttrs: {--%>
-                <%--class: el.attr('class')--%>
-                <%--}--%>
-                <%--}))--%>
-                <%--</script>--%>
-                <%--</c:forEach>--%>
         </fieldset>
         <div id="error-box" style="visibility: hidden">
             <form:errors path="*" element="span" htmlEscape="true" cssClass="error-entry"/>
