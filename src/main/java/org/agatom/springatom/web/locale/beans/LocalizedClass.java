@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,42 +15,15 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.locale;
-
-import org.agatom.springatom.core.util.LocalizationAware;
-import org.agatom.springatom.core.util.Localized;
-import org.agatom.springatom.web.locale.beans.LocalizedClass;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
-import org.springframework.context.MessageSource;
-
-import java.util.Locale;
+package org.agatom.springatom.web.locale.beans;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SMessageSource
-        extends MessageSource {
+public interface LocalizedClass<T> {
+    Class<T> getSource();
 
-    LocalizedClass<?> getMessage(final Class<?> clazz, final Locale locale);
-
-    <LA extends LocalizationAware> LA localize(final LA localizationAware, final Locale locale);
-
-    String getMessage(final Localized localized, final Locale locale);
-
-    String getMessage(final String key, final Locale locale);
-
-    SLocalizedMessages getLocalizedMessages(final Locale locale);
-
-    SLocalizedMessages getLocalizedMessages(final String[] keys, final Locale locale, final boolean usePattern);
-
-    SLocalizedMessage getLocalizedMessage(final String key, final Locale locale);
-
-
-    public enum StorageMode {
-        SINGLE,
-        COMBINED
-    }
+    String getName();
 }

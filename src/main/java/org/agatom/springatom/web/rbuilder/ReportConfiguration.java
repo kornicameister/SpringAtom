@@ -149,6 +149,7 @@ public class ReportConfiguration
 
     public ReportConfiguration putColumn(final ReportableEntity entity, final ReportableColumn reportableColumn) {
         this.putEntity(entity);
+        entity.addColumn(reportableColumn);
         return this;
     }
 

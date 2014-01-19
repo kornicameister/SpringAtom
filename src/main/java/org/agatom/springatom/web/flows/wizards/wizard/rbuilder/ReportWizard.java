@@ -127,6 +127,7 @@ public class ReportWizard
         for (final ReportableEntity entity : this.entities) {
             if (this.reportConfiguration.hasEntity(entity.getJavaClass())) {
                 picked.put(entity, this.entityToColumns.get(entity));
+                this.reportConfiguration.putColumns(entity, picked.get(entity));
                 flag++;
             }
             if (flag == size) {
@@ -152,7 +153,9 @@ public class ReportWizard
 
     private <X extends Identifiable<Integer>> void putToCache(final Collection<X> entities) {
         for (final Identifiable<Integer> identifiable : entities) {
-            this.cache.put(identifiable.getId(), identifiable);
+            if (this.cache.put(identifiable.getId(), identifiable) != null) {
+                throw new RuntimeException(String.format("Overridden values in cache detected...bad situation"));
+            }
         }
     }
 

@@ -21,8 +21,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.springframework.util.ClassUtils;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 
 /**
  * @author kornicameister
@@ -33,11 +35,36 @@ import javax.annotation.Nonnull;
 public class ReportableColumn
         extends ReportableBean
         implements Comparable<ReportableColumn> {
-    private static final long serialVersionUID = 2600080347152145806L;
-    protected String   prefix;
-    protected String   columnName;
-    protected Class<?> columnClass;
-    protected Class<?> renderClass;
+    private static final long          serialVersionUID = 2600080347152145806L;
+    private static final Boolean       DEFAULT_EXCLUDED = Boolean.FALSE;
+    private static final Class<String> DEFAULT_RENDER   = String.class;
+    protected            String        prefix           = null;
+    protected            String        columnName       = null;
+    protected            Class<?>      columnClass      = Void.class;
+    protected            Class<?>      renderClass      = DEFAULT_RENDER;
+    protected            String        renderProperty   = null;
+    protected            Boolean       excluded         = DEFAULT_EXCLUDED;
+
+    public ReportableColumn setExcluded(final Boolean excluded) {
+        this.excluded = excluded;
+        return this;
+    }
+
+    public Boolean getExcluded() {
+        if (excluded == null) {
+            this.excluded = DEFAULT_EXCLUDED;
+        }
+        return excluded;
+    }
+
+    public ReportableColumn setRenderProperty(final String renderProperty) {
+        this.renderProperty = renderProperty;
+        return this;
+    }
+
+    public String getRenderProperty() {
+        return renderProperty;
+    }
 
     public ReportableColumn setPrefix(final String prefix) {
         this.prefix = prefix;
@@ -77,6 +104,29 @@ public class ReportableColumn
         this.renderClass = renderClass;
     }
 
+    /**
+     * Evaluates if this column most likely represents single-valued column.
+     *
+     * @return true if so, false otherwise
+     *
+     * @see ReportableColumn#isMultiValued()
+     */
+    public boolean isSingleValued() {
+        return !this.isMultiValued();
+    }
+
+    /**
+     * Evaluates is this columns most likely represents multi valued column.
+     * Method checks if that's so by verifying if {@link org.agatom.springatom.web.rbuilder.bean.ReportableColumn#columnClass}
+     * is assignable either from {@link java.lang.Iterable} or {@link java.util.Map}
+     *
+     * @return true if multi valued
+     */
+    public boolean isMultiValued() {
+        return ClassUtils.isAssignable(Iterable.class, this.columnClass)
+                || ClassUtils.isAssignable(Map.class, this.columnClass);
+    }
+
     @Override
     public int compareTo(@Nonnull final ReportableColumn column) {
         return ComparisonChain
@@ -91,6 +141,12 @@ public class ReportableColumn
         return String.format("%s.%s", this.prefix, this.columnName);
     }
 
+
+    @Override
+    protected Integer calculateId() {
+        return this.hashCode();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -102,29 +158,32 @@ public class ReportableColumn
 
         ReportableColumn that = (ReportableColumn) o;
 
-        return Objects.equal(this.columnName, that.columnName) &&
-                Objects.equal(this.label, that.label) &&
+        return Objects.equal(this.prefix, that.prefix) &&
+                Objects.equal(this.columnName, that.columnName) &&
                 Objects.equal(this.columnClass, that.columnClass) &&
-                Objects.equal(this.id, that.id);
+                Objects.equal(this.renderClass, that.renderClass) &&
+                Objects.equal(this.renderProperty, that.renderProperty) &&
+                Objects.equal(this.excluded, that.excluded) &&
+                Objects.equal(this.label, that.label);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(columnName, label, id, columnClass);
+        return Objects.hashCode(prefix, columnName, columnClass, renderClass, renderProperty,
+                excluded, label);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
+                      .addValue(prefix)
                       .addValue(columnName)
+                      .addValue(columnClass)
+                      .addValue(renderClass)
+                      .addValue(renderProperty)
+                      .addValue(excluded)
                       .addValue(label)
                       .addValue(id)
-                      .addValue(columnClass)
                       .toString();
-    }
-
-    @Override
-    protected Integer calculateId() {
-        return this.prefix.hashCode() * 31 * this.columnClass.hashCode();
     }
 }

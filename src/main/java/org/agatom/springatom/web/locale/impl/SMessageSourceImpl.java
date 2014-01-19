@@ -22,10 +22,12 @@ import com.google.common.collect.FluentIterable;
 import org.agatom.springatom.core.util.LocalizationAware;
 import org.agatom.springatom.core.util.Localized;
 import org.agatom.springatom.web.locale.SMessageSource;
+import org.agatom.springatom.web.locale.beans.LocalizedClass;
 import org.agatom.springatom.web.locale.beans.SLocale;
 import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
 import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
@@ -41,6 +43,19 @@ import java.util.regex.Pattern;
 public class SMessageSourceImpl
         extends ReloadableResourceBundleMessageSource
         implements SMessageSource {
+
+    @Override
+    public LocalizedClass<?> getMessage(final Class<?> clazz, final Locale locale) {
+        // attempt one - by short name
+        String messageKey = ClassUtils.getShortName(clazz).toLowerCase();
+        String message = this.getMessage(messageKey, locale);
+
+        if (messageKey.equals(message)) {
+            message = this.getMessage(clazz.getName(), locale);
+        }
+
+        return new InternalLocalizedClass<>(clazz, message);
+    }
 
     @Override
     public <LA extends LocalizationAware> LA localize(final LA localizationAware, final Locale locale) {
@@ -121,5 +136,27 @@ public class SMessageSourceImpl
      */
     private Set<String> getKeys(final Locale locale) {
         return this.getMergedProperties(locale).getProperties().stringPropertyNames();
+    }
+
+    private static class InternalLocalizedClass<T>
+            implements LocalizedClass<T> {
+
+        Class<T> source;
+        String   name;
+
+        public InternalLocalizedClass(final Class<T> clazz, final String name) {
+            this.source = clazz;
+            this.name = name;
+        }
+
+        @Override
+        public Class<T> getSource() {
+            return source;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
     }
 }

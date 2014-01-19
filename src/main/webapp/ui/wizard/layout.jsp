@@ -36,13 +36,18 @@
         <tiles:insertAttribute name="wiz.content" flush="true"/>
     </div>
     <div id="${wizardID}-actions" class="x-wizard-actions">
-        <button id="${finishAction}" type="submit" name="${finishAction}" class="x-wizard-action buttonFinish"><s:message code="button.ok"/></button>
-        <button id="${cancelAction}" type="submit" name="${cancelAction}" class="x-wizard-action buttonCancel"><s:message
-                code="button.cancel"/></button>
-        <button id="${nextAction}" type="submit" name="${nextAction}" class="x-wizard-action buttonNext"><s:message
-                code="button.next.short"/></button>
-        <button id="${previousAction}" type="submit" name="${previousAction}" class="x-wizard-action buttonPrevious"><s:message
-                code="button.previous.short"/></button>
+        <button id="${finishAction}" type="submit" name="${finishAction}" class="x-wizard-action buttonFinish">
+            <s:message code="button.ok"/>
+        </button>
+        <button id="${cancelAction}" type="submit" name="${cancelAction}" class="x-wizard-action buttonCancel">
+            <s:message code="button.cancel"/>
+        </button>
+        <button id="${nextAction}" type="submit" name="${nextAction}" class="x-wizard-action buttonNext">
+            <s:message code="button.next.short"/>
+        </button>
+        <button id="${previousAction}" type="submit" name="${previousAction}" class="x-wizard-action buttonPrevious">
+            <s:message code="button.previous.short"/>
+        </button>
     </div>
     <div class="x-clear"></div>
 </div>

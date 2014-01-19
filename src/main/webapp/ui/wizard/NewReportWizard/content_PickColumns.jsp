@@ -40,34 +40,98 @@
         <fieldset>
             <legend><s:message code="wizard.NewReportWizard.pickColumns.desc"/></legend>
             <jsp:useBean id="entityToColumn" scope="request" type="java.util.Map"/>
+            <jsp:useBean id="colToRenderProp" scope="request" type="java.util.Map"/>
             <c:forEach items="${entityToColumn}" varStatus="loop" var="entry">
                 <p>
                     <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.entity.pickColumnsForEntity"/>">
                         <c:set var="reportableEntity" scope="page" value="${entry.key}"/>
-                        <jsp:useBean id="reportableEntity" scope="page"
-                                     class="org.agatom.springatom.web.rbuilder.bean.ReportableEntity"/>
-                        <span>
-                            <s:message code="wizard.NewReportWizard.pickColumns.forEntity" arguments="${reportableEntity.label}"/>
-                        </span>
-                        <form:select id="${requestScope.formID}-${reportableEntity.name}-column-${loop.index}"
-                                     items="${entry.value}"
-                                     cssClass="x-input x-input-select"
-                                     itemLabel="columnName"
-                                     itemValue="id"
-                                     path="entities[${loop.index}].columns"/>
+                        <jsp:useBean id="reportableEntity" scope="page" class="org.agatom.springatom.web.rbuilder.bean.ReportableEntity"/>
+                        <span><s:message code="wizard.NewReportWizard.pickColumns.forEntity" arguments="${reportableEntity.label}"/></span>
+                        <table class="dataTable">
+                            <thead>
+                            <tr>
+                                <th>Label</th>
+                                <th>Render property</th>
+                                <th>Render as</th>
+                                <th>Excluded</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <c:forEach items="${entry.value}" var="column" varStatus="loopColumns">
+                                <c:set var="reportableColumn" scope="page" value="${column}"/>
+                                <jsp:useBean id="reportableColumn" scope="page" class="org.agatom.springatom.web.rbuilder.bean.ReportableColumn"/>
+                                <form:hidden id="col-${loop.index}-${loopColumns.index}-name"
+                                             path="entities[${loop.index}].columns[${loopColumns.index}].columnName"/>
+                                <tr>
+
+                                    <td> <!-- label -->
+                                        <form:input id="col-${loop.index}-${loopColumns.index}-label"
+                                                    readonly="true"
+                                                    path="entities[${loop.index}].columns[${loopColumns.index}].label"/>
+                                    </td>
+
+                                    <td> <!-- render property -->
+                                        <form:input id="col-${loop.index}-${loopColumns.index}-renderProperty"
+                                                    path="entities[${loop.index}].columns[${loopColumns.index}].renderProperty"/>
+                                    </td>
+
+                                    <td>  <!-- render as -->
+                                        <s:eval expression="colToRenderProp[reportableColumn.id]" scope="page" var="itemsRenderClass"/>
+                                        <form:select id="col-${loop.index}-${loopColumns.index}-renderClass"
+                                                     items="${itemsRenderClass}"
+                                                     itemValue="targetClassName"
+                                                     itemLabel="label"
+                                                     cssClass="x-input x-input-select"
+                                                     path="entities[${loop.index}].columns[${loopColumns.index}].renderClass"/>
+                                    </td>
+
+                                    <td> <!-- render excluded -->
+                                        <form:checkbox id="col-${loop.index}-${loopColumns.index}-excluded"
+                                                       path="entities[${loop.index}].columns[${loopColumns.index}].excluded"/>
+                                    </td>
+                                </tr>
+                                <script type="text/javascript" id="editors-${column.id}">
+                                    $(function () {
+                                        Spring.addDecoration(new Spring.ElementDecoration({
+                                            elementId : 'col-${loop.index}-${loopColumns.index}-excluded',
+                                            widgetType: 'dijit.form.CheckBox'
+                                        }));
+                                    })
+                                </script>
+                            </c:forEach>
+                            </tbody>
+                        </table>
                     </label>
                 </p>
-                <script type="text/javascript" id="${requestScope.formID}-entity-decorator">
-                    var el = $('#' + '${requestScope.formID}-${reportableEntity.name}-column-${loop.index}');
-                    Spring.addDecoration(new Spring.ElementDecoration({
-                        elementId  : el.attr('id'),
-                        widgetType : 'dijit.form.MultiSelect',
-                        widgetAttrs: {
-                            class: el.attr('class')
-                        }
-                    }))
-                </script>
             </c:forEach>
+                <%--<c:forEach items="${entityToColumn}" varStatus="loop" var="entities">--%>
+                <%--<p>--%>
+                <%--<label class="x-form-label" title="<s:message code="wizard.NewReportWizard.entity.pickColumnsForEntity"/>">--%>
+                <%--<c:set var="reportableEntity" scope="page" value="${entities.key}"/>--%>
+                <%--<jsp:useBean id="reportableEntity" scope="page"--%>
+                <%--class="org.agatom.springatom.web.rbuilder.bean.ReportableEntity"/>--%>
+                <%--<span>--%>
+                <%--<s:message code="wizard.NewReportWizard.pickColumns.forEntity" arguments="${reportableEntity.label}"/>--%>
+                <%--</span>--%>
+                <%--<form:select id="${requestScope.formID}-${reportableEntity.name}-column-${loop.index}"--%>
+                <%--items="${entities.value}"--%>
+                <%--cssClass="x-input x-input-select"--%>
+                <%--itemLabel="label"--%>
+                <%--itemValue="id"--%>
+                <%--path="entities[${loop.index}].columns"/>--%>
+                <%--</label>--%>
+                <%--</p>--%>
+                <%--<script type="text/javascript" id="${requestScope.formID}-entity-decorator">--%>
+                <%--var el = $('#' + '${requestScope.formID}-${reportableEntity.name}-column-${loop.index}');--%>
+                <%--Spring.addDecoration(new Spring.ElementDecoration({--%>
+                <%--elementId  : el.attr('id'),--%>
+                <%--widgetType : 'dijit.form.MultiSelect',--%>
+                <%--widgetAttrs: {--%>
+                <%--class: el.attr('class')--%>
+                <%--}--%>
+                <%--}))--%>
+                <%--</script>--%>
+                <%--</c:forEach>--%>
         </fieldset>
         <div id="error-box" style="visibility: hidden">
             <form:errors path="*" element="span" htmlEscape="true" cssClass="error-entry"/>
