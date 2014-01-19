@@ -26,3 +26,6 @@ src/main/webapp/static/log/**
 
 # libs
 lib/*
+
+#docs
+docs/**
