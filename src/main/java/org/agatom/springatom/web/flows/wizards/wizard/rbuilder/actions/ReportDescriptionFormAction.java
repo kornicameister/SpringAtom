@@ -18,18 +18,13 @@
 package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 
 import com.google.common.base.Preconditions;
+import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Role;
-import org.springframework.context.annotation.Scope;
 import org.springframework.format.support.FormattingConversionService;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -38,10 +33,8 @@ import org.springframework.webflow.execution.RequestContext;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Lazy
-@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-@Scope(WebApplicationContext.SCOPE_SESSION)
-@Component(value = "reportDescriptionFormAction")
+
+@WizardAction(value = "reportDescriptionFormAction")
 public class ReportDescriptionFormAction
         extends ReportWizardFormAction {
 

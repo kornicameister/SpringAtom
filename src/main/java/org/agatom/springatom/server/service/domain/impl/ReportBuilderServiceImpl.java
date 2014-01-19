@@ -57,6 +57,7 @@ import org.agatom.springatom.web.rbuilder.ReportViewDescriptor;
 import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
 import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
 import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
+import org.agatom.springatom.web.rbuilder.support.RBuilderResource;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -552,7 +553,7 @@ public class ReportBuilderServiceImpl
             file = this.createJasperHolderDirectory(corePackageName);
         }
         final FileSystemResource fileSystemResource = new FileSystemResource(file);
-        return this.getFileSystemResource(fileSystemResource, report, ResourceType.JASPER);
+        return this.getFileSystemResource(fileSystemResource, report, RBuilderResource.JASPER);
     }
 
     private Resource getReportConfigurationResource(final SReport report) throws ReportBuilderServiceException {
@@ -564,22 +565,32 @@ public class ReportBuilderServiceImpl
             file = this.createJasperHolderDirectory(corePackageName);
         }
         final FileSystemResource fileSystemResource = new FileSystemResource(file);
-        return this.getFileSystemResource(fileSystemResource, report, ResourceType.JSON);
+        return this.getFileSystemResource(fileSystemResource, report, RBuilderResource.CONFIGURATION);
     }
 
-    private FileSystemResource getFileSystemResource(final FileSystemResource fileSystemResource, final SReport report, final ResourceType resourceType) {
+    private FileSystemResource getFileSystemResource(final FileSystemResource fileSystemResource, final SReport report, final RBuilderResource resourceType) {
         final String pathname = StringUtils.cleanPath(
                 String.format(LocaleContextHolder.getLocale(), "%s/%s.%s",
                         fileSystemResource.getPath(),
-                        resourceType.getResourceName(this.calculateFileNameHashCode(report)),
+                        this.getResourceName(resourceType, this.calculateFileNameHashCode(report)),
                         resourceType.toString().toLowerCase()
                 )
         );
         return new FileSystemResource(new File(pathname));
     }
 
+    private String getResourceName(final RBuilderResource resourceType, final String fileName) {
+        switch (resourceType) {
+            case CONFIGURATION:
+                return String.format("%s_%s", this.propertiesHolder.getProperty("reports.files.configuration"), fileName);
+            case JASPER:
+                return String.format("%s_%s", this.propertiesHolder.getProperty("reports.files.jasper"), fileName);
+        }
+        return null;
+    }
+
     private String calculateFileNameHashCode(final SReport report) {
-        return StringUtils.trimAllWhitespace(report.getTitle());
+        return String.valueOf(StringUtils.trimAllWhitespace(report.getTitle()).hashCode());
     }
 
     private File createJasperHolderDirectory(final String corePackageName) throws ReportBuilderServiceException {
@@ -599,20 +610,6 @@ public class ReportBuilderServiceImpl
         }
     }
 
-    private static enum ResourceType
-            implements ResourceTypeInterface {
-        JASPER {
-            public String getResourceName(final String fileName) {
-                return String.format("report_%s", fileName);
-            }
-        },
-        JSON {
-            public String getResourceName(final String fileName) {
-                return String.format("report_cfg_%s", fileName);
-            }
-        }
-    }
-
     private SUser getAuthenticatedUser() {
         final Thread key = Thread.currentThread();
         Object ifPresent = this.cache.getIfPresent(key);
@@ -624,10 +621,6 @@ public class ReportBuilderServiceImpl
         }
 
         return (SUser) ifPresent;
-    }
-
-    private static interface ResourceTypeInterface {
-        String getResourceName(final String fileName);
     }
 
     private static class ReportableEntityPredicate

@@ -18,16 +18,11 @@
 package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 
 import org.agatom.springatom.server.service.domain.ReportBuilderService;
+import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.flows.wizards.wizard.rbuilder.ReportWizard;
 import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Role;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.webflow.action.EventFactorySupport;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
@@ -38,11 +33,7 @@ import org.springframework.webflow.execution.RequestContext;
  * @version 0.0.1
  * @since 0.0.1
  */
-
-@Lazy
-@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-@Scope(WebApplicationContext.SCOPE_SESSION)
-@Component(value = "finishReportAction")
+@WizardAction(value = "finishReportAction")
 public class FinishMultiAction
         implements Action {
     private static final Logger LOGGER = Logger.getLogger(FinishMultiAction.class);

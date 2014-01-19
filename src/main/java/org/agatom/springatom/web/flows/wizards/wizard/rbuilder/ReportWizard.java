@@ -35,6 +35,8 @@ import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
 import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Role;
@@ -45,6 +47,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -78,7 +82,12 @@ public class ReportWizard
     private              EntityDescriptors                            entityDescriptors   = null;
     @Autowired
     private              SMessageSource                               messageSource       = null;
+    @Autowired @Qualifier(value = "rbuilderProperties")
+    private              Properties                                   rBuilderProperties  = null;
+    @Value("#{webProperties['sa.delimiter']}")
+    private              String                                       valueDelimiter      = null;
     private              ReportConfiguration                          reportConfiguration = null;
+    private              Collection<String>                           excludedColumns     = null;
 
     @Override
     public void init(final RequestContext context) {
@@ -89,6 +98,7 @@ public class ReportWizard
     @Override
     public void afterPropertiesSet() throws Exception {
         this.createdBy = this.getCreator();
+        this.initializeExcludedColumns();
         this.setEntities(this.getReportableEntities());
         this.setEntityToColumns(this.getReportableColumns(this.entities));
     }
@@ -185,6 +195,13 @@ public class ReportWizard
 
             final TreeSet<ReportableColumn> columns = Sets.newTreeSet();
             for (EntityDescriptorColumn<?> column : this.entityDescriptors.getColumns(entity.getJavaClass())) {
+                if (this.excludedColumns.contains(column.getName())) {
+                    LOGGER.trace(String.format("Excluded column %s from entity %s due it is mentioned in %s",
+                            column.getName(),
+                            entity.getName(), "reports.objects.columns.excludeAlways")
+                    );
+                    continue;
+                }
                 final ReportableColumn reportableColumn = new ReportableColumn()
                         .setPrefix(entity.getMessageKey())
                         .setColumnName(column.getName())
@@ -210,6 +227,17 @@ public class ReportWizard
             return (SUser) principal;
         }
         throw new ReportBuilderServiceException(SUser.class, String.format("Principal\n\t[%s]\nis not authenticated", principal));
+    }
+
+    private void initializeExcludedColumns() {
+        final String property = this.rBuilderProperties.getProperty("reports.objects.columns.excludeAlways");
+        final Collection<String> excludedColumns = Sets.newHashSet();
+        if (StringUtils.hasText(property)) {
+            final String[] columns = StringUtils.tokenizeToStringArray(property, this.valueDelimiter);
+            CollectionUtils.mergeArrayIntoCollection(columns, excludedColumns);
+        }
+        this.excludedColumns = excludedColumns;
+        LOGGER.debug(String.format("Excluded columns set to %s", excludedColumns));
     }
 
     @Override

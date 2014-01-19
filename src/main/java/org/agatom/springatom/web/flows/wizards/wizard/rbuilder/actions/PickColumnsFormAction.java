@@ -19,25 +19,20 @@ package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
+import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.ReportableBean;
 import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
 import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Role;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.support.FormattingConversionService;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -48,10 +43,8 @@ import java.util.Set;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Lazy
-@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-@Scope(WebApplicationContext.SCOPE_SESSION)
-@Component(value = "pickColumnsFormAction")
+
+@WizardAction(value = "pickColumnsFormAction")
 public class PickColumnsFormAction
         extends ReportWizardFormAction {
     private static final Logger LOGGER = Logger.getLogger(PickColumnsFormAction.class);

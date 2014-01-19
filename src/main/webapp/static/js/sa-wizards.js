@@ -82,8 +82,9 @@
             return jQuery.inArray(value, selectedEntries) !== -1;
         };
         /**
+         * Method resolves whether or not selected entry can be associated with the rest of selected entries
          *
-         * @returns {boolean}
+         * @returns {boolean} true if it possible, false otherwise
          */
         var getNotInAssociation = function () {
             var option = $(this),
@@ -124,7 +125,10 @@
         var selectBox = $('#' + this.id),
             entries = selectBox.find('option');
         $.each(entries, function () {
-            $(this).removeAttr('disabled');
+            var entry = $(this);
+            if (jQuery.type(entry.attr('disabled')) !== 'undefined') {
+                entry.removeAttr('disabled');
+            }
         })
     };
     SA.wizard.Helpers.NewReportWizard = helper;

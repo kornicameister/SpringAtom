@@ -30,7 +30,7 @@
 <div id="${wizardID}" class="x-wizard">
     <div class="x-clear"></div>
     <ul id="${wizardID}-header" class="x-wizard-header">
-        <tiles:insertAttribute name="wiz.header" ignore="false" flush="false"/>
+        <%@ include file="header.jsp" %>
     </ul>
     <div id="${wizardID}-content" class="x-wizard-steps">
         <tiles:insertAttribute name="wiz.content" ignore="false" flush="true"/>

@@ -25,25 +25,20 @@ import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.descriptors.EntityAssociation;
 import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
+import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.ReportableBean;
 import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
 import org.agatom.springatom.web.rbuilder.bean.ReportableEntityAssociation;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Role;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.support.FormattingConversionService;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -56,10 +51,8 @@ import java.util.Set;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Lazy
-@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-@Scope(WebApplicationContext.SCOPE_SESSION)
-@Component(value = "pickEntityFormAction")
+
+@WizardAction(value = "pickEntityFormAction")
 public class PickEntityFormAction
         extends ReportWizardFormAction {
     private final static Logger LOGGER                  = Logger.getLogger(PickEntityFormAction.class);
