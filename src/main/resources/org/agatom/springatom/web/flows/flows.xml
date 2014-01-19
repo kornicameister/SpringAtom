@@ -28,10 +28,11 @@
 
     <bean id="flowHandlerAdapter" class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
         <property name="flowExecutor" ref="flowExecutor"/>
-        <property name="useCacheControlHeader" value="#{flowProperties['sa.flows.handler.cache']}"/>
+        <property name="useCacheControlHeader" value="#{flowProperties['sa.flows.handler.cache.useCacheControlHeader']}"/>
         <property name="cacheSeconds" value="#{flowProperties['sa.flows.handler.cache.expiresAfterSeconds']}"/>
-        <property name="alwaysMustRevalidate" value="#{flowProperties['sa.flows.handler.revalidateAlways']}"/>
+        <property name="alwaysMustRevalidate" value="#{flowProperties['sa.flows.handler.alwaysMustRevalidate']}"/>
         <property name="requireSession" value="#{flowProperties['sa.flows.handler.sessionRequired']}"/>
+        <property name="saveOutputToFlashScopeOnRedirect" value="#{flowProperties['sa.flows.handler.saveOutputToFlashScopeOnRedirect']}"/>
         <property name="flowUrlHandler" ref="flowUrlHandler"/>
         <property name="servletContext" ref="servletContext"/>
     </bean>
@@ -72,7 +73,7 @@
                                    validator="validator"/>
 
     <webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
-        <webflow:flow-execution-repository max-executions="666" max-execution-snapshots="666"/>
+        <webflow:flow-execution-repository max-executions="666" max-execution-snapshots="0"/>
         <webflow:flow-execution-listeners>
             <webflow:listener ref="modelViewAppender"/>
             <webflow:listener ref="persistenceListener"/>
