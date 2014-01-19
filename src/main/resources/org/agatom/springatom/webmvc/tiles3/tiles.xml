@@ -24,7 +24,7 @@
     <bean id="ajaxViewResolver"
           class="org.springframework.js.ajax.AjaxUrlBasedViewResolver"
           p:order="0">
-        <property name="viewClass" value="org.springframework.webflow.mvc.view.FlowAjaxTilesView"/>
+        <property name="viewClass" value="org.agatom.springatom.webmvc.tiles3.VFlowAjaxTilesView"/>
         <property name="cache" value="true"/>
         <property name="cacheLimit" value="10"/>
         <property name="cacheUnresolved" value="false"/>
@@ -45,7 +45,7 @@
         <property name="reportDataKey" value="#{rbuilderProperties['reports.reportDataKey']}"/>
     </bean>
 
-    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
         <property name="definitions">
             <list>
                 <value>/ui/**/*view*.xml</value>
@@ -54,8 +54,7 @@
         <property name="checkRefresh" value="true"/>
         <property name="validateDefinitions" value="true"/>
         <property name="useMutableTilesContainer" value="true"/>
-        <property name="preparerFactoryClass"
-                  value="org.springframework.web.servlet.view.tiles2.SpringBeanPreparerFactory"/>
+        <property name="preparerFactoryClass" value="org.springframework.web.servlet.view.tiles3.SimpleSpringPreparerFactory"/>
     </bean>
 
     <bean id="tilesViewController" class="org.agatom.springatom.webmvc.controllers.SVTilesViewController">

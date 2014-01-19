@@ -33,7 +33,7 @@
         <%@ include file="header.jsp" %>
     </ul>
     <div id="${wizardID}-content" class="x-wizard-steps">
-        <tiles:insertAttribute name="wiz.content" ignore="false" flush="true"/>
+        <tiles:insertAttribute name="wiz.content" flush="true"/>
     </div>
     <div id="${wizardID}-actions" class="x-wizard-actions">
         <button id="${finishAction}" type="submit" name="${finishAction}" class="x-wizard-action buttonFinish"><s:message code="button.ok"/></button>

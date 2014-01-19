@@ -51,7 +51,7 @@
         <transition on="next" bind="true" validate="true" to="pickColumns">
             <evaluate expression="pickEntityFormAction.bindAndValidate"/>
         </transition>
-        <transition on="cancel" to="cancel"/>
+        <transition on="cancel" to="cancel" history="invalidate"/>
     </view-state>
 
     <view-state id="pickColumns" view="ui.wizard.NewReportWizard.PickColumns" popup="true">
@@ -65,7 +65,7 @@
         <transition on="previous" to="entity" bind="false" validate="false">
             <evaluate expression="pickColumnsFormAction.resetForm"/>
         </transition>
-        <transition on="cancel" to="cancel"/>
+        <transition on="cancel" to="cancel" history="invalidate"/>
     </view-state>
 
     <view-state id="moreEntitiesAndColumns" view="ui.wizard.NewReportWizard.MoreEntitiesAndColumns" popup="true">
@@ -85,14 +85,14 @@
         <transition on="next" to="reportOverview" validate="true" bind="true" history="invalidate">
             <evaluate expression="reportDescriptionFormAction.bindAndValidate"/>
         </transition>
-        <transition on="cancel" to="cancel"/>
+        <transition on="cancel" to="cancel" history="invalidate"/>
     </view-state>
 
     <view-state id="reportOverview" view="ui.wizard.NewReportWizard.ReportOverview">
         <transition on="finish" to="reportReady">
             <evaluate expression="finishReportAction.execute"/>
         </transition>
-        <transition on="cancel" to="cancel"/>
+        <transition on="cancel" to="cancel" history="invalidate"/>
     </view-state>
 
     <end-state id="reportReady"

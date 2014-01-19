@@ -29,7 +29,7 @@
        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
 
-    <import resource="tiles/tiles.xml"/>
+    <import resource="tiles3/tiles.xml"/>
     <import resource="interceptors/interceptors.xml"/>
 
     <context:component-scan base-package="org.agatom.springatom.webmvc">

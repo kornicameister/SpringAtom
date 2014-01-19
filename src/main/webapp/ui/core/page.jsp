@@ -39,10 +39,10 @@
                 <security:authorize access="isFullyAuthenticated()" var="userAuthenticated"/>
                 <c:choose>
                     <c:when test="${!userAuthenticated}">
-                        <tiles:insertDefinition name="springatom.tiles.auth.action.login" ignore="false" flush="true"/>
+                        <tiles:insertDefinition name="springatom.tiles.auth.action.login" flush="true"/>
                     </c:when>
                     <c:otherwise>
-                        <tiles:insertDefinition name="springatom.tiles.auth.action.logout" ignore="false" flush="true"/>
+                        <tiles:insertDefinition name="springatom.tiles.auth.action.logout" flush="true"/>
                     </c:otherwise>
                 </c:choose>
             </div>
