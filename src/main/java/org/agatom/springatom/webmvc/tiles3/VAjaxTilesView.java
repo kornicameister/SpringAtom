@@ -41,10 +41,14 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 /**
+ * {@code VAjaxTilesView} is a rewritten {@link org.springframework.js.ajax.tiles2.AjaxTilesView} (for Apache Tiles 2.x) to work
+ * with <b>Apache Tiles 3.x.x</b>.
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -69,11 +73,10 @@ public class VAjaxTilesView
 
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
+        final ServletContext servletContext = this.getServletContext();
 
-
-        ServletContext servletContext = getServletContext();
-        if (ajaxHandler.isAjaxRequest(request, response)) {
-            String[] fragmentsToRender = getRenderFragments(model, request, response);
+        if (this.ajaxHandler.isAjaxRequest(request, response)) {
+            String[] fragmentsToRender = this.getRenderFragments(model, request, response);
             if (fragmentsToRender.length == 0) {
                 logger.warn("An Ajax request was detected, but no fragments were specified to be re-rendered.  "
                         + "Falling back to full page render.  This can cause unpredictable results when processing "
@@ -89,7 +92,7 @@ public class VAjaxTilesView
                         + "Have you added a TilesConfigurer to your web application context?");
             }
 
-            exposeModelAsRequestAttributes(model, request);
+            this.exposeModelAsRequestAttributes(model, request);
             JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext));
 
             final Request tilesRequestContext = new ServletRequest(this.applicationContext, request, response);
@@ -98,7 +101,7 @@ public class VAjaxTilesView
                     tilesRequestContext
             );
 
-            Map<String, Object> flattenedAttributeMap = Maps.newHashMap();
+            final Map<String, Object> flattenedAttributeMap = Maps.newHashMap();
             this.flattenAttributeMap(container, tilesRequestContext, flattenedAttributeMap, compositeDefinition, request, response);
             this.addRuntimeAttributes(container, flattenedAttributeMap, request, response);
 
@@ -147,55 +150,51 @@ public class VAjaxTilesView
      * @param request
      *         the servlet request
      * @param response
+     *         the servlet response
      */
     protected void flattenAttributeMap(TilesContainer container, Request requestContext,
                                        Map<String, Object> resultMap,
                                        Definition compositeDefinition,
                                        HttpServletRequest request,
                                        HttpServletResponse response) {
-        final Set<String> locAttr = compositeDefinition.getLocalAttributeNames();
-        final Set<String> cascAttr = compositeDefinition.getCascadedAttributeNames();
+        final Set<String> localAttributeNames = this.getCollectionNullSafe(compositeDefinition.getLocalAttributeNames());
+        final Set<String> cascadedAttributeNames = this.getCollectionNullSafe(compositeDefinition.getCascadedAttributeNames());
 
-
-        for (String attributeName : locAttr) {
+        for (String attributeName : localAttributeNames) {
             final Attribute attribute = compositeDefinition.getAttribute(attributeName);
             if (attribute.getValue() == null || !(attribute.getValue() instanceof String)) {
                 continue;
             }
-            String value = attribute.getValue().toString();
+            final String value = attribute.getValue().toString();
             if (value.startsWith("/")) {
                 resultMap.put(attributeName, attribute);
             } else if (container.isValidDefinition(value, new ServletRequest(this.applicationContext, request, response))) {
                 resultMap.put(attributeName, attribute);
-                Definition nestedDefinition = container.getDefinition(value, requestContext);
-                Assert.isTrue(nestedDefinition != compositeDefinition, "Circular nested definition: " + value);
-                flattenAttributeMap(container, requestContext, resultMap, nestedDefinition, request, response);
+                final Definition nestedDefinition = container.getDefinition(value, requestContext);
+                {
+                    Assert.isTrue(nestedDefinition != compositeDefinition, "Circular nested definition: " + value);
+                }
+                this.flattenAttributeMap(container, requestContext, resultMap, nestedDefinition, request, response);
             }
         }
 
-        if (cascAttr == null) {
-            return;
-        }
-
-        for (String attributeName : cascAttr) {
-
-            System.out.println(attributeName);
-
+        for (String attributeName : cascadedAttributeNames) {
             final Attribute attribute = compositeDefinition.getAttribute(attributeName);
             if (attribute.getValue() == null || !(attribute.getValue() instanceof String)) {
                 continue;
             }
-            String value = attribute.getValue().toString();
+            final String value = attribute.getValue().toString();
             if (value.startsWith("/")) {
                 resultMap.put(attributeName, attribute);
             } else if (container.isValidDefinition(value, new ServletRequest(this.applicationContext, request, response))) {
                 resultMap.put(attributeName, attribute);
-                Definition nestedDefinition = container.getDefinition(value, requestContext);
-                Assert.isTrue(nestedDefinition != compositeDefinition, "Circular nested definition: " + value);
-                flattenAttributeMap(container, requestContext, resultMap, nestedDefinition, request, response);
+                final Definition nestedDefinition = container.getDefinition(value, requestContext);
+                {
+                    Assert.isTrue(nestedDefinition != compositeDefinition, "Circular nested definition: " + value);
+                }
+                this.flattenAttributeMap(container, requestContext, resultMap, nestedDefinition, request, response);
             }
         }
-
 
     }
 
@@ -212,6 +211,7 @@ public class VAjaxTilesView
      * @param request
      *         the Servlet request
      * @param response
+     *         the servlet response
      */
     protected void addRuntimeAttributes(TilesContainer container, Map<String, Object> resultMap, HttpServletRequest request,
                                         HttpServletResponse response) {
@@ -228,4 +228,9 @@ public class VAjaxTilesView
             resultMap.put(name, attr);
         }
     }
+
+    private Set<String> getCollectionNullSafe(Set<String> set) {
+        return Collections.unmodifiableSet(set == null ? Sets.<String>newHashSet() : set);
+    }
+
 }
