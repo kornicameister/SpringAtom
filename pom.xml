@@ -131,7 +131,7 @@
         <!-- db access -->
 
         <tomcat.version>8.0.0-RC3</tomcat.version>
-        <guava.version>15.0</guava.version>
+        <guava.version>16.0</guava.version>
         <tomcat.maven.version>2.1</tomcat.maven.version>
         <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
         <castor.version>1.2</castor.version>

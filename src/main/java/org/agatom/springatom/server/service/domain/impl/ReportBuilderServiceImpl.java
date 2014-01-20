@@ -56,7 +56,7 @@ import org.agatom.springatom.web.rbuilder.ReportRepresentation;
 import org.agatom.springatom.web.rbuilder.ReportViewDescriptor;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
-import org.agatom.springatom.web.rbuilder.exception.RBuilderException;
+import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
 import org.agatom.springatom.web.rbuilder.support.RBuilderResource;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
@@ -177,8 +177,8 @@ public class ReportBuilderServiceImpl
 
     @Override
     @CacheEvict(value = "reports", key = "#pk")
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW, rollbackFor = RBuilderException.class)
-    public Report deleteReport(final Long pk) throws RBuilderException {
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW, rollbackFor = ReportBuilderServiceException.class)
+    public Report deleteReport(final Long pk) throws ReportBuilderServiceException {
         try {
             final SReport one = this.findOne(pk);
 
@@ -200,14 +200,14 @@ public class ReportBuilderServiceImpl
             return one;
         } catch (Exception e) {
             LOGGER.error(String.format("Failed to delete %s", ClassUtils.getShortName(SReport.class)), e);
-            throw new RBuilderException(e);
+            throw new ReportBuilderServiceException(e);
         }
     }
 
     @Override
     @Cacheable(value = "reports", key = "#reportConfiguration.title")
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRED, rollbackFor = RBuilderException.class)
-    public Map<Long, Report> save(final ReportConfiguration reportConfiguration) throws RBuilderException {
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRED, rollbackFor = ReportBuilderServiceException.class)
+    public Map<Long, Report> save(final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException {
         LOGGER.debug(String.format("Saving new report from %s=%s", ClassUtils.getShortName(ReportConfiguration.class), reportConfiguration));
         try {
 
@@ -280,35 +280,35 @@ public class ReportBuilderServiceImpl
             return reports;
         } catch (Exception exception) {
             LOGGER.error(String.format("Failed to save %s to file", reportConfiguration), exception);
-            throw new RBuilderException("Failed to persist new report", exception);
+            throw new ReportBuilderServiceException("Failed to persist new report", exception);
         }
     }
 
     @Override
     @Cacheable(value = "reports", key = "#reportId", condition = "#reportId > 0")
-    public SReport getReport(final Long reportId) throws RBuilderException {
+    public SReport getReport(final Long reportId) throws ReportBuilderServiceException {
         try {
             Assert.notNull(reportId, "Report#ID can not be null");
             return this.findOne(reportId);
         } catch (Exception e) {
-            throw new RBuilderException(String.format("Failed to retrieve report for ID=%d", reportId), e);
+            throw new ReportBuilderServiceException(String.format("Failed to retrieve report for ID=%d", reportId), e);
         }
     }
 
     @Override
     @Cacheable(value = "reports")
-    public SReport getReport(final String title) throws RBuilderException {
+    public SReport getReport(final String title) throws ReportBuilderServiceException {
         try {
             Assert.notNull(title, "Report#title can not be null");
             return this.repository.findByTitle(title);
         } catch (Exception e) {
-            throw new RBuilderException(String.format("Failed to retrieve report for title=%s", title), e);
+            throw new ReportBuilderServiceException(String.format("Failed to retrieve report for title=%s", title), e);
         }
     }
 
     @Override
     public void getReportWrapper(final Long reportId, final String format, final ReportViewDescriptor descriptor) throws
-            RBuilderException {
+            ReportBuilderServiceException {
         LOGGER.debug(String
                 .format("Retrieving %s for pair=[reportId=%d,format=%s]", ClassUtils.getShortName(ReportViewDescriptor.class), reportId, format));
         try {
@@ -327,18 +327,18 @@ public class ReportBuilderServiceImpl
                       .setFormat(format);
         } catch (Exception e) {
             LOGGER.error(String.format("Failed to create %s", ClassUtils.getShortName(ReportViewDescriptor.class)), e);
-            if (e instanceof RBuilderException) {
-                throw (RBuilderException) e;
+            if (e instanceof ReportBuilderServiceException) {
+                throw (ReportBuilderServiceException) e;
             } else {
-                throw new RBuilderException(e);
+                throw new ReportBuilderServiceException(e);
             }
         }
     }
 
     private ModelMap getReportParameters(final String format, final ReportConfiguration configuration, final SReport report) throws
-            RBuilderException {
+            ReportBuilderServiceException {
         if (!this.getAvailableRepresentations().containsKey(format)) {
-            throw new RBuilderException(SReport.class, String.format("%s is not available format to be used", format));
+            throw new ReportBuilderServiceException(SReport.class, String.format("%s is not available format to be used", format));
         }
         try {
             final ModelMap modelMap = new ModelMap();
@@ -351,7 +351,7 @@ public class ReportBuilderServiceImpl
             return modelMap;
         } catch (Exception exception) {
             LOGGER.error(String.format("Error in retrieving reportParameters for %s", configuration), exception);
-            throw new RBuilderException(String.format("Error in retrieving reportParameters for %s", configuration), exception);
+            throw new ReportBuilderServiceException(String.format("Error in retrieving reportParameters for %s", configuration), exception);
         }
     }
 
@@ -544,7 +544,7 @@ public class ReportBuilderServiceImpl
         return false;
     }
 
-    private Resource getReportResource(final SReport report) throws RBuilderException {
+    private Resource getReportResource(final SReport report) throws ReportBuilderServiceException {
         final String corePackageName = String.format("%s/", ClassUtils.getPackageName(SpringAtom.class).replaceAll("\\.", "/"));
         File file;
         try {
@@ -556,7 +556,7 @@ public class ReportBuilderServiceImpl
         return this.getFileSystemResource(fileSystemResource, report, RBuilderResource.JASPER);
     }
 
-    private Resource getReportConfigurationResource(final SReport report) throws RBuilderException {
+    private Resource getReportConfigurationResource(final SReport report) throws ReportBuilderServiceException {
         final String corePackageName = String.format("%s/", ClassUtils.getPackageName(SpringAtom.class).replaceAll("\\.", "/"));
         File file;
         try {
@@ -593,7 +593,7 @@ public class ReportBuilderServiceImpl
         return String.valueOf(StringUtils.trimAllWhitespace(report.getTitle()).hashCode());
     }
 
-    private File createJasperHolderDirectory(final String corePackageName) throws RBuilderException {
+    private File createJasperHolderDirectory(final String corePackageName) throws ReportBuilderServiceException {
         try {
             final FileSystemResource fileSystemResource = new FileSystemResource(ResourceUtils
                     .getFile(String.format("classpath:%s", corePackageName)));
@@ -606,7 +606,7 @@ public class ReportBuilderServiceImpl
                 throw new NestedIOException("Failed to created JasperHolderDirectory");
             }
         } catch (Exception e) {
-            throw new RBuilderException("Failed to create JasperHolderDirectory", e);
+            throw new ReportBuilderServiceException("Failed to create JasperHolderDirectory", e);
         }
     }
 

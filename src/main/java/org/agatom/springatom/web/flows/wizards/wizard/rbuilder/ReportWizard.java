@@ -32,7 +32,7 @@ import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderBean;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
-import org.agatom.springatom.web.rbuilder.exception.RBuilderException;
+import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -223,13 +223,13 @@ public class ReportWizard
         return map;
     }
 
-    private SUser getCreator() throws RBuilderException {
+    private SUser getCreator() throws ReportBuilderServiceException {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final Object principal = authentication.getPrincipal();
         if (principal instanceof SUser) {
             return (SUser) principal;
         }
-        throw new RBuilderException(SUser.class, String.format("Principal\n\t[%s]\nis not authenticated", principal));
+        throw new ReportBuilderServiceException(SUser.class, String.format("Principal\n\t[%s]\nis not authenticated", principal));
     }
 
     private void initializeExcludedColumns() {
