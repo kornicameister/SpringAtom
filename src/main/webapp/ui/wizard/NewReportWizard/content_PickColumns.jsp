@@ -45,7 +45,7 @@
                 <p>
                     <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.entity.pickColumnsForEntity"/>">
                         <c:set var="reportableEntity" scope="page" value="${entry.key}"/>
-                        <jsp:useBean id="reportableEntity" scope="page" class="org.agatom.springatom.web.rbuilder.bean.ReportableEntity"/>
+                        <jsp:useBean id="reportableEntity" scope="page" class="org.agatom.springatom.web.rbuilder.bean.RBuilderEntity"/>
                         <span><s:message code="wizard.NewReportWizard.pickColumns.forEntity" arguments="${reportableEntity.label}"/></span>
                         <table class="dataTable">
                             <thead>
@@ -59,7 +59,7 @@
                             <tbody>
                             <c:forEach items="${entry.value}" var="column" varStatus="loopColumns">
                                 <c:set var="reportableColumn" scope="page" value="${column}"/>
-                                <jsp:useBean id="reportableColumn" scope="page" class="org.agatom.springatom.web.rbuilder.bean.ReportableColumn"/>
+                                <jsp:useBean id="reportableColumn" scope="page" class="org.agatom.springatom.web.rbuilder.bean.RBuilderColumn"/>
                                 <form:hidden id="col-${loop.index}-${loopColumns.index}-name"
                                              path="entities[${loop.index}].columns[${loopColumns.index}].columnName"/>
                                 <tr>

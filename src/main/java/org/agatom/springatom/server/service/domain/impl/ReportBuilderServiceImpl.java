@@ -54,9 +54,9 @@ import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation;
 import org.agatom.springatom.web.rbuilder.ReportViewDescriptor;
-import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
-import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
-import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
+import org.agatom.springatom.web.rbuilder.exception.RBuilderException;
 import org.agatom.springatom.web.rbuilder.support.RBuilderResource;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
@@ -177,8 +177,8 @@ public class ReportBuilderServiceImpl
 
     @Override
     @CacheEvict(value = "reports", key = "#pk")
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW, rollbackFor = ReportBuilderServiceException.class)
-    public Report deleteReport(final Long pk) throws ReportBuilderServiceException {
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW, rollbackFor = RBuilderException.class)
+    public Report deleteReport(final Long pk) throws RBuilderException {
         try {
             final SReport one = this.findOne(pk);
 
@@ -200,14 +200,14 @@ public class ReportBuilderServiceImpl
             return one;
         } catch (Exception e) {
             LOGGER.error(String.format("Failed to delete %s", ClassUtils.getShortName(SReport.class)), e);
-            throw new ReportBuilderServiceException(e);
+            throw new RBuilderException(e);
         }
     }
 
     @Override
     @Cacheable(value = "reports", key = "#reportConfiguration.title")
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRED, rollbackFor = ReportBuilderServiceException.class)
-    public Map<Long, Report> save(final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException {
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRED, rollbackFor = RBuilderException.class)
+    public Map<Long, Report> save(final ReportConfiguration reportConfiguration) throws RBuilderException {
         LOGGER.debug(String.format("Saving new report from %s=%s", ClassUtils.getShortName(ReportConfiguration.class), reportConfiguration));
         try {
 
@@ -218,7 +218,7 @@ public class ReportBuilderServiceImpl
 
             SReport report = null;
 
-            for (final ReportableEntity entity : reportConfiguration.getEntities()) {
+            for (final RBuilderEntity entity : reportConfiguration.getEntities()) {
                 LOGGER.trace(String.format("Generating report instance for entity=%s", entity.getName()));
 
                 if (firstId == -1) {
@@ -280,35 +280,35 @@ public class ReportBuilderServiceImpl
             return reports;
         } catch (Exception exception) {
             LOGGER.error(String.format("Failed to save %s to file", reportConfiguration), exception);
-            throw new ReportBuilderServiceException("Failed to persist new report", exception);
+            throw new RBuilderException("Failed to persist new report", exception);
         }
     }
 
     @Override
     @Cacheable(value = "reports", key = "#reportId", condition = "#reportId > 0")
-    public SReport getReport(final Long reportId) throws ReportBuilderServiceException {
+    public SReport getReport(final Long reportId) throws RBuilderException {
         try {
             Assert.notNull(reportId, "Report#ID can not be null");
             return this.findOne(reportId);
         } catch (Exception e) {
-            throw new ReportBuilderServiceException(String.format("Failed to retrieve report for ID=%d", reportId), e);
+            throw new RBuilderException(String.format("Failed to retrieve report for ID=%d", reportId), e);
         }
     }
 
     @Override
     @Cacheable(value = "reports")
-    public SReport getReport(final String title) throws ReportBuilderServiceException {
+    public SReport getReport(final String title) throws RBuilderException {
         try {
             Assert.notNull(title, "Report#title can not be null");
             return this.repository.findByTitle(title);
         } catch (Exception e) {
-            throw new ReportBuilderServiceException(String.format("Failed to retrieve report for title=%s", title), e);
+            throw new RBuilderException(String.format("Failed to retrieve report for title=%s", title), e);
         }
     }
 
     @Override
     public void getReportWrapper(final Long reportId, final String format, final ReportViewDescriptor descriptor) throws
-            ReportBuilderServiceException {
+            RBuilderException {
         LOGGER.debug(String
                 .format("Retrieving %s for pair=[reportId=%d,format=%s]", ClassUtils.getShortName(ReportViewDescriptor.class), reportId, format));
         try {
@@ -327,18 +327,18 @@ public class ReportBuilderServiceImpl
                       .setFormat(format);
         } catch (Exception e) {
             LOGGER.error(String.format("Failed to create %s", ClassUtils.getShortName(ReportViewDescriptor.class)), e);
-            if (e instanceof ReportBuilderServiceException) {
-                throw (ReportBuilderServiceException) e;
+            if (e instanceof RBuilderException) {
+                throw (RBuilderException) e;
             } else {
-                throw new ReportBuilderServiceException(e);
+                throw new RBuilderException(e);
             }
         }
     }
 
     private ModelMap getReportParameters(final String format, final ReportConfiguration configuration, final SReport report) throws
-            ReportBuilderServiceException {
+            RBuilderException {
         if (!this.getAvailableRepresentations().containsKey(format)) {
-            throw new ReportBuilderServiceException(SReport.class, String.format("%s is not available format to be used", format));
+            throw new RBuilderException(SReport.class, String.format("%s is not available format to be used", format));
         }
         try {
             final ModelMap modelMap = new ModelMap();
@@ -351,7 +351,7 @@ public class ReportBuilderServiceImpl
             return modelMap;
         } catch (Exception exception) {
             LOGGER.error(String.format("Error in retrieving reportParameters for %s", configuration), exception);
-            throw new ReportBuilderServiceException(String.format("Error in retrieving reportParameters for %s", configuration), exception);
+            throw new RBuilderException(String.format("Error in retrieving reportParameters for %s", configuration), exception);
         }
     }
 
@@ -359,10 +359,10 @@ public class ReportBuilderServiceImpl
 
         final String property = this.propertiesHolder.getProperty("reports.reportDataKey");
         final Map<String, Object> map = Maps.newLinkedHashMap();
-        final Map<ReportableEntity, SBasicRepository<?, ?>> repositories = this.getRepositories(configuration);
-        final Map<ReportableEntity, SReport> dynamicEntitiesMap = this.getReportsDistribution(configuration, report);
+        final Map<RBuilderEntity, SBasicRepository<?, ?>> repositories = this.getRepositories(configuration);
+        final Map<RBuilderEntity, SReport> dynamicEntitiesMap = this.getReportsDistribution(configuration, report);
 
-        for (final ReportableEntity entity : repositories.keySet()) {
+        for (final RBuilderEntity entity : repositories.keySet()) {
             final JRDataSource value = this.generateDataSource(repositories.get(entity), entity.getColumns());
             String dataKey;
             if (!dynamicEntitiesMap.get(entity).isDynamic()) {
@@ -375,9 +375,9 @@ public class ReportBuilderServiceImpl
         return map;
     }
 
-    private Map<ReportableEntity, SBasicRepository<?, ?>> getRepositories(final ReportConfiguration report) {
-        final Map<ReportableEntity, SBasicRepository<?, ?>> repositoryMap = Maps.newHashMap();
-        for (final ReportableEntity entity : report.getEntities()) {
+    private Map<RBuilderEntity, SBasicRepository<?, ?>> getRepositories(final ReportConfiguration report) {
+        final Map<RBuilderEntity, SBasicRepository<?, ?>> repositoryMap = Maps.newHashMap();
+        for (final RBuilderEntity entity : report.getEntities()) {
             final SBasicRepository<?, ?> repo = (SBasicRepository<?, ?>) this.repositories.getRepositoryFor(entity.getJavaClass());
             Assert.notNull(repo);
             repositoryMap.put(entity, repo);
@@ -386,7 +386,7 @@ public class ReportBuilderServiceImpl
         return repositoryMap;
     }
 
-    private JRDataSource generateDataSource(final SBasicRepository<?, ?> repositoryFor, final Set<ReportableColumn> columns) {
+    private JRDataSource generateDataSource(final SBasicRepository<?, ?> repositoryFor, final Set<RBuilderColumn> columns) {
         Assert.notNull(repositoryFor);
         Assert.notEmpty(columns);
 
@@ -397,7 +397,7 @@ public class ReportBuilderServiceImpl
             public Object apply(@Nullable final Object input) {
                 assert input != null;
                 final Map<String, Object> map = Maps.newHashMap();
-                for (final ReportableColumn column : columns) {
+                for (final RBuilderColumn column : columns) {
                     final Object object = InvokeUtils.invokeGetter(input, column.getColumnName());
                     map.put(column.getColumnName(), conversionService.convert(object, column.getRenderClass()));
                 }
@@ -407,13 +407,13 @@ public class ReportBuilderServiceImpl
         return JasperReportsUtils.convertReportData(FluentIterable.from(all).transform(transformationFunction).toSet());
     }
 
-    private Map<ReportableEntity, SReport> getReportsDistribution(final ReportConfiguration configuration, final SReport report) {
+    private Map<RBuilderEntity, SReport> getReportsDistribution(final ReportConfiguration configuration, final SReport report) {
         Assert.isTrue(!report.isDynamic());
 
-        final Map<ReportableEntity, SReport> map = Maps.newHashMap();
-        final List<ReportableEntity> entities = configuration.getEntities();
+        final Map<RBuilderEntity, SReport> map = Maps.newHashMap();
+        final List<RBuilderEntity> entities = configuration.getEntities();
         final ReportableEntityPredicate entityPredicate = new ReportableEntityPredicate().setReport(report);
-        Optional<ReportableEntity> entityOptional = FluentIterable.from(entities).filter(entityPredicate).first();
+        Optional<RBuilderEntity> entityOptional = FluentIterable.from(entities).filter(entityPredicate).first();
 
         Assert.isTrue(entityOptional.isPresent());
         map.put(entityOptional.get(), report);
@@ -471,7 +471,7 @@ public class ReportBuilderServiceImpl
         return report.setResource(jasperResource.getURL().getPath(), reportResource.getURL().getPath());
     }
 
-    private JasperReport generateReport(final Report report, final ReportableEntity entity) throws
+    private JasperReport generateReport(final Report report, final RBuilderEntity entity) throws
             ClassNotFoundException, JRException, ColumnBuilderException, DJBuilderException {
         LOGGER.trace(String.format("Generating report[%s] from pair=[\n\treport->%s\n\tentity->%s",
                 ClassUtils.getShortName(DynamicReport.class),
@@ -488,7 +488,7 @@ public class ReportBuilderServiceImpl
         }
     }
 
-    private DynamicReport buildReport(final Report report, final ReportableEntity entity) throws ClassNotFoundException,
+    private DynamicReport buildReport(final Report report, final RBuilderEntity entity) throws ClassNotFoundException,
             ColumnBuilderException, DJBuilderException {
         LOGGER.trace(String.format("Building report instance of %s from pair=[\n\treport->%s\n\tentities->%s",
                 ClassUtils.getShortName(FastReportBuilder.class),
@@ -514,7 +514,7 @@ public class ReportBuilderServiceImpl
                .setRightMargin(margin).setTopMargin(margin).setBottomMargin(margin)
                .setUseFullPageWidth(true);
 
-        for (final ReportableColumn column : entity.getColumns()) {
+        for (final RBuilderColumn column : entity.getColumns()) {
             final AbstractColumn ac = ColumnBuilder.getNew()
                                                    .setColumnProperty(column.getColumnName(), column.getRenderClass())
                                                    .setTitle(column.getLabel())
@@ -534,7 +534,7 @@ public class ReportBuilderServiceImpl
         return builder.build();
     }
 
-    private boolean isGroupingColumn(final ReportableEntity entity, final ReportableColumn column) {
+    private boolean isGroupingColumn(final RBuilderEntity entity, final RBuilderColumn column) {
         final EntityDescriptor<?> descriptor = this.entityDescriptors.getDescriptor(entity.getJavaClass());
         if (descriptor != null) {
             final EntityType<?> entityType = descriptor.getEntityType();
@@ -544,7 +544,7 @@ public class ReportBuilderServiceImpl
         return false;
     }
 
-    private Resource getReportResource(final SReport report) throws ReportBuilderServiceException {
+    private Resource getReportResource(final SReport report) throws RBuilderException {
         final String corePackageName = String.format("%s/", ClassUtils.getPackageName(SpringAtom.class).replaceAll("\\.", "/"));
         File file;
         try {
@@ -556,7 +556,7 @@ public class ReportBuilderServiceImpl
         return this.getFileSystemResource(fileSystemResource, report, RBuilderResource.JASPER);
     }
 
-    private Resource getReportConfigurationResource(final SReport report) throws ReportBuilderServiceException {
+    private Resource getReportConfigurationResource(final SReport report) throws RBuilderException {
         final String corePackageName = String.format("%s/", ClassUtils.getPackageName(SpringAtom.class).replaceAll("\\.", "/"));
         File file;
         try {
@@ -593,7 +593,7 @@ public class ReportBuilderServiceImpl
         return String.valueOf(StringUtils.trimAllWhitespace(report.getTitle()).hashCode());
     }
 
-    private File createJasperHolderDirectory(final String corePackageName) throws ReportBuilderServiceException {
+    private File createJasperHolderDirectory(final String corePackageName) throws RBuilderException {
         try {
             final FileSystemResource fileSystemResource = new FileSystemResource(ResourceUtils
                     .getFile(String.format("classpath:%s", corePackageName)));
@@ -606,7 +606,7 @@ public class ReportBuilderServiceImpl
                 throw new NestedIOException("Failed to created JasperHolderDirectory");
             }
         } catch (Exception e) {
-            throw new ReportBuilderServiceException("Failed to create JasperHolderDirectory", e);
+            throw new RBuilderException("Failed to create JasperHolderDirectory", e);
         }
     }
 
@@ -624,7 +624,7 @@ public class ReportBuilderServiceImpl
     }
 
     private static class ReportableEntityPredicate
-            implements Predicate<ReportableEntity> {
+            implements Predicate<RBuilderEntity> {
 
         private Report report;
 
@@ -634,7 +634,7 @@ public class ReportBuilderServiceImpl
         }
 
         @Override
-        public boolean apply(@Nullable final ReportableEntity input) {
+        public boolean apply(@Nullable final RBuilderEntity input) {
             return input != null && input.getJavaClass().equals(this.report.getReportedClass());
         }
     }

@@ -23,7 +23,7 @@ import org.agatom.springatom.server.repository.repositories.report.SReportReposi
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation;
 import org.agatom.springatom.web.rbuilder.ReportViewDescriptor;
-import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
+import org.agatom.springatom.web.rbuilder.exception.RBuilderException;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
@@ -54,17 +54,17 @@ public interface ReportBuilderService
     @NotNull
     Map<String, ReportRepresentation> getAvailableRepresentations();
 
-    Report deleteReport(@NotNull @Min(value = 1) final Long pk) throws ReportBuilderServiceException;
+    Report deleteReport(@NotNull @Min(value = 1) final Long pk) throws RBuilderException;
 
     @NotNull
-    Map<Long, Report> save(@NotNull final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException;
+    Map<Long, Report> save(@NotNull final ReportConfiguration reportConfiguration) throws RBuilderException;
 
     @NotNull
-    SReport getReport(@Min(value = 1) final Long reportId) throws ReportBuilderServiceException;
+    SReport getReport(@Min(value = 1) final Long reportId) throws RBuilderException;
 
     @NotNull
-    SReport getReport(@NotNull @Length(min = 1) final String title) throws ReportBuilderServiceException;
+    SReport getReport(@NotNull @Length(min = 1) final String title) throws RBuilderException;
 
     void getReportWrapper(@Min(value = 1) final Long reportId, @NotNull final String format, final ReportViewDescriptor descriptor) throws
-            ReportBuilderServiceException;
+            RBuilderException;
 }

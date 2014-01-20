@@ -31,9 +31,13 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * {@code AssociationInformation} is a support bean for {@link org.agatom.springatom.web.flows.wizards.wizard.rbuilder.ReportWizard}
- * which marks single entity further recognized by {@link org.agatom.springatom.web.rbuilder.bean.ReportableEntity#getId()} being
- * possible to create {@code query} with other entities
+ * {@code AssociationInformation} is a support bean wrapping information coming from:
+ * <ol>
+ * <li>{@link org.agatom.springatom.server.model.descriptors.EntityDescriptor#getOneToManyProperties()}</li>
+ * <li>{@link org.agatom.springatom.server.model.descriptors.EntityDescriptor#getManyToOneProperties()}</li>
+ * </ol>
+ * into single bean identified by {@link org.agatom.springatom.server.model.descriptors.EntityDescriptor#getName()} through {@link
+ * org.springframework.hateoas.Identifiable#getId()}
  *
  * @author kornicameister
  * @version 0.0.1

@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
- * {@code RColumnConversionDescriptor} describes the association between original {@link org.agatom.springatom.web.rbuilder.bean.ReportableColumn#getColumnClass()}
+ * {@code RColumnConversionDescriptor} describes the association between original {@link org.agatom.springatom.web.rbuilder.bean.RBuilderColumn#getColumnClass()}
  * and user chosen target class identified by {@link RColumnConversionDescriptor#getTargetClass()}
  *
  * @author kornicameister

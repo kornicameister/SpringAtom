@@ -30,22 +30,25 @@ import javax.validation.constraints.Size;
 import java.util.Set;
 
 /**
+ * {@code RBuilderEntity} carries information about all sorts entities that are used in
+ * {@link org.agatom.springatom.web.flows.wizards.wizard.rbuilder.ReportWizard}
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ReportableEntity
-        extends ReportableBean
-        implements Comparable<ReportableEntity> {
+public class RBuilderEntity
+        extends RBuilderBean
+        implements Comparable<RBuilderEntity> {
     private static final long serialVersionUID = -5864111277348030161L;
     @Size(min = 1)
-    private Set<ReportableColumn> columns;
+    private Set<RBuilderColumn> columns;
     @NotNull
-    private Class<?>              javaClass;
+    private Class<?>            javaClass;
     @NotNull
     @Length(min = 5, max = 50)
-    private String                name;
+    private String              name;
 
     public Class<?> getJavaClass() {
         return javaClass;
@@ -55,12 +58,12 @@ public class ReportableEntity
         return this.javaClass.getName();
     }
 
-    public ReportableEntity setJavaClass(final Class<?> javaClass) {
+    public RBuilderEntity setJavaClass(final Class<?> javaClass) {
         this.javaClass = javaClass;
         return this;
     }
 
-    public ReportableEntity setName(final String name) {
+    public RBuilderEntity setName(final String name) {
         this.name = name;
         return this;
     }
@@ -69,25 +72,25 @@ public class ReportableEntity
         return name;
     }
 
-    public ReportableEntity setColumns(final Set<ReportableColumn> columns) {
+    public RBuilderEntity setColumns(final Set<RBuilderColumn> columns) {
         this.columns = columns;
         return this;
     }
 
-    public Set<ReportableColumn> getColumns() {
+    public Set<RBuilderColumn> getColumns() {
         if (this.columns == null) {
             this.columns = Sets.newTreeSet();
         }
         return columns;
     }
 
-    public ReportableEntity addColumn(final ReportableColumn reportableColumn) {
+    public RBuilderEntity addColumn(final RBuilderColumn reportableColumn) {
         this.getColumns();
         this.columns.add(reportableColumn);
         return this;
     }
 
-    public boolean hasColumn(final ReportableColumn reportableColumn) {
+    public boolean hasColumn(final RBuilderColumn reportableColumn) {
         this.getColumns();
         return this.columns.contains(reportableColumn);
     }
@@ -107,7 +110,7 @@ public class ReportableEntity
     }
 
     @Override
-    public int compareTo(@Nonnull final ReportableEntity entity) {
+    public int compareTo(@Nonnull final RBuilderEntity entity) {
         return ComparisonChain
                 .start()
                 .compare(this.label, entity.label)
@@ -124,7 +127,7 @@ public class ReportableEntity
             return false;
         }
 
-        ReportableEntity that = (ReportableEntity) o;
+        RBuilderEntity that = (RBuilderEntity) o;
 
         return Objects.equal(this.javaClass, that.javaClass) &&
                 Objects.equal(this.name, that.name) &&

@@ -32,9 +32,9 @@ import java.util.Map;
  * @since 0.0.1
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ReportableColumn
-        extends ReportableBean
-        implements Comparable<ReportableColumn> {
+public class RBuilderColumn
+        extends RBuilderBean
+        implements Comparable<RBuilderColumn> {
     private static final long          serialVersionUID = 2600080347152145806L;
     private static final Boolean       DEFAULT_EXCLUDED = Boolean.FALSE;
     private static final Class<String> DEFAULT_RENDER   = String.class;
@@ -45,7 +45,7 @@ public class ReportableColumn
     protected            String        renderProperty   = null;
     protected            Boolean       excluded         = DEFAULT_EXCLUDED;
 
-    public ReportableColumn setExcluded(final Boolean excluded) {
+    public RBuilderColumn setExcluded(final Boolean excluded) {
         this.excluded = excluded;
         return this;
     }
@@ -57,7 +57,7 @@ public class ReportableColumn
         return excluded;
     }
 
-    public ReportableColumn setRenderProperty(final String renderProperty) {
+    public RBuilderColumn setRenderProperty(final String renderProperty) {
         this.renderProperty = renderProperty;
         return this;
     }
@@ -66,7 +66,7 @@ public class ReportableColumn
         return renderProperty;
     }
 
-    public ReportableColumn setPrefix(final String prefix) {
+    public RBuilderColumn setPrefix(final String prefix) {
         this.prefix = prefix;
         return this;
     }
@@ -75,7 +75,7 @@ public class ReportableColumn
         return prefix;
     }
 
-    public ReportableColumn setColumnClass(final Class<?> columnClass) {
+    public RBuilderColumn setColumnClass(final Class<?> columnClass) {
         this.columnClass = columnClass;
         return this;
     }
@@ -88,7 +88,7 @@ public class ReportableColumn
         return columnName;
     }
 
-    public ReportableColumn setColumnName(final String columnName) {
+    public RBuilderColumn setColumnName(final String columnName) {
         this.columnName = columnName;
         return this;
     }
@@ -109,7 +109,7 @@ public class ReportableColumn
      *
      * @return true if so, false otherwise
      *
-     * @see ReportableColumn#isMultiValued()
+     * @see RBuilderColumn#isMultiValued()
      */
     public boolean isSingleValued() {
         return !this.isMultiValued();
@@ -117,7 +117,7 @@ public class ReportableColumn
 
     /**
      * Evaluates is this columns most likely represents multi valued column.
-     * Method checks if that's so by verifying if {@link org.agatom.springatom.web.rbuilder.bean.ReportableColumn#columnClass}
+     * Method checks if that's so by verifying if {@link RBuilderColumn#columnClass}
      * is assignable either from {@link java.lang.Iterable} or {@link java.util.Map}
      *
      * @return true if multi valued
@@ -128,7 +128,7 @@ public class ReportableColumn
     }
 
     @Override
-    public int compareTo(@Nonnull final ReportableColumn column) {
+    public int compareTo(@Nonnull final RBuilderColumn column) {
         return ComparisonChain
                 .start()
                 .compare(this.columnName, column.columnName)
@@ -156,7 +156,7 @@ public class ReportableColumn
             return false;
         }
 
-        ReportableColumn that = (ReportableColumn) o;
+        RBuilderColumn that = (RBuilderColumn) o;
 
         return Objects.equal(this.prefix, that.prefix) &&
                 Objects.equal(this.columnName, that.columnName) &&

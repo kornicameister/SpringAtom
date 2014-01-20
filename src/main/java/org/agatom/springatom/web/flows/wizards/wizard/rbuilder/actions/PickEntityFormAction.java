@@ -27,9 +27,9 @@ import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
-import org.agatom.springatom.web.rbuilder.bean.ReportableBean;
-import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
-import org.agatom.springatom.web.rbuilder.bean.ReportableEntityAssociation;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderBean;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderEntityAssociations;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.TypeDescriptor;
@@ -88,21 +88,21 @@ public class PickEntityFormAction
      *
      * @return {@link java.util.Set} of unselected entities (@link ReportableEntity}
      */
-    private Set<ReportableEntity> getUnselectedEntities() {
+    private Set<RBuilderEntity> getUnselectedEntities() {
         return FluentIterable.from(this.reportWizard.getEntities())
                              .filter(new UnselectedEntityPredicate())
                              .toSet();
     }
 
     /**
-     * Calculates set of {@link org.agatom.springatom.web.rbuilder.bean.ReportableEntityAssociation} from values retrieved from
+     * Calculates set of {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntityAssociations} from values retrieved from
      * {@link org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors#getAssociation(Class)} .
      *
-     * @return {@link java.util.Set} of {@link org.agatom.springatom.web.rbuilder.bean.ReportableEntityAssociation}
+     * @return {@link java.util.Set} of {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntityAssociations}
      */
-    private Set<ReportableEntityAssociation> getAssociateInformation() {
-        final Set<ReportableEntityAssociation> information = Sets.newHashSet();
-        for (ReportableEntity entity : this.reportWizard.getEntities()) {
+    private Set<RBuilderEntityAssociations> getAssociateInformation() {
+        final Set<RBuilderEntityAssociations> information = Sets.newHashSet();
+        for (RBuilderEntity entity : this.reportWizard.getEntities()) {
             final EntityAssociation association = this.entityDescriptors.getAssociation(entity.getJavaClass());
             if (association == null) {
                 continue;
@@ -116,7 +116,7 @@ public class PickEntityFormAction
                             if (input == null) {
                                 return null;
                             }
-                            final ReportableEntity reportableEntity = reportWizard.getEntity(input.getJavaClass());
+                            final RBuilderEntity reportableEntity = reportWizard.getEntity(input.getJavaClass());
                             if (reportableEntity == null) {
                                 return null;
                             }
@@ -124,7 +124,7 @@ public class PickEntityFormAction
                         }
                     })
                     .toSet();
-            information.add(new ReportableEntityAssociation()
+            information.add(new RBuilderEntityAssociations()
                     .setMaster(Long.valueOf(entity.getId()))
                     .setChildren(children)
             );
@@ -133,9 +133,9 @@ public class PickEntityFormAction
     }
 
     private class UnselectedEntityPredicate
-            implements Predicate<ReportableEntity> {
+            implements Predicate<RBuilderEntity> {
         @Override
-        public boolean apply(@Nullable final ReportableEntity input) {
+        public boolean apply(@Nullable final RBuilderEntity input) {
             assert input != null;
             return !reportWizard.getReportConfiguration().hasEntity(input.getJavaClass());
         }
@@ -169,15 +169,15 @@ public class PickEntityFormAction
 
     private abstract class BaseConverter
             extends MatcherConverter {
-        protected Set<ReportableEntity> doConvert(final Set<String> list) {
+        protected Set<RBuilderEntity> doConvert(final Set<String> list) {
             LOGGER.trace(String.format("converting with selected clazz=%s", list));
             Preconditions.checkNotNull(list);
             Preconditions.checkArgument(!list.isEmpty());
-            final Set<ReportableEntity> reportedEntities = Sets.newHashSet();
+            final Set<RBuilderEntity> reportedEntities = Sets.newHashSet();
             for (final String javaClassName : list) {
-                final ReportableBean bean = reportWizard.getReportableBean(Integer.valueOf(javaClassName));
-                if (ClassUtils.isAssignable(ReportableEntity.class, bean.getClass())) {
-                    reportedEntities.add((ReportableEntity) bean);
+                final RBuilderBean bean = reportWizard.getReportableBean(Integer.valueOf(javaClassName));
+                if (ClassUtils.isAssignable(RBuilderEntity.class, bean.getClass())) {
+                    reportedEntities.add((RBuilderEntity) bean);
                 }
             }
             return reportedEntities;
@@ -186,10 +186,10 @@ public class PickEntityFormAction
 
     private class ClazzFieldListToReportEntityConverterList
             extends BaseConverter
-            implements Converter<String[], Set<ReportableEntity>> {
+            implements Converter<String[], Set<RBuilderEntity>> {
 
         @Override
-        public Set<ReportableEntity> convert(final String[] attributes) {
+        public Set<RBuilderEntity> convert(final String[] attributes) {
             return this.doConvert(Sets.newHashSet(attributes));
         }
 
@@ -203,10 +203,10 @@ public class PickEntityFormAction
 
     private class ClazzFieldToReportEntityConverter
             extends BaseConverter
-            implements Converter<String, Set<ReportableEntity>> {
+            implements Converter<String, Set<RBuilderEntity>> {
 
         @Override
-        public Set<ReportableEntity> convert(final String clazz) {
+        public Set<RBuilderEntity> convert(final String clazz) {
             return this.doConvert(Sets.newHashSet(clazz));
         }
 

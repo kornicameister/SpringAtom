@@ -23,9 +23,9 @@ import com.google.common.collect.Sets;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
-import org.agatom.springatom.web.rbuilder.bean.ReportableBean;
-import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
-import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderBean;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
 import org.agatom.springatom.web.rbuilder.support.RColumnConversionDescriptor;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,14 +115,14 @@ public class PickColumnsFormAction
     // TODO add support for rendering given column as the concatenated report
     private Object getColumnsRenderProperties(final ReportConfiguration cfg) {
         final Map<Integer, Set<RColumnConversionDescriptor>> map = Maps.newHashMap();
-        final List<ReportableEntity> entities = cfg.getEntities();
+        final List<RBuilderEntity> entities = cfg.getEntities();
         final Locale locale = LocaleContextHolder.getLocale();
 
-        for (final ReportableEntity entity : entities) {
-            final Set<ReportableColumn> columns = entity.getColumns();
+        for (final RBuilderEntity entity : entities) {
+            final Set<RBuilderColumn> columns = entity.getColumns();
             Assert.notEmpty(columns);
 
-            for (final ReportableColumn column : columns) {
+            for (final RBuilderColumn column : columns) {
                 final Class<?> sourceType = column.getColumnClass();
                 final Set<RColumnConversionDescriptor> properties = Sets.newTreeSet();
 
@@ -160,15 +160,15 @@ public class PickColumnsFormAction
 
     private abstract class BaseConverter
             extends MatcherConverter {
-        protected Set<ReportableColumn> doConvert(final Set<String> list) {
+        protected Set<RBuilderColumn> doConvert(final Set<String> list) {
             LOGGER.trace(String.format("converting with selected clazz=%s", list));
             Preconditions.checkNotNull(list);
             Preconditions.checkArgument(!list.isEmpty());
-            final Set<ReportableColumn> reportedColumns = Sets.newTreeSet();
+            final Set<RBuilderColumn> reportedColumns = Sets.newTreeSet();
             for (final String javaClassName : list) {
-                final ReportableBean bean = reportWizard.getReportableBean(Integer.valueOf(javaClassName));
-                if (ClassUtils.isAssignable(ReportableColumn.class, bean.getClass())) {
-                    reportedColumns.add((ReportableColumn) bean);
+                final RBuilderBean bean = reportWizard.getReportableBean(Integer.valueOf(javaClassName));
+                if (ClassUtils.isAssignable(RBuilderColumn.class, bean.getClass())) {
+                    reportedColumns.add((RBuilderColumn) bean);
                 }
             }
             return reportedColumns;
@@ -179,10 +179,10 @@ public class PickColumnsFormAction
 
     private class StringArrayToReportColumnListConverter
             extends BaseConverter
-            implements Converter<String[], Set<ReportableColumn>> {
+            implements Converter<String[], Set<RBuilderColumn>> {
 
         @Override
-        public Set<ReportableColumn> convert(final String[] attributes) {
+        public Set<RBuilderColumn> convert(final String[] attributes) {
             return this.doConvert(Sets.newHashSet(attributes));
         }
 
@@ -196,10 +196,10 @@ public class PickColumnsFormAction
 
     private class StringToReportColumnListConverter
             extends BaseConverter
-            implements Converter<String, Set<ReportableColumn>> {
+            implements Converter<String, Set<RBuilderColumn>> {
 
         @Override
-        public Set<ReportableColumn> convert(final String clazz) {
+        public Set<RBuilderColumn> convert(final String clazz) {
             return this.doConvert(Sets.newHashSet(clazz));
         }
 
@@ -232,7 +232,7 @@ public class PickColumnsFormAction
                 hasNoErrors = false;
             }
             if (hasNoErrors) {
-                for (final ReportableEntity entity : targetReport.getEntities()) {
+                for (final RBuilderEntity entity : targetReport.getEntities()) {
                     if (!targetReport.hasColumn(entity)) {
                         errors.rejectValue("entities", "wizard.NewReportWizard.error.noColumnsSelectedForEntity", new Object[]{entity
                                 .getName()}, null);

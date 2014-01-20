@@ -24,33 +24,33 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * {@code ReportableEntityAssociation} is a plain {@code JavaBean} carrying information about
- * single {@link org.agatom.springatom.web.rbuilder.bean.ReportableEntity} and all possible associations
+ * {@code RBuilderEntityAssociations} is a plain {@code JavaBean} carrying information about
+ * single {@link RBuilderEntity} and all possible associations
  * that can be made with it.
  * <p/>
  * <b>Association</b> means that given {@link org.springframework.data.domain.Persistable} used to create {@link
- * org.agatom.springatom.web.rbuilder.bean.ReportableEntity} can be linked in either {@link javax.persistence.OneToMany} or {@link
+ * RBuilderEntity} can be linked in either {@link javax.persistence.OneToMany} or {@link
  * javax.persistence.ManyToOne} with another {@link org.springframework.data.domain.Persistable}.
  * <p/>
- * <b>Information about one entity being in association with another</b> is carried by values retrieved from {@link ReportableBean#getId()}
+ * <b>Information about one entity being in association with another</b> is carried by values retrieved from {@link RBuilderBean#getId()}
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class ReportableEntityAssociation
-        implements Serializable {
+public class RBuilderEntityAssociations
+implements Serializable {
 
     private static final long      serialVersionUID = -8970556120241893260L;
     private              Long      master           = -1l;
     private              Set<Long> children         = Sets.newHashSet();
 
-    public ReportableEntityAssociation setMaster(final Long master) {
+    public RBuilderEntityAssociations setMaster(final Long master) {
         this.master = master;
         return this;
     }
 
-    public ReportableEntityAssociation setChildren(final Set<Long> children) {
+    public RBuilderEntityAssociations setChildren(final Set<Long> children) {
         this.children = children;
         return this;
     }
@@ -80,7 +80,7 @@ public class ReportableEntityAssociation
             return false;
         }
 
-        ReportableEntityAssociation that = (ReportableEntityAssociation) o;
+        RBuilderEntityAssociations that = (RBuilderEntityAssociations) o;
 
         return Objects.equal(this.master, that.master) &&
                 Objects.equal(this.children, that.children);

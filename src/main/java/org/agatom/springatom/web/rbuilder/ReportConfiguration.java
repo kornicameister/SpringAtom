@@ -26,8 +26,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.web.beans.WebBean;
-import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
-import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.binding.collection.MapAdaptable;
@@ -47,8 +47,8 @@ import java.util.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportConfiguration
         implements WebBean,
-                   Iterable<ReportableEntity>,
-                   MapAdaptable<String, ReportableEntity> {
+                   Iterable<RBuilderEntity>,
+                   MapAdaptable<String, RBuilderEntity> {
     private static final String                    BEAN_ID          = "reportConfiguration";
     private static final Logger                    LOGGER           = Logger.getLogger(ReportConfiguration.class);
     private static final long                      serialVersionUID = 772657130362339934L;
@@ -62,7 +62,7 @@ public class ReportConfiguration
     protected            Map<String, Serializable> settings         = Maps.newHashMap();
     @NotNull
     @Size(min = 1)
-    protected            Set<ReportableEntity>     entities         = Sets.newTreeSet();
+    protected            Set<RBuilderEntity>       entities         = Sets.newTreeSet();
 
     public ReportConfiguration setTitle(final String title) {
         this.title = title;
@@ -103,23 +103,23 @@ public class ReportConfiguration
         return settings;
     }
 
-    public ReportConfiguration setEntities(final Set<ReportableEntity> entities) {
-        for (final ReportableEntity entity : entities) {
+    public ReportConfiguration setEntities(final Set<RBuilderEntity> entities) {
+        for (final RBuilderEntity entity : entities) {
             this.putEntity(entity);
         }
         return this;
     }
 
-    public boolean hasEntity(final ReportableEntity entity) {
+    public boolean hasEntity(final RBuilderEntity entity) {
         return this.entities.contains(entity);
     }
 
     public boolean hasEntity(final Class<?> javaClass) {
         return FluentIterable
                 .from(this.entities)
-                .firstMatch(new Predicate<ReportableEntity>() {
+                .firstMatch(new Predicate<RBuilderEntity>() {
                     @Override
-                    public boolean apply(@Nullable final ReportableEntity input) {
+                    public boolean apply(@Nullable final RBuilderEntity input) {
                         return input != null && input.getJavaClass().equals(javaClass);
                     }
                 }).isPresent();
@@ -135,11 +135,11 @@ public class ReportConfiguration
         return this;
     }
 
-    public List<ReportableEntity> getEntities() {
+    public List<RBuilderEntity> getEntities() {
         return ImmutableList.copyOf(this.entities);
     }
 
-    public ReportConfiguration putEntity(final ReportableEntity entity) {
+    public ReportConfiguration putEntity(final RBuilderEntity entity) {
         final boolean add = this.entities.add(entity);
         if (!add) {
             LOGGER.trace(String.format("%s already exists in context", entity));
@@ -147,41 +147,41 @@ public class ReportConfiguration
         return this;
     }
 
-    public ReportConfiguration putColumn(final ReportableEntity entity, final ReportableColumn reportableColumn) {
+    public ReportConfiguration putColumn(final RBuilderEntity entity, final RBuilderColumn reportableColumn) {
         this.putEntity(entity);
         entity.addColumn(reportableColumn);
         return this;
     }
 
-    public ReportConfiguration putColumns(final ReportableEntity entity, final Collection<ReportableColumn> reportableColumn) {
+    public ReportConfiguration putColumns(final RBuilderEntity entity, final Collection<RBuilderColumn> reportableColumn) {
         if (CollectionUtils.isEmpty(reportableColumn)) {
             return this;
         }
         this.putEntity(entity);
-        for (final ReportableColumn column : reportableColumn) {
+        for (final RBuilderColumn column : reportableColumn) {
             this.putColumn(entity, column);
         }
         return this;
     }
 
-    public ReportableEntity hasColumn(final ReportableColumn reportableColumn) {
-        final Optional<ReportableEntity> present = FluentIterable
+    public RBuilderEntity hasColumn(final RBuilderColumn reportableColumn) {
+        final Optional<RBuilderEntity> present = FluentIterable
                 .from(this.entities)
-                .firstMatch(new Predicate<ReportableEntity>() {
+                .firstMatch(new Predicate<RBuilderEntity>() {
                     @Override
-                    public boolean apply(@Nullable final ReportableEntity input) {
+                    public boolean apply(@Nullable final RBuilderEntity input) {
                         return input != null && input.hasColumn(reportableColumn);
                     }
                 });
         return present.get();
     }
 
-    public boolean hasColumn(final ReportableEntity entity) {
+    public boolean hasColumn(final RBuilderEntity entity) {
         return entity.hasColumns();
     }
 
     public void clearColumns() {
-        for (final ReportableEntity entity : this.entities) {
+        for (final RBuilderEntity entity : this.entities) {
             if (this.hasColumn(entity)) {
                 entity.clearColumns();
             }
@@ -199,7 +199,7 @@ public class ReportConfiguration
 
     public int getTotalSize() {
         int size = 0;
-        for (final ReportableEntity entity : this.entities) {
+        for (final RBuilderEntity entity : this.entities) {
             size += entity.getColumns().size();
         }
         return size;
@@ -213,14 +213,14 @@ public class ReportConfiguration
     }
 
     @Override
-    public Iterator<ReportableEntity> iterator() {
+    public Iterator<RBuilderEntity> iterator() {
         return this.entities.iterator();
     }
 
     @Override
-    public Map<String, ReportableEntity> asMap() {
-        final Map<String, ReportableEntity> entityMap = Maps.newLinkedHashMap();
-        for (final ReportableEntity entity : this.entities) {
+    public Map<String, RBuilderEntity> asMap() {
+        final Map<String, RBuilderEntity> entityMap = Maps.newLinkedHashMap();
+        for (final RBuilderEntity entity : this.entities) {
             entityMap.put(entity.getName(), entity);
         }
         return Collections.unmodifiableMap(entityMap);

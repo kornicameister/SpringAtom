@@ -29,10 +29,10 @@ import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescripto
 import org.agatom.springatom.web.flows.wizards.wizard.AbstractWizard;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
-import org.agatom.springatom.web.rbuilder.bean.ReportableBean;
-import org.agatom.springatom.web.rbuilder.bean.ReportableColumn;
-import org.agatom.springatom.web.rbuilder.bean.ReportableEntity;
-import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderBean;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
+import org.agatom.springatom.web.rbuilder.exception.RBuilderException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -71,23 +71,23 @@ import java.util.*;
 @Component(value = "reportWizard")
 public class ReportWizard
         extends AbstractWizard
-        implements Iterable<ReportableEntity> {
-    private static final Logger                                       LOGGER              = Logger.getLogger(ReportWizard.class);
-    private static final String                                       BEAN_ID             = "reportDescriptor";
-    private static final long                                         serialVersionUID    = -8974230926174261438L;
-    private              Set<ReportableEntity>                        entities            = Sets.newTreeSet();
-    private              Map<ReportableEntity, Set<ReportableColumn>> entityToColumns     = Maps.newTreeMap();
-    private              Map<Integer, Identifiable<Integer>>          cache               = Maps.newHashMap();
+        implements Iterable<RBuilderEntity> {
+    private static final Logger                                   LOGGER              = Logger.getLogger(ReportWizard.class);
+    private static final String                                   BEAN_ID             = "reportDescriptor";
+    private static final long                                     serialVersionUID    = -8974230926174261438L;
+    private              Set<RBuilderEntity>                      entities            = Sets.newTreeSet();
+    private              Map<RBuilderEntity, Set<RBuilderColumn>> entityToColumns     = Maps.newTreeMap();
+    private              Map<Integer, Identifiable<Integer>>      cache               = Maps.newHashMap();
     @Autowired
-    private              EntityDescriptors                            entityDescriptors   = null;
+    private              EntityDescriptors                        entityDescriptors   = null;
     @Autowired
-    private              SMessageSource                               messageSource       = null;
+    private              SMessageSource                           messageSource       = null;
     @Autowired @Qualifier(value = "rbuilderProperties")
-    private              Properties                                   rBuilderProperties  = null;
+    private              Properties                               rBuilderProperties  = null;
     @Value("#{webProperties['sa.delimiter']}")
-    private              String                                       valueDelimiter      = null;
-    private              ReportConfiguration                          reportConfiguration = null;
-    private              Collection<String>                           excludedColumns     = null;
+    private              String                                   valueDelimiter      = null;
+    private              ReportConfiguration                      reportConfiguration = null;
+    private              Collection<String>                       excludedColumns     = null;
 
     @Override
     public void init(final RequestContext context) {
@@ -110,21 +110,21 @@ public class ReportWizard
         return this.reportConfiguration;
     }
 
-    public Set<ReportableEntity> getEntities() {
+    public Set<RBuilderEntity> getEntities() {
         return this.entities;
     }
 
-    public ReportWizard setEntities(final Set<ReportableEntity> entities) {
+    public ReportWizard setEntities(final Set<RBuilderEntity> entities) {
         this.entities.addAll(entities);
         this.putToCache(entities);
         return this;
     }
 
-    public Map<ReportableEntity, Set<ReportableColumn>> getEntityToColumnForReport() {
-        final Map<ReportableEntity, Set<ReportableColumn>> picked = Maps.newTreeMap();
+    public Map<RBuilderEntity, Set<RBuilderColumn>> getEntityToColumnForReport() {
+        final Map<RBuilderEntity, Set<RBuilderColumn>> picked = Maps.newTreeMap();
         final int size = this.reportConfiguration.getSize();
         int flag = 0;
-        for (final ReportableEntity entity : this.entities) {
+        for (final RBuilderEntity entity : this.entities) {
             if (this.reportConfiguration.hasEntity(entity.getJavaClass())) {
                 picked.put(entity, this.entityToColumns.get(entity));
                 this.reportConfiguration.putColumns(entity, picked.get(entity));
@@ -137,18 +137,18 @@ public class ReportWizard
         return picked;
     }
 
-    public ReportableEntity getEntity(final Class<?> clazz) {
-        final Optional<ReportableEntity> firstMatch = FluentIterable.from(this.entities).firstMatch(new Predicate<ReportableEntity>() {
+    public RBuilderEntity getEntity(final Class<?> clazz) {
+        final Optional<RBuilderEntity> firstMatch = FluentIterable.from(this.entities).firstMatch(new Predicate<RBuilderEntity>() {
             @Override
-            public boolean apply(@Nullable final ReportableEntity input) {
+            public boolean apply(@Nullable final RBuilderEntity input) {
                 return input != null && input.getJavaClass().equals(clazz);
             }
         });
         return firstMatch.isPresent() ? firstMatch.get() : null;
     }
 
-    public ReportableBean getReportableBean(final Integer id) {
-        return (ReportableBean) this.cache.get(id);
+    public RBuilderBean getReportableBean(final Integer id) {
+        return (RBuilderBean) this.cache.get(id);
     }
 
     private <X extends Identifiable<Integer>> void putToCache(final Collection<X> entities) {
@@ -159,16 +159,16 @@ public class ReportWizard
         }
     }
 
-    private ReportWizard setEntityToColumns(final Map<ReportableEntity, Set<ReportableColumn>> entityToColumns) {
+    private ReportWizard setEntityToColumns(final Map<RBuilderEntity, Set<RBuilderColumn>> entityToColumns) {
         this.entityToColumns.putAll(entityToColumns);
-        for (final Set<ReportableColumn> columns : entityToColumns.values()) {
+        for (final Set<RBuilderColumn> columns : entityToColumns.values()) {
             this.putToCache(columns);
         }
         return this;
     }
 
-    private Set<ReportableEntity> getReportableEntities() {
-        final Set<ReportableEntity> entities = Sets.newTreeSet();
+    private Set<RBuilderEntity> getReportableEntities() {
+        final Set<RBuilderEntity> entities = Sets.newTreeSet();
         final Locale locale = LocaleContextHolder.getLocale();
         final Set<SlimEntityDescriptor<?>> descriptors = FluentIterable
                 .from(this.entityDescriptors.getSlimDescriptors())
@@ -182,30 +182,30 @@ public class ReportWizard
                 .toSet();
         for (SlimEntityDescriptor<?> descriptor : descriptors) {
             entities.add(this.messageSource
-                    .localize(new ReportableEntity().setJavaClass(descriptor.getJavaClass()).setName(descriptor.getName()), locale)
+                    .localize(new RBuilderEntity().setJavaClass(descriptor.getJavaClass()).setName(descriptor.getName()), locale)
             );
         }
-        LOGGER.trace(String.format("Available %s at count %d", ClassUtils.getShortName(ReportableEntity.class), entities.size()));
+        LOGGER.trace(String.format("Available %s at count %d", ClassUtils.getShortName(RBuilderEntity.class), entities.size()));
         return entities;
     }
 
-    private Map<ReportableEntity, Set<ReportableColumn>> getReportableColumns(final Set<ReportableEntity> entities) {
+    private Map<RBuilderEntity, Set<RBuilderColumn>> getReportableColumns(final Set<RBuilderEntity> entities) {
 
-        final Map<ReportableEntity, Set<ReportableColumn>> map = Maps.newTreeMap();
+        final Map<RBuilderEntity, Set<RBuilderColumn>> map = Maps.newTreeMap();
         final Locale locale = LocaleContextHolder.getLocale();
 
-        for (final ReportableEntity entity : entities) {
+        for (final RBuilderEntity entity : entities) {
 
-            final TreeSet<ReportableColumn> columns = Sets.newTreeSet();
+            final TreeSet<RBuilderColumn> columns = Sets.newTreeSet();
             for (EntityDescriptorColumn<?> column : this.entityDescriptors.getColumns(entity.getJavaClass())) {
                 if (this.excludedColumns.contains(column.getName())) {
                     LOGGER.trace(String.format("Excluded column %s from entity %s due it is mentioned in %s",
                             column.getName(),
-                            entity.getName(), "reports.objects.columns.excludeAlways")
+                            entity.getName(), "reports.objects.columns.exclude.names")
                     );
                     continue;
                 }
-                final ReportableColumn reportableColumn = new ReportableColumn()
+                final RBuilderColumn reportableColumn = new RBuilderColumn()
                         .setPrefix(entity.getMessageKey())
                         .setColumnName(column.getName())
                         .setColumnClass(column.getColumnClass());
@@ -213,7 +213,7 @@ public class ReportWizard
             }
 
             LOGGER.trace(String
-                    .format("Available %s for entity %s at count %d", ClassUtils.getShortName(ReportableColumn.class),
+                    .format("Available %s for entity %s at count %d", ClassUtils.getShortName(RBuilderColumn.class),
                             entity.getName(), columns
                             .size())
             );
@@ -223,17 +223,17 @@ public class ReportWizard
         return map;
     }
 
-    private SUser getCreator() throws ReportBuilderServiceException {
+    private SUser getCreator() throws RBuilderException {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final Object principal = authentication.getPrincipal();
         if (principal instanceof SUser) {
             return (SUser) principal;
         }
-        throw new ReportBuilderServiceException(SUser.class, String.format("Principal\n\t[%s]\nis not authenticated", principal));
+        throw new RBuilderException(SUser.class, String.format("Principal\n\t[%s]\nis not authenticated", principal));
     }
 
     private void initializeExcludedColumns() {
-        final String property = this.rBuilderProperties.getProperty("reports.objects.columns.excludeAlways");
+        final String property = this.rBuilderProperties.getProperty("reports.objects.columns.exclude.names");
         final Collection<String> excludedColumns = Sets.newHashSet();
         if (StringUtils.hasText(property)) {
             final String[] columns = StringUtils.tokenizeToStringArray(property, this.valueDelimiter);
@@ -249,7 +249,7 @@ public class ReportWizard
     }
 
     @Override
-    public Iterator<ReportableEntity> iterator() {
+    public Iterator<RBuilderEntity> iterator() {
         return this.getEntities().iterator();
     }
 
