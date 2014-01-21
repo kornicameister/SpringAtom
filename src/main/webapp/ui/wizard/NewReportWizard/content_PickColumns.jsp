@@ -42,7 +42,7 @@
             <jsp:useBean id="entityToColumn" scope="request" type="java.util.Map"/>
             <jsp:useBean id="colToRenderProp" scope="request" type="java.util.Map"/>
             <c:forEach items="${entityToColumn}" varStatus="loop" var="entry">
-                <p>
+                <p class="dataTables_wrapper">
                     <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.entity.pickColumnsForEntity"/>">
                         <c:set var="reportableEntity" scope="page" value="${entry.key}"/>
                         <jsp:useBean id="reportableEntity" scope="page" class="org.agatom.springatom.web.rbuilder.bean.RBuilderEntity"/>
@@ -50,10 +50,15 @@
                         <table class="dataTable">
                             <thead>
                             <tr>
-                                <th>Label</th>
-                                <th>Render property</th>
-                                <th>Render as</th>
-                                <th>Excluded</th>
+                                <th>
+                                    <s:message code="wizard.NewReportWizard.pickColumns.table.column.label"/>
+                                </th>
+                                <th>
+                                    <s:message code="wizard.NewReportWizard.pickColumns.table.column.renderAs"/>
+                                </th>
+                                <th>
+                                    <s:message code="wizard.NewReportWizard.pickColumns.table.column.excluded"/>
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -64,15 +69,10 @@
                                              path="entities[${loop.index}].columns[${loopColumns.index}].columnName"/>
                                 <tr>
 
-                                    <td> <!-- label -->
+                                    <td class="center"> <!-- label -->
                                         <form:input id="col-${loop.index}-${loopColumns.index}-label"
                                                     readonly="true"
                                                     path="entities[${loop.index}].columns[${loopColumns.index}].label"/>
-                                    </td>
-
-                                    <td> <!-- render property -->
-                                        <form:input id="col-${loop.index}-${loopColumns.index}-renderProperty"
-                                                    path="entities[${loop.index}].columns[${loopColumns.index}].renderProperty"/>
                                     </td>
 
                                     <td>  <!-- render as -->

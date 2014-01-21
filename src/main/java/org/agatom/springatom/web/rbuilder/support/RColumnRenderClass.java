@@ -18,42 +18,35 @@
 package org.agatom.springatom.web.rbuilder.support;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.ComparisonChain;
-import org.agatom.springatom.core.conversion.ConvertiblePair;
 
-import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
- * {@code RColumnConversionDescriptor} describes the association between original {@link org.agatom.springatom.web.rbuilder.bean.RBuilderColumn#getColumnClass()}
- * and user chosen target class identified by {@link RColumnConversionDescriptor#getTargetClass()}
+ * {@code RColumnRenderClass} describes the association between original {@link org.agatom.springatom.web.rbuilder.bean.RBuilderColumn#getColumnClass()}
+ * and user chosen target class identified by {@link RColumnRenderClass#getTargetClass()}
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 // TODO investigate reusing of code from Converters of Spring
-public class RColumnConversionDescriptor
-        implements ConvertiblePair,
-                   Serializable,
-                   Comparable<RColumnConversionDescriptor> {
+public class RColumnRenderClass
+        implements Serializable {
     private static final long serialVersionUID = -3950594352760043269L;
     private final Class<?> sourceClass;
     private final Class<?> targetClass;
     private final String   label;
 
-    public RColumnConversionDescriptor(final Class<?> sourceType, final Class<?> targetType, final String name) {
+    public RColumnRenderClass(final Class<?> sourceType, final Class<?> targetType, final String name) {
         this.sourceClass = sourceType;
         this.targetClass = targetType;
         this.label = name;
     }
 
-    @Override
     public Class<?> getSourceClass() {
         return this.sourceClass;
     }
 
-    @Override
     public Class<?> getTargetClass() {
         return this.targetClass;
     }
@@ -71,11 +64,6 @@ public class RColumnConversionDescriptor
     }
 
     @Override
-    public int compareTo(@Nonnull final RColumnConversionDescriptor prop) {
-        return ComparisonChain.start().compare(this.label, prop.label).result() - 1;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -84,7 +72,7 @@ public class RColumnConversionDescriptor
             return false;
         }
 
-        RColumnConversionDescriptor that = (RColumnConversionDescriptor) o;
+        RColumnRenderClass that = (RColumnRenderClass) o;
 
         return Objects.equal(this.sourceClass, that.sourceClass) &&
                 Objects.equal(this.targetClass, that.targetClass);

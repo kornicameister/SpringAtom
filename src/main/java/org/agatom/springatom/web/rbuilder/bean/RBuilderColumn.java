@@ -42,7 +42,6 @@ public class RBuilderColumn
     protected            String        columnName       = null;
     protected            Class<?>      columnClass      = Void.class;
     protected            Class<?>      renderClass      = DEFAULT_RENDER;
-    protected            String        renderProperty   = null;
     protected            Boolean       excluded         = DEFAULT_EXCLUDED;
 
     public RBuilderColumn setExcluded(final Boolean excluded) {
@@ -55,15 +54,6 @@ public class RBuilderColumn
             this.excluded = DEFAULT_EXCLUDED;
         }
         return excluded;
-    }
-
-    public RBuilderColumn setRenderProperty(final String renderProperty) {
-        this.renderProperty = renderProperty;
-        return this;
-    }
-
-    public String getRenderProperty() {
-        return renderProperty;
     }
 
     public RBuilderColumn setPrefix(final String prefix) {
@@ -162,28 +152,13 @@ public class RBuilderColumn
                 Objects.equal(this.columnName, that.columnName) &&
                 Objects.equal(this.columnClass, that.columnClass) &&
                 Objects.equal(this.renderClass, that.renderClass) &&
-                Objects.equal(this.renderProperty, that.renderProperty) &&
                 Objects.equal(this.excluded, that.excluded) &&
                 Objects.equal(this.label, that.label);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(prefix, columnName, columnClass, renderClass, renderProperty,
+        return Objects.hashCode(prefix, columnName, columnClass, renderClass,
                 excluded, label);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(prefix)
-                      .addValue(columnName)
-                      .addValue(columnClass)
-                      .addValue(renderClass)
-                      .addValue(renderProperty)
-                      .addValue(excluded)
-                      .addValue(label)
-                      .addValue(id)
-                      .toString();
     }
 }

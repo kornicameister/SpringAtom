@@ -18,6 +18,7 @@
 package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
@@ -26,7 +27,7 @@ import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderBean;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
-import org.agatom.springatom.web.rbuilder.support.RColumnConversionDescriptor;
+import org.agatom.springatom.web.rbuilder.support.RColumnRenderClass;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -114,7 +115,7 @@ public class PickColumnsFormAction
 
     // TODO add support for rendering given column as the concatenated report
     private Object getColumnsRenderProperties(final ReportConfiguration cfg) {
-        final Map<Integer, Set<RColumnConversionDescriptor>> map = Maps.newHashMap();
+        final Map<Integer, List<RColumnRenderClass>> map = Maps.newHashMap();
         final List<RBuilderEntity> entities = cfg.getEntities();
         final Locale locale = LocaleContextHolder.getLocale();
 
@@ -124,11 +125,11 @@ public class PickColumnsFormAction
 
             for (final RBuilderColumn column : columns) {
                 final Class<?> sourceType = column.getColumnClass();
-                final Set<RColumnConversionDescriptor> properties = Sets.newTreeSet();
+                final List<RColumnRenderClass> properties = Lists.newArrayList();
 
                 for (final Class<?> targetType : this.conversionClasses) {
                     if (this.canConvert(sourceType, targetType)) {
-                        properties.add(new RColumnConversionDescriptor(
+                        properties.add(new RColumnRenderClass(
                                 sourceType,
                                 targetType,
                                 this.messageSource.getMessage(targetType, locale).getName()
@@ -173,8 +174,6 @@ public class PickColumnsFormAction
             }
             return reportedColumns;
         }
-
-
     }
 
     private class StringArrayToReportColumnListConverter

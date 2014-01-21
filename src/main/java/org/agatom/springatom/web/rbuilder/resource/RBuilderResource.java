@@ -15,15 +15,14 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.core.conversion;
+package org.agatom.springatom.web.rbuilder.resource;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ConvertiblePair {
-    Class<?> getSourceClass();
-
-    Class<?> getTargetClass();
+public enum RBuilderResource {
+    CONFIGURATION,
+    JASPER
 }

@@ -57,7 +57,7 @@ import org.agatom.springatom.web.rbuilder.ReportViewDescriptor;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
 import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
-import org.agatom.springatom.web.rbuilder.support.RBuilderResource;
+import org.agatom.springatom.web.rbuilder.resource.RBuilderResource;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
