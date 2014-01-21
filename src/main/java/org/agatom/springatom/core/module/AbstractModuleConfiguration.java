@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ClassUtils;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 
 /**
@@ -28,7 +29,8 @@ import org.springframework.util.ClassUtils;
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class AbstractModuleConfiguration {
+abstract public class AbstractModuleConfiguration
+        extends WebMvcConfigurerAdapter {
 
     private final String moduleName;
 
