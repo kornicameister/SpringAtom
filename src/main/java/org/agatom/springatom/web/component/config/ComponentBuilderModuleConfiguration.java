@@ -49,7 +49,7 @@ import java.util.Map;
 )
 public class ComponentBuilderModuleConfiguration
         extends AbstractModuleConfiguration {
-    protected static final String MODULE_NAME = "ComponentBuilders";
+    protected static final String MODULE_NAME = "ComponentBuildersModuleConfiguration";
     protected static final String PACKAGE     = "org.agatom.springatom";
     private static final   Logger LOGGER      = Logger.getLogger(ComponentBuilderModuleConfiguration.class);
     @Autowired
