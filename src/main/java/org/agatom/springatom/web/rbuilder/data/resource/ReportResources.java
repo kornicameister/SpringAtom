@@ -15,14 +15,37 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.rbuilder.resource;
+package org.agatom.springatom.web.rbuilder.data.resource;
+
+import org.springframework.core.io.Resource;
 
 /**
+ * {@link org.agatom.springatom.web.rbuilder.data.resource.ReportResources} in a pair of {@link org.springframework.core.io.Resource}s
+ * where the {@link org.agatom.springatom.web.rbuilder.data.resource.ReportResources#jasperResource} points to a file with compiled instance
+ * of {@link net.sf.jasperreports.engine.JasperReport} and on the other side {@link org.agatom.springatom.web.rbuilder.data.resource.ReportResources#configurationResource}
+ * pointing to the file with serialized {@link org.agatom.springatom.web.rbuilder.ReportConfiguration}
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public enum RBuilderResource {
-    CONFIGURATION,
-    JASPER
+public class ReportResources {
+    private Resource jasperResource;
+    private Resource configurationResource;
+
+    public static ReportResources newReportResources(final Resource jasperResource, final Resource configurationResource) {
+        final ReportResources reportResources = new ReportResources();
+        reportResources.configurationResource = configurationResource;
+        reportResources.jasperResource = jasperResource;
+        return reportResources;
+    }
+
+    public Resource getJasperResource() {
+        return jasperResource;
+    }
+
+    public Resource getConfigurationResource() {
+        return configurationResource;
+    }
+
 }
