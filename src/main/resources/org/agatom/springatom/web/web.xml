@@ -31,10 +31,4 @@
     <context:annotation-config/>
     <context:component-scan base-package="org.agatom.springatom.web"/>
 
-    <!-- configurations -->
-    <bean class="org.agatom.springatom.web.infopages.config.InfoPageModuleConfiguration"/>
-    <bean class="org.agatom.springatom.web.component.config.ComponentBuilderModuleConfiguration"
-          depends-on="org.agatom.springatom.web.infopages.config.InfoPageModuleConfiguration"/>
-    <!-- configurations -->
-
 </beans>

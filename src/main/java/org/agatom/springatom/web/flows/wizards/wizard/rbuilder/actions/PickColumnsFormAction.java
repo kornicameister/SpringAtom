@@ -21,6 +21,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.agatom.springatom.server.model.types.report.Report;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
@@ -146,7 +147,9 @@ public class PickColumnsFormAction
 
     private boolean canConvert(final Class<?> sourceType, final Class<?> targetType) {
         final boolean springConversionPossible = this.conversionService.canConvert(sourceType, targetType);
-        return !(springConversionPossible && this.isConversionBetweenCollectionAndBasic(sourceType, targetType)) && springConversionPossible;
+        final boolean conversionBetweenCollectionAndBasic = this.isConversionBetweenCollectionAndBasic(sourceType, targetType);
+        final boolean isToReportConversion = this.isCollectionLike(sourceType) && ClassUtils.isAssignable(Report.class, targetType);
+        return isToReportConversion || !(springConversionPossible && conversionBetweenCollectionAndBasic) && springConversionPossible;
     }
 
     private boolean isConversionBetweenCollectionAndBasic(final Class<?> sourceType, final Class<?> targetType) {
