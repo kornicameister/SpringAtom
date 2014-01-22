@@ -41,4 +41,39 @@
            timeToLiveSeconds="600"
            maxEntriesLocalHeap="20"/>
 
+    <cache name="org_springatom_cache_revisions"
+           overflowToDisk="true"
+           diskPersistent="true"
+           timeToIdleSeconds="100"
+           timeToLiveSeconds="600"
+           maxEntriesLocalHeap="5"/>
+    <cache name="org_springatom_cache_revisions_first"
+           overflowToDisk="true"
+           diskPersistent="true"
+           timeToIdleSeconds="60"
+           timeToLiveSeconds="120"
+           maxEntriesLocalHeap="5"/>
+    <cache name="org_springatom_cache_revisions_last"
+           overflowToDisk="true"
+           diskPersistent="true"
+           timeToIdleSeconds="60"
+           timeToLiveSeconds="120"
+           maxEntriesLocalHeap="5"/>
+    <cache name="org_springatom_cache_revisions_count"
+           overflowToDisk="true"
+           diskPersistent="true"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           maxEntriesLocalHeap="20"/>
+
+    <cache name="org_agatom_springatom_tableBuilders"
+           maxElementsInMemory="55"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="300"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
 </ehcache>

@@ -41,6 +41,9 @@ import org.agatom.springatom.web.component.request.beans.ComponentTableRequest;
 import org.agatom.springatom.web.infopages.SEntityInfoPage;
 import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.Cache.ValueWrapper;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -48,6 +51,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.Link;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -65,6 +69,8 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
         extends DefaultComponentBuilder<COMP>
         implements EntityAware<Y> {
 
+    private static final String CACHE_NAME       = "org_agatom_springatom_tableBuilders";
+    private static final long   serialVersionUID = -6830218035599925554L;
     @Autowired
     protected TableComponentHelper              helper;
     @Autowired
@@ -73,6 +79,8 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
     private   InfoPageMappings                  pageMappings;
     protected Class<Y>                          entity;
     protected SBasicRepository<Y, Serializable> repository;
+    @Autowired
+    private   CacheManager                      cacheManager;
 
     @Override
     public void setEntity(final Class<Y> entity) {
@@ -159,12 +167,44 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
     }
 
     private Page<Y> getAllEntities(final ComponentTableRequest dc, final Predicate predicate, final long countInContext) {
-        final PageRequest pageable = this.getPageable(countInContext, dc.getPageSize(), dc.getSortingColumnDefs());
-        if (predicate != null) {
-            return this.repository.findAll(predicate, pageable);
+
+        final Cache cache = this.cacheManager.getCache(CACHE_NAME);
+        final Object key = this.calculateKey(new Object[]{dc});
+
+        this.logger.trace(String.format("Using cache %s and key %s", CACHE_NAME, key));
+
+        final ValueWrapper valueWrapper = cache.get(key);
+        Page<Y> page;
+
+        if (valueWrapper == null) {
+
+            this.logger.trace(String.format("In cache %s not object for kye=%s", CACHE_NAME, key));
+
+            final PageRequest pageable = this.getPageable(countInContext, dc.getPageSize(), dc.getSortingColumnDefs());
+            if (predicate != null) {
+                page = this.repository.findAll(predicate, pageable);
+            } else {
+                page = this.repository.findAll(pageable);
+            }
+            cache.put(key, page);
         } else {
-            return this.repository.findAll(pageable);
+            page = (Page<Y>) valueWrapper.get();
+
+            this.logger.trace(String.format("Object retrieved from cache=%s for key %s is page=%s", CACHE_NAME, key, page));
+
+            if (page.getTotalElements() != countInContext) {
+                this.logger.warn("Inconsistent state between cache and db, removing from cache and reevaluating from db");
+                cache.evict(key);
+                return this.getAllEntities(dc, predicate, countInContext);
+            }
         }
+
+        return page;
+    }
+
+    private Object calculateKey(final Object[] objects) {
+        final int hashCodedArguments = ObjectUtils.nullSafeHashCode(objects);
+        return String.format("%s_key_%d", this.getId(), hashCodedArguments);
     }
 
     /**

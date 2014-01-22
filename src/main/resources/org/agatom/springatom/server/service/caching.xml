@@ -28,12 +28,22 @@
     <!-- Ehcache library setup -->
     <cache:annotation-driven/>
 
-    <bean id="cacheManager"
-          class="org.springframework.cache.ehcache.EhCacheCacheManager"
-          lazy-init="false"
-          p:cacheManager-ref="ehcache"/>
     <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
           p:configLocation="classpath:ehcache.xml"
           lazy-init="false"
           p:shared="true"/>
+
+    <bean id="cacheManager" class="org.springframework.cache.support.CompositeCacheManager">
+        <property name="cacheManagers">
+            <list>
+                <bean class="org.springframework.cache.ehcache.EhCacheCacheManager"
+                      lazy-init="false">
+                    <property name="cacheManager" ref="ehcache"/>
+                </bean>
+                <bean id="guavaCacheManager"
+                      class="org.springframework.cache.guava.GuavaCacheManager"/>
+            </list>
+        </property>
+        <property name="fallbackToNoOpCache" value="true"/>
+    </bean>
 </beans>

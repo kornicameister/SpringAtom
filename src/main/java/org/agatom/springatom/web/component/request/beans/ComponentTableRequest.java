@@ -76,7 +76,7 @@ public class ComponentTableRequest
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(criterias, contextKey, builderId, contextClass);
+        return Objects.hashCode(contextKey, builderId, contextClass);
     }
 
     @Override
@@ -90,8 +90,7 @@ public class ComponentTableRequest
 
         ComponentTableRequest that = (ComponentTableRequest) o;
 
-        return Objects.equal(this.criterias, that.criterias) &&
-                Objects.equal(this.contextKey, that.contextKey) &&
+        return Objects.equal(this.contextKey, that.contextKey) &&
                 Objects.equal(this.builderId, that.builderId) &&
                 Objects.equal(this.contextClass, that.contextClass);
     }
