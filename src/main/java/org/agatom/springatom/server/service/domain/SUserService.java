@@ -72,6 +72,15 @@ public interface SUserService
             @Min(value = 2, message = "Minimal SPerson#id is 2, 1 is reserved for internal application usage")
             final long personId) throws EntityDoesNotExistsServiceException;
 
+    /**
+     * Combines retrieving {@code authenticated} {@link org.agatom.springatom.server.model.beans.user.SUser} instance from
+     * {@link org.springframework.security.core.context.SecurityContext#getAuthentication()} and {@link
+     * org.agatom.springatom.server.repository.SRepository#findLastChangeRevision(java.io.Serializable)}
+     *
+     * @return authenticated user in the latest revision
+     *
+     * @see org.agatom.springatom.server.repository.SRepository#findLastChangeRevision(java.io.Serializable)
+     */
     @NotNull
     SUser getAuthenticatedUser();
 

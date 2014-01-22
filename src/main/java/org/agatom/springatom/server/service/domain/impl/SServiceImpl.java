@@ -23,6 +23,7 @@ import org.agatom.springatom.server.repository.exceptions.EntityInRevisionDoesNo
 import org.agatom.springatom.server.service.domain.SService;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.history.Revision;
 import org.springframework.data.history.Revisions;
@@ -49,8 +50,12 @@ import java.io.Serializable;
 abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, N extends Number & Comparable<N>, R extends JpaRepository<T, ID>>
         extends SBasicServiceImpl<T, ID, R>
         implements SService<T, ID, N, R> {
-    private static final Logger LOGGER = Logger.getLogger(SServiceImpl.class);
-    private SRepository<T, ID, N> revRepo;
+    private static final Logger                LOGGER           = Logger.getLogger(SServiceImpl.class);
+    private static final String                CACHE_NAME       = "org_springatom_cache_revisions";
+    private static final String                CACHE_NAME_F     = "org_springatom_cache_revisions_first";
+    private static final String                CACHE_NAME_L     = "org_springatom_cache_revisions_last";
+    private static final String                CACHE_NAME_COUNT = "org_springatom_cache_revisions_count";
+    private              SRepository<T, ID, N> revRepo          = null;
 
     @Override
     public void autoWireRepository(final R repo) {
@@ -62,6 +67,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
     }
 
     @Override
+    @Cacheable(value = CACHE_NAME_F)
     public Revision<N, T> findFirstRevision(final ID id) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("%s(%s)", "findFirstRevision", id));
@@ -70,6 +76,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
     }
 
     @Override
+    @Cacheable(value = CACHE_NAME)
     public Revisions<N, T> findAllRevisions(final ID id) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("%s(%s)", "findAllRevisions", id));
@@ -78,6 +85,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
     }
 
     @Override
+    @Cacheable(value = CACHE_NAME_L)
     public Revision<N, T> findLatestRevision(final ID id) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("%s(%s)", "findLatestRevision", id));
@@ -86,6 +94,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
     }
 
     @Override
+    @Cacheable(value = CACHE_NAME_COUNT)
     public long countRevisions(final ID id) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("%s(%s)", "countRevisions", id));

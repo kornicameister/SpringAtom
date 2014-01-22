@@ -15,20 +15,19 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.service.domain;
+package org.agatom.springatom.web.rbuilder.data.service;
 
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.model.types.report.Report;
-import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation;
 import org.agatom.springatom.web.rbuilder.ReportViewDescriptor;
+import org.agatom.springatom.web.rbuilder.data.resource.ReportResources;
 import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -37,27 +36,16 @@ import java.util.Map;
  * @since 0.0.1
  */
 
-public interface ReportBuilderService
-        extends SService<SReport, Long, Integer, SReportRepository> {
-
-    @NotNull
-    Report newReport(@NotNull final String title,
-                     @NotNull final String subtitle,
-                     @NotNull final String description);
-
-    @NotNull
-    Report newReport(@NotNull final String title,
-                     @NotNull final String subtitle,
-                     @NotNull final String description,
-                     @NotNull final Map<String, Serializable> settings);
+public interface ReportBuilderService {
 
     @NotNull
     Map<String, ReportRepresentation> getAvailableRepresentations();
 
+    @NotNull
     Report deleteReport(@NotNull @Min(value = 1) final Long pk) throws ReportBuilderServiceException;
 
     @NotNull
-    Map<Long, Report> save(@NotNull final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException;
+    Report save(@NotNull final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException;
 
     @NotNull
     SReport getReport(@Min(value = 1) final Long reportId) throws ReportBuilderServiceException;
@@ -65,6 +53,15 @@ public interface ReportBuilderService
     @NotNull
     SReport getReport(@NotNull @Length(min = 1) final String title) throws ReportBuilderServiceException;
 
-    void getReportWrapper(@Min(value = 1) final Long reportId, @NotNull final String format, final ReportViewDescriptor descriptor) throws
-            ReportBuilderServiceException;
+    @NotNull
+    Report findByTitle(@NotNull final String title) throws Exception;
+
+    @NotNull
+    Report populateReportWithResources(@NotNull Report report, @NotNull ReportResources reportResources) throws ReportBuilderServiceException;
+
+    void populateReportViewDescriptor(
+            @Min(value = 1) final Long reportId,
+            @Length(min = 1) final String format,
+            @NotNull final ReportViewDescriptor descriptor
+    ) throws ReportBuilderServiceException;
 }
