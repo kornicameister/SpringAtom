@@ -81,19 +81,24 @@ public class VFlowAjaxTilesView
 
                     final AttributeMap<Object> attributes = currentEvent.getAttributes();
                     final Object _frags = attributes.get(this.fragmentsAttributeName);
-                    if (ClassUtils.isAssignable(String.class, _frags.getClass())) {
-                        fragments = StringUtils.addStringToArray(new String[]{}, (String) _frags);
-                    } else if (ClassUtils.isAssignable(String[].class, _frags.getClass())) {
-                        fragments = (String[]) _frags;
-                    }
 
-                    if (fragments != null) {
-                        context.getFlashScope().put(View.RENDER_FRAGMENTS_ATTRIBUTE, fragments);
-                    }
+                    if (_frags != null) {
+                        if (ClassUtils.isAssignable(String.class, _frags.getClass())) {
+                            fragments = StringUtils.addStringToArray(new String[]{}, (String) _frags);
+                        } else if (ClassUtils.isAssignable(String[].class, _frags.getClass())) {
+                            fragments = (String[]) _frags;
+                        }
 
-                    LOGGER.info(String
-                            .format("Detected %s to be rendered only -> %s", this.fragmentsAttributeName, ObjectUtils.getDisplayString(fragments))
-                    );
+                        if (fragments != null) {
+                            context.getFlashScope().put(View.RENDER_FRAGMENTS_ATTRIBUTE, fragments);
+                        }
+
+                        LOGGER.info(String
+                                .format("Detected %s to be rendered only -> %s", this.fragmentsAttributeName, ObjectUtils.getDisplayString(fragments))
+                        );
+                    } else {
+                        LOGGER.debug(String.format("No %s in next event attribute", this.fragmentsAttributeName));
+                    }
                 }
             }
             if (fragments == null) {
