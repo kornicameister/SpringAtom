@@ -38,7 +38,7 @@ import org.springframework.util.Assert;
 public class SReportServiceImpl
         extends SServiceImpl<SReport, Long, Integer>
         implements SReportService {
-    public static final  String SERVICE_NAME = "reportBuilderService";
+    public static final String SERVICE_NAME = "reportService";
     private static final String CACHE_NAME   = "reports";
 
     @Override
