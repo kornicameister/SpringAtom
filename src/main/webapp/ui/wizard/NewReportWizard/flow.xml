@@ -90,7 +90,7 @@
 
     <view-state id="reportOverview" view="ui.wizard.NewReportWizard.ReportOverview">
         <transition on="finish" to="reportReady">
-            <evaluate expression="finishReportAction.execute"/>
+            <evaluate expression="finishReportWizardAction.execute"/>
         </transition>
         <transition on="cancel" to="cancel" history="invalidate"/>
     </view-state>

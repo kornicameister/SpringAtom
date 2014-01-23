@@ -34,7 +34,7 @@ import java.util.Set;
  * {@link org.agatom.springatom.web.flows.wizards.wizard.rbuilder.ReportWizard}
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -87,6 +87,20 @@ public class RBuilderEntity
     public RBuilderEntity addColumn(final RBuilderColumn reportableColumn) {
         this.getColumns();
         this.columns.add(reportableColumn);
+        return this;
+    }
+
+    /**
+     * Removes single {@link org.agatom.springatom.web.rbuilder.bean.RBuilderColumn} from the set of columns for this {@code entity}
+     *
+     * @param reportableColumn
+     *         column to be removed
+     *
+     * @return this {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity}
+     */
+    public RBuilderEntity removeColumn(final RBuilderColumn reportableColumn) {
+        this.getColumns();
+        this.columns.remove(reportableColumn);
         return this;
     }
 

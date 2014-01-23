@@ -40,8 +40,17 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
+ * {@code ReportConfiguration} is a {@code bean} that is used to carry the report configuration.
+ * It means that such information like:
+ * <ol>
+ * <li>title, subtitle, description etc.</li>
+ * <li>{@link org.agatom.springatom.web.rbuilder.ReportConfiguration#settings}</li>
+ * <li>selected entities {@link org.agatom.springatom.web.rbuilder.ReportConfiguration#entities}</li>
+ * <li>selected columns for the entities {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity#getColumns()}</li>
+ * </ol>
+ *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -59,6 +68,9 @@ public class ReportConfiguration
     protected            String                    subtitle         = null;
     @Length(max = 200)
     protected            String                    description      = null;
+    /**
+     * {@link java.util.Map} with values to be used in generating the report instance
+     */
     protected            Map<String, Serializable> settings         = Maps.newHashMap();
     @NotNull
     @Size(min = 1)
@@ -143,6 +155,46 @@ public class ReportConfiguration
         final boolean add = this.entities.add(entity);
         if (!add) {
             LOGGER.trace(String.format("%s already exists in context", entity));
+        }
+        return this;
+    }
+
+    /**
+     * Remove single {@code reportableColumn} from {@code entity}
+     *
+     * @param entity
+     *         entity to remove columns from
+     * @param reportableColumn
+     *         columns to be removed
+     *
+     * @return this {@link org.agatom.springatom.web.rbuilder.ReportConfiguration}
+     *
+     * @see org.agatom.springatom.web.rbuilder.bean.RBuilderEntity#removeColumn(org.agatom.springatom.web.rbuilder.bean.RBuilderColumn)
+     */
+    public ReportConfiguration popColumn(final RBuilderEntity entity, final RBuilderColumn reportableColumn) {
+        entity.removeColumn(reportableColumn);
+        return this;
+    }
+
+    /**
+     * Removes all columns from {@code reportableColumns} for {@code entity}
+     *
+     * @param entity
+     *         entity to remove columns from
+     * @param reportableColumns
+     *         columns to be removed
+     *
+     * @return this {@link org.agatom.springatom.web.rbuilder.ReportConfiguration}
+     *
+     * @see org.agatom.springatom.web.rbuilder.ReportConfiguration#popColumn(org.agatom.springatom.web.rbuilder.bean.RBuilderEntity,
+     * org.agatom.springatom.web.rbuilder.bean.RBuilderColumn)
+     */
+    public ReportConfiguration popColumns(final RBuilderEntity entity, final Collection<RBuilderColumn> reportableColumns) {
+        if (CollectionUtils.isEmpty(reportableColumns)) {
+            return this;
+        }
+        for (final RBuilderColumn column : reportableColumns) {
+            this.popColumn(entity, column);
         }
         return this;
     }
