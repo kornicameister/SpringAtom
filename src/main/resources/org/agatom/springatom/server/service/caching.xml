@@ -28,20 +28,21 @@
     <!-- Ehcache library setup -->
     <cache:annotation-driven/>
 
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
+
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" lazy-init="false"
           p:configLocation="classpath:ehcache.xml"
-          lazy-init="false"
           p:shared="true"/>
+    <bean id="ehCacheCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" lazy-init="false">
+        <property name="cacheManager" ref="ehcache"/>
+        <property name="transactionAware" value="true"/>
+    </bean>
+    <bean id="guavaCacheManager" class="org.springframework.cache.guava.GuavaCacheManager"/>
 
     <bean id="cacheManager" class="org.springframework.cache.support.CompositeCacheManager">
         <property name="cacheManagers">
             <list>
-                <bean class="org.springframework.cache.ehcache.EhCacheCacheManager"
-                      lazy-init="false">
-                    <property name="cacheManager" ref="ehcache"/>
-                </bean>
-                <bean id="guavaCacheManager"
-                      class="org.springframework.cache.guava.GuavaCacheManager"/>
+                <ref bean="ehCacheCacheManager"/>
+                <ref bean="guavaCacheManager"/>
             </list>
         </property>
         <property name="fallbackToNoOpCache" value="true"/>

@@ -49,7 +49,7 @@ public class FinishMultiAction
         final EventFactorySupport eventFactorySupport = new EventFactorySupport();
 
         try {
-            final Object reports = this.builderService.save(this.reportWizard.getReportConfiguration());
+            final Object reports = this.builderService.newReportInstance(this.reportWizard.getReportConfiguration());
             LOGGER.info(String.format("Persisted new report => %s", reports));
             return eventFactorySupport.success(this, reports);
         } catch (Exception persistException) {
