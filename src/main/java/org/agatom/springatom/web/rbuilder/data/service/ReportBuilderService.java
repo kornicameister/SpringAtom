@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.web.rbuilder.data.service;
 
-import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.model.types.report.Report;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation;
@@ -42,26 +41,12 @@ public interface ReportBuilderService {
     Map<String, ReportRepresentation> getAvailableRepresentations();
 
     @NotNull
-    Report deleteReport(@NotNull @Min(value = 1) final Long pk) throws ReportBuilderServiceException;
-
-    @NotNull
-    Report save(@NotNull final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException;
-
-    @NotNull
-    SReport getReport(@Min(value = 1) final Long reportId) throws ReportBuilderServiceException;
-
-    @NotNull
-    SReport getReport(@NotNull @Length(min = 1) final String title) throws ReportBuilderServiceException;
-
-    @NotNull
-    Report findByTitle(@NotNull final String title) throws Exception;
+    Report newReportInstance(@NotNull final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException;
 
     @NotNull
     Report populateReportWithResources(@NotNull Report report, @NotNull ReportResources reportResources) throws ReportBuilderServiceException;
 
     void populateReportViewDescriptor(
-            @Min(value = 1) final Long reportId,
-            @Length(min = 1) final String format,
-            @NotNull final ReportViewDescriptor descriptor
-    ) throws ReportBuilderServiceException;
+            @Min(value = 1) final Long reportId, @Length(min = 1) final String format, @NotNull final ReportViewDescriptor descriptor) throws
+            ReportBuilderServiceException;
 }

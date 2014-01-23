@@ -21,6 +21,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.model.types.report.Report;
+import org.agatom.springatom.server.service.domain.SReportService;
 import org.agatom.springatom.server.service.support.exceptions.ServiceException;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation;
@@ -65,7 +66,9 @@ public class ReportBuilderController
     private static final Logger LOGGER          = Logger.getLogger(ReportBuilderController.class);
 
     @Autowired
-    private ReportBuilderService service;
+    private ReportBuilderService builderService;
+    @Autowired
+    private SReportService       domainService;
     @Autowired
     private SMessageSource       messageSource;
     @Autowired
@@ -75,16 +78,16 @@ public class ReportBuilderController
     public ModelAndView buildReport(@PathVariable("reportId") final Long reportId, final ModelMap modelMap, final HttpServletResponse response) throws
             ControllerTierException {
         try {
-            final SReport report = this.service.getReport(reportId);
-            final Map<String, ReportRepresentation> availableRepresentations = this.service.getAvailableRepresentations();
+            final SReport report = this.domainService.getReport(reportId);
+            final Map<String, ReportRepresentation> availableRepresentations = this.builderService.getAvailableRepresentations();
 
             LOGGER.info(String.format("/buildReport report=%s :: formats=%s", report, availableRepresentations));
 
             modelMap.put("report", report);
             modelMap.put("representations", availableRepresentations);
             modelMap.put("links", this.createDownloadLinks(availableRepresentations.keySet(), report));
-            modelMap.put("title", this.messageSource
-                    .getMessage("sa.msg.download.what", new Object[]{report.getTitle()}, LocaleContextHolder.getLocale()));
+            modelMap.put("title", this.messageSource.getMessage("sa.msg.download.what", new Object[]{report.getTitle()}, LocaleContextHolder
+                    .getLocale()));
 
             ViewHelper.asDojoModal(response);
 
@@ -101,7 +104,7 @@ public class ReportBuilderController
     public Report deleteReport(@PathVariable("reportId") final Long reportId, final ModelMap modelMap) throws
             ControllerTierException {
         try {
-            final Report report = this.service.deleteReport(reportId);
+            final Report report = this.domainService.deleteOne(reportId);
             modelMap.addAttribute(ClassUtils.getShortName(Report.class), report);
             return report;
         } catch (Exception se) {
@@ -121,7 +124,7 @@ public class ReportBuilderController
     public ModelAndView downloadReportInFormat(@PathVariable("reportId") final Long reportId,
                                                @PathVariable("format") final String format) throws ServiceException {
         LOGGER.info(String.format("/downloadReportInFormat name=%s :: format=%s", reportId, format));
-        this.service.populateReportViewDescriptor(reportId, format, this.descriptor);
+        this.builderService.populateReportViewDescriptor(reportId, format, this.descriptor);
         return new ModelAndView(
                 this.descriptor.getViewName(),
                 this.descriptor.getParameters()

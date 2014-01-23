@@ -29,7 +29,7 @@ import org.agatom.springatom.core.invoke.InvokeUtils;
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.model.types.report.Report;
 import org.agatom.springatom.server.repository.SBasicRepository;
-import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
+import org.agatom.springatom.server.service.domain.SReportService;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation;
 import org.agatom.springatom.web.rbuilder.ReportViewDescriptor;
@@ -42,7 +42,6 @@ import org.agatom.springatom.web.rbuilder.data.service.ReportBuilderService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -83,9 +82,6 @@ public class ReportBuilderServiceImpl
     private static final String CACHE_NAME   = "reports";
     private Repositories                  repositories;
     @Autowired
-    @Qualifier(SReportRepository.REPO_NAME)
-    private SReportRepository             repository;
-    @Autowired
     private ApplicationContext            applicationContext;
     @Autowired
     private FormattingConversionService   conversionService;
@@ -96,6 +92,8 @@ public class ReportBuilderServiceImpl
     private Properties                    propertiesHolder;
     @Autowired
     private List<RBuilderCreateOperation> createOperations;
+    @Autowired
+    private SReportService domainService;
 
     @PostConstruct
     protected void init() {
@@ -108,38 +106,9 @@ public class ReportBuilderServiceImpl
     }
 
     @Override
-    @CacheEvict(value = CACHE_NAME)
-    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW, rollbackFor = ReportBuilderServiceException.class)
-    public Report deleteReport(final Long pk) throws ReportBuilderServiceException {
-        try {
-            final SReport one = this.repository.findOne(pk);
-
-            Assert.notNull(one);
-            Assert.isTrue(!one.isNew());
-
-            final org.agatom.springatom.server.model.types.report.ReportResource resource = one.getResource();
-            final File jasperFile = ResourceUtils.getFile(resource.getJasperPath());
-            final File cfgFile = ResourceUtils.getFile(resource.getConfigurationPath());
-
-            Assert.isTrue(jasperFile.exists());
-            Assert.isTrue(jasperFile.delete());
-
-            Assert.isTrue(cfgFile.exists());
-            Assert.isTrue(cfgFile.delete());
-
-            this.repository.delete(pk);
-
-            return one;
-        } catch (Exception e) {
-            LOGGER.error(String.format("Failed to delete %s", ClassUtils.getShortName(SReport.class)), e);
-            throw new ReportBuilderServiceException(e);
-        }
-    }
-
-    @Override
     @Cacheable(value = CACHE_NAME, key = "#reportConfiguration.title")
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRED, rollbackFor = ReportBuilderServiceException.class)
-    public Report save(final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException {
+    public Report newReportInstance(final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException {
         LOGGER.debug(String.format("Saving new report from %s=%s", ClassUtils.getShortName(ReportConfiguration.class), reportConfiguration));
         try {
             final RBuilderCreateOperation RBuilderCreateOperation = this.getReportCreateOperation(reportConfiguration);
@@ -148,7 +117,7 @@ public class ReportBuilderServiceImpl
             Assert.notNull(report);
             Assert.isAssignable(Persistable.class, report.getClass());
             Assert.isTrue(((Persistable) report).isNew());
-            return this.repository.save((SReport) report);
+            return this.domainService.save((SReport) report);
         } catch (Exception exception) {
             LOGGER.error(String.format("Failed to save %s to file", reportConfiguration), exception);
             throw new ReportBuilderServiceException("Failed to persist new report", exception);
@@ -176,28 +145,6 @@ public class ReportBuilderServiceImpl
     }
 
     @Override
-    @Cacheable(value = CACHE_NAME, key = "#reportId", condition = "#reportId > 0")
-    public SReport getReport(final Long reportId) throws ReportBuilderServiceException {
-        try {
-            Assert.notNull(reportId, "Report#ID can not be null");
-            return this.repository.findOne(reportId);
-        } catch (Exception e) {
-            throw new ReportBuilderServiceException(String.format("Failed to retrieve report for ID=%d", reportId), e);
-        }
-    }
-
-    @Override
-    @Cacheable(value = CACHE_NAME)
-    public SReport getReport(final String title) throws ReportBuilderServiceException {
-        try {
-            Assert.notNull(title, "Report#title can not be null");
-            return this.repository.findByTitle(title);
-        } catch (Exception e) {
-            throw new ReportBuilderServiceException(String.format("Failed to retrieve report for title=%s", title), e);
-        }
-    }
-
-    @Override
     public void populateReportViewDescriptor(
             final Long reportId,
             final String format,
@@ -206,7 +153,7 @@ public class ReportBuilderServiceImpl
         LOGGER.debug(String
                 .format("Retrieving %s for pair=[reportId=%d,format=%s]", ClassUtils.getShortName(ReportViewDescriptor.class), reportId, format));
         try {
-            final SReport report = this.getReport(reportId);
+            final SReport report = this.domainService.findOne(reportId);
             final File file = ResourceUtils.getFile(report.getResource().getConfigurationPath());
 
             final ReportConfiguration configuration = this.jackson.readValue(
@@ -227,12 +174,6 @@ public class ReportBuilderServiceImpl
                 throw new ReportBuilderServiceException(e);
             }
         }
-    }
-
-    @Override
-    @Cacheable(value = CACHE_NAME)
-    public Report findByTitle(@NotNull final String title) throws Exception {
-        return this.repository.findByTitle(title);
     }
 
     @Override
@@ -266,7 +207,7 @@ public class ReportBuilderServiceImpl
             modelMap.putAll(this.getConvertedDataSources(configuration, report));
             modelMap.put(this.propertiesHolder.getProperty("reports.reportFormatKey"), format);
             modelMap.put(this.propertiesHolder.getProperty("reports.reportSubReportsKey"), this.extractSubReports(report));
-            modelMap.put(this.propertiesHolder.getProperty("reports.reportKey"), this.repository.detach(report));
+            modelMap.put(this.propertiesHolder.getProperty("reports.reportKey"), this.domainService.detach(report));
 
             return modelMap;
         } catch (Exception exception) {
@@ -354,7 +295,7 @@ public class ReportBuilderServiceImpl
         if (!CollectionUtils.isEmpty(subReports)) {
             final Set<Report> subReportsDetached = Sets.newLinkedHashSetWithExpectedSize(subReports.size());
             for (final Report subReport : subReports) {
-                final SReport tmp = this.repository.detach((SReport) subReport);
+                final SReport tmp = this.domainService.detach((SReport) subReport);
                 Assert.notNull(tmp);
                 Assert.isTrue(!tmp.isNew());
                 subReportsDetached.add(tmp);
