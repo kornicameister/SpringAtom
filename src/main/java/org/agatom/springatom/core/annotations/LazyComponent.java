@@ -15,28 +15,43 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.service.domain;
+package org.agatom.springatom.core.annotations;
 
-import org.agatom.springatom.server.model.beans.report.SReport;
-import org.agatom.springatom.web.rbuilder.data.exception.ReportBuilderServiceException;
-import org.hibernate.validator.constraints.Length;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import java.lang.annotation.*;
 
 /**
+ * {@link LazyComponent} combines three annotations:
+ * <ol>
+ * <li>{@link org.springframework.stereotype.Component}</li>
+ * <li>{@link org.springframework.context.annotation.Lazy}</li>
+ * <li>{@link org.springframework.context.annotation.Scope} with {@link org.springframework.beans.factory.config.ConfigurableBeanFactory#SCOPE_SINGLETON}</li>
+ * </ol>
+ * <p/>
+ * which explicitly makes annotated bean as {@code lazy} and {@code singleton} at the same time
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 
-public interface SReportService
-        extends SService<SReport, Long, Integer> {
-
-    @NotNull
-    SReport getReport(@Min(value = 1) final Long reportId) throws ReportBuilderServiceException;
-
-    @NotNull
-    SReport getReport(@NotNull @Length(min = 1) final String title) throws ReportBuilderServiceException;
-
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+// spring context
+@Lazy
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+public @interface LazyComponent {
+    /**
+     * The value may indicate a suggestion for a logical component name,
+     * to be turned into a Spring bean in case of an autodetected component.
+     *
+     * @return the suggested component name, if any
+     */
+    String value() default "";
 }

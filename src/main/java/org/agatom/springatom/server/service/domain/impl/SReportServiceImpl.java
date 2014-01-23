@@ -20,7 +20,7 @@ package org.agatom.springatom.server.service.domain.impl;
 import org.agatom.springatom.server.model.beans.report.QSReport;
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.service.domain.SReportService;
-import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
+import org.agatom.springatom.web.rbuilder.data.exception.ReportBuilderServiceException;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -38,7 +38,7 @@ import org.springframework.util.Assert;
 public class SReportServiceImpl
         extends SServiceImpl<SReport, Long, Integer>
         implements SReportService {
-    public static final String SERVICE_NAME = "reportService";
+    public static final  String SERVICE_NAME = "reportService";
     private static final String CACHE_NAME   = "reports";
 
     @Override

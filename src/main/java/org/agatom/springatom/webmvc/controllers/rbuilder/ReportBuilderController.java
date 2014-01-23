@@ -21,12 +21,12 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.model.types.report.Report;
-import org.agatom.springatom.server.service.domain.ReportBuilderService;
 import org.agatom.springatom.server.service.support.exceptions.ServiceException;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation.Representation;
 import org.agatom.springatom.web.rbuilder.ReportViewDescriptor;
+import org.agatom.springatom.web.rbuilder.data.service.ReportBuilderService;
 import org.agatom.springatom.webmvc.ViewHelper;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
@@ -121,7 +121,7 @@ public class ReportBuilderController
     public ModelAndView downloadReportInFormat(@PathVariable("reportId") final Long reportId,
                                                @PathVariable("format") final String format) throws ServiceException {
         LOGGER.info(String.format("/downloadReportInFormat name=%s :: format=%s", reportId, format));
-        this.service.getReportWrapper(reportId, format, this.descriptor);
+        this.service.populateReportViewDescriptor(reportId, format, this.descriptor);
         return new ModelAndView(
                 this.descriptor.getViewName(),
                 this.descriptor.getParameters()
