@@ -17,18 +17,22 @@
 
 package org.agatom.springatom.server.service.domain.impl;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import org.agatom.springatom.server.repository.SBasicRepository;
 import org.agatom.springatom.server.service.domain.SBasicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
+import org.springframework.data.rest.core.event.*;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -43,11 +47,17 @@ import java.util.List;
 @SuppressWarnings({"unchecked", "SpringJavaAutowiringInspection"})
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRED)
 abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializable>
-        implements SBasicService<T, ID> {
+        implements SBasicService<T, ID>,
+                   ApplicationEventPublisherAware {
 
     @Autowired
-    protected SBasicRepository<T, ID> repository;
+    protected SBasicRepository<T, ID>   repository;
+    protected ApplicationEventPublisher publisher;
 
+    @Override
+    public void setApplicationEventPublisher(final ApplicationEventPublisher applicationEventPublisher) {
+        this.publisher = applicationEventPublisher;
+    }
 
     @Override
     public T findOne(final ID id) {
@@ -67,9 +77,20 @@ abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializa
     @Override
     @Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
     public T save(final T persistable) {
-        Preconditions
-                .checkArgument(persistable != null, "Persistable must not be null");
-        return this.repository.saveAndFlush(persistable);
+        Assert.notNull(persistable, "Persistable must not be null");
+        boolean isNew = persistable.isNew();
+        if (isNew) {
+            this.publisher.publishEvent(new BeforeCreateEvent(persistable));
+        } else {
+            this.publisher.publishEvent(new BeforeSaveEvent(persistable));
+        }
+        final T object = this.repository.saveAndFlush(persistable);
+        if (isNew) {
+            this.publisher.publishEvent(new AfterCreateEvent(object));
+        } else {
+            this.publisher.publishEvent(new AfterSaveEvent(object));
+        }
+        return object;
     }
 
     @Override
@@ -79,9 +100,15 @@ abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializa
 
     @Override
     @Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
-    public void deleteOne(final ID pk) {
-        Preconditions.checkArgument(pk != null, "PK must not be null");
+    public synchronized T deleteOne(final ID pk) {
+        Assert.notNull(pk, "PK must not be null");
+        final T source = findOne(pk);
+
+        this.publisher.publishEvent(new BeforeDeleteEvent(source));
         this.repository.delete(pk);
+        this.publisher.publishEvent(new AfterDeleteEvent(source));
+
+        return source;
     }
 
     @Override
@@ -102,6 +129,11 @@ abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializa
             tList.add(this.withFullLoad(obj));
         }
         return tList;
+    }
+
+    @Override
+    public T detach(@NotNull final T object) {
+        return this.repository.detach(object);
     }
 
     protected Long[] toLong(final long[] longs) {

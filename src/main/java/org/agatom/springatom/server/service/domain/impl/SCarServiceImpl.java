@@ -79,7 +79,7 @@ public class SCarServiceImpl
     }
 
     @Override
-    @Cacheable(value = "cars", key = "#attribute.toString()")
+    @Cacheable(value = "cars")
     @Transactional(
             readOnly = true,
             isolation = Isolation.SERIALIZABLE,

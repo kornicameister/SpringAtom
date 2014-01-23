@@ -17,8 +17,8 @@
 
 package org.agatom.springatom.server.service.domain.impl;
 
-import org.agatom.springatom.server.model.beans.report.QSReport;
 import org.agatom.springatom.server.model.beans.report.SReport;
+import org.agatom.springatom.server.repository.repositories.report.SReportRepository;
 import org.agatom.springatom.server.service.domain.SReportService;
 import org.agatom.springatom.web.rbuilder.data.exception.ReportBuilderServiceException;
 import org.springframework.cache.annotation.Cacheable;
@@ -38,11 +38,11 @@ import org.springframework.util.Assert;
 public class SReportServiceImpl
         extends SServiceImpl<SReport, Long, Integer>
         implements SReportService {
-    public static final  String SERVICE_NAME = "reportService";
-    private static final String CACHE_NAME   = "reports";
+    protected static final String SERVICE_NAME = "reportService";
+    private static final   String CACHE_NAME   = "reports";
 
     @Override
-    @Cacheable(value = CACHE_NAME, key = "#reportId", condition = "#reportId > 0")
+    @Cacheable(value = CACHE_NAME)
     public SReport getReport(final Long reportId) throws ReportBuilderServiceException {
         try {
             Assert.notNull(reportId, "Report#ID can not be null");
@@ -54,10 +54,10 @@ public class SReportServiceImpl
 
     @Override
     @Cacheable(value = CACHE_NAME)
-    public SReport getReport(final String title) throws ReportBuilderServiceException {
+    public SReport findByTitle(final String title) throws ReportBuilderServiceException {
         try {
             Assert.notNull(title, "Report#title can not be null");
-            return this.repository.findOne(QSReport.sReport.title.eq(title));
+            return ((SReportRepository) this.repository).findByTitle(title);
         } catch (Exception e) {
             throw new ReportBuilderServiceException(String.format("Failed to retrieve report for title=%s", title), e);
         }

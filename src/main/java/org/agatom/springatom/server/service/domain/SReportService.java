@@ -37,6 +37,5 @@ public interface SReportService
     SReport getReport(@Min(value = 1) final Long reportId) throws ReportBuilderServiceException;
 
     @NotNull
-    SReport getReport(@NotNull @Length(min = 1) final String title) throws ReportBuilderServiceException;
-
+    SReport findByTitle(@NotNull @Length(min = 1) final String title) throws ReportBuilderServiceException;
 }

@@ -24,7 +24,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -96,7 +95,7 @@ public interface SBasicService<T extends Persistable<ID>, ID extends Serializabl
      * @param pk
      *         the entity's {@code ID}
      */
-    void deleteOne(final @NotNull @Min(value = 1) ID pk);
+    T deleteOne(final @NotNull ID pk);
 
     /**
      * Deletes all entities of {@code SBasicService}'s <b>domain class</b>
@@ -108,4 +107,6 @@ public interface SBasicService<T extends Persistable<ID>, ID extends Serializabl
 
     @NotNull
     List<T> withFullLoad(@NotNull Iterable<T> objects);
+
+    T detach(@NotNull T report);
 }
