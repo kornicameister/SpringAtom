@@ -15,15 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.rbuilder;
+package org.agatom.springatom.web.rbuilder.data.exception;
 
-import com.google.common.base.Objects;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Role;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.context.WebApplicationContext;
+import org.agatom.springatom.server.service.support.exceptions.ServiceException;
+import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 
@@ -32,49 +27,35 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component
-@Scope(value = WebApplicationContext.SCOPE_REQUEST)
-@Role(value = BeanDefinition.ROLE_APPLICATION)
-public class ReportViewDescriptor
-        implements Serializable {
-    private static final long serialVersionUID = -15235355484985353L;
-    private String   format;
-    private String   viewName;
-    private ModelMap parameters;
+abstract public class ReportException
+        extends ServiceException {
+    private static final long serialVersionUID = 6553574310591708853L;
 
-    public ReportViewDescriptor setFormat(final String format) {
-        this.format = format;
-        return this;
+    public ReportException(final String message) {
+        super(message);
     }
 
-    public ReportViewDescriptor setViewName(final String viewName) {
-        this.viewName = viewName;
-        return this;
+    public ReportException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 
-    public ReportViewDescriptor setParameters(final ModelMap parameters) {
-        this.parameters = parameters;
-        return this;
+    public <T extends Persistable<ID>, ID extends Serializable> ReportException(final Class<T> target, final String message) {
+        super(target, message);
     }
 
-    public String getViewName() {
-        return viewName;
+    public <T extends Persistable<ID>, ID extends Serializable> ReportException(final Class<T> target, final String message, final Throwable cause) {
+        super(target, message, cause);
     }
 
-    public ModelMap getParameters() {
-        return parameters;
+    public <T extends Persistable<ID>, ID extends Serializable> ReportException(final Class<T> target, final Throwable cause) {
+        super(target, cause);
     }
 
-    public String getFormat() {
-        return format;
+    public <T extends Persistable<ID>, ID extends Serializable> ReportException(final Class<T> target, final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+        super(target, message, cause, enableSuppression, writableStackTrace);
     }
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(viewName)
-                      .addValue(format)
-                      .addValue(parameters)
-                      .toString();
+    public ReportException(final Throwable cause) {
+        super(cause);
     }
 }

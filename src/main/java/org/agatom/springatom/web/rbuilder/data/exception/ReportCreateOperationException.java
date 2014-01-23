@@ -15,66 +15,26 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.rbuilder;
-
-import com.google.common.base.Objects;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Role;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.context.WebApplicationContext;
-
-import java.io.Serializable;
+package org.agatom.springatom.web.rbuilder.data.exception;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component
-@Scope(value = WebApplicationContext.SCOPE_REQUEST)
-@Role(value = BeanDefinition.ROLE_APPLICATION)
-public class ReportViewDescriptor
-        implements Serializable {
-    private static final long serialVersionUID = -15235355484985353L;
-    private String   format;
-    private String   viewName;
-    private ModelMap parameters;
+public class ReportCreateOperationException
+        extends ReportException {
+    private static final long serialVersionUID = -4757123615315430806L;
 
-    public ReportViewDescriptor setFormat(final String format) {
-        this.format = format;
-        return this;
+    public ReportCreateOperationException(final String message) {
+        super(message);
     }
 
-    public ReportViewDescriptor setViewName(final String viewName) {
-        this.viewName = viewName;
-        return this;
+    public ReportCreateOperationException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 
-    public ReportViewDescriptor setParameters(final ModelMap parameters) {
-        this.parameters = parameters;
-        return this;
-    }
-
-    public String getViewName() {
-        return viewName;
-    }
-
-    public ModelMap getParameters() {
-        return parameters;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(viewName)
-                      .addValue(format)
-                      .addValue(parameters)
-                      .toString();
+    public ReportCreateOperationException(final Throwable cause) {
+        super(cause);
     }
 }

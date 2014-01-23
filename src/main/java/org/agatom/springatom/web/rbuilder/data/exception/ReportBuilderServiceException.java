@@ -15,9 +15,8 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.rbuilder.exception;
+package org.agatom.springatom.web.rbuilder.data.exception;
 
-import org.agatom.springatom.server.service.support.exceptions.ServiceException;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
@@ -28,7 +27,7 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 public class ReportBuilderServiceException
-        extends ServiceException {
+        extends ReportException {
 
     private static final long serialVersionUID = -5282239784661658192L;
 

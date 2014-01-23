@@ -32,7 +32,7 @@ import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderBean;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
-import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
+import org.agatom.springatom.web.rbuilder.data.exception.ReportBuilderServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

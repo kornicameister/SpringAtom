@@ -17,10 +17,10 @@
 
 package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
 
-import org.agatom.springatom.server.service.domain.ReportBuilderService;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.flows.wizards.wizard.rbuilder.ReportWizard;
-import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
+import org.agatom.springatom.web.rbuilder.data.exception.ReportBuilderServiceException;
+import org.agatom.springatom.web.rbuilder.data.service.ReportBuilderService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.webflow.action.EventFactorySupport;
