@@ -18,7 +18,6 @@
 package org.agatom.springatom.server.service.domain;
 
 import org.agatom.springatom.server.model.beans.issue.SIssue;
-import org.agatom.springatom.server.repository.repositories.issue.SIssueRepository;
 
 /**
  * @author kornicameister
@@ -26,7 +25,7 @@ import org.agatom.springatom.server.repository.repositories.issue.SIssueReposito
  * @since 0.0.1
  */
 public interface SIssueService
-        extends SBasicService<SIssue, Long, SIssueRepository> {
+        extends SBasicService<SIssue, Long> {
 
 
 }

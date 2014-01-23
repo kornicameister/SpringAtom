@@ -31,7 +31,6 @@ import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.beans.user.authority.SAuthority;
 import org.agatom.springatom.server.model.types.user.SRole;
-import org.agatom.springatom.server.repository.repositories.appointment.SAppointmentRepository;
 import org.agatom.springatom.server.repository.repositories.appointment.SAppointmentTaskRepository;
 import org.agatom.springatom.server.repository.repositories.car.SCarRepository;
 import org.agatom.springatom.server.repository.repositories.user.SUserRepository;
@@ -45,7 +44,7 @@ import org.joda.time.Duration;
 import org.joda.time.ReadableDuration;
 import org.joda.time.ReadableInterval;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.history.Revision;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -68,28 +67,18 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Service(value = "SAppointmentService")
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE)
 public class SAppointmentServiceImpl
-        extends SBasicServiceImpl<SAppointment, Long, SAppointmentRepository>
+        extends SBasicServiceImpl<SAppointment, Long>
         implements SAppointmentService {
     private static final String BAD_ARG_MSG                = "No %s provided, could not execute call";
     private static final String ERROR_MESSAGE_SD_GT_ED_MSG = "startDate must be greater than endDate";
     private static final Logger LOGGER                     = Logger.getLogger(SAppointmentServiceImpl.class);
-    protected SAppointmentRepository repository;
-    @Autowired
-    @Qualifier("AppointmentTaskRepo")
-    SAppointmentTaskRepository taskRepository;
-    @Autowired
-    @Qualifier("CarRepository")
-    SCarRepository             carRepository;
-    @Autowired
-    @Qualifier("UserRepo")
-    SUserRepository            userRepository;
 
-    @Override
     @Autowired
-    public void autoWireRepository(@Qualifier("AppointmentsRepository") final SAppointmentRepository repo) {
-        super.autoWireRepository(repo);
-        this.repository = repo;
-    }
+    private SAppointmentTaskRepository taskRepository;
+    @Autowired
+    private SCarRepository             carRepository;
+    @Autowired
+    private SUserRepository            userRepository;
 
     @Override
     public SAppointment withFullLoad(final SAppointment obj) {
@@ -181,7 +170,7 @@ public class SAppointmentServiceImpl
                         QSAppointmentTask
                                 .sAppointmentTask
                                 .id.
-                                in(Longs.asList(tasksId))
+                                           in(Longs.asList(tasksId))
                 )
         );
         return this.repository.findOne(idAppointment);
@@ -334,7 +323,8 @@ public class SAppointmentServiceImpl
     }
 
     private SUser getMechanic(final long mechanicId) throws EntityDoesNotExistsServiceException {
-        final SUser mechanic = this.userRepository.findOne(mechanicId);
+        final Revision<Integer, SUser> changeRevision = this.userRepository.findLastChangeRevision(mechanicId);
+        final SUser mechanic = changeRevision.getEntity();
         if (mechanic == null) {
             throw new EntityDoesNotExistsServiceException(SUser.class, mechanicId);
         }

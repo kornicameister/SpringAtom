@@ -23,11 +23,11 @@ import org.agatom.springatom.server.repository.exceptions.EntityInRevisionDoesNo
 import org.agatom.springatom.server.service.domain.SService;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.history.Revision;
 import org.springframework.data.history.Revisions;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,29 +42,23 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"SpringJavaAutowiringInspection"})
 @Transactional(readOnly = true,
         isolation = Isolation.SERIALIZABLE,
         propagation = Propagation.SUPPORTS,
         rollbackFor = EntityInRevisionDoesNotExists.class)
-abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, N extends Number & Comparable<N>, R extends JpaRepository<T, ID>>
-        extends SBasicServiceImpl<T, ID, R>
-        implements SService<T, ID, N, R> {
-    private static final Logger                LOGGER           = Logger.getLogger(SServiceImpl.class);
-    private static final String                CACHE_NAME       = "org_springatom_cache_revisions";
-    private static final String                CACHE_NAME_F     = "org_springatom_cache_revisions_first";
-    private static final String                CACHE_NAME_L     = "org_springatom_cache_revisions_last";
-    private static final String                CACHE_NAME_COUNT = "org_springatom_cache_revisions_count";
-    private              SRepository<T, ID, N> revRepo          = null;
+abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, N extends Number & Comparable<N>>
+        extends SBasicServiceImpl<T, ID>
+        implements SService<T, ID, N> {
+    private static final Logger LOGGER           = Logger.getLogger(SServiceImpl.class);
+    private static final String CACHE_NAME       = "org_springatom_cache_revisions";
+    private static final String CACHE_NAME_F     = "org_springatom_cache_revisions_first";
+    private static final String CACHE_NAME_L     = "org_springatom_cache_revisions_last";
+    private static final String CACHE_NAME_COUNT = "org_springatom_cache_revisions_count";
 
-    @Override
-    public void autoWireRepository(final R repo) {
-        super.autoWireRepository(repo);
-        this.revRepo = (SRepository) repo;
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace(String.format("Repository set to %s", this.revRepo));
-        }
-    }
+    @Autowired
+    protected SRepository<T, ID, N> revisionRepository = null;
+
 
     @Override
     @Cacheable(value = CACHE_NAME_F)
@@ -72,7 +66,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("%s(%s)", "findFirstRevision", id));
         }
-        return this.revRepo.findRevisions(id).iterator().next();
+        return this.revisionRepository.findRevisions(id).iterator().next();
     }
 
     @Override
@@ -81,7 +75,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("%s(%s)", "findAllRevisions", id));
         }
-        return this.revRepo.findRevisions(id);
+        return this.revisionRepository.findRevisions(id);
     }
 
     @Override
@@ -90,7 +84,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("%s(%s)", "findLatestRevision", id));
         }
-        return this.revRepo.findLastChangeRevision(id);
+        return this.revisionRepository.findLastChangeRevision(id);
     }
 
     @Override
@@ -99,7 +93,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("%s(%s)", "countRevisions", id));
         }
-        return this.revRepo.countRevisions(id);
+        return this.revisionRepository.countRevisions(id);
     }
 
     @Override
@@ -108,7 +102,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("%s(%s)", "findModifiedBefore", id));
         }
-        return this.revRepo.findRevisions(id, dateTime, SBasicRepository.Operators.BEFORE);
+        return this.revisionRepository.findRevisions(id, dateTime, SBasicRepository.Operators.BEFORE);
     }
 
     @Override
@@ -117,7 +111,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("%s(%s)", "findModifiedAfter", id));
         }
-        return this.revRepo.findRevisions(id, dateTime, SBasicRepository.Operators.AFTER);
+        return this.revisionRepository.findRevisions(id, dateTime, SBasicRepository.Operators.AFTER);
     }
 
     @Override
@@ -126,6 +120,6 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("%s(%s)", "findModifiedAt", id));
         }
-        return this.revRepo.findRevisions(id, dateTime, SBasicRepository.Operators.EQ);
+        return this.revisionRepository.findRevisions(id, dateTime, SBasicRepository.Operators.EQ);
     }
 }

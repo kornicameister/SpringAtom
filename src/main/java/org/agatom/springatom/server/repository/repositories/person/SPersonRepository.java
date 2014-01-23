@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.RepositoryDefinition;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -37,7 +36,6 @@ import java.util.List;
 
 @Qualifier(value = SPersonRepository.REPO_NAME)
 @RestResource(rel = SPersonRepository.REST_REPO_REL, path = SPersonRepository.REST_REPO_PATH)
-@RepositoryDefinition(domainClass = SPerson.class, idClass = Long.class)
 public interface SPersonRepository
         extends SRepository<SPerson, Long, Integer> {
     String REST_REPO_REL  = "rest.person";

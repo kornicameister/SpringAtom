@@ -24,7 +24,6 @@ import com.mysema.query.types.path.StringPath;
 import org.agatom.springatom.server.model.beans.car.QSCar;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.car.SCarMaster;
-import org.agatom.springatom.server.repository.repositories.car.SCarRepository;
 import org.agatom.springatom.server.service.domain.impl.SCarServiceImpl;
 import org.agatom.springatom.server.service.support.constraints.BrandOrModel;
 import org.agatom.springatom.server.service.support.constraints.LicencePlatePL;
@@ -43,7 +42,7 @@ import java.util.List;
  */
 
 public interface SCarService
-        extends SService<SCar, Long, Integer, SCarRepository> {
+        extends SService<SCar, Long, Integer> {
     @NotNull
     List<SCar> findByMaster(
             @BrandOrModel

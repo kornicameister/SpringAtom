@@ -22,9 +22,9 @@ import com.mysema.query.types.OrderSpecifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -47,17 +47,7 @@ import java.util.List;
  */
 
 @Validated
-public interface SBasicService<T extends Persistable<ID>, ID extends Serializable, R extends JpaRepository<T, ID>> {
-    /**
-     * Method implemented by services with {@link org.springframework.beans.factory.annotation.Autowired} annotation to
-     * set the {@link org.springframework.data.jpa.repository.JpaRepository}
-     * of the given type subtype.
-     *
-     * @param repo
-     *         {@code JpaRepository} or its subclass
-     */
-    void autoWireRepository(final R repo);
-
+public interface SBasicService<T extends Persistable<ID>, ID extends Serializable> {
     /**
      * Returns single entity by provided ID of the {@code SBasicService}'s <b>domain class</b>
      *
@@ -91,9 +81,7 @@ public interface SBasicService<T extends Persistable<ID>, ID extends Serializabl
      * @return persisted entity
      */
     @NotNull
-    T save(final
-           @NotNull
-           T persistable);
+    T save(final @NotNull T persistable);
 
     /**
      * Returns how many objects of {@code SBasicService}'s <b>domain class</b> exists
@@ -108,7 +96,7 @@ public interface SBasicService<T extends Persistable<ID>, ID extends Serializabl
      * @param pk
      *         the entity's {@code ID}
      */
-    void deleteOne(final ID pk);
+    void deleteOne(final @NotNull @Min(value = 1) ID pk);
 
     /**
      * Deletes all entities of {@code SBasicService}'s <b>domain class</b>
@@ -116,12 +104,8 @@ public interface SBasicService<T extends Persistable<ID>, ID extends Serializabl
     void deleteAll();
 
     @NotNull
-    T withFullLoad(
-            @NotNull
-            T obj);
+    T withFullLoad(@NotNull T obj);
 
     @NotNull
-    List<T> withFullLoad(
-            @NotNull
-            Iterable<T> objects);
+    List<T> withFullLoad(@NotNull Iterable<T> objects);
 }

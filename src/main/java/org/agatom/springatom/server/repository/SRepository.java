@@ -21,7 +21,6 @@ import org.agatom.springatom.server.repository.exceptions.EntityInRevisionDoesNo
 import org.joda.time.DateTime;
 import org.springframework.data.history.Revision;
 import org.springframework.data.history.Revisions;
-import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.history.RevisionRepository;
 
 import java.io.Serializable;
@@ -34,7 +33,6 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-@NoRepositoryBean
 public interface SRepository<T, ID extends Serializable, N extends Number & Comparable<N>>
         extends SBasicRepository<T, ID>,
                 RevisionRepository<T, ID, N> {
@@ -64,7 +62,8 @@ public interface SRepository<T, ID extends Serializable, N extends Number & Comp
      *
      * @return {@link Revisions}
      */
-    @SuppressWarnings("unchecked") Revisions<N, T> findInRevisions(final ID id, final N... revisions);
+    @SuppressWarnings("unchecked")
+    Revisions<N, T> findInRevisions(final ID id, final N... revisions);
 
     Revisions<N, T> findRevisions(final ID id, final DateTime dateTime, final Operators before);
 

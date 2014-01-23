@@ -23,11 +23,9 @@ import org.agatom.springatom.server.model.beans.car.QSCarMaster;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.car.SCarMaster;
 import org.agatom.springatom.server.model.beans.car.embeddable.QSCarMasterManufacturingData;
-import org.agatom.springatom.server.repository.repositories.car.SCarMasterRepository;
 import org.agatom.springatom.server.repository.repositories.car.SCarRepository;
 import org.agatom.springatom.server.service.domain.SCarMasterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -43,20 +41,11 @@ import java.util.List;
 @Service(value = SCarMasterServiceImpl.SERVICE_NAME)
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SCarMasterServiceImpl
-        extends SBasicServiceImpl<SCarMaster, Long, SCarMasterRepository>
+        extends SBasicServiceImpl<SCarMaster, Long>
         implements SCarMasterService {
     public static final String SERVICE_NAME = "CarMasterService";
     @Autowired
-    @Qualifier("CarRepository")
-    private SCarRepository       carRepository;
-    private SCarMasterRepository repository;
-
-    @Override
-    @Autowired
-    public void autoWireRepository(@Qualifier("CarMasterRepository") final SCarMasterRepository repo) {
-        super.autoWireRepository(repo);
-        this.repository = repo;
-    }
+    private SCarRepository carRepository;
 
     @Override
     public SCarMaster withFullLoad(final SCarMaster obj) {

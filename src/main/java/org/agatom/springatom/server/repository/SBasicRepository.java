@@ -20,7 +20,6 @@ package org.agatom.springatom.server.repository;
 import com.mysema.query.jpa.JPQLQuery;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
-import org.springframework.data.repository.NoRepositoryBean;
 
 import java.io.Serializable;
 
@@ -34,7 +33,6 @@ import java.io.Serializable;
  * @version 0.0.2
  * @since 0.0.1
  */
-@NoRepositoryBean
 public interface SBasicRepository<T, ID extends Serializable>
         extends JpaRepository<T, ID>,
                 QueryDslPredicateExecutor<T> {

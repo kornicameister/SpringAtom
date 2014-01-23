@@ -21,11 +21,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import org.agatom.springatom.server.repository.SBasicRepository;
 import org.agatom.springatom.server.service.domain.SBasicService;
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,34 +40,28 @@ import java.util.List;
  * @since 0.0.1
  */
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "SpringJavaAutowiringInspection"})
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRED)
-abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializable, R extends JpaRepository<T, ID>>
-        implements SBasicService<T, ID, R> {
-    private static final Logger LOGGER = Logger.getLogger(SBasicServiceImpl.class);
-    private SBasicRepository<T, ID> basicRepository;
+abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializable>
+        implements SBasicService<T, ID> {
 
-    @Override
-    public void autoWireRepository(final R repo) {
-        this.basicRepository = (SBasicRepository) repo;
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace(String.format("Repository set to %s", this.basicRepository));
-        }
-    }
+    @Autowired
+    protected SBasicRepository<T, ID> repository;
+
 
     @Override
     public T findOne(final ID id) {
-        return this.basicRepository.findOne(id);
+        return this.repository.findOne(id);
     }
 
     @Override
     public List<T> findAll() {
-        return this.basicRepository.findAll();
+        return this.repository.findAll();
     }
 
     @Override
     public Page<T> findAll(final Pageable pageable) {
-        return this.basicRepository.findAll(pageable);
+        return this.repository.findAll(pageable);
     }
 
     @Override
@@ -76,25 +69,25 @@ abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializa
     public T save(final T persistable) {
         Preconditions
                 .checkArgument(persistable != null, "Persistable must not be null");
-        return this.basicRepository.saveAndFlush(persistable);
+        return this.repository.saveAndFlush(persistable);
     }
 
     @Override
     public long count() {
-        return this.basicRepository.count();
+        return this.repository.count();
     }
 
     @Override
     @Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
     public void deleteOne(final ID pk) {
         Preconditions.checkArgument(pk != null, "PK must not be null");
-        this.basicRepository.delete(pk);
+        this.repository.delete(pk);
     }
 
     @Override
     @Transactional(readOnly = false)
     public void deleteAll() {
-        this.basicRepository.deleteAll();
+        this.repository.deleteAll();
     }
 
     @Override

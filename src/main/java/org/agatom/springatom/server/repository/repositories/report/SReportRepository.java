@@ -21,7 +21,6 @@ import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.repository.SRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.Lock;
-import org.springframework.data.repository.RepositoryDefinition;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +34,6 @@ import javax.persistence.LockModeType;
  */
 @Qualifier(value = SReportRepository.REPO_NAME)
 @RestResource(rel = SReportRepository.REST_REPO_REL, path = SReportRepository.REST_REPO_PATH)
-@RepositoryDefinition(domainClass = SReport.class, idClass = Long.class)
 public interface SReportRepository
         extends SRepository<SReport, Long, Integer> {
     String REPO_NAME      = "reportsRepository";

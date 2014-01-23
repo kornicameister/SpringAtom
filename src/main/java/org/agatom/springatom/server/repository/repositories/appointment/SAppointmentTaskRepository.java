@@ -24,7 +24,6 @@ import org.agatom.springatom.server.repository.SBasicRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.RepositoryDefinition;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -36,7 +35,6 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 @Qualifier(SAppointmentTaskRepository.REPO_NAME)
 @RestResource(rel = SAppointmentTaskRepository.REST_REPO_REL, path = SAppointmentTaskRepository.REST_REPO_PATH)
-@RepositoryDefinition(domainClass = SAppointmentTask.class, idClass = Long.class)
 public interface SAppointmentTaskRepository
         extends SBasicRepository<SAppointmentTask, Long> {
     String REPO_NAME      = "AppointmentTaskRepo";

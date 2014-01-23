@@ -18,7 +18,6 @@
 package org.agatom.springatom.server.service.domain;
 
 import org.agatom.springatom.server.model.beans.user.SUser;
-import org.agatom.springatom.server.repository.repositories.user.SUserRepository;
 import org.agatom.springatom.server.service.support.constraints.Password;
 import org.agatom.springatom.server.service.support.constraints.UserName;
 import org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException;
@@ -33,7 +32,7 @@ import javax.validation.constraints.NotNull;
  * @since 0.0.1
  */
 public interface SUserService
-        extends SService<SUser, Long, Integer, SUserRepository>,
+        extends SService<SUser, Long, Integer>,
                 UserDetailsService {
 
     /**

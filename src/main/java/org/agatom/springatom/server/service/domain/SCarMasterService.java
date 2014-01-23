@@ -19,7 +19,6 @@ package org.agatom.springatom.server.service.domain;
 
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.car.SCarMaster;
-import org.agatom.springatom.server.repository.repositories.car.SCarMasterRepository;
 import org.agatom.springatom.server.service.support.constraints.BrandOrModel;
 
 import javax.validation.constraints.NotNull;
@@ -31,7 +30,7 @@ import java.util.List;
  * @since 0.0.1
  */
 public interface SCarMasterService
-        extends SBasicService<SCarMaster, Long, SCarMasterRepository> {
+        extends SBasicService<SCarMaster, Long> {
 
     List<SCarMaster> findByBrand(
             @BrandOrModel

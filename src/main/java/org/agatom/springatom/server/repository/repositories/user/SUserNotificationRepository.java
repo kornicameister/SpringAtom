@@ -24,7 +24,6 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.RepositoryDefinition;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -35,7 +34,6 @@ import org.springframework.data.rest.core.annotation.RestResource;
  */
 @Qualifier(value = SUserNotificationRepository.REPO_NAME)
 @RestResource(rel = SUserNotificationRepository.REST_REPO_REL, path = SUserNotificationRepository.REST_REPO_PATH)
-@RepositoryDefinition(domainClass = SUserNotification.class, idClass = Long.class)
 public interface SUserNotificationRepository
         extends SBasicRepository<SUserNotification, Long> {
     String REPO_NAME      = "UserNotificationsRepo";

@@ -18,6 +18,7 @@
 package org.agatom.springatom.server.repository.factory;
 
 import org.agatom.springatom.server.model.beans.revision.AuditedRevisionEntity;
+import org.agatom.springatom.server.repository.SBasicRepository;
 import org.agatom.springatom.server.repository.SRepository;
 import org.agatom.springatom.server.repository.impl.SBasicRepositoryImpl;
 import org.agatom.springatom.server.repository.impl.SRepositoryImpl;
@@ -25,12 +26,11 @@ import org.apache.log4j.Logger;
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.springframework.data.envers.repository.support.ReflectionRevisionEntityInformation;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.support.JpaEntityInformation;
-import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
-import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
+import org.springframework.data.jpa.repository.support.*;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.data.repository.history.support.RevisionEntityInformation;
+import org.springframework.util.ClassUtils;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
@@ -46,8 +46,8 @@ import java.io.Serializable;
  * @version 0.0.2
  * @since 0.0.1
  */
-public class SRepositoriesFactoryBean
-        extends JpaRepositoryFactoryBean<SRepository<Object, Serializable, Integer>, Object, Serializable> {
+public class SRepositoriesFactoryBean<T extends SBasicRepository<S, ID>, S, ID extends Serializable>
+        extends JpaRepositoryFactoryBean<T, S, ID> {
 
     private Class<?> revisionEntityClass;
 
@@ -63,16 +63,19 @@ public class SRepositoriesFactoryBean
     private static class SRepositoryFactory
             extends JpaRepositoryFactory {
         private static final Logger LOGGER = Logger.getLogger(SRepositoryFactory.class);
-        private final Class<?>                  revisionEntityClass;
-        private final RevisionEntityInformation revisionEntityInformation;
+        private final Class<?>                        revisionEntityClass;
+        private final RevisionEntityInformation       revisionEntityInformation;
+        private final LockModeRepositoryPostProcessor lockModePostProcessor;
 
         public SRepositoryFactory(final EntityManager entityManager,
                                   final Class<?> revisionEntityClass) {
             super(entityManager);
+            this.lockModePostProcessor = LockModeRepositoryPostProcessor.INSTANCE;
+
             this.revisionEntityClass = revisionEntityClass == null ? AuditedRevisionEntity.class : revisionEntityClass;
             this.revisionEntityInformation = DefaultRevisionEntity.class
-                    .equals(revisionEntityClass) ? new AuditingRevisionEntityInformation()
-                    : new ReflectionRevisionEntityInformation(this.revisionEntityClass);
+                    .equals(revisionEntityClass) ? new AuditingRevisionEntityInformation() : new ReflectionRevisionEntityInformation(this.revisionEntityClass);
+
             if (LOGGER.isTraceEnabled()) {
                 LOGGER.trace(String.format("Created %s with arguments=[em=%s,rec=%s,rei=%s]",
                         SRepositoryFactory.class.getSimpleName(),
@@ -88,10 +91,14 @@ public class SRepositoriesFactoryBean
             final JpaEntityInformation<T, Serializable> entityInformation = (JpaEntityInformation<T, Serializable>) getEntityInformation(metadata
                     .getDomainType());
             final Class<?> repositoryInterface = metadata.getRepositoryInterface();
-            if (!SRepository.class.isAssignableFrom(repositoryInterface)) {
-                return new SBasicRepositoryImpl<>(entityInformation, entityManager);
+            SimpleJpaRepository<T, ID> repository;
+            if (!ClassUtils.isAssignable(SRepository.class, repositoryInterface)) {
+                repository = (SimpleJpaRepository<T, ID>) new SBasicRepositoryImpl<>(entityInformation, entityManager);
+            } else {
+                repository = (SimpleJpaRepository<T, ID>) new SRepositoryImpl<>(entityInformation, revisionEntityInformation, entityManager);
             }
-            return new SRepositoryImpl<>(entityInformation, revisionEntityInformation, entityManager);
+            repository.setLockMetadataProvider(this.lockModePostProcessor.getLockMetadataProvider());
+            return repository;
         }
 
         @Override

@@ -19,7 +19,6 @@ package org.agatom.springatom.server.service.domain;
 
 import org.agatom.springatom.server.model.beans.person.SPersonContact;
 import org.agatom.springatom.server.model.types.contact.SContact;
-import org.agatom.springatom.server.repository.repositories.person.SPersonContactRepository;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.List;
  * @since 0.0.1
  */
 public interface SPersonContactService
-        extends SBasicService<SPersonContact, Long, SPersonContactRepository> {
+        extends SBasicService<SPersonContact, Long> {
     /**
      * Returns all {@link SContact} entities for the given {@link org.agatom.springatom.server.model.types.contact.SMultiContactable#getId()}
      *
@@ -39,5 +38,6 @@ public interface SPersonContactService
      *
      * @return the list of all {@link SContact}s for given {@code SMultiContactable}
      */
-    @NotNull List<SPersonContact> findByAssigned(final long idAssigned);
+    @NotNull
+    List<SPersonContact> findByAssigned(final long idAssigned);
 }

@@ -22,7 +22,6 @@ import org.joda.time.DateTime;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.history.Revision;
 import org.springframework.data.history.Revisions;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -36,12 +35,8 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 
-public interface SService<
-        T extends Persistable<ID>,
-        ID extends Serializable,
-        N extends Number & Comparable<N>,
-        R extends JpaRepository<T, ID>>
-        extends SBasicService<T, ID, R> {
+public interface SService<T extends Persistable<ID>, ID extends Serializable, N extends Number & Comparable<N>>
+        extends SBasicService<T, ID> {
 
     Revision<N, T> findFirstRevision(
             @NotNull

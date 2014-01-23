@@ -23,7 +23,6 @@ import org.agatom.springatom.server.model.types.issue.IssueType;
 import org.agatom.springatom.server.repository.SBasicRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -36,7 +35,6 @@ import org.springframework.data.rest.core.annotation.RestResource;
  * @since 0.0.1
  */
 
-@NoRepositoryBean
 public interface SAbstractIssueRepository<T extends SIssue>
         extends SBasicRepository<T, Long> {
     @RestResource(rel = "byType", path = "type")

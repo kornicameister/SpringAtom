@@ -20,7 +20,6 @@ package org.agatom.springatom.server.service.domain;
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
 import org.agatom.springatom.server.model.beans.appointment.SFreeSlot;
-import org.agatom.springatom.server.repository.repositories.appointment.SAppointmentRepository;
 import org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException;
 import org.agatom.springatom.server.service.support.exceptions.ServiceException;
 import org.joda.time.DateTime;
@@ -36,40 +35,54 @@ import java.util.List;
  * @since 0.0.1
  */
 public interface SAppointmentService
-        extends SBasicService<SAppointment, Long, SAppointmentRepository> {
-    @NotNull SAppointment newAppointment(final ReadableInterval interval,
-                                         final long carId,
-                                         final long assigneeId,
-                                         final long reporterId,
-                                         final SAppointmentTask... tasks) throws ServiceException;
+        extends SBasicService<SAppointment, Long> {
+    @NotNull
+    SAppointment newAppointment(final ReadableInterval interval,
+                                final long carId,
+                                final long assigneeId,
+                                final long reporterId,
+                                final SAppointmentTask... tasks) throws ServiceException;
 
-    @NotNull SAppointment addTask(final long idAppointment,
-                                  final SAppointmentTask... tasks) throws EntityDoesNotExistsServiceException;
+    @NotNull
+    SAppointment addTask(final long idAppointment,
+                         final SAppointmentTask... tasks) throws EntityDoesNotExistsServiceException;
 
-    @NotNull List<SAppointmentTask> findTasks(final long idAppointment);
+    @NotNull
+    List<SAppointmentTask> findTasks(final long idAppointment);
 
-    @NotNull SAppointment removeTask(final long idAppointment, final long... tasksId) throws EntityDoesNotExistsServiceException;
+    @NotNull
+    SAppointment removeTask(final long idAppointment, final long... tasksId) throws EntityDoesNotExistsServiceException;
 
-    @NotNull SAppointment findByTask(final long... tasks);
+    @NotNull
+    SAppointment findByTask(final long... tasks);
 
-    @NotNull List<SAppointment> findByCar(final long carId);
+    @NotNull
+    List<SAppointment> findByCar(final long carId);
 
-    @NotNull List<SAppointment> findBetween(final DateTime startDate, final DateTime endDate);
+    @NotNull
+    List<SAppointment> findBetween(final DateTime startDate, final DateTime endDate);
 
-    @NotNull List<SAppointment> findBetween(final DateTime startDate, final DateTime endDate, boolean currentUserOnly) throws
+    @NotNull
+    List<SAppointment> findBetween(final DateTime startDate, final DateTime endDate, boolean currentUserOnly) throws
             ServiceException;
 
-    @NotNull List<SAppointment> findLater(final DateTime dateTime);
+    @NotNull
+    List<SAppointment> findLater(final DateTime dateTime);
 
-    @NotNull List<SAppointment> findEarlier(final DateTime dateTime);
+    @NotNull
+    List<SAppointment> findEarlier(final DateTime dateTime);
 
-    @NotNull SAppointment postponeToFuture(final long idAppointment, final ReadableDuration duration) throws
+    @NotNull
+    SAppointment postponeToFuture(final long idAppointment, final ReadableDuration duration) throws
             ServiceException;
 
-    @NotNull SAppointment postponeToPast(final long idAppointment, final ReadableDuration duration) throws
+    @NotNull
+    SAppointment postponeToPast(final long idAppointment, final ReadableDuration duration) throws
             ServiceException;
 
-    @NotNull List<SFreeSlot> findSlots(final SFreeSlot.Slot slot, final long... idAppointment);
+    @NotNull
+    List<SFreeSlot> findSlots(final SFreeSlot.Slot slot, final long... idAppointment);
 
-    @NotNull List<SFreeSlot> findSlots(final long... idAppointment);
+    @NotNull
+    List<SFreeSlot> findSlots(final long... idAppointment);
 }

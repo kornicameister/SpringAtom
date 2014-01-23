@@ -21,7 +21,6 @@ import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.user.QSUser;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.repository.repositories.person.SPersonRepository;
-import org.agatom.springatom.server.repository.repositories.user.SUserRepository;
 import org.agatom.springatom.server.service.domain.SUserService;
 import org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,23 +45,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service(value = SUserServiceImpl.SERVICE_NAME)
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
 public class SUserServiceImpl
-        extends SServiceImpl<SUser, Long, Integer, SUserRepository>
+        extends SServiceImpl<SUser, Long, Integer>
         implements SUserService {
     public static final String SERVICE_NAME = "SUserService";
-    private SUserRepository   repository;
     @Autowired
     @Qualifier(value = "securedPasswordEncoder")
     private PasswordEncoder   passwordEncoder;
     @Autowired
     @Qualifier("PersonRepository")
     private SPersonRepository personRepository;
-
-    @Override
-    @Autowired(required = true)
-    public void autoWireRepository(@Qualifier("UserRepo") final SUserRepository repo) {
-        super.autoWireRepository(repo);
-        this.repository = repo;
-    }
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {

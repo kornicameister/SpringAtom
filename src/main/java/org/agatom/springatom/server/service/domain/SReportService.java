@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -17,40 +17,26 @@
 
 package org.agatom.springatom.server.service.domain;
 
-import org.agatom.springatom.server.model.beans.person.SPerson;
-import org.agatom.springatom.server.model.beans.person.SPersonContact;
-import org.agatom.springatom.server.model.types.contact.SContact;
-import org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException;
+import org.agatom.springatom.server.model.beans.report.SReport;
+import org.agatom.springatom.web.rbuilder.exception.ReportBuilderServiceException;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SPersonService
-        extends SService<SPerson, Long, Integer> {
 
-    SContact<SPerson> newContactData(
-            @NotNull
-            final String contact,
-            final long assignTo,
-            @NotNull
-            final SContact assignToContact) throws EntityDoesNotExistsServiceException;
+public interface SReportService
+        extends SService<SReport, Long, Integer> {
 
-    List<SPersonContact> findAllContacts(final Long idClient);
+    @NotNull
+    SReport getReport(@Min(value = 1) final Long reportId) throws ReportBuilderServiceException;
 
-    List<SPerson> findByFirstName(
-            @NotNull
-            final String firstName);
+    @NotNull
+    SReport getReport(@NotNull @Length(min = 1) final String title) throws ReportBuilderServiceException;
 
-    List<SPerson> findByLastName(
-            @NotNull
-            final String lastName);
-
-    SPerson findByEmail(
-            @NotNull
-            final String email);
 }

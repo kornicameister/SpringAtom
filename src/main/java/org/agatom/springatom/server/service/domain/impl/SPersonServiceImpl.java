@@ -17,17 +17,15 @@
 
 package org.agatom.springatom.server.service.domain.impl;
 
+import com.google.common.collect.ImmutableList;
 import org.agatom.springatom.server.model.beans.person.QSPerson;
 import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.person.SPersonContact;
 import org.agatom.springatom.server.model.types.contact.SContact;
-import org.agatom.springatom.server.repository.SRepository;
-import org.agatom.springatom.server.repository.repositories.person.SPersonRepository;
 import org.agatom.springatom.server.service.domain.SPersonContactService;
 import org.agatom.springatom.server.service.domain.SPersonService;
 import org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -46,19 +44,11 @@ import java.util.List;
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 @SuppressWarnings("unchecked")
 public class SPersonServiceImpl
-        extends SServiceImpl<SPerson, Long, Integer, SPersonRepository>
+        extends SServiceImpl<SPerson, Long, Integer>
         implements SPersonService {
-    public static final String                              SERVICE_NAME         = "SPersonService";
+    public static final String                SERVICE_NAME         = "SPersonService";
     @Autowired
-    @Qualifier("PersonContactService")
-    private             SPersonContactService               personContactService = null;
-    private             SRepository<SPerson, Long, Integer> revRepo              = null;
-
-    @Override
-    public void autoWireRepository(final SPersonRepository repo) {
-        super.autoWireRepository(repo);
-        this.revRepo = repo;
-    }
+    private             SPersonContactService personContactService = null;
 
     @Override
     @Transactional(readOnly = false,
@@ -67,7 +57,7 @@ public class SPersonServiceImpl
             rollbackFor = EntityDoesNotExistsServiceException.class)
     public SContact<SPerson> newContactData(final String value, final long clientPk,
                                             final SContact clientContact) throws EntityDoesNotExistsServiceException {
-        final SPerson client = this.revRepo.findOne(clientPk);
+        final SPerson client = this.revisionRepository.findOne(clientPk);
 
         if (client == null) {
             throw new EntityDoesNotExistsServiceException(SPerson.class, clientPk);
@@ -85,25 +75,25 @@ public class SPersonServiceImpl
     @Override
     @CacheEvict(value = "clients", key = "#idClient", beforeInvocation = true)
     public List<SPersonContact> findAllContacts(final Long idClient) {
-        return this.personContactService.findByAssigned(idClient);
+        return ImmutableList.copyOf(this.personContactService.findByAssigned(idClient));
     }
 
     @Override
     @CacheEvict(value = "clients", key = "#firstName", beforeInvocation = true)
     public List<SPerson> findByFirstName(final String firstName) {
-        return (List<SPerson>) this.revRepo.findAll(QSPerson.sPerson.firstName.eq(firstName));
+        return ImmutableList.copyOf(this.revisionRepository.findAll(QSPerson.sPerson.firstName.eq(firstName)));
     }
 
     @Override
     @CacheEvict(value = "clients", key = "#lastName", beforeInvocation = true)
     public List<SPerson> findByLastName(final String lastName) {
-        return (List<SPerson>) this.revRepo.findAll(QSPerson.sPerson.lastName.eq(lastName));
+        return ImmutableList.copyOf(this.revisionRepository.findAll(QSPerson.sPerson.lastName.eq(lastName)));
     }
 
     @Override
     @CacheEvict(value = "clients", key = "#email", beforeInvocation = true)
     public SPerson findByEmail(final String email) {
-        return this.revRepo.findOne(QSPerson.sPerson.primaryMail.eq(email));
+        return this.revisionRepository.findOne(QSPerson.sPerson.primaryMail.eq(email));
     }
 
 }

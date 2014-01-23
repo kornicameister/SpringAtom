@@ -26,7 +26,6 @@ import org.agatom.springatom.server.model.beans.car.embeddable.QSCarMasterManufa
 import org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.repository.repositories.car.SCarMasterRepository;
-import org.agatom.springatom.server.repository.repositories.car.SCarRepository;
 import org.agatom.springatom.server.repository.repositories.user.SUserRepository;
 import org.agatom.springatom.server.service.domain.SCarService;
 import org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException;
@@ -34,7 +33,6 @@ import org.agatom.springatom.server.service.support.exceptions.ServiceException;
 import org.agatom.springatom.server.service.support.exceptions.UnambiguousResultServiceException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -53,24 +51,14 @@ import java.util.List;
 @Service(value = SCarServiceImpl.SERVICE_NAME)
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SCarServiceImpl
-        extends SServiceImpl<SCar, Long, Integer, SCarRepository>
+        extends SServiceImpl<SCar, Long, Integer>
         implements SCarService {
     public static final  String SERVICE_NAME = "SCarService";
     private static final Logger LOGGER       = Logger.getLogger(SCarServiceImpl.class);
     @Autowired
-    @Qualifier("CarMasterRepository")
-    SCarMasterRepository masterService;
-    private SCarRepository  repository;
+    private SCarMasterRepository masterService;
     @Autowired
-    @Qualifier("UserRepo")
-    private SUserRepository userRepository;
-
-    @Override
-    @Autowired
-    public void autoWireRepository(@Qualifier("CarRepository") final SCarRepository repo) {
-        super.autoWireRepository(repo);
-        this.repository = repo;
-    }
+    private SUserRepository      userRepository;
 
     @Override
     @CacheEvict(value = "cars", allEntries = true, beforeInvocation = true)
