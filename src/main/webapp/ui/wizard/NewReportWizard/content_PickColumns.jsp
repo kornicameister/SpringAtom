@@ -59,6 +59,9 @@
                                 <th>
                                     <s:message code="wizard.NewReportWizard.pickColumns.table.column.excluded"/>
                                 </th>
+                                <th>
+                                    <s:message code="wizard.NewReportWizard.pickColumns.table.column.groupBy"/>
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -87,13 +90,22 @@
 
                                     <td> <!-- render excluded -->
                                         <form:checkbox id="col-${loop.index}-${loopColumns.index}-excluded"
-                                                       path="entities[${loop.index}].columns[${loopColumns.index}].excluded"/>
+                                                       path="entities[${loop.index}].columns[${loopColumns.index}].options.excluded"/>
+                                    </td>
+
+                                    <td> <!-- render groupBy -->
+                                        <form:checkbox id="col-${loop.index}-${loopColumns.index}-groupBy"
+                                                       path="entities[${loop.index}].columns[${loopColumns.index}].options.groupBy"/>
                                     </td>
                                 </tr>
                                 <script type="text/javascript" id="editors-${column.id}">
                                     $(function () {
                                         Spring.addDecoration(new Spring.ElementDecoration({
                                             elementId : 'col-${loop.index}-${loopColumns.index}-excluded',
+                                            widgetType: 'dijit.form.CheckBox'
+                                        }));
+                                        Spring.addDecoration(new Spring.ElementDecoration({
+                                            elementId: 'col-${loop.index}-${loopColumns.index}-groupBy',
                                             widgetType: 'dijit.form.CheckBox'
                                         }));
                                     })

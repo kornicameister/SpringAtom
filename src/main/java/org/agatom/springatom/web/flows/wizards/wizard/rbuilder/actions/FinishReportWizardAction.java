@@ -71,7 +71,7 @@ public class FinishReportWizardAction
 
     /**
      * Runs trough all {@code entities} and subsequent {@code columns} picking up these columns where {@link
-     * org.agatom.springatom.web.rbuilder.bean.RBuilderColumn#getExcluded()} is {@link java.lang.Boolean#TRUE}.
+     * org.agatom.springatom.web.rbuilder.bean.RBuilderColumnOptions#excluded} is {@link java.lang.Boolean#TRUE}.
      * After lookup removes these columns from final list submitted to {@link org.agatom.springatom.web.rbuilder.data.service.ReportBuilderService}
      *
      * @param cfg
@@ -92,7 +92,7 @@ public class FinishReportWizardAction
                             @Override
                             public boolean apply(@Nullable final RBuilderColumn input) {
                                 assert input != null;
-                                return input.getExcluded();
+                                return input.getOptions().isExcluded();
                             }
                         }).toSet();
                 if (!columns.isEmpty()) {

@@ -35,25 +35,24 @@ import java.util.Map;
 public class RBuilderColumn
         extends RBuilderBean
         implements Comparable<RBuilderColumn> {
-    private static final long          serialVersionUID = 2600080347152145806L;
-    private static final Boolean       DEFAULT_EXCLUDED = Boolean.FALSE;
-    private static final Class<String> DEFAULT_RENDER   = String.class;
-    protected            String        prefix           = null;
-    protected            String        columnName       = null;
-    protected            Class<?>      columnClass      = Void.class;
-    protected            Class<?>      renderClass      = DEFAULT_RENDER;
-    protected            Boolean       excluded         = DEFAULT_EXCLUDED;
+    private static final long                  serialVersionUID = 2600080347152145806L;
+    private static final Class<String>         DEFAULT_RENDER   = String.class;
+    protected            String                prefix           = null;
+    protected            String                columnName       = null;
+    protected            Class<?>              columnClass      = Void.class;
+    protected            Class<?>              renderClass      = DEFAULT_RENDER;
+    protected            RBuilderColumnOptions options          = null;
 
-    public RBuilderColumn setExcluded(final Boolean excluded) {
-        this.excluded = excluded;
+    public RBuilderColumn setOptions(final RBuilderColumnOptions options) {
+        this.options = options;
         return this;
     }
 
-    public Boolean getExcluded() {
-        if (excluded == null) {
-            this.excluded = DEFAULT_EXCLUDED;
+    public RBuilderColumnOptions getOptions() {
+        if (this.options == null) {
+            this.options = new RBuilderColumnOptions();
         }
-        return excluded;
+        return options;
     }
 
     public RBuilderColumn setPrefix(final String prefix) {
@@ -101,6 +100,8 @@ public class RBuilderColumn
      *
      * @see RBuilderColumn#isMultiValued()
      */
+
+    @JsonIgnore
     public boolean isSingleValued() {
         return !this.isMultiValued();
     }
@@ -112,6 +113,8 @@ public class RBuilderColumn
      *
      * @return true if multi valued
      */
+
+    @JsonIgnore
     public boolean isMultiValued() {
         return ClassUtils.isAssignable(Iterable.class, this.columnClass)
                 || ClassUtils.isAssignable(Map.class, this.columnClass);
@@ -152,13 +155,13 @@ public class RBuilderColumn
                 Objects.equal(this.columnName, that.columnName) &&
                 Objects.equal(this.columnClass, that.columnClass) &&
                 Objects.equal(this.renderClass, that.renderClass) &&
-                Objects.equal(this.excluded, that.excluded) &&
+                Objects.equal(this.options, that.options) &&
                 Objects.equal(this.label, that.label);
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(prefix, columnName, columnClass, renderClass,
-                excluded, label);
+                options, label);
     }
 }
