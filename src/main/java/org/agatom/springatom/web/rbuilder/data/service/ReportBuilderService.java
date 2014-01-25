@@ -22,7 +22,6 @@ import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.ReportRepresentation;
 import org.agatom.springatom.web.rbuilder.ReportViewDescriptor;
 import org.agatom.springatom.web.rbuilder.data.exception.ReportBuilderServiceException;
-import org.agatom.springatom.web.rbuilder.data.resource.ReportResources;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
@@ -42,9 +41,6 @@ public interface ReportBuilderService {
 
     @NotNull
     Report newReportInstance(@NotNull final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException;
-
-    @NotNull
-    Report populateReportWithResources(@NotNull Report report, @NotNull ReportResources reportResources) throws ReportBuilderServiceException;
 
     void populateReportViewDescriptor(
             @Min(value = 1) final Long reportId, @Length(min = 1) final String format, @NotNull final ReportViewDescriptor descriptor) throws

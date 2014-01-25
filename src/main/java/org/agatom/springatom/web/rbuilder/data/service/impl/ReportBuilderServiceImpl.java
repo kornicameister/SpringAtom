@@ -37,15 +37,17 @@ import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
 import org.agatom.springatom.web.rbuilder.data.exception.ReportBuilderServiceException;
 import org.agatom.springatom.web.rbuilder.data.operation.create.RBuilderCreateOperation;
-import org.agatom.springatom.web.rbuilder.data.resource.ReportResources;
+import org.agatom.springatom.web.rbuilder.data.service.JasperBuilderService;
 import org.agatom.springatom.web.rbuilder.data.service.ReportBuilderService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Persistable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.stereotype.Service;
@@ -61,7 +63,6 @@ import org.springframework.util.ResourceUtils;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
-import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -70,30 +71,33 @@ import java.util.Set;
 
 /**
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @Service(value = ReportBuilderServiceImpl.SERVICE_NAME)
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
 public class ReportBuilderServiceImpl
         implements ReportBuilderService {
-    public static final  String SERVICE_NAME = "reportBuilderService";
-    private static final Logger LOGGER       = Logger.getLogger(ReportBuilderServiceImpl.class);
-    private static final String CACHE_NAME   = "reports";
-    private Repositories                  repositories;
+    public static final  String                        SERVICE_NAME                    = "reportBuilderService";
+    private static final Logger                        LOGGER                          = Logger.getLogger(ReportBuilderServiceImpl.class);
+    private static final String                        CACHE_NAME                      = "reports";
+    private static final OrderColumnTransformFunction  ORDER_COLUMN_TRANSFORM_FUNCTION = new OrderColumnTransformFunction();
+    private              Repositories                  repositories                    = null;
     @Autowired
-    private ApplicationContext            applicationContext;
+    private              ApplicationContext            applicationContext              = null;
     @Autowired
-    private FormattingConversionService   conversionService;
+    private              FormattingConversionService   conversionService               = null;
     @Autowired
-    private ObjectMapper                  jackson;
+    private              ObjectMapper                  jackson                         = null;
     @Autowired
     @Qualifier(value = "rbuilderProperties")
-    private Properties                    propertiesHolder;
+    private              Properties                    propertiesHolder                = null;
     @Autowired
-    private List<RBuilderCreateOperation> createOperations;
+    private              List<RBuilderCreateOperation> createOperations                = null;
     @Autowired
-    private SReportService domainService;
+    private              SReportService                domainService                   = null;
+    @Autowired
+    private              JasperBuilderService          builderService                  = null;
 
     @PostConstruct
     protected void init() {
@@ -111,8 +115,8 @@ public class ReportBuilderServiceImpl
     public Report newReportInstance(final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException {
         LOGGER.debug(String.format("Saving new report from %s=%s", ClassUtils.getShortName(ReportConfiguration.class), reportConfiguration));
         try {
-            final RBuilderCreateOperation RBuilderCreateOperation = this.getReportCreateOperation(reportConfiguration);
-            final Report report = RBuilderCreateOperation.createReport(reportConfiguration);
+            final RBuilderCreateOperation createOperation = this.getReportCreateOperation(reportConfiguration);
+            final Report report = createOperation.createReport(reportConfiguration);
 
             Assert.notNull(report);
             Assert.isAssignable(Persistable.class, report.getClass());
@@ -122,26 +126,6 @@ public class ReportBuilderServiceImpl
             LOGGER.error(String.format("Failed to save %s to file", reportConfiguration), exception);
             throw new ReportBuilderServiceException("Failed to persist new report", exception);
         }
-    }
-
-    private RBuilderCreateOperation getReportCreateOperation(final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException {
-        final int size = reportConfiguration.getSize();
-        if (size <= 0) {
-            throw new ReportBuilderServiceException(String.format("Impossible to retrieve %s for %s because it defines no entities",
-                    ClassUtils.getShortName(RBuilderCreateOperation.class),
-                    ClassUtils.getShortName(ReportConfiguration.class)
-            ));
-        }
-        Assert.notEmpty(this.createOperations);
-        for (final RBuilderCreateOperation operation : this.createOperations) {
-            if (operation.canCreate(reportConfiguration)) {
-                return operation;
-            }
-        }
-        throw new ReportBuilderServiceException(String.format("No matching %s was found to handle %s",
-                ClassUtils.getShortName(RBuilderCreateOperation.class),
-                reportConfiguration
-        ));
     }
 
     @Override
@@ -173,26 +157,6 @@ public class ReportBuilderServiceImpl
             } else {
                 throw new ReportBuilderServiceException(e);
             }
-        }
-    }
-
-    @Override
-    public Report populateReportWithResources(@NotNull final Report report, @NotNull final ReportResources reportResources) throws
-            ReportBuilderServiceException {
-        try {
-            final Resource jasperResource = reportResources.getJasperResource();
-            final Resource configurationResource = reportResources.getConfigurationResource();
-
-            Assert.isTrue(jasperResource.exists());
-            Assert.isTrue(configurationResource.exists());
-
-            return ((SReport) report).setResource(
-                    jasperResource.getURL().getPath(),
-                    configurationResource.getURL().getPath()
-            );
-        } catch (Exception exception) {
-            LOGGER.fatal("Failed to populate resources", exception);
-            throw new ReportBuilderServiceException("Failed to populate resources", exception);
         }
     }
 
@@ -251,7 +215,18 @@ public class ReportBuilderServiceImpl
         Assert.notNull(repositoryFor);
         Assert.notEmpty(columns);
 
-        final List<?> all = repositoryFor.findAll();
+        final Set<RBuilderColumn> groupByColumns = builderService.getGroupByColumns(columns);
+        List<?> all;
+
+        if (!CollectionUtils.isEmpty(groupByColumns)) {
+            final List<Order> orders = FluentIterable
+                    .from(groupByColumns)
+                    .transform(ORDER_COLUMN_TRANSFORM_FUNCTION).toList();
+            all = repositoryFor.findAll(new Sort(orders));
+        } else {
+            all = repositoryFor.findAll();
+        }
+
         final Function<Object, Object> transformationFunction = new Function<Object, Object>() {
             @Nullable
             @Override
@@ -303,6 +278,48 @@ public class ReportBuilderServiceImpl
             return subReportsDetached;
         }
         return Sets.newHashSet();
+    }
+
+    /**
+     * Picks up possible {@link org.agatom.springatom.web.rbuilder.data.operation.create.RBuilderCreateOperation}
+     * which can create {@link org.agatom.springatom.server.model.types.report.Report} instance out of {@link ReportConfiguration}
+     *
+     * @param reportConfiguration
+     *         reportConfiguration to be used
+     *
+     * @return instance of valid {@link org.agatom.springatom.web.rbuilder.data.operation.create.RBuilderCreateOperation}
+     *
+     * @throws ReportBuilderServiceException
+     *         if any
+     */
+    private RBuilderCreateOperation getReportCreateOperation(final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException {
+        final int size = reportConfiguration.getSize();
+        if (size <= 0) {
+            throw new ReportBuilderServiceException(String.format("Impossible to retrieve %s for %s because it defines no entities",
+                    ClassUtils.getShortName(RBuilderCreateOperation.class),
+                    ClassUtils.getShortName(ReportConfiguration.class)
+            ));
+        }
+        Assert.notEmpty(this.createOperations);
+        for (final RBuilderCreateOperation operation : this.createOperations) {
+            if (operation.canCreate(reportConfiguration)) {
+                return operation;
+            }
+        }
+        throw new ReportBuilderServiceException(String.format("No matching %s was found to handle %s",
+                ClassUtils.getShortName(RBuilderCreateOperation.class),
+                reportConfiguration
+        ));
+    }
+
+    private static class OrderColumnTransformFunction
+            implements Function<RBuilderColumn, Order> {
+        @Nullable
+        @Override
+        public Order apply(@Nullable final RBuilderColumn input) {
+            assert input != null;
+            return new Order(Direction.ASC, input.getColumnName());
+        }
     }
 
     private static class ReportableEntityPredicate
