@@ -57,10 +57,7 @@
                                     <s:message code="wizard.NewReportWizard.pickColumns.table.column.renderAs"/>
                                 </th>
                                 <th>
-                                    <s:message code="wizard.NewReportWizard.pickColumns.table.column.excluded"/>
-                                </th>
-                                <th>
-                                    <s:message code="wizard.NewReportWizard.pickColumns.table.column.groupBy"/>
+                                    Options
                                 </th>
                             </tr>
                             </thead>
@@ -78,7 +75,7 @@
                                                     path="entities[${loop.index}].columns[${loopColumns.index}].label"/>
                                     </td>
 
-                                    <td>  <!-- render as -->
+                                    <td class="center">  <!-- render as -->
                                         <s:eval expression="colToRenderProp[reportableColumn.id]" scope="page" var="itemsRenderClass"/>
                                         <form:select id="col-${loop.index}-${loopColumns.index}-renderClass"
                                                      items="${itemsRenderClass}"
@@ -88,14 +85,22 @@
                                                      path="entities[${loop.index}].columns[${loopColumns.index}].renderClass"/>
                                     </td>
 
-                                    <td> <!-- render excluded -->
-                                        <form:checkbox id="col-${loop.index}-${loopColumns.index}-excluded"
-                                                       path="entities[${loop.index}].columns[${loopColumns.index}].options.excluded"/>
-                                    </td>
+                                    <td class="center"> <!-- render excluded -->
+                                        <p>
+                                            <form:label path="entities[${loop.index}].columns[${loopColumns.index}].options.excluded">
+                                                <s:message code="wizard.NewReportWizard.pickColumns.table.column.excluded"/>
+                                            </form:label>
+                                            <form:checkbox id="col-${loop.index}-${loopColumns.index}-excluded"
+                                                           path="entities[${loop.index}].columns[${loopColumns.index}].options.excluded"/>
+                                        </p>
 
-                                    <td> <!-- render groupBy -->
-                                        <form:checkbox id="col-${loop.index}-${loopColumns.index}-groupBy"
-                                                       path="entities[${loop.index}].columns[${loopColumns.index}].options.groupBy"/>
+                                        <p>
+                                            <form:label path="entities[${loop.index}].columns[${loopColumns.index}].options.groupBy">
+                                                <s:message code="wizard.NewReportWizard.pickColumns.table.column.groupBy"/>
+                                            </form:label>
+                                            <form:checkbox id="col-${loop.index}-${loopColumns.index}-groupBy"
+                                                           path="entities[${loop.index}].columns[${loopColumns.index}].options.groupBy"/>
+                                        </p>
                                     </td>
                                 </tr>
                                 <script type="text/javascript" id="editors-${column.id}">
