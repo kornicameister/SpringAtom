@@ -15,21 +15,26 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.rbuilder.data.service;
-
-import net.sf.jasperreports.engine.JasperReport;
-import org.agatom.springatom.server.model.types.report.Report;
-import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
-import org.agatom.springatom.web.rbuilder.data.exception.ReportGenerationException;
-
-import javax.validation.constraints.NotNull;
+package org.agatom.springatom.web.rbuilder.support;
 
 /**
+ * {@code PropertiesConstants} defines keys for properties {@code rbuilder.properties}.
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ReportJasperBuilderService {
-    // TODO remove dependency for rbuilder.ban.RBuilderEntity -> replace with something more general
-    JasperReport generateReport(@NotNull final Report report, @NotNull final RBuilderEntity entity) throws ReportGenerationException;
+public final class PropertiesConstants {
+    private PropertiesConstants() {
+    }
+
+    public static final String REPORTS_DOCUMENT_META_MARGIN             = "reports.document.meta.margin";
+    public static final String REPORTS_DOCUMENT_META_DETAIL_HEIGHT      = "reports.document.meta.detailHeight";
+    public static final String REPORTS_DOCUMENT_META_IGNORE_PAGINATION  = "reports.document.meta.ignorePagination";
+    public static final String REPORTS_DOCUMENT_META_FULL_PAGE_WIDTH    = "reports.document.meta.useFullPageWidth";
+    public static final String REPORTS_DOCUMENT_META_SHOW_COL_NAMES     = "reports.document.meta.printColumnNames";
+    public static final String REPORTS_DOCUMENT_META_ALLOW_DETAIL_SPLIT = "reports.document.meta.allowDetailSplit";
+    public static final String REPORTS_DOCUMENT_META_PRINT_ODD_ROWS     = "reports.document.meta.printOddRows";
+    public static final String REPORTS_COLUMN_GROUP_START_IN_NEW_PAGE   = "reports.column.group.startInNewPage";
+    public static final String REPORTS_COLUMN_GROUP_REPRINT_IN_NEW_PAGE = "reports.column.group.reprintInNewPage";
 }

@@ -25,7 +25,7 @@ import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
 import org.agatom.springatom.web.rbuilder.data.exception.InSaveReportCreateOperationException;
 import org.agatom.springatom.web.rbuilder.data.exception.ReportGenerationException;
-import org.agatom.springatom.web.rbuilder.data.service.ReportJasperBuilderService;
+import org.agatom.springatom.web.rbuilder.data.service.JasperBuilderService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -44,7 +44,7 @@ import java.util.Properties;
  * populated elsewhere.
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 
@@ -57,7 +57,7 @@ public class SingleEntityRBuilderCreateOperation
 
     @Autowired
     @Qualifier("concatenatedReportsBuilder")
-    private ReportJasperBuilderService dynamicBuilder;
+    private JasperBuilderService dynamicBuilder;
 
     @Override
     protected boolean preValidate(final ReportConfiguration reportConfiguration) {
@@ -70,8 +70,7 @@ public class SingleEntityRBuilderCreateOperation
             final SUser user,
             final Locale locale,
             final Properties propertiesHolder
-    ) throws
-            InSaveReportCreateOperationException {
+    ) throws InSaveReportCreateOperationException {
         try {
             LOGGER.info(String.format("Saving using %s", reportConfiguration));
 

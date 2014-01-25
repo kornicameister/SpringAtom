@@ -23,6 +23,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.types.report.Report;
+import org.agatom.springatom.server.service.domain.SReportService;
 import org.agatom.springatom.server.service.domain.SUserService;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.data.exception.InSaveReportCreateOperationException;
@@ -46,7 +47,7 @@ import java.util.Properties;
 
 /**
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 abstract class AbstractRBuilderCreateOperation
@@ -55,7 +56,9 @@ abstract class AbstractRBuilderCreateOperation
     private static final Logger LOGGER = Logger.getLogger(RBuilderCreateOperation.class);
 
     @Autowired(required = false)
-    protected ReportBuilderService service          = null;
+    protected ReportBuilderService builderService   = null;
+    @Autowired
+    protected SReportService       domainService    = null;
     @Autowired(required = false)
     private   SUserService         userService      = null;
     @Autowired(required = false)
@@ -155,15 +158,15 @@ abstract class AbstractRBuilderCreateOperation
         return new ReportCreateOperationException(exception);
     }
 
-    private boolean isPersisted(final ReportConfiguration reportConfiguration) throws ReportCreateOperationException {
+    private boolean isPersisted(final ReportConfiguration reportConfiguration) {
         final String title = reportConfiguration.getTitle();
         Assert.hasText(title);
         try {
-            return this.service.findByTitle(title) != null;
+            this.domainService.findByTitle(title);
         } catch (Exception exception) {
-            LOGGER.fatal("isPersisted threw exception", Throwables.getRootCause(exception));
-            throw new ReportCreateOperationException(Throwables.getRootCause(exception));
+            return false;
         }
+        return true;
     }
 
     /**
