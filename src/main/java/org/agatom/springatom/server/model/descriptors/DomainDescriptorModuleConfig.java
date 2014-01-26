@@ -18,9 +18,8 @@
 package org.agatom.springatom.server.model.descriptors;
 
 import org.agatom.springatom.core.module.AbstractModuleConfiguration;
+import org.agatom.springatom.server.model.descriptors.descriptor.DynamicEntityDescriptorReader;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
-import org.agatom.springatom.server.model.descriptors.reader.EntityDescriptorReader;
-import org.agatom.springatom.server.model.descriptors.reader.impl.DynamicEntityDescriptorReader;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

@@ -15,14 +15,13 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.descriptors.reader.impl;
+package org.agatom.springatom.server.model.descriptors.descriptor;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
-import org.agatom.springatom.server.model.descriptors.descriptor.EntityTypeDescriptor;
-import org.agatom.springatom.server.model.descriptors.reader.EntityDescriptorReader;
+import org.agatom.springatom.server.model.descriptors.EntityDescriptorReader;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.Assert;

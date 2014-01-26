@@ -26,7 +26,7 @@ import org.springframework.util.ClassUtils;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SlimEntityTypeDescriptor<X>
+class SlimEntityTypeDescriptor<X>
         implements SlimEntityDescriptor<X> {
     private static final long serialVersionUID = 5735047201811977565L;
     private final Class<X> javaClass;

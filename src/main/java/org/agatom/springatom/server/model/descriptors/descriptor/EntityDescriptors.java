@@ -24,14 +24,10 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Sets;
-import org.agatom.springatom.server.model.descriptors.EntityAssociation;
-import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
-import org.agatom.springatom.server.model.descriptors.EntityDescriptorColumn;
-import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
+import org.agatom.springatom.server.model.descriptors.*;
 import org.agatom.springatom.server.model.descriptors.association.SimpleEntityAssociation;
 import org.agatom.springatom.server.model.descriptors.properties.ManyToOnePropertyDescriptor;
 import org.agatom.springatom.server.model.descriptors.properties.OneToManyPropertyDescriptor;
-import org.agatom.springatom.server.model.descriptors.reader.EntityDescriptorReader;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -39,6 +35,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.PluralAttribute;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -137,9 +134,17 @@ public class EntityDescriptors {
         final Set<Attribute<? super X, ?>> attributes = descriptor.getEntityType().getAttributes();
         final Set<EntityDescriptorColumn<X>> columns = Sets.newLinkedHashSet();
         for (final Attribute<? super X, ?> attribute : attributes) {
-            columns.add(new EntityTypeDescriptorColumn<X>().setName(attribute.getName())
-                                                           .setColumnClass(attribute.getJavaType())
-                                                           .setEntityDescriptor(descriptor));
+            if (ClassUtils.isAssignable(PluralAttribute.class, attribute.getClass())) {
+                final PluralAttribute pluralAttribute = (PluralAttribute) attribute;
+                columns.add(new EntityTypeDescriptorCollectionColumn<X>().setElementClass(pluralAttribute.getElementType().getJavaType())
+                                                                         .setName(attribute.getName())
+                                                                         .setColumnClass(attribute.getJavaType())
+                                                                         .setEntityDescriptor(descriptor));
+            } else {
+                columns.add(new EntityTypeDescriptorColumn<X>().setName(attribute.getName())
+                                                               .setColumnClass(attribute.getJavaType())
+                                                               .setEntityDescriptor(descriptor));
+            }
         }
         return columns;
     }

@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,35 +15,19 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.descriptors.reader;
+package org.agatom.springatom.server.model.descriptors;
 
-import org.agatom.springatom.server.model.descriptors.reader.impl.DynamicEntityDescriptorReader;
-import org.springframework.beans.factory.config.AbstractFactoryBean;
+import java.util.Set;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class DomainTypeReaderFactory
-        extends AbstractFactoryBean<EntityDescriptorReader> {
+public interface EntityDescriptorReader {
+    Set<EntityDescriptor<?>> getDefinitions();
 
-    private Class<EntityDescriptorReader> readerClass;
+    <X> EntityDescriptor<X> getDefinition(final Class<X> xClass);
 
-    @Override
-    public Class<?> getObjectType() {
-        return this.readerClass;
-    }
-
-    @Override
-    protected EntityDescriptorReader createInstance() throws Exception {
-        if (this.readerClass.equals(DynamicEntityDescriptorReader.class)) {
-            return new DynamicEntityDescriptorReader();
-        }
-        return null;
-    }
-
-    public void setReaderClass(Class<EntityDescriptorReader> readerClass) {
-        this.readerClass = readerClass;
-    }
+    <X> EntityDescriptor<X> getDefinition(final Class<X> xClass, boolean initialize);
 }

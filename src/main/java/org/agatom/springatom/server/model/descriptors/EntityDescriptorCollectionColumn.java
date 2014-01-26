@@ -15,16 +15,14 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-/**
- * @author kornicameister
- * @since 0.0.1
- * @version 0.0.1
- */
+package org.agatom.springatom.server.model.descriptors;
 
 /**
- * Package {@code org.agatom.springatom.web.du} is a part of a <b>web</b> tier which includes
- * annotations, interfaces and specific definitions of classes which are designed to handle
- * requests of converting source object to it's valid representation in selected type
- *
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
  */
-package org.agatom.springatom.web.du;
+public interface EntityDescriptorCollectionColumn<X>
+        extends EntityDescriptorColumn<X> {
+    Class<?> getElementClass();
+}

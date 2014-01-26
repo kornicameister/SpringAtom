@@ -26,12 +26,12 @@ import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class EntityTypeDescriptorColumn<X>
+class EntityTypeDescriptorColumn<X>
         implements EntityDescriptorColumn<X> {
     private static final long serialVersionUID = 955310404047484434L;
-    private String                  name;
-    private Class<?>                columnClass;
-    private SlimEntityDescriptor<X> entityDescriptor;
+    protected String                  name;
+    protected Class<?>                columnClass;
+    protected SlimEntityDescriptor<X> entityDescriptor;
 
     @Override
     public String getName() {

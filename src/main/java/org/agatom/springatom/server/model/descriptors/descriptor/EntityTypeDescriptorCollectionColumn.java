@@ -15,21 +15,51 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.descriptors.reader;
+package org.agatom.springatom.server.model.descriptors.descriptor;
 
-import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
-
-import java.util.Set;
+import com.google.common.base.Objects;
+import org.agatom.springatom.server.model.descriptors.EntityDescriptorCollectionColumn;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface EntityDescriptorReader {
-    Set<EntityDescriptor<?>> getDefinitions();
+class EntityTypeDescriptorCollectionColumn<X>
+        extends EntityTypeDescriptorColumn<X>
+        implements EntityDescriptorCollectionColumn<X> {
+    private static final long serialVersionUID = 5084669095081694602L;
+    private Class<?> elementClass;
 
-    <X> EntityDescriptor<X> getDefinition(final Class<X> xClass);
+    public EntityTypeDescriptorCollectionColumn<X> setElementClass(final Class<?> elementClass) {
+        this.elementClass = elementClass;
+        return this;
+    }
 
-    <X> EntityDescriptor<X> getDefinition(final Class<X> xClass, boolean initialize);
+    @Override
+    public Class<?> getElementClass() {
+        return elementClass;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        EntityTypeDescriptorCollectionColumn that = (EntityTypeDescriptorCollectionColumn) o;
+
+        return Objects.equal(this.elementClass, that.elementClass) &&
+                Objects.equal(this.name, that.name) &&
+                Objects.equal(this.columnClass, that.columnClass) &&
+                Objects.equal(this.entityDescriptor, that.entityDescriptor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(elementClass, name, columnClass, entityDescriptor);
+    }
 }

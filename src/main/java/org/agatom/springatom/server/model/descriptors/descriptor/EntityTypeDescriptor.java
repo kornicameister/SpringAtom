@@ -33,7 +33,7 @@ import java.util.Set;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class EntityTypeDescriptor<X>
+class EntityTypeDescriptor<X>
         implements EntityDescriptor<X> {
     private static final long             serialVersionUID = -2920522446371170224L;
     private              EntityType<X>    entityType       = null;
