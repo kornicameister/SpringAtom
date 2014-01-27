@@ -146,6 +146,7 @@
         <asm.version>4.2</asm.version>
         <cglib.version>3.1</cglib.version>
         <javassist.version>3.18.1-GA</javassist.version>
+        <javax.el-api.version>3.0.0</javax.el-api.version>
     </properties>
 
     <repositories>
@@ -882,6 +883,12 @@
             <artifactId>standard</artifactId>
             <version>${taglibs.standard.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>${javax.el-api.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

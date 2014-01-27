@@ -22,6 +22,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.sf.jasperreports.engine.JRDataSource;
@@ -228,17 +229,41 @@ public class ReportBuilderServiceImpl
         }
 
         final Function<Object, Object> transformationFunction = new Function<Object, Object>() {
+
             @Nullable
             @Override
             public Object apply(@Nullable final Object input) {
                 assert input != null;
                 final Map<String, Object> map = Maps.newHashMap();
                 for (final RBuilderColumn column : columns) {
-                    final Object object = InvokeUtils.invokeGetter(input, column.getColumnName());
-                    map.put(column.getColumnName(), conversionService.convert(object, column.getRenderClass()));
+                    final String columnName = column.getColumnName();
+                    final Object object = InvokeUtils.invokeGetter(input, columnName);
+                    final Class<?> renderClass = column.getRenderClass();
+                    this.convertColumn(map, column, columnName, object, renderClass);
                 }
                 return map;
             }
+
+            private void convertColumn(final Map<String, Object> map, final RBuilderColumn column, final String columnName, final Object object, final Class<?> renderClass) {
+                if (column.isMultiValued() && ClassUtils.isAssignable(List.class, renderClass)) {
+                    this.convertAsMultiValued(map, columnName, (List<?>) object);
+                } else {
+                    this.convertAsSingleValued(map, columnName, object, renderClass);
+                }
+            }
+
+            private void convertAsMultiValued(final Map<String, Object> map, final String columnName, final List<?> list) {
+                final List<Object> objects = Lists.newArrayListWithCapacity(list.size());
+                for (final Object obj : list) {
+                    objects.add(conversionService.convert(obj, String.class));
+                }
+                map.put(columnName, objects);
+            }
+
+            private Object convertAsSingleValued(final Map<String, Object> map, final String columnName, final Object object, final Class<?> renderClass) {
+                return map.put(columnName, conversionService.convert(object, renderClass));
+            }
+
         };
         return JasperReportsUtils.convertReportData(FluentIterable.from(all).transform(transformationFunction).toSet());
     }

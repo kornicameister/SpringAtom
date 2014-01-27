@@ -23,6 +23,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.descriptors.EntityDescriptorCollectionColumn;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptorColumn;
 import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
@@ -209,6 +210,9 @@ public class ReportWizard
                         .setPrefix(entity.getMessageKey())
                         .setColumnName(column.getName())
                         .setColumnClass(column.getColumnClass());
+                if (ClassUtils.isAssignable(EntityDescriptorCollectionColumn.class, column.getClass())) {
+                    reportableColumn.setElementClass(((EntityDescriptorCollectionColumn) column).getElementClass());
+                }
                 columns.add(this.messageSource.localize(reportableColumn, locale));
             }
 

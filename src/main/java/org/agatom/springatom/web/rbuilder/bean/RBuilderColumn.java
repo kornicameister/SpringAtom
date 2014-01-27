@@ -42,6 +42,7 @@ public class RBuilderColumn
     protected            Class<?>              columnClass      = Void.class;
     protected            Class<?>              renderClass      = DEFAULT_RENDER;
     protected            RBuilderColumnOptions options          = null;
+    protected            Class<?>              elementClass     = null;
 
     public RBuilderColumn setOptions(final RBuilderColumnOptions options) {
         this.options = options;
@@ -91,6 +92,15 @@ public class RBuilderColumn
 
     public void setRenderClass(final Class<?> renderClass) {
         this.renderClass = renderClass;
+    }
+
+    public RBuilderColumn setElementClass(final Class<?> elementClass) {
+        this.elementClass = elementClass;
+        return this;
+    }
+
+    public Class<?> getElementClass() {
+        return elementClass;
     }
 
     /**
