@@ -87,6 +87,7 @@
                 <bean class="org.agatom.springatom.webmvc.converters.StringToUnixTimestampConverter"/>
                 <bean class="org.agatom.springatom.webmvc.converters.IntervalToStringConverter"/>
                 <bean class="org.agatom.springatom.webmvc.converters.StringAdaptableConverter"/>
+                <bean class="org.agatom.springatom.webmvc.converters.CollectionToSizeConverter"/>
             </set>
         </property>
         <property name="formatters">
@@ -97,6 +98,11 @@
             </set>
         </property>
     </bean>
+
+    <bean id="persistableToStringGenericConverter"
+          class="org.agatom.springatom.server.model.conversion.PersistableToStringGenericConverter"
+          lazy-init="false"
+          depends-on="springAtomConversionService"/>
 
     <bean id="autoWirer"
           class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
