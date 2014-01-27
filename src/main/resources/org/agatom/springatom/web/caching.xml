@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                  ~
   ~                                                                                               ~
   ~ [SpringAtom] is free software: you can redistribute it and/or modify                          ~
   ~ it under the terms of the GNU General Public License as published by                          ~
@@ -16,24 +16,25 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<beans xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:cache="http://www.springframework.org/schema/cache"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:cache="http://www.springframework.org/schema/cache"
+        xmlns="http://www.springframework.org/schema/beans"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
       http://www.springframework.org/schema/cache
       http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-    <!-- Ehcache library setup -->
-
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" lazy-init="false"
-          p:configLocation="classpath:ehcache.xml"
-          p:shared="true"/>
-    <bean id="ehCacheCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" lazy-init="false">
-        <property name="cacheManager" ref="ehcache"/>
-        <property name="transactionAware" value="true"/>
+    <bean id="guavaCacheManager" class="org.springframework.cache.guava.GuavaCacheManager"/>
+    <bean id="webCacheManager" class="org.springframework.cache.support.CompositeCacheManager">
+        <property name="cacheManagers">
+            <list>
+                <ref bean="ehCacheCacheManager"/>
+                <ref bean="guavaCacheManager"/>
+            </list>
+        </property>
+        <property name="fallbackToNoOpCache" value="true"/>
     </bean>
+    <cache:annotation-driven cache-manager="webCacheManager" order="1"/>
 
-    <cache:annotation-driven cache-manager="ehCacheCacheManager" order="0"/>
 </beans>

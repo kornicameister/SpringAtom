@@ -41,6 +41,7 @@ import org.agatom.springatom.web.component.request.beans.ComponentTableRequest;
 import org.agatom.springatom.web.infopages.SEntityInfoPage;
 import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.CacheManager;
@@ -80,6 +81,7 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
     protected Class<Y>                          entity;
     protected SBasicRepository<Y, Serializable> repository;
     @Autowired
+    @Qualifier("webCacheManager")
     private   CacheManager                      cacheManager;
 
     @Override

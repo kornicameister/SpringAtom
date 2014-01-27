@@ -24,6 +24,7 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <import resource="caching.xml"/>
     <import resource="locale/locale.xml"/>
     <import resource="theme/theme.xml"/>
     <import resource="flows/flows.xml"/>
