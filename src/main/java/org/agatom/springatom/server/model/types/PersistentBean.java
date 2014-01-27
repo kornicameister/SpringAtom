@@ -17,8 +17,11 @@
 
 package org.agatom.springatom.server.model.types;
 
+import org.agatom.springatom.core.identifier.Identified;
 import org.agatom.springatom.core.util.Localized;
 import org.agatom.springatom.core.util.StringAdaptable;
+
+import java.io.Serializable;
 
 /**
  * {@code PersistentBean} is common interface for all beans in <b>SpringAtom</b>.
@@ -28,8 +31,9 @@ import org.agatom.springatom.core.util.StringAdaptable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface PersistentBean
+public interface PersistentBean<PK extends Serializable>
         extends StringAdaptable,
-                Localized {
+                Localized,
+                Identified<PK> {
 
 }

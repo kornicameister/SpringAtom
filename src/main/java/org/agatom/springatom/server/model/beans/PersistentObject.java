@@ -21,10 +21,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.primitives.Longs;
 import com.google.common.reflect.TypeToken;
+import org.agatom.springatom.core.identifier.BeanIdentifier;
 import org.agatom.springatom.server.model.types.PersistentBean;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.joor.Reflect;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.ClassUtils;
 
@@ -45,8 +48,12 @@ import java.util.Comparator;
 @Access(value = AccessType.FIELD)
 abstract public class PersistentObject<PK extends Serializable>
         extends AbstractPersistable<PK>
-        implements PersistentBean,
+        implements PersistentBean<PK>,
                    Comparable<PersistentObject<PK>> {
+
+    @Transient
+    private final Class<PK> idClass = (Class<PK>) GenericTypeResolver.resolveTypeArgument(getClass(), PersistentBean.class);
+
     @Transient
     private static final Comparator<Serializable> ID_COMPARATOR    = new Comparator<Serializable>() {
         private static final String COMPARED_KEYS_ARE_NOT_EQUAL_IN_TYPE_O1_S_O2_S = "Compared keys are not equal in type >> o1=%s != o2=%s";
@@ -95,6 +102,12 @@ abstract public class PersistentObject<PK extends Serializable>
     @Transient
     public String asString() {
         return String.format("%s=%s", ClassUtils.getShortName(this.getClass()), this.getId());
+    }
+
+    @Override
+    public BeanIdentifier<PK> getIdentifier() {
+        return BeanIdentifier.newIdentifier(this.getClass(), this.getId() == null ? (PK) Reflect.on(this.idClass).create(Long.valueOf(-1l))
+                                                                                                .get() : this.getId());
     }
 
     @Override

@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,24 +15,45 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types;
+package org.agatom.springatom.core.identifier;
 
-import javax.annotation.Nonnull;
-import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 /**
- * {@code PersistentVersionedBean} is common interface for all beans in <b>SpringAtom</b>.
- * with focus on revisions.
+ * {@code BeanIdentifier} introduces concept of generic and unique identifier object for beans defined
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface PersistentVersionedBean<PK extends Serializable>
-        extends PersistentBean<PK> {
+public class BeanVersionIdentifier<T>
+        extends BeanIdentifier<T> {
+    private static final long   serialVersionUID = 9012389461082648740L;
+    private static final String IDENTIFIER       = "BVI";
 
-    Long getVersion();
+    private Long version;
 
-    void setVersion(@Nonnull @Min(value = 0) final Long version);
+    public static <T extends Serializable> BeanIdentifier<T> newIdentifier(final Class<?> beanClass, final T identifier, final Long version) {
+        return new BeanVersionIdentifier<T>().setVersion(version).setBeanClass(beanClass).setIdentifier(identifier);
+    }
+
+    public BeanVersionIdentifier<T> setVersion(final Long version) {
+        this.version = version;
+        return this;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    @Override
+    public String getId() {
+        return String.format("%s:%s", super.getId(), this.version).toUpperCase();
+    }
+
+    @Override
+    protected String getIdentifierInternalId() {
+        return IDENTIFIER;
+    }
+
 }

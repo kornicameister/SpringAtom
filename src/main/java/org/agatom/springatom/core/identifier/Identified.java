@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,24 +15,16 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types;
+package org.agatom.springatom.core.identifier;
 
-import javax.annotation.Nonnull;
-import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 /**
- * {@code PersistentVersionedBean} is common interface for all beans in <b>SpringAtom</b>.
- * with focus on revisions.
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface PersistentVersionedBean<PK extends Serializable>
-        extends PersistentBean<PK> {
-
-    Long getVersion();
-
-    void setVersion(@Nonnull @Min(value = 0) final Long version);
+public interface Identified<PK extends Serializable>
+        extends Serializable {
+    BeanIdentifier<PK> getIdentifier();
 }
