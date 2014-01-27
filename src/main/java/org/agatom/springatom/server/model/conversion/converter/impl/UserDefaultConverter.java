@@ -15,39 +15,31 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.du.annotation;
+package org.agatom.springatom.server.model.conversion.converter.impl;
 
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Role;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import java.lang.annotation.*;
+import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.conversion.annotation.PersistableConverterUtility;
+import org.agatom.springatom.server.model.conversion.converter.PersistableConverterImpl;
 
 /**
+ * {@code UserDefaultConverter} is a default converter for {@link org.agatom.springatom.server.model.beans.user.SUser}
+ * Returns String representation containing:
+ * <ul>
+ * <li>{@link org.agatom.springatom.server.model.beans.user.SUser#getUsername()}</li>
+ * </ul>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-// java annotations
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-// java annotations
-// spring annotations
-@Component
-@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-// spring annotations
-public @interface DataUtility {
 
-    /**
-     * The value indicates a logical data utility name,
-     * to be turned into a Spring bean in case of an autodetected component.
-     *
-     * @return the component name, if any
-     */
-    String value();
+@PersistableConverterUtility
+public class UserDefaultConverter
+        extends PersistableConverterImpl<SUser> {
+
+    @Override
+    public String convert(final SUser source) {
+        return source.getPerson().getIdentity();
+    }
 
 }
