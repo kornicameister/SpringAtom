@@ -18,6 +18,7 @@
 package org.agatom.springatom.web.rbuilder.support;
 
 import com.google.common.base.Objects;
+import org.springframework.core.convert.converter.GenericConverter.ConvertiblePair;
 
 import java.io.Serializable;
 
@@ -36,6 +37,10 @@ public class RColumnRenderClass
     private final Class<?> sourceClass;
     private final Class<?> targetClass;
     private final String   label;
+
+    public RColumnRenderClass(ConvertiblePair pair, final String name) {
+        this(pair.getSourceType(), pair.getTargetType(), name);
+    }
 
     public RColumnRenderClass(final Class<?> sourceType, final Class<?> targetType, final String name) {
         this.sourceClass = sourceType;

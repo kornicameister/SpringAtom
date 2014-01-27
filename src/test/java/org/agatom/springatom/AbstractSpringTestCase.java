@@ -20,7 +20,6 @@ package org.agatom.springatom;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Persistable;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,14 +52,12 @@ public abstract class AbstractSpringTestCase
     @Autowired
     protected WebApplicationContext wac;
     protected MockMvc               mockMvc;
-    @Autowired
-    @Qualifier("security-filter")
     private   FilterChainProxy      springSecurityFilterChain;
 
     @Before
     public void setUp() throws Exception {
-        this.mockMvc = MockMvcBuilders.
-                                              webAppContextSetup(this.wac)
+        this.springSecurityFilterChain = this.wac.getBean(FilterChainProxy.class);
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
                                       .addFilter(this.springSecurityFilterChain, "/**")
                                       .build();
         final TestingAuthenticationToken authentication = new TestingAuthenticationToken("SYSTEM", "SYSTEM");

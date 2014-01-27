@@ -15,17 +15,60 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.du.utility;
+package org.agatom.springatom.web.rbuilder.conversion.type;
 
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.converter.GenericConverter;
+import com.google.common.base.Objects;
+import org.agatom.springatom.web.rbuilder.conversion.ColumnTypeConversionBranch;
+import org.springframework.core.convert.converter.GenericConverter.ConvertiblePair;
+
+import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface DataUtilityConverter
-        extends GenericConverter {
-    DataUtilityConverter setConversionService(final ConversionService conversionService);
+public class RBuilderConvertiblePair
+        implements Serializable {
+    private static final long serialVersionUID = 4975825247135266596L;
+    private ConvertiblePair            convertiblePair;
+    private ColumnTypeConversionBranch branch;
+
+    public RBuilderConvertiblePair setConvertiblePair(final ConvertiblePair convertiblePair) {
+        this.convertiblePair = convertiblePair;
+        return this;
+    }
+
+    public RBuilderConvertiblePair setBranch(final ColumnTypeConversionBranch branch) {
+        this.branch = branch;
+        return this;
+    }
+
+    public ConvertiblePair getConvertiblePair() {
+        return convertiblePair;
+    }
+
+    public ColumnTypeConversionBranch getBranch() {
+        return branch;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        RBuilderConvertiblePair that = (RBuilderConvertiblePair) o;
+
+        return Objects.equal(this.convertiblePair, that.convertiblePair) &&
+                Objects.equal(this.branch, that.branch);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(convertiblePair, branch);
+    }
 }
