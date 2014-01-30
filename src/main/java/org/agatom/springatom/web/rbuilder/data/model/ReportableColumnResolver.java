@@ -15,45 +15,30 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.core.identifier;
+package org.agatom.springatom.web.rbuilder.data.model;
 
-import java.io.Serializable;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Set;
 
 /**
- * {@code BeanIdentifier} introduces concept of generic and unique identifier object for beans defined
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class BeanVersionIdentifier<T>
-        extends BeanIdentifier<T> {
-    private static final long   serialVersionUID = 9012389461082648740L;
-    private static final String IDENTIFIER       = "BVI";
+@Validated
+public interface ReportableColumnResolver {
 
-    private Long version;
+    static String CACHE_NAME = "org.agatom.springatom.cache.ReportableBeanResolver";
 
-    public static <T extends Serializable> BeanIdentifier<T> newIdentifier(final Class<?> beanClass, final T identifier, final Long version) {
-        return new BeanVersionIdentifier<T>().setVersion(version).setBeanClass(beanClass).setIdentifier(identifier);
-    }
-
-    public BeanVersionIdentifier<T> setVersion(final Long version) {
-        this.version = version;
-        return this;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    @Override
-    public String getId() {
-        return String.format("%s:%s", super.getId(), this.version).toUpperCase();
-    }
-
-    @Override
-    protected String getIdentifierInternalId() {
-        return IDENTIFIER;
-    }
+    @NotNull
+    @Size(min = 1)
+    @Cacheable(value = CACHE_NAME, key = "#entity.javaClass.name + '_columns'")
+    Set<RBuilderColumn> getReportableColumns(@NotNull final RBuilderEntity entity);
 
 }

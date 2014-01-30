@@ -12,68 +12,63 @@
  * GNU General Public License for more details.                                                   *
  *                                                                                                *
  * You should have received a copy of the GNU General Public License                              *
- * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
+ * aInteger with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.core.identifier;
+package org.agatom.springatom.web.rbuilder.bean;
 
 import com.google.common.base.Objects;
-import org.springframework.hateoas.Identifiable;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ObjectUtils;
+import com.google.common.collect.Sets;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
- * {@code BeanIdentifier} introduces concept of generic and unique identifier object for beans defined
+ * {@code RBuilderAssociation} is a plain {@code JavaBean} carrying information about
+ * single {@link RBuilderEntity} and all possible associations
+ * that can be made with it.
+ * <p/>
+ * <b>Association</b> means that given {@link org.springframework.data.domain.Persistable} used to create {@link
+ * RBuilderEntity} can be linked in either {@link javax.persistence.OneToMany} or {@link
+ * javax.persistence.ManyToOne} with another {@link org.springframework.data.domain.Persistable}.
+ * <p/>
+ * <b>Information about one entity being in association with another</b> is carried by values retrieved from {@link RBuilderBean#getId()}
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class BeanIdentifier<T>
-        implements Identifiable<String>,
-                   Serializable {
-    private static final long     serialVersionUID = 9012389461082648740L;
-    private static final String   IDENTIFIER       = "BI";
-    private              Class<?> beanClass        = null;
-    private              T        identifier       = null;
+public class RBuilderAssociation
+        implements Serializable {
 
-    public static <T extends Serializable> BeanIdentifier<T> newIdentifier(final Class<?> beanClass, final T identifier) {
-        return new BeanIdentifier<T>().setBeanClass(beanClass).setIdentifier(identifier);
-    }
+    private static final long         serialVersionUID = -8970556120241893260L;
+    private              Integer      master           = -1;
+    private              Set<Integer> children         = Sets.newHashSet();
 
-    public BeanIdentifier<T> setBeanClass(final Class<?> beanClass) {
-        this.beanClass = beanClass;
+    public RBuilderAssociation setMaster(final Integer master) {
+        this.master = master;
         return this;
     }
 
-    public Class<?> getBeanClass() {
-        return beanClass;
-    }
-
-    public BeanIdentifier<T> setIdentifier(final T identifier) {
-        this.identifier = identifier;
+    public RBuilderAssociation setChildren(final Set<Integer> children) {
+        this.children = children;
         return this;
     }
 
-    public T getIdentifier() {
-        return identifier;
+    public Integer getMaster() {
+        return master;
     }
 
-    @Override
-    public String getId() {
-        return String.format("%s:%s:%s", this.getIdentifierInternalId(), ClassUtils.getShortName(this.beanClass), ObjectUtils
-                .getIdentityHexString(this.identifier)).toUpperCase();
-    }
-
-    protected String getIdentifierInternalId() {
-        return IDENTIFIER;
+    public Set<Integer> getChildren() {
+        return children;
     }
 
     @Override
     public String toString() {
-        return this.getId();
+        return Objects.toStringHelper(this)
+                      .addValue(master)
+                      .addValue(children)
+                      .toString();
     }
 
     @Override
@@ -85,14 +80,14 @@ public class BeanIdentifier<T>
             return false;
         }
 
-        BeanIdentifier that = (BeanIdentifier) o;
+        RBuilderAssociation that = (RBuilderAssociation) o;
 
-        return Objects.equal(this.beanClass, that.beanClass) &&
-                Objects.equal(this.identifier, that.identifier);
+        return Objects.equal(this.master, that.master) &&
+                Objects.equal(this.children, that.children);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(serialVersionUID, beanClass, identifier);
+        return Objects.hashCode(master, children);
     }
 }

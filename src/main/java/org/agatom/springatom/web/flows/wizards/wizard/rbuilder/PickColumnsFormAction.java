@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
+package org.agatom.springatom.web.flows.wizards.wizard.rbuilder;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -29,6 +29,8 @@ import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
 import org.agatom.springatom.web.rbuilder.conversion.ConversionHelper;
 import org.agatom.springatom.web.rbuilder.conversion.type.RBuilderConvertiblePair;
+import org.agatom.springatom.web.rbuilder.data.model.ReportableBeanResolver;
+import org.agatom.springatom.web.rbuilder.data.model.ReportableColumnResolver;
 import org.agatom.springatom.web.rbuilder.support.RColumnRenderClass;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +49,10 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
- * {@code PickColumnsFormAction} is an {@link org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions.ReportWizardFormAction}
+ * {@code PickColumnsFormAction} is an {@link org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction}
  * designed to support step where columns are being selected by creator of the report
  *
  * @author kornicameister
@@ -63,17 +62,21 @@ import java.util.Set;
 
 @WizardAction(value = "pickColumnsFormAction")
 public class PickColumnsFormAction
-        extends ReportWizardFormAction {
+        extends ReportWizardFormAction<ReportConfiguration> {
     private static final Logger LOGGER           = Logger.getLogger(PickColumnsFormAction.class);
     private static final String ENTITY_TO_COLUMN = "entityToColumn";
     private static final String RENDER_PROP      = "colToRenderProp";
 
     @Autowired(required = false)
-    private SMessageSource messageSource  = null;
+    private SMessageSource                   messageSource    = null;
     @Value("#{webProperties['sa.delimiter']}")
-    private String         valueDelimiter = null;
+    private String                           valueDelimiter   = null;
     @Autowired
-    private ConversionHelper<RBuilderColumn> conversionHelper;
+    private ConversionHelper<RBuilderColumn> conversionHelper = null;
+    @Autowired
+    private ReportableColumnResolver         columnResolver   = null;
+    @Autowired
+    private ReportableBeanResolver           beanResolver     = null;
 
     public PickColumnsFormAction() {
         super();
@@ -82,8 +85,9 @@ public class PickColumnsFormAction
 
     @Override
     public Event setupForm(final RequestContext context) throws Exception {
-        context.getViewScope().put(ENTITY_TO_COLUMN, this.reportWizard.getEntityToColumnForReport());
-        context.getViewScope().put(RENDER_PROP, this.getColumnsRenderProperties(this.reportWizard.getReportConfiguration()));
+        final Map<RBuilderEntity, Set<RBuilderColumn>> distribution = this.getColumnDistribution(context);
+        context.getViewScope().put(ENTITY_TO_COLUMN, distribution);
+        context.getViewScope().put(RENDER_PROP, this.getColumnsRenderProperties(distribution.values()));
         return super.setupForm(context);
     }
 
@@ -97,23 +101,31 @@ public class PickColumnsFormAction
 
     @Override
     public Event resetForm(final RequestContext context) throws Exception {
-        final ReportConfiguration report = this.reportWizard.getReportConfiguration();
-        Assert.notNull(report);
-        report.clearColumns();
-        return success();
+        final Event event = super.resetForm(context);
+        this.getCommandBean(context).clearColumns();
+        return event;
+    }
+
+    private Map<RBuilderEntity, Set<RBuilderColumn>> getColumnDistribution(final RequestContext context) throws Exception {
+        final Map<RBuilderEntity, Set<RBuilderColumn>> picked = Maps.newTreeMap();
+        final ReportConfiguration reportConfiguration = this.getCommandBean(context);
+        for (final RBuilderEntity entity : reportConfiguration.getEntities()) {
+            picked.put(entity, this.columnResolver.getReportableColumns(entity));
+            reportConfiguration.putColumns(entity, this.columnResolver.getReportableColumns(entity));
+        }
+        return picked;
     }
 
     // TODO add support for rendering given column as the concatenated report
-    private Object getColumnsRenderProperties(final ReportConfiguration cfg) {
+    private Object getColumnsRenderProperties(final Collection<Set<RBuilderColumn>> columnsSet) {
         final Map<Integer, List<RColumnRenderClass>> map = Maps.newHashMap();
-        final List<RBuilderEntity> entities = cfg.getEntities();
         final Locale locale = LocaleContextHolder.getLocale();
 
-        for (final RBuilderEntity entity : entities) {
-            final Set<RBuilderColumn> columns = entity.getColumns();
-            Assert.notEmpty(columns);
+        Assert.notEmpty(columnsSet);
 
-            for (final RBuilderColumn column : columns) {
+        for (Set<RBuilderColumn> colSet : columnsSet) {
+            Assert.notEmpty(colSet);
+            for (final RBuilderColumn column : colSet) {
                 final Set<RBuilderConvertiblePair> convertiblePairs = this.conversionHelper.getConvertiblePairs(column);
                 if (CollectionUtils.isEmpty(convertiblePairs)) {
                     continue;
@@ -130,6 +142,7 @@ public class PickColumnsFormAction
             }
         }
 
+
         return map;
     }
 
@@ -141,7 +154,7 @@ public class PickColumnsFormAction
             Preconditions.checkArgument(!list.isEmpty());
             final Set<RBuilderColumn> reportedColumns = Sets.newTreeSet();
             for (final String javaClassName : list) {
-                final RBuilderBean bean = reportWizard.getReportableBean(Integer.valueOf(javaClassName));
+                final RBuilderBean bean = beanResolver.getReportableBean(Integer.valueOf(javaClassName));
                 if (ClassUtils.isAssignable(RBuilderColumn.class, bean.getClass())) {
                     reportedColumns.add((RBuilderColumn) bean);
                 }

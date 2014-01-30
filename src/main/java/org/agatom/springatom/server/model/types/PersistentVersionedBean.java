@@ -19,7 +19,6 @@ package org.agatom.springatom.server.model.types;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.Min;
-import java.io.Serializable;
 
 /**
  * {@code PersistentVersionedBean} is common interface for all beans in <b>SpringAtom</b>.
@@ -29,9 +28,8 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface PersistentVersionedBean<PK extends Serializable>
-        extends PersistentBean<PK> {
-
+public interface PersistentVersionedBean
+        extends PersistentBean {
     Long getVersion();
 
     void setVersion(@Nonnull @Min(value = 0) final Long version);

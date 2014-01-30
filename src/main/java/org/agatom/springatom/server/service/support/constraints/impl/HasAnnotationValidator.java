@@ -15,33 +15,43 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.rbuilder.conversion;
+package org.agatom.springatom.server.service.support.constraints.impl;
 
-import org.agatom.springatom.web.rbuilder.bean.RBuilderBean;
-import org.agatom.springatom.web.rbuilder.conversion.type.RBuilderConvertiblePair;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.validation.annotation.Validated;
+import org.agatom.springatom.server.service.support.constraints.HasAnnotation;
+import org.apache.log4j.Logger;
 
-import javax.validation.constraints.NotNull;
-import java.util.Set;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import java.lang.annotation.Annotation;
 
 /**
- * {@code ConversionHelper} is a utility class designed to resolve set of matched
- * types that one type can be converted to in context of data rendering in {@code RBuilder}
+ * {@code VinNumberValidator} validates given <b>vin number</b>.
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Validated
-public interface ConversionHelper<T extends RBuilderBean> {
+public class HasAnnotationValidator
+        implements ConstraintValidator<HasAnnotation, Class<?>> {
+    private static final Logger                      LOGGER          = Logger.getLogger(HasAnnotationValidator.class);
+    private              String                      message         = null;
+    private              Class<? extends Annotation> annotationClass = null;
 
-    String CACHE_NAME = "org.agatom.springatom.web.rbuilder.conversion.ConversionHelper";
+    @Override
+    public void initialize(final HasAnnotation constraintAnnotation) {
+        if (LOGGER.isTraceEnabled()) {
+            this.message = constraintAnnotation.message();
+            this.annotationClass = constraintAnnotation.annotation();
+            LOGGER.trace(String.format("%s initialized", HasAnnotationValidator.class.getSimpleName()));
+        }
+    }
 
-    @Cacheable(value = CACHE_NAME, key = "#column.columnClass + '.ConvertiblePairs'")
-    Set<RBuilderConvertiblePair> getConvertiblePairs(@NotNull final T column);
-
-    @Cacheable(value = CACHE_NAME, key = "#column.columnClass + '.PossibleColumnType'")
-    ColumnTypeConversionBranch getPossibleColumnType(Class<?> columnClass);
-
+    @Override
+    public boolean isValid(final Class<?> vinNumber, final ConstraintValidatorContext context) {
+        final boolean annotationPresent = vinNumber.isAnnotationPresent(this.annotationClass);
+        if (!annotationPresent) {
+            context.buildConstraintViolationWithTemplate(this.message).addPropertyNode("annotation").addBeanNode().addConstraintViolation();
+        }
+        return annotationPresent;
+    }
 }

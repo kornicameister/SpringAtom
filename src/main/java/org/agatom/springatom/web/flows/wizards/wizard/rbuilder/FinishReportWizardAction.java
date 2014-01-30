@@ -15,12 +15,11 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
+package org.agatom.springatom.web.flows.wizards.wizard.rbuilder;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
-import org.agatom.springatom.web.flows.wizards.wizard.rbuilder.ReportWizard;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
@@ -28,9 +27,10 @@ import org.agatom.springatom.web.rbuilder.data.exception.ReportBuilderServiceExc
 import org.agatom.springatom.web.rbuilder.data.service.ReportBuilderService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.webflow.action.EventFactorySupport;
-import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -46,20 +46,31 @@ import java.util.Set;
  */
 @WizardAction(value = "finishReportWizardAction")
 public class FinishReportWizardAction
-        implements Action {
+        extends ReportWizardFormAction<ReportConfiguration> {
     private static final Logger LOGGER = Logger.getLogger(FinishReportWizardAction.class);
 
-    @Autowired
-    private ReportWizard         reportWizard;
     @Autowired
     private ReportBuilderService builderService;
 
     @Override
-    public Event execute(final RequestContext context) throws Exception {
+    public Event bindAndValidate(final RequestContext context) throws Exception {
+        Event event = super.bindAndValidate(context);
+        if (event.getId().equals(this.success().getId())) {
+            event = this.executeInternal(context);
+        }
+        return event;
+    }
+
+    @Override
+    protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
+        return binder;
+    }
+
+    private Event executeInternal(final RequestContext context) throws Exception {
         LOGGER.debug(String.format("/saveReport reportWizard=%s,context=%s", this, context));
         final EventFactorySupport eventFactorySupport = new EventFactorySupport();
         try {
-            final ReportConfiguration reportConfiguration = this.removeExcludedColumns(this.reportWizard.getReportConfiguration());
+            final ReportConfiguration reportConfiguration = this.removeExcludedColumns(this.getCommandBean(context));
             final Object reports = this.builderService.newReportInstance(reportConfiguration);
             LOGGER.info(String.format("Persisted new report => %s", reports));
             return eventFactorySupport.success(this, reports);

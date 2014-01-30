@@ -15,44 +15,29 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizards.wizard;
+package org.agatom.springatom.web.flows.wizards.wizard.rbuilder;
 
-import com.google.common.base.Objects;
-import org.agatom.springatom.server.model.beans.user.SUser;
-import org.agatom.springatom.web.beans.WebBean;
-import org.springframework.beans.factory.InitializingBean;
+import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
+import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.springframework.webflow.execution.RequestContext;
+
+import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class AbstractWizard
-        implements WebBean,
-                   InitializingBean {
-    private static final String DEFAULT_TITLE    = "NewWizard";
-    private static final long   serialVersionUID = -1224480743925951112L;
-    protected String title;
-    protected SUser  createdBy;
+abstract class ReportWizardFormAction<T extends Serializable>
+        extends WizardFormAction<T> {
 
-    public String getTitle() {
-        return title;
-    }
-
-    public SUser getCreatedBy() {
-        return createdBy;
-    }
-
-    public void init(final RequestContext context) {
-        this.title = context.getRequestParameters().get("title", AbstractWizard.DEFAULT_TITLE);
+    private ReportConfiguration getReportConfiguration(final RequestContext context) {
+        return context.getFlowScope().get("reportConfiguration", ReportConfiguration.class);
     }
 
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(title)
-                      .addValue(createdBy)
-                      .toString();
+    protected Object getFormObject(final RequestContext context) throws Exception {
+        return this.getReportConfiguration(context);
     }
+
 }

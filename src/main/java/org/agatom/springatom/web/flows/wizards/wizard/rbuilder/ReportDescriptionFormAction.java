@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
+package org.agatom.springatom.web.flows.wizards.wizard.rbuilder;
 
 import com.google.common.base.Preconditions;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
@@ -25,8 +25,6 @@ import org.springframework.util.ClassUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.webflow.execution.Event;
-import org.springframework.webflow.execution.RequestContext;
 
 /**
  * @author kornicameister
@@ -36,7 +34,7 @@ import org.springframework.webflow.execution.RequestContext;
 
 @WizardAction(value = "reportDescriptionFormAction")
 public class ReportDescriptionFormAction
-        extends ReportWizardFormAction {
+        extends ReportWizardFormAction<ReportConfiguration> {
 
     public ReportDescriptionFormAction() {
         super();
@@ -47,12 +45,6 @@ public class ReportDescriptionFormAction
     protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
         binder.setIgnoreUnknownFields(true);
         return binder;
-    }
-
-    @Override
-    public Event resetForm(final RequestContext context) throws Exception {
-        this.reportWizard.reset();
-        return success();
     }
 
     private class AreDescriptionPropertiesValidValidator

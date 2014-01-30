@@ -17,8 +17,6 @@
 
 package org.agatom.springatom.server.model.beans;
 
-import org.agatom.springatom.core.identifier.BeanIdentifier;
-import org.agatom.springatom.core.identifier.BeanVersionIdentifier;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.types.PersistentVersionedBean;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -42,7 +40,7 @@ import javax.validation.constraints.Min;
 @EntityListeners(value = AuditingEntityListener.class)
 abstract public class PersistentVersionedObject
         extends AbstractAuditable<SUser, Long>
-        implements PersistentVersionedBean<Long> {
+        implements PersistentVersionedBean {
     private static final long serialVersionUID = -3113664043161581649L;
     @Version
     private Long version;
@@ -71,10 +69,5 @@ abstract public class PersistentVersionedObject
     @Override
     public void setVersion(@Nonnull @Min(value = 0) final Long version) {
         this.version = version;
-    }
-
-    @Override
-    public BeanIdentifier<Long> getIdentifier() {
-        return BeanVersionIdentifier.newIdentifier(this.getClass(), this.getId() == null ? Long.valueOf(-1l) : this.getId(), this.version);
     }
 }

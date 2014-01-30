@@ -23,9 +23,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
 
-<%@ page import="org.agatom.springatom.web.rbuilder.ReportConfiguration" %>
-<%@ page import="org.springframework.util.ClassUtils" %>
-<%@ page import="org.springframework.util.StringUtils" %>
 <%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
 <%--
@@ -39,7 +36,7 @@
 
     <form:form id="${requestScope.formID}"
                action="${flowExecutionUrl}"
-               commandName="<%=StringUtils.uncapitalize(ClassUtils.getShortName(ReportConfiguration.class))%>"
+               commandName="commandBean"
                method="<%=RequestMethod.POST.toString().toLowerCase()%>"
                cssClass="x-form">
         <fieldset>

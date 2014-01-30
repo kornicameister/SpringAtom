@@ -15,33 +15,28 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.rbuilder.conversion;
+package org.agatom.springatom.web.rbuilder.data.model;
 
-import org.agatom.springatom.web.rbuilder.bean.RBuilderBean;
-import org.agatom.springatom.web.rbuilder.conversion.type.RBuilderConvertiblePair;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderAssociation;
+import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
 
 /**
- * {@code ConversionHelper} is a utility class designed to resolve set of matched
- * types that one type can be converted to in context of data rendering in {@code RBuilder}
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 @Validated
-public interface ConversionHelper<T extends RBuilderBean> {
+public interface ReportableAssociationResolver {
 
-    String CACHE_NAME = "org.agatom.springatom.web.rbuilder.conversion.ConversionHelper";
+    static String CACHE_NAME = "org.agatom.springatom.cache.ReportableBeanResolver";
 
-    @Cacheable(value = CACHE_NAME, key = "#column.columnClass + '.ConvertiblePairs'")
-    Set<RBuilderConvertiblePair> getConvertiblePairs(@NotNull final T column);
-
-    @Cacheable(value = CACHE_NAME, key = "#column.columnClass + '.PossibleColumnType'")
-    ColumnTypeConversionBranch getPossibleColumnType(Class<?> columnClass);
+    @Nullable
+    @Cacheable(value = CACHE_NAME, key = "#entity.javaClass.name + '_association'")
+    RBuilderAssociation getEntityAssociation(@NotNull final RBuilderEntity entity);
 
 }

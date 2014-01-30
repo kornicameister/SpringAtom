@@ -15,44 +15,43 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizards.wizard.rbuilder.actions;
+package org.agatom.springatom.web.flows.wizards.wizard;
 
-import org.agatom.springatom.web.flows.wizards.wizard.rbuilder.ReportWizard;
-import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.convert.converter.ConditionalConverter;
 import org.springframework.format.support.FormattingConversionService;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.Assert;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.webflow.action.FormAction;
 import org.springframework.webflow.execution.RequestContext;
 
+import java.io.Serializable;
+
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract class ReportWizardFormAction
+public abstract class WizardFormAction<T extends Serializable>
         extends FormAction {
 
-    private static final Logger                      LOGGER             = Logger.getLogger(ReportWizardFormAction.class);
+    private static final Logger                      LOGGER             = Logger.getLogger(WizardFormAction.class);
+    public static final  String                      COMMAND_BEAN_NAME  = "commandBean";
     @Autowired
     protected            FormattingConversionService conversionService  = null;
     @Autowired
     protected            LocalValidatorFactoryBean   delegatedValidator = null;
     @Autowired
-    protected            ReportWizard                reportWizard       = null;
-    @Autowired
     protected            ApplicationContext          applicationContext = null;
 
-    protected ReportWizardFormAction() {
-        this.setFormObjectClass(ReportConfiguration.class);
-        this.setFormObjectName(StringUtils.uncapitalize(ClassUtils.getShortName(ReportConfiguration.class)));
+    protected WizardFormAction() {
+        this.setFormObjectName(COMMAND_BEAN_NAME);
+        this.setFormObjectClass(GenericTypeResolver.resolveTypeArgument(this.getClass(), WizardFormAction.class));
     }
 
     @Override
@@ -67,9 +66,22 @@ abstract class ReportWizardFormAction
         this.doInitBinder(((WebDataBinder) binder), this.conversionService);
     }
 
-    @Override
-    protected Object getFormObject(final RequestContext context) throws Exception {
-        return this.reportWizard.getReportConfiguration();
+    /**
+     * TypeSafe version of {@link org.springframework.webflow.action.FormAction#getFormObject(org.springframework.webflow.execution.RequestContext)}.
+     *
+     * @param context
+     *         current webflow context
+     *
+     * @return this step form object instance
+     *
+     * @throws Exception
+     *         if any, most likely it can be {@link java.lang.ClassCastException}
+     */
+    @SuppressWarnings("unchecked")
+    protected T getCommandBean(final RequestContext context) throws Exception {
+        final Object formObject = this.getFormObject(context);
+        Assert.isInstanceOf(this.getFormObjectClass(), formObject);
+        return (T) formObject;
     }
 
     protected abstract WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService);

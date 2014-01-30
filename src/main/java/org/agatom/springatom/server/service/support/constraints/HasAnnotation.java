@@ -15,18 +15,39 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.types.report;
+package org.agatom.springatom.server.service.support.constraints;
 
-import org.agatom.springatom.core.identifier.BeanIdentifier;
+import org.agatom.springatom.server.service.support.constraints.impl.HasAnnotationValidator;
 
-import java.io.Serializable;
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import javax.validation.ReportAsSingleViolation;
+import javax.validation.constraints.NotNull;
+import java.lang.annotation.*;
+
+import static java.lang.annotation.ElementType.*;
 
 /**
+ * {@code LicencePlatePL} is the annotation used to validate any {@code String} againts being
+ * validate value for licence plates in <b>Poland</b>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ReportElement
-        extends Serializable {
-    ReportElement setBeanIdentifier(BeanIdentifier<Long> beanIdentifier);
+
+@NotNull
+@Target(value = {METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
+@Retention(value = RetentionPolicy.RUNTIME)
+@Documented
+@Constraint(validatedBy = HasAnnotationValidator.class)
+@ReportAsSingleViolation
+public @interface HasAnnotation {
+    String message() default "{org.agatom.springatom.server.service.support.constraints.IsReportableEntity}";
+
+    Class<? extends Annotation> annotation();
+
+    Class<?>[] groups() default {};
+
+    @Deprecated Class<? extends Payload>[] payload() default {};
 }
