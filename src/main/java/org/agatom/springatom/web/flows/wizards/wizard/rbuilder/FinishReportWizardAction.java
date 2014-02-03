@@ -20,6 +20,7 @@ package org.agatom.springatom.web.flows.wizards.wizard.rbuilder;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
+import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderColumn;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderEntity;
@@ -46,7 +47,7 @@ import java.util.Set;
  */
 @WizardAction(value = "finishReportWizardAction")
 public class FinishReportWizardAction
-        extends ReportWizardFormAction<ReportConfiguration> {
+        extends WizardFormAction<ReportConfiguration> {
     private static final Logger LOGGER = Logger.getLogger(FinishReportWizardAction.class);
 
     @Autowired

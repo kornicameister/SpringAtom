@@ -23,6 +23,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
+import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderAssociation;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderBean;
@@ -52,7 +53,7 @@ import java.util.Set;
 
 @WizardAction(value = "pickEntityFormAction")
 public class PickEntityFormAction
-        extends ReportWizardFormAction<ReportConfiguration> {
+        extends WizardFormAction<ReportConfiguration> {
     private final static Logger LOGGER                  = Logger.getLogger(PickEntityFormAction.class);
     private static final String ENTITIES                = "entities";
     private static final String ASSOCIATION_INFORMATION = "associationInformation";

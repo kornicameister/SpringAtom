@@ -19,6 +19,7 @@ package org.agatom.springatom.web.flows.wizards.wizard.rbuilder;
 
 import com.google.common.base.Preconditions;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
+import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.ClassUtils;
@@ -34,7 +35,7 @@ import org.springframework.web.bind.WebDataBinder;
 
 @WizardAction(value = "reportDescriptionFormAction")
 public class ReportDescriptionFormAction
-        extends ReportWizardFormAction<ReportConfiguration> {
+        extends WizardFormAction<ReportConfiguration> {
 
     public ReportDescriptionFormAction() {
         super();

@@ -22,6 +22,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
+import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.rbuilder.ReportConfiguration;
 import org.agatom.springatom.web.rbuilder.bean.RBuilderBean;
@@ -62,7 +63,7 @@ import java.util.*;
 
 @WizardAction(value = "pickColumnsFormAction")
 public class PickColumnsFormAction
-        extends ReportWizardFormAction<ReportConfiguration> {
+        extends WizardFormAction<ReportConfiguration> {
     private static final Logger LOGGER           = Logger.getLogger(PickColumnsFormAction.class);
     private static final String ENTITY_TO_COLUMN = "entityToColumn";
     private static final String RENDER_PROP      = "colToRenderProp";
