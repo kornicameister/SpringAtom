@@ -73,13 +73,13 @@ public class RBuilderEntity
     }
 
     public RBuilderEntity setColumns(final Set<RBuilderColumn> columns) {
-        this.columns = columns;
+        this.columns = Sets.newLinkedHashSet(columns);
         return this;
     }
 
     public Set<RBuilderColumn> getColumns() {
         if (this.columns == null) {
-            this.columns = Sets.newTreeSet();
+            this.columns = Sets.newLinkedHashSet();
         }
         return columns;
     }

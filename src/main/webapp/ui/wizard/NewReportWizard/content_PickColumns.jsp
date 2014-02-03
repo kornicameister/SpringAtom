@@ -48,13 +48,16 @@
                             <thead>
                             <tr>
                                 <th>
+                                    Order <%-- localize --%>
+                                </th>
+                                <th>
                                     <s:message code="wizard.NewReportWizard.pickColumns.table.column.label"/>
                                 </th>
                                 <th>
                                     <s:message code="wizard.NewReportWizard.pickColumns.table.column.renderAs"/>
                                 </th>
                                 <th>
-                                    Options
+                                    Options <%-- localize --%>
                                 </th>
                             </tr>
                             </thead>
@@ -64,7 +67,16 @@
                                 <jsp:useBean id="reportableColumn" scope="page" class="org.agatom.springatom.web.rbuilder.bean.RBuilderColumn"/>
                                 <form:hidden id="col-${loop.index}-${loopColumns.index}-name"
                                              path="entities[${loop.index}].columns[${loopColumns.index}].columnName"/>
-                                <tr>
+                                <tr id="row-${reportableColumn.id}">
+
+                                    <td class="center"> <!-- order -->
+                                        <form:hidden id="col-${loop.index}-${loopColumns.index}-order"
+                                                     path="entities[${loop.index}].columns[${loopColumns.index}].order"/>
+                                        <span id="col-${loop.index}-${loopColumns.index}-order-up"><i
+                                                class="fa fa-color-black fa-arrow-circle-o-up"></i></span>
+                                        <span id="col-${loop.index}-${loopColumns.index}-order-down"><i
+                                                class="fa fa-color-black fa-arrow-circle-o-down"></i></span>
+                                    </td>
 
                                     <td class="center"> <!-- label -->
                                         <form:input id="col-${loop.index}-${loopColumns.index}-label"
@@ -109,6 +121,28 @@
                                         Spring.addDecoration(new Spring.ElementDecoration({
                                             elementId : 'col-${loop.index}-${loopColumns.index}-groupBy',
                                             widgetType: 'dijit.form.CheckBox'
+                                        }));
+                                        Spring.addDecoration(new Spring.ElementDecoration({
+                                            elementId  : 'col-${loop.index}-${loopColumns.index}-order-up',
+                                            widgetType : 'dijit.form.Button',
+                                            widgetAttrs: {
+                                                onClick: function () {
+                                                    var row = $('#' + 'row-${reportableColumn.id}');
+                                                    var input = $('#' + 'col-${loop.index}-${loopColumns.index}-order');
+                                                    SA.wizard.Helpers.NewReportWizard.onColumnOrderChange(row, input, 'up');
+                                                }
+                                            }
+                                        }));
+                                        Spring.addDecoration(new Spring.ElementDecoration({
+                                            elementId  : 'col-${loop.index}-${loopColumns.index}-order-down',
+                                            widgetType : 'dijit.form.Button',
+                                            widgetAttrs: {
+                                                onClick: function () {
+                                                    var row = $('#' + 'row-${reportableColumn.id}');
+                                                    var input = $('#' + 'col-${loop.index}-${loopColumns.index}-order');
+                                                    SA.wizard.Helpers.NewReportWizard.onColumnOrderChange(row, input, 'down');
+                                                }
+                                            }
                                         }));
                                     })
                                 </script>

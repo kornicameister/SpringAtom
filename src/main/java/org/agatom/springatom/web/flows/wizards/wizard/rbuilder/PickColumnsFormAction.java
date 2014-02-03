@@ -152,7 +152,7 @@ public class PickColumnsFormAction
             LOGGER.trace(String.format("converting with selected clazz=%s", list));
             Preconditions.checkNotNull(list);
             Preconditions.checkArgument(!list.isEmpty());
-            final Set<RBuilderColumn> reportedColumns = Sets.newTreeSet();
+            final Set<RBuilderColumn> reportedColumns = Sets.newLinkedHashSet();
             for (final String javaClassName : list) {
                 final RBuilderBean bean = beanResolver.getReportableBean(Integer.valueOf(javaClassName));
                 if (ClassUtils.isAssignable(RBuilderColumn.class, bean.getClass())) {

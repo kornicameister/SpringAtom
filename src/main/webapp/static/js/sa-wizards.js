@@ -131,6 +131,72 @@
             }
         })
     };
+    helper.onColumnOrderChange = function (row, input, direction) {
+        console.log('Row=', row);
+        console.log('Input=', input);
+        console.log('Direction=', direction);
+
+        var allRows = row.parent().children('tr'),
+            expectSelectedRows = allRows.not(row),
+            rowId = row.attr('id'),
+            allRowsIds = (function () {
+                var tmpArray = [];
+                $.each(allRows, function (key, item) {
+                    tmpArray.push($(item).attr('id'));
+                })
+                return tmpArray;
+            }()),
+            indexOfThisRow = jQuery.inArray(row.attr('id'), allRowsIds),
+            canBeMovedInDirection = false,
+            rowToSwapWith = undefined,
+            rowToSwapWithInput = undefined;
+
+        // depending on the given direction, recognize if its possible to move the row there
+        if (direction === 'down') {
+            canBeMovedInDirection = indexOfThisRow === 0 || indexOfThisRow < allRowsIds.length - 1;
+        } else if (direction === 'up') {
+            canBeMovedInDirection = indexOfThisRow === allRowsIds.length - 1 || indexOfThisRow > 0;
+        } else {
+            throw new Error('Invalid direction, null or undefined');
+        }
+
+        if (canBeMovedInDirection) {
+            console.log('Row id=', rowId, ' will be moved in direction=', direction);
+        } else {
+            console.log('Row id=', rowId, ' cant be moved in direction=', direction);
+            return;
+        }
+
+        // get nearest possible next tr to swap with
+        if (direction === 'down') {
+            rowToSwapWith = $('#' + allRowsIds[indexOfThisRow + 1]);
+        } else {
+            rowToSwapWith = $('#' + allRowsIds[indexOfThisRow - 1]);
+        }
+
+
+        console.log('Swapping with row with id=', $(rowToSwapWith).attr('id'));
+        rowToSwapWithInput = rowToSwapWith.children().first().children('input');
+
+        if (direction === 'down') {
+            input.attr('value', indexOfThisRow + 1);
+            var value = indexOfThisRow;
+            if (value < -1) {
+                value = 0;
+            }
+            rowToSwapWithInput.attr('value', value);
+        } else {
+            input.attr('value', indexOfThisRow - 1);
+            value = indexOfThisRow + 1;
+            rowToSwapWithInput.attr('value', value);
+        }
+
+        if (direction === 'down') {
+            $(row).before($(rowToSwapWith));
+        } else {
+            $(rowToSwapWith).before($(row));
+        }
+    };
     SA.wizard.Helpers.NewReportWizard = helper;
 
     /**

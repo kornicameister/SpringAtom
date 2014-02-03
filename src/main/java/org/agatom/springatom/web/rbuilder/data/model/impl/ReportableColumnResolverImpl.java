@@ -40,7 +40,6 @@ import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * @author kornicameister
@@ -81,7 +80,7 @@ public class ReportableColumnResolverImpl
     public Set<RBuilderColumn> getReportableColumns(@NotNull final RBuilderEntity entity) {
 
         final Locale locale = LocaleContextHolder.getLocale();
-        final TreeSet<RBuilderColumn> columns = Sets.newTreeSet();
+        final Set<RBuilderColumn> columns = Sets.newLinkedHashSet();
         final Cloner cloner = new Cloner();
 
         for (EntityDescriptorColumn<?> column : this.entityDescriptors.getColumns(entity.getJavaClass())) {

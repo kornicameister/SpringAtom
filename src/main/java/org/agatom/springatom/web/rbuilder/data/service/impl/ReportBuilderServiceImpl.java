@@ -65,10 +65,7 @@ import org.springframework.util.ResourceUtils;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author kornicameister
@@ -141,10 +138,11 @@ public class ReportBuilderServiceImpl
             final SReport report = this.domainService.findOne(reportId);
             final File file = ResourceUtils.getFile(report.getResource().getConfigurationPath());
 
-            final ReportConfiguration configuration = this.jackson.readValue(
+            final ReportConfiguration configuration = this.orderColumns(this.jackson.readValue(
                     file,
                     ReportConfiguration.class
-            );
+            ));
+
 
             final ModelMap reportParameters = this.getReportParameters(format, configuration, report);
 
@@ -159,6 +157,22 @@ public class ReportBuilderServiceImpl
                 throw new ReportBuilderServiceException(e);
             }
         }
+    }
+
+    private ReportConfiguration orderColumns(final ReportConfiguration reportConfiguration) {
+        final List<RBuilderEntity> entities = reportConfiguration.getEntities();
+        for (RBuilderEntity entity : entities) {
+            final List<RBuilderColumn> columns = Lists.newArrayList(entity.getColumns());
+            reportConfiguration.popColumns(entity, columns);
+            Collections.sort(columns, new Comparator<RBuilderColumn>() {
+                @Override
+                public int compare(final RBuilderColumn o1, final RBuilderColumn o2) {
+                    return o1.getOrder().compareTo(o2.getOrder());
+                }
+            });
+            reportConfiguration.putColumns(entity, columns);
+        }
+        return reportConfiguration;
     }
 
     private ModelMap getReportParameters(final String format, final ReportConfiguration configuration, final SReport report) throws
