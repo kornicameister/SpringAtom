@@ -32,7 +32,7 @@
     <import resource="org/agatom/springatom/server/model/orm.xml"/>
     <import resource="org/agatom/springatom/server/service/caching.xml"/>
     <import resource="org/agatom/springatom/server/service/transactions.xml"/>
-    <import resource="org/agatom/springatom/server/repository/jpa.xml"/>
+    <import resource="org/agatom/springatom/server/repository/JPA.xml"/>
     <import resource="org/agatom/springatom/security/security.xml"/>
     <import resource="org/agatom/springatom/security/acl.xml"/>
 
