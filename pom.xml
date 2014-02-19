@@ -147,7 +147,7 @@
         <cglib.version>3.1</cglib.version>
         <javassist.version>3.18.1-GA</javassist.version>
         <javax.el-api.version>3.0.0</javax.el-api.version>
-        <DynamicJasper.version>5.0.1</DynamicJasper.version>
+        <DynamicJasper.version>5.0.0</DynamicJasper.version>
     </properties>
 
     <repositories>
