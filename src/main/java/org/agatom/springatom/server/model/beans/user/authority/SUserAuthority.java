@@ -27,52 +27,54 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SUserAuthority")
-@Table(name = "SUserAuthority")
+@Entity(name = SUserAuthority.ENTITY_NAME)
+@Table(name = SUserAuthority.TABLE_NAME)
 @AssociationOverrides({
-        @AssociationOverride(name = "pk.user", joinColumns = @JoinColumn(name = "user")),
-        @AssociationOverride(name = "pk.authority", joinColumns = @JoinColumn(name = "authority"))
+		@AssociationOverride(name = "pk.user", joinColumns = @JoinColumn(name = "user")),
+		@AssociationOverride(name = "pk.authority", joinColumns = @JoinColumn(name = "authority"))
 })
 public class SUserAuthority
-        implements Serializable {
+		implements Serializable {
 
-    private static final long serialVersionUID = -61697944597116291L;
-    @EmbeddedId
-    private SUserAuthorityPK pk;
+	private static final   long             serialVersionUID = -61697944597116291L;
+	protected static final String           TABLE_NAME       = "suserauthority";
+	protected static final String           ENTITY_NAME      = "SUserAuthority";
+	@EmbeddedId
+	private                SUserAuthorityPK pk               = null;
 
-    public SUserAuthority() {
-        this.pk = new SUserAuthorityPK();
-    }
+	public SUserAuthority() {
+		this.pk = new SUserAuthorityPK();
+	}
 
-    public SUserAuthority(final SUser user, final SAuthority role) {
-        this.pk = new SUserAuthorityPK(user, role);
-    }
+	public SUserAuthority(final SUser user, final SAuthority role) {
+		this.pk = new SUserAuthorityPK(user, role);
+	}
 
-    public SUserAuthorityPK getPk() {
-        return pk;
-    }
+	public SUserAuthorityPK getPk() {
+		return pk;
+	}
 
-    public void setPk(final SUserAuthorityPK pk) {
-        this.pk = pk;
-    }
+	public void setPk(final SUserAuthorityPK pk) {
+		this.pk = pk;
+	}
 
-    @Transient
-    public SUser getUser() {
-        return pk.getUser();
-    }
+	@Transient
+	public SUser getUser() {
+		return pk.getUser();
+	}
 
-    @Transient
-    public void setUser(final SUser user) {
-        pk.setUser(user);
-    }
+	@Transient
+	public void setUser(final SUser user) {
+		pk.setUser(user);
+	}
 
-    @Transient
-    public SAuthority getAuthority() {
-        return this.pk.getAuthority();
-    }
+	@Transient
+	public SAuthority getAuthority() {
+		return this.pk.getAuthority();
+	}
 
-    @Transient
-    public void setAuthority(final SAuthority role) {
-        pk.setAuthority(role);
-    }
+	@Transient
+	public void setAuthority(final SAuthority role) {
+		pk.setAuthority(role);
+	}
 }

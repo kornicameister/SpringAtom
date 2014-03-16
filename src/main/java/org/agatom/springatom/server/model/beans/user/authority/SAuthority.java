@@ -30,48 +30,50 @@ import javax.persistence.*;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity(name = "SAuthority")
-@Table(name = "SAuthority")
+@Entity(name = SAuthority.ENTITY_NAME)
+@Table(name = SAuthority.TABLE_NAME)
 @AttributeOverride(name = "id", column = @Column(name = "idSAuthority", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SAuthority
-        extends PersistentObject<Long>
-        implements GrantedAuthority {
-    private static final long serialVersionUID = 2893594861541235345L;
-    @Type(type = "org.hibernate.type.EnumType")
-    @Column(name = "authority", updatable = false, unique = true, length = 50, nullable = false)
-    @NaturalId(mutable = false)
-    @Enumerated(value = EnumType.STRING)
-    private SRole role;
+		extends PersistentObject<Long>
+		implements GrantedAuthority {
+	private static final   long   serialVersionUID = 2893594861541235345L;
+	protected static final String ENTITY_NAME      = "SAuthority";
+	protected static final String TABLE_NAME       = "sauthority";
+	@Type(type = "org.hibernate.type.EnumType")
+	@Column(name = "authority", updatable = false, unique = true, length = 50, nullable = false)
+	@NaturalId(mutable = false)
+	@Enumerated(value = EnumType.STRING)
+	private                SRole  role             = null;
 
-    public SAuthority() {
-    }
+	public SAuthority() {
+	}
 
-    public SAuthority(final String role) {
-        this.role = SRole.valueOf(role);
-    }
+	public SAuthority(final String role) {
+		this.role = SRole.valueOf(role);
+	}
 
-    public static GrantedAuthority fromRole(final SRole roleMechanic) {
-        return new SAuthority(roleMechanic.toString());
-    }
+	public static GrantedAuthority fromRole(final SRole roleMechanic) {
+		return new SAuthority(roleMechanic.toString());
+	}
 
-    public SRole getRole() {
-        return role;
-    }
+	public SRole getRole() {
+		return role;
+	}
 
-    public void setRole(final SRole role) {
-        this.role = role;
-    }
+	public void setRole(final SRole role) {
+		this.role = role;
+	}
 
-    public int getRoleId() {
-        return this.role.getRoleId();
-    }
+	public int getRoleId() {
+		return this.role.getRoleId();
+	}
 
-    @Override
-    public String getAuthority() {
-        return this.role.toString();
-    }
+	@Override
+	public String getAuthority() {
+		return this.role.toString();
+	}
 
-    public void setAuthority(final String role) {
-        this.role = SRole.valueOf(role);
-    }
+	public void setAuthority(final String role) {
+		this.role = SRole.valueOf(role);
+	}
 }
