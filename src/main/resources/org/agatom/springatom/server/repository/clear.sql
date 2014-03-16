@@ -1,12 +1,12 @@
 SET foreign_key_checks = 0;
 
-TRUNCATE TABLE `SAuthority`;
-TRUNCATE TABLE `SUser`;
-TRUNCATE TABLE `SPerson_history`;
-TRUNCATE TABLE `SPerson`;
+TRUNCATE TABLE `sauthority`;
+TRUNCATE TABLE `suser`;
+TRUNCATE TABLE `sperson_history`;
+TRUNCATE TABLE `sperson`;
 TRUNCATE TABLE `contacts`;
 TRUNCATE TABLE `contacts_history`;
-TRUNCATE TABLE `SUserAuthority`;
+TRUNCATE TABLE `suserauthority`;
 TRUNCATE TABLE `revinfo`;
 TRUNCATE TABLE `appointment`;
 TRUNCATE TABLE `appointment_task`;

@@ -62,7 +62,7 @@ public enum SRole
 
     @Override
     public String getTable() {
-        return "SAuthority";
+        return "sauthority";
     }
 
     @Override
