@@ -54,6 +54,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.validation.Errors;
 
 import javax.annotation.Nullable;
@@ -79,6 +80,8 @@ public class SAppointmentServiceImpl
 	private static final Logger                     LOGGER                     = Logger.getLogger(SAppointmentServiceImpl.class);
 	@Value(value = "#{sAppointmentProperties['sappointment.minDiffBetweenDatesMs']}")
 	private              long                       minDiffBetweenDates        = 0;
+	@Value(value = "#{sAppointmentProperties['sappointment.maxDiffBetweenDatesMs']}")
+	private long maxDiffBetweenDates = 0;
 	@Autowired
 	private              SAppointmentTaskRepository taskRepository             = null;
 	@Autowired
@@ -387,6 +390,10 @@ public class SAppointmentServiceImpl
 		} else {
 			final DateTime begin = appointment.getBegin();
 			final DateTime end = appointment.getEnd();
+
+			Assert.notNull(begin);
+			Assert.notNull(end);
+
 			final int beginHourOfDay = begin.getHourOfDay();
 			final int endHourOfDay = end.getHourOfDay();
 			if (beginHourOfDay < 8) {
@@ -398,8 +405,13 @@ public class SAppointmentServiceImpl
 			if (begin.isAfter(end)) {
 				errors.rejectValue("begin", "Begin must be lower than end");
 				errors.rejectValue("end", "End must be higher than begin");
-			} else if (new Duration(end.minus(begin.getMillis()).getMillis()).isShorterThan(new Duration(this.minDiffBetweenDates))) {
-				errors.rejectValue("begin", "Minimum time of appointment is shorter than 10 minutes");
+			} else {
+				final Duration duration = new Duration(end.minus(begin.getMillis()).getMillis());
+				if (duration.isShorterThan(new Duration(this.minDiffBetweenDates))) {
+					errors.rejectValue("begin", "Minimum time of appointment is shorter than 10 minutes");
+				} else if (duration.isLongerThan(new Duration(this.maxDiffBetweenDates))) {
+					errors.rejectValue("begin", "Minimum time of appointment is longer than 7 days");
+				}
 			}
 			if (begin.getDayOfMonth() != end.getDayOfMonth()) {
 				errors.rejectValue("begin", "Appointments must be at the same day");
