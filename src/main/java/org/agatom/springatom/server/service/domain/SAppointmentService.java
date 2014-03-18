@@ -29,6 +29,7 @@ import org.joda.time.ReadableInterval;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.Errors;
 
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
@@ -102,4 +103,6 @@ public interface SAppointmentService
 
 	@Cacheable(value = "appointment_principals", key = "'suser_assignees' + #pageble.pageNumber")
 	Collection<SUser> findAssignees(final Pageable pageable);
+
+	void isValid(final SAppointment appointment, final Errors errors);
 }

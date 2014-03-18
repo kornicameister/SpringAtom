@@ -22,8 +22,13 @@ import org.agatom.springatom.server.service.domain.SAppointmentService;
 import org.agatom.springatom.server.service.domain.SCarService;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.support.FormattingConversionService;
+import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.Event;
@@ -39,7 +44,7 @@ import org.springframework.webflow.execution.RequestContext;
 @WizardAction("newAppointmentStep1")
 public class NewAppointmentWizardStep1
 		extends WizardFormAction<SAppointment> {
-
+	private static final Logger LOGGER = Logger.getLogger(NewAppointmentWizardStep1.class);
 	private static final String              CARS               = "cars";
 	private static final String              ASSIGNEES          = "assignees";
 	private static final String              REPORTERS          = "reporters";
@@ -55,6 +60,7 @@ public class NewAppointmentWizardStep1
 	public NewAppointmentWizardStep1() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
+		this.setValidator(new SAppointmentValidator());
 	}
 
 	@Override
@@ -70,5 +76,29 @@ public class NewAppointmentWizardStep1
 	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
 		binder.setRequiredFields(REQUIRED_FIELDS);
 		return super.doInitBinder(binder, conversionService);
+	}
+
+	private class SAppointmentValidator
+			implements Validator {
+
+		@Override
+		public boolean supports(final Class<?> clazz) {
+			return ClassUtils.isAssignable(SAppointment.class, clazz);
+		}
+
+		@Override
+		public void validate(final Object target, final Errors errors) {
+			Assert.notNull(target, "Target must not be null");
+			Assert.isAssignable(SAppointment.class, target.getClass());
+			final SAppointment appointment = (SAppointment) target;
+
+			appointmentService.isValid(appointment, errors);
+
+			if (!errors.hasErrors()) {
+				LOGGER.debug(String.format("%s validated without errors", target));
+			} else {
+				LOGGER.error(String.format("%s validated wit errors => %s", target, errors));
+			}
+		}
 	}
 }

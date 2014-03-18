@@ -46,6 +46,7 @@ import org.joda.time.Duration;
 import org.joda.time.ReadableDuration;
 import org.joda.time.ReadableInterval;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.history.Revision;
 import org.springframework.security.access.AccessDeniedException;
@@ -53,6 +54,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Errors;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -72,16 +74,17 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class SAppointmentServiceImpl
 		extends SBasicServiceImpl<SAppointment, Long>
 		implements SAppointmentService {
-	private static final String BAD_ARG_MSG                = "No %s provided, could not execute call";
-	private static final String ERROR_MESSAGE_SD_GT_ED_MSG = "startDate must be greater than endDate";
-	private static final Logger LOGGER                     = Logger.getLogger(SAppointmentServiceImpl.class);
-
+	private static final String                     BAD_ARG_MSG                = "No %s provided, could not execute call";
+	private static final String                     ERROR_MESSAGE_SD_GT_ED_MSG = "startDate must be greater than endDate";
+	private static final Logger                     LOGGER                     = Logger.getLogger(SAppointmentServiceImpl.class);
+	@Value(value = "#{sAppointmentProperties['sappointment.minDiffBetweenDatesMs']}")
+	private              long                       minDiffBetweenDates        = 0;
 	@Autowired
-	private SAppointmentTaskRepository taskRepository;
+	private              SAppointmentTaskRepository taskRepository             = null;
 	@Autowired
-	private SCarRepository             carRepository;
+	private              SCarRepository             carRepository              = null;
 	@Autowired
-	private SUserRepository            userRepository;
+	private              SUserRepository            userRepository             = null;
 
 	@Override
 	public SAppointment withFullLoad(final SAppointment obj) {
@@ -367,6 +370,37 @@ public class SAppointmentServiceImpl
 				SRole.ROLE_APPOINTMENT_EXECUTE
 		);
 		return Collections.unmodifiableList(Lists.newArrayList(this.userRepository.findAll(predicate, pageable)));
+	}
+
+	@Override
+	public void isValid(final SAppointment appointment, final Errors errors) {
+		if (appointment == null) {
+			errors.reject("1", "Appointment is null");
+		} else {
+			final DateTime begin = appointment.getBegin();
+			final DateTime end = appointment.getEnd();
+			final int beginHourOfDay = begin.getHourOfDay();
+			final int endHourOfDay = end.getHourOfDay();
+			if (beginHourOfDay < 8) {
+				errors.rejectValue("begin", "Begin hour must not be lower than 8AM");
+			}
+			if (endHourOfDay > 20) {
+				errors.rejectValue("end", "End hour must not be higher than 8PM");
+			}
+			if (begin.isAfter(end)) {
+				errors.rejectValue("begin", "Begin must be lower than end");
+				errors.rejectValue("end", "End must be higher than begin");
+			} else if (new Duration(end.minus(begin.getMillis()).getMillis()).isShorterThan(new Duration(this.minDiffBetweenDates))) {
+				errors.rejectValue("begin", "Minimum time of appointment is shorter than 10 minutes");
+			}
+			if (begin.getDayOfMonth() != end.getDayOfMonth()) {
+				errors.rejectValue("begin", "Appointments must be at the same day");
+			} else if (begin.getMonthOfYear() != end.getMonthOfYear()) {
+				errors.rejectValue("begin", "Appointments must be at the same month");
+			} else if (begin.getYear() != end.getYear()) {
+				errors.rejectValue("begin", "Appointments must be at the same year");
+			}
+		}
 	}
 
 	private SUser getMechanic(final long mechanicId) throws EntityDoesNotExistsServiceException {

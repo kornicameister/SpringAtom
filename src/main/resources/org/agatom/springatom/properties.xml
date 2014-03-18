@@ -38,6 +38,10 @@
     <bean id="flowProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location" value="classpath:org/agatom/springatom/web/flows/flows.properties"/>
     </bean>
+    <bean id="sAppointmentProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location"
+                  value="classpath:org/agatom/springatom/server/model/beans/appointment/sappointment.properties"/>
+    </bean>
 
     <bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
