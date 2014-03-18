@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.server.model.conversion.converter.impl;
 
+import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.conversion.annotation.PersistableConverterUtility;
 import org.agatom.springatom.server.model.conversion.converter.PersistableConverterImpl;
@@ -35,11 +36,19 @@ import org.agatom.springatom.server.model.conversion.converter.PersistableConver
 
 @PersistableConverterUtility
 public class UserDefaultConverter
-        extends PersistableConverterImpl<SUser> {
+		extends PersistableConverterImpl<SUser> {
 
-    @Override
-    public String convert(final SUser source) {
-        return source.getPerson().getIdentity();
-    }
+	@Override
+	public String convert(final SUser source) {
+		final SPerson person = source.getPerson();
+		if (person == null) {
+			return "???";
+		}
+		final String identity = person.getIdentity();
+		if (identity == null) {
+			return "???";
+		}
+		return identity;
+	}
 
 }

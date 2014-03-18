@@ -38,55 +38,55 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 public abstract class WizardFormAction<T extends Serializable>
-        extends FormAction {
+		extends FormAction {
 
-    private static final Logger                      LOGGER             = Logger.getLogger(WizardFormAction.class);
-    public static final  String                      COMMAND_BEAN_NAME  = "commandBean";
-    @Autowired
-    protected            FormattingConversionService conversionService  = null;
-    @Autowired
-    protected            LocalValidatorFactoryBean   delegatedValidator = null;
-    @Autowired
-    protected            ApplicationContext          applicationContext = null;
+	private static final Logger                      LOGGER             = Logger.getLogger(WizardFormAction.class);
+	public static final  String                      COMMAND_BEAN_NAME  = "commandBean";
+	@Autowired
+	protected            FormattingConversionService conversionService  = null;
+	@Autowired
+	protected            LocalValidatorFactoryBean   delegatedValidator = null;
+	@Autowired
+	protected            ApplicationContext          applicationContext = null;
 
-    protected WizardFormAction() {
-        this.setFormObjectName(COMMAND_BEAN_NAME);
-        this.setFormObjectClass(GenericTypeResolver.resolveTypeArgument(this.getClass(), WizardFormAction.class));
-    }
+	protected WizardFormAction() {
+		this.setFormObjectName(COMMAND_BEAN_NAME);
+		this.setFormObjectClass(GenericTypeResolver.resolveTypeArgument(this.getClass(), WizardFormAction.class));
+	}
 
-    @Override
-    protected void initBinder(final RequestContext context, final DataBinder binder) {
-        LOGGER.trace("initBinder not set...setting");
+	@Override
+	protected void initBinder(final RequestContext context, final DataBinder binder) {
+		LOGGER.trace("initBinder not set...setting");
 
-        binder.setIgnoreUnknownFields(true);
-        binder.setAutoGrowNestedPaths(true);
-        binder.setConversionService(this.conversionService);
-        binder.setValidator(this.delegatedValidator);
+		binder.setIgnoreUnknownFields(true);
+		binder.setAutoGrowNestedPaths(true);
+		binder.setConversionService(this.conversionService);
+		binder.setValidator(this.delegatedValidator);
 
-        this.doInitBinder(((WebDataBinder) binder), this.conversionService);
-    }
+		this.doInitBinder(((WebDataBinder) binder), this.conversionService);
+	}
 
-    /**
-     * TypeSafe version of {@link org.springframework.webflow.action.FormAction#getFormObject(org.springframework.webflow.execution.RequestContext)}.
-     *
-     * @param context
-     *         current webflow context
-     *
-     * @return this step form object instance
-     *
-     * @throws Exception
-     *         if any, most likely it can be {@link java.lang.ClassCastException}
-     */
-    @SuppressWarnings("unchecked")
-    protected T getCommandBean(final RequestContext context) throws Exception {
-        final Object formObject = this.getFormObject(context);
-        Assert.isInstanceOf(this.getFormObjectClass(), formObject);
-        return (T) formObject;
-    }
+	/**
+	 * TypeSafe version of {@link org.springframework.webflow.action.FormAction#getFormObject(org.springframework.webflow.execution.RequestContext)}.
+	 *
+	 * @param context current webflow context
+	 *
+	 * @return this step form object instance
+	 *
+	 * @throws Exception if any, most likely it can be {@link java.lang.ClassCastException}
+	 */
+	@SuppressWarnings("unchecked")
+	protected T getCommandBean(final RequestContext context) throws Exception {
+		final Object formObject = this.getFormObject(context);
+		Assert.isInstanceOf(this.getFormObjectClass(), formObject);
+		return (T) formObject;
+	}
 
-    protected abstract WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService);
+	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
+		return binder;
+	}
 
-    protected abstract static class MatcherConverter
-            implements ConditionalConverter {
-    }
+	protected abstract static class MatcherConverter
+			implements ConditionalConverter {
+	}
 }

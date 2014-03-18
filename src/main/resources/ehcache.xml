@@ -15,12 +15,14 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true" monitoring="autodetect"
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="true" monitoring="autodetect"
          dynamicConfig="true">
 
     <diskStore path="java.io.tmpdir/springatom"/>
 
-    <defaultCache maxEntriesLocalHeap="10000" eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="120" diskSpoolBufferSizeMB="30"
+    <defaultCache maxEntriesLocalHeap="10000" eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="120"
+                  diskSpoolBufferSizeMB="30"
                   maxEntriesLocalDisk="10000000" diskExpiryThreadIntervalSeconds="120" memoryStoreEvictionPolicy="LRU">
         <persistence strategy="localTempSwap"/>
     </defaultCache>
@@ -33,6 +35,10 @@
     <cache name="clients"
            timeToLiveSeconds="3600"
            maxEntriesLocalHeap="200"
+           overflowToDisk="true"/>
+    <cache name="appointment_principals"
+           timeToLiveSeconds="3600"
+           maxEntriesLocalHeap="5"
            overflowToDisk="true"/>
     <cache name="reports"
            overflowToDisk="true"

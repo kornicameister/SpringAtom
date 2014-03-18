@@ -36,16 +36,20 @@
             <p>
                 <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tf.begin.label"/>">
                     <span><s:message code="wizard.NewAppointmentWizard.tf.begin.label"/></span>
-                    <form:input id="${requestScope.formID}-begin-date" htmlEscape="true" cssClass="x-input" type="date" path="beginDate"/>
-                    <form:input id="${requestScope.formID}-begin-time" htmlEscape="true" cssClass="x-input" type="time" path="beginTime"/>
+                    <form:input id="${requestScope.formID}-begin-date" htmlEscape="true" cssClass="x-input" type="date"
+                                path="beginDate"/>
+                    <form:input id="${requestScope.formID}-begin-time" htmlEscape="true" cssClass="x-input" type="time"
+                                path="beginTime"/>
                 </label>
             </p>
 
             <p>
                 <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tf.end.label"/>">
                     <span><s:message code="wizard.NewAppointmentWizard.tf.end.label"/></span>
-                    <form:input id="${requestScope.formID}-end-date" htmlEscape="true" cssClass="x-input" type="date" path="endDate"/>
-                    <form:input id="${requestScope.formID}-end-time" htmlEscape="true" cssClass="x-input" type="time" path="endTime"/>
+                    <form:input id="${requestScope.formID}-end-date" htmlEscape="true" cssClass="x-input" type="date"
+                                path="endDate"/>
+                    <form:input id="${requestScope.formID}-end-time" htmlEscape="true" cssClass="x-input" type="time"
+                                path="endTime"/>
                 </label>
             </p>
         </fieldset>
@@ -54,7 +58,7 @@
             <p>
                 <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tt.reporter.label"/>">
                     <span><s:message code="wizard.NewAppointmentWizard.tt.reporter.label"/></span>
-                    <form:select id="${requestScope.formID}-repoter"
+                    <form:select id="${requestScope.formID}-reporter"
                                  htmlEscape="true"
                                  cssClass="x-input x-input-select"
                                  items="${requestScope.reporters}"

@@ -27,47 +27,48 @@ import org.agatom.springatom.server.populators.DatabaseEnumPopulable;
  * @since 0.0.1
  */
 public enum SRole
-        implements DatabaseEnumPopulable {
-    ROLE_ADMIN(666),
-    ROLE_ANONYMOUS(-1),
-    ROLE_USER(0),
-    ROLE_CLIENT(1),
-    ROLE_MECHANIC(2),
-    ROLE_BOSS(3),
-    ROLE_ACCOUNT_ADMINISTRATOR(4),
-    //per persistent business class
-    ROLE_CAR_UPDATE(5),
-    ROLE_CAR_READ(6),
-    ROLE_CAR_CREATE(7),
-    ROLE_CAR_DELETE(8),
-    ROLE_APPOINTMENT_CREATE(9),
-    ROLE_APPOINTMENT_READ(10),
-    ROLE_APPOINTMENT_UPDATE(11),
-    ROLE_APPOINTMENT_DELETE(12);
-    //per persistent business class
-    private final int roleId;
+		implements DatabaseEnumPopulable {
+	ROLE_ADMIN(666),
+	ROLE_ANONYMOUS(-1),
+	ROLE_USER(0),
+	ROLE_CLIENT(1),
+	ROLE_MECHANIC(2),
+	ROLE_BOSS(3),
+	ROLE_ACCOUNT_ADMINISTRATOR(4),
+	//per persistent business class
+	ROLE_CAR_UPDATE(5),
+	ROLE_CAR_READ(6),
+	ROLE_CAR_CREATE(7),
+	ROLE_CAR_DELETE(8),
+	ROLE_APPOINTMENT_CREATE(9),
+	ROLE_APPOINTMENT_READ(10),
+	ROLE_APPOINTMENT_UPDATE(11),
+	ROLE_APPOINTMENT_DELETE(12),
+	ROLE_APPOINTMENT_EXECUTE(13);
+	//per persistent business class
+	private final int roleId;
 
-    SRole(final int id) {
-        this.roleId = id;
-    }
+	SRole(final int id) {
+		this.roleId = id;
+	}
 
-    public int getRoleId() {
-        return this.roleId;
-    }
+	public int getRoleId() {
+		return this.roleId;
+	}
 
-    @Override
-    public String[] getColumns() {
-        return new String[]{"authority"};
-    }
+	@Override
+	public String[] getColumns() {
+		return new String[]{"authority"};
+	}
 
-    @Override
-    public String getTable() {
-        return "sauthority";
-    }
+	@Override
+	public String getTable() {
+		return "sauthority";
+	}
 
-    @Override
-    public String[] getData() {
-        return new String[]{this.toString()};
-    }
+	@Override
+	public String[] getData() {
+		return new String[]{this.toString()};
+	}
 
 }

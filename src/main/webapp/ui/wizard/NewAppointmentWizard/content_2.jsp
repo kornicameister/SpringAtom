@@ -26,10 +26,11 @@
 
 <div id="sa-wizard-step-body" class="x-wizard-content">
     <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
+    <s:eval expression="newAppointmentStep2.formObjectName" var="modelAttribute" scope="page"/>
 
     <form:form id="${requestScope.formID}"
                action="${flowExecutionUrl}"
-               modelAttribute="newTask"
+               modelAttribute="${modelAttribute}"
                method="<%=RequestMethod.POST.toString().toLowerCase()%>"
                cssClass="x-form">
         <fieldset>
@@ -38,57 +39,33 @@
                 <div class="x-inputs">
                     <ul id="tasks-container">
                         <s:message code="wizard.NewAppointmentWizard.tl.taskType.placeholder" var="placeholder"/>
-                        <li id="0" data-role="task">
-                            <form:select id="${requestScope.formID}-type"
-                                         items="<%= AppointmentTaskType.values()%>"
-                                         placeholder="${placeholder}"
-                                         cssClass="x-input x-input-select"
-                                         path="type"/>
-                            <form:textarea id="${requestScope.formID}-task"
-                                           htmlEscape="true"
-                                           cssClass="x-input"
-                                           cols="15"
-                                           rows="1"
-                                           path="task"/>
-                            <button id="form-add-row" name="_eventId_addTask" type="submit" data-role="mv-add" class="x-button x-button-add">
-                                <i class="icon-plus icon-color-black"></i>
-                            </button>
-                        </li>
-                        <c:forEach items="${requestScope.tasks}" var="task" varStatus="it" begin="0" step="1">
-                            <li id="${it.index+1}">
-                                <input type="text" value="${task.type}" id="${it.current}-type" readonly/>
-                                <textarea id="${it.current}-task" cols="15" rows="1" readonly>${task.task}</textarea>
-                                <button id="form-remove-row-${it.index}" name="_eventId_removeTask" type="submit" data-role="mv-add"
-                                        class="x-button x-button-remove">
+                        <c:forEach items="tasks" var="task" varStatus="it">
+                            <li id="${it.index}">
+                                    <%-- fixed list of available values to be localized --%>
+                                <form:select id="${requestScope.formID}-type"
+                                             items="<%=AppointmentTaskType.values()%>"
+                                             placeholder="${placeholder}"
+                                             cssClass="x-input x-input-select"
+                                             path="tasks[${it.index}].type"/>
+                                <form:textarea id="${requestScope.formID}-task"
+                                               htmlEscape="true"
+                                               cssClass="x-input"
+                                               cols="15"
+                                               rows="1"
+                                               path="tasks[${it.index}].task"/>
+                                <a id="mv-add" name="${it.index}" class="x-button x-button-add" href="#">
+                                    <i class="icon-plus icon-color-black"></i>
+                                </a>
+                                <a id="mv-remove" name="${it.index}" class="x-button x-button-remove" href="#">
                                     <i class="icon-minus icon-color-black"></i>
-                                </button>
-                                <script type="text/javascript" id="mv-remove-script">
-                                    Spring.addDecoration(new Spring.AjaxEventDecoration({
-                                        elementId: 'form-remove-row-${it.index}',
-                                        event    : 'onclick',
-                                        formId   : '${requestScope.formID}',
-                                        popup    : true,
-                                        params   : {
-                                            fragments: 'wiz.content',
-                                            mode     : "embedded",
-                                            rtai     : '${it.index}'
-                                        }
-                                    }));
-                                </script>
+                                </a>
                             </li>
                         </c:forEach>
                     </ul>
-                    <script type="text/javascript" id="mv-add-flow-script">
-                        Spring.addDecoration(new Spring.AjaxEventDecoration({
-                            elementId: 'form-add-row',
-                            event    : 'onclick',
-                            formId   : '${requestScope.formID}',
-                            popup    : true,
-                            params   : {
-                                fragments: 'wiz.content',
-                                mode     : "embedded"
-                            }
-                        }));
+                    <script type="text/javascript" id="mv-multiple-tasks">
+                        $(function () {
+                            SA.wizard.Helpers.NewAppointmentWizard.handleAddRemoveTask($('ul#tasks-container'));
+                        })
                     </script>
                 </div>
             </div>

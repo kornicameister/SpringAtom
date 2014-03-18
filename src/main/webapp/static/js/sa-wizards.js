@@ -199,6 +199,81 @@
     };
     SA.wizard.Helpers.NewReportWizard = helper;
 
+    SA.wizard.Helpers.NewAppointmentWizard = {
+        handleAddRemoveTask: function (tasks) {
+            var buttons = tasks.find('a[href=#]'),
+                it = 1;
+            if (buttons) {
+                buttons.each(function (index, button) {
+                    button = $(button);
+                    var id = button.attr('id'),
+                        handler = undefined,
+                        addHandler = function (event) {
+                            event.stopPropagation();
+                            var target = $(event.target);
+                            var cloned = target.parent('li').clone(true);
+                            if (!cloned) {
+                                throw new Error('Failed to get DOM to clone');
+                            }
+                            cloned.find('a#mv-add').remove();
+                            cloned.find('a#mv-remove').click(removeHandler);
+                            cloned.attr('id', it++);
+                            tasks.append(cloned);
+                            recalculateInputIds(target.parents('ul'));
+                        },
+                        removeHandler = function (event) {
+                            event.stopPropagation();
+
+                            var target = $(event.target);
+                            target.click(undefined);
+
+                            var parent = target.parent('li');
+                            var ulElement = target.parents('ul');
+                            if (ulElement.find('li').length !== 1) {
+                                parent.remove();
+                            }
+                            recalculateInputIds(ulElement);
+                        },
+                        recalculateInputIds = function (ulElement) {
+                            var liElements = ulElement.find('li'),
+                                id = 0;
+
+                            liElements.each(function (index, li) {
+                                li = $(li);
+                                var lis = li.find('.x-input'),
+                                    incrementValue = lis.length;
+                                lis.each(function (index, input) {
+                                    input = $(input);
+
+                                    var prefixMatcher = new RegExp('^\\w+', 'gi'),
+                                        suffixMatcher = new RegExp('\\.\\w+$', 'gi')
+
+                                    var oldName = input.attr('name');
+
+                                    var prefix = prefixMatcher.exec(oldName);
+                                    var suffix = suffixMatcher.exec(oldName);
+
+                                    var newName = prefix + '[' + Math.floor(((id++) / incrementValue)) + ']' + suffix;
+
+                                    input.attr('name', newName);
+                                });
+                            });
+                        };
+
+                    if (id === 'mv-add') {
+                        handler = addHandler;
+                    } else if (id === 'mv-remove') {
+                        handler = removeHandler;
+                    }
+
+                    button.click(handler);
+                })
+            } else {
+                console.log('Failed to obtain list of buttons');
+            }
+        }
+    };
+
     /**
      * //TODO missing jsDoc
      * @param cfg
@@ -327,31 +402,31 @@
         var decorations = [];
 
         decorations.push(new Spring.ElementDecoration({
-            elementId  : wizardId,
-            widgetType : "dijit.layout.BorderContainer",
+            elementId:   wizardId,
+            widgetType:  "dijit.layout.BorderContainer",
             widgetAttrs: {
-                title        : $('#' + wizardId).attr('title'),
-                gutters      : true,
+                title:         $('#' + wizardId).attr('title'),
+                gutters:       true,
                 liveSplitters: true
             }
         }));
         decorations.push(new Spring.ElementDecoration({
-            elementId  : wizardHeaderId,
-            widgetType : "dijit.layout.ContentPane",
+            elementId:   wizardHeaderId,
+            widgetType:  "dijit.layout.ContentPane",
             widgetAttrs: {
                 region: 'leading'
             }
         }));
         decorations.push(new Spring.ElementDecoration({
-            elementId  : wizardContentId,
-            widgetType : "dijit.layout.ContentPane",
+            elementId:   wizardContentId,
+            widgetType:  "dijit.layout.ContentPane",
             widgetAttrs: {
                 region: 'center'
             }
         }));
         decorations.push(new Spring.ElementDecoration({
-            elementId  : wizardActionsId,
-            widgetType : "dijit.layout.ContentPane",
+            elementId:   wizardActionsId,
+            widgetType:  "dijit.layout.ContentPane",
             widgetAttrs: {
                 region: 'bottom'
             }
@@ -367,12 +442,12 @@
     function applyActionDecorator(val, formId) {
         Spring.addDecoration(new Spring.AjaxEventDecoration({
             elementId: val,
-            event    : 'onclick',
-            formId   : formId,
-            popup    : true,
-            params   : {
+            event:     'onclick',
+            formId:    formId,
+            popup:     true,
+            params:    {
                 fragments: 'wiz.content',
-                mode     : "embedded"
+                mode:      "embedded"
             }
         }));
     }
@@ -380,8 +455,8 @@
     function applyFinishActionDecorator(val, formId) {
         Spring.addDecoration(new Spring.AjaxEventDecoration({
             elementId: val,
-            event    : 'onclick',
-            formId   : formId
+            event:     'onclick',
+            formId:    formId
         }));
     }
 

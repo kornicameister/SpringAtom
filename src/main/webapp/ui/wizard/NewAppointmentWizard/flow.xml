@@ -27,7 +27,8 @@
     <on-start>
         <evaluate expression="'NewAppointmentWizard'" result="flowScope.wizardID"/>
         <evaluate expression="'NewAppointmentWizardForm'" result="flowScope.formID"/>
-        <evaluate expression="new org.agatom.springatom.web.flows.wizards.support.WizardRequiresStepsHolder()" result="flowScope.requiredSteps"/>
+        <evaluate expression="new org.agatom.springatom.web.flows.wizards.support.WizardRequiresStepsHolder()"
+                  result="flowScope.requiredSteps"/>
 
         <!--init required steps-->
         <evaluate expression="flowScope.requiredSteps.add('step1')"/>
@@ -35,70 +36,34 @@
         <!--init requires steps-->
     </on-start>
 
-    <view-state id="step1" view="ui.wizard.NewAppointmentWizard.1" model="appointment" popup="true">
-        <binder>
-            <binding property="car" required="true"/>
-            <binding property="assignee" required="true"/>
-            <binding property="reporter" required="true"/>
-            <binding property="beginDate" required="true"/>
-            <binding property="beginTime" required="true"/>
-            <binding property="endDate" required="true"/>
-            <binding property="endTime" required="true"/>
-        </binder>
-        <on-entry>
-            <evaluate expression="SAppointmentFormService.getNewAppointment(false)"
-                      result="flowScope.appointment"
-                      result-type="org.agatom.springatom.server.model.beans.appointment.SAppointment"/>
-            <evaluate expression="SAppointmentFormService.cars" result="viewScope.cars"/>
-            <evaluate expression="SAppointmentFormService.assignees" result="viewScope.assignees"/>
-            <evaluate expression="SAppointmentFormService.reporters" result="viewScope.reporters"/>
-        </on-entry>
-        <transition on="next" to="step2" validate="false"/>
-        <transition on="cancel" to="cancel" history="invalidate" bind="false"/>
+    <view-state id="step1" view="ui.wizard.NewAppointmentWizard.1" popup="true">
+        <on-render>
+            <evaluate expression="newAppointmentStep1.setupForm"/>
+        </on-render>
+        <transition on="next" to="step2" validate="true" bind="true">
+            <evaluate expression="newAppointmentStep1.bindAndValidate"/>
+        </transition>
+        <transition on="cancel" to="successCancel" history="invalidate" bind="false">
+            <evaluate expression="newAppointmentStep1.resetForm"/>
+        </transition>
     </view-state>
 
-    <view-state id="step2" view="ui.wizard.NewAppointmentWizard.2" model="newTask" popup="true">
-        <binder>
-            <binding property="task" required="false"/>
-            <binding property="type" required="true"/>
-        </binder>
-        <on-entry>
-            <evaluate expression="SAppointmentFormService.newTask"
-                      result="flowScope.newTask"
-                      result-type="org.agatom.springatom.server.model.beans.appointment.SAppointmentTask"/>
-            <evaluate expression="appointment.tasks"
-                      result="viewScope.tasks"/>
-        </on-entry>
-        <transition on="addTask" to="step2">
-            <evaluate expression="SAppointmentFormService.addNewTask(flowScope.appointment, newTask)"/>
+    <view-state id="step2" view="ui.wizard.NewAppointmentWizard.2" popup="true">
+        <on-render>
+            <evaluate expression="newAppointmentStep2.setupForm"/>
+        </on-render>
+        <transition on="finish" to="successCancel" bind="true" validate="true">
+            <evaluate expression="newAppointmentStep2.bindAndValidate"/>
         </transition>
-        <transition on="removeTask" to="step2" bind="false">
-            <evaluate expression="SAppointmentFormService.removeTask(flowScope.appointment, currentEvent.attributes.getString('rtai'))"/>
+        <transition on="previous" to="step1">
+            <evaluate expression="newAppointmentStep2.resetForm"/>
         </transition>
-        <transition on="previous" to="step1"/>
-        <transition on="next" to="step3">
-            <evaluate expression="SAppointmentFormService.addNewTask(flowScope.appointment, newTask)"/>
+        <transition on="cancel" to="successCancel" history="invalidate">
+            <evaluate expression="newAppointmentStep2.resetForm"/>
         </transition>
-        <transition on="cancel" to="cancel" history="invalidate"/>
     </view-state>
 
-    <view-state id="step3" view="ui.wizard.NewAppointmentWizard.3" popup="true">
-        <on-entry>
-            <evaluate expression="flowScope.appointment"
-                      result="viewScope.finalResultAppointment"
-                      result-type="org.agatom.springatom.server.model.beans.appointment.SAppointment"/>
-        </on-entry>
-        <transition on="finish" to="success" history="invalidate">
-            <evaluate expression="SAppointmentService.save(flowScope.appointment)"
-                      result="flowScope.appointment"
-                      result-type="org.agatom.springatom.server.model.beans.appointment.SAppointment"/>
-        </transition>
-        <transition on="cancel" to="cancel" history="invalidate"/>
-    </view-state>
-
-    <end-state id="success"
-               view="externalRedirect:/dashboard/calendar?action=#{currentEvent.id}&amp;eventId=#{appointment.id}&amp;eventBegin=#{appointment.begin.toDateTimeISO()}&amp;eventEnd=#{appointment.end.toDateTimeISO()}"/>
-    <end-state id="cancel"
+    <end-state id="successCancel"
                view="externalRedirect:/dashboard/calendar?action=#{currentEvent.id}"/>
 
 </flow>
