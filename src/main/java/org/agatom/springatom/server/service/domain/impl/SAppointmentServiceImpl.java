@@ -331,44 +331,52 @@ public class SAppointmentServiceImpl
 	@Override
 	public Collection<SUser> findReporters() {
 		// TODO tmp solution before introducing ACL
-		final EnumPath<SRole> role = QSUser.sUser.roles.any().pk.authority.role;
-		final BooleanExpression predicate = role.in(
+		final QSUser user = QSUser.sUser;
+		final EnumPath<SRole> role = user.roles.any().pk.authority.role;
+		BooleanExpression predicate = role.in(
 				SRole.ROLE_APPOINTMENT_CREATE,
 				SRole.ROLE_MECHANIC
 		);
+		predicate = predicate.and(user.accountNonLocked.eq(true)).and(user.accountNonExpired.eq(true));
 		return Collections.unmodifiableList(Lists.newArrayList(this.userRepository.findAll(predicate)));
 	}
 
 	@Override
 	public Collection<SUser> findReporters(final Pageable pageable) {
 		// TODO tmp solution before introducing ACL
-		final EnumPath<SRole> role = QSUser.sUser.roles.any().pk.authority.role;
-		final BooleanExpression predicate = role.in(
+		final QSUser user = QSUser.sUser;
+		final EnumPath<SRole> role = user.roles.any().pk.authority.role;
+		BooleanExpression predicate = role.in(
 				SRole.ROLE_APPOINTMENT_CREATE,
 				SRole.ROLE_MECHANIC
 		);
+		predicate = predicate.and(user.accountNonLocked.eq(true)).and(user.accountNonExpired.eq(true));
 		return Collections.unmodifiableList(Lists.newArrayList(this.userRepository.findAll(predicate, pageable)));
 	}
 
 	@Override
 	public Collection<SUser> findAssignees() {
 		// TODO tmp solution before introducing ACL
-		final EnumPath<SRole> role = QSUser.sUser.roles.any().pk.authority.role;
-		final BooleanExpression predicate = role.in(
+		final QSUser user = QSUser.sUser;
+		final EnumPath<SRole> role = user.roles.any().pk.authority.role;
+		BooleanExpression predicate = role.in(
 				SRole.ROLE_MECHANIC,
 				SRole.ROLE_APPOINTMENT_EXECUTE
 		);
+		predicate = predicate.and(user.accountNonLocked.eq(true)).and(user.accountNonExpired.eq(true));
 		return Collections.unmodifiableList(Lists.newArrayList(this.userRepository.findAll(predicate)));
 	}
 
 	@Override
 	public Collection<SUser> findAssignees(final Pageable pageable) {
 		// TODO tmp solution before introducing ACL
-		final EnumPath<SRole> role = QSUser.sUser.roles.any().pk.authority.role;
-		final BooleanExpression predicate = role.in(
+		final QSUser user = QSUser.sUser;
+		final EnumPath<SRole> role = user.roles.any().pk.authority.role;
+		BooleanExpression predicate = role.in(
 				SRole.ROLE_MECHANIC,
 				SRole.ROLE_APPOINTMENT_EXECUTE
 		);
+		predicate = predicate.and(user.accountNonLocked.eq(true)).and(user.accountNonExpired.eq(true));
 		return Collections.unmodifiableList(Lists.newArrayList(this.userRepository.findAll(predicate, pageable)));
 	}
 
