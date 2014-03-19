@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
@@ -33,19 +34,19 @@ import org.springframework.data.rest.core.annotation.RestResource;
  */
 
 @Qualifier(SPersonContactRepository.REPO_NAME)
-@RestResource(rel = SPersonContactRepository.REST_REPO_REL, path = SPersonContactRepository.REST_REPO_PATH)
+@RepositoryRestResource(itemResourceRel = SPersonContactRepository.REST_REPO_REL, path = SPersonContactRepository.REST_REPO_PATH)
 public interface SPersonContactRepository
-        extends SBasicRepository<SPersonContact, Long> {
+		extends SBasicRepository<SPersonContact, Long> {
 
-    String REST_REPO_REL  = "rest.person.contact";
-    String REST_REPO_PATH = "person_contact";
-    String REPO_NAME      = "SPersonContactRepository";
+	String REST_REPO_REL  = "rest.person.contact";
+	String REST_REPO_PATH = "person_contact";
+	String REPO_NAME      = "SPersonContactRepository";
 
-    @RestResource(rel = "byAssignedLastName", path = "assigned_lastName")
-    Page<SPersonContact> findByAssignedLastNameContaining(@Param("lastName") final String lastName, Pageable pageable);
+	@RestResource(rel = "byAssignedLastName", path = "assigned_lastName")
+	Page<SPersonContact> findByAssignedLastNameContaining(@Param("lastName") final String lastName, Pageable pageable);
 
-    Page<SPersonContact> findByContactContaining(@Param("contact") final String contact, Pageable pageable);
+	Page<SPersonContact> findByContactContaining(@Param("contact") final String contact, Pageable pageable);
 
-    Page<SPersonContact> findByType(@Param("type") final ContactType type, Pageable pageable);
+	Page<SPersonContact> findByType(@Param("type") final ContactType type, Pageable pageable);
 
 }

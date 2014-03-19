@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
@@ -33,7 +34,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
  * @since 0.0.1
  */
 @Qualifier(value = SUserNotificationRepository.REPO_NAME)
-@RestResource(rel = SUserNotificationRepository.REST_REPO_REL, path = SUserNotificationRepository.REST_REPO_PATH)
+@RepositoryRestResource(itemResourceRel = SUserNotificationRepository.REST_REPO_REL, path = SUserNotificationRepository.REST_REPO_PATH)
 public interface SUserNotificationRepository
         extends SBasicRepository<SUserNotification, Long> {
     String REPO_NAME      = "UserNotificationsRepo";

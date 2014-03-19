@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
@@ -35,34 +36,34 @@ import java.util.List;
  */
 
 @Qualifier(SCarMasterRepository.REPO_NAME)
-@RestResource(rel = SCarMasterRepository.REST_REPO_REL, path = SCarMasterRepository.REST_REPO_PATH)
+@RepositoryRestResource(itemResourceRel = SCarMasterRepository.REST_REPO_REL, path = SCarMasterRepository.REST_REPO_PATH)
 public interface SCarMasterRepository
-        extends SBasicRepository<SCarMaster, Long> {
-    String REPO_NAME      = "CarMasterRepository";
-    String REST_REPO_REL  = "repo.carmaster";
-    String REST_REPO_PATH = "car_master";
+		extends SBasicRepository<SCarMaster, Long> {
+	String REPO_NAME      = "CarMasterRepository";
+	String REST_REPO_REL  = "repo.carmaster";
+	String REST_REPO_PATH = "car_master";
 
-    @RestResource(rel = "byBrandAndModel", path = "brandAndModel")
-    SCarMaster findByManufacturingDataBrandAndManufacturingDataModel(
-            @Param("brand") final String brand,
-            @Param("model") final String model
-    );
+	@RestResource(rel = "byBrandAndModel", path = "brandAndModel")
+	SCarMaster findByManufacturingDataBrandAndManufacturingDataModel(
+			@Param("brand") final String brand,
+			@Param("model") final String model
+	);
 
-    @RestResource(rel = "byBrand", path = "brand")
-    Page<SCarMaster> findByManufacturingDataBrand(
-            @Param(value = "brand") final String brand,
-            final Pageable pageable
-    );
+	@RestResource(rel = "byBrand", path = "brand")
+	Page<SCarMaster> findByManufacturingDataBrand(
+			@Param(value = "brand") final String brand,
+			final Pageable pageable
+	);
 
-    @RestResource(rel = "byModel", path = "model")
-    Page<SCarMaster> findByManufacturingDataModel(
-            @Param(value = "model") final String model,
-            final Pageable pageable
-    );
+	@RestResource(rel = "byModel", path = "model")
+	Page<SCarMaster> findByManufacturingDataModel(
+			@Param(value = "model") final String model,
+			final Pageable pageable
+	);
 
-    @RestResource(rel = "byBrandOrModelContaining", path = "brandOrModel_contains")
-    @Query(name = "byBrandOrModelContaining", value = "select cm from SCarMaster as cm where cm.manufacturingData.brand like %:arg% or cm.manufacturingData.model like %:arg%")
-    List<SCarMaster> findByManufacturingDataBrandContainingOrManufacturingDataModelContaining(
-            @Param("arg") final String searchArgument
-    );
+	@RestResource(rel = "byBrandOrModelContaining", path = "brandOrModel_contains")
+	@Query(name = "byBrandOrModelContaining", value = "select cm from SCarMaster as cm where cm.manufacturingData.brand like %:arg% or cm.manufacturingData.model like %:arg%")
+	List<SCarMaster> findByManufacturingDataBrandContainingOrManufacturingDataModelContaining(
+			@Param("arg") final String searchArgument
+	);
 }

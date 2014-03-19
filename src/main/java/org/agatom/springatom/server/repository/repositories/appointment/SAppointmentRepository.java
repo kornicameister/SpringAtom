@@ -25,7 +25,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.data.rest.core.annotation.Description;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
  * {@code SAppointmentRepository} supports CRUD operations, backend with {@link org.springframework.data.jpa.repository.support.Querydsl}
@@ -37,39 +38,43 @@ import org.springframework.data.rest.core.annotation.RestResource;
  */
 
 @Qualifier(value = SAppointmentRepository.REPO_NAME)
-@RestResource(rel = SAppointmentRepository.REST_REPO_REL, path = SAppointmentRepository.REST_REPO_PATH)
+@RepositoryRestResource(
+		itemResourceRel = SAppointmentRepository.REST_REPO_REL,
+		path = SAppointmentRepository.REST_REPO_PATH,
+		collectionResourceRel = SAppointmentRepository.COLLECTION_REL,
+		itemResourceDescription = @Description("Get single SAppointment"),
+		collectionResourceDescription = @Description("Get collection of SAppointments")
+)
 public interface SAppointmentRepository
-        extends SBasicRepository<SAppointment, Long> {
-    String REPO_NAME      = "AppointmentsRepository";
-    String REST_REPO_REL  = "rest.appointment";
-    String REST_REPO_PATH = "appointment";
+		extends SBasicRepository<SAppointment, Long> {
+	String REPO_NAME      = "AppointmentsRepository";
+	String REST_REPO_REL  = "rest.appointment";
+	String REST_REPO_PATH = "appointment";
+	String COLLECTION_REL = "appointments";
 
-    /**
-     * Returns {@link org.springframework.data.domain.Page} of {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} which are
-     * located between two dates on the timeliness. Note that the the date range is exclusive in this case.
-     *
-     * @param begin
-     *         begin date
-     * @param end
-     *         end date
-     * @param pageable
-     *         pageable interface
-     *
-     * @return {@link org.springframework.data.domain.Page} of {@link org.agatom.springatom.server.model.beans.appointment.SAppointment}
-     */
-    Page<SAppointment> findByBeginAfterAndEndBefore(@Param(value = "begin") DateTime begin, @Param(value = "end") DateTime end, Pageable pageable);
+	/**
+	 * Returns {@link org.springframework.data.domain.Page} of {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} which are
+	 * located between two dates on the timeliness. Note that the the date range is exclusive in this case.
+	 *
+	 * @param begin    begin date
+	 * @param end      end date
+	 * @param pageable pageable interface
+	 *
+	 * @return {@link org.springframework.data.domain.Page} of {@link org.agatom.springatom.server.model.beans.appointment.SAppointment}
+	 */
+	Page<SAppointment> findByBeginAfterAndEndBefore(@Param(value = "begin") DateTime begin, @Param(value = "end") DateTime end, Pageable pageable);
 
-    Page<SAppointment> findByBeginAfter(@Param(value = "begin") DateTime begin, Pageable pageable);
+	Page<SAppointment> findByBeginAfter(@Param(value = "begin") DateTime begin, Pageable pageable);
 
-    Page<SAppointment> findByBeginBefore(@Param(value = "begin") DateTime begin, Pageable pageable);
+	Page<SAppointment> findByBeginBefore(@Param(value = "begin") DateTime begin, Pageable pageable);
 
-    Page<SAppointment> findByEndAfter(@Param(value = "end") DateTime begin, Pageable pageable);
+	Page<SAppointment> findByEndAfter(@Param(value = "end") DateTime begin, Pageable pageable);
 
-    Page<SAppointment> findByEndBefore(@Param(value = "end") DateTime begin, Pageable pageable);
+	Page<SAppointment> findByEndBefore(@Param(value = "end") DateTime begin, Pageable pageable);
 
-    Page<SAppointment> findByCarLicencePlate(@Param(value = "licencePlate") String licencePlate, Pageable pageable);
+	Page<SAppointment> findByCarLicencePlate(@Param(value = "licencePlate") String licencePlate, Pageable pageable);
 
-    Page<SAppointment> findByAssignee(@Param(value = "assignee") SUser assignee, Pageable pageable);
+	Page<SAppointment> findByAssignee(@Param(value = "assignee") SUser assignee, Pageable pageable);
 
-    Page<SAppointment> findByReporter(@Param(value = "reporter") SUser assignee, Pageable pageable);
+	Page<SAppointment> findByReporter(@Param(value = "reporter") SUser assignee, Pageable pageable);
 }

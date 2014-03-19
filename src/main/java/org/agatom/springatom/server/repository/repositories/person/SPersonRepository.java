@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
@@ -35,23 +36,23 @@ import java.util.List;
  */
 
 @Qualifier(value = SPersonRepository.REPO_NAME)
-@RestResource(rel = SPersonRepository.REST_REPO_REL, path = SPersonRepository.REST_REPO_PATH)
+@RepositoryRestResource(itemResourceRel = SPersonRepository.REST_REPO_REL, path = SPersonRepository.REST_REPO_PATH)
 public interface SPersonRepository
-        extends SRepository<SPerson, Long, Integer> {
-    String REST_REPO_REL  = "rest.person";
-    String REST_REPO_PATH = "person";
-    String REPO_NAME      = "PersonRepository";
+		extends SRepository<SPerson, Long, Integer> {
+	String REST_REPO_REL  = "rest.person";
+	String REST_REPO_PATH = "person";
+	String REPO_NAME      = "PersonRepository";
 
-    @RestResource(rel = "byFirstNameContaining", path = "firstName_contains")
-    Page<SPerson> findByFirstNameContaining(@Param("name") final String name, final Pageable pageable);
+	@RestResource(rel = "byFirstNameContaining", path = "firstName_contains")
+	Page<SPerson> findByFirstNameContaining(@Param("name") final String name, final Pageable pageable);
 
-    @RestResource(rel = "byLastNameContaining", path = "lastName_contains")
-    Page<SPerson> findByLastNameContaining(@Param("name") final String name, final Pageable pageable);
+	@RestResource(rel = "byLastNameContaining", path = "lastName_contains")
+	Page<SPerson> findByLastNameContaining(@Param("name") final String name, final Pageable pageable);
 
-    @RestResource(rel = "byMail", path = "mail")
-    SPerson findByPrimaryMail(@Param("mail") final String mail);
+	@RestResource(rel = "byMail", path = "mail")
+	SPerson findByPrimaryMail(@Param("mail") final String mail);
 
-    @RestResource(rel = "byIdentity", path = "identity")
-    @Query(name = "byIdentityQuery", value = "select p from SPerson as p where p.firstName like %:arg% or p.lastName like %:arg%")
-    List<SPerson> findPerson(@Param("arg") final String arg);
+	@RestResource(rel = "byIdentity", path = "identity")
+	@Query(name = "byIdentityQuery", value = "select p from SPerson as p where p.firstName like %:arg% or p.lastName like %:arg%")
+	List<SPerson> findPerson(@Param("arg") final String arg);
 }

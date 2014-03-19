@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
@@ -34,16 +35,16 @@ import org.springframework.data.rest.core.annotation.RestResource;
  */
 
 @Qualifier(SAppointmentTaskRepository.REPO_NAME)
-@RestResource(rel = SAppointmentTaskRepository.REST_REPO_REL, path = SAppointmentTaskRepository.REST_REPO_PATH)
+@RepositoryRestResource(itemResourceRel = SAppointmentTaskRepository.REST_REPO_REL, path = SAppointmentTaskRepository.REST_REPO_PATH)
 public interface SAppointmentTaskRepository
-        extends SBasicRepository<SAppointmentTask, Long> {
-    String REPO_NAME      = "AppointmentTaskRepo";
-    String REST_REPO_REL  = "rest.appointment.task";
-    String REST_REPO_PATH = "appointment_tasks";
+		extends SBasicRepository<SAppointmentTask, Long> {
+	String REPO_NAME      = "AppointmentTaskRepo";
+	String REST_REPO_REL  = "rest.appointment.task";
+	String REST_REPO_PATH = "appointment_tasks";
 
-    Page<SAppointmentTask> findByAppointment(@Param(value = "appointment") SAppointment appointment, Pageable pageable);
+	Page<SAppointmentTask> findByAppointment(@Param(value = "appointment") SAppointment appointment, Pageable pageable);
 
-    Page<SAppointmentTask> findByTaskContaining(@Param(value = "task") String taskLike, Pageable pageable);
+	Page<SAppointmentTask> findByTaskContaining(@Param(value = "task") String taskLike, Pageable pageable);
 
-    Page<SAppointmentTask> findByType(@Param(value = "type") AppointmentTaskType type, Pageable pageable);
+	Page<SAppointmentTask> findByType(@Param(value = "type") AppointmentTaskType type, Pageable pageable);
 }

@@ -22,6 +22,7 @@ import org.agatom.springatom.server.model.types.issue.IssueType;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
@@ -36,14 +37,14 @@ import java.util.List;
  */
 
 @Qualifier(value = SIssueRepository.REPO_NAME)
-@RestResource(rel = SIssueRepository.REST_REPO_REL, path = SIssueRepository.REST_REPO_PATH)
+@RepositoryRestResource(itemResourceRel = SIssueRepository.REST_REPO_REL, path = SIssueRepository.REST_REPO_PATH)
 public interface SIssueRepository
-        extends SAbstractIssueRepository<SIssue> {
-    String REPO_NAME      = "IssuesRepository";
-    String REST_REPO_REL  = "rest.issue";
-    String REST_REPO_PATH = "issues";
+		extends SAbstractIssueRepository<SIssue> {
+	String REPO_NAME      = "IssuesRepository";
+	String REST_REPO_REL  = "rest.issue";
+	String REST_REPO_PATH = "issues";
 
-    @RestResource(rel = "byTypeAsList", path = "byType_list")
-    @Query(name = "byTypeAsListQuery", value = "select si from SIssue as si where si.type=:type")
-    List<SIssue> findByTypeAsList(@Param(value = "type") IssueType issueType);
+	@RestResource(rel = "byTypeAsList", path = "byType_list")
+	@Query(name = "byTypeAsListQuery", value = "select si from SIssue as si where si.type=:type")
+	List<SIssue> findByTypeAsList(@Param(value = "type") IssueType issueType);
 }
