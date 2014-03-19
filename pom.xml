@@ -62,19 +62,19 @@
 
         <!-- logging -->
         <log4j.version>1.2.17</log4j.version>
-        <slf4j-log4j12.version>1.7.5</slf4j-log4j12.version>
+        <slf4j-log4j12.version>1.7.6</slf4j-log4j12.version>
         <slf4j.version>1.7.5</slf4j.version>
         <!-- logging -->
 
         <!-- spring -->
         <!-- TODO 4.0.0 -->
-        <spring.version>4.0.0.RELEASE</spring.version>
+        <spring.version>4.0.2.RELEASE</spring.version>
         <spring-webflow.version>2.4.0.BUILD-SNAPSHOT</spring-webflow.version>
-        <spring-security.version>3.2.1.CI-SNAPSHOT</spring-security.version>
-        <spring-data-commons.version>1.7.0.BUILD-SNAPSHOT</spring-data-commons.version>
-        <spring-data-jpa.version>1.5.0.BUILD-SNAPSHOT</spring-data-jpa.version>
+        <spring-security.version>3.2.2.RELEASE</spring-security.version>
+        <spring-data-commons.version>1.7.1.RELEASE</spring-data-commons.version>
+        <spring-data-jpa.version>1.5.1.RELEASE</spring-data-jpa.version>
         <spring-data-envers.version>0.2.0.BUILD-SNAPSHOT</spring-data-envers.version>
-        <spring-data-rest-webmvc.version>2.0.0.BUILD-SNAPSHOT</spring-data-rest-webmvc.version>
+        <spring-data-rest-webmvc.version>2.0.1.RELEASE</spring-data-rest-webmvc.version>
         <spring.hateoas.version>0.9.0.RELEASE</spring.hateoas.version>
         <!-- TODO 4.0.0 -->
         <!-- spring -->
@@ -100,11 +100,12 @@
         <!-- joda -->
 
         <!-- hibernate -->
-        <hibernate.version>4.3.1.Final</hibernate.version>
+        <hibernate.version>4.3.4.Final</hibernate.version>
         <hibernate.annotations.version>3.5.6-Final</hibernate.annotations.version>
-        <hibernate.validator.version>5.0.3.Final</hibernate.validator.version>
+        <hibernate.validator.version>5.1.0.Final</hibernate.validator.version>
+        <hibernate-commons-annotations.version>3.2.0.Final</hibernate-commons-annotations.version>
         <c3p0.version>0.9.5-pre5</c3p0.version>
-        <ehcache.version>2.6.6</ehcache.version>
+        <ehcache.version>2.6.8</ehcache.version>
         <!-- hibernate -->
 
         <!-- web jars -->
@@ -130,7 +131,12 @@
         <mysql-connector-java.version>5.1.29</mysql-connector-java.version>
         <!-- db access -->
 
-        <tomcat.version>8.0.0-RC3</tomcat.version>
+        <!-- jasper -->
+        <DynamicJasper.version>5.0.0</DynamicJasper.version>
+        <jasperreports.version>5.5.1</jasperreports.version>
+        <!-- jasper -->
+
+        <tomcat.version>8.0.3</tomcat.version>
         <guava.version>16.0.1</guava.version>
         <tomcat.maven.version>2.1</tomcat.maven.version>
         <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
@@ -143,11 +149,10 @@
         <javax.validation-api.version>1.1.0.Final</javax.validation-api.version>
         <org.json.version>20131018</org.json.version>
         <taglibs.standard.version>1.1.2</taglibs.standard.version>
-        <asm.version>4.2</asm.version>
+        <asm.version>5.0</asm.version>
         <cglib.version>3.1</cglib.version>
         <javassist.version>3.18.1-GA</javassist.version>
         <javax.el-api.version>3.0.0</javax.el-api.version>
-        <DynamicJasper.version>5.0.0</DynamicJasper.version>
     </properties>
 
     <repositories>
@@ -228,7 +233,7 @@
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>5.5.0</version>
+            <version>${jasperreports.version}</version>
             <type>jar</type>
             <scope>compile</scope>
             <exclusions>
