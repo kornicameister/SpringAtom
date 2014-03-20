@@ -21,15 +21,18 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="restProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="classpath:org/agatom/springatom/rest/rest.properties"/>
+    </bean>
     <bean id="restRepositoryConfiguration"
           class="org.springframework.data.rest.core.config.RepositoryRestConfiguration">
-        <property name="returnBodyOnCreate" value="true"/>
-        <property name="returnBodyOnUpdate" value="false"/>
-        <property name="maxPageSize" value="30"/>
-        <property name="limitParamName" value="limit"/>
-        <property name="pageParamName" value="page"/>
-        <property name="sortParamName" value="sort"/>
-        <property name="defaultPageSize" value="10"/>
+        <property name="returnBodyOnCreate" value="#{restProperties['rest.returnBodyOnCreate']}"/>
+        <property name="returnBodyOnUpdate" value="#{restProperties['rest.returnBodyOnUpdate']}"/>
+        <property name="maxPageSize" value="#{restProperties['rest.maxPageSize']}"/>
+        <property name="limitParamName" value="#{restProperties['rest.limitParamName']}"/>
+        <property name="pageParamName" value="#{restProperties['rest.pageParamName']}"/>
+        <property name="sortParamName" value="#{restProperties['rest.sortParamName']}"/>
+        <property name="defaultPageSize" value="#{restProperties['rest.defaultPageSize']}"/>
     </bean>
 
 </beans>

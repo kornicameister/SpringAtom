@@ -40,21 +40,30 @@
     <context:component-scan base-package="org.agatom.springatom.server">
         <!-- exclude repositories, handled by jpa-->
         <context:exclude-filter type="annotation" expression="org.springframework.data.repository.NoRepositoryBean"/>
-        <context:exclude-filter type="annotation" expression="org.springframework.data.repository.RepositoryDefinition"/>
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.data.repository.RepositoryDefinition"/>
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
         <!-- exclude repositories, handled by jpa-->
     </context:component-scan>
 
-    <bean id="jackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+    <bean id="jackson2HttpMessageConverter"
+          class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
         <property name="objectMapper" ref="jackson2ObjectFactoryBean"/>
         <property name="prettyPrint" value="false"/>
     </bean>
-    <bean id="jackson2ObjectFactoryBean" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
+    <bean id="jackson2ObjectFactoryBean"
+          class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean">
         <property name="failOnEmptyBeans" value="false"/>
-        <property name="autoDetectGettersSetters" value="true"/>
+        <property name="autoDetectGettersSetters" value="false"/>
+        <property name="autoDetectFields" value="true"/>
         <property name="indentOutput" value="false"/>
         <property name="simpleDateFormat" value="YYYY-MM-dd"/>
-        <property name="autoDetectFields" value="true"/>
+        <property name="featuresToEnable">
+            <array value-type="java.lang.Enum">
+                <value>com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS</value>
+                <value>com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS</value>
+            </array>
+        </property>
     </bean>
 
     <bean id="jodaDtff" class="org.springframework.format.datetime.joda.DateTimeFormatterFactory">
@@ -67,6 +76,7 @@
     <bean id="springAtomConversionService"
           class="org.springframework.format.support.FormattingConversionServiceFactoryBean"
           depends-on="jodaDtff,jodaTff"
+          primary="true"
           lazy-init="false">
         <property name="registerDefaultFormatters" value="true"/>
         <property name="formatterRegistrars">
