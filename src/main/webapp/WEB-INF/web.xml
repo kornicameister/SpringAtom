@@ -31,10 +31,7 @@
     </context-param>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>
-            classpath:springatom-application-root.xml,
-            classpath:springatom-rest-mvc.xml
-        </param-value>
+        <param-value>classpath:springatom-all.xml</param-value>
     </context-param>
     <!-- context param -->
 
@@ -136,7 +133,7 @@
 
     <servlet>
         <servlet-name>springatom-rest</servlet-name>
-        <servlet-class>org.springframework.data.rest.webmvc.RepositoryRestDispatcherServlet</servlet-class>
+        <servlet-class>org.agatom.springatom.rest.SARepositoryRestDispatcherServlet</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
     <servlet-mapping>

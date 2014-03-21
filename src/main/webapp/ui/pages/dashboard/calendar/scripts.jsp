@@ -1,3 +1,5 @@
+<%@ page import="org.agatom.springatom.server.model.beans.appointment.SAppointment" %>
+<%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~
@@ -14,9 +16,6 @@
   ~ You should have received a copy of the GNU General Public License                            ~
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
-<%@ page import="org.agatom.springatom.server.model.beans.appointment.SAppointment" %>
-<%@ page import="org.springframework.http.MediaType" %>
-<%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -37,9 +36,9 @@
 <s:message code="${domainClassName}" var="domainName"/>
 <s:message code="sa.msg.objectCreated" var="objectCreatedMsg" arguments="${domainName}"/>
 
-<s:url value="/app/data/appointment/feed" var="jsonFeed"/>
-<c:set var="jsonFeedMethod" value="<%=RequestMethod.POST.toString().toLowerCase()%>"/>
-<c:set var="jsonFeedContentType" value="<%=MediaType.APPLICATION_FORM_URLENCODED_VALUE%>"/>
+<s:url value="/rest/appointment/search/beginAfterAndEndBeforeTimestamp" var="jsonFeed"/>
+<c:set var="jsonFeedMethod" value="<%=RequestMethod.GET.toString().toLowerCase()%>"/>
+<c:set var="jsonFeedContentType" value="application/hal+json"/>
 
 <script type="text/javascript" id="calendar-loader">
     $(function () {
@@ -52,6 +51,7 @@
         var $calendar = $('#calendar'),
                 parent = $calendar.parent('.x-calendar'),
                 pHeight = parent.height();
+
 
         $calendar.fullCalendar({
             header             : {
@@ -69,37 +69,14 @@
                 {
                     url               : '${jsonFeed}',
                     method            : '${jsonFeedMethod}',
-                    contentType       : '${jsonFeedContentType}',
                     cache             : true,
+                    startParam        : 'begin',
+                    endParam          : 'end',
                     data              : {
-                        domainClass: '${domainClassName}'
+                        sort: 'begin'
                     },
-                    eventDataTransform: function (eventData) {
-                        console.log(eventData);
-                        var begin = moment(eventData['start']).unix();
-                        var end = moment(eventData['end']).unix();
-                        var url = '', urlIndex = -1;
-
-                        $.each(eventData['links'], function (it, value) {
-                            if (value['rel'] == 'self') {
-                                url = value['href'];
-                                urlIndex = it;
-                            }
-                            return url !== '';
-                        });
-
-                        delete eventData['links'][urlIndex];
-
-                        return {
-                            id    : eventData['id'],
-                            start : begin,
-                            end   : end,
-                            allDay: false,
-                            url   : url,
-                            links : eventData['links'],
-                            title : eventData['title']
-                        }
-                    }
+                    eventDataTransform: SA.calendar.eventDataTransform,
+                    success           : SA.calendar.successLoad
                 }
             ],
             defaultEventMinutes: 30,

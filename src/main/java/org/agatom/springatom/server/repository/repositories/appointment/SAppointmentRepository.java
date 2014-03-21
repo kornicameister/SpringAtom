@@ -24,9 +24,11 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.Description;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
  * {@code SAppointmentRepository} supports CRUD operations, backend with {@link org.springframework.data.jpa.repository.support.Querydsl}
@@ -62,7 +64,20 @@ public interface SAppointmentRepository
 	 *
 	 * @return {@link org.springframework.data.domain.Page} of {@link org.agatom.springatom.server.model.beans.appointment.SAppointment}
 	 */
+	@RestResource(
+			rel = "beginAfterAndEndBefore",
+			path = "beginAfterAndEndBefore",
+			description = @Description("Looks up for appointment in given range using DateTime as boundaries")
+	)
 	Page<SAppointment> findByBeginAfterAndEndBefore(@Param(value = "begin") DateTime begin, @Param(value = "end") DateTime end, Pageable pageable);
+
+	@RestResource(
+			rel = "beginAfterAndEndBeforeTimestamp",
+			path = "beginAfterAndEndBeforeTimestamp",
+			description = @Description("Looks up for appointment in given range using timestamps as boundaries")
+	)
+	@Query(value = "select t from SAppointment as t where t.beginTs >= :begin and t.endTs <= :end")
+	Page<SAppointment> findByBeginAfterAndEndBefore(@Param(value = "begin") long begin, @Param(value = "end") long end, Pageable pageable);
 
 	Page<SAppointment> findByBeginAfter(@Param(value = "begin") DateTime begin, Pageable pageable);
 

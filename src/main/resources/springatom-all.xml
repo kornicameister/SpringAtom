@@ -21,19 +21,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="restProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="location" value="classpath:org/agatom/springatom/rest/rest.properties"/>
-    </bean>
-    <bean id="restRepositoryConfiguration"
-          class="org.springframework.data.rest.core.config.RepositoryRestConfiguration">
-        <property name="returnBodyOnCreate" value="#{restProperties['rest.returnBodyOnCreate']}"/>
-        <property name="returnBodyOnUpdate" value="#{restProperties['rest.returnBodyOnUpdate']}"/>
-        <property name="maxPageSize" value="#{restProperties['rest.maxPageSize']}"/>
-        <property name="limitParamName" value="#{restProperties['rest.limitParamName']}"/>
-        <property name="pageParamName" value="#{restProperties['rest.pageParamName']}"/>
-        <property name="sortParamName" value="#{restProperties['rest.sortParamName']}"/>
-        <property name="defaultPageSize" value="#{restProperties['rest.defaultPageSize']}"/>
-    </bean>
-    <bean class="org.agatom.springatom.rest.AdditionalRestConfiguration" lazy-init="true"/>
+    <import resource="springatom-application-root.xml"/>
+    <import resource="springatom-application-web.xml"/>
+    <import resource="springatom-rest-mvc.xml"/>
 
 </beans>

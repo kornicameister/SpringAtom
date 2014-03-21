@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import org.agatom.springatom.server.model.beans.activity.SAssignedActivity;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.types.ReportableEntity;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
@@ -34,6 +35,7 @@ import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * {@code SAppointment} is the business object describing the event.
@@ -71,6 +73,10 @@ public class SAppointment
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "car", referencedColumnName = "idScar")
 	private              SCar                   car              = null;
+	@Formula(value = "UNIX_TIMESTAMP(begin)")
+	private              Long                   beginTs          = null;
+	@Formula(value = "UNIX_TIMESTAMP(end)")
+	private              Long                   endTs            = null;
 
 	public List<SAppointmentTask> getTasks() {
 		this.requireTaskList();
@@ -136,6 +142,20 @@ public class SAppointment
 
 	public Interval getInterval() {
 		return new Interval(this.begin, this.end);
+	}
+
+	public long getBeginTs() {
+		if (this.beginTs != null) {
+			return this.beginTs;
+		}
+		return TimeUnit.MILLISECONDS.toSeconds(this.begin.getMillis());
+	}
+
+	public long getEndTs() {
+		if (this.endTs != null) {
+			return this.endTs;
+		}
+		return TimeUnit.MILLISECONDS.toSeconds(this.end.getMillis());
 	}
 
 	public SAppointment setInterval(final ReadableInterval duration) {

@@ -27,13 +27,15 @@
 
 <script type="text/javascript" src="<s:url value="${staticResources}/jquery/2.1.0/jquery.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/momentjs/2.5.0/min/moment.min.js"/>"></script>
-<script type="text/javascript" src="<s:url value="${staticResources}/momentjs/2.5.0/lang/${lang.language}.js"/>"></script>
-<script type="text/javascript" src="<s:url value='${staticResources}/fullcalendar/1.6.4/fullcalendar.min.js'/>"></script>
+<script type="text/javascript"
+        src="<s:url value="${staticResources}/momentjs/2.5.0/lang/${lang.language}.js"/>"></script>
+<script type="text/javascript" src="<s:url value='${staticResources}/fullcalendar/1.6.4/fullcalendar.js'/>"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/spin-js/1.3.3/spin.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/spin-js/1.3.3/jquery.spin.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/dojo/dojo.js" />"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/spring/Spring.js.uncompressed.js" />"></script>
-<script type="text/javascript" src="<s:url value="${staticResources}/spring/Spring-Dojo.js.uncompressed.js" />"></script>
+<script type="text/javascript"
+        src="<s:url value="${staticResources}/spring/Spring-Dojo.js.uncompressed.js" />"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/sources/js/jquery.dataTables.min.js" />"></script>
 
 <script type="text/javascript" src="<s:url value="${staticLib}/mmenu/3.2.1/jquery.mmenu.min.js"/>"></script>
@@ -48,3 +50,4 @@
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-breadcrumb.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-wizards.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-components.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticSa}/sa-calendar.js"/>"></script>
