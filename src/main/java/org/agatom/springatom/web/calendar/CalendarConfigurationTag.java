@@ -46,8 +46,13 @@ public class CalendarConfigurationTag
 	private static final String   MONTH_NAMES_SHORT     = "monthNamesShort";
 	private static final String   AXIS_FORMAT           = "axisFormat";
 	private static final String   ALL_DAY_TEXT          = "allDayText";
-	public static final  String   COLUMN_FORMAT         = "columnFormat";
-	public static final  String   EVENT_SOURCES         = "eventSources";
+	private static final String COLUMN_FORMAT         = "columnFormat";
+	private static final String EVENT_SOURCES         = "eventSources";
+	private static final String MIN_TIME              = "minTime";
+	private static final String MAX_TIME              = "maxTime";
+	private static final String FIRST_HOUR            = "firstHour";
+	private static final String DEFAULT_VIEW          = "defaultView";
+	private static final String DEFAULT_EVENT_MINUTES = "defaultEventMinutes";
 
 	@Override
 	protected int doStartTagInternal() throws Exception {
@@ -68,11 +73,11 @@ public class CalendarConfigurationTag
 		configuration.put(COLUMN_FORMAT, this.getColumnFormat(applicationProperties));
 		configuration.put(EVENT_SOURCES, this.getEventSources(applicationProperties));
 
-		configuration.put("minTime", Integer.valueOf(applicationProperties.getProperty("component.calendar.minTime")));
-		configuration.put("maxTime", Integer.valueOf(applicationProperties.getProperty("component.calendar.maxTime")));
-		configuration.put("firstHour", Integer.valueOf(applicationProperties.getProperty("component.calendar.firstHour")));
-		configuration.put("defaultView", applicationProperties.getProperty("component.calendar.view"));
-		configuration.put("defaultEventMinutes", Integer.valueOf(applicationProperties.getProperty("component.calendar.defaultEventMinutes")));
+		configuration.put(MIN_TIME, Integer.valueOf(applicationProperties.getProperty("component.calendar.minTime")));
+		configuration.put(MAX_TIME, Integer.valueOf(applicationProperties.getProperty("component.calendar.maxTime")));
+		configuration.put(FIRST_HOUR, Integer.valueOf(applicationProperties.getProperty("component.calendar.firstHour")));
+		configuration.put(DEFAULT_VIEW, applicationProperties.getProperty("component.calendar.view"));
+		configuration.put(DEFAULT_EVENT_MINUTES, Integer.valueOf(applicationProperties.getProperty("component.calendar.defaultEventMinutes")));
 
 		configuration.put("wizardHref", applicationProperties.getProperty("component.calendar.wizardHref"));
 
