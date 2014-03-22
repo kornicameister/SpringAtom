@@ -23,6 +23,18 @@
       xmlns="http://www.springframework.org/schema/webflow"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+    <!-- inputs -->
+    <!--
+        Inputs gathered from calendarComponent
+    -->
+    <input name="begin" required="true" type="java.lang.Long"/>
+    <input name="end" required="true" type="java.lang.Long"/>
+    <input name="allDay" required="true" type="java.lang.Boolean"/>
+    <input name="view" required="true" type="java.lang.String"/>
+    <input name="popup" required="true" type="java.lang.Boolean"/>
+    <input name="mode" required="true" type="java.lang.String"/>
+    <input name="action" required="true" type="java.lang.String"/>
+    <input name="calendar" required="false" type="java.lang.Boolean"/>
 
     <on-start>
         <evaluate expression="'NewAppointmentWizard'" result="flowScope.wizardID"/>

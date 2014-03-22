@@ -67,6 +67,11 @@
                 <value>com.fasterxml.jackson.databind.SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS</value>
             </array>
         </property>
+        <property name="modules">
+            <list value-type="com.fasterxml.jackson.databind.Module">
+                <bean class="com.fasterxml.jackson.datatype.joda.JodaModule"/>
+            </list>
+        </property>
     </bean>
 
     <bean id="jodaDtff" class="org.springframework.format.datetime.joda.DateTimeFormatterFactory">

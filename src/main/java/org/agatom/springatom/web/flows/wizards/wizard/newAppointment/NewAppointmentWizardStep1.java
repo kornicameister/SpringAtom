@@ -23,6 +23,8 @@ import org.agatom.springatom.server.service.domain.SCarService;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import org.joda.time.ReadableInstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.Assert;
@@ -30,9 +32,12 @@ import org.springframework.util.ClassUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
+
+import java.io.Serializable;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 17.03.14</small>
@@ -44,14 +49,17 @@ import org.springframework.webflow.execution.RequestContext;
 @WizardAction("newAppointmentStep1")
 public class NewAppointmentWizardStep1
 		extends WizardFormAction<SAppointment> {
-	private static final Logger LOGGER = Logger.getLogger(NewAppointmentWizardStep1.class);
+	private static final Logger LOGGER          = Logger.getLogger(NewAppointmentWizardStep1.class);
 	private static final String              CARS               = "cars";
 	private static final String              ASSIGNEES          = "assignees";
 	private static final String              REPORTERS          = "reporters";
+	private static final String CALENDAR_INPUTS = "calendarInputs";
 	private static final String[]            REQUIRED_FIELDS    = new String[]{
 			"car", "assignee", "reporter", "beginDate", "endDate", "beginTime", "endTime"
 	};
 	private static final String              FORM_OBJECT_NAME   = "appointment";
+	private static final String DATE_PATTERN    = "yyyy-MM-dd";
+	private static final String TIME_PATTERN    = "HH:mm";
 	@Autowired
 	private              SAppointmentService appointmentService = null;
 	@Autowired
@@ -65,11 +73,29 @@ public class NewAppointmentWizardStep1
 
 	@Override
 	public Event setupForm(final RequestContext context) throws Exception {
+
 		final MutableAttributeMap<Object> viewScope = context.getViewScope();
 		viewScope.put(CARS, this.carService.findAll());
 		viewScope.put(ASSIGNEES, this.appointmentService.findAssignees());
 		viewScope.put(REPORTERS, this.appointmentService.findReporters());
+
+		final AttributeMap<Object> attributes = context.getFlowScope();
+		viewScope.put(CALENDAR_INPUTS, this.populateCalendarComponentInputs(attributes));
+
 		return super.setupForm(context);
+	}
+
+	private CalendarComponentInputs populateCalendarComponentInputs(final AttributeMap<Object> attributes) {
+		final DateTime begin = this.convertToDateTime(attributes.getLong("begin"));
+		final DateTime end = this.convertToDateTime(attributes.getLong("end"));
+		final Boolean allDay = attributes.getBoolean("allDay");
+		final String action = attributes.getString("action");
+		final Boolean calendar = attributes.getBoolean("calendar", false);
+		return new CalendarComponentInputs(begin, end, allDay, action, calendar);
+	}
+
+	private DateTime convertToDateTime(final Long begin) {
+		return (DateTime) this.conversionService.convert(begin, ReadableInstant.class);
 	}
 
 	@Override
@@ -99,6 +125,50 @@ public class NewAppointmentWizardStep1
 			} else {
 				LOGGER.error(String.format("%s validated wit errors => %s", target, errors));
 			}
+		}
+	}
+
+	public class CalendarComponentInputs implements Serializable {
+		private final Boolean  calendar;
+		private       DateTime begin;
+		private       DateTime end;
+		private       boolean  allDay;
+		private       String   action;
+
+		public CalendarComponentInputs(final DateTime begin, final DateTime end, final boolean allDay, final String action, final Boolean calendar) {
+			this.begin = begin;
+			this.end = end;
+			this.allDay = allDay;
+			this.action = action;
+			this.calendar = calendar;
+		}
+
+		public boolean isCalendar() {
+			return calendar;
+		}
+
+		public String getBeginDate() {
+			return this.begin.toString(DATE_PATTERN);
+		}
+
+		public String getEndDate() {
+			return this.end.toString(DATE_PATTERN);
+		}
+
+		public String getBeginTime() {
+			return this.begin.toString(TIME_PATTERN);
+		}
+
+		public String getEndTime() {
+			return this.end.toString(TIME_PATTERN);
+		}
+
+		public boolean isAllDay() {
+			return allDay;
+		}
+
+		public String getAction() {
+			return action;
 		}
 	}
 }

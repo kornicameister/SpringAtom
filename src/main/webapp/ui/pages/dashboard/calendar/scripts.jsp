@@ -79,6 +79,7 @@
                     success           : SA.calendar.successLoad
                 }
             ],
+            select             : SA.calendar.launchWizardOnSelect,
             defaultEventMinutes: 30,
             allDayText         : 'Caly dzien',      // localize from RB
             monthNames         : monthNames,
@@ -97,16 +98,6 @@
             selectHelper       : true,
             selectable         : true,
             editable           : true,
-            loading            : function (isLoading, viewName) {
-                if (isLoading) {
-                    alertify.log(viewName.name + ' is loading...');
-                } else {
-                    alertify.success(viewName.name + ' loaded');
-                }
-            },
-            dayClick           : function (date, allDay, jsEvent, view) {
-                $('#dddd').click();
-            },
             eventClick         : function (calEvent, jsEvent, view) {
                 console.log('Event: ' + calEvent.title);
                 console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);

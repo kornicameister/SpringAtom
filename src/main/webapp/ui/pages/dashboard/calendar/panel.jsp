@@ -20,8 +20,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 
-<a href="<s:url value="/app/wizard/NewAppointmentWizard"/>" id="dddd">AAAAAAA</a>
 <section class="x-calendar">
     <div id="calendar"></div>
 </section>
+<a id="calendarComponentHref" href="<s:url value="/app/wizard/NewAppointmentWizard"/>" style="visibility: hidden">_calendarComponent</a>
 <%@ include file="scripts.jsp" %>

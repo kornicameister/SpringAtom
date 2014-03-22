@@ -25,7 +25,8 @@
 		SA.calendar = {};
 	}
 
-	var requiredProperties = ['_embedded'],
+	var wizardHref = '/app/wizard/NewAppointmentWizard',
+		requiredProperties = ['_embedded'],
 		mappingProperties = {
 			_embedded: 'data',
 			_links   : 'links'
@@ -136,6 +137,21 @@
 			links : eventData['links'],
 			title : getEventTitle.apply(this, [urlCar, urlInfopage])
 		}
+	};
+	SA.calendar.launchWizardOnSelect = function (start, end, allDay, jsEvent, view) {
+		start = moment.utc(start.toJSON()).valueOf();
+		end = moment.utc(end.toJSON()).valueOf();
+
+		Spring.remoting.getLinkedResource('calendarComponentHref', {
+			begin   : start,
+			end     : end,
+			allDay  : allDay,
+			view    : view['name'],
+			popup   : true,
+			mode    : 'embedded',
+			action  : 'create',
+			calendar: true
+		}, true);
 	}
 
 }(window.SA = window.SA || {}, jQuery));

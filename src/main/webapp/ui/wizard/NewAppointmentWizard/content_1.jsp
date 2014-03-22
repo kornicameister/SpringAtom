@@ -26,6 +26,17 @@
 <div id="sa-wizard-step-body" class="x-wizard-content">
     <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
 
+    <jsp:useBean id="calendarInputs"
+                 type="org.agatom.springatom.web.flows.wizards.wizard.newAppointment.NewAppointmentWizardStep1.CalendarComponentInputs"
+                 scope="request"/>
+    <c:if test="${calendarInputs != null}">
+        <c:set var="begin" value="${calendarInputs.beginDate}" scope="page"/>
+        <c:set var="end" value="${calendarInputs.endDate}" scope="page"/>
+        <c:set var="beginT" value="${calendarInputs.beginTime}" scope="page"/>
+        <c:set var="endT" value="${calendarInputs.endTime}" scope="page"/>
+        <c:set var="readonly" value="${calendarInputs.calendar}" scope="page"/>
+    </c:if>
+
     <form:form id="${requestScope.formID}"
                action="${flowExecutionUrl}"
                commandName="appointment"
@@ -36,9 +47,19 @@
             <p>
                 <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tf.begin.label"/>">
                     <span><s:message code="wizard.NewAppointmentWizard.tf.begin.label"/></span>
-                    <form:input id="${requestScope.formID}-begin-date" htmlEscape="true" cssClass="x-input" type="date"
+                    <form:input id="${requestScope.formID}-begin-date"
+                                htmlEscape="true"
+                                cssClass="x-input"
+                                type="date"
+                                value="${begin}"
+                                readonly="${readonly}"
                                 path="beginDate"/>
-                    <form:input id="${requestScope.formID}-begin-time" htmlEscape="true" cssClass="x-input" type="time"
+                    <form:input id="${requestScope.formID}-begin-time"
+                                htmlEscape="true"
+                                cssClass="x-input"
+                                type="time"
+                                value="${beginT}"
+                                readonly="${readonly}"
                                 path="beginTime"/>
                 </label>
             </p>
@@ -46,9 +67,19 @@
             <p>
                 <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tf.end.label"/>">
                     <span><s:message code="wizard.NewAppointmentWizard.tf.end.label"/></span>
-                    <form:input id="${requestScope.formID}-end-date" htmlEscape="true" cssClass="x-input" type="date"
+                    <form:input id="${requestScope.formID}-end-date"
+                                htmlEscape="true"
+                                cssClass="x-input"
+                                type="date"
+                                value="${end}"
+                                readonly="${readonly}"
                                 path="endDate"/>
-                    <form:input id="${requestScope.formID}-end-time" htmlEscape="true" cssClass="x-input" type="time"
+                    <form:input id="${requestScope.formID}-end-time"
+                                htmlEscape="true"
+                                cssClass="x-input"
+                                type="time"
+                                value="${endT}"
+                                readonly="${readonly}"
                                 path="endTime"/>
                 </label>
             </p>
