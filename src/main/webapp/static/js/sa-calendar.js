@@ -131,7 +131,7 @@
 				id    : eventData['id'],
 				start : begin,
 				end   : end,
-				allDay: false,
+				allDay: eventData['allDay'],
 				url   : urlInfopage,
 				links : eventData['links'],
 				title : getEventTitle.apply(this, [urlCar, urlInfopage])

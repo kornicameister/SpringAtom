@@ -77,6 +77,17 @@ public class SAppointment
 	private              Long                   beginTs          = null;
 	@Formula(value = "UNIX_TIMESTAMP(end)")
 	private              Long                   endTs            = null;
+	@Column(name = "allDay", nullable = true)
+	private boolean allDay = false;
+
+	public boolean isAllDay() {
+		return allDay;
+	}
+
+	public SAppointment setAllDay(final boolean allDay) {
+		this.allDay = allDay;
+		return this;
+	}
 
 	public List<SAppointmentTask> getTasks() {
 		this.requireTaskList();

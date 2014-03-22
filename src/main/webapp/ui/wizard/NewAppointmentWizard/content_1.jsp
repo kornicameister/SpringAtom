@@ -35,6 +35,7 @@
         <c:set var="beginT" value="${calendarInputs.beginTime}" scope="page"/>
         <c:set var="endT" value="${calendarInputs.endTime}" scope="page"/>
         <c:set var="readonly" value="${calendarInputs.calendar}" scope="page"/>
+        <c:set var="allDay" value="${calendarInputs.allDay}" scope="page"/>
     </c:if>
 
     <form:form id="${requestScope.formID}"
@@ -43,6 +44,7 @@
                method="<%=RequestMethod.POST.toString().toLowerCase()%>"
                cssClass="x-form">
         <fieldset>
+            <form:hidden path="allDay" value="${allDay}"/>
             <legend><s:message code="wizard.NewAppointmentWizard.tf.label"/></legend>
             <p>
                 <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tf.begin.label"/>">

@@ -25,8 +25,10 @@ import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 import org.joda.time.ReadableInstant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.Assert;
@@ -51,23 +53,27 @@ import java.io.Serializable;
 @WizardAction("newAppointmentStep1")
 public class NewAppointmentWizardStep1
 		extends WizardFormAction<SAppointment> {
-	private static final Logger         LOGGER          = Logger.getLogger(NewAppointmentWizardStep1.class);
+	private static final Logger              LOGGER             = Logger.getLogger(NewAppointmentWizardStep1.class);
 	private static final String              CARS               = "cars";
 	private static final String              ASSIGNEES          = "assignees";
 	private static final String              REPORTERS          = "reporters";
-	private static final String         CALENDAR_INPUTS = "calendarInputs";
+	private static final String              CALENDAR_INPUTS    = "calendarInputs";
 	private static final String[]            REQUIRED_FIELDS    = new String[]{
 			"car", "assignee", "reporter", "beginDate", "endDate", "beginTime", "endTime"
 	};
 	private static final String              FORM_OBJECT_NAME   = "appointment";
-	private              String         dataPattern     = null;
-	private              String         timePattern     = null;
+	private              String              dataPattern        = null;
+	private              String              timePattern        = null;
 	@Autowired
 	private              SAppointmentService appointmentService = null;
 	@Autowired
 	private              SCarService         carService         = null;
 	@Autowired
-	private              SMessageSource messageSource   = null;
+	private              SMessageSource      messageSource      = null;
+	@Value(value = "#{applicationPropertiesBean['component.calendar.minTime']}")
+	private              Integer             minTime            = 0;
+	@Value(value = "#{applicationPropertiesBean['component.calendar.maxTime']}")
+	private              Integer             maxTime            = 0;
 
 	public NewAppointmentWizardStep1() {
 		super();
@@ -97,16 +103,27 @@ public class NewAppointmentWizardStep1
 	}
 
 	private CalendarComponentInputs populateCalendarComponentInputs(final AttributeMap<Object> attributes) {
-		final DateTime begin = this.convertToDateTime(attributes.getLong("begin"));
-		final DateTime end = this.convertToDateTime(attributes.getLong("end"));
 		final Boolean allDay = attributes.getBoolean("allDay");
+		final DateTime begin = this.convertToDateTime(attributes.getLong("begin"), allDay, true);
+		final DateTime end = this.convertToDateTime(attributes.getLong("end"), allDay, false);
 		final String action = attributes.getString("action");
 		final Boolean calendar = attributes.getBoolean("calendar", false);
 		return new CalendarComponentInputs(begin, end, allDay, action, calendar);
 	}
 
-	private DateTime convertToDateTime(final Long begin) {
-		return (DateTime) this.conversionService.convert(begin, ReadableInstant.class);
+	private DateTime convertToDateTime(final Long milliseconds, final boolean allDay, final boolean isBeginDate) {
+		final DateTime convert = (DateTime) this.conversionService.convert(milliseconds, ReadableInstant.class);
+		if (allDay) {
+			final MutableDateTime dateTime = convert.toMutableDateTime();
+			if (isBeginDate) {
+				dateTime.setHourOfDay(this.minTime);
+			} else {
+				dateTime.setHourOfDay(this.maxTime);
+			}
+			dateTime.setMinuteOfHour(0);
+			return dateTime.toDateTime();
+		}
+		return convert;
 	}
 
 	@Override

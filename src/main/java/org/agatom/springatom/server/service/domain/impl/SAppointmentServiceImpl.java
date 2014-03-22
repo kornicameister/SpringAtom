@@ -81,7 +81,11 @@ public class SAppointmentServiceImpl
 	@Value(value = "#{sAppointmentProperties['sappointment.minDiffBetweenDatesMs']}")
 	private              long                       minDiffBetweenDates        = 0;
 	@Value(value = "#{sAppointmentProperties['sappointment.maxDiffBetweenDatesMs']}")
-	private long maxDiffBetweenDates = 0;
+	private              long                       maxDiffBetweenDates        = 0;
+	@Value(value = "#{applicationPropertiesBean['component.calendar.minTime']}")
+	private              Integer                    minTime                    = 0;
+	@Value(value = "#{applicationPropertiesBean['component.calendar.maxTime']}")
+	private              Integer                    maxTime                    = 0;
 	@Autowired
 	private              SAppointmentTaskRepository taskRepository             = null;
 	@Autowired
@@ -175,12 +179,12 @@ public class SAppointmentServiceImpl
 	public SAppointment removeTask(final long idAppointment, final long... tasksId) throws EntityDoesNotExistsServiceException {
 		checkArgument(idAppointment > 0, String.format(BAD_ARG_MSG, "SAppointment#getId()"));
 		this.taskRepository.deleteInBatch(this.taskRepository
-				.findAll(
-						QSAppointmentTask
-								.sAppointmentTask
-								.id.
-								in(Longs.asList(tasksId))
-				)
+						.findAll(
+								QSAppointmentTask
+										.sAppointmentTask
+										.id.
+										in(Longs.asList(tasksId))
+						)
 		);
 		return this.repository.findOne(idAppointment);
 	}
@@ -396,11 +400,11 @@ public class SAppointmentServiceImpl
 
 			final int beginHourOfDay = begin.getHourOfDay();
 			final int endHourOfDay = end.getHourOfDay();
-			if (beginHourOfDay < 8) {
-				errors.rejectValue("begin", "Begin hour must not be lower than 8AM");
+			if (beginHourOfDay < this.minTime) {
+				errors.rejectValue("begin", String.format("Begin hour must not be lower than %d", this.minTime));
 			}
-			if (endHourOfDay > 20) {
-				errors.rejectValue("end", "End hour must not be higher than 8PM");
+			if (endHourOfDay > this.maxTime) {
+				errors.rejectValue("end", String.format("End hour must not be higher than %d", this.maxTime));
 			}
 			if (begin.isAfter(end)) {
 				errors.rejectValue("begin", "Begin must be lower than end");
