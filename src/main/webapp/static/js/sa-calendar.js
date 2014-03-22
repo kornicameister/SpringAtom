@@ -89,69 +89,132 @@
 		},
 		isValidResponse = function (eventData) {
 			return typeof eventData['self'] === 'undefined';
-		};
+		},
+		successLoad = function (args) {
+			if (jQuery.isPlainObject(args)) {
+				// proceeding
+				var ret = {};
+				jQuery.each(args, function (key, value) {
+					if (jQuery.inArray(key, requiredProperties) !== -1) {
+						ret[mappingProperties[key]] = rpHandlers[key].apply(this, [value]);
+					} else {
+						console.log('Key => ' + key + ' not in ' + requiredProperties);
+					}
+				});
+				if (!ret['data']) {
+					return [];
+				}
+				return ret['data'];
+			}
+			return [];
+		},
+		eventDataTransform = function (eventData) {
+			if (!isValidResponse(eventData)) {
+				console.log('Invalid eventData...return');
+				return undefined;
+			}
+			var begin = eventData['beginTs'],
+				end = eventData['endTs'],
+				urlInfopage = '',
+				urlCar = '';
 
-	SA.calendar.successLoad = function (args) {
-		if (jQuery.isPlainObject(args)) {
-			// proceeding
-			var ret = {};
-			jQuery.each(args, function (key, value) {
-				if (jQuery.inArray(key, requiredProperties) !== -1) {
-					ret[mappingProperties[key]] = rpHandlers[key].apply(this, [value]);
-				} else {
-					console.log('Key => ' + key + ' not in ' + requiredProperties);
+			$.each(eventData['links'], function (rel, value) {
+				if (rel === 'infoPage') {
+					urlInfopage = value['href'];
+				}
+				if (rel === 'car') {
+					urlCar = value['href'];
 				}
 			});
-			if (!ret['data']) {
-				return [];
-			}
-			return ret['data'];
-		}
-		return [];
-	};
-	SA.calendar.eventDataTransform = function (eventData) {
-		if (!isValidResponse(eventData)) {
-			console.log('Invalid eventData...return');
-			return undefined;
-		}
-		var begin = eventData['beginTs'],
-			end = eventData['endTs'],
-			urlInfopage = '',
-			urlCar = '';
 
-		$.each(eventData['links'], function (rel, value) {
-			if (rel === 'infoPage') {
-				urlInfopage = value['href'];
+			return {
+				id    : eventData['id'],
+				start : begin,
+				end   : end,
+				allDay: false,
+				url   : urlInfopage,
+				links : eventData['links'],
+				title : getEventTitle.apply(this, [urlCar, urlInfopage])
 			}
-			if (rel === 'car') {
-				urlCar = value['href'];
+		},
+		launchWizardOnSelect = function (start, end, allDay, jsEvent, view) {
+			start = moment.utc(start.toJSON()).valueOf();
+			end = moment.utc(end.toJSON()).valueOf();
+
+			Spring.remoting.getLinkedResource('calendarComponentHref', {
+				begin   : start,
+				end     : end,
+				allDay  : allDay,
+				view    : view['name'],
+				popup   : true,
+				mode    : 'embedded',
+				action  : 'create',
+				calendar: true
+			}, true);
+		},
+		preProcessConfig = function (config, calendar) {
+			if (config) {
+				var wizardHref = config['wizardHref'];
+
+				// create new a element
+				var wizardHrefA = $('<a>_calendar_</a>');
+				wizardHrefA.attr('href', wizardHref)
+					.attr('style', 'visibility:hidden')
+					.attr('id', 'calendarComponentHref');
+				calendar.append(wizardHrefA);
+				// create new a element
+
+				delete config['wizardHref'];
 			}
-		});
-
-		return {
-			id    : eventData['id'],
-			start : begin,
-			end   : end,
-			allDay: false,
-			url   : urlInfopage,
-			links : eventData['links'],
-			title : getEventTitle.apply(this, [urlCar, urlInfopage])
-		}
-	};
-	SA.calendar.launchWizardOnSelect = function (start, end, allDay, jsEvent, view) {
-		start = moment.utc(start.toJSON()).valueOf();
-		end = moment.utc(end.toJSON()).valueOf();
-
-		Spring.remoting.getLinkedResource('calendarComponentHref', {
-			begin   : start,
-			end     : end,
-			allDay  : allDay,
-			view    : view['name'],
-			popup   : true,
-			mode    : 'embedded',
-			action  : 'create',
-			calendar: true
-		}, true);
+			return config;
+		},
+		postProcessConfig = function (config, defConfig) {
+			var eventSources = defConfig['eventSources'];
+			if (jQuery.isArray(eventSources)) {
+				var tmp = eventSources[0],
+					tmp2 = config['eventSources'][0];
+				tmp = jQuery.extend(tmp, tmp2);
+				delete config['eventSources'];
+				eventSources[0] = tmp;
+			}
+			return jQuery.extend(defConfig, config);
+		};
+	SA.calendar.createCalendar = function (target, config) {
+		var $calendar = $(target),
+			pHeight = $calendar.height(),
+			defConfig = {
+				header             : {
+					left  : 'prev,next today',
+					center: 'title',
+					right : 'month,agendaWeek,agendaDay'
+				},
+				eventSources       : [
+					{
+						cache             : true,
+						data              : {
+							sort: 'begin'
+						},
+						eventDataTransform: eventDataTransform,
+						success           : successLoad
+					}
+				],
+				select             : launchWizardOnSelect,
+				defaultEventMinutes: 30,
+				weekends           : false,
+				weekNumbers        : true,
+				firstDay           : 1,
+				height             : pHeight,
+				aspectRatio        : 2.2,
+				firstHour          : 8,
+				minTime            : 7,
+				maxTime            : 21,
+				selectHelper       : true,
+				selectable         : true,
+				editable           : true
+			};
+		config = preProcessConfig(config, $calendar);
+		config = postProcessConfig(config, defConfig);
+		$calendar.fullCalendar(config);
 	}
 
 }(window.SA = window.SA || {}, jQuery));

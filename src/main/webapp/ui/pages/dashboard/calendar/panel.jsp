@@ -19,9 +19,13 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sc" uri="/WEB-INF/tags/sa/calendar.tld" %>
 
-<section class="x-calendar">
-    <div id="calendar"></div>
+<section id="calendar" class="x-calendar">
+    <script type="text/javascript" id="calendarLoader">
+        $(function () {
+            SA.calendar.createCalendar($('#calendar'), <sc:calendarConfiguration/>);
+        })
+    </script>
 </section>
 <a id="calendarComponentHref" href="<s:url value="/app/wizard/NewAppointmentWizard"/>" style="visibility: hidden">_calendarComponent</a>
-<%@ include file="scripts.jsp" %>

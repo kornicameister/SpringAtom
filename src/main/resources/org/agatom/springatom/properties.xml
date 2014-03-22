@@ -51,6 +51,7 @@
                 <value>classpath:org/agatom/springatom/server/database.properties</value>
                 <value>classpath:org/agatom/springatom/web/rbuilder/rbuilder.properties</value>
                 <value>classpath:org/agatom/springatom/webmvc/url-mapping.properties</value>
+                <value>classpath:org/agatom/springatom/components/calendar.properties</value>
             </array>
         </property>
         <property name="fileEncoding" value="UTF-8"/>
@@ -59,6 +60,22 @@
         <property name="searchSystemEnvironment" value="true"/>
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_FALLBACK"/>
         <property name="valueSeparator" value=","/>
+    </bean>
+
+    <bean id="applicationPropertiesBean" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <array>
+                <value>classpath:org/agatom/springatom/web/web.properties</value>
+                <value>classpath:org/agatom/springatom/webmvc/webmvc.properties</value>
+                <value>classpath:org/agatom/springatom/server/database.properties</value>
+                <value>classpath:org/agatom/springatom/web/rbuilder/rbuilder.properties</value>
+                <value>classpath:org/agatom/springatom/webmvc/url-mapping.properties</value>
+                <value>classpath:org/agatom/springatom/components/calendar.properties</value>
+            </array>
+        </property>
+        <property name="fileEncoding" value="UTF-8"/>
+        <property name="ignoreResourceNotFound" value="false"/>
+        <property name="singleton" value="true"/>
     </bean>
 
 </beans>

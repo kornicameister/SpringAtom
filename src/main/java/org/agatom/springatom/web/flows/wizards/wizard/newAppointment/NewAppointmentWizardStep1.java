@@ -22,10 +22,12 @@ import org.agatom.springatom.server.service.domain.SAppointmentService;
 import org.agatom.springatom.server.service.domain.SCarService;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
+import org.agatom.springatom.web.locale.SMessageSource;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableInstant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -49,26 +51,35 @@ import java.io.Serializable;
 @WizardAction("newAppointmentStep1")
 public class NewAppointmentWizardStep1
 		extends WizardFormAction<SAppointment> {
-	private static final Logger LOGGER          = Logger.getLogger(NewAppointmentWizardStep1.class);
+	private static final Logger         LOGGER          = Logger.getLogger(NewAppointmentWizardStep1.class);
 	private static final String              CARS               = "cars";
 	private static final String              ASSIGNEES          = "assignees";
 	private static final String              REPORTERS          = "reporters";
-	private static final String CALENDAR_INPUTS = "calendarInputs";
+	private static final String         CALENDAR_INPUTS = "calendarInputs";
 	private static final String[]            REQUIRED_FIELDS    = new String[]{
 			"car", "assignee", "reporter", "beginDate", "endDate", "beginTime", "endTime"
 	};
 	private static final String              FORM_OBJECT_NAME   = "appointment";
-	private static final String DATE_PATTERN    = "yyyy-MM-dd";
-	private static final String TIME_PATTERN    = "HH:mm";
+	private              String         dataPattern     = null;
+	private              String         timePattern     = null;
 	@Autowired
 	private              SAppointmentService appointmentService = null;
 	@Autowired
 	private              SCarService         carService         = null;
+	@Autowired
+	private              SMessageSource messageSource   = null;
 
 	public NewAppointmentWizardStep1() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
 		this.setValidator(new SAppointmentValidator());
+	}
+
+	@Override
+	protected void initAction() {
+		super.initAction();
+		this.dataPattern = this.messageSource.getMessage("data.format.value", LocaleContextHolder.getLocale());
+		this.timePattern = this.messageSource.getMessage("date.format.hours", LocaleContextHolder.getLocale());
 	}
 
 	@Override
@@ -148,19 +159,19 @@ public class NewAppointmentWizardStep1
 		}
 
 		public String getBeginDate() {
-			return this.begin.toString(DATE_PATTERN);
+			return this.begin.toString(dataPattern);
 		}
 
 		public String getEndDate() {
-			return this.end.toString(DATE_PATTERN);
+			return this.end.toString(dataPattern);
 		}
 
 		public String getBeginTime() {
-			return this.begin.toString(TIME_PATTERN);
+			return this.begin.toString(timePattern);
 		}
 
 		public String getEndTime() {
-			return this.end.toString(TIME_PATTERN);
+			return this.end.toString(timePattern);
 		}
 
 		public boolean isAllDay() {
