@@ -22,7 +22,6 @@ import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.web.component.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
-import org.agatom.springatom.web.component.builders.table.exception.DynamicColumnResolutionException;
 import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
