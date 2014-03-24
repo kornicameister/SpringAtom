@@ -51,3 +51,5 @@
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-wizards.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-components.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticSa}/sa-calendar.js"/>"></script>
+
+<script type="text/javascript" src="<s:url value="${staticResources}/requirejs/2.1.11/require.js"/>"></script>

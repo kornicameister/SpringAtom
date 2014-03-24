@@ -20,12 +20,51 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sc" uri="/WEB-INF/tags/sa/calendar.tld" %>
+<%@ taglib prefix="cmp" tagdir="/WEB-INF/tags/sa/component" %>
 
-<section id="calendar" class="x-calendar">
-    <script type="text/javascript" id="calendarLoader">
-        $(function () {
-            SA.calendar.createCalendar($('#calendar'), <sc:calendarConfiguration/>);
-        })
+<div id="calendarWrapper">
+    <div id="calendar" class="x-calendar">
+        <script type="text/javascript" id="calendarLoader">
+            $(function () {
+                SA.calendar.createCalendar($('#calendar'), <sc:calendarConfiguration/>);
+            })
+        </script>
+    </div>
+    <div id="calendarTable">
+        <cmp:table type="org.agatom.springatom.server.model.beans.appointment.SAppointment"/>
+    </div>
+    <script type="text/javascript">
+        var a = new Spring.ElementDecoration({
+                    elementId  : 'calendarWrapper',
+                    widgetType : "dijit.layout.TabContainer",
+                    widgetAttrs: {
+                        style   : 'width:100%; height:100%',
+                        doLayout: false
+                    }
+                }),
+                b = new Spring.ElementDecoration({
+                    elementId  : 'calendar',
+                    widgetType : "dijit.layout.ContentPane",
+                    widgetAttrs: {
+                        title     : 'Organizer',
+                        style     : 'width:95%; height:95%',
+                        scrollable: true,
+                        selected  : true,
+                        closable  : false
+                    }
+                }),
+                c = new Spring.ElementDecoration({
+                    elementId  : 'calendarTable',
+                    widgetType : "dijit.layout.ContentPane",
+                    widgetAttrs: {
+                        title   : 'Table',
+                        selected: false,
+                        closable: false
+                    }
+                });
+        Spring.addDecoration(c);
+        Spring.addDecoration(b);
+        Spring.addDecoration(a);
     </script>
-</section>
-<a id="calendarComponentHref" href="<s:url value="/app/wizard/NewAppointmentWizard"/>" style="visibility: hidden">_calendarComponent</a>
+</div>
+

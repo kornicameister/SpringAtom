@@ -16,21 +16,21 @@
  **************************************************************************************************/
 
 .x-calendar {
-    margin: 0 auto;
+    margin : 0 auto;
 }
 
 #calendar {
-    width: 80%;
-    margin: 0 auto;
-    overflow: hidden;
-    clear: both;
+    width    : 80%;
+    margin   : 0 auto;
+    overflow : hidden;
+    clear    : both;
 }
 
 .fc-day-number {
-    font-size: larger;
-    color: #246485;
-    font-weight: bolder;
-    padding: 1px;
-    border: none;
-    box-shadow: 0 2px #246485;
+    font-size   : larger;
+    color       : #246485;
+    font-weight : bolder;
+    padding     : 1px;
+    border      : none;
+    box-shadow  : 0 2px #246485;
 }
