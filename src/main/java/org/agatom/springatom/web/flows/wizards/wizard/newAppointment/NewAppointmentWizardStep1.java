@@ -31,10 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.format.support.FormattingConversionService;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -42,6 +38,7 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 17.03.14</small>
@@ -78,14 +75,14 @@ public class NewAppointmentWizardStep1
 	public NewAppointmentWizardStep1() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
-		this.setValidator(new SAppointmentValidator());
 	}
 
 	@Override
 	protected void initAction() {
+		final Locale locale = LocaleContextHolder.getLocale();
+		this.dataPattern = this.messageSource.getMessage("data.format.value", locale);
+		this.timePattern = this.messageSource.getMessage("date.format.hours", locale);
 		super.initAction();
-		this.dataPattern = this.messageSource.getMessage("data.format.value", LocaleContextHolder.getLocale());
-		this.timePattern = this.messageSource.getMessage("date.format.hours", LocaleContextHolder.getLocale());
 	}
 
 	@Override
@@ -132,36 +129,13 @@ public class NewAppointmentWizardStep1
 		return super.doInitBinder(binder, conversionService);
 	}
 
-	private class SAppointmentValidator
-			implements Validator {
-
-		@Override
-		public boolean supports(final Class<?> clazz) {
-			return ClassUtils.isAssignable(SAppointment.class, clazz);
-		}
-
-		@Override
-		public void validate(final Object target, final Errors errors) {
-			Assert.notNull(target, "Target must not be null");
-			Assert.isAssignable(SAppointment.class, target.getClass());
-			final SAppointment appointment = (SAppointment) target;
-
-			appointmentService.isValid(appointment, errors);
-
-			if (!errors.hasErrors()) {
-				LOGGER.debug(String.format("%s validated without errors", target));
-			} else {
-				LOGGER.error(String.format("%s validated wit errors => %s", target, errors));
-			}
-		}
-	}
-
 	public class CalendarComponentInputs implements Serializable {
-		private final Boolean  calendar;
-		private       DateTime begin;
-		private       DateTime end;
-		private       boolean  allDay;
-		private       String   action;
+		private static final long     serialVersionUID = -2820877172701734808L;
+		private              Boolean  calendar         = null;
+		private              DateTime begin            = null;
+		private              DateTime end              = null;
+		private              boolean  allDay           = false;
+		private              String   action           = null;
 
 		public CalendarComponentInputs(final DateTime begin, final DateTime end, final boolean allDay, final String action, final Boolean calendar) {
 			this.begin = begin;

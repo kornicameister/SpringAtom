@@ -46,7 +46,6 @@ import org.joda.time.Duration;
 import org.joda.time.ReadableDuration;
 import org.joda.time.ReadableInterval;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.history.Revision;
 import org.springframework.security.access.AccessDeniedException;
@@ -54,7 +53,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 
 import javax.annotation.Nullable;
@@ -78,14 +77,6 @@ public class SAppointmentServiceImpl
 	private static final String                     BAD_ARG_MSG                = "No %s provided, could not execute call";
 	private static final String                     ERROR_MESSAGE_SD_GT_ED_MSG = "startDate must be greater than endDate";
 	private static final Logger                     LOGGER                     = Logger.getLogger(SAppointmentServiceImpl.class);
-	@Value(value = "#{sAppointmentProperties['sappointment.minDiffBetweenDatesMs']}")
-	private              long                       minDiffBetweenDates        = 0;
-	@Value(value = "#{sAppointmentProperties['sappointment.maxDiffBetweenDatesMs']}")
-	private              long                       maxDiffBetweenDates        = 0;
-	@Value(value = "#{applicationPropertiesBean['component.calendar.minTime']}")
-	private              Integer                    minTime                    = 0;
-	@Value(value = "#{applicationPropertiesBean['component.calendar.maxTime']}")
-	private              Integer                    maxTime                    = 0;
 	@Autowired
 	private              SAppointmentTaskRepository taskRepository             = null;
 	@Autowired
@@ -385,46 +376,6 @@ public class SAppointmentServiceImpl
 		);
 		predicate = predicate.and(user.accountNonLocked.eq(true)).and(user.accountNonExpired.eq(true));
 		return Collections.unmodifiableList(Lists.newArrayList(this.userRepository.findAll(predicate, pageable)));
-	}
-
-	@Override
-	public void isValid(final SAppointment appointment, final Errors errors) {
-		if (appointment == null) {
-			errors.reject("1", "Appointment is null");
-		} else {
-			final DateTime begin = appointment.getBegin();
-			final DateTime end = appointment.getEnd();
-
-			Assert.notNull(begin);
-			Assert.notNull(end);
-
-			final int beginHourOfDay = begin.getHourOfDay();
-			final int endHourOfDay = end.getHourOfDay();
-			if (beginHourOfDay < this.minTime) {
-				errors.rejectValue("begin", String.format("Begin hour must not be lower than %d", this.minTime));
-			}
-			if (endHourOfDay > this.maxTime) {
-				errors.rejectValue("end", String.format("End hour must not be higher than %d", this.maxTime));
-			}
-			if (begin.isAfter(end)) {
-				errors.rejectValue("begin", "Begin must be lower than end");
-				errors.rejectValue("end", "End must be higher than begin");
-			} else {
-				final Duration duration = new Duration(end.minus(begin.getMillis()).getMillis());
-				if (duration.isShorterThan(new Duration(this.minDiffBetweenDates))) {
-					errors.rejectValue("begin", "Minimum time of appointment is shorter than 10 minutes");
-				} else if (duration.isLongerThan(new Duration(this.maxDiffBetweenDates))) {
-					errors.rejectValue("begin", "Minimum time of appointment is longer than 7 days");
-				}
-			}
-			if (begin.getDayOfMonth() != end.getDayOfMonth()) {
-				errors.rejectValue("begin", "Appointments must be at the same day");
-			} else if (begin.getMonthOfYear() != end.getMonthOfYear()) {
-				errors.rejectValue("begin", "Appointments must be at the same month");
-			} else if (begin.getYear() != end.getYear()) {
-				errors.rejectValue("begin", "Appointments must be at the same year");
-			}
-		}
 	}
 
 	private SUser getMechanic(final long mechanicId) throws EntityDoesNotExistsServiceException {

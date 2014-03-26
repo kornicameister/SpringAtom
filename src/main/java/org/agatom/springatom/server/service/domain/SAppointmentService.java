@@ -103,6 +103,4 @@ public interface SAppointmentService
 
 	@Cacheable(value = "appointment_principals", key = "'suser_assignees' + #pageble.pageNumber")
 	Collection<SUser> findAssignees(final Pageable pageable);
-
-	void isValid(final SAppointment appointment, final Errors errors);
 }

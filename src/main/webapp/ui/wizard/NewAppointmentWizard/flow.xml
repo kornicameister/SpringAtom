@@ -48,8 +48,8 @@
         <!--init requires steps-->
     </on-start>
 
-    <view-state id="step1" view="ui.wizard.NewAppointmentWizard.1" popup="true">
-        <on-render>
+    <view-state id="step1" view="ui.wizard.NewAppointmentWizard.1" popup="true" model="appointment">
+    <on-render>
             <evaluate expression="newAppointmentStep1.setupForm"/>
         </on-render>
         <transition on="next" to="step2" validate="true" bind="true">
@@ -67,8 +67,8 @@
         <transition on="finish" to="successCancel" bind="true" validate="true">
             <evaluate expression="newAppointmentStep2.bindAndValidate"/>
         </transition>
-        <transition on="previous" to="step1">
-            <evaluate expression="newAppointmentStep2.resetForm"/>
+        <transition on="previous" to="step1" bind="false" validate="false">
+        <evaluate expression="newAppointmentStep2.resetForm"/>
         </transition>
         <transition on="cancel" to="successCancel" history="invalidate">
             <evaluate expression="newAppointmentStep2.resetForm"/>

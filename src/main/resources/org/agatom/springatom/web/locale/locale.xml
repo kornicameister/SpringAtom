@@ -24,12 +24,13 @@
     <bean id="messageSource"
           class="org.agatom.springatom.web.locale.impl.SMessageSourceImpl">
         <property name="basenames">
-            <array>
+            <array value-type="java.lang.String">
                 <value>classpath:org/agatom/springatom/web/locale/ui</value>
                 <value>classpath:org/agatom/springatom/web/locale/format</value>
                 <value>classpath:org/agatom/springatom/web/locale/messages</value>
                 <value>classpath:org/agatom/springatom/web/locale/domainObjects</value>
                 <value>classpath:org/agatom/springatom/web/locale/wizards</value>
+                <value>classpath:org/agatom/springatom/web/locale/enums</value>
             </array>
         </property>
         <property name="cacheSeconds" value="#{webProperties['sa.locale.cacheSeconds']}"/>

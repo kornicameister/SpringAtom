@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.web.flows.wizards.wizard.newAppointment;
 
+import com.google.common.collect.Lists;
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
 import org.agatom.springatom.server.service.domain.SAppointmentService;
@@ -24,11 +25,13 @@ import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -53,6 +56,19 @@ public class NewAppointmentWizardStep2
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
 		this.setValidator(new SAppointmentValidator());
+	}
+
+	@Override
+	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
+//		binder.setAutoGrowNestedPaths(true);
+		return super.doInitBinder(binder, conversionService);
+	}
+
+	@Override
+	public Event setupForm(final RequestContext context) throws Exception {
+		final SAppointment commandBean = this.getCommandBean(context);
+//		commandBean.addTask(Lists.newArrayList(new SAppointmentTask()));
+		return super.setupForm(context);
 	}
 
 	@Override
