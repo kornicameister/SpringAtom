@@ -33,7 +33,6 @@
                method="<%=RequestMethod.POST.toString().toLowerCase()%>"
                cssClass="x-form">
         <fieldset>
-            <form:hidden path="allDay" value="${allDay}"/>
             <legend><s:message code="wizard.NewAppointmentWizard.comment.label"/></legend>
             <p>
                 <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.comment.label"/>">
