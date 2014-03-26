@@ -49,30 +49,43 @@
     </on-start>
 
     <view-state id="step1" view="ui.wizard.NewAppointmentWizard.1" popup="true" model="appointment">
-    <on-render>
-            <evaluate expression="newAppointmentStep1.setupForm"/>
+        <on-render>
+        <evaluate expression="newAppointmentStep1.setupForm"/>
         </on-render>
         <transition on="next" to="step2" validate="true" bind="true">
             <evaluate expression="newAppointmentStep1.bindAndValidate"/>
         </transition>
-        <transition on="cancel" to="successCancel" history="invalidate" bind="false">
-            <evaluate expression="newAppointmentStep1.resetForm"/>
-        </transition>
+        <transition on="cancel" to="successCancel" history="invalidate"/>
     </view-state>
 
     <view-state id="step2" view="ui.wizard.NewAppointmentWizard.2" popup="true">
         <on-render>
             <evaluate expression="newAppointmentStep2.setupForm"/>
         </on-render>
-        <transition on="finish" to="successCancel" bind="true" validate="true">
+        <transition on="next" to="step3" validate="true" bind="true">
             <evaluate expression="newAppointmentStep2.bindAndValidate"/>
         </transition>
         <transition on="previous" to="step1" bind="false" validate="false">
-        <evaluate expression="newAppointmentStep2.resetForm"/>
-        </transition>
-        <transition on="cancel" to="successCancel" history="invalidate">
             <evaluate expression="newAppointmentStep2.resetForm"/>
         </transition>
+        <transition on="finish" to="successCancel" bind="true" validate="true">
+            <evaluate expression="newAppointmentStep2.bindAndValidate"/>
+            <evaluate expression="newAppointmentStep3.bindAndValidate"/>
+        </transition>
+        <transition on="cancel" to="successCancel" history="invalidate"/>
+    </view-state>
+
+    <view-state id="step3" view="ui.wizard.NewAppointmentWizard.3" popup="true">
+        <on-render>
+            <evaluate expression="newAppointmentStep3.setupForm"/>
+        </on-render>
+        <transition on="finish" to="successCancel" bind="true" validate="true">
+            <evaluate expression="newAppointmentStep3.bindAndValidate"/>
+        </transition>
+        <transition on="previous" to="step2" bind="false" validate="false">
+            <evaluate expression="newAppointmentStep3.resetForm"/>
+        </transition>
+        <transition on="cancel" to="successCancel" history="invalidate"/>
     </view-state>
 
     <end-state id="successCancel"

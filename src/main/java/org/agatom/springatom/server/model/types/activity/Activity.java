@@ -27,13 +27,17 @@ import org.joda.time.DateTime;
  * @since 0.0.1
  */
 public interface Activity
-        extends PersistentEmbeddable {
+		extends PersistentEmbeddable {
 
-    SUser getReporter();
+	SUser getReporter();
 
-    Activity setReporter(SUser user);
+	Activity setReporter(SUser user);
 
-    DateTime getAssigned();
+	DateTime getAssigned();
 
-    Activity setAssigned(DateTime assigned);
+	Activity setAssigned(DateTime assigned);
+
+	String getComment();
+
+	Activity setComment(String comment);
 }

@@ -23,6 +23,7 @@ import org.agatom.springatom.server.model.types.activity.Activity;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.Length;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
@@ -41,47 +42,62 @@ import java.io.Serializable;
  */
 @MappedSuperclass
 abstract public class SActivity<PK extends Serializable>
-        extends PersistentObject<PK>
-        implements Activity {
-    private static final String DATE_TIME_TYPE   = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
-    private static final long   serialVersionUID = 2584800898826870084L;
-    @NotNull
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "activity_reporter", referencedColumnName = "idSUser", updatable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    protected SUser    reporter;
-    @Past
-    @Type(type = DATE_TIME_TYPE)
-    @Column(name = "activity_date", nullable = false)
-    protected DateTime assigned;
+		extends PersistentObject<PK>
+		implements Activity {
+	private static final String DATE_TIME_TYPE   = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
+	private static final long   serialVersionUID = 2584800898826870084L;
+	@NotNull
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@JoinColumn(name = "activity_reporter", referencedColumnName = "idSUser", updatable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	protected SUser    reporter;
+	@Past
+	@Type(type = DATE_TIME_TYPE)
+	@Column(name = "activity_date", nullable = false)
+	protected DateTime assigned;
+	@Length(max = 500)
+	@Column(name = "activity_comment", nullable = true, length = 500)
+	private   String   comment;
 
-    public SActivity() {
-        this.assigned = DateTime.now();
-    }
+	public SActivity() {
+		this.assigned = DateTime.now();
+	}
 
-    @Override
-    public SUser getReporter() {
-        if (this.reporter == null) {
-            this.reporter = new SUser();
-        }
-        return reporter;
-    }
+	@Override
+	public SUser getReporter() {
+		if (this.reporter == null) {
+			this.reporter = new SUser();
+		}
+		return reporter;
+	}
 
-    @Override
-    public Activity setReporter(final SUser user) {
-        this.reporter = user;
-        return this;
-    }
+	@Override
+	public Activity setReporter(final SUser user) {
+		this.reporter = user;
+		return this;
+	}
 
-    @Override
-    public DateTime getAssigned() {
-        return null == this.assigned ? null : new DateTime(this.assigned);
-    }
+	@Override
+	public DateTime getAssigned() {
+		return null == this.assigned ? null : new DateTime(this.assigned);
+	}
 
-    @Override
-    public Activity setAssigned(final DateTime assigned) {
-        this.assigned = assigned;
-        return this;
-    }
+	@Override
+	public Activity setAssigned(final DateTime assigned) {
+		this.assigned = assigned;
+		return this;
+	}
+
+	@Override
+	public String getComment() {
+		return comment;
+	}
+
+	@Override
+	public Activity setComment(final String comment) {
+		this.comment = comment;
+		return this;
+	}
+
 
 }

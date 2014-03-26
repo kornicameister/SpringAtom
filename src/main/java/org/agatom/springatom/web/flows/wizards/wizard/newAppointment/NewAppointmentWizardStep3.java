@@ -18,19 +18,17 @@
 package org.agatom.springatom.web.flows.wizards.wizard.newAppointment;
 
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
-import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
+import org.agatom.springatom.server.service.domain.SAppointmentService;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-
-import java.util.List;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 17.03.14</small>
@@ -39,32 +37,39 @@ import java.util.List;
  * @version 0.0.1
  * @since 0.0.1
  */
-@WizardAction("newAppointmentStep2")
-public class NewAppointmentWizardStep2
+@WizardAction("newAppointmentStep3")
+public class NewAppointmentWizardStep3
 		extends WizardFormAction<SAppointment> {
-	private static final Logger LOGGER           = Logger.getLogger(NewAppointmentWizardStep2.class);
-	private static final String FORM_OBJECT_NAME = "appointment";
+	private static final Logger              LOGGER           = Logger.getLogger(NewAppointmentWizardStep3.class);
+	private static final String              FORM_OBJECT_NAME = "appointment";
+	@Autowired
+	private              SAppointmentService service          = null;
 
-	public NewAppointmentWizardStep2() {
+	public NewAppointmentWizardStep3() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
-		this.setValidator(new TaskValidator());
+		this.setValidator(new SAppointmentValidator());
 	}
 
 	@Override
 	public Event resetForm(final RequestContext context) throws Exception {
-		this.getCommandBean(context).clearTasks();
-		return success();
+		final SAppointment appointment = this.getCommandBean(context);
+		appointment.setComment(null);
+		return success(appointment);
 	}
 
 	@Override
 	public Event bindAndValidate(final RequestContext context) throws Exception {
 		final Event event = super.bindAndValidate(context);
-		this.getCommandBean(context).assignTasks();
+		if (event.getId().equals(this.success().getId())) {
+			final SAppointment sAppointment = this.service.save(this.getCommandBean(context));
+			Assert.notNull(sAppointment, "Failed to save appointment, null returned");
+			Assert.isTrue(!sAppointment.isNew(), "Failed to save appointment, isNew() returned true");
+		}
 		return event;
 	}
 
-	private class TaskValidator
+	private class SAppointmentValidator
 			implements Validator {
 
 		@Override
@@ -76,14 +81,7 @@ public class NewAppointmentWizardStep2
 		public void validate(final Object target, final Errors errors) {
 			Assert.notNull(target, "Target must not be null");
 			Assert.isAssignable(SAppointment.class, target.getClass());
-			final SAppointment appointment = (SAppointment) target;
-			final List<SAppointmentTask> tasks = appointment.getTasks();
-			if (CollectionUtils.isEmpty(tasks)) {
-				errors.rejectValue("tasks", "Tasks can not be null");
-			}
-			for (final SAppointmentTask appointmentTasks : tasks) {
-				delegatedValidator.validate(appointmentTasks, errors);
-			}
+			delegatedValidator.validate(target, errors);
 			if (!errors.hasErrors()) {
 				LOGGER.debug(String.format("%s validated without errors", target));
 			} else {
