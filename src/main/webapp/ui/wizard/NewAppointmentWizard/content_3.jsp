@@ -37,12 +37,12 @@
             <legend><s:message code="wizard.NewAppointmentWizard.comment.label"/></legend>
             <p>
                 <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.comment.label"/>">
-                    <span><s:message code="wizard.NewAppointmentWizard.tf.begin.label"/></span>
+                    <span><<s:message code="wizard.NewAppointmentWizard.comment.label"/></span>
                     <form:textarea id="${requestScope.formID}-task"
                                    htmlEscape="true"
                                    cssClass="x-input"
-                                   cols="15"
-                                   rows="1"
+                                   cols="25"
+                                   rows="10"
                                    path="comment"/>
                 </label>
             </p>
