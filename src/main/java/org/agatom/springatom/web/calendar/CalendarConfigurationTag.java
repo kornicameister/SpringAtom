@@ -38,7 +38,7 @@ import java.util.Properties;
  */
 public class CalendarConfigurationTag
 		extends RequestContextAwareTag {
-
+	private static final long   serialVersionUID      = -1112384114346318149L;
 	private static final String[] EMPTY_ARRAY_OF_STRING = new String[]{};
 	private static final String   DAY_NAMES             = "dayNames";
 	private static final String   DAY_NAMES_SHORT       = "dayNamesShort";
@@ -53,6 +53,7 @@ public class CalendarConfigurationTag
 	private static final String FIRST_HOUR            = "firstHour";
 	private static final String DEFAULT_VIEW          = "defaultView";
 	private static final String DEFAULT_EVENT_MINUTES = "defaultEventMinutes";
+	private static final String WIZARD_HREF           = "wizardHref";
 
 	@Override
 	protected int doStartTagInternal() throws Exception {
@@ -63,10 +64,10 @@ public class CalendarConfigurationTag
 		final Locale locale = LocaleContextHolder.getLocale();
 		final Map<String, Object> configuration = Maps.newLinkedHashMap();
 
-		configuration.put(DAY_NAMES, this.toJSArray(messageSource.getMessage("date.months", locale)));
-		configuration.put(DAY_NAMES_SHORT, this.toJSArray(messageSource.getMessage("date.months.short", locale)));
-		configuration.put(MONTH_NAMES, this.toJSArray(messageSource.getMessage("date.days", locale)));
-		configuration.put(MONTH_NAMES_SHORT, this.toJSArray(messageSource.getMessage("date.days.short", locale)));
+		configuration.put(MONTH_NAMES, this.toJSArray(messageSource.getMessage("date.months", locale)));
+		configuration.put(MONTH_NAMES_SHORT, this.toJSArray(messageSource.getMessage("date.months.short", locale)));
+		configuration.put(DAY_NAMES, this.toJSArray(messageSource.getMessage("date.days", locale)));
+		configuration.put(DAY_NAMES_SHORT, this.toJSArray(messageSource.getMessage("date.days.short", locale)));
 
 		configuration.put(AXIS_FORMAT, messageSource.getMessage("date.format.hours", locale));
 		configuration.put(ALL_DAY_TEXT, messageSource.getMessage("date.allDayText", locale));
@@ -79,8 +80,7 @@ public class CalendarConfigurationTag
 		configuration.put(DEFAULT_VIEW, applicationProperties.getProperty("component.calendar.view"));
 		configuration.put(DEFAULT_EVENT_MINUTES, Integer.valueOf(applicationProperties.getProperty("component.calendar.defaultEventMinutes")));
 
-		configuration.put("wizardHref", applicationProperties.getProperty("component.calendar.wizardHref"));
-
+		configuration.put(WIZARD_HREF, applicationProperties.getProperty("component.calendar.wizardHref"));
 
 		final JspWriter out = pageContext.getOut();
 		out.write(new JSONObject(configuration).toString());
