@@ -54,10 +54,10 @@
                                                rows="1"
                                                path="tasks[${it.index}].task"/>
                                 <a id="mv-add" name="${it.index}" class="x-button x-button-add" href="#">
-                                    <i class="icon-plus icon-color-black"></i>
+                                    <i class="fa fa-plus fa-color-black"></i>
                                 </a>
                                 <a id="mv-remove" name="${it.index}" class="x-button x-button-remove" href="#">
-                                    <i class="icon-minus icon-color-black"></i>
+                                    <i class="fa fa-minus fa-color-black"></i>
                                 </a>
                             </li>
                         </c:forEach>
@@ -70,12 +70,9 @@
                 </div>
             </div>
         </fieldset>
-        <div id="error-box" style="visibility: hidden">
-            <form:errors path="*" element="span" htmlEscape="true" cssClass="error-entry"/>
-        </div>
+        <swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
     </form:form>
 </div>
 <swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
 <swf:getActions forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>
-<swf:renderErrors forState="${flowRequestContext.currentState}"/>

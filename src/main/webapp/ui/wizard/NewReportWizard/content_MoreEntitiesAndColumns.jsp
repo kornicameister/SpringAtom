@@ -34,7 +34,8 @@
                cssClass="x-form">
         <fieldset>
             <legend><s:message code="wizard.NewReportWizard.addMoreEntitiesAndColumns"/></legend>
-            <jsp:useBean id="reportConfiguration" scope="request" type="org.agatom.springatom.web.rbuilder.ReportConfiguration"/>
+            <jsp:useBean id="reportConfiguration" scope="request"
+                         type="org.agatom.springatom.web.rbuilder.ReportConfiguration"/>
                 <%--TODO -> does not evaluate to valid html fragment--%>
             <c:forEach items="${reportConfiguration.entities}" var="entity" varStatus="loop">
                 <p id="${loop.index}">
@@ -47,15 +48,13 @@
             </p>
 
             <p>
-                Click <s:message code="button.previous"/>[<s:message code="button.previous.short"/>] to go back and select more columns
+                Click <s:message code="button.previous"/>[<s:message code="button.previous.short"/>] to go back and
+                select more columns
             </p>
         </fieldset>
-        <div id="error-box" style="visibility: hidden">
-            <form:errors path="*" element="span" htmlEscape="true" cssClass="error-entry"/>
-        </div>
+        <swf:notificationsBox context="${flowRequestContext}"/>
     </form:form>
 </div>
 <swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
 <swf:getActions forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>
-<swf:renderErrors forState="${flowRequestContext.currentState}"/>

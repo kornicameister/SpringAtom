@@ -16,223 +16,208 @@
  **************************************************************************************************/
 
 (function (SA, $) {
-    if (!SA.core) {
-        SA.core = {};
-    }
+	if (!SA.core) {
+		SA.core = {};
+	}
 
-    // private methods
-    var priv = {
-        initNotificiationSystem: function () {
-            SA.core.ajax.loadLocalizedPreferences({
-                keys    : {
-                    'ok'    : 'button.ok',
-                    'cancel': 'button.cancel'
-                },
-                pattern : false,
-                reversed: true,
-                callback: function (data) {
-                    alertify.set({
-                        labels: {
-                            ok    : data['ok'][0],
-                            cancel: data['cancel'][0]
-                        }
-                    });
-                }
-            });
-        },
-        initStrings            : function () {
-            String.prototype.startsWith = function (str) {
-                var length = str.length;
-                return this.substring(0, length) === str;
-            };
-            String.prototype.endsWith = function (str) {
-                var length = this.length;
-                return this.substring(length - 1, length) === str;
-            };
-            String.prototype.removeFromBeginning = function (count) {
-                return this.substring(count);
-            };
-            String.prototype.removeFromEnd = function (count) {
-                var length = this.length;
-                return this.substring(0, length - count);
-            };
-        },
-        initJQueryExtension    : function () {
-            $.fn.doesExist = function () {
-                return $(this).length > 0;
-            };
-            jQuery.delegate = function (rules) {
-                return function (e) {
-                    var target = $(e.target);
-                    for (var selector in rules)
-                        if (target.is(selector)) return rules[selector].apply(this, $.makeArray(arguments));
-                }
-            };
-            $.urlParam = function (name, decode) {
-                var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
-                if (results == null) {
-                    return '';
-                }
-                else {
-                    var result = results[1] || 0;
-                    if (decode === true) {
-                        result = decodeURIComponent(result);
-                    }
-                    return result;
-                }
-            }
-        }
-    };
+	// private methods
+	var priv = {
+		initNotificiationSystem: function () {
+			SA.core.ajax.loadLocalizedPreferences({
+				keys    : {
+					'ok'    : 'button.ok',
+					'cancel': 'button.cancel'
+				},
+				pattern : false,
+				reversed: true,
+				callback: function (data) {
+					alertify.set({
+						labels: {
+							ok    : data['ok'][0],
+							cancel: data['cancel'][0]
+						}
+					});
+				}
+			});
+		},
+		initStrings            : function () {
+			String.prototype.startsWith = function (str) {
+				var length = str.length;
+				return this.substring(0, length) === str;
+			};
+			String.prototype.endsWith = function (str) {
+				var length = this.length;
+				return this.substring(length - 1, length) === str;
+			};
+			String.prototype.removeFromBeginning = function (count) {
+				return this.substring(count);
+			};
+			String.prototype.removeFromEnd = function (count) {
+				var length = this.length;
+				return this.substring(0, length - count);
+			};
+		},
+		initJQueryExtension    : function () {
+			$.fn.doesExist = function () {
+				return $(this).length > 0;
+			};
+			jQuery.delegate = function (rules) {
+				return function (e) {
+					var target = $(e.target);
+					for (var selector in rules)
+						if (target.is(selector)) return rules[selector].apply(this, $.makeArray(arguments));
+				}
+			};
+			$.urlParam = function (name, decode) {
+				var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+				if (results == null) {
+					return '';
+				}
+				else {
+					var result = results[1] || 0;
+					if (decode === true) {
+						result = decodeURIComponent(result);
+					}
+					return result;
+				}
+			}
+		}
+	};
 
-    // public methods
-    SA.core.openModal = function (target) {
-        var _target = $(target);
-        if (SA.core.isEmpty(_target)) {
-            _target.modal({
-                overlayClose: true,
-                opacity     : 20,
-                overlayCss  : {
-                    backgroundColor: "#246485"
-                }
-            })
-        } else {
-            SA.core.showError("Could not locate target=" + target);
-        }
-    };
-    SA.core.showSuccess = function (text) {
-        alertify.success(
-            '<span style="font-weight: bold">' + text + '</span>'
-        );
-    };
-    SA.core.showError = function (text) {
-        if (text instanceof jQuery) {
-            if (text.length == 0) {
-                return;
-            }
-            var msg = "";
-            $.each(text, function (index, val) {
-                msg += '<p>' + $(val).html() + "</p>";
-            });
-            text = msg;
-        }
-        alertify.error(
-            '<span style="font-weight: bold">' + text + '</span>'
-        );
-    };
-    SA.core.isEmpty = function (obj) {
-        return true;
-    };
+	// public methods
+	SA.core.openModal = function (target) {
+		var _target = $(target);
+		if (SA.core.isEmpty(_target)) {
+			_target.modal({
+				overlayClose: true,
+				opacity     : 20,
+				overlayCss  : {
+					backgroundColor: "#246485"
+				}
+			})
+		} else {
+			SA.core.showError("Could not locate target=" + target);
+		}
+	};
+	SA.core.showSuccess = function (text) {
+		alertify.success(
+				'<span style="font-weight: bold">' + text + '</span>'
+		);
+	};
+	SA.core.isEmpty = function (obj) {
+		return true;
+	};
 
-    if (!SA.core.ajax) {
-        SA.core.ajax = {};
-    }
+	if (!SA.core.ajax) {
+		SA.core.ajax = {};
+	}
 
-    /**
-     * Loads localized preferences according to the passed configuration.
-     * cfg is defined as follow:
-     * <li>keys - an array of code to the localized preferences</li>
-     * <li>pattern[default=true] - if set to false no pattern matching will be used</li>
-     * <li>reversed[default=false] -
-     *     if set to true requested keys must be passed as the object literal.
-     *     In example:
-     *     <pre>
-     *      keys: { a:'key.1' }
-     *     </pre>
-     *     If so the values assigned to the properties in the literal will be send to the server
-     *     and than swapped with the received values for the given keys.
-     * </li>
-     * <li>callback - the function to call in case of the successful retrieval</li>
-     * <li>scope - in which to execute the callback</li>
-     *
-     * @param cfg configuration literal
-     */
-    SA.core.ajax.loadLocalizedPreferences = function (cfg) {
-        var defaults = {
-                keys    : ['*'],
-                pattern : true,
-                reversed: false,
-                callback: undefined,
-                scope   : undefined
-            },
-            reverser = function (options) {
-                var tmp = [];
-                $.each(options, function (key, value) {
-                    tmp.push(value);
-                });
-                return tmp;
-            };
+	/**
+	 * Loads localized preferences according to the passed configuration.
+	 * cfg is defined as follow:
+	 * <li>keys - an array of code to the localized preferences</li>
+	 * <li>pattern[default=true] - if set to false no pattern matching will be used</li>
+	 * <li>reversed[default=false] -
+	 *     if set to true requested keys must be passed as the object literal.
+	 *     In example:
+	 *     <pre>
+	 *      keys: { a:'key.1' }
+	 *     </pre>
+	 *     If so the values assigned to the properties in the literal will be send to the server
+	 *     and than swapped with the received values for the given keys.
+	 * </li>
+	 * <li>callback - the function to call in case of the successful retrieval</li>
+	 * <li>scope - in which to execute the callback</li>
+	 *
+	 * @param cfg configuration literal
+	 */
+	SA.core.ajax.loadLocalizedPreferences = function (cfg) {
+		var defaults = {
+				keys    : ['*'],
+				pattern : true,
+				reversed: false,
+				callback: undefined,
+				scope   : undefined
+			},
+			reverser = function (options) {
+				var tmp = [];
+				$.each(options, function (key, value) {
+					tmp.push(value);
+				});
+				return tmp;
+			};
 
-        cfg = $.extend(defaults, cfg);
+		cfg = $.extend(defaults, cfg);
 
-        $.ajax({
-            url        : '/app/data/lang/read',
-            type       : 'POST',
-            contentType: "application/json",
-            data       : JSON.stringify({
-                keys   : (function () {
-                    if (cfg['reversed']) {
-                        return reverser(cfg['keys']);
-                    }
-                    return cfg['keys'];
-                }()),
-                pattern: cfg['pattern']
-            }),
-            dataType   : 'json',
-            success    : function (data) {
-                var preferences = data['preferences'];
-                $.each(preferences, function (index, pref) {
-                    var _key = pref['key'],
-                        _message = pref['message'];
-                    $.each(cfg['keys'], function (key, value) {
-                        if (value === _key) {
-                            cfg['keys'][key] = _message.split(',');
-                        }
-                    });
-                });
-                if (cfg['callback']) {
-                    cfg['callback'].apply(cfg['scope'], [cfg['keys']]);
-                }
-            }
-        });
-    };
+		$.ajax({
+			url        : '/app/data/lang/read',
+			type       : 'POST',
+			contentType: "application/json",
+			data       : JSON.stringify({
+				keys   : (function () {
+					if (cfg['reversed']) {
+						return reverser(cfg['keys']);
+					}
+					return cfg['keys'];
+				}()),
+				pattern: cfg['pattern']
+			}),
+			dataType   : 'json',
+			success    : function (data) {
+				var preferences = data['preferences'];
+				$.each(preferences, function (index, pref) {
+					var _key = pref['key'],
+						_message = pref['message'];
+					$.each(cfg['keys'], function (key, value) {
+						if (value === _key) {
+							cfg['keys'][key] = _message.split(',');
+						}
+					});
+				});
+				if (cfg['callback']) {
+					cfg['callback'].apply(cfg['scope'], [cfg['keys']]);
+				}
+			}
+		});
+	};
 
-    var bundleCache = {
+	var bundleCache = {
 
-    };
-    SA.core.getLocalizedMsg = function (key) {
+	};
+	SA.core.getLocalizedMsg = function (key) {
 
-        if (typeof bundleCache[key] !== 'undefined') {
-            return bundleCache[key];
-        }
+		if (typeof bundleCache[key] !== 'undefined') {
+			return bundleCache[key];
+		}
 
-        $.ajax({
-            url        : '/data/lang/bundle/' + key,
-            type       : 'GET',
-            dataType   : 'json',
-            contentType: "application/json",
-            async      : false,
-            success    : function (data) {
-                bundleCache[key] = data['message'];
-                return bundleCache[key];
-            },
-            error      : function (xhr, status, error) {
-                SA.core.showError('Failed to getLocalizedMsg => ' + error);
-            }
-        });
+		$.ajax({
+			url        : '/data/lang/bundle/' + key,
+			type       : 'GET',
+			dataType   : 'json',
+			contentType: "application/json",
+			async      : false,
+			success    : function (data) {
+				bundleCache[key] = data['message'];
+				return bundleCache[key];
+			},
+			error      : function (xhr, status, error) {
+				SA.core.showError('Failed to getLocalizedMsg => ' + error);
+			}
+		});
 
-        return bundleCache[key];
-    };
+		return bundleCache[key];
+	};
 
-    SA.core.genId = function (val, prefix) {
-        return prefix + '-' + val;
-    };
+	SA.core.genId = function (val, prefix) {
+		return prefix + '-' + val;
+	};
 
-    (function () {
-        console.log('Initializing SA.core');
-        priv.initNotificiationSystem();
-        priv.initJQueryExtension();
-        priv.initStrings();
-        console.log('Initialized SA.core');
-    }());
+	(function () {
+		console.log('Initializing SA.core');
+		priv.initNotificiationSystem();
+		priv.initJQueryExtension();
+		priv.initStrings();
+		console.log('Initialized SA.core');
+	}());
 
 }(window.SA = window.SA || {}, jQuery));

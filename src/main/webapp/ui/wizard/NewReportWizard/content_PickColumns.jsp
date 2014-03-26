@@ -40,10 +40,13 @@
             <jsp:useBean id="colToRenderProp" scope="request" type="java.util.Map"/>
             <c:forEach items="${entityToColumn}" varStatus="loop" var="entry">
                 <p class="dataTables_wrapper">
-                    <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.entity.pickColumnsForEntity"/>">
+                    <label class="x-form-label"
+                           title="<s:message code="wizard.NewReportWizard.entity.pickColumnsForEntity"/>">
                         <c:set var="reportableEntity" scope="page" value="${entry.key}"/>
-                        <jsp:useBean id="reportableEntity" scope="page" class="org.agatom.springatom.web.rbuilder.bean.RBuilderEntity"/>
-                        <span><s:message code="wizard.NewReportWizard.pickColumns.forEntity" arguments="${reportableEntity.label}"/></span>
+                        <jsp:useBean id="reportableEntity" scope="page"
+                                     class="org.agatom.springatom.web.rbuilder.bean.RBuilderEntity"/>
+                        <span><s:message code="wizard.NewReportWizard.pickColumns.forEntity"
+                                         arguments="${reportableEntity.label}"/></span>
                         <table class="dataTable">
                             <thead>
                             <tr>
@@ -64,7 +67,8 @@
                             <tbody>
                             <c:forEach items="${entry.value}" var="column" varStatus="loopColumns">
                                 <c:set var="reportableColumn" scope="page" value="${column}"/>
-                                <jsp:useBean id="reportableColumn" scope="page" class="org.agatom.springatom.web.rbuilder.bean.RBuilderColumn"/>
+                                <jsp:useBean id="reportableColumn" scope="page"
+                                             class="org.agatom.springatom.web.rbuilder.bean.RBuilderColumn"/>
                                 <form:hidden id="col-${loop.index}-${loopColumns.index}-name"
                                              path="entities[${loop.index}].columns[${loopColumns.index}].columnName"/>
                                 <tr id="row-${reportableColumn.id}">
@@ -85,7 +89,8 @@
                                     </td>
 
                                     <td class="center">  <!-- render as -->
-                                        <s:eval expression="colToRenderProp[reportableColumn.id]" scope="page" var="itemsRenderClass"/>
+                                        <s:eval expression="colToRenderProp[reportableColumn.id]" scope="page"
+                                                var="itemsRenderClass"/>
                                         <form:select id="col-${loop.index}-${loopColumns.index}-renderClass"
                                                      items="${itemsRenderClass}"
                                                      itemValue="targetClassName"
@@ -96,16 +101,20 @@
 
                                     <td class="center"> <!-- render excluded -->
                                         <p>
-                                            <form:label path="entities[${loop.index}].columns[${loopColumns.index}].options.excluded">
-                                                <s:message code="wizard.NewReportWizard.pickColumns.table.column.excluded"/>
+                                            <form:label
+                                                    path="entities[${loop.index}].columns[${loopColumns.index}].options.excluded">
+                                                <s:message
+                                                        code="wizard.NewReportWizard.pickColumns.table.column.excluded"/>
                                             </form:label>
                                             <form:checkbox id="col-${loop.index}-${loopColumns.index}-excluded"
                                                            path="entities[${loop.index}].columns[${loopColumns.index}].options.excluded"/>
                                         </p>
 
                                         <p>
-                                            <form:label path="entities[${loop.index}].columns[${loopColumns.index}].options.groupBy">
-                                                <s:message code="wizard.NewReportWizard.pickColumns.table.column.groupBy"/>
+                                            <form:label
+                                                    path="entities[${loop.index}].columns[${loopColumns.index}].options.groupBy">
+                                                <s:message
+                                                        code="wizard.NewReportWizard.pickColumns.table.column.groupBy"/>
                                             </form:label>
                                             <form:checkbox id="col-${loop.index}-${loopColumns.index}-groupBy"
                                                            path="entities[${loop.index}].columns[${loopColumns.index}].options.groupBy"/>
@@ -153,12 +162,9 @@
                 </p>
             </c:forEach>
         </fieldset>
-        <div id="error-box" style="visibility: hidden">
-            <form:errors path="*" element="span" htmlEscape="true" cssClass="error-entry"/>
-        </div>
+        <swf:notificationsBox context="${flowRequestContext}"/>
     </form:form>
 </div>
 <swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
 <swf:getActions forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>
-<swf:renderErrors forState="${flowRequestContext.currentState}"/>

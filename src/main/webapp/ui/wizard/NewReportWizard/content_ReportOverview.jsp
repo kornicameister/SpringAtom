@@ -36,12 +36,9 @@
                cssClass="x-form">
         <fieldset>
         </fieldset>
-        <div id="error-box" style="visibility: hidden">
-            <form:errors path="*" element="span" htmlEscape="true" cssClass="error-entry"/>
-        </div>
+        <swf:notificationsBox context="${flowRequestContext}"/>
     </form:form>
 </div>
 <swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
 <swf:getActions forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>
-<swf:renderErrors forState="${flowRequestContext.currentState}"/>

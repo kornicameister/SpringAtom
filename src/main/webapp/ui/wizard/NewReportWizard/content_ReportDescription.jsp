@@ -52,7 +52,8 @@
                 </script>
                 <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.subtitle"/>">
                     <span><s:message code="wizard.NewReportWizard.report.subtitle"/></span>
-                    <form:input id="${requestScope.formID}-subtitle" htmlEscape="true" cssClass="x-input" path="subtitle"/>
+                    <form:input id="${requestScope.formID}-subtitle" htmlEscape="true" cssClass="x-input"
+                                path="subtitle"/>
                 </label>
                 <script type="text/javascript">
                     var el = $('#' + '${requestScope.formID}-subtitle');
@@ -66,7 +67,8 @@
                 </script>
                 <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.description"/>">
                     <span><s:message code="wizard.NewReportWizard.report.description"/></span>
-                    <form:textarea id="${requestScope.formID}-description" htmlEscape="true" cssClass="x-input" path="description"/>
+                    <form:textarea id="${requestScope.formID}-description" htmlEscape="true" cssClass="x-input"
+                                   path="description"/>
                 </label>
                 <script type="text/javascript">
                     var el = $('#' + '${requestScope.formID}-description');
@@ -80,12 +82,9 @@
                 </script>
             </p>
         </fieldset>
-        <div id="error-box" style="visibility: hidden">
-            <form:errors path="*" element="span" htmlEscape="true" cssClass="error-entry"/>
-        </div>
+        <swf:notificationsBox context="${flowRequestContext}"/>
     </form:form>
 </div>
 <swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
 <swf:getActions forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>
-<swf:renderErrors forState="${flowRequestContext.currentState}"/>
