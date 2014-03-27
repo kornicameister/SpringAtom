@@ -15,4 +15,32 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-Not yet implemented
+<%@ page language="java" session="true" trimDirectiveWhitespaces="true" %>
+
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="ip" tagdir="/WEB-INF/tags/ip" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<s:eval expression="requestScope[T(org.agatom.springatom.web.infopages.InfoPageConstants).INFOPAGE_AVAILABLE]"
+        var="ipAvailable"/>
+
+<c:choose>
+    <c:when test="${ipAvailable == false}">
+        <s:message code="springatom.infopages.noInfoPage"/>
+    </c:when>
+    <c:otherwise>
+        <s:eval expression="requestScope[T(org.agatom.springatom.web.infopages.InfoPageConstants).INFOPAGE_PAGE]"
+                var="ipInfoPage"/>
+        <c:set var="dos" value="ip-${fn:toLowerCase(ipInfoPage.objectClass.simpleName})"/>
+        <section id="${dos}" class="x-info-page">
+            <script type="text/javascript" id="ip-descriptor-script">
+                $(function () {
+                    $('#' + '${dos}').loadDomainPage({
+                        view: '<s:eval expression="requestScope[T(org.agatom.springatom.web.infopages.InfoPageConstants).INFOPAGE_VIEW_DATA_TEMPLATE_LINK]"/>'
+                    });
+                });
+            </script>
+        </section>
+    </c:otherwise>
+</c:choose>

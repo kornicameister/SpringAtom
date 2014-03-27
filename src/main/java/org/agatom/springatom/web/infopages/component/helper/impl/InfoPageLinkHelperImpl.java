@@ -18,16 +18,22 @@
 package org.agatom.springatom.web.infopages.component.helper.impl;
 
 import org.agatom.springatom.web.infopages.SInfoPage;
-import org.agatom.springatom.web.infopages.component.helper.InfoPageLinkHelper;
+import org.agatom.springatom.web.infopages.link.InfoPageRequest;
+import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
 import org.agatom.springatom.webmvc.controllers.SVInfoPageController;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Persistable;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.util.UriTemplate;
 
+import javax.annotation.PostConstruct;
 import java.io.Serializable;
+import java.util.Map;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
@@ -39,7 +45,21 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
  * @since 0.0.1
  */
 public class InfoPageLinkHelperImpl implements InfoPageLinkHelper {
-	private static final Logger LOGGER = Logger.getLogger(InfoPageLinkHelperImpl.class);
+	private static final Logger      LOGGER              = Logger.getLogger(InfoPageLinkHelperImpl.class);
+	private              UriTemplate infoPageUriTemplate = null;
+
+	@PostConstruct
+	private UriTemplate getInfoPageUriTemplate() {
+		this.infoPageUriTemplate = new UriTemplate(
+				String.format("{%s}/ip/{%s}/{%s}{%s}",
+						PathElement.CONTEXT.getInternalKey(),
+						PathElement.OBJECT_CLASS.getInternalKey(),
+						PathElement.OBJECT_ID.getInternalKey(),
+						PathElement.OBJECT_VERSION.getInternalKey()
+				)
+		);
+		return this.infoPageUriTemplate;
+	}
 
 	@Override
 	public <T extends Serializable> Link getInfoPageLink(final SInfoPage page, final Persistable<T> persistable) {
@@ -74,4 +94,70 @@ public class InfoPageLinkHelperImpl implements InfoPageLinkHelper {
 
 		return infoPage;
 	}
+
+	@Override
+	public boolean isInfoPageLink(final String path) {
+		return !StringUtils.hasText(path) || this.infoPageUriTemplate.matches(path);
+	}
+
+	@Override
+	public InfoPageRequest toInfoPageRequest(final String path) {
+		final InfoPageRequest link = new InfoPageRequest();
+		if (!StringUtils.hasText(path)) {
+			return null;
+		}
+		final Map<String, String> match = this.infoPageUriTemplate.match(path);
+
+		for (final String key : match.keySet()) {
+
+			final PathElement element = PathElement.fromInternalKey(key);
+			final String value = match.get(key);
+
+			switch (element) {
+				case CONTEXT:
+					link.setContext(value);
+					break;
+				case OBJECT_CLASS:
+					link.setObjectClass(ClassUtils.resolveClassName(value, this.getClass().getClassLoader()));
+					break;
+				case OBJECT_ID:
+					link.setObjectId(Long.valueOf(value));
+					break;
+				case OBJECT_VERSION:
+					if (StringUtils.hasLength(value)) {
+						link.setObjectVersion(Long.valueOf(value));
+					}
+					break;
+			}
+		}
+
+		return link;
+	}
+
+	private static enum PathElement {
+		CONTEXT("?.app*"),
+		OBJECT_CLASS("objectClass"),
+		OBJECT_VERSION("?.objectVersion*"),
+		OBJECT_ID("objectId");
+
+		private final String internalKey;
+
+		PathElement(final String internalKey) {
+			this.internalKey = internalKey;
+		}
+
+		public String getInternalKey() {
+			return this.internalKey;
+		}
+
+		public static PathElement fromInternalKey(final String key) {
+			for (PathElement pathElement : PathElement.values()) {
+				if (pathElement.getInternalKey().equalsIgnoreCase(key)) {
+					return pathElement;
+				}
+			}
+			return null;
+		}
+	}
+
 }

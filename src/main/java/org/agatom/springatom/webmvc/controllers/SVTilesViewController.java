@@ -21,38 +21,43 @@ import com.google.common.collect.Maps;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.mvc.AbstractUrlViewController;
+import org.springframework.web.util.UriTemplate;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Properties;
-
+import java.util.Set;
 
 public class SVTilesViewController
-        extends AbstractUrlViewController {
-    private static final Logger              LOGGER = Logger.getLogger(SVTilesViewController.class);
-    private final        Map<String, String> urlMap = Maps.newHashMap();
+		extends AbstractUrlViewController {
+	private static final Logger                   LOGGER    = Logger.getLogger(SVTilesViewController.class);
+	private final        Map<UriTemplate, String> templates = Maps.newHashMap();
+	@Autowired
+	@Qualifier(value = "urlMappingsProperties")
+	private              Properties               mappings  = null;
 
-    @Autowired
-    @Qualifier(value = "urlMappingsProperties")
-    private Properties mappings;
+	@PostConstruct
+	private void initializeMapping() {
+		final Set<String> templateUrls = this.mappings.stringPropertyNames();
+		for (final String templateUrl : templateUrls) {
+			this.templates.put(new UriTemplate(templateUrl), this.mappings.getProperty(templateUrl));
+		}
+	}
 
-    @PostConstruct
-    private void initializeMapping() {
-        CollectionUtils.mergePropertiesIntoMap(mappings, this.urlMap);
-    }
-
-    @Override
-    protected String getViewNameForRequest(final HttpServletRequest request) {
-        final String path = this.getUrlPathHelper().getLookupPathForRequest(request);
-        if (this.urlMap.containsKey(path)) {
-            final String viewName = this.urlMap.get(path);
-            LOGGER.info(String.format("For path %s resolved view %s", path, viewName));
-            return viewName;
-        }
-        return null;
-    }
+	@Override
+	protected String getViewNameForRequest(final HttpServletRequest request) {
+		final String path = this.getUrlPathHelper().getLookupPathForRequest(request);
+		for (final UriTemplate template : this.templates.keySet()) {
+			if (template.matches(path)) {
+				final String viewName = this.templates.get(template);
+				LOGGER.info(String.format("For path %s resolved view %s", path, viewName));
+				return viewName;
+			}
+		}
+		LOGGER.warn(String.format("Failed to retrieve view for path %s", path));
+		return null;
+	}
 
 }

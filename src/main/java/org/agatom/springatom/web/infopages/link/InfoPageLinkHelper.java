@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.infopages.component.helper;
+package org.agatom.springatom.web.infopages.link;
 
 import org.agatom.springatom.web.infopages.SInfoPage;
 import org.springframework.data.domain.Persistable;
@@ -31,7 +31,26 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 public interface InfoPageLinkHelper {
+
 	<T extends Serializable> Link getInfoPageLink(final SInfoPage page, final Persistable<T> persistable);
 
 	<T extends Serializable> Link getInfoPageLink(final String path, final T id);
+
+	/**
+	 * Determines if given path points to infoPage
+	 *
+	 * @param path to check
+	 *
+	 * @return true if path is InfoPage path
+	 */
+	boolean isInfoPageLink(final String path);
+
+	/**
+	 * Retrieves map of parameters from infoPage request
+	 *
+	 * @param path to extract params
+	 *
+	 * @return map of params
+	 */
+	InfoPageRequest toInfoPageRequest(final String path);
 }

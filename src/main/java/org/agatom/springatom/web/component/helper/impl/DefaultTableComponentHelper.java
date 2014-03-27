@@ -21,7 +21,7 @@ import org.agatom.springatom.web.component.elements.table.DandelionTableComponen
 import org.agatom.springatom.web.component.elements.table.TableColumnComponent;
 import org.agatom.springatom.web.component.elements.table.TableComponent;
 import org.agatom.springatom.web.component.helper.TableComponentHelper;
-import org.agatom.springatom.web.infopages.component.helper.InfoPageLinkHelper;
+import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
 import org.agatom.springatom.webmvc.controllers.SVTableBuilderController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

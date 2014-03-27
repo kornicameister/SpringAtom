@@ -19,7 +19,7 @@ package org.agatom.springatom.rest.processors;
 
 
 import org.agatom.springatom.web.infopages.SEntityInfoPage;
-import org.agatom.springatom.web.infopages.component.helper.InfoPageLinkHelper;
+import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
 import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Persistable;
@@ -55,7 +55,7 @@ public class InfoPageResourceProcessor implements ResourceProcessor<Resource<? e
 		}
 
 		final Class<? extends Persistable> contentClass = content.getClass();
-		final SEntityInfoPage infoPageForEntity = this.infoPageMappings.getInfoPageForEntity(contentClass);
+		final SEntityInfoPage infoPageForEntity = this.infoPageMappings.getInfoPageForEntity(ClassUtils.getUserClass(contentClass));
 		if (infoPageForEntity != null) {
 			final Link infoPageLink = this.infoPageLinkHelper.getInfoPageLink(infoPageForEntity, content);
 			if (infoPageLink != null) {

@@ -24,12 +24,13 @@ package org.agatom.springatom.web.infopages;
  */
 public final class InfoPageConstants {
 
-    public static final String INFOPAGE_VIEW_DATA_TEMPLATE_LINK = "ipDataView";
-    public static final String INFOPAGE_PAGE                    = "ipInfoPage";
-    public static final String INFOPAGE_BUILDER                 = "ipBuilder";
-    public static final String TABLE_COMPONENT_BUILDER          = "ipTableBuilder";
-    public static final String INFOPAGE_PARAMS                  = "ipParams";
+	public static final String INFOPAGE_VIEW_DATA_TEMPLATE_LINK = "ipDataView";
+	public static final String INFOPAGE_PAGE                    = "ipInfoPage";
+	public static final String INFOPAGE_BUILDER                 = "ipBuilder";
+	public static final String TABLE_COMPONENT_BUILDER          = "ipTableBuilder";
+	public static final String INFOPAGE_PARAMS                  = "ipParams";
+	public static final String INFOPAGE_AVAILABLE               = "ipAvailable";
 
-    private InfoPageConstants() {
-    }
+	private InfoPageConstants() {
+	}
 }

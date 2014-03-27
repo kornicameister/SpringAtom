@@ -22,8 +22,8 @@ import org.agatom.springatom.web.component.config.ComponentBuilderModuleConfigur
 import org.agatom.springatom.web.infopages.annotation.DomainInfoPage;
 import org.agatom.springatom.web.infopages.annotation.InfoPage;
 import org.agatom.springatom.web.infopages.component.helper.InfoPageComponentHelper;
-import org.agatom.springatom.web.infopages.component.helper.InfoPageLinkHelper;
-import org.agatom.springatom.web.infopages.component.helper.impl.DefaultInfoPageComponentHelper;
+import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
+import org.agatom.springatom.web.infopages.link.impl.DefaultInfoPageComponentHelper;
 import org.agatom.springatom.web.infopages.component.helper.impl.InfoPageLinkHelperImpl;
 import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
 import org.apache.log4j.Logger;
