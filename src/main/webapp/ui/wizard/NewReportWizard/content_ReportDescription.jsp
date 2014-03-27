@@ -50,7 +50,9 @@
                         }
                     }))
                 </script>
-                <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.subtitle"/>">
+            </p>
+            <p>
+            <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.subtitle"/>">
                     <span><s:message code="wizard.NewReportWizard.report.subtitle"/></span>
                     <form:input id="${requestScope.formID}-subtitle" htmlEscape="true" cssClass="x-input"
                                 path="subtitle"/>
@@ -65,7 +67,9 @@
                         }
                     }))
                 </script>
-                <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.description"/>">
+            </p>
+            <p>
+            <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.description"/>">
                     <span><s:message code="wizard.NewReportWizard.report.description"/></span>
                     <form:textarea id="${requestScope.formID}-description" htmlEscape="true" cssClass="x-input"
                                    path="description"/>
