@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.format.support.FormattingConversionService;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -100,15 +101,22 @@ public class NewAppointmentWizardStep1
 	}
 
 	private CalendarComponentInputs populateCalendarComponentInputs(final AttributeMap<Object> attributes) {
-		final Boolean allDay = attributes.getBoolean("allDay");
-		final DateTime begin = this.convertToDateTime(attributes.getLong("begin"), allDay, true);
-		final DateTime end = this.convertToDateTime(attributes.getLong("end"), allDay, false);
-		final String action = attributes.getString("action");
+		Boolean allDay = attributes.getBoolean("allDay", false);
+		allDay = allDay == null ? false : allDay;
+
+		final DateTime begin = this.convertToDateTime(attributes.getLong("begin", DateTime.now().getMillis()), allDay, true);
+		final DateTime end = this.convertToDateTime(attributes.getLong("end", DateTime.now().getMillis()), allDay, false);
+
+		final String action = attributes.getString("action", "create");
 		final Boolean calendar = attributes.getBoolean("calendar", false);
-		return new CalendarComponentInputs(begin, end, allDay, action, calendar);
+
+		return new CalendarComponentInputs(begin, end, allDay, !StringUtils.hasText(action) ? "create" : action, calendar == null ? false : calendar);
 	}
 
-	private DateTime convertToDateTime(final Long milliseconds, final boolean allDay, final boolean isBeginDate) {
+	private DateTime convertToDateTime(Long milliseconds, final boolean allDay, final boolean isBeginDate) {
+		if (milliseconds == null) {
+			milliseconds = DateTime.now().getMillis();
+		}
 		final DateTime convert = (DateTime) this.conversionService.convert(milliseconds, ReadableInstant.class);
 		if (allDay) {
 			final MutableDateTime dateTime = convert.toMutableDateTime();

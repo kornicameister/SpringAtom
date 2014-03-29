@@ -27,13 +27,13 @@
     <!--
         Inputs gathered from calendarComponent
     -->
-    <input name="begin" required="true" type="java.lang.Long"/>
-    <input name="end" required="true" type="java.lang.Long"/>
-    <input name="allDay" required="true" type="java.lang.Boolean"/>
-    <input name="view" required="true" type="java.lang.String"/>
-    <input name="popup" required="true" type="java.lang.Boolean"/>
-    <input name="mode" required="true" type="java.lang.String"/>
-    <input name="action" required="true" type="java.lang.String"/>
+    <input name="begin" required="false" type="java.lang.Long"/>
+    <input name="end" required="false" type="java.lang.Long"/>
+    <input name="allDay" required="false" type="java.lang.Boolean"/>
+    <input name="view" required="false" type="java.lang.String"/>
+    <input name="popup" required="false" type="java.lang.Boolean"/>
+    <input name="mode" required="false" type="java.lang.String"/>
+    <input name="action" required="false" type="java.lang.String"/>
     <input name="calendar" required="false" type="java.lang.Boolean"/>
 
     <on-start>
@@ -50,7 +50,7 @@
 
     <view-state id="step1" view="ui.wizard.NewAppointmentWizard.1" popup="true" model="appointment">
         <on-render>
-        <evaluate expression="newAppointmentStep1.setupForm"/>
+            <evaluate expression="newAppointmentStep1.setupForm"/>
         </on-render>
         <transition on="next" to="step2" validate="true" bind="true">
             <evaluate expression="newAppointmentStep1.bindAndValidate"/>
