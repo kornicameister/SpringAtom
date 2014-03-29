@@ -38,7 +38,7 @@
         src="<s:url value="${staticResources}/spring/Spring-Dojo.js.uncompressed.js" />"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/sources/js/jquery.dataTables.min.js" />"></script>
 
-<script type="text/javascript" src="<s:url value="${staticLib}/mmenu/3.2.1/jquery.mmenu.min.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticLib}/mmenu/4.0.0/jquery.mmenu.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/tinycon.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/midway.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/alertify/alertify.min.js"/>"></script>

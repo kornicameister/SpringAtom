@@ -34,7 +34,7 @@ html, body {
 }
 
 body {
-    background-color : #EEEEEE;
+    background-color : #eeeeee;
     font-size        : 14px;
     line-height      : 22px;
     color            : #333333;
@@ -84,15 +84,14 @@ div.content {
     margin             : 10px;
     clear              : both;
     height             : 77%;
-    width              : 97%;
     overflow-y         : hidden;
     padding            : 15px 15px 30px; /* Height of the footer */
     background         : rgba(255, 255, 255, 0.9);
     border             : 0;
     border-radius      : 24px;
     cursor             : pointer;
-    -webkit-box-shadow : inset 2px 2px 2px 2px #00A2D3, 0 10px rgba(255, 255, 255, 0.1);
-    box-shadow         : inset 2px 2px 2px 2px #00A2D3, 0 10px rgba(255, 255, 255, 0.1);
+    -webkit-box-shadow : inset 2px 2px 2px 2px #00a2d3, 0 10px rgba(255, 255, 255, 0.1);
+    box-shadow         : inset 2px 2px 2px 2px #00a2d3, 0 10px rgba(255, 255, 255, 0.1);
 }
 
 header.main, footer.main {
@@ -101,7 +100,7 @@ header.main, footer.main {
     box-shadow         : 0 1px 5px rgba(34, 34, 34, 0.5);
     font-size          : 16px;
     font-weight        : bold;
-    color              : #FFFFFF;
+    color              : #ffffff;
     text-align         : center;
     clear              : both;
     height             : 5%;
@@ -159,11 +158,11 @@ div.content section p:last-child {
 /*tooltip*/
 .tooltip {
     background-color   : #000000;
-    border             : 1px solid #FFFFFF;
+    border             : 1px solid #ffffff;
     padding            : 10px 15px;
     width              : 200px;
     display            : none;
-    color              : #FFFFFF;
+    color              : #ffffff;
     text-align         : left;
     font-size          : 12px;
     /* outline radius for mozilla/firefox only */

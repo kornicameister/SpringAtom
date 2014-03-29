@@ -24,14 +24,6 @@
     margin-left : 50px;
 }
 
-html.mm-opened .mm-page {
-    margin-left : 50px;
-}
-
-html.mm-opening .mm-page {
-    margin-left : -65px;
-}
-
 .mm-menu {
     display : block !important;
 }
@@ -41,7 +33,7 @@ html.mm-opening .mm-page {
 }
 
 .mm-menu li a [class^="fa"] {
-    margin : 0 35px 0 -22px;
+    margin : 0 35px 0 -2px;
 }
 
 .mm-menu i {

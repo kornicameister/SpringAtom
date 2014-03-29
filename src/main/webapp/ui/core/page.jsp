@@ -30,8 +30,8 @@
 </head>
 <body class="tundra">
 <div id="page">
-    <div class="content-wrapper midway-vertical midway-horizontal">
-        <header id="header" class="main">
+    <div class="content-wrapper">
+    <header id="header" class="main">
             <s:message code="label.dashboard.header" htmlEscape="true" var="headerLabel"/>
             <p>${headerLabel}</p>
 

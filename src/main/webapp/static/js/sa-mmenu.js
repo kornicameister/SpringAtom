@@ -31,30 +31,26 @@
  * You should have received a copy of the GNU General Public License                              *
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
+$(function () {
+	$.fn.mmenu.debug = function (msg) {
+		alert(msg);
+	};
 
-$(document).ready(function () {
-    var $nav = $('nav#menu');
-    $nav.mmenu({
-        isMenu         : true,
-        counters       : true,
-        searchfield    : true,
-        slidingSubmenus: true,
-        configuration  : {
-            selectedClass: 'active'
-        }
-    });
-    $nav.on("opening.mm", function () {
-        $('.mm-search').fadeToggle();
-        $('.login-embedded-form').fadeToggle();
-        $('.logout-embedded-form').fadeToggle();
-    });
-    $nav.on('closing.mm', function () {
-        // close all opened submenus
-        $('nav#menu .mm-submenu').each(function () {
-            $(this).trigger("close.mm");
-        });
-        $('.mm-search').fadeToggle();
-        $('.login-embedded-form').fadeToggle();
-        $('.logout-embedded-form').fadeToggle();
-    });
+	$('nav#menu').mmenu({
+		counters       : true,
+		slidingSubmenus: true,
+		searchfield    : true,
+		configuration  : {
+			selectedClass: 'active'
+		}
+	}).on("opening.mm", function () {
+		$('.mm-search').fadeToggle();
+	}).on('closing.mm', function () {
+		// close all opened submenus
+		$(this).find('.mm-submenu').each(function () {
+			$(this).trigger("close.mm");
+		});
+		$('.mm-search').fadeToggle();
+	});
 });
+

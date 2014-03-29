@@ -21,7 +21,6 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 
 <nav id="menu" data-role="navigation">
-    <s:escapeBody htmlEscape="true"/>
     <ul>
         <li>
             <a href="#menu"><i class="fa fa-list fa-color"></i>Menu</a>
