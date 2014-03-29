@@ -31,6 +31,7 @@
                 <value>classpath:org/agatom/springatom/web/locale/domainObjects</value>
                 <value>classpath:org/agatom/springatom/web/locale/wizards</value>
                 <value>classpath:org/agatom/springatom/web/locale/enums</value>
+                <value>classpath:org/agatom/springatom/web/locale/actions</value>
             </array>
         </property>
         <property name="cacheSeconds" value="#{webProperties['sa.locale.cacheSeconds']}"/>

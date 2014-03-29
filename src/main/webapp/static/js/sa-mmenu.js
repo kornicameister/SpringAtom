@@ -36,7 +36,8 @@ $(function () {
 		alert(msg);
 	};
 
-	$('nav#menu').mmenu({
+	var $nav = $('nav#menu');
+	$nav.mmenu({
 		counters       : true,
 		slidingSubmenus: true,
 		searchfield    : true,
@@ -47,10 +48,25 @@ $(function () {
 		$('.mm-search').fadeToggle();
 	}).on('closing.mm', function () {
 		// close all opened submenus
-		$(this).find('.mm-submenu').each(function () {
+		$(this).find('.mm-current').each(function () {
 			$(this).trigger("close.mm");
 		});
 		$('.mm-search').fadeToggle();
 	});
+
+	$nav.find('a[data-dynamic=true]')
+		.each(function () {
+			var href = $(this);
+			if (href.attr('data-mode') === 'wizardAction') {
+				href.click(function (event) {
+					event.stopPropagation();
+					event.preventDefault();
+					Spring.remoting.getLinkedResource(href.attr('id'), {
+						popup: true,
+						mode : 'embedded'
+					}, true);
+				});
+			}
+		});
 });
 

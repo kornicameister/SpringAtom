@@ -32,6 +32,9 @@
                 <i class="fa fa-desktop fa-color"></i>${indexLabel}
             </a>
         </li>
+        <security:authorize access="isFullyAuthenticated()">
+            <%@ include file="context/contextMenu.jsp" %>
+        </security:authorize>
         <security:authorize url="/app/dashboard/*">
             <%@ include file="secured/dashboard_navigation.jsp" %>
         </security:authorize>

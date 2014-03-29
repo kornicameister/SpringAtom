@@ -15,26 +15,35 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.action;
-
-import org.springframework.web.bind.annotation.RequestMethod;
+package org.agatom.springatom.web.action.model.actions;
 
 /**
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 29.03.14</small>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+public class WizardAction extends LinkAction {
+	private static final long     serialVersionUID = 4681017930494233352L;
+	private              String   wizardName       = null;
+	private              Class<?> type             = null;
 
-public class PopupAction
-        extends LinkAction {
-    private RequestMethod type;
+	public WizardAction setWizardName(final String wizardName) {
+		this.wizardName = wizardName;
+		return this;
+	}
 
-    public PopupAction setType(final RequestMethod type) {
-        this.type = type;
-        return this;
-    }
+	public String getWizardName() {
+		return wizardName;
+	}
 
-    public RequestMethod getType() {
-        return type;
-    }
+	public WizardAction setType(final Class<?> type) {
+		this.type = type;
+		return this;
+	}
+
+	public Class<?> getType() {
+		return type;
+	}
 }

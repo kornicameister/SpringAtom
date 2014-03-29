@@ -15,12 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.action;
-
-import org.springframework.hateoas.Identifiable;
-import org.springframework.hateoas.Link;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
+package org.agatom.springatom.web.action.model.actions;
 
 /**
  * @author kornicameister
@@ -28,39 +23,7 @@ import org.springframework.util.StringUtils;
  * @since 0.0.1
  */
 
-public class LinkAction
-        implements Identifiable<String> {
-    protected String url   = null;
-    protected String label = null;
-
-    public LinkAction setLabel(final String label) {
-        this.label = label;
-        return this;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public LinkAction setUrl(final String url) {
-        this.url = url;
-        return this;
-    }
-
-    public LinkAction setUrl(final Link link) {
-        return this.setUrl(link.getHref());
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getMode() {
-        return StringUtils.uncapitalize(ClassUtils.getShortName(this.getClass()));
-    }
-
-    @Override
-    public String getId() {
-        return String.format("%s-%d", ClassUtils.getShortName(this.getClass()), Math.abs(this.hashCode()));
-    }
+public class DownloadAction
+		extends LinkAction {
+	private static final long serialVersionUID = 6937230026509127006L;
 }

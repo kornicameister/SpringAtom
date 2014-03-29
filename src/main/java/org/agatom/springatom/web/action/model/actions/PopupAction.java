@@ -15,7 +15,9 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.action;
+package org.agatom.springatom.web.action.model.actions;
+
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @author kornicameister
@@ -23,6 +25,17 @@ package org.agatom.springatom.web.action;
  * @since 0.0.1
  */
 
-public class DownloadAction
-        extends LinkAction {
+public class PopupAction
+		extends LinkAction {
+	private static final long          serialVersionUID = -2015463566430907903L;
+	private              RequestMethod type             = null;
+
+	public PopupAction setType(final RequestMethod type) {
+		this.type = type;
+		return this;
+	}
+
+	public RequestMethod getType() {
+		return type;
+	}
 }

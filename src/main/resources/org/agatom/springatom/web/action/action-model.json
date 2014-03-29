@@ -1,0 +1,65 @@
+{
+	"actionModels": [
+		{
+			"name"       : "navigator-context-menu",
+			"description": "Menu entries available after logging in, allows to access such methods like CREATE for instance",
+			"submodels"  : [
+				"newObjects",
+				"userNavigation"
+			]
+		},
+		{
+			"name"          : "userNavigation",
+			"description"   : "Menu for the user directly",
+			"resourceBundle": "springatom.actions.action.userMenu",
+			"actions"       : [
+				{
+					"name"          : "notificationBox",
+					"type"          : "org.agatom.springatom.server.model.beans.user.SUser",
+					"resourceBundle": "springatom.actions.action.userMenu.notificationBox",
+					"command"       : {
+						"type": "link",
+						"url" : "/app/user/notifications"
+					}
+				}
+			]
+		},
+		{
+			"name"          : "newObjects",
+			"description"   : "New objects menu",
+			"resourceBundle": "springatom.actions.action.newObjects",
+			"actions"       : [
+				{
+					"name"          : "newUser",
+					"type"          : "org.agatom.springatom.server.model.beans.user.SUser",
+					"resourceBundle": "springatom.actions.action.newUser",
+					"command"       : {
+						"type"    : "wizard",
+						"url"     : "/app/wizard/NewUserWizard",
+						"redirect": "false"
+					}
+				},
+				{
+					"name"          : "newAppointment",
+					"type"          : "org.agatom.springatom.server.model.beans.appointment.SAppointment",
+					"resourceBundle": "springatom.actions.action.newAppointment",
+					"command"       : {
+						"type"    : "wizard",
+						"url"     : "/app/wizard/NewAppointmentWizard",
+						"redirect": "false"
+					}
+				},
+				{
+					"name"          : "newReport",
+					"type"          : "org.agatom.springatom.server.model.beans.report.SReport",
+					"resourceBundle": "springatom.actions.action.newReport",
+					"command"       : {
+						"type"    : "wizard",
+						"url"     : "/app/wizard/NewReportWizard",
+						"redirect": "false"
+					}
+				}
+			]
+		}
+	]
+}
