@@ -36,5 +36,7 @@ public interface LocalizedClassModel<T> extends Serializable, MapAdaptable<Strin
 
 	Set<LocalizedClassAttribute> getAttributes();
 
+	String getLocalizedAttribute(final String attributeName);
+
 	boolean hasAttributes();
 }

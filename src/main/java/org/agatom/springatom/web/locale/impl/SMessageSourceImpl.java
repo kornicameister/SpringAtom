@@ -306,6 +306,7 @@ public class SMessageSourceImpl
 		Class<T>                     source     = null;
 		String                       name       = null;
 		Set<LocalizedClassAttribute> attributes = null;
+		transient Map<String, LocalizedClassAttribute> asMap = null;
 
 		public InternalLocalizedClassModel(final Class<T> clazz, final String name, final boolean found) {
 			this.source = clazz;
@@ -334,17 +335,25 @@ public class SMessageSourceImpl
 		}
 
 		@Override
+		public String getLocalizedAttribute(final String attributeName) {
+			return this.asMap().get(attributeName).getLabel();
+		}
+
+		@Override
 		public boolean hasAttributes() {
 			return !CollectionUtils.isEmpty(this.attributes);
 		}
 
 		@Override
 		public Map<String, LocalizedClassAttribute> asMap() {
-			final Map<String, LocalizedClassAttribute> map = Maps.newHashMapWithExpectedSize(this.attributes.size());
-			for (final LocalizedClassAttribute key : this.attributes) {
-				map.put(key.getName(), key);
+			if (this.asMap == null) {
+				final Map<String, LocalizedClassAttribute> map = Maps.newHashMapWithExpectedSize(this.attributes.size());
+				for (final LocalizedClassAttribute key : this.attributes) {
+					map.put(key.getName(), key);
+				}
+				this.asMap = map;
 			}
-			return map;
+			return this.asMap;
 		}
 	}
 }

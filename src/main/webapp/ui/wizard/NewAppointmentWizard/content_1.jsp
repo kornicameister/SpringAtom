@@ -38,6 +38,14 @@
         <c:set var="allDay" value="${calendarInputs.allDay}" scope="page"/>
     </c:if>
 
+    <jsp:useBean id="localizedModel" type="org.agatom.springatom.web.locale.beans.LocalizedClassModel" scope="request"/>
+
+    <s:eval expression="localizedModel.getLocalizedAttribute('begin')" var="beginLabel"/>
+    <s:eval expression="localizedModel.getLocalizedAttribute('end')" var="endLabel"/>
+    <s:eval expression="localizedModel.getLocalizedAttribute('car')" var="carLabel"/>
+    <s:eval expression="localizedModel.getLocalizedAttribute('reporter')" var="reporterLabel"/>
+    <s:eval expression="localizedModel.getLocalizedAttribute('assignee')" var="assigneeLabel"/>
+
     <form:form id="${requestScope.formID}"
                action="${flowExecutionUrl}"
                commandName="appointment"
@@ -47,8 +55,8 @@
             <form:hidden path="allDay" value="${allDay}"/>
             <legend><s:message code="wizard.NewAppointmentWizard.tf.label"/></legend>
             <p>
-                <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tf.begin.label"/>">
-                    <span><s:message code="wizard.NewAppointmentWizard.tf.begin.label"/></span>
+                <label class="x-form-label" title="${beginLabel}">
+                    <span>${beginLabel}</span>
                     <form:input id="${requestScope.formID}-begin-date"
                                 htmlEscape="true"
                                 cssClass="x-input"
@@ -67,8 +75,8 @@
             </p>
 
             <p>
-                <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tf.end.label"/>">
-                    <span><s:message code="wizard.NewAppointmentWizard.tf.end.label"/></span>
+                <label class="x-form-label" title="${endLabel}">
+                    <span>${endLabel}</span>
                     <form:input id="${requestScope.formID}-end-date"
                                 htmlEscape="true"
                                 cssClass="x-input"
@@ -89,8 +97,8 @@
         <fieldset>
             <legend><s:message code="wizard.NewAppointmentWizard.tt.label"/></legend>
             <p>
-                <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tt.reporter.label"/>">
-                    <span><s:message code="wizard.NewAppointmentWizard.tt.reporter.label"/></span>
+                <label class="x-form-label" title="${reporterLabel}">
+                    <span>${reporterLabel}</span>
                     <form:select id="${requestScope.formID}-reporter"
                                  htmlEscape="true"
                                  cssClass="x-input x-input-select"
@@ -102,8 +110,8 @@
             </p>
 
             <p>
-                <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tt.assignee.label"/>">
-                    <span><s:message code="wizard.NewAppointmentWizard.tt.assignee.label"/></span>
+                <label class="x-form-label" title="${assigneeLabel}">
+                    <span>${assigneeLabel}</span>
                     <s:message code="wizard.NewAppointmentWizard.tt.assignee.placeholder" var="assigneePlaceholder"/>
                     <form:select id="${requestScope.formID}-assignee"
                                  htmlEscape="true"
@@ -118,8 +126,8 @@
             </p>
 
             <p>
-                <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.tt.car.label"/>">
-                    <span><s:message code="wizard.NewAppointmentWizard.tt.car.label"/></span>
+                <label class="x-form-label" title="${carLabel}">
+                    <span>${carLabel}</span>
                     <s:message code="wizard.NewAppointmentWizard.tt.car.placeholder" var="carPlaceholder"/>
                     <form:select id="${requestScope.formID}-car"
                                  htmlEscape="true"

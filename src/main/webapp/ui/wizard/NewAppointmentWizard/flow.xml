@@ -46,6 +46,10 @@
         <evaluate expression="flowScope.requiredSteps.add('step1')"/>
         <evaluate expression="flowScope.requiredSteps.add('step2')"/>
         <!--init requires steps-->
+
+        <evaluate
+                expression="sMessageSource.getMessage(T(org.agatom.springatom.server.model.beans.appointment.SAppointment),T(org.springframework.context.i18n.LocaleContextHolder).locale)"
+                result="flowScope.localizedModel"/>
     </on-start>
 
     <view-state id="step1" view="ui.wizard.NewAppointmentWizard.1" popup="true" model="appointment">

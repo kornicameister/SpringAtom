@@ -27,6 +27,11 @@
     <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
     <s:eval expression="newAppointmentStep2.formObjectName" var="modelAttribute" scope="page"/>
 
+
+    <jsp:useBean id="localizedModel" type="org.agatom.springatom.web.locale.beans.LocalizedClassModel" scope="request"/>
+
+    <s:eval expression="localizedModel.getLocalizedAttribute('comment')" var="commentLabel"/>
+
     <form:form id="${requestScope.formID}"
                action="${flowExecutionUrl}"
                commandName="${modelAttribute}"
@@ -35,8 +40,8 @@
         <fieldset>
             <legend><s:message code="wizard.NewAppointmentWizard.comment.label"/></legend>
             <p>
-                <label class="x-form-label" title="<s:message code="wizard.NewAppointmentWizard.comment.label"/>">
-                    <span><<s:message code="wizard.NewAppointmentWizard.comment.label"/></span>
+                <label class="x-form-label" title="${commentLabel}">
+                    <span>${commentLabel}</span>
                     <form:textarea id="${requestScope.formID}-task"
                                    htmlEscape="true"
                                    cssClass="x-input"
