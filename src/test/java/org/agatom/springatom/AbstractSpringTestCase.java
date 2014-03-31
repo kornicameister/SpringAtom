@@ -42,36 +42,33 @@ import java.util.Collection;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {
-        "classpath:springatom-application-root.xml",
-        "classpath:springatom-application-web.xml"
+		"classpath:springatom-all.xml"
 })
 public abstract class AbstractSpringTestCase
-        extends ReflectionTestUtils {
+		extends ReflectionTestUtils {
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    protected WebApplicationContext wac;
-    protected MockMvc               mockMvc;
-    private   FilterChainProxy      springSecurityFilterChain;
+	@SuppressWarnings("SpringJavaAutowiringInspection")
+	@Autowired
+	protected WebApplicationContext wac;
+	protected MockMvc               mockMvc;
 
-    @Before
-    public void setUp() throws Exception {
-        this.springSecurityFilterChain = this.wac.getBean(FilterChainProxy.class);
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
-                                      .addFilter(this.springSecurityFilterChain, "/**")
-                                      .build();
-        final TestingAuthenticationToken authentication = new TestingAuthenticationToken("SYSTEM", "SYSTEM");
-        authentication.setAuthenticated(true);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
+	@Before
+	public void setUp() throws Exception {
+		final FilterChainProxy springSecurityFilterChain = this.wac.getBean(FilterChainProxy.class);
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
+				.addFilter(springSecurityFilterChain, "/**")
+				.build();
+		final TestingAuthenticationToken authentication = new TestingAuthenticationToken("SYSTEM", "SYSTEM");
+		authentication.setAuthenticated(true);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+	}
 
-    public long[] extractIDS(final Collection<? extends Persistable> value) {
-        final long[] ids = new long[value.size()];
-        final int length = ids.length;
-        int it = 0;
-        for (final Persistable persistable : value) {
-            ids[it++] = (long) persistable.getId();
-        }
-        return ids;
-    }
+	public long[] extractIDS(final Collection<? extends Persistable> value) {
+		final long[] ids = new long[value.size()];
+		int it = 0;
+		for (final Persistable persistable : value) {
+			ids[it++] = (long) persistable.getId();
+		}
+		return ids;
+	}
 }

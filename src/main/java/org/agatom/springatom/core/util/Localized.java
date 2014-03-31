@@ -17,6 +17,8 @@
 
 package org.agatom.springatom.core.util;
 
+import java.io.Serializable;
+
 /**
  * {@code Localized} is a utility interface marking an implementing bean
  * as localization aware.
@@ -26,6 +28,6 @@ package org.agatom.springatom.core.util;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface Localized {
-    String getMessageKey();
+public interface Localized extends Serializable {
+	String getMessageKey();
 }

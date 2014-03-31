@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,43 +15,26 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.locale;
+package org.agatom.springatom.web.locale.beans;
 
-import org.agatom.springatom.core.util.LocalizationAware;
-import org.agatom.springatom.core.util.Localized;
-import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
-import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.MessageSource;
+import org.springframework.binding.collection.MapAdaptable;
 
-import java.util.Locale;
+import java.io.Serializable;
+import java.util.Set;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SMessageSource
-		extends MessageSource {
+public interface LocalizedClassModel<T> extends Serializable, MapAdaptable<String, LocalizedClassAttribute> {
+	Class<T> getSource();
 
-	@Cacheable(value = "org.agatom.springatom.localizedClassesCache")
-	<T> LocalizedClassModel<T> getMessage(final Class<T> clazz, final Locale locale);
+	String getName();
 
-	<LA extends LocalizationAware> LA localize(final LA localizationAware, final Locale locale);
+	boolean isFound();
 
-	String getMessage(final Localized localized, final Locale locale);
+	Set<LocalizedClassAttribute> getAttributes();
 
-	String getMessage(final String key, final Locale locale);
-
-	SLocalizedMessages getLocalizedMessages(final Locale locale);
-
-	SLocalizedMessages getLocalizedMessages(final String[] keys, final Locale locale, final boolean usePattern);
-
-	SLocalizedMessage getLocalizedMessage(final String key, final Locale locale);
-
-	public enum StorageMode {
-		SINGLE,
-		COMBINED
-	}
+	boolean hasAttributes();
 }

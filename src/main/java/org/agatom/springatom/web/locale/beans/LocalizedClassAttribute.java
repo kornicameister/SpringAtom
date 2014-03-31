@@ -17,13 +17,19 @@
 
 package org.agatom.springatom.web.locale.beans;
 
+import org.agatom.springatom.core.util.Localized;
+
 /**
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 30.03.14</small>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface LocalizedClass<T> {
-    Class<T> getSource();
+public interface LocalizedClassAttribute extends Localized {
+	String getName();
 
-    String getName();
+	String getLabel();
+
+	boolean isFound();
 }
