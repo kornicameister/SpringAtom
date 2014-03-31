@@ -24,6 +24,7 @@ import org.agatom.springatom.server.model.beans.PersistentObject;
 import org.agatom.springatom.server.model.beans.PersistentVersionedObject;
 import org.agatom.springatom.server.model.beans.activity.SActivity;
 import org.agatom.springatom.server.model.beans.activity.SAssignedActivity;
+import org.agatom.springatom.server.model.beans.appointment.QSAppointment;
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.server.model.beans.appointment.SAppointmentIssue;
 import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
@@ -144,6 +145,25 @@ public class SMessageSourceImplTest extends AbstractSpringTestCase {
 			}
 
 			Assert.assertTrue(String.format("[%s] No localized values for attributes = %s", ClassUtils.getShortName(clazz), ObjectUtils.nullSafeToString(notFound)), notFound.isEmpty());
+		}
+	}
+
+
+	@Test
+	public void testGetAttributes() throws Exception {
+		final String[] attributes = new String[]{
+				QSAppointment.sAppointment.begin.getMetadata().getName(),
+				QSAppointment.sAppointment.end.getMetadata().getName(),
+				QSAppointment.sAppointment.tasks.getMetadata().getName(),
+				QSAppointment.sAppointment.beginTs.getMetadata().getName(),
+				QSAppointment.sAppointment.endTs.getMetadata().getName(),
+				QSAppointment.sAppointment.assigned.getMetadata().getName(),
+				QSAppointment.sAppointment.car.getMetadata().getName()
+		};
+		for (final String attrName : attributes) {
+			final LocalizedClassAttribute pl_pl = this.messageSource.getMessage(SAppointment.class, attrName, Locale.forLanguageTag("pl"));
+			System.out.println(pl_pl);
+			Assert.assertTrue(pl_pl.isFound());
 		}
 	}
 

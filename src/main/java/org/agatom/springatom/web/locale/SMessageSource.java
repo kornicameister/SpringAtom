@@ -19,6 +19,7 @@ package org.agatom.springatom.web.locale;
 
 import org.agatom.springatom.core.util.LocalizationAware;
 import org.agatom.springatom.core.util.Localized;
+import org.agatom.springatom.web.locale.beans.LocalizedClassAttribute;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.agatom.springatom.web.locale.beans.SLocalizedMessage;
 import org.agatom.springatom.web.locale.beans.SLocalizedMessages;
@@ -37,6 +38,9 @@ public interface SMessageSource
 
 	@Cacheable(value = "org.agatom.springatom.localizedClassesCache")
 	<T> LocalizedClassModel<T> getMessage(final Class<T> clazz, final Locale locale);
+
+	@Cacheable(value = "org.agatom.springatom.localizedClassesCache")
+	<T> LocalizedClassAttribute getMessage(final Class<T> clazz, final String attributeName, final Locale locale);
 
 	<LA extends LocalizationAware> LA localize(final LA localizationAware, final Locale locale);
 

@@ -151,6 +151,15 @@ public class SMessageSourceImpl
 	}
 
 	@Override
+	public <T> LocalizedClassAttribute getMessage(final Class<T> clazz, final String attributeName, final Locale locale) {
+		final LocalizedClassModel<T> message = this.getMessage(clazz, locale);
+		if (message.hasAttributes()) {
+			return message.asMap().get(attributeName);
+		}
+		return null;
+	}
+
+	@Override
 	public <LA extends LocalizationAware> LA localize(final LA localizationAware, final Locale locale) {
 		final String messageKey = localizationAware.getMessageKey();
 		final String msg = this.getMessage(messageKey, locale);
