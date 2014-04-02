@@ -24,7 +24,7 @@
     <bean id="ajaxViewResolver"
           class="org.springframework.js.ajax.AjaxUrlBasedViewResolver"
           p:order="0">
-        <property name="viewClass" value="org.agatom.springatom.webmvc.tiles3.VFlowAjaxTilesView"/>
+        <property name="viewClass" value="org.springframework.webflow.mvc.view.FlowAjaxTiles3View"/>
         <property name="cache" value="true"/>
         <property name="cacheLimit" value="10"/>
         <property name="cacheUnresolved" value="false"/>

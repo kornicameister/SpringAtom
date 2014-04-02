@@ -70,7 +70,7 @@
         <!-- spring -->
         <!-- TODO 4.0.0 -->
         <spring.version>4.0.3.RELEASE</spring.version>
-        <spring-webflow.version>2.4.0.BUILD-SNAPSHOT</spring-webflow.version>
+        <spring-webflow.version>2.4.0.RC1</spring-webflow.version>
         <spring-security.version>3.2.3.RELEASE</spring-security.version>
         <spring-data-commons.version>1.7.1.RELEASE</spring-data-commons.version>
         <spring-data-jpa.version>1.5.1.RELEASE</spring-data-jpa.version>
