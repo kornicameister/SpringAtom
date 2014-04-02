@@ -26,9 +26,9 @@
 <jsp:useBean id="lang" scope="request" type="java.util.Locale"/>
 
 <script type="text/javascript" src="<s:url value="${staticResources}/jquery/2.1.0/jquery.min.js"/>"></script>
-<script type="text/javascript" src="<s:url value="${staticResources}/momentjs/2.5.0/min/moment.min.js"/>"></script>
+<script type="text/javascript" src="<s:url value="${staticResources}/momentjs/2.5.1/min/moment.min.js"/>"></script>
 <script type="text/javascript"
-        src="<s:url value="${staticResources}/momentjs/2.5.0/lang/${lang.language}.js"/>"></script>
+        src="<s:url value="${staticResources}/momentjs/2.5.1/lang/${lang.language}.js"/>"></script>
 <script type="text/javascript" src="<s:url value='${staticResources}/fullcalendar/1.6.4/fullcalendar.js'/>"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/spin-js/1.3.3/spin.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/spin-js/1.3.3/jquery.spin.js"/>"></script>
