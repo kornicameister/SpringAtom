@@ -19,6 +19,7 @@ package org.agatom.springatom.web.flows.wizards.wizard;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.convert.converter.ConditionalConverter;
@@ -28,6 +29,7 @@ import org.springframework.validation.DataBinder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.webflow.action.FormAction;
+import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 import java.io.Serializable;
@@ -43,6 +45,7 @@ public abstract class WizardFormAction<T extends Serializable>
 	private static final Logger                      LOGGER             = Logger.getLogger(WizardFormAction.class);
 	public static final  String                      COMMAND_BEAN_NAME  = "commandBean";
 	@Autowired
+	@Qualifier(value = "springAtomConversionService")
 	protected            FormattingConversionService conversionService  = null;
 	@Autowired
 	protected            LocalValidatorFactoryBean   delegatedValidator = null;
@@ -80,6 +83,10 @@ public abstract class WizardFormAction<T extends Serializable>
 		final Object formObject = this.getFormObject(context);
 		Assert.isInstanceOf(this.getFormObjectClass(), formObject);
 		return (T) formObject;
+	}
+
+	protected boolean isSuccessEvent(final Event event) {
+		return event.getId().equals(this.success().getId());
 	}
 
 	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {

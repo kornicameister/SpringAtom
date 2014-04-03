@@ -32,20 +32,20 @@ import java.util.Collection;
  * @since 0.0.1
  */
 public interface SSecuredUser
-        extends UserDetails {
+		extends UserDetails {
 
-    void setPassword(final String password);
+	void setPassword(final String password);
 
-    void setUserName(final String userName);
+	void setUsername(final String userName);
 
-    void setEnabled(final boolean disabled);
+	void setEnabled(final boolean disabled);
 
-    <T extends GrantedAuthority> boolean addAuthority(final T authority);
+	<T extends GrantedAuthority> boolean addAuthority(final T authority);
 
-    <T extends GrantedAuthority> boolean removeAuthority(final T authority);
+	<T extends GrantedAuthority> boolean removeAuthority(final T authority);
 
-    <T extends GrantedAuthority> boolean hasAuthority(final T authority);
+	<T extends GrantedAuthority> boolean hasAuthority(final T authority);
 
-    boolean hasAuthorities(final Collection<? extends GrantedAuthority> authorities);
+	boolean hasAuthorities(final Collection<? extends GrantedAuthority> authorities);
 
 }

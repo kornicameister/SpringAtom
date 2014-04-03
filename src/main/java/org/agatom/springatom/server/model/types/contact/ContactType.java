@@ -23,8 +23,9 @@ package org.agatom.springatom.server.model.types.contact;
  * @since 0.0.1
  */
 public enum ContactType {
-    SCT_FAX,
-    SCT_MAIL,
-    SCT_CELL_PHONE,
-    SCT_PHONE
+	SCT_FAX,
+	SCT_MAIL,
+	SCT_CELL_PHONE,
+	SCT_PHONE,
+	SCT_BUSINESS_PHONE
 }

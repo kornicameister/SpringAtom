@@ -32,54 +32,54 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @since 0.0.1
  */
 abstract public class AbstractTestCaseWithClient
-        extends AbstractSpringTestCase {
-    protected static SUser C_1;
-    protected static SUser C_2;
-    @Autowired
-    protected        SUserService   userService;
-    @Autowired
-    protected        SPersonService personService;
+		extends AbstractSpringTestCase {
+	protected static SUser          C_1;
+	protected static SUser          C_2;
+	@Autowired
+	protected        SUserService   userService;
+	@Autowired
+	protected        SPersonService personService;
 
-    @Before
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        if (AbstractTestCaseWithClient.C_1 != null && AbstractTestCaseWithClient.C_2 != null) {
-            return;
-        }
-        {
-            SPerson person = new SPerson();
-            person.setFirstName("Tomasz");
-            person.setLastName("Trębski");
-            person.setPrimaryMail("kornicameister@gmail.com");
+	@Before
+	@Override
+	public void setUp() throws Exception {
+		super.setUp();
+		if (AbstractTestCaseWithClient.C_1 != null && AbstractTestCaseWithClient.C_2 != null) {
+			return;
+		}
+		{
+			SPerson person = new SPerson();
+			person.setFirstName("Tomasz");
+			person.setLastName("Trębski");
+			person.setPrimaryMail("kornicameister@gmail.com");
 
-            SUser client = new SUser();
-            client.setPerson(person);
-            client.setUserName("kornicameister");
-            client.setPassword("a");
+			SUser client = new SUser();
+			client.setPerson(person);
+			client.setUsername("kornicameister");
+			client.setPassword("a");
 
-            SUser newClient = this.userService.save(client);
+			SUser newClient = this.userService.save(client);
 
-            Assert.assertNotNull("newClient is null", newClient);
-            Assert.assertNotNull("newClient#id is null", newClient.getId());
-            AbstractCarTestCase.C_1 = newClient;
-        }
-        {
-            SPerson person = new SPerson();
-            person.setFirstName("Maja");
-            person.setLastName("Staszczyk");
-            person.setPrimaryMail("m2311007@gmail.com");
+			Assert.assertNotNull("newClient is null", newClient);
+			Assert.assertNotNull("newClient#id is null", newClient.getId());
+			AbstractCarTestCase.C_1 = newClient;
+		}
+		{
+			SPerson person = new SPerson();
+			person.setFirstName("Maja");
+			person.setLastName("Staszczyk");
+			person.setPrimaryMail("m2311007@gmail.com");
 
-            SUser client = new SUser();
-            client.setPerson(person);
-            client.setUserName("m2311007");
-            client.setPassword("b");
+			SUser client = new SUser();
+			client.setPerson(person);
+			client.setUsername("m2311007");
+			client.setPassword("b");
 
-            SUser newClient = this.userService.save(client);
+			SUser newClient = this.userService.save(client);
 
-            Assert.assertNotNull("newClient is null", newClient);
-            Assert.assertNotNull("newClient#id is null", newClient.getId());
-            AbstractCarTestCase.C_2 = newClient;
-        }
-    }
+			Assert.assertNotNull("newClient is null", newClient);
+			Assert.assertNotNull("newClient#id is null", newClient.getId());
+			AbstractCarTestCase.C_2 = newClient;
+		}
+	}
 }

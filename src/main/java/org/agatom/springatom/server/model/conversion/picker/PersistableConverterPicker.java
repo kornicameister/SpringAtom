@@ -44,61 +44,64 @@ import java.util.Set;
 @Role(BeanDefinition.ROLE_SUPPORT)
 public class PersistableConverterPicker {
 
-    @Autowired
-    private Set<PersistableConverter<?>> converters;
+	@Autowired
+	private Set<PersistableConverter<?>> converters;
 
-    @SuppressWarnings("unchecked")
-    public <T extends Persistable> Converter<T, String> getConverterForSelector(final String key) {
-        final Optional<PersistableConverter<?>> match = FluentIterable.from(this.converters).firstMatch(new Predicate<PersistableConverter<?>>() {
-            @Override
-            public boolean apply(@Nullable final PersistableConverter<?> input) {
-                assert input != null;
-                final PersistableConverterUtility annotation = input.getClass().getAnnotation(PersistableConverterUtility.class);
-                return annotation != null && AnnotationUtils.getValue(annotation, "selector").equals(key);
-            }
-        });
-        if (match.isPresent()) {
-            return (Converter<T, String>) match.get();
-        }
-        return new DefaultPickedConverter<>();
-    }
+	@SuppressWarnings("unchecked")
+	public <T extends Persistable> Converter<T, String> getConverterForSelector(final String key) {
+		final Optional<PersistableConverter<?>> match = FluentIterable.from(this.converters).firstMatch(new Predicate<PersistableConverter<?>>() {
+			@Override
+			public boolean apply(@Nullable final PersistableConverter<?> input) {
+				assert input != null;
+				final PersistableConverterUtility annotation = input.getClass().getAnnotation(PersistableConverterUtility.class);
+				return annotation != null && AnnotationUtils.getValue(annotation, "selector").equals(key);
+			}
+		});
+		if (match.isPresent()) {
+			return (Converter<T, String>) match.get();
+		}
+		return new DefaultPickedConverter<>();
+	}
 
-    @SuppressWarnings("unchecked")
-    public <T extends Persistable> Converter<T, String> getDefaultConverter(final TypeDescriptor sourceType) {
-        final Optional<PersistableConverter<?>> match = FluentIterable
-                .from(this.converters)
-                .filter(new Predicate<PersistableConverter<?>>() {
-                    @Override
-                    public boolean apply(@Nullable final PersistableConverter<?> input) {
-                        assert input != null;
-                        return input.matches(sourceType, TypeDescriptor.valueOf(String.class));
-                    }
-                })
-                .firstMatch(new Predicate<PersistableConverter<?>>() {
-                    @Override
-                    public boolean apply(@Nullable final PersistableConverter<?> input) {
-                        assert input != null;
-                        final PersistableConverterUtility annotation = input.getClass().getAnnotation(PersistableConverterUtility.class);
-                        return annotation != null && String.valueOf(AnnotationUtils.getValue(annotation, "selector")).isEmpty();
-                    }
-                });
-        if (match.isPresent()) {
-            return (Converter<T, String>) match.get();
-        }
-        return new DefaultPickedConverter<>();
-    }
+	@SuppressWarnings("unchecked")
+	public <T extends Persistable> Converter<T, String> getDefaultConverter(final TypeDescriptor sourceType) {
+		final Optional<PersistableConverter<?>> match = FluentIterable
+				.from(this.converters)
+				.filter(new Predicate<PersistableConverter<?>>() {
+					@Override
+					public boolean apply(@Nullable final PersistableConverter<?> input) {
+						assert input != null;
+						return input.matches(sourceType, TypeDescriptor.valueOf(String.class));
+					}
+				})
+				.firstMatch(new Predicate<PersistableConverter<?>>() {
+					@Override
+					public boolean apply(@Nullable final PersistableConverter<?> input) {
+						assert input != null;
+						final PersistableConverterUtility annotation = input.getClass().getAnnotation(PersistableConverterUtility.class);
+						return annotation != null && String.valueOf(AnnotationUtils.getValue(annotation, "selector")).isEmpty();
+					}
+				});
+		if (match.isPresent()) {
+			return (Converter<T, String>) match.get();
+		}
+		return new DefaultPickedConverter<>();
+	}
 
-    private class DefaultPickedConverter<T extends Persistable>
-            extends PersistableConverterImpl<T> {
+	private class DefaultPickedConverter<T extends Persistable>
+			extends PersistableConverterImpl<T> {
 
-        @Override
-        public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-            return true;
-        }
+		@Override
+		public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+			return true;
+		}
 
-        @Override
-        public String convert(final Persistable source) {
-            return source.toString();
-        }
-    }
+		@Override
+		public String convert(final Persistable source) {
+			if (source == null) {
+				return "";
+			}
+			return source.toString();
+		}
+	}
 }

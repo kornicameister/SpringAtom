@@ -1001,14 +1001,9 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>${project.site-plugin.version}</version>
                 <configuration>
-                    <reportPlugins>
-                        <!-- Cobertura Plugin -->
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>cobertura-maven-plugin</artifactId>
-                            <version>2.5.1</version>
-                        </plugin>
-                    </reportPlugins>
+                    <generateReports>true</generateReports>
+                    <generateProjectInfo>true</generateProjectInfo>
+                    <generateSitemap>true</generateSitemap>
                     <detail>true</detail>
                 </configuration>
             </plugin>

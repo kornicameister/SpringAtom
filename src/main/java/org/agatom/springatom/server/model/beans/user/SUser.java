@@ -95,6 +95,9 @@ public class SUser
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
+		if (this.roles == null) {
+			this.roles = Sets.newHashSet();
+		}
 		Set<SAuthority> roles = new HashSet<>();
 		for (SUserAuthority userToRole : this.roles) {
 			roles.add(userToRole.getAuthority());
@@ -189,7 +192,7 @@ public class SUser
 		this.credentials.setPassword(password);
 	}
 
-	public void setUserName(final String login) {
+	public void setUsername(final String login) {
 		this.credentials.setUsername(login);
 	}
 
@@ -200,6 +203,10 @@ public class SUser
 		for (final GrantedAuthority role : roles) {
 			this.roles.add(new SUserAuthority(this, (SAuthority) role));
 		}
+	}
+
+	public void clearAuthorities() {
+		this.roles = null;
 	}
 
 	public SPerson getPerson() {

@@ -1,0 +1,182 @@
+/**************************************************************************************************
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
+ *                                                                                                *
+ * [SpringAtom] is free software: you can redistribute it and/or modify                           *
+ * it under the terms of the GNU General Public License as published by                           *
+ * the Free Software Foundation, either version 3 of the License, or                              *
+ * (at your option) any later version.                                                            *
+ *                                                                                                *
+ * [SpringAtom] is distributed in the hope that it will be useful,                                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                                 *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  *
+ * GNU General Public License for more details.                                                   *
+ *                                                                                                *
+ * You should have received a copy of the GNU General Public License                              *
+ * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
+ **************************************************************************************************/
+
+package org.agatom.springatom.web.flows.wizards.wizard.newUser;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import org.agatom.springatom.server.model.beans.person.SPerson;
+import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.types.contact.ContactType;
+import org.agatom.springatom.server.model.types.contact.SContact;
+import org.agatom.springatom.server.service.domain.SUserService;
+import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
+import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
+import org.agatom.springatom.web.locale.SMessageSource;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.format.support.FormattingConversionService;
+import org.springframework.util.ClassUtils;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.RequestContext;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+/**
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 17.03.14</small>
+ *
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+@WizardAction("newUserWizardStep3")
+public class NewUserWizardStep3
+		extends WizardFormAction<SUser> {
+	private static final Logger          LOGGER                    = Logger.getLogger(NewUserWizardStep3.class);
+	private static final String          FORM_OBJECT_NAME          = "user";
+	private static final String          LOCALIZED_CONTACTS_TYPES  = "localizedContactsTypes";
+	private              Converter<?, ?> STR_TO_CONTACT_CONVERTER  = new StringToPersonContactConverter();
+	private              Converter<?, ?> ARR_TO_CONTACTS_CONVERTER = new ArrayToPersonContactsConverter();
+	@Autowired
+	private              SMessageSource  messageSource             = null;
+	@Autowired
+	private              SUserService    userService               = null;
+
+	public NewUserWizardStep3() {
+		super();
+		this.setFormObjectName(FORM_OBJECT_NAME);
+	}
+
+	@Override
+	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
+		conversionService.addConverter(ARR_TO_CONTACTS_CONVERTER);
+		conversionService.addConverter(STR_TO_CONTACT_CONVERTER);
+		return super.doInitBinder(binder, conversionService);
+	}
+
+	@Override
+	public Event setupForm(final RequestContext context) throws Exception {
+		LOGGER.trace(String.format("setupForm(context=%s)", context));
+		final Locale locale = LocaleContextHolder.getLocale();
+
+		final ContactType[] contactTypes = ContactType.values();
+		final List<LocalizedContact> localizedContactsTypes = Lists.newArrayListWithExpectedSize(contactTypes.length);
+		for (ContactType contactType : contactTypes) {
+			localizedContactsTypes.add(new LocalizedContact().setLabel(this.messageSource.getMessage(contactType.name(), locale)).setContactType(contactType));
+		}
+
+		final MutableAttributeMap<Object> viewScope = context.getViewScope();
+		viewScope.put(LOCALIZED_CONTACTS_TYPES, localizedContactsTypes);
+		return super.setupForm(context);
+	}
+
+	@Override
+	public Event bindAndValidate(final RequestContext context) throws Exception {
+		final Event event = super.bindAndValidate(context);
+		if (this.isSuccessEvent(event)) {
+			this.userService.registerNewUser(this.getCommandBean(context));
+		}
+		return event;
+	}
+
+	@Override
+	public Event resetForm(final RequestContext context) throws Exception {
+		final SPerson person = this.getCommandBean(context).getPerson();
+		if (person != null) {
+			person.clearContacts();
+		}
+		return super.resetForm(context);
+	}
+
+	private abstract class BaseConverter
+			extends MatcherConverter {
+		protected Set<SContact> doConvert(final Set<String> list) {
+			LOGGER.trace(String.format("converting with selected clazz=%s", list));
+			Preconditions.checkNotNull(list);
+			Preconditions.checkArgument(!list.isEmpty());
+			final Set<SContact> contacts = Sets.newHashSet();
+			return contacts;
+		}
+	}
+
+	private class LocalizedContact implements Serializable {
+		private static final long        serialVersionUID = -1940243718109904998L;
+		private              String      label            = null;
+		private              ContactType contactType      = null;
+
+		public LocalizedContact setLabel(final String label) {
+			this.label = label;
+			return this;
+		}
+
+		public LocalizedContact setContactType(final ContactType role) {
+			this.contactType = role;
+			return this;
+		}
+
+		public String getLabel() {
+			return label;
+		}
+
+		public ContactType getContactType() {
+			return contactType;
+		}
+	}
+
+	private class ArrayToPersonContactsConverter
+			extends BaseConverter
+			implements Converter<String[], Set<SContact>> {
+
+		@Override
+		public Set<SContact> convert(final String[] attributes) {
+			return this.doConvert(Sets.newHashSet(attributes));
+		}
+
+		@Override
+		public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+			final Class<?> sourceTypeClass = sourceType.getType();
+			return ClassUtils.isAssignable(String[].class, sourceTypeClass)
+					&& ClassUtils.isAssignable(Set.class, targetType.getType());
+		}
+	}
+
+	private class StringToPersonContactConverter
+			extends BaseConverter
+			implements Converter<String, Set<SContact>> {
+
+		@Override
+		public Set<SContact> convert(final String clazz) {
+			return this.doConvert(Sets.newHashSet(clazz));
+		}
+
+		@Override
+		public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+			final Class<?> sourceTypeClass = sourceType.getType();
+			return ClassUtils.isAssignable(String.class, sourceTypeClass)
+					&& ClassUtils.isAssignable(Set.class, targetType.getType());
+		}
+	}
+}

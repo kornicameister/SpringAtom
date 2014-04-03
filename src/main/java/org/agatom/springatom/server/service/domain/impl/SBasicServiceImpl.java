@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
+import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -59,6 +60,13 @@ abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializa
 	@Autowired(required = false)
 	private   SUserService              userService = null;
 	protected ApplicationEventPublisher publisher   = null;
+
+	@PostConstruct
+	private void initUserService() {
+		if (ClassUtils.isAssignableValue(SUserService.class, this)) {
+			this.userService = (SUserService) this;
+		}
+	}
 
 	@Override
 	public void setApplicationEventPublisher(final ApplicationEventPublisher applicationEventPublisher) {

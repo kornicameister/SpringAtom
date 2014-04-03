@@ -17,9 +17,8 @@
 
 package org.agatom.springatom.server.model.beans.person;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
+import com.google.common.base.Function;
+import com.google.common.collect.*;
 import org.agatom.springatom.server.model.beans.PersistentContactable;
 import org.agatom.springatom.server.model.types.ReportableEntity;
 import org.agatom.springatom.server.model.types.contact.SContact;
@@ -30,8 +29,12 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Nullable;
 import javax.persistence.*;
+import javax.persistence.Table;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -90,14 +93,22 @@ public class SPerson
 
 	@Override
 	public List<SContact> getContacts() {
-		return ImmutableList.copyOf(this.contacts);
+		if (this.contacts == null) {
+			this.contacts = Sets.newHashSet();
+		}
+		return Lists.newArrayList(this.contacts);
 	}
 
 	@Override
 	public boolean addContact(final Collection<SContact> contacts) {
-		if (contacts.size() > 0) {
+		if (!CollectionUtils.isEmpty(contacts)) {
 			if (this.contacts == null) {
 				this.contacts = Sets.newIdentityHashSet();
+			}
+			for (SContact contact : contacts) {
+				if (ClassUtils.isAssignableValue(SPersonContact.class, contact)) {
+					((SPersonContact) contact).setAssigned(this);
+				}
 			}
 			return this.contacts.addAll(contacts);
 		}
@@ -112,5 +123,38 @@ public class SPerson
 			return this.contacts.removeAll(difference);
 		}
 		return false;
+	}
+
+	public SPerson setContacts(final Collection<SContact> contacts) {
+		this.addContact(contacts);
+		return this;
+	}
+
+	public void clearContacts() {
+		this.contacts = null;
+	}
+
+	public Collection<SPersonContact> getPersonContacts() {
+		final ImmutableList<SPersonContact> list = FluentIterable.from(this.getContacts()).transform(new Function<SContact, SPersonContact>() {
+			@Nullable
+			@Override
+			public SPersonContact apply(@Nullable final SContact input) {
+				if (input != null && ClassUtils.isAssignableValue(SPersonContact.class, input)) {
+					return (SPersonContact) input;
+				}
+				return null;
+			}
+		}).toList();
+		return Lists.newArrayList(list);
+	}
+
+	public boolean setPersonContacts(final Collection<SPersonContact> contacts) {
+		return this.addContact(FluentIterable.from(contacts).transform(new Function<SPersonContact, SContact>() {
+			@Nullable
+			@Override
+			public SContact apply(@Nullable final SPersonContact input) {
+				return input;
+			}
+		}).toList());
 	}
 }
