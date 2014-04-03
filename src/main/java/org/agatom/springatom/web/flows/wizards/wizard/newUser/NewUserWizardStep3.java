@@ -17,13 +17,10 @@
 
 package org.agatom.springatom.web.flows.wizards.wizard.newUser;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.types.contact.ContactType;
-import org.agatom.springatom.server.model.types.contact.SContact;
 import org.agatom.springatom.server.service.domain.SUserService;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
 import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
@@ -38,7 +35,6 @@ import org.springframework.webflow.execution.RequestContext;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 17.03.14</small>
@@ -50,13 +46,13 @@ import java.util.Set;
 @WizardAction("newUserWizardStep3")
 public class NewUserWizardStep3
 		extends WizardFormAction<SUser> {
-	private static final Logger          LOGGER                    = Logger.getLogger(NewUserWizardStep3.class);
-	private static final String          FORM_OBJECT_NAME          = "user";
-	private static final String          LOCALIZED_CONTACTS_TYPES  = "localizedContactsTypes";
+	private static final Logger         LOGGER                   = Logger.getLogger(NewUserWizardStep3.class);
+	private static final String         FORM_OBJECT_NAME         = "user";
+	private static final String         LOCALIZED_CONTACTS_TYPES = "localizedContactsTypes";
 	@Autowired
-	private              SMessageSource  messageSource             = null;
+	private              SMessageSource messageSource            = null;
 	@Autowired
-	private              SUserService    userService               = null;
+	private              SUserService   userService              = null;
 
 	public NewUserWizardStep3() {
 		super();
@@ -95,17 +91,6 @@ public class NewUserWizardStep3
 			person.clearContacts();
 		}
 		return super.resetForm(context);
-	}
-
-	private abstract class BaseConverter
-			extends MatcherConverter {
-		protected Set<SContact> doConvert(final Set<String> list) {
-			LOGGER.trace(String.format("converting with selected clazz=%s", list));
-			Preconditions.checkNotNull(list);
-			Preconditions.checkArgument(!list.isEmpty());
-			final Set<SContact> contacts = Sets.newHashSet();
-			return contacts;
-		}
 	}
 
 	private class LocalizedContact implements Serializable {
