@@ -31,11 +31,6 @@ import org.agatom.springatom.web.locale.SMessageSource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.format.support.FormattingConversionService;
-import org.springframework.util.ClassUtils;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -58,8 +53,6 @@ public class NewUserWizardStep3
 	private static final Logger          LOGGER                    = Logger.getLogger(NewUserWizardStep3.class);
 	private static final String          FORM_OBJECT_NAME          = "user";
 	private static final String          LOCALIZED_CONTACTS_TYPES  = "localizedContactsTypes";
-	private              Converter<?, ?> STR_TO_CONTACT_CONVERTER  = new StringToPersonContactConverter();
-	private              Converter<?, ?> ARR_TO_CONTACTS_CONVERTER = new ArrayToPersonContactsConverter();
 	@Autowired
 	private              SMessageSource  messageSource             = null;
 	@Autowired
@@ -68,13 +61,6 @@ public class NewUserWizardStep3
 	public NewUserWizardStep3() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
-	}
-
-	@Override
-	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
-		conversionService.addConverter(ARR_TO_CONTACTS_CONVERTER);
-		conversionService.addConverter(STR_TO_CONTACT_CONVERTER);
-		return super.doInitBinder(binder, conversionService);
 	}
 
 	@Override
@@ -127,56 +113,22 @@ public class NewUserWizardStep3
 		private              String      label            = null;
 		private              ContactType contactType      = null;
 
+		public String getLabel() {
+			return label;
+		}
+
 		public LocalizedContact setLabel(final String label) {
 			this.label = label;
 			return this;
 		}
 
-		public LocalizedContact setContactType(final ContactType role) {
-			this.contactType = role;
-			return this;
-		}
-
-		public String getLabel() {
-			return label;
-		}
-
 		public ContactType getContactType() {
 			return contactType;
 		}
-	}
 
-	private class ArrayToPersonContactsConverter
-			extends BaseConverter
-			implements Converter<String[], Set<SContact>> {
-
-		@Override
-		public Set<SContact> convert(final String[] attributes) {
-			return this.doConvert(Sets.newHashSet(attributes));
-		}
-
-		@Override
-		public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-			final Class<?> sourceTypeClass = sourceType.getType();
-			return ClassUtils.isAssignable(String[].class, sourceTypeClass)
-					&& ClassUtils.isAssignable(Set.class, targetType.getType());
-		}
-	}
-
-	private class StringToPersonContactConverter
-			extends BaseConverter
-			implements Converter<String, Set<SContact>> {
-
-		@Override
-		public Set<SContact> convert(final String clazz) {
-			return this.doConvert(Sets.newHashSet(clazz));
-		}
-
-		@Override
-		public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-			final Class<?> sourceTypeClass = sourceType.getType();
-			return ClassUtils.isAssignable(String.class, sourceTypeClass)
-					&& ClassUtils.isAssignable(Set.class, targetType.getType());
+		public LocalizedContact setContactType(final ContactType role) {
+			this.contactType = role;
+			return this;
 		}
 	}
 }
