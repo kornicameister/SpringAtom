@@ -32,20 +32,33 @@ import org.springframework.binding.convert.converters.StringToEnum;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.ResourceUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.Set;
 
 /**
+ * {@code NewUserWizardStep2} is responsible for preparing, converting and binding
+ * the set of {@link org.agatom.springatom.server.model.beans.user.authority.SAuthority} for
+ * given {@link org.agatom.springatom.server.model.beans.user.SUser}
+ * [{@link org.agatom.springatom.web.flows.wizards.wizard.newUser.NewUserWizardStep2#getCommandBean(org.springframework.webflow.execution.RequestContext)}].
+ * <p/>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 17.03.14</small>
  *
  * @author kornicameister
@@ -55,12 +68,13 @@ import java.util.Set;
 @WizardAction("newUserWizardStep2")
 public class NewUserWizardStep2
 		extends WizardFormAction<SUser> {
+	public static final  String          AUTHORITIES_REQUIRED_FIELD        = "authorities";
 	private static final Logger          LOGGER                            = Logger.getLogger(NewUserWizardStep2.class);
 	private static final String          FORM_OBJECT_NAME                  = "user";
 	private static final String          LOCALIZED_ROLES_KEY               = "localizedRoles";
-	public static final  String          AUTHORITIES_REQUIRED_FIELD        = "authorities";
 	private              Converter<?, ?> STRING_TO_GRANTED_AUTHORITY       = new StringToGrantedAuthorityConverter();
 	private              Converter<?, ?> STRING_ARR_TO_GRANTED_AUTHORITIES = new ArrayToGrantedAuthoritiesConverter();
+	private              Set<SRole>      excludedRoles                     = Sets.newHashSet();
 	@Autowired
 	private              SMessageSource  messageSource                     = null;
 
@@ -70,11 +84,40 @@ public class NewUserWizardStep2
 	}
 
 	@Override
-	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
-		conversionService.addConverter(STRING_ARR_TO_GRANTED_AUTHORITIES);
-		conversionService.addConverter(STRING_TO_GRANTED_AUTHORITY);
-		binder.setRequiredFields(AUTHORITIES_REQUIRED_FIELD);
-		return super.doInitBinder(binder, conversionService);
+	protected void initAction() {
+		super.initAction();
+		this.getRolesToExcludeInWizard();
+	}
+
+	/**
+	 * Reads the set of {@link org.agatom.springatom.server.model.types.user.SRole} to be excluded in
+	 * wizard from being assigned to new {@link org.agatom.springatom.server.model.beans.user.SUser}
+	 */
+	private void getRolesToExcludeInWizard() {
+		try {
+			final File file = ResourceUtils.getFile("classpath:org/agatom/springatom/web/flows/wizards/wizard/newUser/excluded-roles.properties");
+			if (file.canRead()) {
+				final Properties properties = PropertiesLoaderUtils.loadProperties(new FileSystemResource(file));
+				final String property = properties.getProperty("springatom.excludedRolesInCreate", "");
+				if (StringUtils.hasText(property)) {
+					final StringToEnum stringToEnum = new StringToEnum();
+					final String[] split = StringUtils.split(property, ",");
+					for (String propRaw : split) {
+						final SRole role = (SRole) stringToEnum.convertSourceToTargetClass(propRaw, SRole.class);
+						this.excludedRoles.add(role);
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			LOGGER.error("Failed to access excluded roles properties", e);
+		} catch (IOException e) {
+			LOGGER.error("Failed to read properties", e);
+		} catch (Exception e) {
+			LOGGER.error("General failure in reading excluded properties", e);
+		}
+		if (!this.excludedRoles.isEmpty()) {
+			LOGGER.trace(String.format("Read %d roles to be excluded = %s", this.excludedRoles.size(), this.excludedRoles));
+		}
 	}
 
 	@Override
@@ -85,6 +128,10 @@ public class NewUserWizardStep2
 		final SRole[] sRoles = SRole.values();
 		final List<LocalizedRole> localizedRoles = Lists.newArrayListWithExpectedSize(sRoles.length);
 		for (SRole sRole : sRoles) {
+			if (this.excludedRoles.contains(sRole)) {
+				LOGGER.trace(String.format("%s suppressed, it was found in excluded roles", sRole));
+				continue;
+			}
 			localizedRoles.add(new LocalizedRole().setLabel(this.messageSource.getMessage(sRole.name(), locale)).setRole(sRole));
 		}
 
@@ -99,6 +146,19 @@ public class NewUserWizardStep2
 		return super.resetForm(context);
 	}
 
+	@Override
+	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
+		conversionService.addConverter(STRING_ARR_TO_GRANTED_AUTHORITIES);
+		conversionService.addConverter(STRING_TO_GRANTED_AUTHORITY);
+		binder.setRequiredFields(AUTHORITIES_REQUIRED_FIELD);
+		return super.doInitBinder(binder, conversionService);
+	}
+
+	/**
+	 * Converter responsible for generating the set of {@link org.agatom.springatom.server.model.beans.user.authority.SAuthority}
+	 * from passed {@link java.util.Set} of {@link java.lang.String} where each one is mapped to {@link org.agatom.springatom.server.model.types.user.SRole}
+	 * with the help of {@link org.springframework.binding.convert.converters.StringToEnum}
+	 */
 	private abstract class BaseConverter
 			extends MatcherConverter {
 		protected Set<GrantedAuthority> doConvert(final Set<String> list) {
@@ -122,27 +182,32 @@ public class NewUserWizardStep2
 		}
 	}
 
+	/**
+	 * {@code LocalizedRole} holds a pair of {@link org.agatom.springatom.server.model.types.user.SRole}
+	 * and its localized value under {@link org.agatom.springatom.web.flows.wizards.wizard.newUser.NewUserWizardStep2.LocalizedRole#label}
+	 * value
+	 */
 	private class LocalizedRole implements Serializable {
 		private static final long   serialVersionUID = -6064570964928557059L;
 		private              String label            = null;
 		private              SRole  role             = null;
+
+		public String getLabel() {
+			return label;
+		}
 
 		public LocalizedRole setLabel(final String label) {
 			this.label = label;
 			return this;
 		}
 
+		public SRole getRole() {
+			return role;
+		}
+
 		public LocalizedRole setRole(final SRole role) {
 			this.role = role;
 			return this;
-		}
-
-		public String getLabel() {
-			return label;
-		}
-
-		public SRole getRole() {
-			return role;
 		}
 	}
 
