@@ -53,10 +53,10 @@ import static java.lang.annotation.ElementType.*;
  */
 @NotNull
 @Length(min = 6,
-        max = 20,
-        message = "Password length must be between [6,20]")
-@Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]))",
-        message = "Password must contain at least one digit[0-9],uppercase letter[A-Z],lowercase letter[a-z] and special character")
+		max = 20,
+		message = "Password length must be between [6,20]")
+@Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})",
+		message = "Password must contain at least one digit[0-9],uppercase letter[A-Z],lowercase letter[a-z] and special character")
 //business-logic
 @Target(value = {METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
 @Retention(value = RetentionPolicy.RUNTIME)
@@ -65,9 +65,9 @@ import static java.lang.annotation.ElementType.*;
 @Constraint(validatedBy = {})
 @ReportAsSingleViolation
 public @interface Password {
-    String message() default "{org.agatom.springatom.server.service.support.constraints.Password}";
+	String message() default "{org.agatom.springatom.server.service.support.constraints.Password}";
 
-    Class<?>[] groups() default {};
+	Class<?>[] groups() default {};
 
-    @Deprecated Class<? extends Payload>[] payload() default {};
+	@Deprecated Class<? extends Payload>[] payload() default {};
 }

@@ -64,9 +64,9 @@ import java.util.Set;
 public class SUser
 		extends PersistentVersionedObject
 		implements SSecuredUser {
-	private static final   long                serialVersionUID      = -5918876176226057267L;
 	protected static final String              ENTITY_NAME           = "SUser";
 	protected static final String              TABLE_NAME            = "suser";
+	private static final   long                serialVersionUID      = -5918876176226057267L;
 	@Audited
 	@Embedded
 	private                SUserCredentials    credentials           = null;
@@ -188,12 +188,12 @@ public class SUser
 		).size() > 0;
 	}
 
-	public void setPassword(final String password) {
-		this.credentials.setPassword(password);
-	}
-
 	public void setUsername(final String login) {
 		this.credentials.setUsername(login);
+	}
+
+	public void setPassword(final String password) {
+		this.credentials.setPassword(password);
 	}
 
 	public void setAuthorities(final Set<? extends GrantedAuthority> roles) {
@@ -201,7 +201,7 @@ public class SUser
 			this.roles = new HashSet<>();
 		}
 		for (final GrantedAuthority role : roles) {
-			this.roles.add(new SUserAuthority(this, (SAuthority) role));
+			this.addAuthority(role);
 		}
 	}
 

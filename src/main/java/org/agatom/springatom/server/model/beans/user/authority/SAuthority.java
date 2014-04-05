@@ -19,7 +19,6 @@ package org.agatom.springatom.server.model.beans.user.authority;
 
 import org.agatom.springatom.server.model.beans.PersistentObject;
 import org.agatom.springatom.server.model.types.user.SRole;
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -36,12 +35,11 @@ import javax.persistence.*;
 public class SAuthority
 		extends PersistentObject<Long>
 		implements GrantedAuthority {
-	private static final   long   serialVersionUID = 2893594861541235345L;
 	protected static final String ENTITY_NAME      = "SAuthority";
 	protected static final String TABLE_NAME       = "sauthority";
+	private static final   long   serialVersionUID = 2893594861541235345L;
 	@Type(type = "org.hibernate.type.EnumType")
 	@Column(name = "authority", updatable = false, unique = true, length = 50, nullable = false)
-	@NaturalId(mutable = false)
 	@Enumerated(value = EnumType.STRING)
 	private                SRole  role             = null;
 
