@@ -32,9 +32,9 @@ import java.util.List;
  */
 public interface SMultiContactable
         extends SContactable {
-    List<SContact> getContacts();
+	List<? extends SContact> getContacts();
 
-    boolean addContact(final Collection<SContact> contacts);
+	boolean addContact(final Collection<? extends SContact> contacts);
 
-    boolean removeContact(final Collection<SContact> contacts);
+	boolean removeContact(final Collection<? extends SContact> contacts);
 }

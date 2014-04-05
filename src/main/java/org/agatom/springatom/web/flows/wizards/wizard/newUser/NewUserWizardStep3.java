@@ -28,6 +28,7 @@ import org.agatom.springatom.web.locale.SMessageSource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.util.ClassUtils;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -45,9 +46,9 @@ import java.util.Locale;
  */
 @WizardAction("newUserWizardStep3")
 public class NewUserWizardStep3
-		extends WizardFormAction<SUser> {
+		extends WizardFormAction<SPerson> {
 	private static final Logger         LOGGER                   = Logger.getLogger(NewUserWizardStep3.class);
-	private static final String         FORM_OBJECT_NAME         = "user";
+	private static final String FORM_OBJECT_NAME = "person";
 	private static final String         LOCALIZED_CONTACTS_TYPES = "localizedContactsTypes";
 	@Autowired
 	private              SMessageSource messageSource            = null;
@@ -79,18 +80,39 @@ public class NewUserWizardStep3
 	public Event bindAndValidate(final RequestContext context) throws Exception {
 		final Event event = super.bindAndValidate(context);
 		if (this.isSuccessEvent(event)) {
-			this.userService.registerNewUser(this.getCommandBean(context));
+			final MutableAttributeMap<Object> scope = this.getFormObjectScope().getScope(context);
+			final Object object = scope.get("user");
+			if (object != null && ClassUtils.isAssignableValue(SUser.class, object)) {
+				final SUser user = (SUser) object;
+				final SPerson person = this.getCommandBean(context);
+				user.setPerson(person);
+				this.userService.registerNewUser(user);
+			}
 		}
 		return event;
 	}
 
 	@Override
 	public Event resetForm(final RequestContext context) throws Exception {
-		final SPerson person = this.getCommandBean(context).getPerson();
+		final SPerson person = this.getCommandBean(context);
 		if (person != null) {
 			person.clearContacts();
 		}
 		return super.resetForm(context);
+	}
+
+	@Override
+	protected Object getFormObject(final RequestContext context) throws Exception {
+		final MutableAttributeMap<Object> scope = this.getFormObjectScope().getScope(context);
+		final Object object = scope.get("user");
+		if (object != null && ClassUtils.isAssignableValue(SUser.class, object)) {
+			final SUser user = (SUser) object;
+			final SPerson person = user.getPerson();
+			if (person != null) {
+				return person;
+			}
+		}
+		return super.getFormObject(context);
 	}
 
 	private class LocalizedContact implements Serializable {

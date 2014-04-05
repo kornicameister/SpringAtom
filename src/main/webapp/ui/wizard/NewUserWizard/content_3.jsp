@@ -33,12 +33,12 @@
                method="<%=RequestMethod.POST.toString().toLowerCase()%>"
                cssClass="x-form">
         <fieldset>
-            <legend><s:message code="wizard.NewAppointmentWizard.tl.label"/></legend>
+            <legend><s:message code="sperson.contacts"/></legend>
             <div class="x-multiple-input">
                 <div class="x-inputs">
                     <ul id="contacts-container">
                         <s:message code="wizard.NewAppointmentWizard.tl.taskType.placeholder" var="placeholder"/>
-                        <c:forEach items="person.personContacts" var="contact" varStatus="it">
+                        <c:forEach items="contacts" var="contact" varStatus="it">
                             <li id="${it.index}">
                                     <%-- fixed list of available values to be localized --%>
                                 <form:select id="${requestScope.formID}-contacts-type"
@@ -47,11 +47,11 @@
                                              cssClass="x-input x-input-select"
                                              itemLabel="label"
                                              itemValue="contactType"
-                                             path="person.personContacts[${it.index}].type"/>
+                                             path="contacts[${it.index}].type"/>
                                 <form:input id="${requestScope.formID}-contacts-contact"
                                             htmlEscape="true"
                                             cssClass="x-input"
-                                            path="person.personContacts[${it.index}].contact"/>
+                                            path="contacts[${it.index}].contact"/>
                                 <a id="mv-add" name="${it.index}" class="x-button x-button-add" href="#">
                                     <i class="fa fa-plus fa-color-black"></i>
                                 </a>

@@ -17,8 +17,9 @@
 
 package org.agatom.springatom.server.model.beans.person;
 
-import com.google.common.base.Function;
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.beans.PersistentContactable;
 import org.agatom.springatom.server.model.types.ReportableEntity;
 import org.agatom.springatom.server.model.types.contact.SContact;
@@ -32,9 +33,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Nullable;
 import javax.persistence.*;
-import javax.persistence.Table;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -55,21 +54,21 @@ import java.util.Set;
 public class SPerson
 		extends PersistentContactable
 		implements SMultiContactable {
+	protected static final String ENTITY_NAME = "SPerson";
+	protected static final String TABLE_NAME  = "sperson";
 	private static final   long   serialVersionUID = -8306142304138446067L;
-	protected static final String ENTITY_NAME      = "SPerson";
-	protected static final String TABLE_NAME       = "sperson";
 	@NotEmpty
 	@Length(min = 3, max = 45)
 	@Column(name = "fName", length = 45, nullable = false)
-	private String        firstName;
+	private String              firstName;
 	@NotEmpty
 	@Length(min = 3, max = 45)
 	@Column(name = "lName", length = 45, nullable = false)
-	private String        lastName;
+	private String              lastName;
 	@BatchSize(size = 10)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "assigned", targetEntity = SPersonContact.class)
-	private Set<SContact> contacts;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "assigned")
+	private Set<SPersonContact> contacts;
 
 	public String getFirstName() {
 		return firstName;
@@ -91,70 +90,46 @@ public class SPerson
 		return String.format("%s %s", this.firstName, this.lastName);
 	}
 
+	public void clearContacts() {
+		this.contacts = null;
+	}
+
 	@Override
-	public List<SContact> getContacts() {
+	public List<SPersonContact> getContacts() {
 		if (this.contacts == null) {
 			this.contacts = Sets.newHashSet();
 		}
 		return Lists.newArrayList(this.contacts);
 	}
 
+	public SPerson setContacts(final List<SPersonContact> contacts) {
+		this.addContact(contacts);
+		return this;
+	}
+
 	@Override
-	public boolean addContact(final Collection<SContact> contacts) {
+	public boolean addContact(final Collection<? extends SContact> contacts) {
 		if (!CollectionUtils.isEmpty(contacts)) {
-			if (this.contacts == null) {
-				this.contacts = Sets.newIdentityHashSet();
-			}
 			for (SContact contact : contacts) {
 				if (ClassUtils.isAssignableValue(SPersonContact.class, contact)) {
 					((SPersonContact) contact).setAssigned(this);
+					this.getContacts().add((SPersonContact) contact);
 				}
 			}
-			return this.contacts.addAll(contacts);
+			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean removeContact(final Collection<SContact> contacts) {
+	public boolean removeContact(final Collection<? extends SContact> contacts) {
 		if (contacts.size() > 0 && this.contacts != null) {
-			final HashSet<SContact> contactSet = Sets.newHashSet(contacts);
-			final ImmutableSet<SContact> difference = Sets.union(this.contacts, contactSet).immutableCopy();
+			final HashSet<? extends SContact> contactSet = Sets.newHashSet(contacts);
+			final ImmutableSet<? extends SContact> difference = Sets.union(this.contacts, contactSet).immutableCopy();
 			return this.contacts.removeAll(difference);
 		}
 		return false;
 	}
 
-	public SPerson setContacts(final Collection<SContact> contacts) {
-		this.addContact(contacts);
-		return this;
-	}
 
-	public void clearContacts() {
-		this.contacts = null;
-	}
-
-	public Collection<SPersonContact> getPersonContacts() {
-		final ImmutableList<SPersonContact> list = FluentIterable.from(this.getContacts()).transform(new Function<SContact, SPersonContact>() {
-			@Nullable
-			@Override
-			public SPersonContact apply(@Nullable final SContact input) {
-				if (input != null && ClassUtils.isAssignableValue(SPersonContact.class, input)) {
-					return (SPersonContact) input;
-				}
-				return null;
-			}
-		}).toList();
-		return Lists.newArrayList(list);
-	}
-
-	public boolean setPersonContacts(final Collection<SPersonContact> contacts) {
-		return this.addContact(FluentIterable.from(contacts).transform(new Function<SPersonContact, SContact>() {
-			@Nullable
-			@Override
-			public SContact apply(@Nullable final SPersonContact input) {
-				return input;
-			}
-		}).toList());
-	}
 }
