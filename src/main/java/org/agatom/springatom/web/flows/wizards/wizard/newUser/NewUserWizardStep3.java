@@ -27,6 +27,8 @@ import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageContext;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.util.ClassUtils;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -41,14 +43,18 @@ import java.util.Locale;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 17.03.14</small>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @WizardAction("newUserWizardStep3")
 public class NewUserWizardStep3
 		extends WizardFormAction<SPerson> {
 	private static final Logger         LOGGER                   = Logger.getLogger(NewUserWizardStep3.class);
-	private static final String FORM_OBJECT_NAME = "person";
+	private static final String         FORM_OBJECT_NAME         = "person";
+	/**
+	 * Localized attributes key under which {@link org.agatom.springatom.web.flows.wizards.wizard.newUser.NewUserWizardStep3.LocalizedContact}
+	 * are available in the view
+	 */
 	private static final String         LOCALIZED_CONTACTS_TYPES = "localizedContactsTypes";
 	@Autowired
 	private              SMessageSource messageSource            = null;
@@ -80,16 +86,50 @@ public class NewUserWizardStep3
 	public Event bindAndValidate(final RequestContext context) throws Exception {
 		final Event event = super.bindAndValidate(context);
 		if (this.isSuccessEvent(event)) {
-			final MutableAttributeMap<Object> scope = this.getFormObjectScope().getScope(context);
-			final Object object = scope.get("user");
-			if (object != null && ClassUtils.isAssignableValue(SUser.class, object)) {
-				final SUser user = (SUser) object;
-				final SPerson person = this.getCommandBean(context);
-				user.setPerson(person);
-				this.userService.registerNewUser(user);
-			}
+			this.registerUser(context);
 		}
 		return event;
+	}
+
+	/**
+	 * Effectively register new {@link org.agatom.springatom.server.model.beans.user.SUser}
+	 * by calling {@link org.agatom.springatom.server.service.domain.SUserService#registerNewUser(org.agatom.springatom.server.model.beans.user.SUser)}.
+	 * <p/>
+	 * Failure may occur due to:
+	 * <ul>
+	 * <li>{@link javax.validation.ConstraintViolationException}</li>
+	 * <li>{@link org.agatom.springatom.server.service.exceptions.UserRegistrationException}</li>
+	 * </ul>
+	 *
+	 * @param context context to extract user from
+	 *
+	 * @return {@link #success()} or {@link #error(Exception)}
+	 *
+	 * @throws Exception if any
+	 */
+	private Event registerUser(final RequestContext context) throws Exception {
+		final MutableAttributeMap<Object> scope = this.getFormObjectScope().getScope(context);
+		final Object object = scope.get("user");
+		if (object != null && ClassUtils.isAssignableValue(SUser.class, object)) {
+			final SUser user = (SUser) object;
+			final SPerson person = this.getCommandBean(context);
+			user.setPerson(person);
+			try {
+				this.userService.registerNewUser(user);
+			} catch (Exception exp) {
+				final MessageContext messageContext = context.getMessageContext();
+				messageContext.addMessage(
+						new MessageBuilder()
+								.source(user)
+								.error()
+								.code("newUser.user.registrationFailed")
+								.args(user.getUsername(), exp.getMessage())
+								.build()
+				);
+				return error(exp);
+			}
+		}
+		return success();
 	}
 
 	@Override
@@ -115,6 +155,11 @@ public class NewUserWizardStep3
 		return super.getFormObject(context);
 	}
 
+	/**
+	 * {@code LocalizedContact} holds a pair of {@link org.agatom.springatom.server.model.types.contact.ContactType}
+	 * and its localized value under {@link org.agatom.springatom.web.flows.wizards.wizard.newUser.NewUserWizardStep3.LocalizedContact#label}
+	 * value
+	 */
 	private class LocalizedContact implements Serializable {
 		private static final long        serialVersionUID = -1940243718109904998L;
 		private              String      label            = null;

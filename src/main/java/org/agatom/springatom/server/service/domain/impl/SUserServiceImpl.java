@@ -17,13 +17,16 @@
 
 package org.agatom.springatom.server.service.domain.impl;
 
+import com.mysema.query.types.expr.BooleanExpression;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.user.QSUser;
 import org.agatom.springatom.server.model.beans.user.SUser;
-import org.agatom.springatom.server.repository.repositories.person.SPersonRepository;
 import org.agatom.springatom.server.service.domain.SPersonService;
 import org.agatom.springatom.server.service.domain.SUserService;
+import org.agatom.springatom.server.service.exceptions.UserRegistrationException;
 import org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -38,6 +41,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author kornicameister
@@ -49,17 +53,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class SUserServiceImpl
 		extends SServiceImpl<SUser, Long, Integer>
 		implements SUserService {
-	protected static final String            SERVICE_NAME     = "SUserService";
+	protected static final String          SERVICE_NAME    = "SUserService";
+	private static final   Logger          LOGGER          = Logger.getLogger(SUserServiceImpl.class);
 	@Lazy
 	@Autowired
 	@Qualifier(value = "securedPasswordEncoder")
-	private                PasswordEncoder   passwordEncoder  = null;
+	private                PasswordEncoder passwordEncoder = null;
 	@Lazy
 	@Autowired(required = false)
-	private                SPersonRepository personRepository = null;
-	@Lazy
-	@Autowired(required = false)
-	private                SPersonService    personService    = null;
+	private                SPersonService  personService   = null;
 
 	@Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
@@ -72,33 +74,54 @@ public class SUserServiceImpl
 	}
 
 	@Override
-	@Transactional(readOnly = false, rollbackFor = EntityDoesNotExistsServiceException.class)
-	//TODO figure out possible exceptions
+	@Transactional(readOnly = false, rollbackFor = UserRegistrationException.class)
 	public SUser registerNewUser(final String userName,
 	                             final String password,
-	                             final long personId) throws EntityDoesNotExistsServiceException {
+	                             final long personId) throws UserRegistrationException {
+		try {
+			final SPerson person = this.retrievePerson(personId);
+			this.checkIfPersonAlreadyAssignedToUser(person);
 
-		// TODO add user registration
-		final SPerson person = this.retrievePerson(personId);
+			final SUser user = new SUser();
+			user.setPerson(person);
+			user.setPassword(password);
+			user.setUsername(userName);
 
-		return null;
+			return this.registerNewUser(user);
+		} catch (EntityDoesNotExistsServiceException exp) {
+			LOGGER.fatal(String.format("Failed to save user with login %s, message is %s", userName, exp.getMessage()));
+			throw new UserRegistrationException(userName, String.format("Failed to save new user, because no person exists with id %d", personId), exp);
+		} catch (Exception exp) {
+			LOGGER.fatal(String.format("Failed to save user with login %s, message is %s", userName, exp.getMessage()));
+			throw new UserRegistrationException(userName, "Failed to save new user", exp);
+		}
 	}
 
 	@Override
-	@Transactional(readOnly = false)
-	public SUser registerNewUser(final SUser user) {
-		SPerson person = user.getPerson();
-		if (person != null) {
-			if (person.isNew()) {
-				person = this.personService.save(person);
+	@Transactional(readOnly = false, rollbackFor = UserRegistrationException.class)
+	public SUser registerNewUser(final SUser user) throws UserRegistrationException {
+		try {
+			SPerson person = user.getPerson();
+			if (person != null) {
+				if (person.isNew()) {
+					person = this.personService.save(person);
+				}
+				user.setPerson(person);
+				user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+
+				if (CollectionUtils.isEmpty(user.getAuthorities())) {
+					LOGGER.trace(String.format("%s has no authorities, his account will be disabled", user));
+					user.setEnabled(false);
+				}
+
+				return super.save(user);
+			} else {
+				throw new InvalidArgumentException(new String[]{"Person can not be null"});
 			}
-			user.setPerson(person);
-			user.setPassword(this.passwordEncoder.encode(user.getPassword()));
-			return this.save(user);
-		} else {
-			//exception
+		} catch (Exception exp) {
+			LOGGER.fatal(String.format("Failed to save user with login %s, message is %s", user.getUsername(), exp.getMessage()));
+			throw new UserRegistrationException(user, "Failed to save new user", exp);
 		}
-		return null;
 	}
 
 	@Override
@@ -113,12 +136,38 @@ public class SUserServiceImpl
 	}
 
 	private SPerson retrievePerson(final long personId) throws EntityDoesNotExistsServiceException {
-		final SPerson person = this.personRepository.findOne(personId);
-
+		final SPerson person = this.personService.findOne(personId);
 		if (person == null) {
 			throw new EntityDoesNotExistsServiceException(SPerson.class, personId);
 		}
-
 		return person;
+	}
+
+	/**
+	 * Message runs call to {@link org.agatom.springatom.server.repository.repositories.user.SUserRepository}
+	 * to verify if passed {@code person} is already associated with any {@link org.agatom.springatom.server.model.beans.user.SUser}.
+	 * If so exception is thrown that will result in {@link org.agatom.springatom.server.service.exceptions.UserRegistrationException}
+	 *
+	 * @param person to check if it is associated with {@link org.agatom.springatom.server.model.beans.user.SUser}
+	 *
+	 * @throws Exception if person has corresponding {@link org.agatom.springatom.server.model.beans.user.SUser}
+	 */
+	private void checkIfPersonAlreadyAssignedToUser(final SPerson person) throws Exception {
+		final QSUser sUser = QSUser.sUser;
+		final BooleanExpression eq = sUser.person.eq(person);
+		final SUser one = this.repository.findOne(eq);
+		if (one != null) {
+			throw new Exception(String.format("%s already has user associated with it", person));
+		}
+	}
+
+	@Override
+	public SUser save(final SUser persistable) {
+		try {
+			return this.registerNewUser(persistable);
+		} catch (UserRegistrationException e) {
+			LOGGER.fatal("Failed to save user instance, registration failed", e);
+		}
+		return null;
 	}
 }

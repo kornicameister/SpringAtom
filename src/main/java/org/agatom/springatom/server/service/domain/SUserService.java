@@ -18,9 +18,10 @@
 package org.agatom.springatom.server.service.domain;
 
 import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.service.exceptions.UserRegistrationException;
 import org.agatom.springatom.server.service.support.constraints.Password;
 import org.agatom.springatom.server.service.support.constraints.UserName;
-import org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException;
+import org.agatom.springatom.server.service.support.constraints.ValidUser;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.validation.constraints.Min;
@@ -43,9 +44,7 @@ public interface SUserService
 	 * <b>
 	 * It is crucial that an object of {@link org.agatom.springatom.server.model.beans.person.SPerson} already exists
 	 * because
-	 * each instance of the {@link org.agatom.springatom.server.model.beans.user.SUser} must be associated with either
-	 * {@link org.agatom.springatom.server.model.beans.person.client.SClient}
-	 * or {@link org.agatom.springatom.server.model.beans.person.mechanic.SMechanic}
+	 * each instance of the {@link org.agatom.springatom.server.model.beans.user.SUser} with it
 	 * </b>
 	 * </p>
 	 *
@@ -55,20 +54,28 @@ public interface SUserService
 	 *
 	 * @return an instance of the {@link org.agatom.springatom.server.model.beans.user.SUser}
 	 *
-	 * @throws org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException if there is no {@link org.agatom.springatom.server.model.beans.person.SPerson} to be associated with the
-	 *                                                                                                     new {@link org.agatom.springatom.server.model.beans.user.SUser}
+	 * @throws UserRegistrationException if any
 	 */
 	@NotNull
-	SUser registerNewUser(
-			@UserName
-			final String userName,
-			@Password
-			final String password,
-			@Min(value = 2, message = "Minimal SPerson#id is 2, 1 is reserved for internal application usage")
-			final long personId) throws EntityDoesNotExistsServiceException;
+	SUser registerNewUser(@UserName final String userName, @Password final String password,
+	                      @Min(value = 2, message = "Minimal SPerson#id is 2, 1 is reserved for internal application usage")
+	                      final long personId) throws UserRegistrationException;
 
+	/**
+	 * Performs direct registration from instance of {@link org.agatom.springatom.server.model.beans.user.SUser}.
+	 * New {@code user} must have existing and not yet persisted instance of {@link org.agatom.springatom.server.model.beans.person.SPerson}
+	 * associated with it.
+	 * {@code user} will be validated againts {@link org.agatom.springatom.server.service.support.constraints.Password}
+	 * and {@link org.agatom.springatom.server.service.support.constraints.UserName}
+	 *
+	 * @param user user to be registered
+	 *
+	 * @return registered user
+	 *
+	 * @throws UserRegistrationException if any
+	 */
 	@NotNull
-	SUser registerNewUser(final SUser user);
+	SUser registerNewUser(@ValidUser final SUser user) throws UserRegistrationException;
 
 	/**
 	 * Combines retrieving {@code authenticated} {@link org.agatom.springatom.server.model.beans.user.SUser} instance from
