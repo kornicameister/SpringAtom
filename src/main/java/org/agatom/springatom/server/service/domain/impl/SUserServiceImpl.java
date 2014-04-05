@@ -18,7 +18,6 @@
 package org.agatom.springatom.server.service.domain.impl;
 
 import com.mysema.query.types.expr.BooleanExpression;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.user.QSUser;
 import org.agatom.springatom.server.model.beans.user.SUser;
@@ -116,7 +115,7 @@ public class SUserServiceImpl
 
 				return super.save(user);
 			} else {
-				throw new InvalidArgumentException(new String[]{"Person can not be null"});
+				throw new IllegalArgumentException("Person can not be null");
 			}
 		} catch (Exception exp) {
 			LOGGER.fatal(String.format("Failed to save user with login %s, message is %s", user.getUsername(), exp.getMessage()));
