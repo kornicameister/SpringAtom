@@ -73,7 +73,7 @@
         <transition on="cancel" to="successCancel" history="invalidate"/>
     </view-state>
 
-    <end-state id="successCancel"
-               view="externalRedirect:/dashboard/calendar?action=#{currentEvent.id}"/>
+    <!-- should be handled in different way -->
+    <end-state id="successCancel" view="externalRedirect:/ip/user/#{user.id}"/>
 
 </flow>
