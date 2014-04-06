@@ -285,6 +285,30 @@
 		}
 	};
 
+	SA.wizard.NewUserWizard = {};
+	SA.wizard.NewUserWizard.onOwnerChange = function (event, owners) {
+		if (!event) {
+			console.log('Invalid argument supplied, returning');
+		}
+		var ownerFound = undefined;
+		jQuery.each(owners, function (index, owner) {
+			if (owner['ownerId'] === parseInt(event)) {
+				ownerFound = owner;
+				return false;
+			}
+		});
+		if (ownerFound) {
+			var cars = ownerFound['carsMap'],
+				message = '';
+			jQuery.each(cars, function (index, value) {
+				message += '<p>' + value['brandModel'] + '[' + value['licencePlate'] + ']' + '</p>';
+			});
+		}
+		if (message && message.length > 0) {
+			alertify.log(message, '', 5000);
+		}
+	};
+
 	$.valHooks.textarea = {
 		get: function (elem) {
 			return elem.value.replace(/\r?\n/g, "\r\n");

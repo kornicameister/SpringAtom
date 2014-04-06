@@ -21,6 +21,7 @@ import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.conversion.annotation.PersistableConverterUtility;
 import org.agatom.springatom.server.model.conversion.converter.PersistableConverterImpl;
+import org.apache.log4j.Logger;
 
 /**
  * {@code UserDefaultConverter} is a default converter for {@link org.agatom.springatom.server.model.beans.user.SUser}
@@ -40,15 +41,23 @@ public class UserDefaultConverter
 
 	@Override
 	public String convert(final SUser source) {
-		final SPerson person = source.getPerson();
-		if (person == null) {
-			return "???";
+		try {
+			if (source == null) {
+				return "???";
+			}
+			final SPerson person = source.getPerson();
+			if (person == null) {
+				return "???";
+			}
+			final String identity = person.getIdentity();
+			if (identity == null) {
+				return "???";
+			}
+			return identity;
+		} catch (Exception exp) {
+			Logger.getLogger(this.getClass()).error(exp.getMessage());
+			return "[error]";
 		}
-		final String identity = person.getIdentity();
-		if (identity == null) {
-			return "???";
-		}
-		return identity;
 	}
 
 }

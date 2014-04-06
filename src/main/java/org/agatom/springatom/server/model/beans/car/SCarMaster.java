@@ -38,57 +38,74 @@ import java.util.Set;
 @ReportableEntity
 @AttributeOverride(name = "id", column = @Column(name = "idSCarMaster", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SCarMaster
-        extends PersistentObject<Long> {
-    public static final  String TABLE_NAME       = "car_master";
-    public static final  String ENTITY_NAME      = "SCarMaster";
-    private static final long   serialVersionUID = -4932035593494629555L;
-    @Embedded
-    private SCarMasterManufacturingData manufacturingData;
-    @BatchSize(
-            size = 10
-    )
-    @OneToMany(
-            fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.DETACH
-            },
-            orphanRemoval = true,
-            mappedBy = "carMaster"
-    )
-    private Set<SCar> children = new HashSet<>();
-    @Column(nullable = true,
-            length = 1000,
-            name = "thumbnailPath")
-    private String thumbnailPath;
+		extends PersistentObject<Long> {
+	public static final  String TABLE_NAME       = "car_master";
+	public static final  String ENTITY_NAME      = "SCarMaster";
+	private static final long   serialVersionUID = -4932035593494629555L;
+	@Embedded
+	private SCarMasterManufacturingData manufacturingData;
+	@BatchSize(
+			size = 10
+	)
+	@OneToMany(
+			fetch = FetchType.LAZY,
+			cascade = {
+					CascadeType.DETACH
+			},
+			orphanRemoval = true,
+			mappedBy = "carMaster"
+	)
+	private Set<SCar> children = new HashSet<>();
+	@Column(nullable = true,
+			length = 1000,
+			name = "thumbnailPath")
+	private String thumbnailPath;
 
-    public SCarMaster() {
-        super();
-    }
+	public SCarMaster() {
+		super();
+		this.manufacturingData = new SCarMasterManufacturingData();
+	}
 
-    public SCarMasterManufacturingData getManufacturingData() {
-        return manufacturingData;
-    }
+	public SCarMasterManufacturingData getManufacturingData() {
+		return manufacturingData;
+	}
 
-    public SCarMaster setManufacturingData(final SCarMasterManufacturingData manufacturingData) {
-        this.manufacturingData = manufacturingData;
-        return this;
-    }
+	public SCarMaster setManufacturingData(final SCarMasterManufacturingData manufacturingData) {
+		this.manufacturingData = manufacturingData;
+		return this;
+	}
 
-    public String getThumbnailPath() {
-        return thumbnailPath;
-    }
+	public String getThumbnailPath() {
+		return thumbnailPath;
+	}
 
-    public SCarMaster setThumbnailPath(final String thumbnailPath) {
-        this.thumbnailPath = thumbnailPath;
-        return this;
-    }
+	public SCarMaster setThumbnailPath(final String thumbnailPath) {
+		this.thumbnailPath = thumbnailPath;
+		return this;
+	}
 
-    public Set<SCar> getChildren() {
-        return children;
-    }
+	public Set<SCar> getChildren() {
+		return children;
+	}
 
-    public SCarMaster setChildren(final Collection<SCar> children) {
-        this.children = Sets.newHashSet(children);
-        return this;
-    }
+	public SCarMaster setChildren(final Collection<SCar> children) {
+		this.children = Sets.newHashSet(children);
+		return this;
+	}
+
+	public String getBrand() {
+		return this.manufacturingData.getBrand();
+	}
+
+	public SCarMasterManufacturingData setBrand(final String brand) {
+		return this.manufacturingData.setBrand(brand);
+	}
+
+	public String getModel() {
+		return this.manufacturingData.getModel();
+	}
+
+	public SCarMasterManufacturingData setModel(final String model) {
+		return this.manufacturingData.setModel(model);
+	}
 }

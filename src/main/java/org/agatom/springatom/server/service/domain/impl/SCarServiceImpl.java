@@ -17,14 +17,18 @@
 
 package org.agatom.springatom.server.service.domain.impl;
 
+import com.google.common.collect.Sets;
 import com.mysema.query.types.expr.BooleanExpression;
+import com.mysema.query.types.path.EnumPath;
 import org.agatom.springatom.server.model.beans.car.QSCar;
 import org.agatom.springatom.server.model.beans.car.QSCarMaster;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.car.SCarMaster;
 import org.agatom.springatom.server.model.beans.car.embeddable.QSCarMasterManufacturingData;
 import org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData;
+import org.agatom.springatom.server.model.beans.user.QSUser;
 import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.types.user.SRole;
 import org.agatom.springatom.server.repository.repositories.car.SCarMasterRepository;
 import org.agatom.springatom.server.repository.repositories.user.SUserRepository;
 import org.agatom.springatom.server.service.domain.SCarService;
@@ -40,7 +44,9 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author kornicameister
@@ -51,163 +57,194 @@ import java.util.List;
 @Service(value = SCarServiceImpl.SERVICE_NAME)
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SCarServiceImpl
-        extends SServiceImpl<SCar, Long, Integer>
-        implements SCarService {
-    public static final  String SERVICE_NAME = "SCarService";
-    private static final Logger LOGGER       = Logger.getLogger(SCarServiceImpl.class);
-    @Autowired
-    private SCarMasterRepository masterService;
-    @Autowired
-    private SUserRepository      userRepository;
+		extends SServiceImpl<SCar, Long, Integer>
+		implements SCarService {
+	public static final  String SERVICE_NAME = "SCarService";
+	private static final Logger LOGGER       = Logger.getLogger(SCarServiceImpl.class);
+	@Autowired
+	private SCarMasterRepository masterService;
+	@Autowired
+	private SUserRepository      userRepository;
 
-    @Override
-    @CacheEvict(value = "cars", allEntries = true, beforeInvocation = true)
-    public List<SCar> findByMaster(final String brand, final String model) {
-        return (List<SCar>) this.repository.findAll(QSCar.sCar.carMaster.eq(this.getMaster(brand, model)));
-    }
+	@Override
+	@CacheEvict(value = "cars", allEntries = true, beforeInvocation = true)
+	public List<SCar> findByMaster(final String brand, final String model) {
+		return (List<SCar>) this.repository.findAll(QSCar.sCar.carMaster.eq(this.getMaster(brand, model)));
+	}
 
-    @Override
-    @CacheEvict(value = "cars", allEntries = true, beforeInvocation = true)
-    public List<SCar> findByMaster(final Long... masterId) {
-        return (List<SCar>) this.repository.findAll(QSCar.sCar.carMaster.id.in(masterId));
-    }
+	@Override
+	@CacheEvict(value = "cars", allEntries = true, beforeInvocation = true)
+	public List<SCar> findByMaster(final Long... masterId) {
+		return (List<SCar>) this.repository.findAll(QSCar.sCar.carMaster.id.in(masterId));
+	}
 
-    @Override
-    @Cacheable(value = "cars", key = "#carId")
-    public SCarMaster findMaster(final long carId) {
-        return this.masterService.findOne(QSCarMaster.sCarMaster.children.any().id.eq(carId));
-    }
+	@Override
+	@Cacheable(value = "cars", key = "#carId")
+	public SCarMaster findMaster(final long carId) {
+		return this.masterService.findOne(QSCarMaster.sCarMaster.children.any().id.eq(carId));
+	}
 
-    @Override
-    @Cacheable(value = "cars")
-    @Transactional(
-            readOnly = true,
-            isolation = Isolation.SERIALIZABLE,
-            propagation = Propagation.SUPPORTS,
-            rollbackFor = UnambiguousResultServiceException.class
-    )
-    public List<SCar> findBy(final SCarAttribute attribute, final Object value) throws
-            UnambiguousResultServiceException {
-        final List<SCar> cars = (List<SCar>) this.repository.findAll(attribute.eq(value));
-        switch (attribute) {
-            case LICENCE_PLATE:
-            case VIN_NUMBER:
-                if (cars.size() > 1) {
-                    throw new UnambiguousResultServiceException(SCar.class, attribute, value, 1, cars.size());
-                }
-                break;
-            case OWNER:
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug(String.format("More than one row has been returned for attribute=%s", attribute));
-                }
-                break;
-        }
-        return cars;
-    }
+	@Override
+	@Cacheable(value = "cars")
+	@Transactional(
+			readOnly = true,
+			isolation = Isolation.SERIALIZABLE,
+			propagation = Propagation.SUPPORTS,
+			rollbackFor = UnambiguousResultServiceException.class
+	)
+	public List<SCar> findBy(final SCarAttribute attribute, final Object value) throws
+			UnambiguousResultServiceException {
+		final List<SCar> cars = (List<SCar>) this.repository.findAll(attribute.eq(value));
+		switch (attribute) {
+			case LICENCE_PLATE:
+			case VIN_NUMBER:
+				if (cars.size() > 1) {
+					throw new UnambiguousResultServiceException(SCar.class, attribute, value, 1, cars.size());
+				}
+				break;
+			case OWNER:
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug(String.format("More than one row has been returned for attribute=%s", attribute));
+				}
+				break;
+		}
+		return cars;
+	}
 
-    @Override
-    @Transactional(readOnly = false, rollbackFor = EntityDoesNotExistsServiceException.class) //TODO figure out possible exceptions
-    public SCar newCar(final String brand, final String model, final String licencePlate, final String vinNumber, final long ownerId) throws
-            EntityDoesNotExistsServiceException {
+	@Override
+	@Transactional(readOnly = false, rollbackFor = EntityDoesNotExistsServiceException.class)
+	//TODO figure out possible exceptions
+	public SCar newCar(final String brand, final String model, final String licencePlate, final String vinNumber, final long ownerId) throws
+			EntityDoesNotExistsServiceException {
 
-        final SUser owner = this.getOwner(ownerId);
-        final SCarMaster sCarMaster = this.getOrPersistMaster(brand, model);
+		final SUser owner = this.getOwner(ownerId);
+		final SCarMaster sCarMaster = this.getOrPersistMaster(brand, model);
 
-        if (owner == null) {
-            throw new EntityDoesNotExistsServiceException(SUser.class, ownerId);
-        }
-        if (sCarMaster == null) {
-            throw new EntityDoesNotExistsServiceException(SCarMaster.class, brand, model);
-        }
-        final SCar sCar = this.persistCar(licencePlate, vinNumber, sCarMaster, owner);
-        LOGGER.info(String.format("Created SCar >> %s", sCar));
-        return sCar;
-    }
+		if (owner == null) {
+			throw new EntityDoesNotExistsServiceException(SUser.class, ownerId);
+		}
+		if (sCarMaster == null) {
+			throw new EntityDoesNotExistsServiceException(SCarMaster.class, brand, model);
+		}
+		final SCar sCar = this.persistCar(licencePlate, vinNumber, sCarMaster, owner);
+		LOGGER.info(String.format("Created SCar >> %s", sCar));
+		return sCar;
+	}
 
-    @Override
-    @Transactional(readOnly = false,
-            rollbackFor = EntityDoesNotExistsServiceException.class,
-            isolation = Isolation.READ_COMMITTED,
-            propagation = Propagation.REQUIRES_NEW)
-    @Cacheable(key = "#idCar",
-            value = "cars",
-            condition = "#idCar.compareTo(1) > 1")
-    @CacheEvict(key = "#idClient",
-            value = "clients",
-            beforeInvocation = true)
-    public SCar newOwner(final long idCar, final long idClient) throws
-            EntityDoesNotExistsServiceException {
-        final SCar car = this.findOne(idCar);
-        final SUser owner = this.getOwner(idClient);
-        if (car == null) {
-            throw new EntityDoesNotExistsServiceException(SCar.class, idCar);
-        }
-        if (owner == null) {
-            throw new EntityDoesNotExistsServiceException(SUser.class, idClient);
-        }
+	@Override
+	@Transactional(readOnly = false,
+			rollbackFor = EntityDoesNotExistsServiceException.class,
+			isolation = Isolation.READ_COMMITTED,
+			propagation = Propagation.REQUIRES_NEW)
+	@Cacheable(key = "#idCar",
+			value = "cars",
+			condition = "#idCar.compareTo(1) > 1")
+	@CacheEvict(key = "#idClient",
+			value = "clients",
+			beforeInvocation = true)
+	public SCar newOwner(final long idCar, final long idClient) throws
+			EntityDoesNotExistsServiceException {
+		final SCar car = this.findOne(idCar);
+		final SUser owner = this.getOwner(idClient);
+		if (car == null) {
+			throw new EntityDoesNotExistsServiceException(SCar.class, idCar);
+		}
+		if (owner == null) {
+			throw new EntityDoesNotExistsServiceException(SUser.class, idClient);
+		}
 
-        car.setOwner(owner);
-        final SCar updatedCar = this.repository.saveAndFlush(car);
+		car.setOwner(owner);
+		final SCar updatedCar = this.repository.saveAndFlush(car);
 
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("Changed owner of %s from %s to %s", updatedCar, car.getOwner(), owner));
-        }
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(String.format("Changed owner of %s from %s to %s", updatedCar, car.getOwner(), owner));
+		}
 
-        return updatedCar;
-    }
+		return updatedCar;
+	}
 
-    private SCarMaster getMaster(final String brand, final String model) {
-        final QSCarMasterManufacturingData manufacturingData = QSCarMaster.sCarMaster.manufacturingData;
-        final BooleanExpression brandEq = manufacturingData.brand.eq(brand);
-        final BooleanExpression modelEq = manufacturingData.model.eq(model);
-        return this.masterService.findOne(brandEq.and(modelEq));
-    }
+	@Override
+	public Collection<Owner> getOwners() {
+		final Set<Owner> ownerSet = Sets.newHashSet();
 
-    private SCar persistCar(final String licencePlate,
-                            final String vinNumber,
-                            final SCarMaster sCarMaster,
-                            final SUser owner) {
-        SCar sCar = new SCar();
-        sCar.setCarMaster(sCarMaster);
-        sCar.setLicencePlate(licencePlate);
-        sCar.setVinNumber(vinNumber);
-        sCar.setOwner(owner);
-        sCar = this.repository.saveAndFlush(sCar);
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("SCar >>> %s", sCar));
-        }
-        return sCar;
-    }
+		final QSUser user = QSUser.sUser;
+		final QSCar car = QSCar.sCar;
 
-    private SCarMaster getOrPersistMaster(final String brand, final String model) {
-        SCarMaster sCarMaster = this.getMaster(brand, model);
-        if (sCarMaster == null) {
-            LOGGER.warn(String
-                    .format("No %s for brand=%s and service=%s", SCarMaster.class.getSimpleName(), brand, model));
-            sCarMaster = new SCarMaster();
-            sCarMaster.setManufacturingData(new SCarMasterManufacturingData(brand, model));
-            sCarMaster = this.masterService.save(sCarMaster);
-        }
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace(String.format("SCarMaster >>> %s", sCarMaster));
-        }
-        return sCarMaster;
-    }
+		final EnumPath<SRole> role = user.roles.any().pk.authority.role;
+		BooleanExpression predicate = role.in(SRole.ROLE_CLIENT, SRole.ROLE_MECHANIC);
+		predicate = predicate.and(user.credentials.username.ne("SYSTEM"));
+		predicate = predicate.and(user.accountNonLocked.eq(true)).and(user.accountNonExpired.eq(true).and(user.enabled.eq(true)));
+		try {
+			final Iterable<SUser> users = this.userRepository.findAll(predicate);
 
-    private SUser getOwner(final Long ownerId) {
-        final SUser owner = this.userRepository.findOne(ownerId);
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace(String.format("SClient#Owner >>> %s", owner));
-        }
-        return owner;
-    }
+			for (final SUser userFound : users) {
+				final Iterable<SCar> all = this.repository.findAll(QSCar.sCar.owner.eq(userFound));
+				final Owner owner = new Owner()
+						.setOwner(userFound)
+						.setCars(Sets.newHashSet(all));
+				ownerSet.add(owner);
+			}
 
-    public class InvalidOwnerException
-            extends ServiceException {
-        private static final long serialVersionUID = 9104651445939425769L;
+			return ownerSet;
+		} catch (Exception exp) {
+			LOGGER.fatal("Failure in retrieving possible owners", exp);
+		}
 
-        public InvalidOwnerException(final SCar car, final SUser owner) {
-            super(SCar.class, String.format("Owner for %s does not differ from current one %s", car, owner));
-        }
-    }
+		return null;
+	}
+
+	private SUser getOwner(final Long ownerId) {
+		final SUser owner = this.userRepository.findOne(ownerId);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace(String.format("SClient#Owner >>> %s", owner));
+		}
+		return owner;
+	}
+
+	private SCarMaster getOrPersistMaster(final String brand, final String model) {
+		SCarMaster sCarMaster = this.getMaster(brand, model);
+		if (sCarMaster == null) {
+			LOGGER.warn(String
+					.format("No %s for brand=%s and service=%s", SCarMaster.class.getSimpleName(), brand, model));
+			sCarMaster = new SCarMaster();
+			sCarMaster.setManufacturingData(new SCarMasterManufacturingData(brand, model));
+			sCarMaster = this.masterService.save(sCarMaster);
+		}
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace(String.format("SCarMaster >>> %s", sCarMaster));
+		}
+		return sCarMaster;
+	}
+
+	private SCar persistCar(final String licencePlate,
+	                        final String vinNumber,
+	                        final SCarMaster sCarMaster,
+	                        final SUser owner) {
+		SCar sCar = new SCar();
+		sCar.setCarMaster(sCarMaster);
+		sCar.setLicencePlate(licencePlate);
+		sCar.setVinNumber(vinNumber);
+		sCar.setOwner(owner);
+		sCar = this.save(sCar);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(String.format("SCar >>> %s", sCar));
+		}
+		return sCar;
+	}
+
+	private SCarMaster getMaster(final String brand, final String model) {
+		final QSCarMasterManufacturingData manufacturingData = QSCarMaster.sCarMaster.manufacturingData;
+		final BooleanExpression brandEq = manufacturingData.brand.eq(brand);
+		final BooleanExpression modelEq = manufacturingData.model.eq(model);
+		return this.masterService.findOne(brandEq.and(modelEq));
+	}
+
+	public class InvalidOwnerException
+			extends ServiceException {
+		private static final long serialVersionUID = 9104651445939425769L;
+
+		public InvalidOwnerException(final SCar car, final SUser owner) {
+			super(SCar.class, String.format("Owner for %s does not differ from current one %s", car, owner));
+		}
+	}
 }

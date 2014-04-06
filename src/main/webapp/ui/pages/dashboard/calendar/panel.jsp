@@ -22,7 +22,7 @@
 <%@ taglib prefix="sc" uri="/WEB-INF/tags/sa/calendar.tld" %>
 <%@ taglib prefix="cmp" tagdir="/WEB-INF/tags/sa/component" %>
 
-<a id="dupa" href="<s:url value="/app/wizard/NewUserWizard"/>">AAAA</a>
+<a id="dupa" href="<s:url value="/app/wizard/NewCarWizard"/>">AAAA</a>
 <script type="text/javascript">
     $(function () {
         Spring.addDecoration(new Spring.AjaxEventDecoration({

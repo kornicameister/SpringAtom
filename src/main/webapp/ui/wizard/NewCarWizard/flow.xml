@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is free software: you can redistribute it and/or modify                          ~
+  ~ it under the terms of the GNU General Public License as published by                          ~
+  ~ the Free Software Foundation, either version 3 of the License, or                             ~
+  ~ (at your option) any later version.                                                           ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is distributed in the hope that it will be useful,                               ~
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of                                ~
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                 ~
+  ~ GNU General Public License for more details.                                                  ~
+  ~                                                                                               ~
+  ~ You should have received a copy of the GNU General Public License                             ~
+  ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<!--suppress XmlPathReference, WebflowModelInspection -->
+<flow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      parent="wizard"
+      start-state="setupCar"
+      xmlns="http://www.springframework.org/schema/webflow"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+
+    <on-start>
+        <evaluate expression="'NewCarWizard'" result="flowScope.wizardID"/>
+        <evaluate expression="'NewCarWizardForm'" result="flowScope.formID"/>
+        <evaluate expression="new org.agatom.springatom.web.flows.wizards.support.WizardRequiresStepsHolder()"
+                  result="flowScope.requiredSteps"/>
+
+        <!--init required steps-->
+        <evaluate expression="flowScope.requiredSteps.add('SetupCar')"/>
+        <!--init requires steps-->
+
+        <evaluate expression="newCarWizard.getNewCar(flowRequestContext)"
+                  result="flowScope.car"
+                  result-type="org.agatom.springatom.server.model.beans.car.SCar"/>
+    </on-start>
+
+    <view-state id="setupCar" view="ui.wizard.NewCarWizard.1" popup="true" model="car">
+        <on-render>
+            <evaluate expression="newCarWizard.setupForm"/>
+        </on-render>
+        <transition on="finish" to="successCancel" validate="false">
+            <!--
+                validation can be done here, due to exception in classmate,
+                instead custom validator is checking the inputs to verify
+                if everything is fine
+            -->
+            <evaluate expression="newCarWizard.bindAndValidate"/>
+        </transition>
+        <transition on="cancel" to="successCancel" history="invalidate"/>
+    </view-state>
+
+    <!-- should be handled in different way -->
+    <end-state id="successCancel" view="externalRedirect:/ip/car/#{car.id}"/>
+
+</flow>
