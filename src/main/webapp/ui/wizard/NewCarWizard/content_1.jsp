@@ -109,7 +109,6 @@
                                  itemLabel="ownerIdentity"
                                  itemValue="ownerId"
                                  path="owner"/>
-                    <span id="existingCarsMsgHolder"></span>
                 </form:label>
             </p>
         </fieldset>
@@ -148,6 +147,7 @@
                 widgetType : 'dijit.form.Select',
                 widgetAttrs: {
                     sortByLabel: true,
+                    style: 'min-width:200px;height:15px',
                     onChange   : function (evt) {
                         SA.wizard.NewUserWizard.onOwnerChange.apply(this, [evt, owners]);
                     }
@@ -157,28 +157,38 @@
                 elementId  : $2.attr('id'),
                 widgetType : 'dijit.form.TextBox',
                 widgetAttrs: {
-                    class: $2.attr('class')
+                    class    : $2.attr('class'),
+                    required : true,
+                    uppercase: true,
+                    trim     : true
                 }
             }));
             Spring.addDecoration(new Spring.ElementDecoration({
                 elementId  : $3.attr('id'),
                 widgetType : 'dijit.form.TextBox',
                 widgetAttrs: {
-                    class: $3.attr('class')
+                    class    : $3.attr('class'),
+                    required : true,
+                    uppercase: true,
+                    trim     : true
                 }
             }));
             Spring.addDecoration(new Spring.ElementDecoration({
                 elementId  : $4.attr('id'),
                 widgetType : 'dijit.form.ComboBox',
                 widgetAttrs: {
-                    style: 'width:200px;height:15px'
+                    style     : 'width:200px;height:15px',
+                    propercase: true,
+                    trim      : true
                 }
             }));
             Spring.addDecoration(new Spring.ElementDecoration({
                 elementId  : $5.attr('id'),
                 widgetType : 'dijit.form.ComboBox',
                 widgetAttrs: {
-                    style: 'width:200px;height:15px'
+                    style     : 'width:200px;height:15px',
+                    propercase: true,
+                    trim      : true
                 }
             }));
             Spring.addDecoration(new Spring.ElementDecoration({

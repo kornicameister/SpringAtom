@@ -44,18 +44,20 @@
         <on-render>
             <evaluate expression="newCarWizard.setupForm"/>
         </on-render>
-        <transition on="finish" to="successCancel" validate="false">
+        <transition on="finish" to="success" validate="false">
             <!--
-                validation can be done here, due to exception in classmate,
-                instead custom validator is checking the inputs to verify
-                if everything is fine
-            -->
+                    validation can be done here, due to exception in classmate,
+                    instead custom validator is checking the inputs to verify
+                    if everything is fine
+                -->
             <evaluate expression="newCarWizard.bindAndValidate"/>
         </transition>
-        <transition on="cancel" to="successCancel" history="invalidate"/>
+        <transition on="cancel" to="cancel" history="invalidate" bind="false" validate="false"/>
     </view-state>
 
     <!-- should be handled in different way -->
-    <end-state id="successCancel" view="externalRedirect:/ip/car/#{car.id}"/>
+    <end-state id="success" view="externalRedirect:/ip/car/#{car.id}"/>
+    <!-- TODO should be the page from which the flow was called -->
+    <end-state id="cancel" view="externalRedirect:/"/>
 
 </flow>
