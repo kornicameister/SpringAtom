@@ -35,24 +35,43 @@
         <fieldset>
             <legend><s:message code="scar"/></legend>
             <p>
+                <label for="${requestScope.formID}-newBrandModel" class="x-form-label">
+                    <span>${requestScope.newBrandModelMsg}</span>
+                    <input id="${requestScope.formID}-newBrandModel" name="newBrandModel" type="checkbox">
+                </label>
+            </p>
+
+            <p>
                 <form:label path="brand" cssClass="x-form-label">
                     <span><s:message code="scarmastermanufacturingdata.brand"/></span>
                     <form:select id="${requestScope.formID}-brand"
                                  htmlEscape="true"
                                  cssClass="x-input"
                                  items="${requestScope.brands}"
+                                 disabled="true"
                                  path="brand"/>
                 </form:label>
-            </p>
-
-            <p>
                 <form:label path="model" cssClass="x-form-label">
                     <span><s:message code="scarmastermanufacturingdata.brand"/></span>
                     <form:select id="${requestScope.formID}-model"
                                  htmlEscape="true"
                                  cssClass="x-input"
                                  items="${requestScope.models}"
+                                 disabled="true"
                                  path="model"/>
+                </form:label>
+            </p>
+
+            <p>
+                <form:label path="carMaster" cssClass="x-form-label">
+                    <span><s:message code="scarmaster.manufacturingdata"/></span>
+                    <form:select id="${requestScope.formID}-carMaster"
+                                 htmlEscape="true"
+                                 cssClass="x-input"
+                                 items="${requestScope.carMasters}"
+                                 itemValue="id"
+                                 itemLabel="manufacturingData.identity"
+                                 path="carMaster"/>
                 </form:label>
             </p>
         </fieldset>
@@ -107,6 +126,22 @@
             var $3 = $('#' + '${requestScope.formID}-vinNumber');
             var $4 = $('#' + '${requestScope.formID}-model');
             var $5 = $('#' + '${requestScope.formID}-brand');
+            var $6 = $('#' + '${requestScope.formID}-newBrandModel');
+            var $7 = $('#' + '${requestScope.formID}-carMaster');
+
+            $6.change(function () {
+                console.log('Switching between newBrandModel/persistedBrandModel mode');
+                var checkBox = $(this);
+                if (checkBox.is(':checked')) {
+                    dijit.byId($4.attr('id')).set('disabled', false);
+                    dijit.byId($5.attr('id')).set('disabled', false);
+                    dijit.byId($7.attr('id')).set('disabled', true);
+                } else {
+                    dijit.byId($4.attr('id')).set('disabled', true);
+                    dijit.byId($5.attr('id')).set('disabled', true);
+                    dijit.byId($7.attr('id')).set('disabled', false);
+                }
+            });
 
             Spring.addDecoration(new Spring.ElementDecoration({
                 elementId  : $1.attr('id'),
@@ -142,6 +177,13 @@
             Spring.addDecoration(new Spring.ElementDecoration({
                 elementId  : $5.attr('id'),
                 widgetType : 'dijit.form.ComboBox',
+                widgetAttrs: {
+                    style: 'width:200px;height:15px'
+                }
+            }));
+            Spring.addDecoration(new Spring.ElementDecoration({
+                elementId : $7.attr('id'),
+                widgetType: 'dijit.form.Select',
                 widgetAttrs: {
                     style: 'width:200px;height:15px'
                 }

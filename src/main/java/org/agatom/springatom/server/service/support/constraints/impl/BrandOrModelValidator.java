@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,42 +15,42 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.service.support.constraints;
+package org.agatom.springatom.server.service.support.constraints.impl;
 
-import org.agatom.springatom.server.service.support.constraints.impl.BrandOrModelValidator;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.agatom.springatom.core.RegexpPatterns;
+import org.agatom.springatom.server.service.support.constraints.BrandOrModel;
+import org.springframework.util.CollectionUtils;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
-import javax.validation.ReportAsSingleViolation;
-import javax.validation.constraints.NotNull;
-import java.lang.annotation.*;
-
-import static java.lang.annotation.ElementType.*;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import java.util.List;
 
 /**
- * {@code LicencePlatePL} is the annotation used to validate any {@code String} againts being
- * validate value for licence plates in <b>Poland</b>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 07.04.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
+public class BrandOrModelValidator implements ConstraintValidator<BrandOrModel, String[]> {
 
-//business-logic
-@NotNull
-@NotEmpty
-//business-logic
-@Target(value = {METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
-@Retention(value = RetentionPolicy.RUNTIME)
-@Inherited
-@Documented
-@Constraint(validatedBy = {BrandOrModelValidator.class})
-@ReportAsSingleViolation
-public @interface BrandOrModel {
-	String message() default "{org.agatom.springatom.server.service.support.constraints.BrandOrModel}";
+	@Override
+	public void initialize(final BrandOrModel constraintAnnotation) {
+	}
 
-	Class<?>[] groups() default {};
+	@Override
+	public boolean isValid(final String[] value, final ConstraintValidatorContext context) {
+		final List<?> list = CollectionUtils.arrayToList(value);
+		for (Object str : list) {
+			final boolean valid = this.isValid((String) str);
+			if (!valid) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-	@Deprecated Class<? extends Payload>[] payload() default {};
+	private boolean isValid(final String value) {
+		return value == null || java.util.regex.Pattern.compile(RegexpPatterns.BIG_FIRST_LETTER_PATTERN).matcher(value).matches();
+	}
 }

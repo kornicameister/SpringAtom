@@ -64,7 +64,14 @@ public class NewCarWizard
 	};
 	private static final String             BRANDS           = "brands";
 	private static final String             MODELS           = "models";
+	private static final String             CAR_MASTERS      = "carMasters";
 	private static final String[]           REQUIRED_FIELDS  = new String[]{
+			QSCar.sCar.vinNumber.getMetadata().getName(),
+			QSCar.sCar.licencePlate.getMetadata().getName(),
+			QSCar.sCar.owner.getMetadata().getName()
+	};
+	private static final String[]           ALLOWED_FIELDS   = new String[]{
+			QSCar.sCar.carMaster.getMetadata().getName(),
 			QSCar.sCar.carMaster.manufacturingData.brand.getMetadata().getName(),
 			QSCar.sCar.carMaster.manufacturingData.model.getMetadata().getName(),
 			QSCar.sCar.vinNumber.getMetadata().getName(),
@@ -88,6 +95,8 @@ public class NewCarWizard
 	@Override
 	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
 		binder.setRequiredFields(REQUIRED_FIELDS);
+		binder.setAllowedFields(ALLOWED_FIELDS);
+		binder.setIgnoreUnknownFields(true);
 		return super.doInitBinder(binder, conversionService);
 	}
 
@@ -106,6 +115,7 @@ public class NewCarWizard
 			final List<SCarMaster> all = this.carMasterService.findAll();
 			viewScope.put(BRANDS, this.extractBrands(all));
 			viewScope.put(MODELS, this.extractModels(all));
+			viewScope.put(CAR_MASTERS, all);
 
 		} catch (Exception exp) {
 			LOGGER.fatal(String.format("setupForm(context=%s) failed", context), exp);

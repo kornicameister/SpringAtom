@@ -37,6 +37,7 @@
         <evaluate expression="newCarWizard.getNewCar(flowRequestContext)"
                   result="flowScope.car"
                   result-type="org.agatom.springatom.server.model.beans.car.SCar"/>
+        <set name="flashScope.newBrandModelMsg" value="resourceBundle.newCarNewCarMaster"/>
     </on-start>
 
     <view-state id="setupCar" view="ui.wizard.NewCarWizard.1" popup="true" model="car">

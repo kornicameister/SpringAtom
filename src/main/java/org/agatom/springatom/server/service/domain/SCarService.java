@@ -23,6 +23,7 @@ import com.mysema.query.types.Path;
 import com.mysema.query.types.expr.BooleanExpression;
 import com.mysema.query.types.path.NumberPath;
 import com.mysema.query.types.path.StringPath;
+import org.agatom.springatom.core.RegexpPatterns;
 import org.agatom.springatom.server.model.beans.car.QSCar;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.car.SCarMaster;
@@ -36,6 +37,7 @@ import org.agatom.springatom.server.service.support.exceptions.UnambiguousResult
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -75,9 +77,9 @@ public interface SCarService
 
 	@NotNull
 	SCar newCar(
-			@BrandOrModel
+			@Pattern(regexp = RegexpPatterns.BIG_FIRST_LETTER_PATTERN, message = "Brand or service must starts with the capitalized letter")
 			final String brand,
-			@BrandOrModel
+			@Pattern(regexp = RegexpPatterns.BIG_FIRST_LETTER_PATTERN, message = "Brand or service must starts with the capitalized letter")
 			final String model,
 			@LicencePlatePL
 			final String licencePlate,
