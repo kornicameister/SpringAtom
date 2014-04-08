@@ -17,91 +17,98 @@
 
 package org.agatom.springatom.server.model.beans.car.embeddable;
 
+import org.agatom.springatom.server.model.types.car.ManufacturingData;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Pattern;
-import java.io.Serializable;
 
 import static org.agatom.springatom.core.RegexpPatterns.BIG_FIRST_LETTER_PATTERN;
 
 /**
+ * {@code SCarMasterManufacturingData} is {@link javax.persistence.Embeddable} model
+ * embedded into {@link org.agatom.springatom.server.model.beans.car.SCarMaster}
+ * instance and hence providing information about single {@link org.agatom.springatom.server.model.beans.car.SCar}
+ * instance
+ *
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
 @Embeddable
 public class SCarMasterManufacturingData
-        implements Serializable {
-    private static final long serialVersionUID = 545689870492641597L;
-    @NotBlank
-    @Pattern(regexp = BIG_FIRST_LETTER_PATTERN)
-    @Column(nullable = false,
-            length = 45,
-            updatable = true,
-            insertable = true,
-            name = "brand")
-    private String brand;
-    @NotBlank
-    @Pattern(regexp = BIG_FIRST_LETTER_PATTERN)
-    @Column(nullable = false,
-            length = 45,
-            updatable = true,
-            insertable = true,
-            name = "service")
-    private String model;
+		implements ManufacturingData {
+	private static final long serialVersionUID = 545689870492641597L;
+	@NotBlank
+	@Pattern(regexp = BIG_FIRST_LETTER_PATTERN)
+	@Column(nullable = false,
+			length = 45,
+			updatable = true,
+			insertable = true,
+			name = "brand")
+	private String brand;
+	@NotBlank
+	@Pattern(regexp = BIG_FIRST_LETTER_PATTERN)
+	@Column(nullable = false,
+			length = 45,
+			updatable = true,
+			insertable = true,
+			name = "service")
+	private String model;
 
-    public SCarMasterManufacturingData() {
-        super();
-    }
+	public SCarMasterManufacturingData() {
+		super();
+	}
 
-    public SCarMasterManufacturingData(final String brand, final String model) {
-        this.brand = brand;
-        this.model = model;
-    }
+	public SCarMasterManufacturingData(final String brand, final String model) {
+		this.brand = brand;
+		this.model = model;
+	}
 
-    public String getBrand() {
-        return brand;
-    }
+	@Override
+	public String getBrand() {
+		return brand;
+	}
 
-    public SCarMasterManufacturingData setBrand(final String brand) {
-        this.brand = brand;
-        return this;
-    }
+	public SCarMasterManufacturingData setBrand(final String brand) {
+		this.brand = brand;
+		return this;
+	}
 
-    public String getModel() {
-        return model;
-    }
+	@Override
+	public String getModel() {
+		return model;
+	}
 
-    public SCarMasterManufacturingData setModel(final String model) {
-        this.model = model;
-        return this;
-    }
+	public SCarMasterManufacturingData setModel(final String model) {
+		this.model = model;
+		return this;
+	}
 
-    public String getIdentity() {
-        return String.format("%s %s", this.brand, this.model);
-    }
+	public String getIdentity() {
+		return String.format("%s %s", this.brand, this.model);
+	}
 
-    @Override
-    public int hashCode() {
-        int result = brand != null ? brand.hashCode() : 0;
-        result = 31 * result + (model != null ? model.hashCode() : 0);
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		int result = brand != null ? brand.hashCode() : 0;
+		result = 31 * result + (model != null ? model.hashCode() : 0);
+		return result;
+	}
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SCarMasterManufacturingData)) {
-            return false;
-        }
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof SCarMasterManufacturingData)) {
+			return false;
+		}
 
-        SCarMasterManufacturingData that = (SCarMasterManufacturingData) o;
+		SCarMasterManufacturingData that = (SCarMasterManufacturingData) o;
 
-        return !(brand != null ? !brand.equals(that.brand) : that.brand != null)
-                && !(model != null ? !model.equals(that.model) : that.model != null);
-    }
+		return !(brand != null ? !brand.equals(that.brand) : that.brand != null)
+				&& !(model != null ? !model.equals(that.model) : that.model != null);
+	}
 }
