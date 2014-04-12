@@ -20,6 +20,7 @@ package org.agatom.springatom.server.service.vinNumber.decoder;
 import org.agatom.springatom.server.service.vinNumber.exception.VinDecodingException;
 import org.agatom.springatom.server.service.vinNumber.model.VinNumber;
 import org.agatom.springatom.server.service.vinNumber.model.VinNumberData;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 08.04.14</small>
@@ -30,8 +31,10 @@ import org.agatom.springatom.server.service.vinNumber.model.VinNumberData;
  */
 public interface VinDecoder {
 
+	@Cacheable(value = "vinDecoder")
 	VinNumberData decode(final String vinNumber) throws VinDecodingException;
 
+	@Cacheable(value = "vinDecoder")
 	VinNumberData decode(final VinNumber vinNumber) throws VinDecodingException;
 
 }

@@ -126,6 +126,22 @@ public class VinNumber
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hashCode(elementMap, vinNumber);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		VinNumber that = (VinNumber) o;
+
+		return Objects.equal(this.elementMap, that.elementMap) &&
+				Objects.equal(this.vinNumber, that.vinNumber);
+	}
+
+	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)
 				.addValue(elementMap)

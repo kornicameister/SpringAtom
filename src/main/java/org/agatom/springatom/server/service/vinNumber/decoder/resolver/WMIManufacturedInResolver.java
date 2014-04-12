@@ -32,6 +32,6 @@ import javax.validation.constraints.NotNull;
 
 public interface WMIManufacturedInResolver {
 
-	@Cacheable(value = "org.agatom.springatom.server.service.vinNumber.decoder.resolver.WMIManufacturedInResolver")
+	@Cacheable(value = "wmiManufacturedInResolver")
 	CountryCode getCountryCode(@NotNull String wmi);
 }
