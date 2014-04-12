@@ -18,6 +18,7 @@
 package org.agatom.springatom.server.service.support.constraints.impl;
 
 import org.agatom.springatom.server.service.support.constraints.VinNumber;
+import org.agatom.springatom.server.service.vinNumber.validator.VinNumberValidator;
 import org.apache.log4j.Logger;
 
 import javax.validation.ConstraintValidator;
@@ -30,42 +31,21 @@ import javax.validation.ConstraintValidatorContext;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class VinNumberValidator
-        implements ConstraintValidator<VinNumber, String> {
-    private static final Logger LOGGER     = Logger.getLogger(VinNumberValidator.class);
-    private static final int    VIN_LENGTH = 17;
-    private static final int[]  WEIGHTS    = {8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2};
+public class ConstraintVinNumberValidator
+		implements ConstraintValidator<VinNumber, String> {
+	private static final Logger LOGGER = Logger.getLogger(ConstraintVinNumberValidator.class);
 
-    @Override
-    public void initialize(final VinNumber constraintAnnotation) {
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace(String.format("%s initialized",
-                    VinNumberValidator.class.getSimpleName()
-            ));
-        }
-    }
+	@Override
+	public void initialize(final VinNumber constraintAnnotation) {
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace(String.format("%s initialized",
+					ConstraintVinNumberValidator.class.getSimpleName()
+			));
+		}
+	}
 
-    @Override
-    public boolean isValid(final String vinNumber, final ConstraintValidatorContext context) {
-        int crc = 0;
-        for (int i = 0 ; i < VIN_LENGTH ; i++) {
-            crc += WEIGHTS[i] * this.resolveCharacterValue(vinNumber.charAt(i));
-        }
-        final char checksum = (crc %= 11) == 10 ? 'X' : Character.forDigit(crc, 10);
-        final boolean valid = this.isChecksumValid(vinNumber, checksum);
-        if (valid && LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("VinNumber=%s is valid [checksum=%s]", vinNumber, checksum));
-        } else if (!valid) {
-            LOGGER.warn(String.format("VinNumber=%s is invalid [checksum=%s]", vinNumber, checksum));
-        }
-        return valid;
-    }
-
-    private int resolveCharacterValue(final int c) {
-        return c <= '9' ? c - '0' : ((c >= 'S' ? c + 1 : c) - 'A') % 9 + 1;
-    }
-
-    public boolean isChecksumValid(final String number, final char checksum) {
-        return number.charAt(8) == checksum;
-    }
+	@Override
+	public boolean isValid(final String vinNumber, final ConstraintValidatorContext context) {
+		return new VinNumberValidator().validate(vinNumber);
+	}
 }

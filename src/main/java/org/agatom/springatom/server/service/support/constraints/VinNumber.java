@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.server.service.support.constraints;
 
-import org.agatom.springatom.server.service.support.constraints.impl.VinNumberValidator;
+import org.agatom.springatom.server.service.support.constraints.impl.ConstraintVinNumberValidator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -43,20 +43,20 @@ import static java.lang.annotation.ElementType.*;
 //business-logic
 @NotEmpty
 @Length(
-        min = 17,
-        max = 17,
-        message = "VinNumber valid length is 17 character"
+		min = 17,
+		max = 17,
+		message = "VinNumber valid length is 17 character"
 )
 //business-logic
 @Target(value = {METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
 @Retention(value = RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = VinNumberValidator.class)
+@Constraint(validatedBy = ConstraintVinNumberValidator.class)
 @ReportAsSingleViolation
 public @interface VinNumber {
-    String message() default "{org.agatom.springatom.server.service.support.constraints.VinNumber}";
+	String message() default "{org.agatom.springatom.server.service.support.constraints.VinNumber}";
 
-    Class<?>[] groups() default {};
+	Class<?>[] groups() default {};
 
-    @Deprecated Class<? extends Payload>[] payload() default {};
+	@Deprecated Class<? extends Payload>[] payload() default {};
 }
