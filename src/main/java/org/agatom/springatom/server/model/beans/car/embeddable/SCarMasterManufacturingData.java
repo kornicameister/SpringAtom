@@ -17,8 +17,11 @@
 
 package org.agatom.springatom.server.model.beans.car.embeddable;
 
+import com.google.common.base.Objects;
+import com.neovisionaries.i18n.CountryCode;
 import org.agatom.springatom.server.model.types.car.ManufacturingData;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -42,20 +45,16 @@ public class SCarMasterManufacturingData
 	private static final long serialVersionUID = 545689870492641597L;
 	@NotBlank
 	@Pattern(regexp = BIG_FIRST_LETTER_PATTERN)
-	@Column(nullable = false,
-			length = 45,
-			updatable = true,
-			insertable = true,
-			name = "brand")
-	private String brand;
+	@Column(nullable = false, length = 45, updatable = true, insertable = true, name = "brand")
+	private              String brand            = null;
 	@NotBlank
 	@Pattern(regexp = BIG_FIRST_LETTER_PATTERN)
-	@Column(nullable = false,
-			length = 45,
-			updatable = true,
-			insertable = true,
-			name = "service")
-	private String model;
+	@Column(nullable = false, length = 45, updatable = true, insertable = true, name = "service")
+	private              String model            = null;
+	@Column(nullable = false, length = 100, updatable = true, insertable = true, name = "scm_md_mi")
+	private              String manufacturedIn   = null;
+	@Column(nullable = false, length = 100, updatable = true, insertable = true, name = "scd_md_mb")
+	private              String manufacturedBy   = null;
 
 	public SCarMasterManufacturingData() {
 		super();
@@ -86,29 +85,48 @@ public class SCarMasterManufacturingData
 		return this;
 	}
 
+	@Override
+	public CountryCode getManufacturedIn() {
+		if (StringUtils.hasText(this.manufacturedIn)) {
+			return CountryCode.getByCode(this.manufacturedIn);
+		}
+		return null;
+	}
+
+	public SCarMasterManufacturingData setManufacturedIn(final CountryCode manufacturedIn) {
+		this.manufacturedIn = manufacturedIn.getAlpha3();
+		return this;
+	}
+
+	@Override
+	public String getManufacturedBy() {
+		return manufacturedBy;
+	}
+
+	public SCarMasterManufacturingData setManufacturedBy(final String manufacturedBy) {
+		this.manufacturedBy = manufacturedBy;
+		return this;
+	}
+
 	public String getIdentity() {
 		return String.format("%s %s", this.brand, this.model);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = brand != null ? brand.hashCode() : 0;
-		result = 31 * result + (model != null ? model.hashCode() : 0);
-		return result;
+		return Objects.hashCode(brand, model, manufacturedIn, manufacturedBy);
 	}
 
 	@Override
-	public boolean equals(final Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (!(o instanceof SCarMasterManufacturingData)) {
-			return false;
-		}
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
 		SCarMasterManufacturingData that = (SCarMasterManufacturingData) o;
 
-		return !(brand != null ? !brand.equals(that.brand) : that.brand != null)
-				&& !(model != null ? !model.equals(that.model) : that.model != null);
+		return Objects.equal(this.brand, that.brand) &&
+				Objects.equal(this.model, that.model) &&
+				Objects.equal(this.manufacturedIn, that.manufacturedIn) &&
+				Objects.equal(this.manufacturedBy, that.manufacturedBy);
 	}
 }

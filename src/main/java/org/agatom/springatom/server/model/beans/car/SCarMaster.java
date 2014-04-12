@@ -18,14 +18,18 @@
 package org.agatom.springatom.server.model.beans.car;
 
 import com.google.common.collect.Sets;
+import com.neovisionaries.i18n.CountryCode;
 import org.agatom.springatom.server.model.beans.PersistentObject;
 import org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData;
 import org.agatom.springatom.server.model.types.ReportableEntity;
+import org.agatom.springatom.server.model.types.car.CarMaster;
+import org.agatom.springatom.server.model.types.car.FuelType;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -38,28 +42,24 @@ import java.util.Set;
 @ReportableEntity
 @AttributeOverride(name = "id", column = @Column(name = "idSCarMaster", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SCarMaster
-		extends PersistentObject<Long> {
+		extends PersistentObject<Long>
+		implements CarMaster<SCar> {
 	public static final  String TABLE_NAME       = "car_master";
 	public static final  String ENTITY_NAME      = "SCarMaster";
 	private static final long   serialVersionUID = -4932035593494629555L;
 	@Embedded
-	private SCarMasterManufacturingData manufacturingData;
-	@BatchSize(
-			size = 10
-	)
-	@OneToMany(
-			fetch = FetchType.LAZY,
-			cascade = {
-					CascadeType.DETACH
-			},
-			orphanRemoval = true,
-			mappedBy = "carMaster"
-	)
-	private Set<SCar> children = new HashSet<>();
-	@Column(nullable = true,
-			length = 1000,
-			name = "thumbnailPath")
-	private String thumbnailPath;
+	private              SCarMasterManufacturingData manufacturingData = null;
+	@BatchSize(size = 10)
+	@OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH}, orphanRemoval = true, mappedBy = "carMaster")
+	private              Set<SCar>                   children          = Sets.newHashSet();
+	@Column(nullable = true, length = 1000, name = "thumbnailPath")
+	private              String                      thumbnailPath     = null;
+	@Type(type = "org.hibernate.type.EnumType")
+	@Enumerated(value = EnumType.STRING)
+	@Column(name = "scm_fuelType", updatable = true, unique = false, length = 50, nullable = true)
+	private              FuelType                    fuelType          = null;
+	@Column(name = "scm_yp", updatable = true, unique = false, length = 50, nullable = true)
+	private              Long                        yearOfProduction  = null;
 
 	public SCarMaster() {
 		super();
@@ -84,7 +84,52 @@ public class SCarMaster
 		return this;
 	}
 
+	@Override
+	public String getBrand() {
+		return this.manufacturingData.getBrand();
+	}
+
+	@Override
+	public String getModel() {
+		return this.manufacturingData.getModel();
+	}
+
+	@Override
+	public CountryCode getManufacturedIn() {
+		return this.manufacturingData.getManufacturedIn();
+	}
+
+	@Override
+	public String getManufacturedBy() {
+		return this.manufacturingData.getManufacturedBy();
+	}
+
+	public SCarMasterManufacturingData setBrand(final String brand) {
+		return this.manufacturingData.setBrand(brand);
+	}
+
+	public SCarMasterManufacturingData setModel(final String model) {
+		return this.manufacturingData.setModel(model);
+	}
+
+	public SCarMasterManufacturingData setManufacturedIn(final CountryCode manufacturedIn) {
+		return this.manufacturingData.setManufacturedIn(manufacturedIn);
+	}
+
+	public SCarMasterManufacturingData setManufacturedBy(final String manufacturedBy) {
+		return this.manufacturingData.setManufacturedBy(manufacturedBy);
+	}
+
+	@Override
+	public Iterator<SCar> iterator() {
+		return this.getChildren().iterator();
+	}
+
+	@Override
 	public Set<SCar> getChildren() {
+		if (this.children == null) {
+			this.children = Sets.newHashSet();
+		}
 		return children;
 	}
 
@@ -93,19 +138,23 @@ public class SCarMaster
 		return this;
 	}
 
-	public String getBrand() {
-		return this.manufacturingData.getBrand();
+	@Override
+	public FuelType getFuelType() {
+		return this.fuelType;
 	}
 
-	public SCarMasterManufacturingData setBrand(final String brand) {
-		return this.manufacturingData.setBrand(brand);
+	public SCarMaster setFuelType(final FuelType fuelType) {
+		this.fuelType = fuelType;
+		return this;
 	}
 
-	public String getModel() {
-		return this.manufacturingData.getModel();
+	@Override
+	public Long getYearOfProduction() {
+		return this.yearOfProduction;
 	}
 
-	public SCarMasterManufacturingData setModel(final String model) {
-		return this.manufacturingData.setModel(model);
+	public SCarMaster setYearOfProduction(final Long yearOfProduction) {
+		this.yearOfProduction = yearOfProduction;
+		return this;
 	}
 }

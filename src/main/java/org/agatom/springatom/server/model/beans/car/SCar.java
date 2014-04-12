@@ -18,9 +18,9 @@
 package org.agatom.springatom.server.model.beans.car;
 
 import org.agatom.springatom.server.model.beans.PersistentVersionedObject;
-import org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.types.ReportableEntity;
+import org.agatom.springatom.server.model.types.car.Car;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -40,7 +40,8 @@ import javax.validation.constraints.NotNull;
 @ReportableEntity
 @AttributeOverride(name = "id", column = @Column(name = "idSCar", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SCar
-		extends PersistentVersionedObject {
+		extends PersistentVersionedObject
+		implements Car {
 	public static final  String TABLE_NAME       = "cars";
 	public static final  String ENTITY_NAME      = "SCar";
 	private static final long   serialVersionUID = -1473162805427581686L;
@@ -61,7 +62,6 @@ public class SCar
 	@NaturalId(mutable = true)
 	private String     vinNumber;
 
-
 	public SCarMaster getCarMaster() {
 		return carMaster;
 	}
@@ -71,12 +71,43 @@ public class SCar
 		return this;
 	}
 
+	@Override
 	public String getLicencePlate() {
 		return licencePlate;
 	}
 
 	public SCar setLicencePlate(final String registrationNumber) {
 		this.licencePlate = registrationNumber;
+		return this;
+	}
+
+	@Override
+	public SUser getOwner() {
+		return owner;
+	}
+
+	public SCar setOwner(final SUser client) {
+		this.owner = client;
+		return this;
+	}
+
+	@Override
+	public String getBrand() {
+		return this.carMaster.getBrand();
+	}
+
+	public SCar setBrand(final String brand) {
+		this.carMaster.setBrand(brand);
+		return this;
+	}
+
+	@Override
+	public String getModel() {
+		return this.carMaster.getModel();
+	}
+
+	public SCar setModel(final String model) {
+		this.carMaster.setModel(model);
 		return this;
 	}
 
@@ -87,30 +118,5 @@ public class SCar
 	public SCar setVinNumber(final String vinNumber) {
 		this.vinNumber = vinNumber;
 		return this;
-	}
-
-	public SUser getOwner() {
-		return owner;
-	}
-
-	public SCar setOwner(final SUser client) {
-		this.owner = client;
-		return this;
-	}
-
-	public String getBrand() {
-		return this.carMaster.getBrand();
-	}
-
-	public SCarMasterManufacturingData setBrand(final String brand) {
-		return this.carMaster.setBrand(brand);
-	}
-
-	public String getModel() {
-		return this.carMaster.getModel();
-	}
-
-	public SCarMasterManufacturingData setModel(final String model) {
-		return this.carMaster.setModel(model);
 	}
 }

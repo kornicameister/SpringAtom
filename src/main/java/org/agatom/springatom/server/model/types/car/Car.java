@@ -17,13 +17,12 @@
 
 package org.agatom.springatom.server.model.types.car;
 
-import com.neovisionaries.i18n.CountryCode;
+import org.agatom.springatom.server.model.beans.user.SUser;
 
 import java.io.Serializable;
 
 /**
- * {@code ManufacturingData} carries information about {@link #getModel()} and {@link #getBrand()}
- * of single vehicle
+ * {@code Car} wraps information about the single {@link org.agatom.springatom.server.model.types.car.Car}
  * <p/>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 08.04.14</small>
  *
@@ -31,13 +30,13 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ManufacturingData
+public interface Car
 		extends Serializable {
+	String getLicencePlate();
+
+	SUser getOwner();
+
 	String getBrand();
 
 	String getModel();
-
-	CountryCode getManufacturedIn();
-
-	String getManufacturedBy();
 }

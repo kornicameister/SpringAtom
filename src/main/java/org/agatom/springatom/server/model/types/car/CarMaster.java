@@ -17,13 +17,11 @@
 
 package org.agatom.springatom.server.model.types.car;
 
-import com.neovisionaries.i18n.CountryCode;
-
-import java.io.Serializable;
+import java.util.Set;
 
 /**
- * {@code ManufacturingData} carries information about {@link #getModel()} and {@link #getBrand()}
- * of single vehicle
+ * {@code CarMaster} provides basic information regarding the {@link org.agatom.springatom.server.model.types.car.Car}
+ * that are immutable for single car.
  * <p/>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 08.04.14</small>
  *
@@ -31,13 +29,11 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ManufacturingData
-		extends Serializable {
-	String getBrand();
+public interface CarMaster<T extends Car>
+		extends ManufacturingData, Iterable<T> {
+	Set<T> getChildren();
 
-	String getModel();
+	FuelType getFuelType();
 
-	CountryCode getManufacturedIn();
-
-	String getManufacturedBy();
+	Long getYearOfProduction();
 }
