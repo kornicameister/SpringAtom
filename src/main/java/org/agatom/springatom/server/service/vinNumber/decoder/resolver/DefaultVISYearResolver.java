@@ -19,8 +19,12 @@ package org.agatom.springatom.server.service.vinNumber.decoder.resolver;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.agatom.springatom.core.annotations.LazyComponent;
 import org.agatom.springatom.server.service.vinNumber.exception.VinNumberServiceException;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Description;
+import org.springframework.context.annotation.Role;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +37,9 @@ import java.util.Map;
  * @since 0.0.1
  */
 
+@LazyComponent
+@Role(BeanDefinition.ROLE_SUPPORT)
+@Description("Retrieves year of car production")
 class DefaultVISYearResolver
 		implements VISYearResolver {
 	private static final Map<Character, Integer> CODES           = Maps.newHashMap();

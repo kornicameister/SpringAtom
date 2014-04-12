@@ -41,7 +41,7 @@ import org.springframework.util.ClassUtils;
 @Service("vinNumberDecoder")
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @Description("vinNumberDecoder resolves all possible to retrieve information from passed vin number")
-public class VinNumberDecoder
+class VinNumberDecoder
 		implements VinDecoder {
 	private static final Logger                    LOGGER                    = Logger.getLogger(VinNumberDecoder.class);
 	@Autowired

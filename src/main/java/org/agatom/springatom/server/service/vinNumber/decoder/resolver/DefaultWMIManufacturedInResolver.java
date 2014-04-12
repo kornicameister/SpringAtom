@@ -23,7 +23,13 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Maps;
 import com.neovisionaries.i18n.CountryCode;
 import javassist.NotFoundException;
+import org.agatom.springatom.core.annotations.LazyComponent;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Description;
+import org.springframework.context.annotation.Role;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ResourceUtils;
@@ -46,10 +52,15 @@ import java.util.Set;
  * @since 0.0.1
  */
 
+@LazyComponent
+@Role(BeanDefinition.ROLE_SUPPORT)
+@Description("Retrieves manufacturedIn by looking up in the entries loaded from file storage")
 class DefaultWMIManufacturedInResolver
 		implements WMIManufacturedInResolver {
 	private static final Logger                             LOGGER         = Logger.getLogger(DefaultWMIManufacturedInResolver.class);
 	private static final String                             WMI_PATH       = "classpath:org/agatom/springatom/server/service/vinNumber/wmi.json";
+	@Autowired
+	@Qualifier("jackson2ObjectFactoryBean")
 	private              ObjectMapper                       objectMapper   = null;
 	private              Map<CodeRangeWrapper, CountryCode> countryCodeMap = Maps.newTreeMap();
 
@@ -103,11 +114,6 @@ class DefaultWMIManufacturedInResolver
 			}
 		}
 		return null;
-	}
-
-	public void setObjectMapper(final ObjectMapper objectMapper) {
-		Assert.notNull(objectMapper, "ObjectMapper can not be null");
-		this.objectMapper = objectMapper;
 	}
 
 	private static class CodeRangeWrapper
