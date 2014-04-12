@@ -19,7 +19,7 @@
 <!--suppress XmlPathReference, WebflowModelInspection -->
 <flow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       parent="wizard"
-      start-state="setupCar"
+      start-state="setupVin"
       xmlns="http://www.springframework.org/schema/webflow"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow.xsd">
@@ -31,18 +31,34 @@
                   result="flowScope.requiredSteps"/>
 
         <!--init required steps-->
-        <evaluate expression="flowScope.requiredSteps.add('SetupCar')"/>
+        <evaluate expression="flowScope.requiredSteps.add('setupVin')"/>
+        <evaluate expression="flowScope.requiredSteps.add('setupCar')"/>
         <!--init requires steps-->
 
-        <evaluate expression="newCarWizard.getNewCar(flowRequestContext)"
+        <evaluate expression="newCarWizard1.getNewCar(flowRequestContext)"
                   result="flowScope.car"
                   result-type="org.agatom.springatom.server.model.beans.car.SCar"/>
         <set name="flashScope.newBrandModelMsg" value="resourceBundle.newCarNewCarMaster"/>
     </on-start>
 
-    <view-state id="setupCar" view="ui.wizard.NewCarWizard.1" popup="true" model="car">
+    <view-state id="setupVin" view="ui.wizard.NewCarWizard.1" popup="true" model="car">
         <on-render>
-            <evaluate expression="newCarWizard.setupForm"/>
+            <evaluate expression="newCarWizard1.setupForm"/>
+        </on-render>
+        <transition on="next" to="setupCar" validate="false">
+            <!--
+                    validation can be done here, due to exception in classmate,
+                    instead custom validator is checking the inputs to verify
+                    if everything is fine
+                -->
+            <evaluate expression="newCarWizard1.bindAndValidate"/>
+        </transition>
+        <transition on="cancel" to="cancel" history="invalidate" bind="false" validate="false"/>
+    </view-state>
+
+    <view-state id="setupCar" view="ui.wizard.NewCarWizard.2" popup="true" model="car">
+        <on-render>
+            <evaluate expression="newCarWizard2.setupForm"/>
         </on-render>
         <transition on="finish" to="success" validate="false">
             <!--
@@ -50,7 +66,7 @@
                     instead custom validator is checking the inputs to verify
                     if everything is fine
                 -->
-            <evaluate expression="newCarWizard.bindAndValidate"/>
+            <evaluate expression="newCarWizard2.bindAndValidate"/>
         </transition>
         <transition on="cancel" to="cancel" history="invalidate" bind="false" validate="false"/>
     </view-state>

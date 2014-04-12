@@ -50,10 +50,10 @@ import java.util.*;
  * @version 0.0.1
  * @since 0.0.1
  */
-@WizardAction("newCarWizard")
-public class NewCarWizard
+@WizardAction("newCarWizard2")
+public class NewCarWizardStep2
 		extends WizardFormAction<SCar> {
-	private static final Logger             LOGGER           = Logger.getLogger(NewCarWizard.class);
+	private static final Logger             LOGGER           = Logger.getLogger(NewCarWizardStep2.class);
 	private static final String             FORM_OBJECT_NAME = "car";
 	private static final String             OWNERS_PARAM_KEY = "owners";
 	private static final Comparator<String> COMPARATOR       = new Comparator<String>() {
@@ -66,7 +66,6 @@ public class NewCarWizard
 	private static final String             MODELS           = "models";
 	private static final String             CAR_MASTERS      = "carMasters";
 	private static final String[]           REQUIRED_FIELDS  = new String[]{
-			QSCar.sCar.vinNumber.getMetadata().getName(),
 			QSCar.sCar.licencePlate.getMetadata().getName(),
 			QSCar.sCar.owner.getMetadata().getName()
 	};
@@ -74,7 +73,6 @@ public class NewCarWizard
 			QSCar.sCar.carMaster.getMetadata().getName(),
 			QSCar.sCar.carMaster.manufacturingData.brand.getMetadata().getName(),
 			QSCar.sCar.carMaster.manufacturingData.model.getMetadata().getName(),
-			QSCar.sCar.vinNumber.getMetadata().getName(),
 			QSCar.sCar.licencePlate.getMetadata().getName(),
 			QSCar.sCar.owner.getMetadata().getName()
 	};
@@ -83,13 +81,9 @@ public class NewCarWizard
 	@Autowired
 	private              SCarMasterService  carMasterService = null;
 
-	public NewCarWizard() {
+	public NewCarWizardStep2() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
-	}
-
-	public SCar getNewCar(final RequestContext context) throws Exception {
-		return this.getCommandBean(context);
 	}
 
 	@Override
@@ -201,7 +195,8 @@ public class NewCarWizard
 		return event;
 	}
 
-	private class OwnerBean implements Serializable {
+	private class OwnerBean
+			implements Serializable {
 		private static final long                      serialVersionUID = 1349406708171914877L;
 		private              String                    ownerIdentity    = null;
 		private              Long                      ownerId          = null;
