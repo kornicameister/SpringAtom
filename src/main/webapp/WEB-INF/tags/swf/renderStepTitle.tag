@@ -42,6 +42,5 @@
     </c:otherwise>
 </c:choose>
 <swf:stateId var="stateId" state="${forState}"/>
-<s:message code="wizard.${requestScope.wizardID}.title" var="title"/>
-<s:message code="wizard.step.title" arguments="${title},${stateId}" argumentSeparator=","/>
+<s:message code="wizard.${requestScope.wizardID}.title"/>
 </h2>
