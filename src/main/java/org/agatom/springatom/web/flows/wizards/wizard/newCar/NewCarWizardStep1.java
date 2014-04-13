@@ -26,7 +26,9 @@ import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.support.FormattingConversionService;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -42,6 +44,7 @@ public class NewCarWizardStep1
 		extends WizardFormAction<SCar> {
 	private static final Logger   LOGGER           = Logger.getLogger(NewCarWizardStep1.class);
 	private static final String   FORM_OBJECT_NAME = "car";
+	private static final String   VIN_NUMBER_DATA  = "vinNumberData";
 	private static final String[] REQUIRED_FIELDS  = new String[]{
 			QSCar.sCar.vinNumber.getMetadata().getName()
 	};
@@ -69,11 +72,15 @@ public class NewCarWizardStep1
 	public Event bindAndValidate(final RequestContext context) throws Exception {
 		final Event event = super.bindAndValidate(context);
 		if (this.isSuccessEvent(event)) {
+			final MutableAttributeMap<Object> flowScope = context.getFlowScope();
+
 			LOGGER.trace(String.format("VinDecoding in progress.."));
+
 			SCar car = this.getCommandBean(context);
 			try {
 				final VinNumberData vinNumberData = this.vinDecoder.decode(car.getVinNumber());
-				LOGGER.info(String.format("Retrieved VinNumberData => %s", vinNumberData));
+				Assert.notNull(vinNumberData);
+				flowScope.put(VIN_NUMBER_DATA, vinNumberData);
 			} catch (Exception exp) {
 				return error(exp);
 			}

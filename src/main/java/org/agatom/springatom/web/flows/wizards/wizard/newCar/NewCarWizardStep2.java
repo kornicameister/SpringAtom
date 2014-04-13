@@ -24,14 +24,18 @@ import com.google.common.collect.Maps;
 import org.agatom.springatom.server.model.beans.car.QSCar;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.car.SCarMaster;
+import org.agatom.springatom.server.model.types.car.FuelType;
 import org.agatom.springatom.server.service.domain.SCarMasterService;
 import org.agatom.springatom.server.service.domain.SCarService;
 import org.agatom.springatom.web.flows.wizards.actions.WizardAction;
+import org.agatom.springatom.web.flows.wizards.wizard.LocalizedEnumHolder;
 import org.agatom.springatom.web.flows.wizards.wizard.WizardFormAction;
+import org.agatom.springatom.web.locale.SMessageSource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
@@ -65,6 +69,7 @@ public class NewCarWizardStep2
 	private static final String             BRANDS           = "brands";
 	private static final String             MODELS           = "models";
 	private static final String             CAR_MASTERS      = "carMasters";
+	private static final String         FUEL_TYPES    = "fuelTypes";
 	private static final String[]           REQUIRED_FIELDS  = new String[]{
 			QSCar.sCar.licencePlate.getMetadata().getName(),
 			QSCar.sCar.owner.getMetadata().getName()
@@ -80,6 +85,8 @@ public class NewCarWizardStep2
 	private              SCarService        carService       = null;
 	@Autowired
 	private              SCarMasterService  carMasterService = null;
+	@Autowired
+	private              SMessageSource messageSource = null;
 
 	public NewCarWizardStep2() {
 		super();
@@ -110,6 +117,7 @@ public class NewCarWizardStep2
 			viewScope.put(BRANDS, this.extractBrands(all));
 			viewScope.put(MODELS, this.extractModels(all));
 			viewScope.put(CAR_MASTERS, all);
+			viewScope.put(FUEL_TYPES, this.getFuelTypes());
 
 		} catch (Exception exp) {
 			LOGGER.fatal(String.format("setupForm(context=%s) failed", context), exp);
@@ -162,6 +170,21 @@ public class NewCarWizardStep2
 				return input.getModel();
 			}
 		}).toSortedSet(COMPARATOR);
+	}
+
+	private List<LocalizedEnumHolder<FuelType>> getFuelTypes() {
+		final ArrayList<FuelType> types = Lists.newArrayList(FuelType.values());
+		final Locale locale = LocaleContextHolder.getLocale();
+		return FluentIterable.from(types)
+				.transform(new Function<FuelType, LocalizedEnumHolder<FuelType>>() {
+					@Nullable
+					@Override
+					@SuppressWarnings("unchecked")
+					public LocalizedEnumHolder<FuelType> apply(@Nullable final FuelType input) {
+						assert input != null;
+						return new LocalizedEnumHolder<FuelType>().setValue(input).setLabel(messageSource.getMessage(input.name(), locale));
+					}
+				}).toList();
 	}
 
 	@Override

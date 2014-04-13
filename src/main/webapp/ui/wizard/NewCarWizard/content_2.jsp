@@ -85,6 +85,30 @@
                                 path="licencePlate"/>
                 </form:label>
             </p>
+
+            <p>
+                <form:label path="carMaster.fuelType" cssClass="x-form-label">
+                    <span><s:message code="scarmaster.fueltype"/></span>
+                    <form:select id="${requestScope.formID}-carMaster-fuelType"
+                                 htmlEscape="true"
+                                 cssClass="x-input"
+                                 items="${requestScope.fuelTypes}"
+                                 itemLabel="label"
+                                 itemValue="value"
+                                 path="carMaster.fuelType"/>
+                </form:label>
+            </p>
+
+            <p>
+                <form:label path="licencePlate" cssClass="x-form-label">
+                    <span><s:message code="scarmaster.yearofproduction"/></span>
+                    <form:select id="${requestScope.formID}-carMaster-yearProduction"
+                                 htmlEscape="true"
+                                 cssClass="x-input"
+                                 items="${requestScope.vinNumberData.years}"
+                                 path="carMaster.yearOfProduction"/>
+                </form:label>
+            </p>
         </fieldset>
         <fieldset>
             <legend><s:message code="scar.owner"/></legend>
@@ -115,6 +139,8 @@
             var $5 = $('#' + '${requestScope.formID}-brand');
             var $6 = $('#' + '${requestScope.formID}-newBrandModel');
             var $7 = $('#' + '${requestScope.formID}-carMaster');
+            var $8 = $('#' + '${requestScope.formID}-carMaster-fuelType');
+            var $9 = $('#' + '${requestScope.formID}-carMaster-yearProduction');
 
             $6.change(function () {
                 console.log('Switching between newBrandModel/persistedBrandModel mode');
@@ -174,6 +200,22 @@
                 widgetType : 'dijit.form.Select',
                 widgetAttrs: {
                     style: 'width:200px;height:15px'
+                }
+            }));
+            Spring.addDecoration(new Spring.ElementDecoration({
+                elementId  : $8.attr('id'),
+                widgetType : 'dijit.form.Select',
+                widgetAttrs: {
+                    style: 'width:200px;height:15px'
+                }
+            }));
+            Spring.addDecoration(new Spring.ElementDecoration({
+                elementId  : $9.attr('id'),
+                widgetType : 'dijit.form.ComboBox',
+                widgetAttrs: {
+                    style     : 'width:200px;height:15px',
+                    propercase: true,
+                    trim      : true
                 }
             }));
         });
