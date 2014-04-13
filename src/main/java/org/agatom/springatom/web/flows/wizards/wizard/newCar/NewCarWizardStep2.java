@@ -37,7 +37,6 @@ import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.format.support.FormattingConversionService;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.Event;
@@ -69,7 +68,7 @@ public class NewCarWizardStep2
 	private static final String             BRANDS           = "brands";
 	private static final String             MODELS           = "models";
 	private static final String             CAR_MASTERS      = "carMasters";
-	private static final String         FUEL_TYPES    = "fuelTypes";
+	private static final String             FUEL_TYPES       = "fuelTypes";
 	private static final String[]           REQUIRED_FIELDS  = new String[]{
 			QSCar.sCar.licencePlate.getMetadata().getName(),
 			QSCar.sCar.owner.getMetadata().getName()
@@ -79,14 +78,16 @@ public class NewCarWizardStep2
 			QSCar.sCar.carMaster.manufacturingData.brand.getMetadata().getName(),
 			QSCar.sCar.carMaster.manufacturingData.model.getMetadata().getName(),
 			QSCar.sCar.licencePlate.getMetadata().getName(),
-			QSCar.sCar.owner.getMetadata().getName()
+			QSCar.sCar.owner.getMetadata().getName(),
+			QSCar.sCar.fuelType.getMetadata().getName(),
+			QSCar.sCar.yearOfProduction.getMetadata().getName()
 	};
 	@Autowired
 	private              SCarService        carService       = null;
 	@Autowired
 	private              SCarMasterService  carMasterService = null;
 	@Autowired
-	private              SMessageSource messageSource = null;
+	private              SMessageSource     messageSource    = null;
 
 	public NewCarWizardStep2() {
 		super();
@@ -194,13 +195,7 @@ public class NewCarWizardStep2
 			SCar car = this.getCommandBean(context);
 			try {
 				// to enable all validation to be called
-				car = this.carService.newCar(
-						StringUtils.capitalize(car.getBrand()),
-						StringUtils.capitalize(car.getModel()),
-						car.getLicencePlate().toUpperCase(),
-						car.getVinNumber().toUpperCase(),
-						car.getOwner().getId()
-				);
+				car = this.carService.save(car);
 				context.getFlowScope().put(FORM_OBJECT_NAME, car);
 			} catch (Exception exp) {
 				final MessageContext messageContext = context.getMessageContext();

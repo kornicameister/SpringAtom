@@ -39,4 +39,8 @@ public interface Car
 	String getBrand();
 
 	String getModel();
+
+	FuelType getFuelType();
+
+	Long getYearOfProduction();
 }

@@ -28,11 +28,11 @@ import org.agatom.springatom.server.model.beans.car.QSCar;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.car.SCarMaster;
 import org.agatom.springatom.server.model.beans.user.SUser;
-import org.agatom.springatom.server.service.domain.impl.SCarServiceImpl;
 import org.agatom.springatom.server.service.support.constraints.BrandOrModel;
 import org.agatom.springatom.server.service.support.constraints.LicencePlatePL;
 import org.agatom.springatom.server.service.support.constraints.VinNumber;
 import org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException;
+import org.agatom.springatom.server.service.support.exceptions.ServiceException;
 import org.agatom.springatom.server.service.support.exceptions.UnambiguousResultServiceException;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -51,6 +51,10 @@ import java.util.Set;
 
 public interface SCarService
 		extends SService<SCar, Long, Integer> {
+
+	@Override
+	SCar save(final SCar persistable);
+
 	@NotNull
 	List<SCar> findByMaster(
 			@BrandOrModel
@@ -88,7 +92,7 @@ public interface SCarService
 			final long ownerId) throws EntityDoesNotExistsServiceException;
 
 	@NotNull
-	SCar newOwner(final long idCar, final long idClient) throws EntityDoesNotExistsServiceException, SCarServiceImpl.InvalidOwnerException;
+	SCar newOwner(final long idCar, final long idClient) throws EntityDoesNotExistsServiceException, InvalidOwnerException;
 
 	/**
 	 * Retrieves collection of {@link org.agatom.springatom.server.service.domain.SCarService.Owner}
@@ -127,7 +131,8 @@ public interface SCarService
 	 * to be associated with {@link org.agatom.springatom.server.model.beans.car.SCar} or
 	 * are already associated with it
 	 */
-	public static class Owner implements Serializable {
+	public static class Owner
+			implements Serializable {
 		private static final long      serialVersionUID = 4675008331100577522L;
 		private              SUser     owner            = null;
 		private              Set<SCar> cars             = Sets.newHashSet();
@@ -166,5 +171,14 @@ public interface SCarService
 					Objects.equal(this.cars, that.cars);
 		}
 
+	}
+
+	public static class InvalidOwnerException
+			extends ServiceException {
+		private static final long serialVersionUID = 9104651445939425769L;
+
+		public InvalidOwnerException(final SCar car, final SUser owner) {
+			super(SCar.class, String.format("Owner for %s does not differ from current one %s", car, owner));
+		}
 	}
 }

@@ -133,14 +133,15 @@
                 </form:label>
                 <script type="text/javascript">
                     $(function () {
-                        var yearProduction = $('#' + '${requestScope.formID}-carMaster-yearProduction');
+                        var licencePlate = $('#' + '${requestScope.formID}-licencePlate');
                         Spring.addDecoration(new Spring.ElementDecoration({
-                            elementId  : yearProduction.attr('id'),
-                            widgetType : 'dijit.form.ComboBox',
+                            elementId  : licencePlate.attr('id'),
+                            widgetType : 'dijit.form.TextBox',
                             widgetAttrs: {
-                                style     : 'width:200px;height:15px',
-                                propercase: true,
-                                trim      : true
+                                class    : licencePlate.attr('class'),
+                                required : true,
+                                uppercase: true,
+                                trim     : true
                             }
                         }));
                     });
@@ -148,15 +149,15 @@
             </p>
 
             <p>
-                <form:label path="carMaster.fuelType" cssClass="x-form-label">
-                    <span><s:message code="scarmaster.fueltype"/></span>
+                <form:label path="fuelType" cssClass="x-form-label">
+                    <span><s:message code="scar.fueltype"/></span>
                     <form:select id="${requestScope.formID}-carMaster-fuelType"
                                  htmlEscape="true"
                                  cssClass="x-input"
                                  items="${requestScope.fuelTypes}"
                                  itemLabel="label"
                                  itemValue="value"
-                                 path="carMaster.fuelType"/>
+                                 path="fuelType"/>
                 </form:label>
                 <script type="text/javascript">
                     $(function () {
@@ -173,25 +174,24 @@
             </p>
 
             <p>
-                <form:label path="licencePlate" cssClass="x-form-label">
-                    <span><s:message code="scarmaster.yearofproduction"/></span>
-                    <form:select id="${requestScope.formID}-carMaster-yearProduction"
+                <form:label path="yearOfProduction" cssClass="x-form-label">
+                    <span><s:message code="scar.yearofproduction"/></span>
+                    <form:select id="${requestScope.formID}-yearProduction"
                                  htmlEscape="true"
                                  cssClass="x-input"
                                  items="${requestScope.vinNumberData.years}"
-                                 path="carMaster.yearOfProduction"/>
+                                 path="yearOfProduction"/>
                 </form:label>
                 <script type="text/javascript">
                     $(function () {
-                        var licencePlate = $('#' + '${requestScope.formID}-licencePlate');
+                        var yearProduction = $('#' + '${requestScope.formID}-yearProduction');
                         Spring.addDecoration(new Spring.ElementDecoration({
-                            elementId  : licencePlate.attr('id'),
-                            widgetType : 'dijit.form.TextBox',
+                            elementId  : yearProduction.attr('id'),
+                            widgetType : 'dijit.form.ComboBox',
                             widgetAttrs: {
-                                class    : licencePlate.attr('class'),
-                                required : true,
-                                uppercase: true,
-                                trim     : true
+                                style     : 'width:200px;height:15px',
+                                propercase: true,
+                                trim      : true
                             }
                         }));
                     })

@@ -23,9 +23,7 @@ import org.agatom.springatom.server.model.beans.PersistentObject;
 import org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData;
 import org.agatom.springatom.server.model.types.ReportableEntity;
 import org.agatom.springatom.server.model.types.car.CarMaster;
-import org.agatom.springatom.server.model.types.car.FuelType;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -44,9 +42,9 @@ import java.util.Set;
 public class SCarMaster
 		extends PersistentObject<Long>
 		implements CarMaster<SCar> {
-	public static final  String TABLE_NAME       = "car_master";
-	public static final  String ENTITY_NAME      = "SCarMaster";
-	private static final long   serialVersionUID = -4932035593494629555L;
+	public static final  String                      TABLE_NAME        = "car_master";
+	public static final  String                      ENTITY_NAME       = "SCarMaster";
+	private static final long                        serialVersionUID  = -4932035593494629555L;
 	@Embedded
 	private              SCarMasterManufacturingData manufacturingData = null;
 	@BatchSize(size = 10)
@@ -54,12 +52,6 @@ public class SCarMaster
 	private              Set<SCar>                   children          = Sets.newHashSet();
 	@Column(nullable = true, length = 1000, name = "thumbnailPath")
 	private              String                      thumbnailPath     = null;
-	@Type(type = "org.hibernate.type.EnumType")
-	@Enumerated(value = EnumType.STRING)
-	@Column(name = "scm_fuelType", updatable = true, unique = false, length = 50, nullable = true)
-	private              FuelType                    fuelType          = null;
-	@Column(name = "scm_yp", updatable = true, unique = false, length = 50, nullable = true)
-	private              Long                        yearOfProduction  = null;
 
 	public SCarMaster() {
 		super();
@@ -135,26 +127,6 @@ public class SCarMaster
 
 	public SCarMaster setChildren(final Collection<SCar> children) {
 		this.children = Sets.newHashSet(children);
-		return this;
-	}
-
-	@Override
-	public FuelType getFuelType() {
-		return this.fuelType;
-	}
-
-	public SCarMaster setFuelType(final FuelType fuelType) {
-		this.fuelType = fuelType;
-		return this;
-	}
-
-	@Override
-	public Long getYearOfProduction() {
-		return this.yearOfProduction;
-	}
-
-	public SCarMaster setYearOfProduction(final Long yearOfProduction) {
-		this.yearOfProduction = yearOfProduction;
 		return this;
 	}
 }

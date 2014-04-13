@@ -28,6 +28,7 @@ package org.agatom.springatom.server.model.types.car;
  */
 public enum FuelType {
 	GASOLINE("gse"),
+	GASOLINE_GAS("gse_gs"),
 	DIESEL("dsl"),
 	GAS("gs"),
 	ORGANIC("org");

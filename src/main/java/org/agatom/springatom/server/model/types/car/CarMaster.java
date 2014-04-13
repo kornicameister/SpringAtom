@@ -32,8 +32,4 @@ import java.util.Set;
 public interface CarMaster<T extends Car>
 		extends ManufacturingData, Iterable<T> {
 	Set<T> getChildren();
-
-	FuelType getFuelType();
-
-	Long getYearOfProduction();
 }
