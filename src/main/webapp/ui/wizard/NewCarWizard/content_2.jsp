@@ -1,4 +1,3 @@
-<%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~
@@ -22,6 +21,7 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
+<%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
 <div id="sa-wizard-step-body" class="x-wizard-content">
     <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
@@ -60,6 +60,53 @@
                                  disabled="true"
                                  path="model"/>
                 </form:label>
+                <script type="text/javascript">
+                    $(function () {
+                        var model = $('#' + '${requestScope.formID}-model'),
+                                brand = $('#' + '${requestScope.formID}-brand'),
+                                carMaster = $('#' + '${requestScope.formID}-carMaster'),
+                                newBrandModelCB = $('#' + '${requestScope.formID}-newBrandModel');
+
+                        newBrandModelCB.change(function () {
+                            console.log('Switching between newBrandModel/persistedBrandModel mode');
+                            var checkBox = $(this);
+                            if (checkBox.is(':checked')) {
+                                dijit.byId(model.attr('id')).set('disabled', false);
+                                dijit.byId(brand.attr('id')).set('disabled', false);
+                                dijit.byId(carMaster.attr('id')).set('disabled', true);
+                            } else {
+                                dijit.byId(model.attr('id')).set('disabled', true);
+                                dijit.byId(brand.attr('id')).set('disabled', true);
+                                dijit.byId(carMaster.attr('id')).set('disabled', false);
+                            }
+                        });
+                        Spring.addDecoration(new Spring.ElementDecoration({
+                            elementId  : model.attr('id'),
+                            widgetType : 'dijit.form.ComboBox',
+                            widgetAttrs: {
+                                style     : 'width:200px;height:15px',
+                                propercase: true,
+                                trim      : true
+                            }
+                        }));
+                        Spring.addDecoration(new Spring.ElementDecoration({
+                            elementId  : brand.attr('id'),
+                            widgetType : 'dijit.form.ComboBox',
+                            widgetAttrs: {
+                                style     : 'width:200px;height:15px',
+                                propercase: true,
+                                trim      : true
+                            }
+                        }));
+                        Spring.addDecoration(new Spring.ElementDecoration({
+                            elementId  : carMaster.attr('id'),
+                            widgetType : 'dijit.form.Select',
+                            widgetAttrs: {
+                                style: 'width:200px;height:15px'
+                            }
+                        }));
+                    });
+                </script>
             </p>
 
             <p>
@@ -84,6 +131,20 @@
                                 cssClass="x-input"
                                 path="licencePlate"/>
                 </form:label>
+                <script type="text/javascript">
+                    $(function () {
+                        var yearProduction = $('#' + '${requestScope.formID}-carMaster-yearProduction');
+                        Spring.addDecoration(new Spring.ElementDecoration({
+                            elementId  : yearProduction.attr('id'),
+                            widgetType : 'dijit.form.ComboBox',
+                            widgetAttrs: {
+                                style     : 'width:200px;height:15px',
+                                propercase: true,
+                                trim      : true
+                            }
+                        }));
+                    });
+                </script>
             </p>
 
             <p>
@@ -97,6 +158,18 @@
                                  itemValue="value"
                                  path="carMaster.fuelType"/>
                 </form:label>
+                <script type="text/javascript">
+                    $(function () {
+                        var fuelType = $('#' + '${requestScope.formID}-carMaster-fuelType');
+                        Spring.addDecoration(new Spring.ElementDecoration({
+                            elementId  : fuelType.attr('id'),
+                            widgetType : 'dijit.form.Select',
+                            widgetAttrs: {
+                                style: 'width:200px;height:15px'
+                            }
+                        }));
+                    });
+                </script>
             </p>
 
             <p>
@@ -108,6 +181,21 @@
                                  items="${requestScope.vinNumberData.years}"
                                  path="carMaster.yearOfProduction"/>
                 </form:label>
+                <script type="text/javascript">
+                    $(function () {
+                        var licencePlate = $('#' + '${requestScope.formID}-licencePlate');
+                        Spring.addDecoration(new Spring.ElementDecoration({
+                            elementId  : licencePlate.attr('id'),
+                            widgetType : 'dijit.form.TextBox',
+                            widgetAttrs: {
+                                class    : licencePlate.attr('class'),
+                                required : true,
+                                uppercase: true,
+                                trim     : true
+                            }
+                        }));
+                    })
+                </script>
             </p>
         </fieldset>
         <fieldset>
@@ -123,103 +211,27 @@
                                  itemValue="ownerId"
                                  path="owner"/>
                 </form:label>
+                <script type="text/javascript">
+                    $(function () {
+                        var owners = <s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(requestScope.owners)" htmlEscape="false" javaScriptEscape="false"/>;
+                        var owner = $('#' + '${requestScope.formID}-owner');
+                        Spring.addDecoration(new Spring.ElementDecoration({
+                            elementId  : owner.attr('id'),
+                            widgetType : 'dijit.form.Select',
+                            widgetAttrs: {
+                                sortByLabel: true,
+                                style      : 'min-width:200px;height:15px',
+                                onChange   : function (evt) {
+                                    SA.wizard.NewUserWizard.onOwnerChange.apply(this, [evt, owners]);
+                                }
+                            }
+                        }));
+                    })
+                </script>
             </p>
         </fieldset>
         <swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
     </form:form>
-
-    <script type="text/javascript" id="${requestScope.formID}-entity-decorator">
-        $(function () {
-            var owners = <s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(requestScope.owners)" htmlEscape="false" javaScriptEscape="false"/>;
-            var existingCarsMsgHolder = $('#existingCarsMsgHolder');
-
-            var $1 = $('#' + '${requestScope.formID}-owner');
-            var $2 = $('#' + '${requestScope.formID}-licencePlate');
-            var $4 = $('#' + '${requestScope.formID}-model');
-            var $5 = $('#' + '${requestScope.formID}-brand');
-            var $6 = $('#' + '${requestScope.formID}-newBrandModel');
-            var $7 = $('#' + '${requestScope.formID}-carMaster');
-            var $8 = $('#' + '${requestScope.formID}-carMaster-fuelType');
-            var $9 = $('#' + '${requestScope.formID}-carMaster-yearProduction');
-
-            $6.change(function () {
-                console.log('Switching between newBrandModel/persistedBrandModel mode');
-                var checkBox = $(this);
-                if (checkBox.is(':checked')) {
-                    dijit.byId($4.attr('id')).set('disabled', false);
-                    dijit.byId($5.attr('id')).set('disabled', false);
-                    dijit.byId($7.attr('id')).set('disabled', true);
-                } else {
-                    dijit.byId($4.attr('id')).set('disabled', true);
-                    dijit.byId($5.attr('id')).set('disabled', true);
-                    dijit.byId($7.attr('id')).set('disabled', false);
-                }
-            });
-
-            Spring.addDecoration(new Spring.ElementDecoration({
-                elementId  : $1.attr('id'),
-                widgetType : 'dijit.form.Select',
-                widgetAttrs: {
-                    sortByLabel: true,
-                    style      : 'min-width:200px;height:15px',
-                    onChange   : function (evt) {
-                        SA.wizard.NewUserWizard.onOwnerChange.apply(this, [evt, owners]);
-                    }
-                }
-            }));
-            Spring.addDecoration(new Spring.ElementDecoration({
-                elementId  : $2.attr('id'),
-                widgetType : 'dijit.form.TextBox',
-                widgetAttrs: {
-                    class    : $2.attr('class'),
-                    required : true,
-                    uppercase: true,
-                    trim     : true
-                }
-            }));
-            Spring.addDecoration(new Spring.ElementDecoration({
-                elementId  : $4.attr('id'),
-                widgetType : 'dijit.form.ComboBox',
-                widgetAttrs: {
-                    style     : 'width:200px;height:15px',
-                    propercase: true,
-                    trim      : true
-                }
-            }));
-            Spring.addDecoration(new Spring.ElementDecoration({
-                elementId  : $5.attr('id'),
-                widgetType : 'dijit.form.ComboBox',
-                widgetAttrs: {
-                    style     : 'width:200px;height:15px',
-                    propercase: true,
-                    trim      : true
-                }
-            }));
-            Spring.addDecoration(new Spring.ElementDecoration({
-                elementId  : $7.attr('id'),
-                widgetType : 'dijit.form.Select',
-                widgetAttrs: {
-                    style: 'width:200px;height:15px'
-                }
-            }));
-            Spring.addDecoration(new Spring.ElementDecoration({
-                elementId  : $8.attr('id'),
-                widgetType : 'dijit.form.Select',
-                widgetAttrs: {
-                    style: 'width:200px;height:15px'
-                }
-            }));
-            Spring.addDecoration(new Spring.ElementDecoration({
-                elementId  : $9.attr('id'),
-                widgetType : 'dijit.form.ComboBox',
-                widgetAttrs: {
-                    style     : 'width:200px;height:15px',
-                    propercase: true,
-                    trim      : true
-                }
-            }));
-        });
-    </script>
 </div>
 <swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
 <swf:getActions forState="${flowRequestContext.currentState}"/>
