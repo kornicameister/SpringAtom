@@ -58,6 +58,16 @@
 						"url"     : "/app/wizard/NewReportWizard",
 						"redirect": "false"
 					}
+				},
+				{
+					"name"          : "newCar",
+					"type"          : "org.agatom.springatom.server.model.beans.car.SCar",
+					"resourceBundle": "springatom.actions.action.newCar",
+					"command"       : {
+						"type"    : "wizard",
+						"url"     : "/app/wizard/NewCarWizard",
+						"redirect": "false"
+					}
 				}
 			]
 		}
