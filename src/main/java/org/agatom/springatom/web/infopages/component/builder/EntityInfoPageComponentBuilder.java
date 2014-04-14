@@ -43,7 +43,9 @@ import org.agatom.springatom.web.infopages.component.elements.attributes.InfoPag
 import org.agatom.springatom.web.infopages.component.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.web.infopages.data.EntityInfoPageResponse;
 import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
+import org.agatom.springatom.web.locale.SMessageSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Persistable;
 import org.springframework.hateoas.Link;
 import org.springframework.util.ClassUtils;
@@ -62,174 +64,181 @@ import java.util.Map;
  * @since 0.0.1
  */
 abstract public class EntityInfoPageComponentBuilder<Y extends Persistable<?>>
-        extends InfoPageComponentBuilder
-        implements EntityAware<Y> {
+		extends InfoPageComponentBuilder
+		implements EntityAware<Y> {
+	private static final long                              serialVersionUID  = -3418951435217744217L;
+	protected            Class<Y>                          entity            = null;
+	protected            SBasicRepository<Y, Serializable> repository        = null;
+	@Autowired
+	protected            EntityDescriptors                 descriptors       = null;
+	@Autowired
+	private              InfoPageMappings                  pageMappings      = null;
+	@Autowired
+	private              ComponentBuilders                 componentBuilders = null;
+	@Autowired
+	private              SMessageSource                    messageSource     = null;
 
-    protected Class<Y>                          entity;
-    protected SBasicRepository<Y, Serializable> repository;
-    @Autowired
-    protected EntityDescriptors                 descriptors;
-    @Autowired
-    private   InfoPageMappings                  pageMappings;
-    @Autowired
-    private   ComponentBuilders                 componentBuilders;
+	@Override
+	public void setEntity(final Class<Y> entity) {
+		this.entity = entity;
+	}
 
-    @Override
-    public void setEntity(final Class<Y> entity) {
-        this.entity = entity;
-    }
+	@Override
+	public void setRepository(final SBasicRepository<Y, Serializable> repository) {
+		this.repository = repository;
+	}
 
-    @Override
-    public void setRepository(final SBasicRepository<Y, Serializable> repository) {
-        this.repository = repository;
-    }
+	@Override
+	protected void postProcessDefinition(final InfoPageComponent definition) {
+		if (ClassUtils.isAssignable(PersistentVersionedObject.class, this.entity)) {
+			this.populateSystemPanel(this.helper.newSystemPanel(definition, LayoutType.VERTICAL));
+		}
+	}
 
-    @Override
-    protected void postProcessDefinition(final InfoPageComponent definition) {
-        if (ClassUtils.isAssignable(PersistentVersionedObject.class, this.entity)) {
-            this.populateSystemPanel(this.helper.newSystemPanel(definition, LayoutType.VERTICAL));
-        }
-    }
+	@Override
+	protected ComponentDataResponse<?> buildData(final ComponentDataRequest dataRequest) throws ComponentException {
+		final Long objectId = dataRequest.getLong("objectId");
+		final Y object = this.repository.findOne(objectId);
+		this.logger.trace(String.format("processing object %s=%s", ClassUtils.getShortName(object.getClass()), object.getId()));
+		return new EntityInfoPageResponse() {
+			private static final long serialVersionUID = 5093004619980504166L;
 
-    @Override
-    protected ComponentDataResponse<?> buildData(final ComponentDataRequest dataRequest) throws ComponentException {
-        final Long objectId = dataRequest.getLong("objectId");
-        final Y object = this.repository.findOne(objectId);
-        this.logger.trace(String.format("processing object %s=%s", ClassUtils.getShortName(object.getClass()), object.getId()));
-        return new EntityInfoPageResponse() {
-            private static final long serialVersionUID = 5093004619980504166L;
+			@Override
+			public Object getValueForPath(final String path) throws ComponentException {
+				logger.trace(String.format("processing path %s", path));
+				Object value = InvokeUtils.invokeGetter(object, path);
 
-            @Override
-            public Object getValueForPath(final String path) throws ComponentException {
-                logger.trace(String.format("processing path %s", path));
-                Object value = InvokeUtils.invokeGetter(object, path);
+				if (value != null) {
+					final InfoPageAttributeComponent attributeComponent = getAttributeForPath(path);
 
-                if (value != null) {
-                    final InfoPageAttributeComponent attributeComponent = getAttributeForPath(path);
+					switch (attributeComponent.getDisplayAs()) {
+						case INFOPAGE: {
+							if (value instanceof Persistable) {
 
-                    switch (attributeComponent.getDisplayAs()) {
-                        case INFOPAGE: {
-                            if (value instanceof Persistable) {
+								final String label = getInfoPageLinkLabel((Persistable<?>) value);
+								final Class<?> assocClass = getEntityAttribute(path).getJavaType();
 
-                                final String label = getInfoPageLinkLabel((Persistable<?>) value);
-                                final Class<?> assocClass = getEntityAttribute(path).getJavaType();
+								final SEntityInfoPage domain = pageMappings.getInfoPageForEntity(assocClass);
+								if (domain != null) {
+									value = new DelegatedLink(
+											helper.getInfoPageLink(
+													domain.getPath(),
+													Long.parseLong(String.valueOf(((Persistable) value).getId()))
+											)
+									)
+											.withLabel(label)
+											.withRel(domain.getRel());
+								} else {
+									value = label;
+								}
+							} else {
+								throw new ComponentPathEvaluationException(String
+										.format("%s does not match %s as value", path, ClassUtils.getShortName(Persistable.class)));
+							}
+						}
+						break;
+						case TABLE: {
+							if (value instanceof Iterable || value instanceof Map) {
+								final PluralAttribute<?, ?, ?> entityAttribute = (PluralAttribute<?, ?, ?>) getEntityAttribute(path);
+								final Class<?> javaType = entityAttribute.getElementType().getJavaType();
+								if (componentBuilders.hasBuilder(javaType, ComponentBuilds.Produces.TABLE_COMPONENT)) {
+									final String builderId = componentBuilders.getBuilderId(javaType, ComponentBuilds.Produces.TABLE_COMPONENT);
+									final Link builderLink = helper.getBuilderLink();
 
-                                final SEntityInfoPage domain = pageMappings.getInfoPageForEntity(assocClass);
-                                if (domain != null) {
-                                    value = new DelegatedLink(
-                                            helper.getInfoPageLink(
-                                                    domain.getPath(),
-                                                    Long.parseLong(String.valueOf(((Persistable) value).getId()))
-                                            ))
-                                            .withLabel(label)
-                                            .withRel(domain.getRel());
-                                } else {
-                                    value = label;
-                                }
-                            } else {
-                                throw new ComponentPathEvaluationException(String
-                                        .format("%s does not match %s as value", path, ClassUtils.getShortName(Persistable.class)));
-                            }
-                        }
-                        break;
-                        case TABLE: {
-                            if (value instanceof Iterable || value instanceof Map) {
-                                final PluralAttribute<?, ?, ?> entityAttribute = (PluralAttribute<?, ?, ?>) getEntityAttribute(path);
-                                final Class<?> javaType = entityAttribute.getElementType().getJavaType();
-                                if (componentBuilders.hasBuilder(javaType, ComponentBuilds.Produces.TABLE_COMPONENT)) {
-                                    final String builderId = componentBuilders.getBuilderId(javaType, ComponentBuilds.Produces.TABLE_COMPONENT);
-                                    final Link builderLink = helper.getBuilderLink();
+									final Object contextValue = InvokeUtils.invokeGetter(object, path.split("\\.")[0]);
+									if (!ClassUtils.isAssignable(Persistable.class, contextValue.getClass())) {
+										value = new BuilderLink(
+												builderId,
+												object.getClass(),
+												object.getId(),
+												builderLink
+										);
+									} else {
+										value = new BuilderLink(
+												builderId,
+												contextValue.getClass(),
+												((Persistable<?>) contextValue).getId(),
+												builderLink
+										);
+									}
+								}
+							}
+						}
+					}
 
-                                    final Object contextValue = InvokeUtils.invokeGetter(object, path.split("\\.")[0]);
-                                    if (!ClassUtils.isAssignable(Persistable.class, contextValue.getClass())) {
-                                        value = new BuilderLink(
-                                                builderId,
-                                                object.getClass(),
-                                                object.getId(),
-                                                builderLink
-                                        );
-                                    } else {
-                                        value = new BuilderLink(
-                                                builderId,
-                                                contextValue.getClass(),
-                                                ((Persistable<?>) contextValue).getId(),
-                                                builderLink
-                                        );
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+					if (ClassUtils.isAssignableValue(Enum.class, value)) {
+						value = messageSource.getMessage(((Enum<?>) value).name(), LocaleContextHolder.getLocale());
+					}
+				}
 
-                if (value == null) {
-                    logger.trace(String
-                            .format("path %s does not correspond to any property of %s", path, ClassUtils.getShortName(object.getClass())));
-                    value = "???";
-                }
+				if (value == null) {
+					logger.trace(String
+							.format("path %s does not correspond to any property of %s", path, ClassUtils.getShortName(object.getClass())));
+					value = "???";
+				}
 
-                logger.trace(String.format("processed path %s to %s", path, value));
-                return value;
-            }
-        }.setValue(object);
-    }
+				logger.trace(String.format("processed path %s to %s", path, value));
+				return value;
+			}
+		}.setValue(object);
+	}
 
-    protected String getInfoPageLinkLabel(final Persistable<?> value) {
-        if (value instanceof SCarMaster) {
-            return InvokeUtils.invokeGetter(value, "manufacturingData.identity", String.class);
-        } else if (value instanceof SUser) {
-            return InvokeUtils.invokeGetter(value, "person.identity", String.class);
-        } else if (value instanceof SCar) {
-            return InvokeUtils.invokeGetter(value, "licencePlate", String.class);
-        }
-        return null;
-    }
+	protected String getInfoPageLinkLabel(final Persistable<?> value) {
+		if (value instanceof SCarMaster) {
+			return InvokeUtils.invokeGetter(value, "manufacturingData.identity", String.class);
+		} else if (value instanceof SUser) {
+			return InvokeUtils.invokeGetter(value, "person.identity", String.class);
+		} else if (value instanceof SCar) {
+			return InvokeUtils.invokeGetter(value, "licencePlate", String.class);
+		}
+		return null;
+	}
 
-    protected EntityDescriptor<Y> getEntityDescriptor() {
-        return this.descriptors.getDescriptor(this.entity);
-    }
+	protected Attribute<?, ?> getEntityAttribute(final String path) {
+		EntityType<?> entityType = getEntityDescriptor().getEntityType();
+		Attribute<?, ?> attribute = null;
+		try {
+			final List<String> paths = Lists.newArrayListWithExpectedSize(1);
+			if (path.contains(".")) {
+				paths.addAll(Lists.newArrayList(StringUtils.split(path, ".")));
+			} else {
+				paths.add(path);
+			}
+			if (paths.size() == 1) {
+				attribute = entityType.getAttribute(path);
+			} else {
+				for (int i = 0; i < paths.size(); i++) {
+					final String nestedPath = paths.get(i);
+					attribute = entityType.getAttribute(nestedPath);
+					if (i != paths.size() - 1) {
+						entityType = this.descriptors.getDescriptor(attribute.getJavaType()).getEntityType();
+					}
+				}
+			}
+		} finally {
+			if (attribute != null) {
+				this.logger.trace(String.format("%s has no attribute %s", entityType.getName(), path));
+			}
+		}
+		return attribute;
+	}
 
-    protected String getEntityName() {
-        return this.getEntityDescriptor().getEntityType().getName();
-    }
+	protected EntityDescriptor<Y> getEntityDescriptor() {
+		return this.descriptors.getDescriptor(this.entity);
+	}
 
-    protected Attribute<?, ?> getEntityAttribute(final String path) {
-        EntityType<?> entityType = getEntityDescriptor().getEntityType();
-        Attribute<?, ?> attribute = null;
-        try {
-            final List<String> paths = Lists.newArrayListWithExpectedSize(1);
-            if (path.contains(".")) {
-                paths.addAll(Lists.newArrayList(StringUtils.split(path, ".")));
-            } else {
-                paths.add(path);
-            }
-            if (paths.size() == 1) {
-                attribute = entityType.getAttribute(path);
-            } else {
-                for (int i = 0 ; i < paths.size() ; i++) {
-                    final String nestedPath = paths.get(i);
-                    attribute = entityType.getAttribute(nestedPath);
-                    if (i != paths.size() - 1) {
-                        entityType = this.descriptors.getDescriptor(attribute.getJavaType()).getEntityType();
-                    }
-                }
-            }
-        } finally {
-            if (attribute != null) {
-                this.logger.trace(String.format("%s has no attribute %s", entityType.getName(), path));
-            }
-        }
-        return attribute;
-    }
+	private void populateSystemPanel(final InfoPagePanelComponent panel) {
+		if (!panel.isSystemAttributesHolder()) {
+			return;
+		}
+		this.helper.newAttribute(panel, "version", "persistentversionedobject.version", AttributeDisplayAs.VALUE);
+		this.helper.newAttribute(panel, "createdBy", "persistentversionedobject.createdby", AttributeDisplayAs.INFOPAGE);
+		this.helper.newAttribute(panel, "createdDate", "persistentversionedobject.createddate", AttributeDisplayAs.VALUE);
+		this.helper.newAttribute(panel, "lastModifiedBy", "persistentversionedobject.lastmodifiedby", AttributeDisplayAs.INFOPAGE);
+		this.helper.newAttribute(panel, "lastModifiedDate", "persistentversionedobject.lastmodifieddate", AttributeDisplayAs.VALUE);
+	}
 
-    private void populateSystemPanel(final InfoPagePanelComponent panel) {
-        if (!panel.isSystemAttributesHolder()) {
-            return;
-        }
-        this.helper.newAttribute(panel, "version", "persistentversionableobject.version", AttributeDisplayAs.VALUE);
-        this.helper.newAttribute(panel, "createdBy", "persistentversionableobject.createdBy", AttributeDisplayAs.INFOPAGE);
-        this.helper.newAttribute(panel, "createdDate", "persistentversionableobject.createdDate", AttributeDisplayAs.VALUE);
-        this.helper.newAttribute(panel, "lastModifiedBy", "persistentversionableobject.lastModifiedBy", AttributeDisplayAs.INFOPAGE);
-        this.helper.newAttribute(panel, "lastModifiedDate", "persistentversionableobject.lastModifiedDate", AttributeDisplayAs.VALUE);
-    }
+	protected String getEntityName() {
+		return this.getEntityDescriptor().getEntityType().getName();
+	}
 }

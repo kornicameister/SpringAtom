@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.webmvc.pages.builders;
 
+import org.agatom.springatom.server.model.beans.car.QSCar;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.web.component.builders.annotation.EntityBased;
@@ -53,14 +54,16 @@ public class CarInfoPageComponentBuilder
         return cmp;
     }
 
-    private void populateInfoPagePanel(final InfoPagePanelComponent panel) {
-        this.helper.newLinkAttribute(panel, "carMaster", this.getEntityName());
-        this.helper.newLinkAttribute(panel, "owner", this.getEntityName());
-    }
+	private void populateBasicPanel(final InfoPagePanelComponent panel) {
+		this.helper.newAttribute(panel, "id", "persistentobject.id", AttributeDisplayAs.VALUE);
+		this.helper.newValueAttribute(panel, QSCar.sCar.licencePlate.getMetadata().getName(), this.getEntityName());
+		this.helper.newValueAttribute(panel, QSCar.sCar.vinNumber.getMetadata().getName(), this.getEntityName());
+		this.helper.newValueAttribute(panel, QSCar.sCar.fuelType.getMetadata().getName(), this.getEntityName());
+		this.helper.newValueAttribute(panel, QSCar.sCar.yearOfProduction.getMetadata().getName(), this.getEntityName());
+	}
 
-    private void populateBasicPanel(final InfoPagePanelComponent panel) {
-        this.helper.newAttribute(panel, "id", "persistentobject.id", AttributeDisplayAs.VALUE);
-        this.helper.newValueAttribute(panel, "licencePlate", this.getEntityName());
-        this.helper.newValueAttribute(panel, "vinNumber", this.getEntityName());
-    }
+	private void populateInfoPagePanel(final InfoPagePanelComponent panel) {
+		this.helper.newLinkAttribute(panel, "carMaster", this.getEntityName());
+		this.helper.newLinkAttribute(panel, "owner", this.getEntityName());
+	}
 }
