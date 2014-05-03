@@ -22,9 +22,9 @@ import org.agatom.springatom.web.component.config.ComponentBuilderModuleConfigur
 import org.agatom.springatom.web.infopages.annotation.DomainInfoPage;
 import org.agatom.springatom.web.infopages.annotation.InfoPage;
 import org.agatom.springatom.web.infopages.component.helper.InfoPageComponentHelper;
+import org.agatom.springatom.web.infopages.component.helper.impl.DefaultInfoPageComponentHelper;
 import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
-import org.agatom.springatom.web.infopages.link.impl.DefaultInfoPageComponentHelper;
-import org.agatom.springatom.web.infopages.component.helper.impl.InfoPageLinkHelperImpl;
+import org.agatom.springatom.web.infopages.link.impl.InfoPageLinkHelperImpl;
 import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
@@ -75,6 +75,17 @@ public class InfoPageModuleConfiguration
 
 	@Bean
 	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public InfoPageConfigurationSource getInfoPageConfigurationSource() {
+		this.logRegistering(InfoPageConfigurationSource.class, LOGGER);
+		final InfoPageConfigurationSourceImpl source = new InfoPageConfigurationSourceImpl()
+				.setProvider(this.getInfoPageComponentProvider())
+				.setBasePackage(this.applicationContext.getEnvironment().getProperty("springatom.infoPages.basePackage"));
+		source.setApplicationContext(this.applicationContext);
+		return source;
+	}
+
+	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 	public InfoPageComponentProvider getInfoPageComponentProvider() {
 		this.logRegistering(InfoPageComponentProvider.class, LOGGER);
 		return new InfoPageComponentProvider();
@@ -88,17 +99,6 @@ public class InfoPageModuleConfiguration
 		processor.setBeanFactory(this.beanFactory);
 		processor.setBasePackage(this.applicationContext.getEnvironment().getProperty("springatom.infoPages.basePackage"));
 		return processor;
-	}
-
-	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public InfoPageConfigurationSource getInfoPageConfigurationSource() {
-		this.logRegistering(InfoPageConfigurationSource.class, LOGGER);
-		final InfoPageConfigurationSourceImpl source = new InfoPageConfigurationSourceImpl()
-				.setProvider(this.getInfoPageComponentProvider())
-				.setBasePackage(this.applicationContext.getEnvironment().getProperty("springatom.infoPages.basePackage"));
-		source.setApplicationContext(this.applicationContext);
-		return source;
 	}
 
 	@Bean

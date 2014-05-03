@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.infopages.link.impl;
+package org.agatom.springatom.web.infopages.component.helper.impl;
 
 import org.agatom.springatom.web.component.elements.PanelComponent;
 import org.agatom.springatom.web.component.helper.impl.DefaultComponentHelper;
@@ -117,19 +117,19 @@ public class DefaultInfoPageComponentHelper
 		return this.populateTitle(attribute);
 	}
 
+	private InfoPageAttributeComponent populateTitle(final InfoPageAttributeComponent val) {
+		val.setTitle(
+				entitleFromMessageKey(val)
+		);
+		return val;
+	}
+
 	private InfoPagePanelComponent populateTitle(final InfoPagePanelComponent val) {
 		val.setTitle(
 				this.messageSource.getMessage(
 						val.getHolds().getMessageKey(),
 						LocaleContextHolder.getLocale()
 				)
-		);
-		return val;
-	}
-
-	private InfoPageAttributeComponent populateTitle(final InfoPageAttributeComponent val) {
-		val.setTitle(
-				entitleFromMessageKey(val)
 		);
 		return val;
 	}

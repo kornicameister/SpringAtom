@@ -15,11 +15,11 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.infopages.component.helper.impl;
+package org.agatom.springatom.web.infopages.link.impl;
 
 import org.agatom.springatom.web.infopages.SInfoPage;
-import org.agatom.springatom.web.infopages.link.InfoPageRequest;
 import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
+import org.agatom.springatom.web.infopages.link.InfoPageRequest;
 import org.agatom.springatom.webmvc.controllers.SVInfoPageController;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Persistable;
@@ -146,10 +146,6 @@ public class InfoPageLinkHelperImpl implements InfoPageLinkHelper {
 			this.internalKey = internalKey;
 		}
 
-		public String getInternalKey() {
-			return this.internalKey;
-		}
-
 		public static PathElement fromInternalKey(final String key) {
 			for (PathElement pathElement : PathElement.values()) {
 				if (pathElement.getInternalKey().equalsIgnoreCase(key)) {
@@ -157,6 +153,10 @@ public class InfoPageLinkHelperImpl implements InfoPageLinkHelper {
 				}
 			}
 			return null;
+		}
+
+		public String getInternalKey() {
+			return this.internalKey;
 		}
 	}
 
