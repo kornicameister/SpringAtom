@@ -69,13 +69,13 @@
 
         <!-- spring -->
         <!-- TODO 4.0.0 -->
-        <spring.version>4.0.3.RELEASE</spring.version>
+        <spring.version>4.0.4.RELEASE</spring.version>
         <spring-webflow.version>2.4.0.RC1</spring-webflow.version>
         <spring-security.version>3.2.3.RELEASE</spring-security.version>
-        <spring-data-commons.version>1.7.1.RELEASE</spring-data-commons.version>
-        <spring-data-jpa.version>1.5.1.RELEASE</spring-data-jpa.version>
+        <spring-data-commons.version>1.7.2.RELEASE</spring-data-commons.version>
+        <spring-data-jpa.version>1.5.2.RELEASE</spring-data-jpa.version>
         <spring-data-envers.version>0.2.0.BUILD-SNAPSHOT</spring-data-envers.version>
-        <spring-data-rest-webmvc.version>2.0.1.RELEASE</spring-data-rest-webmvc.version>
+        <spring-data-rest-webmvc.version>2.0.2.RELEASE</spring-data-rest-webmvc.version>
         <spring.hateoas.version>0.10.0.RELEASE</spring.hateoas.version>
         <!-- TODO 4.0.0 -->
         <!-- spring -->
@@ -101,7 +101,7 @@
         <!-- joda -->
 
         <!-- hibernate -->
-        <hibernate.version>4.3.4.Final</hibernate.version>
+        <hibernate.version>4.3.5.Final</hibernate.version>
         <hibernate.annotations.version>3.5.6-Final</hibernate.annotations.version>
         <hibernate.validator.version>5.1.0.Final</hibernate.validator.version>
         <hibernate-commons-annotations.version>3.2.0.Final</hibernate-commons-annotations.version>
@@ -125,7 +125,7 @@
         <!-- testing -->
 
         <!-- aop -->
-        <aspectj.version>1.7.4</aspectj.version>
+        <aspectj.version>1.8.0</aspectj.version>
         <!-- aop -->
 
         <!-- db access -->
@@ -134,13 +134,13 @@
 
         <!-- jasper -->
         <DynamicJasper.version>5.0.0</DynamicJasper.version>
-        <jasperreports.version>5.5.1</jasperreports.version>
+        <jasperreports.version>5.5.2</jasperreports.version>
         <!-- jasper -->
 
-        <jackson.version>2.3.2</jackson.version>
+        <jackson.version>2.3.3</jackson.version>
 
         <tomcat.version>8.0.5</tomcat.version>
-        <guava.version>16.0.1</guava.version>
+        <guava.version>17.0</guava.version>
         <tomcat.maven.version>2.1</tomcat.maven.version>
         <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
         <castor.version>1.2</castor.version>
@@ -152,7 +152,7 @@
         <javax.validation-api.version>1.1.0.Final</javax.validation-api.version>
         <org.json.version>20131018</org.json.version>
         <taglibs.standard.version>1.1.2</taglibs.standard.version>
-        <asm.version>5.0.1</asm.version>
+        <asm.version>5.0.2</asm.version>
         <cglib.version>3.1</cglib.version>
         <javassist.version>3.18.1-GA</javassist.version>
         <javax.el-api.version>3.0.0</javax.el-api.version>
@@ -601,11 +601,6 @@
         <!-- mysema -->
 
         <!-- webjars -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>extjs</artifactId>
-            <version>4.2.1.883</version>
-        </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
