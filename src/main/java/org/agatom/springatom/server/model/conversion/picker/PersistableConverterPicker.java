@@ -43,20 +43,24 @@ import java.util.Set;
 @LazyComponent
 @Role(BeanDefinition.ROLE_SUPPORT)
 public class PersistableConverterPicker {
-
+	private static final DefaultPickedConverter<Persistable> DEFAULT_PICKED_CONVERTER = new DefaultPickedConverter<>();
 	@Autowired
-	private Set<PersistableConverter<?>> converters;
+	private              Set<PersistableConverter<?>>        converters               = null;
 
 	@SuppressWarnings("unchecked")
 	public <T extends Persistable> Converter<T, String> getConverterForSelector(final String key) {
-		final Optional<PersistableConverter<?>> match = FluentIterable.from(this.converters).firstMatch(new Predicate<PersistableConverter<?>>() {
+		final Predicate<PersistableConverter<?>> selector = new Predicate<PersistableConverter<?>>() {
 			@Override
 			public boolean apply(@Nullable final PersistableConverter<?> input) {
 				assert input != null;
-				final PersistableConverterUtility annotation = input.getClass().getAnnotation(PersistableConverterUtility.class);
-				return annotation != null && AnnotationUtils.getValue(annotation, "selector").equals(key);
+				final PersistableConverterUtility annotation = input
+						.getClass()
+						.getAnnotation(PersistableConverterUtility.class);
+				return annotation != null
+						&& AnnotationUtils.getValue(annotation, "selector").equals(key);
 			}
-		});
+		};
+		final Optional<PersistableConverter<?>> match = FluentIterable.from(this.converters).firstMatch(selector);
 		if (match.isPresent()) {
 			return (Converter<T, String>) match.get();
 		}
@@ -65,30 +69,38 @@ public class PersistableConverterPicker {
 
 	@SuppressWarnings("unchecked")
 	public <T extends Persistable> Converter<T, String> getDefaultConverter(final TypeDescriptor sourceType) {
+		final Predicate<PersistableConverter<?>> filter = new Predicate<PersistableConverter<?>>() {
+			@Override
+			public boolean apply(@Nullable final PersistableConverter<?> input) {
+				assert input != null;
+				return input.matches(sourceType, TypeDescriptor.valueOf(String.class));
+			}
+		};
+		final Predicate<PersistableConverter<?>> selector = new Predicate<PersistableConverter<?>>() {
+			@Override
+			public boolean apply(@Nullable final PersistableConverter<?> input) {
+				assert input != null;
+				final PersistableConverterUtility annotation = input
+						.getClass()
+						.getAnnotation(PersistableConverterUtility.class);
+				return annotation != null
+						&& String.valueOf(AnnotationUtils.getValue(annotation, "selector")).isEmpty();
+			}
+		};
+
 		final Optional<PersistableConverter<?>> match = FluentIterable
 				.from(this.converters)
-				.filter(new Predicate<PersistableConverter<?>>() {
-					@Override
-					public boolean apply(@Nullable final PersistableConverter<?> input) {
-						assert input != null;
-						return input.matches(sourceType, TypeDescriptor.valueOf(String.class));
-					}
-				})
-				.firstMatch(new Predicate<PersistableConverter<?>>() {
-					@Override
-					public boolean apply(@Nullable final PersistableConverter<?> input) {
-						assert input != null;
-						final PersistableConverterUtility annotation = input.getClass().getAnnotation(PersistableConverterUtility.class);
-						return annotation != null && String.valueOf(AnnotationUtils.getValue(annotation, "selector")).isEmpty();
-					}
-				});
+				.filter(filter)
+				.firstMatch(selector);
+
 		if (match.isPresent()) {
 			return (Converter<T, String>) match.get();
 		}
-		return new DefaultPickedConverter<>();
+
+		return (Converter<T, String>) DEFAULT_PICKED_CONVERTER;
 	}
 
-	private class DefaultPickedConverter<T extends Persistable>
+	private static class DefaultPickedConverter<T extends Persistable>
 			extends PersistableConverterImpl<T> {
 
 		@Override

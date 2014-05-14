@@ -47,67 +47,71 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 public class SRepositoriesFactoryBean<T extends SBasicRepository<S, ID>, S, ID extends Serializable>
-        extends JpaRepositoryFactoryBean<T, S, ID> {
+		extends JpaRepositoryFactoryBean<T, S, ID> {
+	private Class<?> revisionEntityClass = null;
 
-    private Class<?> revisionEntityClass;
+	public void setRevisionEntityClass(Class<?> revisionEntityClass) {
+		this.revisionEntityClass = revisionEntityClass;
+	}
 
-    public void setRevisionEntityClass(Class<?> revisionEntityClass) {
-        this.revisionEntityClass = revisionEntityClass;
-    }
+	@Override
+	protected RepositoryFactorySupport createRepositoryFactory(final EntityManager entityManager) {
+		return new SRepositoryFactory(entityManager, this.revisionEntityClass);
+	}
 
-    @Override
-    protected RepositoryFactorySupport createRepositoryFactory(final EntityManager entityManager) {
-        return new SRepositoryFactory(entityManager, this.revisionEntityClass);
-    }
+	private static class SRepositoryFactory
+			extends JpaRepositoryFactory {
+		private static final Logger LOGGER = Logger.getLogger(SRepositoryFactory.class);
+		private final Class<?>                        revisionEntityClass;
+		private final RevisionEntityInformation       revisionEntityInformation;
+		private final LockModeRepositoryPostProcessor lockModePostProcessor;
 
-    private static class SRepositoryFactory
-            extends JpaRepositoryFactory {
-        private static final Logger LOGGER = Logger.getLogger(SRepositoryFactory.class);
-        private final Class<?>                        revisionEntityClass;
-        private final RevisionEntityInformation       revisionEntityInformation;
-        private final LockModeRepositoryPostProcessor lockModePostProcessor;
+		public SRepositoryFactory(final EntityManager entityManager,
+		                          final Class<?> revisionEntityClass) {
+			super(entityManager);
+			this.lockModePostProcessor = LockModeRepositoryPostProcessor.INSTANCE;
 
-        public SRepositoryFactory(final EntityManager entityManager,
-                                  final Class<?> revisionEntityClass) {
-            super(entityManager);
-            this.lockModePostProcessor = LockModeRepositoryPostProcessor.INSTANCE;
+			this.revisionEntityClass = revisionEntityClass == null ? AuditedRevisionEntity.class : revisionEntityClass;
+			this.revisionEntityInformation = DefaultRevisionEntity.class
+					.equals(revisionEntityClass)
+					? new AuditingRevisionEntityInformation()
+					: new ReflectionRevisionEntityInformation(this.revisionEntityClass);
 
-            this.revisionEntityClass = revisionEntityClass == null ? AuditedRevisionEntity.class : revisionEntityClass;
-            this.revisionEntityInformation = DefaultRevisionEntity.class
-                    .equals(revisionEntityClass) ? new AuditingRevisionEntityInformation() : new ReflectionRevisionEntityInformation(this.revisionEntityClass);
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace(String.format("Created %s with arguments=[em=%s,rec=%s,rei=%s]",
+						SRepositoryFactory.class.getSimpleName(),
+						entityManager,
+						this.revisionEntityClass,
+						this.revisionEntityInformation));
+			}
+		}
 
-            if (LOGGER.isTraceEnabled()) {
-                LOGGER.trace(String.format("Created %s with arguments=[em=%s,rec=%s,rei=%s]",
-                        SRepositoryFactory.class.getSimpleName(),
-                        entityManager,
-                        this.revisionEntityClass,
-                        this.revisionEntityInformation));
-            }
-        }
+		@Override
+		@SuppressWarnings({"unchecked", "UnusedDeclaration"})
+		protected <T, ID extends Serializable> JpaRepository<?, ?> getTargetRepository(
+				final RepositoryMetadata metadata,
+				final EntityManager entityManager) {
+			final JpaEntityInformation<T, Serializable> entityInformation =
+					(JpaEntityInformation<T, Serializable>) getEntityInformation(metadata
+							.getDomainType());
+			final Class<?> repositoryInterface = metadata.getRepositoryInterface();
+			SimpleJpaRepository repository;
+			if (!ClassUtils.isAssignable(SRepository.class, repositoryInterface)) {
+				repository = new SBasicRepositoryImpl(entityInformation, entityManager);
+			} else {
+				repository = new SRepositoryImpl(entityInformation, revisionEntityInformation, entityManager);
+			}
+			repository.setLockMetadataProvider(this.lockModePostProcessor.getLockMetadataProvider());
+			return repository;
+		}
 
-        @Override
-        @SuppressWarnings("unchecked")
-        protected <T, ID extends Serializable> JpaRepository<?, ?> getTargetRepository(final RepositoryMetadata metadata, final EntityManager entityManager) {
-            final JpaEntityInformation<T, Serializable> entityInformation = (JpaEntityInformation<T, Serializable>) getEntityInformation(metadata
-                    .getDomainType());
-            final Class<?> repositoryInterface = metadata.getRepositoryInterface();
-            SimpleJpaRepository<T, ID> repository;
-            if (!ClassUtils.isAssignable(SRepository.class, repositoryInterface)) {
-                repository = (SimpleJpaRepository<T, ID>) new SBasicRepositoryImpl<>(entityInformation, entityManager);
-            } else {
-                repository = (SimpleJpaRepository<T, ID>) new SRepositoryImpl<>(entityInformation, revisionEntityInformation, entityManager);
-            }
-            repository.setLockMetadataProvider(this.lockModePostProcessor.getLockMetadataProvider());
-            return repository;
-        }
-
-        @Override
-        protected Class<?> getRepositoryBaseClass(final RepositoryMetadata metadata) {
-            final Class<?> repositoryInterface = metadata.getRepositoryInterface();
-            if (!SRepository.class.isAssignableFrom(repositoryInterface)) {
-                return SBasicRepositoryImpl.class;
-            }
-            return SRepositoryImpl.class;
-        }
-    }
+		@Override
+		protected Class<?> getRepositoryBaseClass(final RepositoryMetadata metadata) {
+			final Class<?> repositoryInterface = metadata.getRepositoryInterface();
+			if (!SRepository.class.isAssignableFrom(repositoryInterface)) {
+				return SBasicRepositoryImpl.class;
+			}
+			return SRepositoryImpl.class;
+		}
+	}
 }
