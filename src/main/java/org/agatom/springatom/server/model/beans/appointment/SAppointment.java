@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import org.agatom.springatom.server.model.beans.activity.SAssignedActivity;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.types.ReportableEntity;
+import org.agatom.springatom.server.model.types.appointment.Appointment;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -52,7 +53,7 @@ import java.util.concurrent.TimeUnit;
 @AttributeOverride(name = "id", column = @Column(name = "idSAppointment", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SAppointment
 		extends SAssignedActivity<Long>
-		implements Iterable<SAppointmentTask> {
+		implements Iterable<SAppointmentTask>, Appointment {
 	public static final  String                 TABLE_NAME       = "appointment";
 	public static final  String                 ENTITY_NAME      = "SAppointment";
 	private static final String                 DATE_TIME_TYPE   = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
@@ -78,8 +79,21 @@ public class SAppointment
 	@Formula(value = "UNIX_TIMESTAMP(end)")
 	private              Long                   endTs            = null;
 	@Column(name = "allDay", nullable = true)
-	private boolean allDay = false;
+	private              boolean                allDay           = false;
+	@Column(name = "closed", nullable = true)
+	private              boolean                closed           = false;
 
+	@Override
+	public boolean isClosed() {
+		return this.closed;
+	}
+
+	public SAppointment setClosed(final boolean closed) {
+		this.closed = closed;
+		return this;
+	}
+
+	@Override
 	public boolean isAllDay() {
 		return allDay;
 	}
@@ -89,6 +103,7 @@ public class SAppointment
 		return this;
 	}
 
+	@Override
 	public List<SAppointmentTask> getTasks() {
 		this.requireTaskList();
 		return tasks;
@@ -107,6 +122,58 @@ public class SAppointment
 			}
 		}
 		return this;
+	}
+
+	@Override
+	public DateTime getBegin() {
+		this.requireBeginDate();
+		return this.begin.toDateTime();
+	}
+
+	public SAppointment setBegin(final DateTime begin) {
+		this.begin = begin;
+		return this;
+	}
+
+	@Override
+	public DateTime getEnd() {
+		this.requireEndDate();
+		return this.end.toDateTime();
+	}
+
+	public SAppointment setEnd(final DateTime end) {
+		this.end = end;
+		return this;
+	}
+
+	@Override
+	public Interval getInterval() {
+		return new Interval(this.begin, this.end);
+	}
+
+	public SAppointment setInterval(final ReadableInterval duration) {
+		this.setBegin(duration.getStart());
+		this.setEnd(duration.getEnd());
+		return this;
+	}
+
+	@Override
+	public SCar getCar() {
+		if (this.car == null) {
+			this.car = new SCar();
+		}
+		return this.car;
+	}
+
+	public SAppointment setCar(final SCar car) {
+		this.car = car;
+		return this;
+	}
+
+	private void requireTaskList() {
+		if (this.tasks == null) {
+			this.tasks = Lists.newLinkedList();
+		}
 	}
 
 	public SAppointment removeTask(final SAppointmentTask... tasks) {
@@ -131,30 +198,6 @@ public class SAppointment
 		return this;
 	}
 
-	public DateTime getBegin() {
-		this.requireBeginDate();
-		return this.begin.toDateTime();
-	}
-
-	public SAppointment setBegin(final DateTime begin) {
-		this.begin = begin;
-		return this;
-	}
-
-	public DateTime getEnd() {
-		this.requireEndDate();
-		return this.end.toDateTime();
-	}
-
-	public SAppointment setEnd(final DateTime end) {
-		this.end = end;
-		return this;
-	}
-
-	public Interval getInterval() {
-		return new Interval(this.begin, this.end);
-	}
-
 	public long getBeginTs() {
 		if (this.beginTs != null) {
 			return this.beginTs;
@@ -169,12 +212,6 @@ public class SAppointment
 		return TimeUnit.MILLISECONDS.toSeconds(this.end.getMillis());
 	}
 
-	public SAppointment setInterval(final ReadableInterval duration) {
-		this.setBegin(duration.getStart());
-		this.setEnd(duration.getEnd());
-		return this;
-	}
-
 	public boolean postpone(final ReadableDuration duration, final boolean toFuture) {
 		if (this.begin != null && this.end != null) {
 			final int scalar = toFuture ? 1 : -1;
@@ -183,18 +220,6 @@ public class SAppointment
 			return true;
 		}
 		return false;
-	}
-
-	public SCar getCar() {
-		if (this.car == null) {
-			this.car = new SCar();
-		}
-		return this.car;
-	}
-
-	public SAppointment setCar(final SCar car) {
-		this.car = car;
-		return this;
 	}
 
 	public LocalTime getBeginTime() {
@@ -210,6 +235,12 @@ public class SAppointment
 		return this;
 	}
 
+	private void requireBeginDate() {
+		if (this.begin == null) {
+			this.begin = DateTime.now();
+		}
+	}
+
 	public LocalTime getEndTime() {
 		this.requireEndDate();
 		return this.end.toLocalTime();
@@ -221,6 +252,12 @@ public class SAppointment
 		mutableDateTime.setTime(localTime.toDateTimeToday());
 		this.end = mutableDateTime.toDateTime();
 		return this;
+	}
+
+	private void requireEndDate() {
+		if (this.end == null) {
+			this.end = DateTime.now();
+		}
 	}
 
 	public LocalDate getBeginDate() {
@@ -245,24 +282,6 @@ public class SAppointment
 		mutableDateTime.setDate(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth());
 		this.end = mutableDateTime.toDateTime();
 		return this;
-	}
-
-	private void requireEndDate() {
-		if (this.end == null) {
-			this.end = DateTime.now();
-		}
-	}
-
-	private void requireBeginDate() {
-		if (this.begin == null) {
-			this.begin = DateTime.now();
-		}
-	}
-
-	private void requireTaskList() {
-		if (this.tasks == null) {
-			this.tasks = Lists.newLinkedList();
-		}
 	}
 
 	@Override

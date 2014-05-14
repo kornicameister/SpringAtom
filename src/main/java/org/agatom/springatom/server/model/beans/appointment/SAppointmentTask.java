@@ -19,6 +19,7 @@ package org.agatom.springatom.server.model.beans.appointment;
 
 import org.agatom.springatom.server.model.beans.PersistentObject;
 import org.agatom.springatom.server.model.types.ReportableEntity;
+import org.agatom.springatom.server.model.types.appointment.AppointmentTask;
 import org.agatom.springatom.server.model.types.appointment.AppointmentTaskType;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
@@ -36,50 +37,54 @@ import javax.persistence.*;
 @ReportableEntity
 @AttributeOverride(name = "id", column = @Column(name = "idSAppointmentTask", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SAppointmentTask
-        extends PersistentObject<Long> {
-    public static final  String TABLE_NAME       = "appointment_task";
-    public static final  String ENTITY_NAME      = "SAppointmentTask";
-    private static final long   serialVersionUID = -300491275397373687L;
-    @NotEmpty
-    @Length(min = 10, max = 444)
-    @Column(name = "sat_task", nullable = false, length = 444)
-    private String              task;
-    @Type(type = "org.hibernate.type.EnumType")
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "sat_type", updatable = true, unique = false, length = 50, nullable = false)
-    private AppointmentTaskType type;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "sat_app", referencedColumnName = "idSAppointment", updatable = false)
-    private SAppointment        appointment;
+		extends PersistentObject<Long>
+		implements AppointmentTask {
+	public static final  String TABLE_NAME       = "appointment_task";
+	public static final  String ENTITY_NAME      = "SAppointmentTask";
+	private static final long   serialVersionUID = -300491275397373687L;
+	@NotEmpty
+	@Length(min = 10, max = 444)
+	@Column(name = "sat_task", nullable = false, length = 444)
+	private String              task;
+	@Type(type = "org.hibernate.type.EnumType")
+	@Enumerated(value = EnumType.STRING)
+	@Column(name = "sat_type", updatable = true, unique = false, length = 50, nullable = false)
+	private AppointmentTaskType type;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "sat_app", referencedColumnName = "idSAppointment", updatable = false)
+	private SAppointment        appointment;
 
-    public String getTask() {
-        return task;
-    }
+	@Override
+	public String getTask() {
+		return task;
+	}
 
-    public SAppointmentTask setTask(final String task) {
-        this.task = task;
-        return this;
-    }
+	@Override
+	public SAppointment getAppointment() {
+		return this.appointment;
+	}
 
-    public SAppointment getAppointment() {
-        return appointment;
-    }
+	public SAppointmentTask setAppointment(final SAppointment appointments) {
+		this.appointment = appointments;
+		return this;
+	}
 
-    public SAppointmentTask setAppointment(final SAppointment appointments) {
-        this.appointment = appointments;
-        return this;
-    }
+	@Override
+	public AppointmentTaskType getType() {
+		return type;
+	}
 
-    public AppointmentTaskType getType() {
-        return type;
-    }
+	public SAppointmentTask setType(final AppointmentTaskType type) {
+		this.type = type;
+		return this;
+	}
 
-    public SAppointmentTask setType(final String type) {
-        return this.setType(AppointmentTaskType.valueOf(type));
-    }
+	public SAppointmentTask setTask(final String task) {
+		this.task = task;
+		return this;
+	}
 
-    public SAppointmentTask setType(final AppointmentTaskType type) {
-        this.type = type;
-        return this;
-    }
+	public SAppointmentTask setType(final String type) {
+		return this.setType(AppointmentTaskType.valueOf(type));
+	}
 }
