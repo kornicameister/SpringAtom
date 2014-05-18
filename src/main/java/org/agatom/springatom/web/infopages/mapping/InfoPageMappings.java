@@ -32,6 +32,8 @@ import java.util.Set;
  * @since 0.0.1
  */
 
+// to be removed when declarative engine is ready
+@Deprecated
 public class InfoPageMappings
         implements Iterable<Class<?>> {
     // caches
@@ -40,35 +42,34 @@ public class InfoPageMappings
     private final Map<String, SInfoPage>      pathToPageCache             = Maps.newHashMap();
     private       InfoPageConfigurationSource infoPageConfigurationSource = null;
 
-    /**
-     * Caches the page in several cache repositories to support
-     * faster load in the next requests.
-     * <p/>
-     * Works for either {@link org.agatom.springatom.web.infopages.SInfoPage}
-     * or {@link org.agatom.springatom.web.infopages.SEntityInfoPage}
-     *
-     * @param page
-     *         to be cached
-     */
-    private void cache(final SInfoPage page) {
-        this.pathToPageCache.put(page.getPath(), page);
-        this.relToPageCache.put(page.getRel(), page);
-        if (page instanceof SEntityInfoPage) {
-            final SEntityInfoPage infoPage = (SEntityInfoPage) page;
-            this.domainToPageCache.put(infoPage.getDomain(), page);
-        }
-    }
+	public SInfoPage getInfoPageForRel(final String rel) {
+		if (this.relToPageCache.containsKey(rel)) {
+			return this.relToPageCache.get(rel);
+		}
+		final SInfoPage infoPage = this.infoPageConfigurationSource.getFromRel(rel);
+		if (infoPage != null) {
+			this.cache(infoPage);
+			return infoPage;
+		}
+		return null;
+	}
 
-    public SInfoPage getInfoPageForRel(final String rel) {
-        if (this.relToPageCache.containsKey(rel)) {
-            return this.relToPageCache.get(rel);
-        }
-        final SInfoPage infoPage = this.infoPageConfigurationSource.getFromRel(rel);
-        if (infoPage != null) {
-            this.cache(infoPage);
-            return infoPage;
-        }
-        return null;
+	/**
+	 * Caches the page in several cache repositories to support
+	 * faster load in the next requests.
+	 * <p/>
+	 * Works for either {@link org.agatom.springatom.web.infopages.SInfoPage}
+	 * or {@link org.agatom.springatom.web.infopages.SEntityInfoPage}
+	 *
+	 * @param page to be cached
+	 */
+	private void cache(final SInfoPage page) {
+		this.pathToPageCache.put(page.getPath(), page);
+		this.relToPageCache.put(page.getRel(), page);
+		if (page instanceof SEntityInfoPage) {
+			final SEntityInfoPage infoPage = (SEntityInfoPage) page;
+			this.domainToPageCache.put(infoPage.getDomain(), page);
+		}
     }
 
     public SEntityInfoPage getInfoPageForEntity(final Class<?> domainClass) {
@@ -83,23 +84,23 @@ public class InfoPageMappings
         return null;
     }
 
-    public SInfoPage getInfoPageForPath(final String path) {
-        if (this.pathToPageCache.containsKey(path)) {
-            return this.pathToPageCache.get(path);
-        }
-        final SInfoPage infoPage = this.infoPageConfigurationSource.getFromPath(path);
-        if (infoPage != null) {
-            this.cache(infoPage);
-            return infoPage;
-        }
-        return null;
-    }
-
     public boolean hasInfoPageForDomain(final String domain) {
-        return this.getInfoPageForPath(domain) != null;
+	    return this.getInfoPageForPath(domain) != null;
     }
 
-    public void setInfoPageConfigurationSource(final InfoPageConfigurationSource ipcs) {
+	public SInfoPage getInfoPageForPath(final String path) {
+		if (this.pathToPageCache.containsKey(path)) {
+			return this.pathToPageCache.get(path);
+		}
+		final SInfoPage infoPage = this.infoPageConfigurationSource.getFromPath(path);
+		if (infoPage != null) {
+			this.cache(infoPage);
+			return infoPage;
+		}
+		return null;
+	}
+
+	public void setInfoPageConfigurationSource(final InfoPageConfigurationSource ipcs) {
         this.infoPageConfigurationSource = ipcs;
     }
 
