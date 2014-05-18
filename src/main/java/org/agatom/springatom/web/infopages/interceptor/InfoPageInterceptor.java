@@ -18,12 +18,17 @@
 package org.agatom.springatom.web.infopages.interceptor;
 
 import org.agatom.springatom.web.infopages.InfoPageConstants;
+import org.agatom.springatom.web.infopages.InfoPageNotFoundException;
 import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
 import org.agatom.springatom.web.infopages.link.InfoPageRequest;
-import org.agatom.springatom.webmvc.controllers.SVInfoPageController;
+import org.agatom.springatom.web.infopages.mapping.InfoPageMappingService;
+import org.agatom.springatom.web.infopages.provider.InfoPageProviderService;
+import org.agatom.springatom.webmvc.controllers.components.SVInfoPageController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -34,9 +39,13 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
- * {@code SCDRViewInterceptor} is the shorthand for <i>SCommonDataResolverViewInterceptor</i>.
- * This class intercepts request for the views before processing them and injects commonly reused beans
- * into them.
+ * {@code InfoPageInterceptor} is specialized interceptor ({@link org.springframework.web.servlet.HandlerInterceptor}) designed
+ * to put an information required in {@link org.agatom.springatom.web.infopages.provider.structure.InfoPage} page rendering process.
+ * Data being set is as follow:
+ * <ol>
+ * <li>{@link org.agatom.springatom.web.infopages.link.InfoPageRequest}</li>
+ * <li>{@link org.springframework.hateoas.Link} to {@link org.agatom.springatom.web.infopages.InfoPageConstants#INFOPAGE_DS}</li>
+ * </ol>
  *
  * @author kornicameister
  * @version 0.0.1
@@ -44,24 +53,60 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  */
 public class InfoPageInterceptor
 		extends HandlerInterceptorAdapter {
-	private static final Logger             LOGGER             = Logger.getLogger(InfoPageInterceptor.class);
+	private static final Logger LOGGER = Logger.getLogger(InfoPageInterceptor.class);
 	@Autowired
-	private              InfoPageLinkHelper infoPageLinkHelper = null;
+	private              InfoPageLinkHelper      infoPageLinkHelper = null;
+	@Autowired
+	private              InfoPageProviderService providerService    = null;
+	@Autowired
+	private              InfoPageMappingService  mappingService     = null;
 
 	@Override
-	public void postHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler, final ModelAndView modelAndView) throws
-			Exception {
-		if (modelAndView != null && modelAndView.getModelMap() != null) {
-			final ModelMap modelMap = modelAndView.getModelMap();
-			final InfoPageRequest infoPageRequest = this.infoPageLinkHelper.toInfoPageRequest(request.getRequestURI());
+	public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
+		LOGGER.debug(String.format("preHandle(request=%s,response=%s,handler=%s)", request, response, handler));
 
-			modelMap.put(InfoPageConstants.INFOPAGE_AVAILABLE, infoPageRequest.isValid());
-			if (infoPageRequest.isValid()) {
-				modelMap.put(InfoPageConstants.INFOPAGE_PAGE, infoPageRequest);
-				modelMap.put(InfoPageConstants.INFOPAGE_VIEW_DATA_TEMPLATE_LINK, linkTo(methodOn(SVInfoPageController.class).getInfoPageViewData(null, null)).withRel("dummy").getHref());
-			}
-
-			LOGGER.trace(String.format("IP=%s(%s)", modelAndView.getViewName(), modelMap));
+		final InfoPageRequest infoPageRequest = this.infoPageLinkHelper.toInfoPageRequest(request);
+		boolean goOn = infoPageRequest != null && infoPageRequest.isValid();
+		if (!goOn) {
+			LOGGER.warn(String.format("URI:: %s does not correspond to any infoPage", request.getRequestURI()));
+			request.setAttribute(InfoPageConstants.INFOPAGE_INVALID_REQUEST, String.format("InfoPage for path %s can not be requested, due to invalid request", request.getRequestURI()));
+			return false;
 		}
+
+		goOn = this.mappingService.hasInfoPage(infoPageRequest.getObjectClass());
+		if (!goOn) {
+			LOGGER.warn(String.format("ObjectClass:: %s does not correspond to any infoPage", infoPageRequest.getObjectClass()));
+			request.setAttribute(InfoPageConstants.INFOPAGE_NOT_AVAILABLE, String.format("InfoPage for domain %s can not be requested because it is not defined", ClassUtils.getShortName(infoPageRequest.getObjectClass())));
+		}
+
+		return goOn;
 	}
+
+	@Override
+	public void postHandle(final HttpServletRequest request,
+	                       final HttpServletResponse response,
+	                       final Object handler,
+	                       final ModelAndView modelAndView) throws Exception {
+		LOGGER.debug(String.format("postHandle(request=%s,response=%s,handler=%s,modelAndView=%s)", request, response, handler, modelAndView));
+
+		final ModelMap modelMap = modelAndView.getModelMap();
+		final InfoPageRequest infoPageRequest = this.infoPageLinkHelper.toInfoPageRequest(request);
+
+		final boolean valid = infoPageRequest.isValid();
+		modelMap.put(InfoPageConstants.INFOPAGE_AVAILABLE, true);
+
+		if (valid) {
+			modelMap.put(InfoPageConstants.INFOPAGE_REQUEST, infoPageRequest);
+			modelMap.put(InfoPageConstants.INFOPAGE_PAGE, this.providerService.getInfoPage(infoPageRequest.getObjectClass()));
+			modelMap.put(InfoPageConstants.INFOPAGE_DS, this.getDataSourceLink());
+		}
+
+		LOGGER.trace(String.format("IP=%s(%s)", modelAndView.getViewName(), modelMap));
+
+	}
+
+	private Link getDataSourceLink() throws InfoPageNotFoundException {
+		return linkTo(methodOn(SVInfoPageController.class).getInfoPageViewData(null, null)).withRel(InfoPageConstants.INFOPAGE_DS);
+	}
+
 }
