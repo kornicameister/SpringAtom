@@ -28,19 +28,21 @@ import org.springframework.web.servlet.DispatcherServlet;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SARepositoryRestDispatcherServlet extends DispatcherServlet {
+public class SARepositoryRestDispatcherServlet
+		extends DispatcherServlet {
+	private static final long serialVersionUID = 8217867511809606982L;
 
 	public SARepositoryRestDispatcherServlet() {
-		configure();
-	}
-
-	public SARepositoryRestDispatcherServlet(final WebApplicationContext webApplicationContext) {
-		super(webApplicationContext);
 		configure();
 	}
 
 	private void configure() {
 		this.setContextClass(AnnotationConfigWebApplicationContext.class);
 		this.setContextConfigLocation(SARepositoryRestMvcConfiguration.class.getName());
+	}
+
+	public SARepositoryRestDispatcherServlet(final WebApplicationContext webApplicationContext) {
+		super(webApplicationContext);
+		configure();
 	}
 }

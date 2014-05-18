@@ -52,8 +52,8 @@ import java.util.Properties;
 		useDefaultFilters = false
 )
 public class SARepositoryRestMvcConfiguration extends RepositoryRestMvcConfiguration {
-	private static final Logger                     LOGGER                = Logger.getLogger(SARepositoryRestMvcConfiguration.class);
 	public static final  StringToEnum               STRING_TO_ENUM        = new StringToEnum();
+	private static final Logger LOGGER = Logger.getLogger(SARepositoryRestMvcConfiguration.class);
 	@Autowired
 	@Qualifier("restProperties")
 	private              Properties                 restProperties        = null;
@@ -62,10 +62,10 @@ public class SARepositoryRestMvcConfiguration extends RepositoryRestMvcConfigura
 	@PostConstruct
 	private void postConstruct() {
 		Assert.notNull(this.restProperties, "restProperties not found [null]");
-		this.populateEnableDisableFeatuers();
+		this.populateEnableDisable();
 	}
 
-	private void populateEnableDisableFeatuers() {
+	private void populateEnableDisable() {
 		this.populateForProperty("rest.jackson.enableFeatures", true, STRING_TO_ENUM);
 		this.populateForProperty("rest.jackson.disableFeatures", false, STRING_TO_ENUM);
 	}
