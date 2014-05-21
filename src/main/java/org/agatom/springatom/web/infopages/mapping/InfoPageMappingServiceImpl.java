@@ -20,7 +20,7 @@ package org.agatom.springatom.web.infopages.mapping;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
-import org.agatom.springatom.web.infopages.SInfoPageNotFoundException;
+import org.agatom.springatom.web.infopages.InfoPageNotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -60,6 +60,9 @@ class InfoPageMappingServiceImpl
 	@Qualifier(MAPPING_PROPERTIES)
 	private              Properties                                   properties         = null;
 
+	/**
+	 * Loads all registered {@link org.agatom.springatom.web.infopages.provider.structure.InfoPage} from {@code infoPageProperties}
+	 */
 	@PostConstruct
 	@SuppressWarnings("unchecked")
 	private void postConstruct() {
@@ -109,9 +112,9 @@ class InfoPageMappingServiceImpl
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T extends Persistable<?>> Class<T> getMappedClass(final String rel) throws SInfoPageNotFoundException {
+	public <T extends Persistable<?>> Class<T> getMappedClass(final String rel) throws InfoPageNotFoundException {
 		if (!this.hasInfoPage(rel)) {
-			throw new SInfoPageNotFoundException(rel);
+			throw new InfoPageNotFoundException(rel);
 		}
 		return (Class<T>) this.relToClassMap.get(rel);
 	}

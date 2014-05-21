@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.web.infopages.mapping;
 
-import org.agatom.springatom.web.infopages.SInfoPageNotFoundException;
+import org.agatom.springatom.web.infopages.InfoPageNotFoundException;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -44,5 +44,5 @@ public interface InfoPageMappingService {
 	 *
 	 * @return mapped {@link org.springframework.data.domain.Persistable} class
 	 */
-	<T extends Persistable<?>> Class<T> getMappedClass(final String rel) throws SInfoPageNotFoundException;
+	<T extends Persistable<?>> Class<T> getMappedClass(final String rel) throws InfoPageNotFoundException;
 }
