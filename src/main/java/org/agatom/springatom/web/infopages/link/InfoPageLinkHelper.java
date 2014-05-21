@@ -17,10 +17,12 @@
 
 package org.agatom.springatom.web.infopages.link;
 
+import org.agatom.springatom.web.infopages.InfoPageNotFoundException;
 import org.agatom.springatom.web.infopages.SInfoPage;
 import org.springframework.data.domain.Persistable;
 import org.springframework.hateoas.Link;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 
 /**
@@ -46,11 +48,11 @@ public interface InfoPageLinkHelper {
 	boolean isInfoPageLink(final String path);
 
 	/**
-	 * Retrieves map of parameters from infoPage request
+	 * Retrieves map of parameters from {@link javax.servlet.http.HttpServletRequest} request
 	 *
-	 * @param path to extract params
+	 * @param request to extract params
 	 *
 	 * @return map of params
 	 */
-	InfoPageRequest toInfoPageRequest(final String path);
+	InfoPageRequest toInfoPageRequest(final HttpServletRequest request) throws InfoPageNotFoundException;
 }

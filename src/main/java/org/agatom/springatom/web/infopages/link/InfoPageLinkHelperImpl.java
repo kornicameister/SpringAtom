@@ -15,23 +15,28 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.infopages.link.impl;
+package org.agatom.springatom.web.infopages.link;
 
+import org.agatom.springatom.web.infopages.InfoPageNotFoundException;
 import org.agatom.springatom.web.infopages.SInfoPage;
-import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
-import org.agatom.springatom.web.infopages.link.InfoPageRequest;
-import org.agatom.springatom.webmvc.controllers.SVInfoPageController;
+import org.agatom.springatom.web.infopages.mapping.InfoPageMappingService;
+import org.agatom.springatom.webmvc.controllers.components.SVInfoPageController;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Role;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Persistable;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.TemplateVariable;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriTemplate;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -44,16 +49,22 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class InfoPageLinkHelperImpl implements InfoPageLinkHelper {
-	private static final Logger      LOGGER              = Logger.getLogger(InfoPageLinkHelperImpl.class);
-	private              UriTemplate infoPageUriTemplate = null;
+@Component
+@Role(BeanDefinition.ROLE_SUPPORT)
+@Scope(BeanDefinition.SCOPE_SINGLETON)
+class InfoPageLinkHelperImpl
+		implements InfoPageLinkHelper {
+	private static final Logger                 LOGGER              = Logger.getLogger(InfoPageLinkHelperImpl.class);
+	private              UriTemplate            infoPageUriTemplate = null;
+	@Autowired
+	private              InfoPageMappingService mappingService      = null;
 
 	@PostConstruct
 	private UriTemplate getInfoPageUriTemplate() {
 		this.infoPageUriTemplate = new UriTemplate(
-				String.format("{%s}/ip/{%s}/{%s}{%s}",
+				String.format("{%s}/cmp/ip/{%s}/{%s}{%s}",
 						PathElement.CONTEXT.getInternalKey(),
-						PathElement.OBJECT_CLASS.getInternalKey(),
+						PathElement.OBJECT_PATH.getInternalKey(),
 						PathElement.OBJECT_ID.getInternalKey(),
 						PathElement.OBJECT_VERSION.getInternalKey()
 				)
@@ -101,11 +112,14 @@ public class InfoPageLinkHelperImpl implements InfoPageLinkHelper {
 	}
 
 	@Override
-	public InfoPageRequest toInfoPageRequest(final String path) {
-		final InfoPageRequest link = new InfoPageRequest();
+	public InfoPageRequest toInfoPageRequest(final HttpServletRequest request) throws InfoPageNotFoundException {
+		final String path = request.getRequestURI();
+
 		if (!StringUtils.hasText(path)) {
 			return null;
 		}
+
+		final InfoPageRequest link = new InfoPageRequest(request);
 		final Map<String, String> match = this.infoPageUriTemplate.match(path);
 
 		for (final String key : match.keySet()) {
@@ -117,8 +131,8 @@ public class InfoPageLinkHelperImpl implements InfoPageLinkHelper {
 				case CONTEXT:
 					link.setContext(value);
 					break;
-				case OBJECT_CLASS:
-					link.setObjectClass(ClassUtils.resolveClassName(value, this.getClass().getClassLoader()));
+				case OBJECT_PATH:
+					link.setObjectClass(this.mappingService.getMappedClass(value));
 					break;
 				case OBJECT_ID:
 					link.setObjectId(Long.valueOf(value));
@@ -136,7 +150,7 @@ public class InfoPageLinkHelperImpl implements InfoPageLinkHelper {
 
 	private static enum PathElement {
 		CONTEXT("?.app*"),
-		OBJECT_CLASS("objectClass"),
+		OBJECT_PATH("path"),
 		OBJECT_VERSION("?.objectVersion*"),
 		OBJECT_ID("objectId");
 
