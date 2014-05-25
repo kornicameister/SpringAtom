@@ -40,10 +40,13 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * {@code InfoPageMappingServiceImpl} implements {@link org.agatom.springatom.web.infopages.mapping.InfoPageMappingService}
+ * in order to support retrieving information about registered {@link org.agatom.springatom.web.infopages.provider.structure.InfoPage}
+ * <p/>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 18.05.14</small>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @Component
@@ -117,5 +120,18 @@ class InfoPageMappingServiceImpl
 			throw new InfoPageNotFoundException(rel);
 		}
 		return (Class<T>) this.relToClassMap.get(rel);
+	}
+
+	@Override
+	public <T extends Persistable<?>> String getMappedRel(final Class<T> clazz) throws InfoPageNotFoundException {
+		if (!this.hasInfoPage(clazz)) {
+			throw new InfoPageNotFoundException(clazz);
+		}
+		return FluentIterable.from(this.relToClassMap.keySet()).firstMatch(new Predicate<String>() {
+			@Override
+			public boolean apply(@Nullable final String input) {
+				return input != null && relToClassMap.get(input).equals(clazz);
+			}
+		}).get();
 	}
 }

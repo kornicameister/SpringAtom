@@ -45,4 +45,14 @@ public interface InfoPageMappingService {
 	 * @return mapped {@link org.springframework.data.domain.Persistable} class
 	 */
 	<T extends Persistable<?>> Class<T> getMappedClass(final String rel) throws InfoPageNotFoundException;
+
+	/**
+	 * Retrieves mapped <b>rel</b> from {@link org.springframework.data.domain.Persistable} class
+	 *
+	 * @param clazz {@link org.springframework.data.domain.Persistable} class
+	 * @param <T>   {@link org.springframework.data.domain.Persistable} class generic type
+	 *
+	 * @return <b>rel</b>
+	 */
+	<T extends Persistable<?>> String getMappedRel(final Class<T> clazz) throws InfoPageNotFoundException;
 }

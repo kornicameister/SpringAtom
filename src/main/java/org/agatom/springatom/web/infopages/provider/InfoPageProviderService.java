@@ -23,7 +23,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Persistable;
 
 /**
- * {@code InfoPageProvider} loads {@link org.agatom.springatom.web.infopages.SInfoPage} from
+ * {@code InfoPageProviderService} loads {@link org.agatom.springatom.web.infopages.provider.structure.InfoPage} from
  * the implemented source.
  * <p/>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 17.05.14</small>
@@ -35,7 +35,7 @@ import org.springframework.data.domain.Persistable;
 public interface InfoPageProviderService {
 
 	/**
-	 * Returns {@link org.agatom.springatom.web.infopages.SInfoPage} for selected {@link org.springframework.data.domain.Persistable}
+	 * Returns {@link org.agatom.springatom.web.infopages.provider.structure.InfoPage} for selected {@link org.springframework.data.domain.Persistable}
 	 * domain class
 	 *
 	 * @param persistableClass domain class to execute search
@@ -48,7 +48,7 @@ public interface InfoPageProviderService {
 	<T extends Persistable<?>> InfoPage getInfoPage(final Class<T> persistableClass) throws SException;
 
 	/**
-	 * Retrieves path to the file containing {@link org.agatom.springatom.web.infopages.SInfoPage} declaration
+	 * Retrieves path to the file containing {@link org.agatom.springatom.web.infopages.provider.structure.InfoPage} declaration
 	 *
 	 * @param persistableClass domain class to get the path from
 	 * @param <T>              {@link org.springframework.data.domain.Persistable} subclasses
@@ -59,7 +59,7 @@ public interface InfoPageProviderService {
 	<T extends Persistable<?>> String getFilePath(Class<T> persistableClass);
 
 	/**
-	 * Returns {@link org.agatom.springatom.web.infopages.SInfoPage} for selected {@link org.springframework.data.domain.Persistable}
+	 * Returns {@link org.agatom.springatom.web.infopages.provider.structure.InfoPage} for selected {@link org.springframework.data.domain.Persistable}
 	 * domain object
 	 *
 	 * @param persistable domain object to execute search

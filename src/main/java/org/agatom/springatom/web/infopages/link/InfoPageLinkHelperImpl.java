@@ -18,7 +18,6 @@
 package org.agatom.springatom.web.infopages.link;
 
 import org.agatom.springatom.web.infopages.InfoPageNotFoundException;
-import org.agatom.springatom.web.infopages.SInfoPage;
 import org.agatom.springatom.web.infopages.mapping.InfoPageMappingService;
 import org.agatom.springatom.webmvc.controllers.components.SVInfoPageController;
 import org.apache.log4j.Logger;
@@ -31,7 +30,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriTemplate;
 
@@ -46,7 +44,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 20.03.14</small>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @Component
@@ -73,27 +71,31 @@ class InfoPageLinkHelperImpl
 	}
 
 	@Override
-	public <T extends Serializable> Link getInfoPageLink(final SInfoPage page, final Persistable<T> persistable) {
-		final String path = page.getPath();
+	public <T extends Serializable> Link getInfoPageLink(final Persistable<T> persistable) throws InfoPageNotFoundException {
+		LOGGER.trace(String.format("getInfoPageLink(persistable=%s)", persistable));
+
+		Assert.isTrue(!persistable.isNew(), "Persistable must be persisted to retrieve InfoPage");
+
+		final String rel = this.mappingService.getMappedRel(persistable.getClass());
 		final T id = persistable.getId();
+
 		try {
-			return this.getInfoPageLink(path, id);
+			return this.getInfoPageLink(rel, id);
 		} catch (Throwable e) {
-			LOGGER.error(String.format("Failed to generate link for InfoPage=%s, returning null", page), e);
+			LOGGER.error(String.format("Failed to generate link for InfoPage=%s, returning null", persistable), e);
 			return null;
 		}
 	}
 
 	@Override
 	public <T extends Serializable> Link getInfoPageLink(final String path, final T id) {
+		LOGGER.trace(String.format("getInfoPageLink(path=%s,id=%s)", path, id));
 
 		Assert.notNull(path, "Path can not be null");
 		Assert.isTrue(!path.isEmpty(), "Path can not be empty");
 		Assert.notNull(id, "Id can not be null");
 
-		LOGGER.trace(String.format("Generating link for path=%s and id=%s", path, ObjectUtils.getDisplayString(id)));
-
-		Link infoPage = linkTo(SVInfoPageController.class).slash(path).slash(id).withRel("infoPage");
+		Link infoPage = linkTo(SVInfoPageController.class).slash(path).slash(id).withRel(path);
 
 		final String href = infoPage.getHref();
 		if (href.contains("/rest/")) {
