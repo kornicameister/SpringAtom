@@ -17,12 +17,16 @@
 
 package org.agatom.springatom.web.infopages.interceptor;
 
+import org.agatom.springatom.core.exception.SException;
 import org.agatom.springatom.web.infopages.InfoPageConstants;
 import org.agatom.springatom.web.infopages.InfoPageNotFoundException;
+import org.agatom.springatom.web.infopages.component.elements.InfoPageComponent;
 import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
 import org.agatom.springatom.web.infopages.link.InfoPageRequest;
 import org.agatom.springatom.web.infopages.mapping.InfoPageMappingService;
 import org.agatom.springatom.web.infopages.provider.InfoPageProviderService;
+import org.agatom.springatom.web.infopages.provider.builder.InfoPageComponentBuilderService;
+import org.agatom.springatom.web.infopages.provider.structure.InfoPage;
 import org.agatom.springatom.webmvc.controllers.components.SVInfoPageController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,13 +57,15 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  */
 public class InfoPageInterceptor
 		extends HandlerInterceptorAdapter {
-	private static final Logger LOGGER = Logger.getLogger(InfoPageInterceptor.class);
+	private static final Logger                          LOGGER             = Logger.getLogger(InfoPageInterceptor.class);
 	@Autowired
-	private              InfoPageLinkHelper      infoPageLinkHelper = null;
+	private              InfoPageLinkHelper              infoPageLinkHelper = null;
 	@Autowired
-	private              InfoPageProviderService providerService    = null;
+	private              InfoPageProviderService         providerService    = null;
 	@Autowired
-	private              InfoPageMappingService  mappingService     = null;
+	private              InfoPageMappingService          mappingService     = null;
+	@Autowired
+	private              InfoPageComponentBuilderService builderService     = null;
 
 	@Override
 	public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
@@ -97,12 +103,17 @@ public class InfoPageInterceptor
 
 		if (valid) {
 			modelMap.put(InfoPageConstants.INFOPAGE_REQUEST, infoPageRequest);
-			modelMap.put(InfoPageConstants.INFOPAGE_PAGE, this.providerService.getInfoPage(infoPageRequest.getObjectClass()));
+			modelMap.put(InfoPageConstants.INFOPAGE_PAGE, this.getInfoPage(infoPageRequest));
 			modelMap.put(InfoPageConstants.INFOPAGE_DS, this.getDataSourceLink());
 		}
 
 		LOGGER.trace(String.format("IP=%s(%s)", modelAndView.getViewName(), modelMap));
 
+	}
+
+	private InfoPageComponent getInfoPage(final InfoPageRequest infoPageRequest) throws SException {
+		final InfoPage page = this.providerService.getInfoPage(infoPageRequest.getObjectClass());
+		return this.builderService.buildInfoPage(page);
 	}
 
 	private Link getDataSourceLink() throws InfoPageNotFoundException {

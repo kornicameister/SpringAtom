@@ -19,8 +19,8 @@ package org.agatom.springatom.web.infopages.interceptor;
 
 import org.agatom.springatom.AbstractSpringTestCase;
 import org.agatom.springatom.web.infopages.InfoPageConstants;
+import org.agatom.springatom.web.infopages.component.elements.InfoPageComponent;
 import org.agatom.springatom.web.infopages.link.InfoPageRequest;
-import org.agatom.springatom.web.infopages.provider.structure.InfoPage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,7 +77,7 @@ public class InfoPageInterceptorTest
 
 	private void validate() {
 		ModelAndViewAssert.assertAndReturnModelAttributeOfType(this.mav, InfoPageConstants.INFOPAGE_DS, Link.class);
-		ModelAndViewAssert.assertAndReturnModelAttributeOfType(this.mav, InfoPageConstants.INFOPAGE_PAGE, InfoPage.class);
+		ModelAndViewAssert.assertAndReturnModelAttributeOfType(this.mav, InfoPageConstants.INFOPAGE_PAGE, InfoPageComponent.class);
 		ModelAndViewAssert.assertAndReturnModelAttributeOfType(this.mav, InfoPageConstants.INFOPAGE_REQUEST, InfoPageRequest.class);
 		ModelAndViewAssert.assertModelAttributeValue(this.mav, InfoPageConstants.INFOPAGE_AVAILABLE, true);
 	}
