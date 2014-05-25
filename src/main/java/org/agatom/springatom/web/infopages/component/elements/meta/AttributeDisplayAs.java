@@ -23,8 +23,8 @@ package org.agatom.springatom.web.infopages.component.elements.meta;
  * @since 0.0.1
  */
 public enum AttributeDisplayAs {
-    VALUE,
-    TABLE,
-    INFOPAGE,
-    EMAIL
+	VALUE_ATTRIBUTE,
+	TABLE_ATTRIBUTE,
+	EMBEDDED_ATTRIBUTE,
+	LINK_ATTRIBUTE
 }

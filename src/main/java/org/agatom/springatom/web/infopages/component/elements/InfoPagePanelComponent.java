@@ -18,13 +18,12 @@
 package org.agatom.springatom.web.infopages.component.elements;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.Maps;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import org.agatom.springatom.web.component.elements.PanelComponent;
-import org.agatom.springatom.web.infopages.component.elements.attributes.InfoPageAttributeComponent;
-import org.agatom.springatom.web.infopages.component.elements.meta.PanelHolds;
 
-import java.util.Map;
-import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * @author kornicameister
@@ -32,63 +31,39 @@ import java.util.Set;
  * @since 0.0.1
  */
 public class InfoPagePanelComponent
-        extends PanelComponent<InfoPageAttributeComponent> {
-    private static final long                                    serialVersionUID = 4239054882163081910L;
-    private transient    Map<String, InfoPageAttributeComponent> attributesPath   = Maps.newHashMap();
-    private              PanelHolds                              holds            = null;
+		extends PanelComponent<InfoPageAttributeComponent> {
+	private static final long serialVersionUID = 4239054882163081910L;
 
-    public InfoPageAttributeComponent getAttributeForPath(final String path) {
-        return attributesPath.get(path);
-    }
+	public boolean containsAttributeForPath(final String path) {
+		return this.getAttributeForPath(path) != null;
+	}
 
-    public boolean containsAttributeForPath(final String path) {
-        return attributesPath.containsKey(path);
-    }
+	public InfoPageAttributeComponent getAttributeForPath(final String path) {
+		final Optional<InfoPageAttributeComponent> match = FluentIterable.from(this.content).firstMatch(new Predicate<InfoPageAttributeComponent>() {
+			@Override
+			public boolean apply(@Nullable final InfoPageAttributeComponent input) {
+				return input != null && input.getPath().equals(path);
+			}
+		});
+		return match.isPresent() ? match.get() : null;
+	}
 
-    @Override
-    public boolean addContent(final InfoPageAttributeComponent infoPageAttributeComponent) {
-        final boolean addContent = super.addContent(infoPageAttributeComponent);
-        if (addContent) {
-            final String path = infoPageAttributeComponent.getPath();
-            this.attributesPath.put(path, infoPageAttributeComponent);
-        }
-        return addContent;
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(position, layout, content, title, dynamicProperties);
+	}
 
-    public PanelHolds getHolds() {
-        if (this.holds == null) {
-            this.holds = PanelHolds.BASIC_ATTRIBUTES;
-        }
-        return holds;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-    public InfoPagePanelComponent setHolds(final PanelHolds holds) {
-        this.holds = holds;
-        return this;
-    }
+		InfoPagePanelComponent that = (InfoPagePanelComponent) o;
 
-    public Set<InfoPageAttributeComponent> getAttributes() {
-        return this.getContent();
-    }
-
-    public boolean isBasicAttributesHolder() {
-        return this.getHolds().equals(PanelHolds.BASIC_ATTRIBUTES);
-    }
-
-    public boolean isSystemAttributesHolder() {
-        return this.getHolds().equals(PanelHolds.SYSTEM_ATTRIBUTES);
-    }
-
-    public boolean isOneToManyAttributesHolder() {
-        return this.getHolds().equals(PanelHolds.ONE_TO_MANY_ATTRIBUTES);
-    }
-
-    public boolean isManyToOneAttributesHolder() {
-        return this.getHolds().equals(PanelHolds.MANY_TO_ONE_ATTRIBUTES);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(holds, type, layout, content, title);
-    }
+		return Objects.equal(this.position, that.position) &&
+				Objects.equal(this.layout, that.layout) &&
+				Objects.equal(this.content, that.content) &&
+				Objects.equal(this.title, that.title) &&
+				Objects.equal(this.dynamicProperties, that.dynamicProperties);
+	}
 }

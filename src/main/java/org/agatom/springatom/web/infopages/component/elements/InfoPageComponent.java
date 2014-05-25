@@ -17,38 +17,42 @@
 
 package org.agatom.springatom.web.infopages.component.elements;
 
-import com.google.common.base.Objects;
 import org.agatom.springatom.web.component.elements.ContentComponent;
-import org.agatom.springatom.web.component.elements.ThumbnailComponent;
+import org.springframework.hateoas.Identifiable;
 
 /**
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 
 public class InfoPageComponent
-        extends ContentComponent<InfoPagePanelComponent> {
-    private static final long               serialVersionUID = -1693645505025410828L;
-    private              ThumbnailComponent thumbnail        = null;
+		extends ContentComponent<InfoPagePanelComponent>
+		implements Identifiable<String> {
+	private static final long   serialVersionUID = -1693645505025410828L;
+	private              String id               = null;
+	private Class<?> domain;
 
-    public ThumbnailComponent getThumbnail() {
-        return thumbnail;
-    }
+	@Override
+	public String getId() {
+		return this.id;
+	}
 
-    public void setThumbnail(final ThumbnailComponent thumbnail) {
-        this.thumbnail = thumbnail;
-    }
+	public InfoPageComponent setId(final String id) {
+		this.id = id;
+		return this;
+	}
 
-    public int getPanelsCount() {
-        return this.content.size();
-    }
+	public int getSize() {
+		return this.content.size();
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(thumbnail)
-                      .addValue(content)
-                      .toString();
-    }
+	public Class<?> getDomain() {
+		return this.domain;
+	}
+
+	public InfoPageComponent setDomain(final Class<?> domain) {
+		this.domain = domain;
+		return this;
+	}
 }
