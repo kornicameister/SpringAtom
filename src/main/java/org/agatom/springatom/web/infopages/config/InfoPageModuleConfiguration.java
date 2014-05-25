@@ -18,24 +18,11 @@
 package org.agatom.springatom.web.infopages.config;
 
 import org.agatom.springatom.core.module.AbstractModuleConfiguration;
-import org.agatom.springatom.web.component.config.ComponentBuilderModuleConfiguration;
-import org.agatom.springatom.web.infopages.annotation.DomainInfoPage;
-import org.agatom.springatom.web.infopages.annotation.InfoPage;
-import org.agatom.springatom.web.infopages.component.helper.InfoPageComponentHelper;
-import org.agatom.springatom.web.infopages.component.helper.impl.DefaultInfoPageComponentHelper;
-import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
-import org.agatom.springatom.web.infopages.link.impl.InfoPageLinkHelperImpl;
-import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
 import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.BeanInitializationException;
-import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.*;
+import org.springframework.core.io.FileSystemResourceLoader;
 
 /**
  * @author kornicameister
@@ -43,91 +30,21 @@ import org.springframework.context.annotation.*;
  * @since 0.0.1
  */
 @Configuration(value = InfoPageModuleConfiguration.MODULE_NAME)
-@PropertySource(value = "classpath:org/agatom/springatom/web/infopages/infopage.properties")
-@ComponentScan(
-		nameGenerator = ComponentBuilderModuleConfiguration.NameGen.class,
-		basePackages = {
-				"org.agatom.springatom"
-		},
-		useDefaultFilters = false,
-		includeFilters = {
-				@ComponentScan.Filter(value = InfoPage.class, type = FilterType.ANNOTATION),
-				@ComponentScan.Filter(value = DomainInfoPage.class, type = FilterType.ANNOTATION)
-		}
-)
+@PropertySource(value = InfoPageModuleConfiguration.LOCATION)
 public class InfoPageModuleConfiguration
-		extends AbstractModuleConfiguration
-		implements BeanFactoryAware,
-		ApplicationContextAware {
-	protected static final String MODULE_NAME = "InfoPageConfiguration";
+		extends AbstractModuleConfiguration {
+	protected static final String MODULE_NAME = "ipConfiguration";
+	protected static final String LOCATION    = "classpath:org/agatom/springatom/web/infopages/infopages.properties";
 	private static final   Logger LOGGER      = Logger.getLogger(InfoPageModuleConfiguration.class);
-	private ListableBeanFactory beanFactory;
-	private ApplicationContext  applicationContext;
 
-	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public InfoPageMappings getInfoPageMapping() {
-		this.logRegistering(InfoPageMappings.class, LOGGER);
-		final InfoPageMappings mappings = new InfoPageMappings();
-		mappings.setInfoPageConfigurationSource(this.getInfoPageConfigurationSource());
-		return mappings;
-	}
-
-	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public InfoPageConfigurationSource getInfoPageConfigurationSource() {
-		this.logRegistering(InfoPageConfigurationSource.class, LOGGER);
-		final InfoPageConfigurationSourceImpl source = new InfoPageConfigurationSourceImpl()
-				.setProvider(this.getInfoPageComponentProvider())
-				.setBasePackage(this.applicationContext.getEnvironment().getProperty("springatom.infoPages.basePackage"));
-		source.setApplicationContext(this.applicationContext);
-		return source;
-	}
-
-	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public InfoPageComponentProvider getInfoPageComponentProvider() {
-		this.logRegistering(InfoPageComponentProvider.class, LOGGER);
-		return new InfoPageComponentProvider();
-	}
-
-	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public InfoPageAwareBeanPostProcessor getInfoPagePostProcessor() {
-		this.logRegistering(InfoPageAwareBeanPostProcessor.class, LOGGER);
-		final InfoPageAwareBeanPostProcessor processor = new InfoPageAwareBeanPostProcessor();
-		processor.setBeanFactory(this.beanFactory);
-		processor.setBasePackage(this.applicationContext.getEnvironment().getProperty("springatom.infoPages.basePackage"));
-		return processor;
-	}
-
-	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public InfoPageComponentHelper getInfoPageComponentHelper() {
-		this.logRegistering(DefaultInfoPageComponentHelper.class, LOGGER);
-		return new DefaultInfoPageComponentHelper();
-	}
-
-	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public InfoPageLinkHelper getInfoPageLinkHelper() {
-		this.logRegistering(InfoPageLinkHelperImpl.class, LOGGER);
-		return new InfoPageLinkHelperImpl();
-	}
-
-	@Override
-	public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
-		if (beanFactory instanceof ListableBeanFactory) {
-			this.beanFactory = (ListableBeanFactory) beanFactory;
-			LOGGER.trace(String.format("/setBeanFactory -> %s", beanFactory));
-			return;
-		}
-		throw new BeanInitializationException(String.format("%s is not %s", beanFactory, ListableBeanFactory.class));
-	}
-
-	@Override
-	public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
+	@Bean(name = "infoPageProperties")
+	@Scope(BeanDefinition.SCOPE_SINGLETON)
+	@Role(BeanDefinition.ROLE_SUPPORT)
+	public PropertiesFactoryBean getInfoPageMappingProperties() {
+		this.logRegistering(PropertiesFactoryBean.class, LOGGER);
+		final PropertiesFactoryBean factoryBean = new PropertiesFactoryBean();
+		factoryBean.setLocation(new FileSystemResourceLoader().getResource(LOCATION));
+		return factoryBean;
 	}
 
 }
