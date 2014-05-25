@@ -18,28 +18,30 @@
 package org.agatom.springatom.rest.processors;
 
 
-import org.agatom.springatom.web.infopages.SEntityInfoPage;
+import com.mysema.commons.lang.Assert;
+import org.agatom.springatom.web.infopages.InfoPageNotFoundException;
 import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
-import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Persistable;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
-import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
+ * {@code InfoPageResourceProcessor} is customized {@link org.springframework.hateoas.ResourceProcessor}
+ * that appends additional link to {@link org.agatom.springatom.web.infopages.provider.structure.InfoPage}, if such exists for
+ * given {@link org.springframework.data.domain.Persistable}
+ * <p/>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 20.03.14</small>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
-public class InfoPageResourceProcessor implements ResourceProcessor<Resource<? extends Persistable<?>>> {
-	private static final Logger           LOGGER           = Logger.getLogger(InfoPageResourceProcessor.class);
-	private              InfoPageMappings infoPageMappings = null;
-	private InfoPageLinkHelper infoPageLinkHelper;
+public class InfoPageResourceProcessor
+		implements ResourceProcessor<Resource<? extends Persistable<?>>> {
+	private static final Logger             LOGGER             = Logger.getLogger(InfoPageResourceProcessor.class);
+	private              InfoPageLinkHelper infoPageLinkHelper = null;
 
 	@Override
 	public Resource<? extends Persistable<?>> process(final Resource<? extends Persistable<?>> resource) {
@@ -54,24 +56,12 @@ public class InfoPageResourceProcessor implements ResourceProcessor<Resource<? e
 			return null;
 		}
 
-		final Class<? extends Persistable> contentClass = content.getClass();
-		final SEntityInfoPage infoPageForEntity = this.infoPageMappings.getInfoPageForEntity(ClassUtils.getUserClass(contentClass));
-		if (infoPageForEntity != null) {
-			final Link infoPageLink = this.infoPageLinkHelper.getInfoPageLink(infoPageForEntity, content);
-			if (infoPageLink != null) {
-				resource.add(infoPageLink);
-			} else {
-				LOGGER.warn(String.format("%s has infoPage but link was not created", ClassUtils.getShortName(contentClass)));
-			}
-		} else {
-			LOGGER.trace(String.format("%s has no infoPage", ClassUtils.getShortName(contentClass)));
+		try {
+			resource.add(this.infoPageLinkHelper.getInfoPageLink(content));
+		} catch (InfoPageNotFoundException e) {
+			LOGGER.warn(String.format("%s has no infoPage and link was not created", ClassUtils.getShortName(content.getClass())));
 		}
 		return resource;
-	}
-
-	public void setInfoPageMappings(final InfoPageMappings infoPageMappings) {
-		Assert.notNull(infoPageMappings, "infoPageMappings can not be null");
-		this.infoPageMappings = infoPageMappings;
 	}
 
 	public void setInfoPageLinkHelper(final InfoPageLinkHelper infoPageLinkHelper) {

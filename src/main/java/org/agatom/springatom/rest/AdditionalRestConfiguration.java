@@ -19,7 +19,6 @@ package org.agatom.springatom.rest;
 
 import org.agatom.springatom.rest.processors.InfoPageResourceProcessor;
 import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
-import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,27 +33,22 @@ import javax.annotation.PostConstruct;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 20.03.14</small>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @Configuration
 public class AdditionalRestConfiguration {
-
-	@Autowired(required = false)
-	private InfoPageMappings   infoPageMappings   = null;
 	@Autowired(required = false)
 	private InfoPageLinkHelper infoPageLinkHelper = null;
 
 	@PostConstruct
 	private void postConstruct() {
-		Assert.notNull(this.infoPageMappings, "infoPageMappings not found [null]");
 		Assert.notNull(this.infoPageLinkHelper, "infoPageLinkHelper not found [null]");
 	}
 
 	@Bean
 	public ResourceProcessor<Resource<? extends Persistable<?>>> getPersistableProcessor() {
 		final InfoPageResourceProcessor processor = new InfoPageResourceProcessor();
-		processor.setInfoPageMappings(this.infoPageMappings);
 		processor.setInfoPageLinkHelper(this.infoPageLinkHelper);
 		return processor;
 	}
