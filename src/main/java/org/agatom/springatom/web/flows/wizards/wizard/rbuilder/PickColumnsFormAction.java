@@ -93,59 +93,59 @@ public class PickColumnsFormAction
     }
 
     @Override
-    protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
-        binder.setIgnoreUnknownFields(true);
-        conversionService.addConverter(new StringArrayToReportColumnListConverter());
-        conversionService.addConverter(new StringToReportColumnListConverter());
-        return binder;
-    }
-
-    @Override
     public Event resetForm(final RequestContext context) throws Exception {
-        final Event event = super.resetForm(context);
-        this.getCommandBean(context).clearColumns();
-        return event;
+	    final Event event = super.resetForm(context);
+	    this.getCommandBean(context).clearColumns();
+	    return event;
     }
 
-    private Map<RBuilderEntity, Set<RBuilderColumn>> getColumnDistribution(final RequestContext context) throws Exception {
-        final Map<RBuilderEntity, Set<RBuilderColumn>> picked = Maps.newTreeMap();
-        final ReportConfiguration reportConfiguration = this.getCommandBean(context);
-        for (final RBuilderEntity entity : reportConfiguration.getEntities()) {
-            picked.put(entity, this.columnResolver.getReportableColumns(entity));
-            reportConfiguration.putColumns(entity, this.columnResolver.getReportableColumns(entity));
-        }
-        return picked;
-    }
+	private Map<RBuilderEntity, Set<RBuilderColumn>> getColumnDistribution(final RequestContext context) throws Exception {
+		final Map<RBuilderEntity, Set<RBuilderColumn>> picked = Maps.newTreeMap();
+		final ReportConfiguration reportConfiguration = this.getCommandBean(context);
+		for (final RBuilderEntity entity : reportConfiguration.getEntities()) {
+			picked.put(entity, this.columnResolver.getReportableColumns(entity));
+			reportConfiguration.putColumns(entity, this.columnResolver.getReportableColumns(entity));
+		}
+		return picked;
+	}
 
-    // TODO add support for rendering given column as the concatenated report
-    private Object getColumnsRenderProperties(final Collection<Set<RBuilderColumn>> columnsSet) {
-        final Map<Integer, List<RColumnRenderClass>> map = Maps.newHashMap();
-        final Locale locale = LocaleContextHolder.getLocale();
+	// TODO add support for rendering given column as the concatenated report
+	private Object getColumnsRenderProperties(final Collection<Set<RBuilderColumn>> columnsSet) {
+		final Map<Integer, List<RColumnRenderClass>> map = Maps.newHashMap();
+		final Locale locale = LocaleContextHolder.getLocale();
 
-        Assert.notEmpty(columnsSet);
+		Assert.notEmpty(columnsSet);
 
-        for (Set<RBuilderColumn> colSet : columnsSet) {
-            Assert.notEmpty(colSet);
-            for (final RBuilderColumn column : colSet) {
-                final Set<RBuilderConvertiblePair> convertiblePairs = this.conversionHelper.getConvertiblePairs(column);
-                if (CollectionUtils.isEmpty(convertiblePairs)) {
-                    continue;
-                }
+		for (Set<RBuilderColumn> colSet : columnsSet) {
+			Assert.notEmpty(colSet);
+			for (final RBuilderColumn column : colSet) {
+				final Set<RBuilderConvertiblePair> convertiblePairs = this.conversionHelper.getConvertiblePairs(column);
+				if (CollectionUtils.isEmpty(convertiblePairs)) {
+					continue;
+				}
 
-                final List<RColumnRenderClass> properties = Lists.newArrayList();
+				final List<RColumnRenderClass> properties = Lists.newArrayList();
 
-                for (RBuilderConvertiblePair convertiblePair : convertiblePairs) {
-                    final ConvertiblePair pair = convertiblePair.getConvertiblePair();
-                    properties.add(new RColumnRenderClass(pair, this.messageSource.getMessage(pair.getTargetType(), locale).getName()));
-                }
+				for (RBuilderConvertiblePair convertiblePair : convertiblePairs) {
+					final ConvertiblePair pair = convertiblePair.getConvertiblePair();
+					properties.add(new RColumnRenderClass(pair, this.messageSource.getLocalizedClassModel(pair.getTargetType(), locale).getName()));
+				}
 
-                map.put(column.getId(), properties);
-            }
-        }
+				map.put(column.getId(), properties);
+			}
+		}
 
 
-        return map;
-    }
+		return map;
+	}
+
+	@Override
+	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
+		binder.setIgnoreUnknownFields(true);
+		conversionService.addConverter(new StringArrayToReportColumnListConverter());
+		conversionService.addConverter(new StringToReportColumnListConverter());
+		return binder;
+	}
 
     private abstract class BaseConverter
             extends MatcherConverter {
