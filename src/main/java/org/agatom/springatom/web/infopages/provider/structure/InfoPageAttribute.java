@@ -17,8 +17,10 @@
 
 package org.agatom.springatom.web.infopages.provider.structure;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
+import org.agatom.springatom.core.util.Localized;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -34,11 +36,16 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class InfoPageAttribute
-		implements Serializable, Comparable<InfoPageAttribute> {
+		implements Serializable, Comparable<InfoPageAttribute>, Localized {
 	private static final long   serialVersionUID = -8718015686294718467L;
 	private              String path             = null;
 	private              String converter        = null;
+	/**
+	 * Optional: By default localization for attribute comes from domain object localized model
+	 */
+	private String messageKey = null;
 
 	public String getPath() {
 		return this.path;
@@ -78,6 +85,16 @@ public class InfoPageAttribute
 	}
 
 	@Override
+	public String getMessageKey() {
+		return this.messageKey;
+	}
+
+	public InfoPageAttribute setMessageKey(final String messageKey) {
+		this.messageKey = messageKey;
+		return this;
+	}
+
+	@Override
 	public int compareTo(@Nonnull final InfoPageAttribute o) {
 		return ComparisonChain.start()
 				.compare(this.path, o.path)
@@ -99,5 +116,4 @@ public class InfoPageAttribute
 		return Objects.equal(this.path, that.path) &&
 				Objects.equal(this.converter, that.converter);
 	}
-
 }

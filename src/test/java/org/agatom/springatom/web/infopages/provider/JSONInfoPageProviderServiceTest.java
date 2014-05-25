@@ -21,7 +21,9 @@ import com.google.common.collect.Maps;
 import org.agatom.springatom.AbstractSpringTestCase;
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.web.infopages.provider.structure.InfoPage;
+import org.agatom.springatom.web.infopages.provider.structure.InfoPageAttribute;
 import org.agatom.springatom.web.infopages.provider.structure.InfoPageDefaults;
+import org.agatom.springatom.web.infopages.provider.structure.InfoPagePanel;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -29,6 +31,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
+import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
@@ -84,6 +87,22 @@ public class JSONInfoPageProviderServiceTest
 
 			Assert.assertNotNull(defaults.getLayout());
 			Assert.assertNotNull(defaults.isCollapsible());
+
+		}
+	}
+
+	@Test
+	public void test_3_TestPanelsAttributes() throws Exception {
+		for (final Class<? extends Persistable<?>> clazz : this.filePathTest.keySet()) {
+			final InfoPage page = this.service.getInfoPage(clazz);
+			for (final InfoPagePanel panel : page) {
+				Assert.assertTrue(StringUtils.hasText(panel.getId()));
+				Assert.assertTrue(StringUtils.hasText(panel.getMessageKey()));
+				Assert.assertNotNull(panel.getLayout());
+				for (final InfoPageAttribute attribute : panel) {
+					Assert.assertTrue(StringUtils.hasText(attribute.getPath()));
+				}
+			}
 
 		}
 	}

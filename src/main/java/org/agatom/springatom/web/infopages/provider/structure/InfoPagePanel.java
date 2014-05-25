@@ -19,9 +19,11 @@ package org.agatom.springatom.web.infopages.provider.structure;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Objects;
+import org.agatom.springatom.core.util.Localized;
 import org.springframework.hateoas.Identifiable;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -35,10 +37,11 @@ import java.util.Set;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InfoPagePanel
-		implements Identifiable<String>, Serializable {
+		implements Identifiable<String>, Serializable, Localized, Iterable<InfoPageAttribute> {
 	private static final long                   serialVersionUID = -4966053815380618681L;
 	private              String                 id               = null;
 	private              InfoPageLayout         layout           = null;
+	private String messageKey = null;
 	private              Set<InfoPageAttribute> attributes       = null;
 	private              boolean                collapsible      = false;
 	private              boolean                frozen           = false;
@@ -90,8 +93,18 @@ public class InfoPagePanel
 	}
 
 	@Override
+	public String getMessageKey() {
+		return this.messageKey;
+	}
+
+	public InfoPagePanel setMessageKey(final String messageKey) {
+		this.messageKey = messageKey;
+		return this;
+	}
+
+	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, layout, attributes);
+		return Objects.hashCode(id, layout, messageKey, attributes, collapsible, frozen);
 	}
 
 	@Override
@@ -103,6 +116,14 @@ public class InfoPagePanel
 
 		return Objects.equal(this.id, that.id) &&
 				Objects.equal(this.layout, that.layout) &&
-				Objects.equal(this.attributes, that.attributes);
+				Objects.equal(this.messageKey, that.messageKey) &&
+				Objects.equal(this.attributes, that.attributes) &&
+				Objects.equal(this.collapsible, that.collapsible) &&
+				Objects.equal(this.frozen, that.frozen);
+	}
+
+	@Override
+	public Iterator<InfoPageAttribute> iterator() {
+		return this.attributes.iterator();
 	}
 }
