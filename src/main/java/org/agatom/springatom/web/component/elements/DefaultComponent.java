@@ -17,24 +17,45 @@
 
 package org.agatom.springatom.web.component.elements;
 
+import com.google.common.collect.Maps;
 import org.agatom.springatom.web.component.Component;
+
+import javax.annotation.Nonnull;
+import java.util.Map;
 
 /**
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 abstract public class DefaultComponent
-        implements Component {
-    protected String title;
+		implements Component {
+	private static final long                serialVersionUID  = -2772317139576112812L;
+	protected            String              title             = null;
+	protected            Map<String, Object> dynamicProperties = null;
 
-    @Override
-    public String getTitle() {
-        return this.title;
-    }
+	@Override
+	public String getTitle() {
+		return this.title;
+	}
 
-    @Override
-    public void setTitle(final String title) {
-        this.title = title;
-    }
+	@Override
+	public void setTitle(final String title) {
+		this.title = title;
+	}
+
+	public Object getDynamicProperty(@Nonnull final String key) {
+		return this.getDynamicProperties().get(key);
+	}
+
+	public Map<String, Object> getDynamicProperties() {
+		if (this.dynamicProperties == null) {
+			this.dynamicProperties = Maps.newHashMap();
+		}
+		return this.dynamicProperties;
+	}
+
+	public Object addDynamicProperty(final String key, final Object value) {
+		return this.getDynamicProperties().put(key, value);
+	}
 }

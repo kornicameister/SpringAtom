@@ -26,14 +26,15 @@ import org.agatom.springatom.web.infopages.component.elements.meta.AttributeDisp
 import javax.annotation.Nonnull;
 
 /**
+ * {@code InfoPageAttributeComponent} describes single <b>attribute</b> being part of {@link org.agatom.springatom.web.infopages.component.elements.InfoPagePanelComponent}
+ *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 public class InfoPageAttributeComponent
 		extends DefaultComponent
-		implements Localized,
-		EmbeddableComponent {
+		implements Localized, EmbeddableComponent {
 	private static final long               serialVersionUID = -6698659446456215525L;
 	protected            int                position         = -1;
 	protected            String             path             = null;

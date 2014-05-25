@@ -18,57 +18,42 @@
 package org.agatom.springatom.web.component.elements;
 
 import org.agatom.springatom.web.component.EmbeddableComponent;
-import org.agatom.springatom.web.component.meta.LayoutType;
-import org.agatom.springatom.web.component.meta.PanelType;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 public class PanelComponent<T extends EmbeddableComponent>
-        extends ContentComponent<T>
-        implements EmbeddableComponent {
-    private static final long       serialVersionUID = 8998087479297251535L;
-    protected            int        position         = -1;
-    protected            PanelType  type             = null;
-    protected            LayoutType layout           = null;
+		extends ContentComponent<T>
+		implements EmbeddableComponent {
+	private static final long   serialVersionUID = 8998087479297251535L;
+	protected            int    position         = -1;
+	protected            String layout           = null;
 
-    @Override
-    public int getPosition() {
-        return position;
-    }
+	public String getLayout() {
+		return this.layout;
+	}
 
-    @Override
-    public void setPosition(final int position) {
-        this.position = position;
-    }
+	public PanelComponent<T> setLayout(final String layout) {
+		this.layout = layout;
+		return this;
+	}
 
-    public PanelType getType() {
-        return type;
-    }
+	@Override
+	public int getPosition() {
+		return position;
+	}
 
-    public PanelComponent<T> setType(final PanelType type) {
-        this.type = type;
-        return this;
-    }
+	@Override
+	public void setPosition(final int position) {
+		this.position = position;
+	}
 
-    public LayoutType getLayout() {
-        if (this.layout == null) {
-            this.layout = LayoutType.VERTICAL;
-        }
-        return layout;
-    }
-
-    public PanelComponent<T> setLayout(final LayoutType layout) {
-        this.layout = layout;
-        return this;
-    }
-
-    @Override
-    public int compareTo(final @Nonnull EmbeddableComponent panel) {
-        return Integer.compare(this.position, panel.getPosition());
-    }
+	@Override
+	public int compareTo(final @Nonnull EmbeddableComponent panel) {
+		return Integer.compare(this.position, panel.getPosition());
+	}
 }

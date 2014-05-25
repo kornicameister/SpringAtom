@@ -29,29 +29,38 @@ import java.util.Set;
  * @since 0.0.1
  */
 abstract public class ContentComponent<T extends EmbeddableComponent>
-        extends DefaultComponent
-        implements Iterable<T> {
-    protected Set<T> content = Sets.newTreeSet();
+		extends DefaultComponent
+		implements Iterable<T> {
+	private static final long   serialVersionUID = -8072389645215572550L;
+	protected            Set<T> content          = null;
 
-    public Set<T> getContent() {
-        return content;
-    }
+	public boolean removeContent(final Object o) {
+		return this.getContent().remove(o);
+	}
 
-    public void setContent(final Set<T> content) {
-        this.content = content;
-    }
+	public Set<T> getContent() {
+		if (this.content == null) {
+			this.content = Sets.newTreeSet();
+		}
+		return this.content;
+	}
 
-    public boolean addContent(final T t) {
-        t.setPosition(this.content.size());
-        return content.add(t);
-    }
+	@Override
+	public Iterator<T> iterator() {
+		return this.getContent().iterator();
+	}
 
-    public boolean removeContent(final Object o) {
-        return content.remove(o);
-    }
+	public void setContent(final Set<T> content) {
+		this.getContent().clear();
+		for (final T t : content) {
+			this.addContent(t);
+		}
+	}
 
-    @Override
-    public Iterator<T> iterator() {
-        return content.iterator();
-    }
+	public boolean addContent(final T t) {
+		t.setPosition(this.getContent().size());
+		return this.getContent().add(t);
+	}
+
+
 }
