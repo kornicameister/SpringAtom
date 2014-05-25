@@ -118,10 +118,68 @@ public class SMessageSourceImpl
 		}
 	}
 
+	private static class InternalLocalizedClassModel<T>
+			implements LocalizedClassModel<T> {
+		private static final long serialVersionUID = -9041229694358443850L;
+		boolean                      found      = false;
+		Class<T>                     source     = null;
+		String                       name       = null;
+		Set<LocalizedClassAttribute> attributes = null;
+		transient Map<String, LocalizedClassAttribute> asMap = null;
+
+		public InternalLocalizedClassModel(final Class<T> clazz, final String name, final boolean found) {
+			this.source = clazz;
+			this.name = name;
+			this.found = found;
+		}
+
+		@Override
+		public Class<T> getSource() {
+			return source;
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public boolean isFound() {
+			return found;
+		}
+
+		@Override
+		public Set<LocalizedClassAttribute> getAttributes() {
+			return this.attributes;
+		}
+
+		@Override
+		public String getLocalizedAttribute(final String attributeName) {
+			return this.asMap().get(attributeName).getLabel();
+		}
+
+		@Override
+		public boolean hasAttributes() {
+			return !CollectionUtils.isEmpty(this.attributes);
+		}
+
+		@Override
+		public Map<String, LocalizedClassAttribute> asMap() {
+			if (this.asMap == null) {
+				final Map<String, LocalizedClassAttribute> map = Maps.newHashMapWithExpectedSize(this.attributes.size());
+				for (final LocalizedClassAttribute key : this.attributes) {
+					map.put(key.getName(), key);
+				}
+				this.asMap = map;
+			}
+			return this.asMap;
+		}
+	}
+
 	@Override
 	@SuppressWarnings("ConstantConditions")
-	public <T> LocalizedClassModel<T> getMessage(final Class<T> clazz, final Locale locale) {
-		LOGGER.trace(String.format("getMessage(clazz=%s,locale=%s", clazz, locale));
+	public <T> LocalizedClassModel<T> getLocalizedClassModel(final Class<T> clazz, final Locale locale) {
+		LOGGER.trace(String.format("getLocalizedClassModel(clazz=%s,locale=%s", clazz, locale));
 		final boolean isPersistable = ClassUtils.isAssignable(Persistable.class, clazz);
 
 		String messageKey;
@@ -226,67 +284,10 @@ public class SMessageSourceImpl
 		return localizedClass;
 	}
 
-	private static class InternalLocalizedClassModel<T>
-			implements LocalizedClassModel<T> {
-		private static final long serialVersionUID = -9041229694358443850L;
-		boolean                      found      = false;
-		Class<T>                     source     = null;
-		String                       name       = null;
-		Set<LocalizedClassAttribute> attributes = null;
-		transient Map<String, LocalizedClassAttribute> asMap = null;
-
-		public InternalLocalizedClassModel(final Class<T> clazz, final String name, final boolean found) {
-			this.source = clazz;
-			this.name = name;
-			this.found = found;
-		}
-
-		@Override
-		public Class<T> getSource() {
-			return source;
-		}
-
-		@Override
-		public String getName() {
-			return name;
-		}
-
-		@Override
-		public boolean isFound() {
-			return found;
-		}
-
-		@Override
-		public Set<LocalizedClassAttribute> getAttributes() {
-			return this.attributes;
-		}
-
-		@Override
-		public String getLocalizedAttribute(final String attributeName) {
-			return this.asMap().get(attributeName).getLabel();
-		}
-
-		@Override
-		public boolean hasAttributes() {
-			return !CollectionUtils.isEmpty(this.attributes);
-		}
-
-		@Override
-		public Map<String, LocalizedClassAttribute> asMap() {
-			if (this.asMap == null) {
-				final Map<String, LocalizedClassAttribute> map = Maps.newHashMapWithExpectedSize(this.attributes.size());
-				for (final LocalizedClassAttribute key : this.attributes) {
-					map.put(key.getName(), key);
-				}
-				this.asMap = map;
-			}
-			return this.asMap;
-		}
-	}
 
 	@Override
-	public <T> LocalizedClassAttribute getMessage(final Class<T> clazz, final String attributeName, final Locale locale) {
-		final LocalizedClassModel<T> message = this.getMessage(clazz, locale);
+	public <T> LocalizedClassAttribute getLocalizedClassAttribute(final Class<T> clazz, final String attributeName, final Locale locale) {
+		final LocalizedClassModel<T> message = this.getLocalizedClassModel(clazz, locale);
 		if (message.hasAttributes()) {
 			return message.asMap().get(attributeName);
 		}

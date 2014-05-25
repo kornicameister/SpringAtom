@@ -98,7 +98,7 @@ class InfoPageComponentBuilderServiceImpl
 		final Locale locale = LocaleContextHolder.getLocale();
 
 		final EntityDescriptor<?> descriptor = this.entityDescriptors.getDescriptor(pageDomain);
-		final LocalizedClassModel<?> rbModel = this.messageSource.getMessage(pageDomain, locale);
+		final LocalizedClassModel<?> rbModel = this.messageSource.getLocalizedClassModel(pageDomain, locale);
 		final EntityType<?> entityType = descriptor.getEntityType();
 
 		if (LOGGER.isTraceEnabled()) {

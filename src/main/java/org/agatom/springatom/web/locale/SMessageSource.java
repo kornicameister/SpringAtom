@@ -30,17 +30,17 @@ import java.util.Locale;
 
 /**
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 public interface SMessageSource
 		extends MessageSource {
 
 	@Cacheable(value = "org.agatom.springatom.localizedClassesCache")
-	<T> LocalizedClassModel<T> getMessage(final Class<T> clazz, final Locale locale);
+	<T> LocalizedClassModel<T> getLocalizedClassModel(final Class<T> clazz, final Locale locale);
 
 	@Cacheable(value = "org.agatom.springatom.localizedClassesCache")
-	<T> LocalizedClassAttribute getMessage(final Class<T> clazz, final String attributeName, final Locale locale);
+	<T> LocalizedClassAttribute getLocalizedClassAttribute(final Class<T> clazz, final String attributeName, final Locale locale);
 
 	<LA extends LocalizationAware> LA localize(final LA localizationAware, final Locale locale);
 
