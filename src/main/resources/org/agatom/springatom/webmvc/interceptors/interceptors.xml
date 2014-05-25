@@ -51,7 +51,7 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <!-- first * is context path -->
-            <mvc:mapping path="/*/ip/**/*/*"/>
+            <mvc:mapping path="/*/cmp/ip/**/*/*"/>
             <ref bean="infoPageInterceptor"/>
         </mvc:interceptor>
         <ref bean="scdrViewInterceptor"/>
