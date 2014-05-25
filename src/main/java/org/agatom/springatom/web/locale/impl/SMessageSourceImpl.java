@@ -20,7 +20,6 @@ package org.agatom.springatom.web.locale.impl;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.core.util.LocalizationAware;
@@ -40,8 +39,8 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Nullable;
 import javax.persistence.metamodel.Attribute;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -58,6 +57,66 @@ public class SMessageSourceImpl
 	private static final Logger            LOGGER            = Logger.getLogger(SMessageSourceImpl.class);
 	@Autowired
 	private              EntityDescriptors entityDescriptors = null;
+
+	private static class InternalLocalizedClassAttribute
+			implements LocalizedClassAttribute {
+		private static final long serialVersionUID = -9210749041074012095L;
+		String  messageKey = null;
+		boolean found      = false;
+		String  name       = null;
+		String  label      = null;
+
+		InternalLocalizedClassAttribute(final String name, final String label, final String messageKey, final boolean found) {
+			this.name = name;
+			this.label = label;
+			this.messageKey = messageKey;
+			this.found = found;
+		}
+
+		@Override
+		public String getName() {
+			return this.name;
+		}
+
+		@Override
+		public String getLabel() {
+			return this.label;
+		}
+
+		@Override
+		public boolean isFound() {
+			return this.found;
+		}
+
+		@Override
+		public String getMessageKey() {
+			return this.messageKey;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(name, label);
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			InternalLocalizedClassAttribute that = (InternalLocalizedClassAttribute) o;
+
+			return Objects.equal(this.name, that.name) &&
+					Objects.equal(this.label, that.label);
+		}
+
+		@Override
+		public String toString() {
+			return Objects.toStringHelper(this)
+					.add("name", name)
+					.add("found", found)
+					.toString();
+		}
+	}
 
 	@Override
 	@SuppressWarnings("ConstantConditions")
@@ -93,17 +152,17 @@ public class SMessageSourceImpl
 
 		final Set<LocalizedClassAttribute> attributes = Sets.newHashSet();
 
-		final List<String> attributesToLocalize = Lists.newLinkedList();
+		final Set<String> attributesToLocalize = Sets.newHashSet();
 		final EntityDescriptor<T> descriptor = this.entityDescriptors.getDescriptor(clazz);
 		if (descriptor != null) {
 			LOGGER.trace(String.format("%s has corresponding %s to read attributes from", ClassUtils.getShortName(clazz), ClassUtils.getShortName(EntityDescriptor.class)));
 			final Set<Attribute<? super T, ?>> localAttributes = descriptor.getEntityType().getAttributes();
 			for (final Attribute<? super T, ?> attribute : localAttributes) {
-				attributesToLocalize.add(attribute.getName());
+				attributesToLocalize.add(attribute.getName().toLowerCase());
 			}
 		} else {
 			LOGGER.trace(String.format("%s has not corresponding %s to read attributes from", ClassUtils.getShortName(clazz), ClassUtils.getShortName(EntityDescriptor.class)));
-			final Field[] fields = clazz.getDeclaredFields();
+			final Field[] fields = clazz.getFields();
 			for (Field field : fields) {
 				if (Modifier.isStatic(field.getModifiers())) {
 					continue;
@@ -111,6 +170,23 @@ public class SMessageSourceImpl
 				attributesToLocalize.add(field.getName());
 			}
 		}
+
+		// analyze getters
+		final Method[] methods = clazz.getMethods();
+		for (Method method : methods) {
+			String name = method.getName();
+			if (!(name.startsWith("get") || name.startsWith("is"))) {
+				continue;
+			}
+			if (name.startsWith("get")) {
+				name = name.substring(3, name.length());
+			} else {
+				name = name.substring(2, name.length());
+			}
+			name = name.toLowerCase();
+			attributesToLocalize.add(name);
+		}
+
 
 		if (!CollectionUtils.isEmpty(attributesToLocalize)) {
 			LOGGER.trace(String.format("%s has %d attributes to localize", ClassUtils.getShortName(clazz), attributesToLocalize.size()));
@@ -148,6 +224,64 @@ public class SMessageSourceImpl
 		final InternalLocalizedClassModel<T> localizedClass = new InternalLocalizedClassModel<>(clazz, localizedClassName, true);
 		localizedClass.attributes = attributes;
 		return localizedClass;
+	}
+
+	private static class InternalLocalizedClassModel<T>
+			implements LocalizedClassModel<T> {
+		private static final long serialVersionUID = -9041229694358443850L;
+		boolean                      found      = false;
+		Class<T>                     source     = null;
+		String                       name       = null;
+		Set<LocalizedClassAttribute> attributes = null;
+		transient Map<String, LocalizedClassAttribute> asMap = null;
+
+		public InternalLocalizedClassModel(final Class<T> clazz, final String name, final boolean found) {
+			this.source = clazz;
+			this.name = name;
+			this.found = found;
+		}
+
+		@Override
+		public Class<T> getSource() {
+			return source;
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public boolean isFound() {
+			return found;
+		}
+
+		@Override
+		public Set<LocalizedClassAttribute> getAttributes() {
+			return this.attributes;
+		}
+
+		@Override
+		public String getLocalizedAttribute(final String attributeName) {
+			return this.asMap().get(attributeName).getLabel();
+		}
+
+		@Override
+		public boolean hasAttributes() {
+			return !CollectionUtils.isEmpty(this.attributes);
+		}
+
+		@Override
+		public Map<String, LocalizedClassAttribute> asMap() {
+			if (this.asMap == null) {
+				final Map<String, LocalizedClassAttribute> map = Maps.newHashMapWithExpectedSize(this.attributes.size());
+				for (final LocalizedClassAttribute key : this.attributes) {
+					map.put(key.getName(), key);
+				}
+				this.asMap = map;
+			}
+			return this.asMap;
+		}
 	}
 
 	@Override
@@ -240,120 +374,5 @@ public class SMessageSourceImpl
 		return this.getMergedProperties(locale).getProperties().stringPropertyNames();
 	}
 
-	private static class InternalLocalizedClassAttribute implements LocalizedClassAttribute {
-		private static final long serialVersionUID = -9210749041074012095L;
-		String  messageKey = null;
-		boolean found      = false;
-		String  name       = null;
-		String  label      = null;
 
-		InternalLocalizedClassAttribute(final String name, final String label, final String messageKey, final boolean found) {
-			this.name = name;
-			this.label = label;
-			this.messageKey = messageKey;
-			this.found = found;
-		}
-
-		@Override
-		public String getName() {
-			return this.name;
-		}
-
-		@Override
-		public String getLabel() {
-			return this.label;
-		}
-
-		@Override
-		public boolean isFound() {
-			return this.found;
-		}
-
-		@Override
-		public String getMessageKey() {
-			return this.messageKey;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			InternalLocalizedClassAttribute that = (InternalLocalizedClassAttribute) o;
-
-			return Objects.equal(this.name, that.name) &&
-					Objects.equal(this.label, that.label);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hashCode(name, label);
-		}
-
-		@Override
-		public String toString() {
-			return Objects.toStringHelper(this)
-					.add("name", name)
-					.add("found", found)
-					.toString();
-		}
-	}
-
-	private static class InternalLocalizedClassModel<T>
-			implements LocalizedClassModel<T> {
-		private static final long serialVersionUID = -9041229694358443850L;
-		boolean                      found      = false;
-		Class<T>                     source     = null;
-		String                       name       = null;
-		Set<LocalizedClassAttribute> attributes = null;
-		transient Map<String, LocalizedClassAttribute> asMap = null;
-
-		public InternalLocalizedClassModel(final Class<T> clazz, final String name, final boolean found) {
-			this.source = clazz;
-			this.name = name;
-			this.found = found;
-		}
-
-		@Override
-		public Class<T> getSource() {
-			return source;
-		}
-
-		@Override
-		public String getName() {
-			return name;
-		}
-
-		@Override
-		public boolean isFound() {
-			return found;
-		}
-
-		@Override
-		public Set<LocalizedClassAttribute> getAttributes() {
-			return this.attributes;
-		}
-
-		@Override
-		public String getLocalizedAttribute(final String attributeName) {
-			return this.asMap().get(attributeName).getLabel();
-		}
-
-		@Override
-		public boolean hasAttributes() {
-			return !CollectionUtils.isEmpty(this.attributes);
-		}
-
-		@Override
-		public Map<String, LocalizedClassAttribute> asMap() {
-			if (this.asMap == null) {
-				final Map<String, LocalizedClassAttribute> map = Maps.newHashMapWithExpectedSize(this.attributes.size());
-				for (final LocalizedClassAttribute key : this.attributes) {
-					map.put(key.getName(), key);
-				}
-				this.asMap = map;
-			}
-			return this.asMap;
-		}
-	}
 }
