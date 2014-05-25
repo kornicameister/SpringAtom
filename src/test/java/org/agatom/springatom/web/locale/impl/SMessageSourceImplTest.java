@@ -66,7 +66,8 @@ import java.util.Set;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SMessageSourceImplTest extends AbstractSpringTestCase {
+public class SMessageSourceImplTest
+		extends AbstractSpringTestCase {
 
 	private List<Class<?>> classList     = Lists.newArrayList();
 	@Autowired
@@ -105,7 +106,7 @@ public class SMessageSourceImplTest extends AbstractSpringTestCase {
 	@Test
 	public void testGetMessageLocalePL() throws Exception {
 		for (final Class<?> clazz : this.classList) {
-			final LocalizedClassModel<?> pl_pl = this.messageSource.getMessage(clazz, Locale.forLanguageTag("pl"));
+			final LocalizedClassModel<?> pl_pl = this.messageSource.getLocalizedClassModel(clazz, Locale.forLanguageTag("pl"));
 			System.out.println(pl_pl);
 			final Set<LocalizedClassAttribute> attributes = pl_pl.getAttributes();
 
@@ -128,7 +129,7 @@ public class SMessageSourceImplTest extends AbstractSpringTestCase {
 	@Test
 	public void testGetMessageLocaleEN() throws Exception {
 		for (final Class<?> clazz : this.classList) {
-			final LocalizedClassModel<?> pl_pl = this.messageSource.getMessage(clazz, Locale.ENGLISH);
+			final LocalizedClassModel<?> pl_pl = this.messageSource.getLocalizedClassModel(clazz, Locale.ENGLISH);
 			System.out.println(pl_pl);
 			final Set<LocalizedClassAttribute> attributes = pl_pl.getAttributes();
 
@@ -161,7 +162,7 @@ public class SMessageSourceImplTest extends AbstractSpringTestCase {
 				QSAppointment.sAppointment.car.getMetadata().getName()
 		};
 		for (final String attrName : attributes) {
-			final LocalizedClassAttribute pl_pl = this.messageSource.getMessage(SAppointment.class, attrName, Locale.forLanguageTag("pl"));
+			final LocalizedClassAttribute pl_pl = this.messageSource.getLocalizedClassAttribute(SAppointment.class, attrName, Locale.forLanguageTag("pl"));
 			System.out.println(pl_pl);
 			Assert.assertTrue(pl_pl.isFound());
 		}
