@@ -20,14 +20,16 @@ package org.agatom.springatom.web.component;
 import java.io.Serializable;
 
 /**
+ * {@code EmbeddableComponent} is marker interface for <b>components</b> that are part of {@link org.agatom.springatom.web.component.elements.ContentComponent}
+ *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 public interface EmbeddableComponent
-        extends Serializable,
-                Comparable<EmbeddableComponent> {
-    int getPosition();
+		extends Serializable,
+		Comparable<EmbeddableComponent> {
+	int getPosition();
 
-    void setPosition(int position);
+	void setPosition(int position);
 }
