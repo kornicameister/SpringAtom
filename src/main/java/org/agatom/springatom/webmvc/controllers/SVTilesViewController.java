@@ -17,46 +17,92 @@
 
 package org.agatom.springatom.webmvc.controllers;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.mvc.AbstractUrlViewController;
 import org.springframework.web.util.UriTemplate;
 
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * {@code SVTilesViewController} is generic controller mapping requests to views.
+ * Views are loaded from {@code urlMappingProperties}
+ */
 public class SVTilesViewController
 		extends AbstractUrlViewController {
-	private static final Logger                   LOGGER    = Logger.getLogger(SVTilesViewController.class);
-	private final        Map<UriTemplate, String> templates = Maps.newHashMap();
+	private static final Logger                   LOGGER        = Logger.getLogger(SVTilesViewController.class);
+	private static final String                   PROP_LOCATION = "urlMappingsProperties";
+	private final        Map<String, String>      urlMap        = Maps.newHashMap();
+	private final        Map<String, UriTemplate> templateUrls  = Maps.newHashMap();
 	@Autowired
-	@Qualifier(value = "urlMappingsProperties")
-	private              Properties               mappings  = null;
+	@Qualifier(value = PROP_LOCATION)
+	private              Properties               mappings      = null;
 
 	@PostConstruct
 	private void initializeMapping() {
-		final Set<String> templateUrls = this.mappings.stringPropertyNames();
+		CollectionUtils.mergePropertiesIntoMap(mappings, this.urlMap);
+		this.findTemplateUrls();
+	}
+
+	private void findTemplateUrls() {
+		final Set<String> templateUrls = FluentIterable
+				.from(this.urlMap.keySet())
+				.filter(new Predicate<String>() {
+					@Override
+					public boolean apply(@Nullable final String input) {
+						return input != null && input.contains("*");
+					}
+				})
+				.toSet();
+		LOGGER.info(String.format("Found %d template urls", templateUrls.size()));
 		for (final String templateUrl : templateUrls) {
-			this.templates.put(new UriTemplate(templateUrl), this.mappings.getProperty(templateUrl));
+			final String substring = templateUrl.substring(1);
+			this.templateUrls.put(substring, new UriTemplate(substring));
 		}
 	}
 
 	@Override
 	protected String getViewNameForRequest(final HttpServletRequest request) {
 		final String path = this.getUrlPathHelper().getLookupPathForRequest(request);
-		for (final UriTemplate template : this.templates.keySet()) {
-			if (template.matches(path)) {
-				final String viewName = this.templates.get(template);
+		final String shortName = ClassUtils.getShortName(this.getClass());
+
+		String viewName = null;
+		if (this.urlMap.containsKey(path)) {
+			viewName = this.urlMap.get(path);
+			LOGGER.info(String.format("For path %s resolved view %s", path, viewName));
+		} else {
+			final UriTemplate template = this.getTemplate(path);
+			if (template != null) {
+				viewName = this.urlMap.get(String.format("*%s", template.toString()));
 				LOGGER.info(String.format("For path %s resolved view %s", path, viewName));
+				request.setAttribute(String.format("%sByTemplate", shortName), true);
 				return viewName;
 			}
 		}
-		LOGGER.warn(String.format("Failed to retrieve view for path %s", path));
+		if (viewName != null) {
+			request.setAttribute(String.format("%sViewName", shortName), viewName);
+		}
+		return viewName;
+	}
+
+	private UriTemplate getTemplate(final String path) {
+		for (final String key : this.templateUrls.keySet()) {
+			final UriTemplate template = this.templateUrls.get(key);
+			if (template.matches(path)) {
+				return template;
+			}
+		}
 		return null;
 	}
 
