@@ -22,36 +22,39 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.context.request.WebRequest;
 
 /**
+ * {@code ComponentDataRequest} wraps around single {@link org.springframework.web.context.request.WebRequest} and
+ * {@link org.springframework.ui.ModelMap}. This class in immutable.
+ *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 public class ComponentDataRequest {
-    private final ModelMap   values;
-    private final WebRequest webRequest;
+	private final ModelMap   values;
+	private final WebRequest webRequest;
 
-    public ComponentDataRequest(final ModelMap modelMap, final WebRequest webRequest) {
-        this.values = modelMap;
-        this.webRequest = webRequest;
-    }
+	public ComponentDataRequest(final ModelMap modelMap, final WebRequest webRequest) {
+		this.values = modelMap;
+		this.webRequest = webRequest;
+	}
 
-    public ModelMap getValues() {
-        return values;
-    }
+	public ModelMap getValues() {
+		return values;
+	}
 
-    public WebRequest getWebRequest() {
-        return webRequest;
-    }
+	public WebRequest getWebRequest() {
+		return webRequest;
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(values)
-                      .addValue(webRequest)
-                      .toString();
-    }
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(values)
+				.addValue(webRequest)
+				.toString();
+	}
 
-    public Long getLong(final String key) {
-        return Long.parseLong(String.valueOf(this.values.get(key)));
-    }
+	public Long getLong(final String key) {
+		return Long.parseLong(String.valueOf(this.values.get(key)));
+	}
 }
