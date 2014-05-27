@@ -17,9 +17,9 @@
 
 package org.agatom.springatom.web.infopages.link;
 
+import com.google.common.collect.Maps;
 import org.agatom.springatom.web.infopages.InfoPageNotFoundException;
 import org.agatom.springatom.web.infopages.mapping.InfoPageMappingService;
-import org.agatom.springatom.webmvc.controllers.components.SVInfoPageController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -27,7 +27,6 @@ import org.springframework.context.annotation.Role;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Persistable;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.TemplateVariable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -37,8 +36,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Map;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 20.03.14</small>
@@ -95,13 +92,15 @@ class InfoPageLinkHelperImpl
 		Assert.isTrue(!path.isEmpty(), "Path can not be empty");
 		Assert.notNull(id, "Id can not be null");
 
-		Link infoPage = linkTo(SVInfoPageController.class).slash(path).slash(id).withRel(path);
+		final UriTemplate localTemplate = new UriTemplate(String.format("/app/cmp/ip/{%s}/{%s}",
+				PathElement.OBJECT_PATH.getInternalKey(),
+				PathElement.OBJECT_ID.getInternalKey()
+		));
+		final Map<String, Object> expandVars = Maps.newHashMap();
+		expandVars.put(PathElement.OBJECT_ID.getInternalKey(), id.toString());
+		expandVars.put(PathElement.OBJECT_PATH.getInternalKey(), path);
 
-		final String href = infoPage.getHref();
-		if (href.contains("/rest/")) {
-			infoPage = new Link(href.replace("/rest/", "/app/"), infoPage.getRel());
-			infoPage.expand(new TemplateVariable("origin", TemplateVariable.VariableType.FRAGMENT, "yes"));
-		}
+		Link infoPage = new Link(localTemplate.expand(expandVars).toString());
 
 		LOGGER.trace(String.format("Resulting link is => %s", infoPage));
 
