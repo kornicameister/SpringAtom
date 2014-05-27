@@ -52,7 +52,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  * </ol>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.4
  * @since 0.0.1
  */
 public class InfoPageInterceptor
