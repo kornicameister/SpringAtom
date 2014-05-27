@@ -27,7 +27,7 @@ import org.agatom.springatom.web.infopages.mapping.InfoPageMappingService;
 import org.agatom.springatom.web.infopages.provider.InfoPageProviderService;
 import org.agatom.springatom.web.infopages.provider.builder.InfoPageComponentBuilderService;
 import org.agatom.springatom.web.infopages.provider.structure.InfoPage;
-import org.agatom.springatom.webmvc.controllers.components.SVInfoPageController;
+import org.agatom.springatom.webmvc.controllers.components.SVComponentsDataController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -117,7 +117,7 @@ public class InfoPageInterceptor
 	}
 
 	private Link getDataSourceLink() throws InfoPageNotFoundException {
-		return linkTo(methodOn(SVInfoPageController.class).getInfoPageViewData(null, null)).withRel(InfoPageConstants.INFOPAGE_DS);
+		return linkTo(methodOn(SVComponentsDataController.class).onInfoPageDataRequest(null, null)).withRel(InfoPageConstants.INFOPAGE_DS);
 	}
 
 }
