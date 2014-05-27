@@ -27,8 +27,7 @@ import org.agatom.springatom.core.invoke.InvokeUtils;
 import org.agatom.springatom.server.repository.SBasicRepository;
 import org.agatom.springatom.web.action.model.actions.LinkAction;
 import org.agatom.springatom.web.component.ComponentConstants;
-import org.agatom.springatom.web.component.builders.DefaultComponentBuilder;
-import org.agatom.springatom.web.component.builders.EntityAware;
+import org.agatom.springatom.web.component.builders.AbstractComponentBuilder;
 import org.agatom.springatom.web.component.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.builders.exception.ComponentPathEvaluationException;
 import org.agatom.springatom.web.component.builders.exception.ComponentTableException;
@@ -38,22 +37,19 @@ import org.agatom.springatom.web.component.data.ComponentDataResponse;
 import org.agatom.springatom.web.component.elements.table.TableComponent;
 import org.agatom.springatom.web.component.helper.TableComponentHelper;
 import org.agatom.springatom.web.component.request.beans.ComponentTableRequest;
-import org.agatom.springatom.web.infopages.SEntityInfoPage;
-import org.agatom.springatom.web.infopages.mapping.InfoPageMappings;
+import org.agatom.springatom.web.infopages.InfoPageNotFoundException;
+import org.agatom.springatom.web.infopages.mapping.InfoPageMappingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.Cache;
-import org.springframework.cache.Cache.ValueWrapper;
-import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.Link;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.ObjectUtils;
 
+import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -62,46 +58,51 @@ import java.util.Map;
  * {@code TableComponentBuilder} provides generic functionality for all the implementing classes
  * that eases and helps to build a table component {@link org.agatom.springatom.web.component.elements.table.TableComponent}.
  *
+ * Changelog:
+ * <ol>
+ *     <li>0.0.1 -> 0.0.2
+ *         <ul>
+ *             <li>Removed EntityAware</li>
+ *             <li>Repository is set via dependency injection</li>
+ *             <li>entity is read via GenericTypeResolver</li>
+ *         </ul>
+ *     </li>
+ * </ol>
+ *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 abstract public class TableComponentBuilder<COMP extends TableComponent, Y extends Persistable<?>>
-		extends DefaultComponentBuilder<COMP>
-		implements EntityAware<Y> {
+		extends AbstractComponentBuilder<COMP> {
+	@Autowired
+	protected TableComponentHelper              helper       = null;
+	@Autowired
+	protected ApplicationContext                context      = null;
+	@Autowired
+	protected SBasicRepository<Y, Serializable> repository   = null;
+	protected Class<Y>                          entity       = null;
+	@Autowired
+	private   InfoPageMappingService            pageMappings = null;
 
-	private static final String CACHE_NAME       = "org_agatom_springatom_tableBuilders";
-	private static final long   serialVersionUID = -6830218035599925554L;
-	@Autowired
-	protected TableComponentHelper              helper;
-	@Autowired
-	protected ApplicationContext                context;
-	@Autowired
-	private   InfoPageMappings                  pageMappings;
-	protected Class<Y>                          entity;
-	protected SBasicRepository<Y, Serializable> repository;
-	@Autowired
-	@Qualifier("webCacheManager")
-	private   CacheManager                      cacheManager;
-
-	@Override
-	public void setEntity(final Class<Y> entity) {
-		this.entity = entity;
+	@PostConstruct
+	@SuppressWarnings("unchecked")
+	private void postConstruct() {
+		this.entity = (Class<Y>) GenericTypeResolver.resolveTypeArguments(getClass(), getClass())[1];
 	}
 
 	@Override
-	public void setRepository(final SBasicRepository<Y, Serializable> repository) {
-		this.repository = repository;
-	}
-
-	@Override
-	protected void postProcessDefinition(final COMP definition) {
-		super.postProcessDefinition(definition);
-		if (this.pageMappings.getInfoPageForEntity(this.entity) != null) {
-			this.helper.newTableColumn(definition, "infopage", "persistentobject.infopage")
+	protected COMP postProcessDefinition(final COMP definition, final ComponentDataRequest dataRequest) {
+		super.postProcessDefinition(definition, dataRequest);
+		if (this.pageMappings.hasInfoPage(this.entity)) {
+			this.helper.newTableColumn(
+					definition,
+					"infopage",
+					"persistentobject.infopage")
 					.setRenderFunctionName("renderTableAction")
 					.setSortable(false);
 		}
+		return definition;
 	}
 
 	@Override
@@ -168,62 +169,6 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
 		}
 	}
 
-	private Page<Y> getAllEntities(final ComponentTableRequest dc, final Predicate predicate, final long countInContext) {
-
-		final Cache cache = this.cacheManager.getCache(CACHE_NAME);
-		final Object key = this.calculateKey(new Object[]{dc});
-
-		this.logger.trace(String.format("Using cache %s and key %s", CACHE_NAME, key));
-
-		final ValueWrapper valueWrapper = cache.get(key);
-		Page<Y> page;
-
-		if (valueWrapper == null) {
-
-			this.logger.trace(String.format("In cache %s not object for kye=%s", CACHE_NAME, key));
-
-			final PageRequest pageable = this.getPageable(countInContext, dc.getPageSize(), dc.getSortingColumnDefs());
-			if (predicate != null) {
-				page = this.repository.findAll(predicate, pageable);
-			} else {
-				page = this.repository.findAll(pageable);
-			}
-			cache.put(key, page);
-		} else {
-			page = (Page<Y>) valueWrapper.get();
-
-			this.logger.trace(String.format("Object retrieved from cache=%s for key %s is page=%s", CACHE_NAME, key, page));
-
-			if (page.getTotalElements() != countInContext) {
-				this.logger.warn("Inconsistent state between cache and db, removing from cache and reevaluating from db");
-				cache.evict(key);
-				return this.getAllEntities(dc, predicate, countInContext);
-			}
-		}
-
-		return page;
-	}
-
-	private Object calculateKey(final Object[] objects) {
-		final int hashCodedArguments = ObjectUtils.nullSafeHashCode(objects);
-		return String.format("%s_key_%d", this.getId(), hashCodedArguments);
-	}
-
-	/**
-	 * Method handles converting found {@code value} for {@code path} if necessary.
-	 * If value was found using path but there is a requirement to retrieve another value for it,
-	 * this method can be easily overridden hence give the possibility to override old value
-	 *
-	 * @param object current object being processed
-	 * @param value  current value found for {@code path}
-	 * @param path   current path
-	 *
-	 * @return new/old value for {@code path}
-	 */
-	protected Object handleColumnConversion(final Y object, final Object value, final String path) {
-		return value;
-	}
-
 	/**
 	 * Using passed {@link org.agatom.springatom.web.component.request.beans.ComponentTableRequest} method
 	 * constructs {@link com.mysema.query.types.Predicate} for the {@link org.springframework.data.repository.Repository}
@@ -267,6 +212,64 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
 		return predicate;
 	}
 
+	private Page<Y> getAllEntities(final ComponentTableRequest dc, final Predicate predicate, final long countInContext) {
+		final PageRequest pageable = this.getPageable(countInContext, dc.getPageSize(), dc.getSortingColumnDefs());
+		Page<Y> page;
+
+		if (predicate != null) {
+			page = this.repository.findAll(predicate, pageable);
+		} else {
+			page = this.repository.findAll(pageable);
+		}
+
+		return page;
+	}
+
+	/**
+	 * If value for current {@code path} was not found (therefore was null) this method will be called to retrieve value
+	 * for given {@code path} as for <b>dynamic column</b>.
+	 * In other words such pair <b>@{code path}</b> and <b>column</b> can be considered as <b>calculable attribute</b>
+	 *
+	 * @param object current object being processed
+	 * @param path   current path
+	 *
+	 * @return value for path or null
+	 *
+	 * @see org.agatom.springatom.web.component.builders.table.TableComponentBuilder#handleColumnConversion(org.springframework.data.domain.Persistable,
+	 * Object, String)
+	 */
+	protected Object handleDynamicColumn(final Y object, final String path) throws DynamicColumnResolutionException {
+		switch (path) {
+			case "infopage": {
+				Link link;
+				try {
+					link = helper.getInfoPageLink(this.pageMappings.getMappedRel(object.getClass()), (Long) object.getId());
+					return new LinkAction()
+							.setLabel(ClassUtils.getShortName(this.entity.getName()))
+							.setUrl(link);
+				} catch (InfoPageNotFoundException exp) {
+					throw new DynamicColumnResolutionException(exp);
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Method handles converting found {@code value} for {@code path} if necessary.
+	 * If value was found using path but there is a requirement to retrieve another value for it,
+	 * this method can be easily overridden hence give the possibility to override old value
+	 *
+	 * @param object current object being processed
+	 * @param value  current value found for {@code path}
+	 * @param path   current path
+	 *
+	 * @return new/old value for {@code path}
+	 */
+	protected Object handleColumnConversion(final Y object, final Object value, final String path) {
+		return value;
+	}
+
 	/**
 	 * Method checks if table builder was called in some specific context
 	 *
@@ -290,36 +293,6 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
 	 * @see org.agatom.springatom.web.component.builders.table.TableComponentBuilder#getPredicate(org.agatom.springatom.web.component.request.beans.ComponentTableRequest)
 	 */
 	protected abstract Predicate getPredicate(final Long contextKey, final Class<?> contextClass);
-
-	/**
-	 * If value for current {@code path} was not found (therefore was null) this method will be called to retrieve value
-	 * for given {@code path} as for <b>dynamic column</b>.
-	 * In other words such pair <b>@{code path}</b> and <b>column</b> can be considered as <b>calculable attribute</b>
-	 *
-	 * @param object current object being processed
-	 * @param path   current path
-	 *
-	 * @return value for path or null
-	 *
-	 * @see org.agatom.springatom.web.component.builders.table.TableComponentBuilder#handleColumnConversion(org.springframework.data.domain.Persistable,
-	 * Object, String)
-	 */
-	protected Object handleDynamicColumn(final Y object, final String path) throws DynamicColumnResolutionException {
-		switch (path) {
-			case "infopage": {
-				final SEntityInfoPage infoPage = this.pageMappings.getInfoPageForEntity(this.entity);
-				if (infoPage != null) {
-					final Link link = helper.getInfoPageLink(
-							infoPage.getPath(),
-							Long.parseLong(String.valueOf(object.getId()))
-					);
-					return new LinkAction().setLabel(ClassUtils.getShortName(this.entity.getName()))
-							.setUrl(link);
-				}
-			}
-		}
-		return null;
-	}
 
 	protected PageRequest getPageable(final long totalObjects, final int pageSize, final List<ColumnDef> sort) {
 		final int pageNumber = this.getPageNumber(totalObjects, pageSize);
