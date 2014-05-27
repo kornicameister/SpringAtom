@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -17,18 +17,29 @@
 
 package org.agatom.springatom.web.component.builders;
 
+import org.agatom.springatom.web.component.builders.exception.ComponentException;
+import org.agatom.springatom.web.component.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.data.ComponentDataResponse;
+
 /**
- * {@code ComponentBuilder} marker interface for all <b>component builder</b>
+ * {@code ComponentDataBuilder} is an interface for <b>component builders</b>
+ * designed to provide the data for given component without paying attention on its definition
+ * <p/>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 27.05.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentBuilder {
+public interface ComponentDataBuilder {
 	/**
-	 * Returns this builder <b>ID</b>
+	 * Returns data for implementing builder. Data must be {@link org.agatom.springatom.web.component.data.ComponentDataResponse} or subclass
 	 *
-	 * @return unique identification of the builder
+	 * @param dataRequest request to work with
+	 *
+	 * @return the data
+	 *
+	 * @throws ComponentException if any
 	 */
-	String getId();
+	ComponentDataResponse<?> getData(final ComponentDataRequest dataRequest) throws ComponentException;
 }

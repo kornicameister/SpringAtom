@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -17,18 +17,44 @@
 
 package org.agatom.springatom.web.component.builders;
 
+import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
+import org.agatom.springatom.web.component.builders.exception.ComponentException;
+import org.agatom.springatom.web.component.data.ComponentDataRequest;
+
+import java.io.Serializable;
+
 /**
- * {@code ComponentBuilder} marker interface for all <b>component builder</b>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 27.05.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentBuilder {
+public interface ComponentDefinitionBuilder<COMP extends Serializable> {
+
 	/**
-	 * Returns this builder <b>ID</b>
+	 * Returns value of {@link org.agatom.springatom.web.component.builders.annotation.ComponentBuilds.Produces}
 	 *
-	 * @return unique identification of the builder
+	 * @return what builder produces
 	 */
-	String getId();
+	ComponentBuilds.Produces getProduces();
+
+	/**
+	 * Returns a component class built by this builder
+	 *
+	 * @return a component class
+	 */
+	Class<?> getBuilds();
+
+	/**
+	 * Returns valid definition appropriate for this builder. Definition must be {@link java.io.Serializable}
+	 *
+	 * @param dataRequest to access the request and conditionally build definition if necessary
+	 *
+	 * @return builder definition
+	 *
+	 * @throws ComponentException in case of an error
+	 */
+	COMP getDefinition(final ComponentDataRequest dataRequest) throws ComponentException;
+
 }

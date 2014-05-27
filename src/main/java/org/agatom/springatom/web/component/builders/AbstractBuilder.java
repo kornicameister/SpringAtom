@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -17,18 +17,38 @@
 
 package org.agatom.springatom.web.component.builders;
 
+import com.google.common.base.Objects;
+import org.apache.log4j.Logger;
+
 /**
- * {@code ComponentBuilder} marker interface for all <b>component builder</b>
+ * {@code AbstractBuilder} is a root for all <b>component builder</b>. Defines root fields and functionality.
+ * It is not an actual {@link org.agatom.springatom.web.component.builders.ComponentDataBuilder}
+ * or {@link org.agatom.springatom.web.component.builders.ComponentDefinitionBuilder}, yet all concrete implementations
+ * starts from it
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 27.05.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentBuilder {
-	/**
-	 * Returns this builder <b>ID</b>
-	 *
-	 * @return unique identification of the builder
-	 */
-	String getId();
+abstract class AbstractBuilder
+		implements ComponentBuilder {
+	protected final Logger logger = Logger.getLogger(getClass());
+	private         String id     = null;
+
+	@Override
+	public final String getId() {
+		return this.id;
+	}
+
+	public final void setId(final String id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.add("id", id)
+				.toString();
+	}
 }
