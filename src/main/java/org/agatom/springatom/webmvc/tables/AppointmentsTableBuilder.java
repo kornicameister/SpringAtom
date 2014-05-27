@@ -15,15 +15,15 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.pages.builders;
+package org.agatom.springatom.webmvc.tables;
 
 import com.mysema.query.types.Predicate;
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.web.component.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
+import org.agatom.springatom.web.component.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
-import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 /**
@@ -39,14 +39,11 @@ import org.springframework.util.StringUtils;
 )
 public class AppointmentsTableBuilder
 		extends TableComponentBuilder<DandelionTableComponent, SAppointment> {
-
-	protected static final String BUILDER_ID       = "appointmentsTableBuilder";
-	private static final   String TABLE_ID         = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointment.ENTITY_NAME));
-	private static final   Logger LOGGER           = Logger.getLogger(AppointmentsTableBuilder.class);
-	private static final   long   serialVersionUID = 585939608681695245L;
+	protected static final String BUILDER_ID = "appointmentsTableBuilder";
+	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointment.ENTITY_NAME));
 
 	@Override
-	protected DandelionTableComponent buildDefinition() {
+	protected DandelionTableComponent buildDefinition(final ComponentDataRequest dataRequest) {
 		final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
 		this.helper.newTableColumn(component, "id", "persistentobject.id");
 		this.helper.newTableColumn(component, "begin", "sappointment.begin").setRenderFunctionName("renderDate");
@@ -70,11 +67,6 @@ public class AppointmentsTableBuilder
 				return object.getReporter().getPerson().getIdentity();
 		}
 		return super.handleColumnConversion(object, value, path);
-	}
-
-	@Override
-	protected Logger getLogger() {
-		return LOGGER;
 	}
 
 	@Override

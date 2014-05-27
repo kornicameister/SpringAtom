@@ -15,16 +15,18 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.pages.builders;
+package org.agatom.springatom.webmvc.tables;
 
 import com.mysema.query.types.Predicate;
-import org.agatom.springatom.server.model.beans.car.QSCar;
-import org.agatom.springatom.server.model.beans.car.SCar;
+import org.agatom.springatom.server.model.beans.person.QSPersonContact;
+import org.agatom.springatom.server.model.beans.person.SPerson;
+import org.agatom.springatom.server.model.beans.person.SPersonContact;
 import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.web.component.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
+import org.agatom.springatom.web.component.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
-import org.apache.log4j.Logger;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -32,47 +34,33 @@ import org.springframework.util.StringUtils;
  * @version 0.0.1
  * @since 0.0.1
  */
-@EntityBased(entity = SCar.class)
+@EntityBased(entity = SPersonContact.class)
 @ComponentBuilds(
-        id = CarsTableBuilder.BUILDER_ID,
-        builds = SCar.class,
-        produces = ComponentBuilds.Produces.TABLE_COMPONENT
+		id = ContactsForPersonTableBuilder.BUILDER_ID,
+		builds = SPersonContact.class,
+		produces = ComponentBuilds.Produces.TABLE_COMPONENT
 )
-public class CarsTableBuilder
-        extends TableComponentBuilder<DandelionTableComponent, SCar> {
+public class ContactsForPersonTableBuilder
+		extends TableComponentBuilder<DandelionTableComponent, SPersonContact> {
+	protected static final String BUILDER_ID = "contactsForPersonTableBuilder";
+	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SPersonContact.ENTITY_NAME));
 
-    protected static final String BUILDER_ID       = "carsTableBuilder";
-    private static final   String TABLE_ID         = String.format("%s%s", "table", StringUtils.uncapitalize(SCar.ENTITY_NAME));
-    private static final   Logger LOGGER           = Logger.getLogger(CarsTableBuilder.class);
-    private static final   long   serialVersionUID = 3079491907844336996L;
+	@Override
+	protected Predicate getPredicate(final Long id, final Class<?> contextClass) {
+		if (ClassUtils.isAssignable(SPerson.class, contextClass)) {
+			return QSPersonContact.sPersonContact.assigned.id.eq(id);
+		} else if (ClassUtils.isAssignable(SPersonContact.class, contextClass)) {
+			return QSPersonContact.sPersonContact.id.eq(id);
+		}
+		return null;
+	}
 
-    @Override
-    protected Object handleColumnConversion(final SCar object, final Object value, final String path) {
-        switch (path) {
-            case "owner": {
-                return object.getOwner().getPerson().getIdentity();
-            }
-        }
-        return super.handleColumnConversion(object, value, path);
-    }
-
-    @Override
-    protected Predicate getPredicate(final Long id, final Class<?> contextClass) {
-        return QSCar.sCar.carMaster.id.eq(id);
-    }
-
-    @Override
-    protected Logger getLogger() {
-        return LOGGER;
-    }
-
-    @Override
-    protected DandelionTableComponent buildDefinition() {
-        final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
-        this.helper.newTableColumn(component, "id", "persistentobject.id");
-        this.helper.newTableColumn(component, "owner", "scar.owner");
-        this.helper.newTableColumn(component, "licencePlate", "scar.licenceplate");
-        this.helper.newTableColumn(component, "vinNumber", "scar.vinnumber");
-        return component;
-    }
+	@Override
+	protected DandelionTableComponent buildDefinition(final ComponentDataRequest dataRequest) {
+		final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
+		this.helper.newTableColumn(component, "id", "persistentobject.id");
+		this.helper.newTableColumn(component, "contact", "scontact.contact");
+		this.helper.newTableColumn(component, "type", "scontact.type");
+		return component;
+	}
 }

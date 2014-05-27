@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.pages.builders;
+package org.agatom.springatom.webmvc.tables;
 
 import com.mysema.query.types.Predicate;
 import org.agatom.springatom.server.model.beans.appointment.QSAppointmentTask;
@@ -23,8 +23,8 @@ import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
 import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.web.component.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
+import org.agatom.springatom.web.component.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
-import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 /**
@@ -34,34 +34,26 @@ import org.springframework.util.StringUtils;
  */
 @EntityBased(entity = SAppointmentTask.class)
 @ComponentBuilds(
-        id = AppointmentTaskTableBuilder.BUILDER_ID,
-        builds = SAppointmentTask.class,
-        produces = ComponentBuilds.Produces.TABLE_COMPONENT
+		id = AppointmentTaskTableBuilder.BUILDER_ID,
+		builds = SAppointmentTask.class,
+		produces = ComponentBuilds.Produces.TABLE_COMPONENT
 )
 public class AppointmentTaskTableBuilder
-        extends TableComponentBuilder<DandelionTableComponent, SAppointmentTask> {
+		extends TableComponentBuilder<DandelionTableComponent, SAppointmentTask> {
+	protected static final String BUILDER_ID = "appointmentTaskTableBuilder";
+	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointmentTask.ENTITY_NAME));
 
-    protected static final String BUILDER_ID       = "appointmentTaskTableBuilder";
-    private static final   String TABLE_ID         = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointmentTask.ENTITY_NAME));
-    private static final   Logger LOGGER           = Logger.getLogger(AppointmentTaskTableBuilder.class);
-    private static final   long   serialVersionUID = 585939608681695245L;
+	@Override
+	protected DandelionTableComponent buildDefinition(final ComponentDataRequest dataRequest) {
+		final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
+		this.helper.newTableColumn(component, "id", "persistentobject.id");
+		this.helper.newTableColumn(component, "type", "sappointment.task.type");
+		this.helper.newTableColumn(component, "task", "sappointment.task.task").setSortable(false);
+		return component;
+	}
 
-    @Override
-    protected DandelionTableComponent buildDefinition() {
-        final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
-        this.helper.newTableColumn(component, "id", "persistentobject.id");
-        this.helper.newTableColumn(component, "type", "sappointment.task.type");
-        this.helper.newTableColumn(component, "task", "sappointment.task.task").setSortable(false);
-        return component;
-    }
-
-    @Override
-    protected Logger getLogger() {
-        return LOGGER;
-    }
-
-    @Override
-    protected Predicate getPredicate(final Long appointmentId, final Class<?> contextClass) {
-        return QSAppointmentTask.sAppointmentTask.appointment.id.eq(appointmentId);
-    }
+	@Override
+	protected Predicate getPredicate(final Long appointmentId, final Class<?> contextClass) {
+		return QSAppointmentTask.sAppointmentTask.appointment.id.eq(appointmentId);
+	}
 }
