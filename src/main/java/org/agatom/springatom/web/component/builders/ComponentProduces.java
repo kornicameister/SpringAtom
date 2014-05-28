@@ -18,6 +18,7 @@
 package org.agatom.springatom.web.component.builders;
 
 /**
+ * {@code ComponentProduces} describes what particular builder is creating
  * <small>Class is a part of <b>SpringAtom</b> and was created at 27.05.14</small>
  *
  * @author kornicameister

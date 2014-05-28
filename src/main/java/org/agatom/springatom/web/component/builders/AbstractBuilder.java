@@ -18,7 +18,9 @@
 package org.agatom.springatom.web.component.builders;
 
 import com.google.common.base.Objects;
+import org.agatom.springatom.web.component.builders.annotation.ComponentBuilder;
 import org.apache.log4j.Logger;
+import org.springframework.core.annotation.AnnotationUtils;
 
 /**
  * {@code AbstractBuilder} is a root for all <b>component builder</b>. Defines root fields and functionality.
@@ -28,27 +30,23 @@ import org.apache.log4j.Logger;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 27.05.14</small>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 abstract class AbstractBuilder
 		implements Builder {
 	protected final Logger logger = Logger.getLogger(getClass());
-	private         String id     = null;
-
-	@Override
-	public final String getId() {
-		return this.id;
-	}
-
-	public final void setId(final String id) {
-		this.id = id;
-	}
 
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)
-				.add("id", id)
+				.add("id", getId())
 				.toString();
+	}
+
+	@Override
+	public final String getId() {
+		final Class<? extends AbstractBuilder> clazz = this.getClass();
+		return String.valueOf(AnnotationUtils.getValue(clazz.getAnnotation(ComponentBuilder.class)));
 	}
 }
