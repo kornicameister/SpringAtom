@@ -32,11 +32,7 @@
     <import resource="tiles3/tiles.xml"/>
     <import resource="interceptors/interceptors.xml"/>
 
-    <context:component-scan base-package="org.agatom.springatom.webmvc">
-        <context:exclude-filter type="annotation" expression="org.agatom.springatom.web.component.builders.annotation.ComponentBuilds"/>
-        <context:exclude-filter type="annotation" expression="org.agatom.springatom.web.infopages.annotation.InfoPage"/>
-        <context:exclude-filter type="annotation" expression="org.agatom.springatom.web.infopages.annotation.DomainInfoPage"/>
-    </context:component-scan>
+    <context:component-scan base-package="org.agatom.springatom.webmvc"/>
 
     <mvc:annotation-driven validator="validator"
                            conversion-service="springAtomConversionService">
