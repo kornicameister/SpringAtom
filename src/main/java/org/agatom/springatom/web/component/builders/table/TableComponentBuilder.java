@@ -27,7 +27,7 @@ import org.agatom.springatom.core.invoke.InvokeUtils;
 import org.agatom.springatom.server.repository.SBasicRepository;
 import org.agatom.springatom.web.action.model.actions.LinkAction;
 import org.agatom.springatom.web.component.ComponentConstants;
-import org.agatom.springatom.web.component.builders.AbstractComponentBuilder;
+import org.agatom.springatom.web.component.builders.AbstractComponentDefinitionBuilder;
 import org.agatom.springatom.web.component.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.builders.exception.ComponentPathEvaluationException;
 import org.agatom.springatom.web.component.builders.exception.ComponentTableException;
@@ -50,23 +50,22 @@ import org.springframework.hateoas.Link;
 import org.springframework.util.ClassUtils;
 
 import javax.annotation.PostConstruct;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 /**
  * {@code TableComponentBuilder} provides generic functionality for all the implementing classes
  * that eases and helps to build a table component {@link org.agatom.springatom.web.component.elements.table.TableComponent}.
- *
+ * <p/>
  * Changelog:
  * <ol>
- *     <li>0.0.1 -> 0.0.2
- *         <ul>
- *             <li>Removed EntityAware</li>
- *             <li>Repository is set via dependency injection</li>
- *             <li>entity is read via GenericTypeResolver</li>
- *         </ul>
- *     </li>
+ * <li>0.0.1 -> 0.0.2
+ * <ul>
+ * <li>Removed EntityAware</li>
+ * <li>Repository is set via dependency injection</li>
+ * <li>entity is read via GenericTypeResolver</li>
+ * </ul>
+ * </li>
  * </ol>
  *
  * @author kornicameister
@@ -74,21 +73,21 @@ import java.util.Map;
  * @since 0.0.1
  */
 abstract public class TableComponentBuilder<COMP extends TableComponent, Y extends Persistable<?>>
-		extends AbstractComponentBuilder<COMP> {
+		extends AbstractComponentDefinitionBuilder<COMP> {
 	@Autowired
-	protected TableComponentHelper              helper       = null;
+	protected TableComponentHelper      helper       = null;
 	@Autowired
-	protected ApplicationContext                context      = null;
+	protected ApplicationContext        context      = null;
 	@Autowired
-	protected SBasicRepository<Y, Serializable> repository   = null;
-	protected Class<Y>                          entity       = null;
+	protected SBasicRepository<Y, Long> repository   = null;
+	protected Class<Y>                  entity       = null;
 	@Autowired
-	private   InfoPageMappingService            pageMappings = null;
+	private   InfoPageMappingService    pageMappings = null;
 
 	@PostConstruct
 	@SuppressWarnings("unchecked")
 	private void postConstruct() {
-		this.entity = (Class<Y>) GenericTypeResolver.resolveTypeArguments(getClass(), getClass())[1];
+		this.entity = (Class<Y>) GenericTypeResolver.resolveTypeArguments(getClass(), TableComponentBuilder.class)[1];
 	}
 
 	@Override
@@ -284,7 +283,7 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
 	/**
 	 * Internal method for {@link org.agatom.springatom.web.component.builders.table.TableComponentBuilder}'s that extends this base class
 	 *
-	 * @param contextKey   value set in another {@link org.agatom.springatom.web.component.builders.ComponentBuilder} which is most likely the {@link
+	 * @param contextKey   value set in another {@link org.agatom.springatom.web.component.builders.Builder} which is most likely the {@link
 	 *                     org.springframework.data.domain.Persistable#getId()} of a {@code contextClass}
 	 * @param contextClass points to a {@link java.lang.Class} correlating to the {@code contextKey}
 	 *

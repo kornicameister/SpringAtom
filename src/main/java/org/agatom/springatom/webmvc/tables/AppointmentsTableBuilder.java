@@ -19,7 +19,7 @@ package org.agatom.springatom.webmvc.tables;
 
 import com.mysema.query.types.Predicate;
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
-import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
+import org.agatom.springatom.web.component.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
 import org.agatom.springatom.web.component.data.ComponentDataRequest;
@@ -32,11 +32,7 @@ import org.springframework.util.StringUtils;
  * @since 0.0.1
  */
 @EntityBased(entity = SAppointment.class)
-@ComponentBuilds(
-		id = AppointmentsTableBuilder.BUILDER_ID,
-		builds = SAppointment.class,
-		produces = ComponentBuilds.Produces.TABLE_COMPONENT
-)
+@ComponentBuilder(AppointmentsTableBuilder.BUILDER_ID)
 public class AppointmentsTableBuilder
 		extends TableComponentBuilder<DandelionTableComponent, SAppointment> {
 	protected static final String BUILDER_ID = "appointmentsTableBuilder";

@@ -37,16 +37,13 @@ import java.lang.annotation.*;
 @Documented
 @Target(value = {ElementType.TYPE})
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface ComponentBuilds {
-    String id();
-
-    Class<?> builds();
-
-    Produces produces() default Produces.PAGE_COMPONENT;
-
-    public static enum Produces {
-        PAGE_COMPONENT,
-        TABLE_COMPONENT
-    }
+public @interface ComponentBuilder {
+	/**
+	 * The value may indicate a suggestion for a logical component name,
+	 * to be turned into a Spring bean in case of an autodetected component.
+	 *
+	 * @return the suggested component name, if any
+	 */
+	String value() default "";
 
 }

@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
  * @since 0.0.1
  */
 abstract class AbstractBuilder
-		implements ComponentBuilder {
+		implements Builder {
 	protected final Logger logger = Logger.getLogger(getClass());
 	private         String id     = null;
 

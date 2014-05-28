@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.web.component.builders;
 
-import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.web.component.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.elements.table.TableComponent;
@@ -34,29 +33,29 @@ import java.util.concurrent.TimeUnit;
  * @version 0.0.3
  * @since 0.0.1
  */
-abstract public class AbstractComponentBuilder<COMP extends Serializable>
+abstract public class AbstractComponentDefinitionBuilder<COMP extends Serializable>
 		extends AbstractComponentDataBuilder
 		implements ComponentDefinitionBuilder<COMP> {
-	private Class<?>                 builds   = getBuilds();
-	private ComponentBuilds.Produces produces = getProduces();
+	private Class<?>          builds            = getBuilds();
+	private ComponentProduces componentProduces = getProduces();
 
 	@Override
-	public final ComponentBuilds.Produces getProduces() {
-		if (this.produces == null) {
+	public final ComponentProduces getProduces() {
+		if (this.componentProduces == null) {
 			if (ClassUtils.isAssignable(InfoPageComponent.class, this.getBuilds())) {
-				this.produces = ComponentBuilds.Produces.PAGE_COMPONENT;
+				this.componentProduces = ComponentProduces.PAGE_COMPONENT;
 			} else if (ClassUtils.isAssignable(TableComponent.class, this.getBuilds())) {
-				this.produces = ComponentBuilds.Produces.TABLE_COMPONENT;
+				this.componentProduces = ComponentProduces.TABLE_COMPONENT;
 			}
-			this.logger.trace(String.format("%s produces %s", ClassUtils.getShortName(this.getClass()), this.produces));
+			this.logger.trace(String.format("%s produces %s", ClassUtils.getShortName(this.getClass()), this.componentProduces));
 		}
-		return produces;
+		return componentProduces;
 	}
 
 	@Override
 	public final Class<?> getBuilds() {
 		if (this.builds == null) {
-			this.builds = GenericTypeResolver.resolveTypeArgument(getClass(), ComponentBuilder.class);
+			this.builds = GenericTypeResolver.resolveTypeArgument(getClass(), ComponentDefinitionBuilder.class);
 			this.logger.trace(String.format("%s builds %s", ClassUtils.getShortName(this.getClass()), ClassUtils.getShortName(this.builds)));
 		}
 		return this.builds;

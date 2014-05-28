@@ -31,7 +31,8 @@ import org.agatom.springatom.web.component.data.ComponentDataResponse;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentDataBuilder {
+public interface ComponentDataBuilder
+		extends Builder {
 	/**
 	 * Returns data for implementing builder. Data must be {@link org.agatom.springatom.web.component.data.ComponentDataResponse} or subclass
 	 *

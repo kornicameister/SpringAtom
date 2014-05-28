@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.web.component.builders;
 
-import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
 import org.agatom.springatom.web.component.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.data.ComponentDataRequest;
 
@@ -30,14 +29,15 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentDefinitionBuilder<COMP extends Serializable> {
+public interface ComponentDefinitionBuilder<COMP extends Serializable>
+		extends ComponentDataBuilder {
 
 	/**
-	 * Returns value of {@link org.agatom.springatom.web.component.builders.annotation.ComponentBuilds.Produces}
+	 * Returns value of {@link ComponentProduces}
 	 *
 	 * @return what builder produces
 	 */
-	ComponentBuilds.Produces getProduces();
+	ComponentProduces getProduces();
 
 	/**
 	 * Returns a component class built by this builder

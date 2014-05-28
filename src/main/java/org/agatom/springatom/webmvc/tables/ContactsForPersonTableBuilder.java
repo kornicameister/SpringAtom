@@ -21,7 +21,7 @@ import com.mysema.query.types.Predicate;
 import org.agatom.springatom.server.model.beans.person.QSPersonContact;
 import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.person.SPersonContact;
-import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
+import org.agatom.springatom.web.component.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
 import org.agatom.springatom.web.component.data.ComponentDataRequest;
@@ -35,11 +35,7 @@ import org.springframework.util.StringUtils;
  * @since 0.0.1
  */
 @EntityBased(entity = SPersonContact.class)
-@ComponentBuilds(
-		id = ContactsForPersonTableBuilder.BUILDER_ID,
-		builds = SPersonContact.class,
-		produces = ComponentBuilds.Produces.TABLE_COMPONENT
-)
+@ComponentBuilder(ContactsForPersonTableBuilder.BUILDER_ID)
 public class ContactsForPersonTableBuilder
 		extends TableComponentBuilder<DandelionTableComponent, SPersonContact> {
 	protected static final String BUILDER_ID = "contactsForPersonTableBuilder";

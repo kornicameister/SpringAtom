@@ -17,31 +17,18 @@
 
 package org.agatom.springatom.web.component.builders;
 
-import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.context.request.WebRequest;
-
 /**
+ * {@code Builder} marker interface for all <b>component builder</b>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentBuilders {
-
-    ComponentBuilder<?> getBuilder(final String componentId);
-
-    ComponentBuilder<?> getBuilder(final String componentId, final ModelMap modelMap, final WebRequest request);
-
-    ComponentBuilder<?> getBuilder(final Class<?> target, final ModelMap modelMap, final WebRequest request);
-
-    ComponentBuilder<?> getBuilder(final Class<?> target, final ComponentBuilds.Produces produces, final ModelMap modelMap, final WebRequest request);
-
-    boolean hasBuilder(Class<?> target);
-
-    boolean hasBuilder(Class<?> target, ComponentBuilds.Produces produces);
-
-    String getBuilderId(Class<?> target);
-
-    String getBuilderId(Class<?> target, ComponentBuilds.Produces produces);
-
+public interface Builder {
+	/**
+	 * Returns this builder <b>ID</b>
+	 *
+	 * @return unique identification of the builder
+	 */
+	String getId();
 }

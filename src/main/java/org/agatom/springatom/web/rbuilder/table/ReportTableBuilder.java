@@ -22,13 +22,13 @@ import org.agatom.springatom.server.model.beans.report.QSReport;
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.web.action.model.actions.AjaxAction;
 import org.agatom.springatom.web.action.model.actions.PopupAction;
-import org.agatom.springatom.web.component.builders.annotation.ComponentBuilds;
+import org.agatom.springatom.web.component.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
 import org.agatom.springatom.web.component.builders.table.exception.DynamicColumnResolutionException;
+import org.agatom.springatom.web.component.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
 import org.agatom.springatom.webmvc.controllers.rbuilder.ReportBuilderController;
-import org.apache.log4j.Logger;
 import org.springframework.hateoas.Link;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -42,21 +42,14 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
  * @since 0.0.1
  */
 @EntityBased(entity = SReport.class)
-@ComponentBuilds(
-		id = ReportTableBuilder.BUILDER_ID,
-		builds = SReport.class,
-		produces = ComponentBuilds.Produces.TABLE_COMPONENT
-)
+@ComponentBuilder(ReportTableBuilder.BUILDER_ID)
 public class ReportTableBuilder
 		extends TableComponentBuilder<DandelionTableComponent, SReport> {
-
-	private static final   long   serialVersionUID = -4745941707048690321L;
-	private static final   String TABLE_ID         = String.format("%s%s", "table", StringUtils.uncapitalize(SReport.ENTITY_NAME));
-	private static final   Logger LOGGER           = Logger.getLogger(ReportTableBuilder.class);
-	protected static final String BUILDER_ID       = "reportTableBuilder";
+	protected static final String BUILDER_ID = "reportTableBuilder";
+	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SReport.ENTITY_NAME));
 
 	@Override
-	protected DandelionTableComponent buildDefinition() {
+	protected DandelionTableComponent buildDefinition(final ComponentDataRequest dataRequest) {
 		final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
 		this.helper.newTableColumn(component, "id", "persistentobject.id");
 		this.helper.newTableColumn(component, "title", "sreport.title");
@@ -105,11 +98,6 @@ public class ReportTableBuilder
 			}
 		}
 		return retValue;
-	}
-
-	@Override
-	protected Logger getLogger() {
-		return LOGGER;
 	}
 
 	@Override
