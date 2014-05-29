@@ -15,12 +15,12 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.builders;
+package org.agatom.springatom.web.component.core.builders;
 
-import org.agatom.springatom.web.component.builders.exception.ComponentException;
-import org.agatom.springatom.web.component.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.elements.table.TableComponent;
-import org.agatom.springatom.web.infopages.component.elements.InfoPageComponent;
+import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
+import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.core.elements.table.TableComponent;
+import org.agatom.springatom.web.component.infopages.elements.InfoPageComponent;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;

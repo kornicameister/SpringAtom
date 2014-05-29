@@ -15,38 +15,17 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.builders;
-
-import com.google.common.base.Objects;
-import org.agatom.springatom.web.component.builders.annotation.ComponentBuilder;
-import org.apache.log4j.Logger;
-import org.springframework.core.annotation.AnnotationUtils;
+package org.agatom.springatom.web.component.core.builders;
 
 /**
- * {@code AbstractBuilder} is a root for all <b>component builder</b>. Defines root fields and functionality.
- * It is not an actual {@link org.agatom.springatom.web.component.builders.ComponentDataBuilder}
- * or {@link org.agatom.springatom.web.component.builders.ComponentDefinitionBuilder}, yet all concrete implementations
- * starts from it
+ * {@code ComponentProduces} describes what particular builder is creating
  * <small>Class is a part of <b>SpringAtom</b> and was created at 27.05.14</small>
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.1
  * @since 0.0.1
  */
-abstract class AbstractBuilder
-		implements Builder {
-	protected final Logger logger = Logger.getLogger(getClass());
-
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this)
-				.add("id", getId())
-				.toString();
-	}
-
-	@Override
-	public final String getId() {
-		final Class<? extends AbstractBuilder> clazz = this.getClass();
-		return String.valueOf(AnnotationUtils.getValue(clazz.getAnnotation(ComponentBuilder.class)));
-	}
+public enum ComponentProduces {
+	PAGE_COMPONENT,
+	TABLE_COMPONENT
 }

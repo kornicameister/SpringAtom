@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,17 +15,21 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.builders;
+package org.agatom.springatom.web.component.core.builders;
 
 /**
- * {@code ComponentProduces} describes what particular builder is creating
- * <small>Class is a part of <b>SpringAtom</b> and was created at 27.05.14</small>
+ * {@code Builder} marker interface for all <b>component builder</b>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public enum ComponentProduces {
-	PAGE_COMPONENT,
-	TABLE_COMPONENT
+public interface Builder {
+	/**
+	 * Returns this builder <b>ID</b>. The <b>ID</b> is retrieved from an annotation
+	 * {@link org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder}
+	 *
+	 * @return unique identification of the builder
+	 */
+	String getId();
 }

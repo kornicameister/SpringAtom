@@ -15,10 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.builders;
+package org.agatom.springatom.web.component.core.builders;
 
-import org.agatom.springatom.web.component.builders.exception.ComponentException;
-import org.agatom.springatom.web.component.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
+import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 
 import java.io.Serializable;
 

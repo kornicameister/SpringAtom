@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,27 +15,38 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.builders.exception;
+package org.agatom.springatom.web.component.core.builders;
+
+import com.google.common.base.Objects;
+import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
+import org.apache.log4j.Logger;
+import org.springframework.core.annotation.AnnotationUtils;
 
 /**
+ * {@code AbstractBuilder} is a root for all <b>component builder</b>. Defines root fields and functionality.
+ * It is not an actual {@link org.agatom.springatom.web.component.core.builders.ComponentDataBuilder}
+ * or {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder}, yet all concrete implementations
+ * starts from it
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 27.05.14</small>
+ *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
-public class ComponentPathEvaluationException
-        extends ComponentException {
+abstract class AbstractBuilder
+		implements Builder {
+	protected final Logger logger = Logger.getLogger(getClass());
 
-    private static final long serialVersionUID = 4322042989281394202L;
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.add("id", getId())
+				.toString();
+	}
 
-    public ComponentPathEvaluationException(final String message) {
-        super(message);
-    }
-
-    public ComponentPathEvaluationException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
-
-    public ComponentPathEvaluationException(final Throwable cause) {
-        super(cause);
-    }
+	@Override
+	public String getId() {
+		final Class<? extends AbstractBuilder> clazz = this.getClass();
+		return String.valueOf(AnnotationUtils.getValue(clazz.getAnnotation(ComponentBuilder.class)));
+	}
 }

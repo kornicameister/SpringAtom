@@ -15,35 +15,27 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.builders.annotation;
-
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import java.lang.annotation.*;
+package org.agatom.springatom.web.component.core.builders.exception;
 
 /**
- * {@code ComponentBuilder} is an annotation that marks annotated bean as capable
- * of producing definition of a component.
- *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Inherited
-@Documented
-@Target(value = {ElementType.TYPE})
-@Retention(value = RetentionPolicy.RUNTIME)
-public @interface ComponentBuilder {
-	/**
-	 * The value may indicate a suggestion for a logical component name,
-	 * to be turned into a Spring bean in case of an autodetected component.
-	 *
-	 * @return the suggested component name, if any
-	 */
-	String value() default "";
+public class ComponentPathEvaluationException
+		extends ComponentException {
 
+	private static final long serialVersionUID = 4322042989281394202L;
+
+	public ComponentPathEvaluationException(final String message) {
+		super(message);
+	}
+
+	public ComponentPathEvaluationException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
+
+	public ComponentPathEvaluationException(final Throwable cause) {
+		super(cause);
+	}
 }

@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.builders.exception;
+package org.agatom.springatom.web.component.core.builders.exception;
 
 /**
  * @author kornicameister
@@ -23,18 +23,18 @@ package org.agatom.springatom.web.component.builders.exception;
  * @since 0.0.1
  */
 public class ComponentException
-        extends Exception {
-    private static final long serialVersionUID = -6181041823249235155L;
+		extends Exception {
+	private static final long serialVersionUID = -6181041823249235155L;
 
-    public ComponentException(final String message) {
-        super(message);
-    }
+	public ComponentException(final String message) {
+		super(message);
+	}
 
-    public ComponentException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+	public ComponentException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 
-    public ComponentException(final Throwable cause) {
-        super(cause);
-    }
+	public ComponentException(final Throwable cause) {
+		super(cause);
+	}
 }

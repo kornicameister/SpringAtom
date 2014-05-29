@@ -15,21 +15,35 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.builders;
+package org.agatom.springatom.web.component.core.builders.annotation;
+
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import java.lang.annotation.*;
 
 /**
- * {@code Builder} marker interface for all <b>component builder</b>
+ * {@code ComponentBuilder} is an annotation that marks annotated bean as capable
+ * of producing definition of a component.
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface Builder {
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Inherited
+@Documented
+@Target(value = {ElementType.TYPE})
+@Retention(value = RetentionPolicy.RUNTIME)
+public @interface ComponentBuilder {
 	/**
-	 * Returns this builder <b>ID</b>. The <b>ID</b> is retrieved from an annotation
-	 * {@link org.agatom.springatom.web.component.builders.annotation.ComponentBuilder}
+	 * The value may indicate a suggestion for a logical component name,
+	 * to be turned into a Spring bean in case of an autodetected component.
 	 *
-	 * @return unique identification of the builder
+	 * @return the suggested component name, if any
 	 */
-	String getId();
+	String value() default "";
+
 }

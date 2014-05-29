@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,19 +15,32 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.builders.annotation;
+package org.agatom.springatom.web.component.core.builders;
 
-import java.lang.annotation.*;
+import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
+import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 
 /**
+ * {@code ComponentDataBuilder} is an interface for <b>component builders</b>
+ * designed to provide the data for given component without paying attention on its definition
+ * <p/>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 27.05.14</small>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Inherited
-@Documented
-@Target(value = {ElementType.TYPE})
-@Retention(value = RetentionPolicy.RUNTIME)
-public @interface EntityBased {
-    Class<?> entity();
+public interface ComponentDataBuilder
+		extends Builder {
+	/**
+	 * Returns data for implementing builder. Data must be {@link org.agatom.springatom.web.component.core.data.ComponentDataResponse} or subclass
+	 *
+	 * @param dataRequest request to work with
+	 *
+	 * @return the data
+	 *
+	 * @throws ComponentException if any
+	 */
+	ComponentDataResponse getData(final ComponentDataRequest dataRequest) throws ComponentException;
 }
