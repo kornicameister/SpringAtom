@@ -15,13 +15,13 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.repository;
+package org.agatom.springatom.web.component.core.repository;
 
-import org.agatom.springatom.web.component.builders.Builder;
-import org.agatom.springatom.web.component.builders.ComponentProduces;
+import org.agatom.springatom.web.component.core.builders.Builder;
+import org.agatom.springatom.web.component.core.builders.ComponentProduces;
 
 /**
- * {@code ComponentBuilderRepository} provides access to the {@link org.agatom.springatom.web.component.builders.Builder} instances
+ * {@code ComponentBuilderRepository} provides access to the {@link org.agatom.springatom.web.component.core.builders.Builder} instances
  *
  * @author kornicameister
  * @version 0.0.2
@@ -30,29 +30,29 @@ import org.agatom.springatom.web.component.builders.ComponentProduces;
 public interface ComponentBuilderRepository {
 
 	/**
-	 * Retrieves builder for given {@code componentId}, the same as defined in {@link org.agatom.springatom.web.component.builders.annotation.ComponentBuilder#value()}
+	 * Retrieves builder for given {@code componentId}, the same as defined in {@link org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder#value()}
 	 *
 	 * @param componentId the id of the builder
 	 *
-	 * @return the {@link org.agatom.springatom.web.component.builders.Builder}
+	 * @return the {@link org.agatom.springatom.web.component.core.builders.Builder}
 	 */
 	Builder getBuilder(final String componentId);
 
 	/**
-	 * Verifies is there is {@link org.agatom.springatom.web.component.builders.Builder} defined
-	 * to build {@code target} class. By default this method evaluates {@link org.agatom.springatom.web.component.builders.ComponentProduces#TABLE_COMPONENT} existence
+	 * Verifies is there is {@link org.agatom.springatom.web.component.core.builders.Builder} defined
+	 * to build {@code target} class. By default this method evaluates {@link org.agatom.springatom.web.component.core.builders.ComponentProduces#TABLE_COMPONENT} existence
 	 *
 	 * @param target class
 	 *
 	 * @return true/false
 	 *
-	 * @see #hasBuilder(Class, org.agatom.springatom.web.component.builders.ComponentProduces)
+	 * @see #hasBuilder(Class, org.agatom.springatom.web.component.core.builders.ComponentProduces)
 	 */
 	boolean hasBuilder(Class<?> target);
 
 	/**
-	 * Verifies is there is {@link org.agatom.springatom.web.component.builders.Builder} defined
-	 * to build {@code target} and {@link org.agatom.springatom.web.component.builders.ComponentProduces}
+	 * Verifies is there is {@link org.agatom.springatom.web.component.core.builders.Builder} defined
+	 * to build {@code target} and {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
 	 *
 	 * @param target   class
 	 * @param produces what builder produces
@@ -64,21 +64,21 @@ public interface ComponentBuilderRepository {
 	boolean hasBuilder(Class<?> target, ComponentProduces produces);
 
 	/**
-	 * Retrieves {@link org.agatom.springatom.web.component.builders.Builder} for
-	 * {@code target} class. By default this method evaluates for {@link org.agatom.springatom.web.component.builders.ComponentProduces#TABLE_COMPONENT}
+	 * Retrieves {@link org.agatom.springatom.web.component.core.builders.Builder} for
+	 * {@code target} class. By default this method evaluates for {@link org.agatom.springatom.web.component.core.builders.ComponentProduces#TABLE_COMPONENT}
 	 *
 	 * @param target class
 	 *
 	 * @return builder id
 	 *
-	 * @see #getBuilderId(Class, org.agatom.springatom.web.component.builders.ComponentProduces)
+	 * @see #getBuilderId(Class, org.agatom.springatom.web.component.core.builders.ComponentProduces)
 	 * @see #getBuilder(String)
 	 */
 	String getBuilderId(Class<?> target);
 
 	/**
-	 * Retrieves {@link org.agatom.springatom.web.component.builders.Builder} for
-	 * {@code target} class and particular {@link org.agatom.springatom.web.component.builders.ComponentProduces}
+	 * Retrieves {@link org.agatom.springatom.web.component.core.builders.Builder} for
+	 * {@code target} class and particular {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
 	 *
 	 * @param target   class
 	 * @param produces what builder produces

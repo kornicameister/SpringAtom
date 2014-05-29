@@ -15,45 +15,21 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.elements;
+package org.agatom.springatom.web.component.core;
 
-import org.agatom.springatom.web.component.EmbeddableComponent;
-
-import javax.annotation.Nonnull;
+import java.io.Serializable;
 
 /**
+ * {@code EmbeddableComponent} is marker interface for <b>components</b> that are part of {@link org.agatom.springatom.web.component.core.elements.ContentComponent}
+ *
  * @author kornicameister
  * @version 0.0.2
  * @since 0.0.1
  */
-public class PanelComponent<T extends EmbeddableComponent>
-		extends ContentComponent<T>
-		implements EmbeddableComponent {
-	private static final long   serialVersionUID = 8998087479297251535L;
-	protected            int    position         = -1;
-	protected            String layout           = null;
+public interface EmbeddableComponent
+		extends Serializable,
+		Comparable<EmbeddableComponent> {
+	int getPosition();
 
-	public String getLayout() {
-		return this.layout;
-	}
-
-	public PanelComponent<T> setLayout(final String layout) {
-		this.layout = layout;
-		return this;
-	}
-
-	@Override
-	public int getPosition() {
-		return position;
-	}
-
-	@Override
-	public void setPosition(final int position) {
-		this.position = position;
-	}
-
-	@Override
-	public int compareTo(final @Nonnull EmbeddableComponent panel) {
-		return Integer.compare(this.position, panel.getPosition());
-	}
+	void setPosition(int position);
 }

@@ -15,38 +15,15 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.helper.impl;
+package org.agatom.springatom.web.component.core;
 
-import org.agatom.springatom.core.util.Localized;
-import org.agatom.springatom.web.component.helper.ComponentHelper;
-import org.agatom.springatom.web.locale.SMessageSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.hateoas.Link;
+import java.io.Serializable;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Qualifier(value = "ComponentHelper")
-public class DefaultComponentHelper
-        implements ComponentHelper {
-
-    @Autowired
-    protected SMessageSource messageSource;
-
-    @Override
-    public String entitleFromMessageKey(final Localized localized) {
-        return this.messageSource.getMessage(
-                localized.getMessageKey(),
-                LocaleContextHolder.getLocale()
-        );
-    }
-
-    @Override
-    public Link getBuilderLink() {
-        return new Link(String.format("/app/tableBuilder/inContext")).withRel("inContextBuilder");
-    }
+public interface ComponentValue
+		extends Serializable {
 }

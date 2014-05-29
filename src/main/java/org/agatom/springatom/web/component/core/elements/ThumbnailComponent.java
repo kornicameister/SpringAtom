@@ -15,18 +15,78 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component;
+package org.agatom.springatom.web.component.core.elements;
 
-import java.io.Serializable;
+import com.google.common.base.Objects;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface Component
-        extends Serializable {
-    String getTitle();
+public class ThumbnailComponent
+		extends DefaultComponent {
+	private static final long   serialVersionUID = -5885377305838416274L;
+	private              String href             = null;
+	private              String alt              = null;
+	private              String tooltip          = null;
 
-    void setTitle(final String title);
+	public String getHref() {
+		return href;
+	}
+
+	public ThumbnailComponent setHref(final String href) {
+		this.href = href;
+		return this;
+	}
+
+	public String getAlt() {
+		return alt;
+	}
+
+	public ThumbnailComponent setAlt(final String alt) {
+		this.alt = alt;
+		return this;
+	}
+
+	public String getTooltip() {
+		return tooltip;
+	}
+
+	public ThumbnailComponent setTooltip(final String tooltip) {
+		this.tooltip = tooltip;
+		return this;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(href, alt, tooltip, title);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		ThumbnailComponent that = (ThumbnailComponent) o;
+
+		return Objects.equal(this.href, that.href) &&
+				Objects.equal(this.alt, that.alt) &&
+				Objects.equal(this.tooltip, that.tooltip) &&
+				Objects.equal(this.title, that.title);
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(href)
+				.addValue(alt)
+				.addValue(tooltip)
+				.addValue(title)
+				.toString();
+	}
 }

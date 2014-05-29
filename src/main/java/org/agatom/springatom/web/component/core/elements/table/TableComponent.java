@@ -15,25 +15,59 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.helper;
+package org.agatom.springatom.web.component.core.elements.table;
 
-import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
-import org.agatom.springatom.web.component.elements.table.TableColumnComponent;
-import org.agatom.springatom.web.component.elements.table.TableComponent;
-import org.springframework.hateoas.Link;
+import com.google.common.base.Objects;
+import org.agatom.springatom.web.component.core.elements.ContentComponent;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface TableComponentHelper
-        extends ComponentHelper {
-    Link getInfoPageLink(String path, Long id);
+public class TableComponent
+		extends ContentComponent<TableColumnComponent> {
+	private static final long    serialVersionUID = 3527305242535311855L;
+	protected            String  tableId          = null;
+	protected            int     rowsOnPage       = 10;
+	protected            boolean filterable       = true;
 
-    DandelionTableComponent newDandelionTable(final String tableId, final String builderId);
+	public String getTableId() {
+		return tableId;
+	}
 
-    Link getTableLink(final String tableId, final String builderId);
+	public TableComponent setTableId(final String tableId) {
+		this.tableId = tableId;
+		return this;
+	}
 
-    TableColumnComponent newTableColumn(final TableComponent cmp, final String path, final String rbKey);
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(tableId);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		TableComponent that = (TableComponent) o;
+
+		return Objects.equal(this.tableId, that.tableId);
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(tableId)
+				.addValue(rowsOnPage)
+				.addValue(filterable)
+				.addValue(content)
+				.addValue(title)
+				.toString();
+	}
 }

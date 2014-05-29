@@ -15,18 +15,22 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.helper.impl;
+package org.agatom.springatom.web.component.core.helper.impl;
 
-import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
-import org.agatom.springatom.web.component.elements.table.TableColumnComponent;
-import org.agatom.springatom.web.component.elements.table.TableComponent;
-import org.agatom.springatom.web.component.helper.TableComponentHelper;
-import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
-import org.agatom.springatom.webmvc.controllers.SVTableBuilderController;
+import org.agatom.springatom.web.component.core.elements.table.DandelionTableComponent;
+import org.agatom.springatom.web.component.core.elements.table.TableColumnComponent;
+import org.agatom.springatom.web.component.core.elements.table.TableComponent;
+import org.agatom.springatom.web.component.core.helper.TableComponentHelper;
+import org.agatom.springatom.web.component.infopages.link.InfoPageLinkHelper;
+import org.agatom.springatom.webmvc.controllers.components.SVTableBuilderController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Role;
+import org.springframework.context.annotation.Scope;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -36,7 +40,10 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class DefaultTableComponentHelper
+@Component
+@Scope(BeanDefinition.SCOPE_SINGLETON)
+@Role(BeanDefinition.ROLE_SUPPORT)
+class DefaultTableComponentHelper
 		extends DefaultComponentHelper
 		implements TableComponentHelper {
 

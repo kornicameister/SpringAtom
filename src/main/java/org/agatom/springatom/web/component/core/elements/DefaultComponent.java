@@ -15,10 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.elements;
+package org.agatom.springatom.web.component.core.elements;
 
 import com.google.common.collect.Maps;
-import org.agatom.springatom.web.component.Component;
+import org.agatom.springatom.web.component.core.Component;
 
 import javax.annotation.Nonnull;
 import java.util.Map;

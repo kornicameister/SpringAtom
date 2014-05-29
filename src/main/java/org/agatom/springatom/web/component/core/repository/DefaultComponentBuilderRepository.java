@@ -15,16 +15,16 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.repository;
+package org.agatom.springatom.web.component.core.repository;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
-import org.agatom.springatom.web.component.builders.Builder;
-import org.agatom.springatom.web.component.builders.ComponentDefinitionBuilder;
-import org.agatom.springatom.web.component.builders.ComponentProduces;
+import org.agatom.springatom.web.component.core.builders.Builder;
+import org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder;
+import org.agatom.springatom.web.component.core.builders.ComponentProduces;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -48,8 +48,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@code DefaultComponentBuilderRepository} is an implementation of {@link org.agatom.springatom.web.component.repository.ComponentBuilderRepository}.
- * Reads all existing builder definition to support direct access for the application according to the {@link org.agatom.springatom.web.component.repository.ComponentBuilderRepository}
+ * {@code DefaultComponentBuilderRepository} is an implementation of {@link org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository}.
+ * Reads all existing builder definition to support direct access for the application according to the {@link org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository}
  * contract
  *
  * @author kornicameister
@@ -102,12 +102,12 @@ class DefaultComponentBuilderRepository
 	}
 
 	/**
-	 * Returns {@link org.agatom.springatom.web.component.builders.ComponentProduces}
-	 * is {@code source} is {@link org.agatom.springatom.web.component.builders.ComponentDefinitionBuilder}
+	 * Returns {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
+	 * is {@code source} is {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder}
 	 *
-	 * @param source {@link org.agatom.springatom.web.component.builders.Builder} source
+	 * @param source {@link org.agatom.springatom.web.component.core.builders.Builder} source
 	 *
-	 * @return {@link org.agatom.springatom.web.component.builders.ComponentProduces}
+	 * @return {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
 	 */
 	private ComponentProduces getComponentProduces(final Builder source) {
 		if (ClassUtils.isAssignableValue(ComponentDefinitionBuilder.class, source)) {
@@ -117,10 +117,10 @@ class DefaultComponentBuilderRepository
 	}
 
 	/**
-	 * Returns the {@link java.lang.Class} that {@link org.agatom.springatom.web.component.builders.ComponentDefinitionBuilder}
+	 * Returns the {@link java.lang.Class} that {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder}
 	 * object is built by the class
 	 *
-	 * @param source {@link org.agatom.springatom.web.component.builders.Builder} source
+	 * @param source {@link org.agatom.springatom.web.component.core.builders.Builder} source
 	 *
 	 * @return the built class
 	 */

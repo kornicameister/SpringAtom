@@ -15,10 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.elements;
+package org.agatom.springatom.web.component.core.elements;
 
 import com.google.common.collect.Sets;
-import org.agatom.springatom.web.component.EmbeddableComponent;
+import org.agatom.springatom.web.component.core.EmbeddableComponent;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -45,11 +45,6 @@ abstract public class ContentComponent<T extends EmbeddableComponent>
 		return this.content;
 	}
 
-	@Override
-	public Iterator<T> iterator() {
-		return this.getContent().iterator();
-	}
-
 	public void setContent(final Set<T> content) {
 		this.getContent().clear();
 		for (final T t : content) {
@@ -60,6 +55,11 @@ abstract public class ContentComponent<T extends EmbeddableComponent>
 	public boolean addContent(final T t) {
 		t.setPosition(this.getContent().size());
 		return this.getContent().add(t);
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return this.getContent().iterator();
 	}
 
 

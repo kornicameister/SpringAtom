@@ -15,9 +15,11 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.helper;
+package org.agatom.springatom.web.component.core.helper;
 
-import org.agatom.springatom.core.util.Localized;
+import org.agatom.springatom.web.component.core.elements.table.DandelionTableComponent;
+import org.agatom.springatom.web.component.core.elements.table.TableColumnComponent;
+import org.agatom.springatom.web.component.core.elements.table.TableComponent;
 import org.springframework.hateoas.Link;
 
 /**
@@ -25,8 +27,13 @@ import org.springframework.hateoas.Link;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentHelper {
-    String entitleFromMessageKey(final Localized localized);
+public interface TableComponentHelper
+		extends ComponentHelper {
+	Link getInfoPageLink(String path, Long id);
 
-    Link getBuilderLink();
+	DandelionTableComponent newDandelionTable(final String tableId, final String builderId);
+
+	Link getTableLink(final String tableId, final String builderId);
+
+	TableColumnComponent newTableColumn(final TableComponent cmp, final String path, final String rbKey);
 }

@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component;
+package org.agatom.springatom.web.component.core;
 
 import java.io.Serializable;
 
@@ -24,6 +24,9 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentValue
-        extends Serializable {
+public interface Component
+		extends Serializable {
+	String getTitle();
+
+	void setTitle(final String title);
 }
