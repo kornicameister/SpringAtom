@@ -41,7 +41,6 @@
         </mvc:message-converters>
         <mvc:argument-resolvers>
             <bean class="com.github.dandelion.datatables.extras.spring3.ajax.DatatablesCriteriasMethodArgumentResolver"/>
-            <bean class="org.agatom.springatom.web.component.request.ComponentRequestMethodArgumentResolver"/>
         </mvc:argument-resolvers>
     </mvc:annotation-driven>
     <!--suppress SpringModelInspection -->
