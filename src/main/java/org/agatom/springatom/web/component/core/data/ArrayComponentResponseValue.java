@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,46 +15,69 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.data;
+package org.agatom.springatom.web.component.core.data;
 
 import com.google.common.base.Objects;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.context.request.WebRequest;
+import com.google.common.collect.Sets;
+
+import java.util.Iterator;
+import java.util.Set;
 
 /**
- * {@code ComponentDataRequest} wraps around single {@link org.springframework.web.context.request.WebRequest} and
- * {@link org.springframework.ui.ModelMap}. This class in immutable.
+ * {@code ArrayComponentResponseValue} is designed to carry multiple {@link org.agatom.springatom.web.component.core.data.ComponentResponseValue} values
+ * <p/>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 29.05.14</small>
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.1
  * @since 0.0.1
  */
-public class ComponentDataRequest {
-	private final ModelMap   values;
-	private final WebRequest webRequest;
+public class ArrayComponentResponseValue
+		implements ComponentResponseValue, Iterable<ComponentResponseValue> {
+	private static final long                        serialVersionUID = -4216098968674546827L;
+	private              Set<ComponentResponseValue> data             = Sets.newHashSet();
 
-	public ComponentDataRequest(final ModelMap modelMap, final WebRequest webRequest) {
-		this.values = modelMap;
-		this.webRequest = webRequest;
+	public boolean addValue(final ComponentResponseValue value) {
+		return this.data.add(value);
 	}
 
-	public ModelMap getValues() {
-		return values;
+	@Override
+	public Iterator<ComponentResponseValue> iterator() {
+		return this.getData().iterator();
 	}
 
-	public WebRequest getWebRequest() {
-		return webRequest;
+	public Set<ComponentResponseValue> getData() {
+		return this.data;
+	}
+
+	public ArrayComponentResponseValue setData(final Set<ComponentResponseValue> data) {
+		this.data = data;
+		return this;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(data);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		ArrayComponentResponseValue that = (ArrayComponentResponseValue) o;
+
+		return Objects.equal(this.data, that.data);
 	}
 
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)
-				.addValue(values)
-				.addValue(webRequest)
+				.add("size", this.size())
 				.toString();
 	}
 
-	public Long getLong(final String key) {
-		return Long.parseLong(String.valueOf(this.values.get(key)));
+	public int size() {
+		return this.data.size();
 	}
 }
