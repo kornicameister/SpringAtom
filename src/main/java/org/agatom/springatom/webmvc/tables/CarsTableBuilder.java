@@ -20,11 +20,11 @@ package org.agatom.springatom.webmvc.tables;
 import com.mysema.query.types.Predicate;
 import org.agatom.springatom.server.model.beans.car.QSCar;
 import org.agatom.springatom.server.model.beans.car.SCar;
-import org.agatom.springatom.web.component.builders.annotation.ComponentBuilder;
-import org.agatom.springatom.web.component.builders.annotation.EntityBased;
-import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
-import org.agatom.springatom.web.component.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
+import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
+import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
+import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.core.elements.table.DandelionTableComponent;
+import org.agatom.springatom.web.component.table.TableComponentBuilder;
 import org.springframework.util.StringUtils;
 
 /**

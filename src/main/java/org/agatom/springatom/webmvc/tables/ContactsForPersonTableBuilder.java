@@ -21,11 +21,11 @@ import com.mysema.query.types.Predicate;
 import org.agatom.springatom.server.model.beans.person.QSPersonContact;
 import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.person.SPersonContact;
-import org.agatom.springatom.web.component.builders.annotation.ComponentBuilder;
-import org.agatom.springatom.web.component.builders.annotation.EntityBased;
-import org.agatom.springatom.web.component.builders.table.TableComponentBuilder;
-import org.agatom.springatom.web.component.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.elements.table.DandelionTableComponent;
+import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
+import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
+import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.core.elements.table.DandelionTableComponent;
+import org.agatom.springatom.web.component.table.TableComponentBuilder;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 

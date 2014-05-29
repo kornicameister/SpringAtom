@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,30 +15,28 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.builders.table.exception;
+package org.agatom.springatom.web.component.table.exception;
 
-import org.agatom.springatom.web.component.builders.exception.ComponentTableException;
+import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 
 /**
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class DynamicColumnResolutionException
-        extends ComponentTableException {
+public class ComponentTableException
+		extends ComponentException {
+	private static final long serialVersionUID = -5087620558468679894L;
 
-    private static final long serialVersionUID = -6331209247827860887L;
+	public ComponentTableException(final String message) {
+		super(message);
+	}
 
-    public DynamicColumnResolutionException(final String message) {
-        super(message);
-    }
+	public ComponentTableException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 
-    public DynamicColumnResolutionException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
-
-    public DynamicColumnResolutionException(final Throwable cause) {
-        super(cause);
-    }
-
+	public ComponentTableException(final Throwable cause) {
+		super(cause);
+	}
 }
