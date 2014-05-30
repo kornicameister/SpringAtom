@@ -31,16 +31,16 @@ import com.google.common.base.Objects;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 29.05.14</small>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 public class SingleComponentResponseValue
 		implements ComponentResponseValue {
 	private static final long   serialVersionUID = 6036509201003171980L;
-	private              String path             = null;
-	private              Object value            = null;
-	private              String renderType       = null;
-	private              String valueType        = null;
+	protected String path       = null;
+	protected Object value      = null;
+	protected String renderType = null;
+	protected String valueType  = null;
 
 	public String getPath() {
 		return path;
