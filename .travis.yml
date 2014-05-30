@@ -1,0 +1,9 @@
+language: java
+git:
+  submodules: false
+branches:
+  only:
+    - sa-mvc-alpha-2
+jdk:
+  - openjdk7
+  - oraclejdk
