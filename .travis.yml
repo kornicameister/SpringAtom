@@ -6,4 +6,4 @@ branches:
     - sa-mvc-alpha-2
 jdk:
   - openjdk7
-  - oraclejdk
+  - openjdk8
