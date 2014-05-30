@@ -18,7 +18,7 @@
 package org.agatom.springatom.rest;
 
 import org.agatom.springatom.rest.processors.InfoPageResourceProcessor;
-import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
+import org.agatom.springatom.web.component.infopages.link.InfoPageLinkHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

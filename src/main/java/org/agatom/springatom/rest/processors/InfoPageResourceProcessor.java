@@ -19,8 +19,8 @@ package org.agatom.springatom.rest.processors;
 
 
 import com.mysema.commons.lang.Assert;
-import org.agatom.springatom.web.infopages.InfoPageNotFoundException;
-import org.agatom.springatom.web.infopages.link.InfoPageLinkHelper;
+import org.agatom.springatom.web.component.infopages.InfoPageNotFoundException;
+import org.agatom.springatom.web.component.infopages.link.InfoPageLinkHelper;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Persistable;
 import org.springframework.hateoas.Resource;
@@ -29,7 +29,7 @@ import org.springframework.util.ClassUtils;
 
 /**
  * {@code InfoPageResourceProcessor} is customized {@link org.springframework.hateoas.ResourceProcessor}
- * that appends additional link to {@link org.agatom.springatom.web.infopages.provider.structure.InfoPage}, if such exists for
+ * that appends additional link to {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}, if such exists for
  * given {@link org.springframework.data.domain.Persistable}
  * <p/>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 20.03.14</small>
