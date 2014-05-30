@@ -42,6 +42,9 @@
         <mvc:argument-resolvers>
             <bean class="com.github.dandelion.datatables.extras.spring3.ajax.DatatablesCriteriasMethodArgumentResolver"/>
         </mvc:argument-resolvers>
+        <mvc:return-value-handlers>
+            <bean class="org.agatom.springatom.webmvc.controllers.components.CDRReturnValueConverter"/>
+        </mvc:return-value-handlers>
     </mvc:annotation-driven>
     <!--suppress SpringModelInspection -->
     <mvc:resources mapping="/static/**"

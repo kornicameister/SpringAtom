@@ -1,0 +1,70 @@
+{
+	"id"      : "appointment_ip_v_1",
+	"domain"  : "org.agatom.springatom.server.model.beans.appointment.SAppointment",
+	"defaults": {
+		"collapsible": true,
+		"layout"     : "VERTICAL"
+	},
+	"content" : [
+		{
+			"id"        : "basicAttributes",
+			"layout"    : "VERTICAL",
+			"messageKey": "springatom.infopage.rb.basicAttributesPanel.title",
+			"attributes": [
+				{
+					"path": "id"
+				},
+				{
+					"path": "begin"
+				},
+				{
+					"path"     : "interval",
+					"converter": "org.agatom.springatom.webmvc.converters.IntervalToStringConverter"
+				},
+				{
+					"path": "end"
+				},
+				{
+					"path": "closed"
+				},
+				{
+					"path": "comment"
+				},
+				{
+					"path": "assigned"
+				}
+			]
+		},
+		{
+			"id"        : "tasks",
+			"layout"    : "VERTICAL",
+			"messageKey": "springatom.infopage.rb.oneToManyPanel.title",
+			"attributes": [
+				{
+					"converter": "org.agatom.springatom.webmvc.converters.ToTableConverter",
+					"path"     : "tasks"
+				}
+			]
+		},
+		{
+			"id"        : "assignees",
+			"layout"    : "VERTICAL",
+			"messageKey": "springatom.infopage.rb.manyToOnePanel.title",
+			"attributes": [
+				{
+					"converter": "org.agatom.springatom.webmvc.converters.ToInfoPageLinkConverter",
+					"path"     : "car"
+				},
+				{
+					"converter": "org.agatom.springatom.webmvc.converters.ToInfoPageLinkConverter",
+					"path"     : "assignee"
+				},
+				{
+					"converter": "org.agatom.springatom.webmvc.converters.ToInfoPageLinkConverter",
+					"path"     : "reporter"
+				}
+
+			]
+		}
+	]
+}

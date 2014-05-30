@@ -603,6 +603,11 @@
         <!-- webjars -->
         <dependency>
             <groupId>org.webjars</groupId>
+            <artifactId>extjs</artifactId>
+            <version>3.4.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>${webjars.jquery.version}</version>
         </dependency>
@@ -974,9 +979,6 @@
                     <detail>true</detail>
                     <printSummary>true</printSummary>
                     <forkMode>once</forkMode>
-                    <excludes>
-                        <exclude>**/*Test.class</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
