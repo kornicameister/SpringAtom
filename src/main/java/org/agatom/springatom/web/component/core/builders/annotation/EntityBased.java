@@ -20,8 +20,11 @@ package org.agatom.springatom.web.component.core.builders.annotation;
 import java.lang.annotation.*;
 
 /**
+ * {@code EntityBased} marks given {@link org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder}
+ * as capable of producing and/or definition/data for given entity
+ *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @Inherited

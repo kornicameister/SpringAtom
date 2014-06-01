@@ -34,7 +34,7 @@ import org.springframework.core.io.FileSystemResourceLoader;
 public class InfoPageModuleConfiguration
 		extends AbstractModuleConfiguration {
 	protected static final String MODULE_NAME = "ipConfiguration";
-	protected static final String LOCATION    = "classpath:org/agatom/springatom/web/infopages/infopages.properties";
+	protected static final String LOCATION = "classpath:org/agatom/springatom/web/component/infopages/infopages.properties";
 	private static final   Logger LOGGER      = Logger.getLogger(InfoPageModuleConfiguration.class);
 
 	@Bean(name = "infoPageProperties")

@@ -22,18 +22,12 @@ import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
-import org.agatom.springatom.web.component.core.data.ComponentResponseValue;
-import org.agatom.springatom.web.component.core.data.SingleComponentResponseValue;
-import org.agatom.springatom.web.component.core.request.ComponentRequestAttribute;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -57,10 +51,10 @@ abstract public class AbstractComponentDataBuilder
 		try {
 			Assert.notNull(dataRequest, "DataRequest can not be null");
 
-			final Set<ComponentResponseValue> data = this.buildData(dataRequest);
+			final Object data = this.buildData(dataRequest);
 
-			if (CollectionUtils.isEmpty(data)) {
-				this.logger.warn(String.format("For request=%s, builder returned null/empty data", dataRequest));
+			if (data == null) {
+				this.logger.warn(String.format("For request=%s, builder returned null data", dataRequest));
 			} else {
 				this.logger.trace(String.format("For request=%s, builder returned data=%s", dataRequest, data));
 			}
@@ -76,7 +70,7 @@ abstract public class AbstractComponentDataBuilder
 	}
 
 	/**
-	 * Implement this method to return {@link org.agatom.springatom.web.component.core.data.ComponentDataResponse} of this <b>component builder</b>
+	 * Implement this method to return actual data of this builder
 	 *
 	 * @param dataRequest request to work with
 	 *
@@ -84,27 +78,7 @@ abstract public class AbstractComponentDataBuilder
 	 *
 	 * @throws ComponentException if any
 	 */
-	protected abstract Set<ComponentResponseValue> buildData(final ComponentDataRequest dataRequest) throws ComponentException;
-
-	/**
-	 * Creates {@link org.agatom.springatom.web.component.core.data.SingleComponentResponseValue} instance out of
-	 * {@code value} and {@code attribute}
-	 *
-	 * @param value     value for attribute
-	 * @param attribute the attribute
-	 *
-	 * @return response value
-	 *
-	 * @see org.agatom.springatom.web.component.core.data.SingleComponentResponseValue
-	 * @see org.agatom.springatom.web.component.core.request.ComponentRequestAttribute
-	 */
-	protected ComponentResponseValue getSingleResponseValue(final Object value, final ComponentRequestAttribute attribute) {
-		return new SingleComponentResponseValue()
-				.setPath(attribute.getPath())
-				.setRenderType(attribute.getType())
-				.setValue(value)
-				.setValueType(value != null ? ClassUtils.getUserClass(value.getClass()).getName() : "undefined");
-	}
+	protected abstract Object buildData(final ComponentDataRequest dataRequest) throws ComponentException;
 
 	/**
 	 * Retrieves {@link javax.persistence.metamodel.Attribute} for given path out of {@link #getEntityDescriptor()}

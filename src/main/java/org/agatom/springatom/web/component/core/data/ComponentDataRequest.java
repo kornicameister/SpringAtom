@@ -18,44 +18,63 @@
 package org.agatom.springatom.web.component.core.data;
 
 import com.google.common.base.Objects;
+import org.agatom.springatom.web.component.core.Component;
+import org.agatom.springatom.web.component.core.request.AbstractComponentRequest;
+import org.agatom.springatom.web.component.core.request.ComponentRequestAttribute;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.context.request.WebRequest;
+
+import java.util.Set;
 
 /**
- * {@code ComponentDataRequest} wraps around single {@link org.springframework.web.context.request.WebRequest} and
- * {@link org.springframework.ui.ModelMap}. This class in immutable and {@code abstract} and it meant to be subclassed
- * by valid request for given component
+ * {@code ComponentDataRequest} wraps {@link org.agatom.springatom.web.component.core.request.AbstractComponentRequest} (marshalled
+ * from Ajax], {@link #component} and {@link #values} of the request
  *
  * @author kornicameister
- * @version 0.0.3
+ * @version 0.0.4
  * @since 0.0.1
  */
-abstract public class ComponentDataRequest {
-	private final ModelMap   values;
-	private final WebRequest webRequest;
+public class ComponentDataRequest {
+	protected final ModelMap                 values;
+	protected final AbstractComponentRequest request;
+	private         Component                component;
 
-	public ComponentDataRequest(final ModelMap modelMap, final WebRequest webRequest) {
+	public ComponentDataRequest(final ModelMap modelMap, final AbstractComponentRequest request) {
 		this.values = modelMap;
-		this.webRequest = webRequest;
+		this.request = request;
+	}
+
+	public Component getComponent() {
+		return component;
+	}
+
+	public void setComponent(final Component component) {
+		this.component = component;
 	}
 
 	public ModelMap getValues() {
-		return values;
+		return this.values;
 	}
 
-	public WebRequest getWebRequest() {
-		return webRequest;
+	public Set<ComponentRequestAttribute> getAttributes() {
+		return this.request.getAttributes();
+	}
+
+	public Class<?> getDomain() {
+		return this.request.getDomain();
+	}
+
+	public Long getId() {
+		return this.request.getId();
+	}
+
+	public Long getVersion() {
+		return this.request.getVersion();
 	}
 
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)
 				.addValue(values)
-				.addValue(webRequest)
 				.toString();
-	}
-
-	public Long getLong(final String key) {
-		return Long.parseLong(String.valueOf(this.values.get(key)));
 	}
 }

@@ -17,26 +17,28 @@
 
 package org.agatom.springatom.web.component.core.data;
 
-import com.google.common.collect.Sets;
-
 import java.io.Serializable;
-import java.util.Set;
 
 /**
+ * {@code ComponentDataResponse} is the bean sent from {@link org.agatom.springatom.web.component.core.builders.ComponentDataBuilder}
+ * instance. Whereas particular implementation of {@link org.agatom.springatom.web.component.core.builders.ComponentDataBuilder}
+ * are not bound to specific return value, {@code ComponentDataResponse} is always returned as the final value from them.
+ * Check {@link org.agatom.springatom.web.component.core.builders.AbstractComponentDataBuilder#buildData(ComponentDataRequest)}
+ *
  * @author kornicameister
  * @version 0.0.2
  * @since 0.0.1
  */
 public class ComponentDataResponse
 		implements Serializable {
-	private static final long                        serialVersionUID = 5738008166804737807L;
-	private              String                      builtBy          = null;
-	private              Set<ComponentResponseValue> data             = null;
-	private              boolean                     success          = false;
-	private              Throwable                   error            = null;
-	private              long                        time             = 0;
+	private static final long      serialVersionUID = 5738008166804737807L;
+	private              String    builtBy          = null;
+	private              Object    data             = null;
+	private              boolean   success          = false;
+	private              Throwable error            = null;
+	private              long      time             = 0;
 
-	public static ComponentDataResponse success(final String builtBy, final Set<ComponentResponseValue> data, final long time) {
+	public static ComponentDataResponse success(final String builtBy, final Object data, final long time) {
 		return new ComponentDataResponse()
 				.setBuiltBy(builtBy)
 				.setData(data)
@@ -56,19 +58,16 @@ public class ComponentDataResponse
 		return this.builtBy;
 	}
 
-	public ComponentDataResponse setBuiltBy(final String builtBy) {
+	private ComponentDataResponse setBuiltBy(final String builtBy) {
 		this.builtBy = builtBy;
 		return this;
 	}
 
-	public Set<ComponentResponseValue> getData() {
-		if (this.data == null) {
-			this.data = Sets.newLinkedHashSet();
-		}
+	public Object getData() {
 		return this.data;
 	}
 
-	public ComponentDataResponse setData(final Set<ComponentResponseValue> data) {
+	private ComponentDataResponse setData(final Object data) {
 		this.data = data;
 		return this;
 	}
@@ -77,7 +76,7 @@ public class ComponentDataResponse
 		return this.success;
 	}
 
-	public ComponentDataResponse setSuccess(final boolean success) {
+	private ComponentDataResponse setSuccess(final boolean success) {
 		this.success = success;
 		return this;
 	}
@@ -86,7 +85,7 @@ public class ComponentDataResponse
 		return this.error;
 	}
 
-	public ComponentDataResponse setError(final Throwable error) {
+	private ComponentDataResponse setError(final Throwable error) {
 		this.error = error;
 		return this;
 	}
@@ -95,7 +94,7 @@ public class ComponentDataResponse
 		return this.time;
 	}
 
-	public ComponentDataResponse setTime(final long time) {
+	private ComponentDataResponse setTime(final long time) {
 		this.time = time;
 		return this;
 	}

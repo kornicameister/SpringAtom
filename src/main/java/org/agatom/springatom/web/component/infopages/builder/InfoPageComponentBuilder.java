@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.web.component.infopages.builder;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Maps;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
 import org.agatom.springatom.server.repository.SBasicRepository;
@@ -25,11 +25,8 @@ import org.agatom.springatom.server.repository.SRepository;
 import org.agatom.springatom.web.component.core.builders.AbstractComponentDataBuilder;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.data.ComponentResponseValue;
 import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
-import org.agatom.springatom.web.component.core.request.AbstractComponentRequest;
 import org.agatom.springatom.web.component.core.request.ComponentRequestAttribute;
-import org.agatom.springatom.web.component.core.request.ComponentWrappedRequest;
 import org.agatom.springatom.web.component.infopages.link.InfoPageLinkHelper;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.springframework.beans.BeanWrapper;
@@ -38,6 +35,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.history.Revision;
 import org.springframework.util.ClassUtils;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -48,7 +46,7 @@ import java.util.Set;
  * @param <Y> marker for {@link org.springframework.data.domain.Persistable} that builder builds data for
  *
  * @author kornicameister
- * @version 0.0.3
+ * @version 0.0.4
  * @since 0.0.1
  */
 public abstract class InfoPageComponentBuilder<Y extends Persistable<?>>
@@ -77,11 +75,8 @@ public abstract class InfoPageComponentBuilder<Y extends Persistable<?>>
 	}
 
 	@Override
-	protected Set<ComponentResponseValue> buildData(final ComponentDataRequest dataRequest) throws ComponentException {
-		this.logger.trace(String.format("buildData(dataRequest=%s)", dataRequest));
-
-		final ComponentWrappedRequest wrappedRequest = (ComponentWrappedRequest) dataRequest;
-		final AbstractComponentRequest request = wrappedRequest.getComponentRequest();
+	protected Object buildData(final ComponentDataRequest request) throws ComponentException {
+		this.logger.trace(String.format("buildData(dataRequest=%s)", request));
 
 		final Long objectId = request.getId();
 		final Long objectVersion = request.getVersion();
@@ -92,21 +87,20 @@ public abstract class InfoPageComponentBuilder<Y extends Persistable<?>>
 
 		this.logger.trace(String.format("processing object %s=%s", object, object.getId()));
 
-		final Set<ComponentResponseValue> data = Sets.newHashSet();
+		final Map<String, Object> data = Maps.newHashMap();
 
 		for (final ComponentRequestAttribute attribute : attributes) {
 			this.logger.trace(String.format("Processing attribute for path=%s from %s", attribute.getPath(), attribute));
 
 			final String path = attribute.getPath();
 			final Object propertyValue = bw.getPropertyValue(path);
-			final ComponentResponseValue responseValue = this.getSingleResponseValue(propertyValue, attribute);
 
-			this.logger.trace(String.format("Processed attribute for path=%s to %s", path, responseValue));
+			this.logger.trace(String.format("Processed attribute for path=%s to %s", path, propertyValue));
 
-			data.add(responseValue);
+			data.put(path, propertyValue);
 		}
 
-		return data;
+		return new InfoPageResponseWrapper().setData(data).setSource(object);
 	}
 
 	/**

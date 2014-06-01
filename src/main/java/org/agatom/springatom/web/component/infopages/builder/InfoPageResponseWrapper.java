@@ -15,69 +15,49 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core.data;
+package org.agatom.springatom.web.component.infopages.builder;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.Sets;
+import org.springframework.data.domain.Persistable;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
 
 /**
- * {@code ArrayComponentResponseValue} is designed to carry multiple {@link org.agatom.springatom.web.component.core.data.ComponentResponseValue} values
+ * {@code InfoPageResponseWrapper} carries data returned by {@link org.agatom.springatom.web.component.infopages.builder.InfoPageComponentBuilder}
  * <p/>
- * <small>Class is a part of <b>SpringAtom</b> and was created at 29.05.14</small>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 30.05.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class ArrayComponentResponseValue
-		implements ComponentResponseValue, Iterable<ComponentResponseValue> {
-	private static final long                        serialVersionUID = -4216098968674546827L;
-	private              Set<ComponentResponseValue> data             = Sets.newHashSet();
+public class InfoPageResponseWrapper {
+	private Map<String, Object> data   = null;
+	private Persistable<?>      source = null;
 
-	public boolean addValue(final ComponentResponseValue value) {
-		return this.data.add(value);
+	public Map<String, Object> getData() {
+		return data;
 	}
 
-	@Override
-	public Iterator<ComponentResponseValue> iterator() {
-		return this.getData().iterator();
-	}
-
-	public Set<ComponentResponseValue> getData() {
-		return this.data;
-	}
-
-	public ArrayComponentResponseValue setData(final Set<ComponentResponseValue> data) {
+	public InfoPageResponseWrapper setData(final Map<String, Object> data) {
 		this.data = data;
 		return this;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(data);
+	public Persistable<?> getSource() {
+		return source;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		ArrayComponentResponseValue that = (ArrayComponentResponseValue) o;
-
-		return Objects.equal(this.data, that.data);
+	public InfoPageResponseWrapper setSource(final Persistable<?> source) {
+		this.source = source;
+		return this;
 	}
 
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)
-				.add("size", this.size())
+				.add("data", data)
+				.add("convert", source)
 				.toString();
-	}
-
-	public int size() {
-		return this.data.size();
 	}
 }
