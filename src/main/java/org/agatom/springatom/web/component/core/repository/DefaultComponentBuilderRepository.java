@@ -18,6 +18,7 @@
 package org.agatom.springatom.web.component.core.repository;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.FluentIterable;
@@ -25,11 +26,12 @@ import com.google.common.collect.Maps;
 import org.agatom.springatom.web.component.core.builders.Builder;
 import org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder;
 import org.agatom.springatom.web.component.core.builders.ComponentProduces;
+import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
+import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -38,6 +40,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Role;
 import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
@@ -53,7 +56,7 @@ import java.util.Map;
  * contract
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.3
  * @since 0.0.1
  */
 @Component
@@ -61,19 +64,21 @@ import java.util.Map;
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 class DefaultComponentBuilderRepository
 		implements ComponentBuilderRepository, ApplicationContextAware, BeanFactoryAware {
-	private static final Logger                          LOGGER      = Logger.getLogger(ComponentBuilderRepository.class);
+	private static final Logger                          LOGGER                   = Logger.getLogger(ComponentBuilderRepository.class);
 	@Autowired
-	private              List<Builder>                   builderList = null;
-	private              ApplicationContext              context     = null;
-	private              ConfigurableListableBeanFactory beanFactory = null;
-	private              Map<String, DefinitionHolder>   holderMap   = null;
+	private              List<Builder>                   builderList              = null;
+	private              ApplicationContext              context                  = null;
+	private              ConfigurableListableBeanFactory beanFactory              = null;
+	private              Map<DefinitionHolder, String>   definitionToBuilderIdMap = null;
+	private              Map<DefinitionHolder, Builder>  definitionToBuilderMap   = null;
 
 	@PostConstruct
 	private void readBuilders() {
-		final String[] beanNamesForType = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(this.context, Builder.class, true, false);
+		final String[] beanNamesForType = this.beanFactory.getBeanNamesForAnnotation(ComponentBuilder.class);
 		if (beanNamesForType.length > 0) {
 
-			this.holderMap = Maps.newHashMap();
+			this.definitionToBuilderIdMap = Maps.newHashMap();
+			this.definitionToBuilderMap = Maps.newHashMap();
 
 			for (final String beanName : beanNamesForType) {
 				final ScannedGenericBeanDefinition definition = (ScannedGenericBeanDefinition) this.beanFactory.getBeanDefinition(beanName);
@@ -90,10 +95,12 @@ class DefaultComponentBuilderRepository
 
 					final ComponentProduces producesType = this.getComponentProduces(builder);
 					final Class<?> builds = this.getComponentBuilds(builder);
+					final Class<?> basedForEntity = this.getBasedForEntity(builder);
 
-					final DefinitionHolder holder = new DefinitionHolder(builds, producesType);
+					final DefinitionHolder holder = new DefinitionHolder(builds, producesType, basedForEntity);
 
-					this.holderMap.put(beanName, holder);
+					this.definitionToBuilderIdMap.put(holder, beanName);
+					this.definitionToBuilderMap.put(holder, builder);
 
 					LOGGER.trace(String.format("/readBuilders -> %s", holder));
 				}
@@ -103,9 +110,9 @@ class DefaultComponentBuilderRepository
 
 	/**
 	 * Returns {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
-	 * is {@code source} is {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder}
+	 * is {@code convert} is {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder}
 	 *
-	 * @param source {@link org.agatom.springatom.web.component.core.builders.Builder} source
+	 * @param source {@link org.agatom.springatom.web.component.core.builders.Builder} convert
 	 *
 	 * @return {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
 	 */
@@ -120,13 +127,29 @@ class DefaultComponentBuilderRepository
 	 * Returns the {@link java.lang.Class} that {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder}
 	 * object is built by the class
 	 *
-	 * @param source {@link org.agatom.springatom.web.component.core.builders.Builder} source
+	 * @param source {@link org.agatom.springatom.web.component.core.builders.Builder} convert
 	 *
 	 * @return the built class
 	 */
 	private Class<?> getComponentBuilds(final Builder source) {
 		if (ClassUtils.isAssignableValue(ComponentDefinitionBuilder.class, source)) {
 			return ((ComponentDefinitionBuilder<?>) source).getBuilds();
+		}
+		return null;
+	}
+
+	/**
+	 * Returns {@link org.agatom.springatom.web.component.core.builders.annotation.EntityBased#entity()} value, if
+	 * {@code builder} is designated to build data/definition for domain specific class
+	 *
+	 * @param builder to get based for entity
+	 *
+	 * @return the class or null, if builder has no {@link org.agatom.springatom.web.component.core.builders.annotation.EntityBased} annotation
+	 */
+	private Class<?> getBasedForEntity(final Builder builder) {
+		final EntityBased annotation = AnnotationUtils.findAnnotation(builder.getClass(), EntityBased.class);
+		if (annotation != null) {
+			return (Class<?>) AnnotationUtils.getValue(annotation, "entity");
 		}
 		return null;
 	}
@@ -153,10 +176,15 @@ class DefaultComponentBuilderRepository
 
 	@Override
 	public String getBuilderId(final Class<?> target, final ComponentProduces produces) {
-		for (final String componentId : this.holderMap.keySet()) {
-			if (this.holderMap.get(componentId).equals(target, produces)) {
-				return componentId;
+		final Optional<DefinitionHolder> match = FluentIterable.from(this.definitionToBuilderMap.keySet()).firstMatch(new Predicate<DefinitionHolder>() {
+			@Override
+			public boolean apply(@Nullable final DefinitionHolder input) {
+				return input != null && input.canBuiltForEntity(target, produces);
 			}
+		});
+		if (match.isPresent()) {
+			final DefinitionHolder definitionHolder = match.get();
+			return this.definitionToBuilderIdMap.get(definitionHolder);
 		}
 		return null;
 	}
@@ -171,31 +199,17 @@ class DefaultComponentBuilderRepository
 		this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
 	}
 
-	private static enum CRITERIA {
-		TARGET("builds"),
-		PRODUCES("produces"),
-		ID("id");
-		private final String key;
-
-		CRITERIA(final String key) {
-			this.key = key;
-		}
-
-	}
-
 	private static class DefinitionHolder
 			implements Comparable<DefinitionHolder> {
 
 		private final Class<?>          builds;
 		private final ComponentProduces produces;
+		private final Class<?>          basedForEntity;
 
-		public DefinitionHolder(final Class<?> builds, final ComponentProduces produces) {
+		public DefinitionHolder(final Class<?> builds, final ComponentProduces produces, final Class<?> basedForEntity) {
 			this.builds = builds;
 			this.produces = produces;
-		}
-
-		public boolean equals(final Class<?> target, final ComponentProduces produces) {
-			return this.builds.equals(target) && this.produces.equals(produces);
+			this.basedForEntity = basedForEntity;
 		}
 
 		@Override
@@ -204,11 +218,33 @@ class DefaultComponentBuilderRepository
 		}
 
 		@Override
+		public int hashCode() {
+			return Objects.hashCode(builds, produces, basedForEntity);
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			DefinitionHolder that = (DefinitionHolder) o;
+
+			return Objects.equal(this.builds, that.builds) &&
+					Objects.equal(this.produces, that.produces) &&
+					Objects.equal(this.basedForEntity, that.basedForEntity);
+		}
+
+		@Override
 		public String toString() {
 			return Objects.toStringHelper(this)
 					.addValue(builds)
 					.addValue(produces)
+					.addValue(basedForEntity)
 					.toString();
+		}
+
+		public boolean canBuiltForEntity(final Class<?> target, final ComponentProduces produces) {
+			return this.produces.equals(produces) && (this.basedForEntity != null && ClassUtils.isAssignable(this.basedForEntity, target));
 		}
 	}
 }
