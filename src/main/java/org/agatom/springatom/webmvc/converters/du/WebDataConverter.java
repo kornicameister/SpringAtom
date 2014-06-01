@@ -15,7 +15,11 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core.data;
+package org.agatom.springatom.webmvc.converters.du;
+
+import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.webmvc.converters.du.exception.WebConverterException;
+import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 
@@ -26,6 +30,17 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentResponseValue
-		extends Serializable {
+public interface WebDataConverter<T extends Serializable> {
+
+	/**
+	 * Returns {@code T} value for given {@code key} out of {@code value}
+	 *
+	 * @param key         the key
+	 * @param value       the value
+	 * @param persistable source of the value
+	 * @param request     request
+	 *
+	 * @return the converted value
+	 */
+	T convert(String key, Object value, Persistable<?> persistable, ComponentDataRequest request) throws WebConverterException;
 }

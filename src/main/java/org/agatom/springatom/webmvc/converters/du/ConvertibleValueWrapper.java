@@ -15,73 +15,66 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core.request;
+package org.agatom.springatom.webmvc.converters.du;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.web.component.core.Component;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.context.request.WebRequest;
-
-import java.security.Principal;
-import java.util.Locale;
-import java.util.Map;
+import org.springframework.data.domain.Persistable;
 
 /**
- * <small>Class is a part of <b>SpringAtom</b> and was created at 29.05.14</small>
+ * {@code WebData} represent a container that is required to be passed as <b>convert</b>
+ * of the conversion from it to the {@link java.lang.String}, which is considered as <b>target</b>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 30.05.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-final public class ComponentWrappedRequest
-		extends ComponentDataRequest {
-	private AbstractComponentRequest componentRequest = null;
-	private WebRequest               webRequest       = null;
-	/**
-	 * Component for this request, {@link org.agatom.springatom.web.component.core.Component}
-	 */
-	private Component                component        = null;
+public class ConvertibleValueWrapper {
+	private Object               value   = null;
+	private ComponentDataRequest request = null;
+	private String         key;
+	private Persistable<?> source;
 
-	public ComponentWrappedRequest(final ModelMap modelMap, final WebRequest webRequest) {
-		super(modelMap, webRequest);
+	public Object getValue() {
+		return value;
 	}
 
-	public AbstractComponentRequest getComponentRequest() {
-		return componentRequest;
+	public void setValue(final Object value) {
+		this.value = value;
 	}
 
-	public ComponentWrappedRequest setComponentRequest(final AbstractComponentRequest componentRequest) {
-		this.componentRequest = componentRequest;
-		return this;
+	public ComponentDataRequest getRequest() {
+		return request;
 	}
 
-	public Principal getUser() {
-		return this.webRequest.getUserPrincipal();
+	public void setRequest(final ComponentDataRequest request) {
+		this.request = request;
 	}
 
-	public Locale getLocale() {
-		return this.webRequest.getLocale();
+	public String getKey() {
+		return key;
 	}
 
-	public Map<String, String[]> getParameterMap() {
-		return webRequest.getParameterMap();
+	public void setKey(final String key) {
+		this.key = key;
 	}
 
-	public Component getComponent() {
-		return this.component;
+	public Persistable<?> getSource() {
+		return source;
 	}
 
-	public ComponentWrappedRequest setComponent(final Component component) {
-		this.component = component;
-		return this;
+	public void setSource(final Persistable<?> source) {
+		this.source = source;
 	}
 
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)
-				.add("componentRequest", componentRequest)
-				.add("webRequest", webRequest)
+				.add("key", key)
+				.add("value", value)
+				.add("convert", source)
+				.add("request", request)
 				.toString();
 	}
 }
