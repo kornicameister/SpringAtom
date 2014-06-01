@@ -37,13 +37,15 @@ import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * {@code AbstractWebConverter} is an abstract implementation of {@link org.agatom.springatom.webmvc.converters.du.WebDataConverter}.
+ * Defines the algorithm or retrieving converted value in {@link #convert(String, Object, org.springframework.data.domain.Persistable, org.agatom.springatom.web.component.core.data.ComponentDataRequest)}
+ * and defines some reusable methods.
  * <small>Class is a part of <b>SpringAtom</b> and was created at 31.05.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
 abstract public class AbstractWebConverter
 		implements WebDataConverter<Serializable> {
 	private static final Logger            LOGGER            = Logger.getLogger(AbstractWebConverter.class);

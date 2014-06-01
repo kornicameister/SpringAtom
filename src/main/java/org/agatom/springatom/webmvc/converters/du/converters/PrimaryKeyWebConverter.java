@@ -28,6 +28,12 @@ import org.springframework.util.ClassUtils;
 import java.io.Serializable;
 
 /**
+ * {@code PrimaryKeyWebConverter} creates {@link org.agatom.springatom.webmvc.converters.du.component.core.WebDataComponentsArray}
+ * containing two other components:
+ * <ol>
+ * <li>{@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent} with the {@link org.springframework.data.domain.Persistable#getId()}</li>
+ * <li>{@link org.agatom.springatom.webmvc.converters.du.component.core.IconComponent} with the icon</li>
+ * </ol>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 31.05.14</small>
  *
  * @author kornicameister

@@ -26,7 +26,7 @@ import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepos
 import org.agatom.springatom.webmvc.controllers.components.SVComponentsDataController;
 import org.agatom.springatom.webmvc.controllers.components.SVComponentsDefinitionController;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
-import org.agatom.springatom.webmvc.converters.du.component.core.WebDataComponentsArray;
+import org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent;
 import org.agatom.springatom.webmvc.converters.du.exception.WebConverterException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +42,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
+ * {@link org.agatom.springatom.webmvc.converters.du.converters.ToTableRequestWebConverter}
+ * crates instance of {@link org.agatom.springatom.webmvc.converters.du.converters.ToTableRequestWebConverter.TableRequest} component.
+ * Provides information required to make a request to retrieve table configuration and data.
  * <small>Class is a part of <b>SpringAtom</b> and was created at 01.06.14</small>
  *
  * @author kornicameister
@@ -77,24 +80,34 @@ public class ToTableRequestWebConverter
 
 		if (hasBuilder) {
 			final String builderId = this.builderRepository.getBuilderId(associatedType, ComponentProduces.TABLE_COMPONENT);
-			final WebDataComponentsArray array = new WebDataComponentsArray();
+			final TableRequest request = new TableRequest();
 
-			array.setTitle(this.getLabel(key, persistable));
-			array.addDynamicProperty("builderId", builderId);
-			array.addDynamicProperty("configurationUrl", linkTo(methodOn(SVComponentsDefinitionController.class).onTableConfigRequest(null)).withSelfRel().getHref());
-			array.addDynamicProperty("dataUrl", linkTo(methodOn(SVComponentsDataController.class).onTableDataRequest(null, null)).withSelfRel().getHref());
-			array.addDynamicProperty("domain", associatedType.getName());
+			request.setTitle(this.getLabel(key, persistable));
+			request.addDynamicProperty("builderId", builderId);
+			request.addDynamicProperty("configurationUrl", linkTo(methodOn(SVComponentsDefinitionController.class).onTableConfigRequest(null)).withSelfRel().getHref());
+			request.addDynamicProperty("dataUrl", linkTo(methodOn(SVComponentsDataController.class).onTableDataRequest(null, null)).withSelfRel().getHref());
+			request.addDynamicProperty("domain", associatedType.getName());
 
 			final Map<String, Object> context = Maps.newHashMap();
 			context.put("domain", ClassUtils.getUserClass(persistable));
 			context.put("id", persistable.getId());
 			context.put("version", ClassUtils.isAssignableValue(PersistentVersionedBean.class, persistable) ? ((PersistentVersionedBean) persistable).getVersion() : -1);
-			array.addDynamicProperty("context", context);
+			request.setValue(context);
 
-			return array;
+			return request;
 		}
 
 		return null;
+	}
+
+	protected static class TableRequest
+			extends DefaultWebDataComponent<Map<String, Object>> {
+		private static final long serialVersionUID = 4160071560623816868L;
+
+		@Override
+		public String getUiType() {
+			return "tableRequest";
+		}
 	}
 
 }

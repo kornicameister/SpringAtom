@@ -15,52 +15,56 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.converters.du.converters;
+package org.agatom.springatom.webmvc.converters.du.component.core;
 
-import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
-import org.agatom.springatom.webmvc.converters.du.component.core.TextComponent;
-import org.springframework.data.domain.Persistable;
-import org.springframework.util.ClassUtils;
-
-import java.io.Serializable;
+import com.google.common.base.Objects;
 
 /**
- * {@code PrimitivesWebConverter} supports retrieving the value for primitives values like for example {@link java.lang.Number} or {@link java.lang.Boolean}
- * <small>Class is a part of <b>SpringAtom</b> and was created at 31.05.14</small>
+ * {@code LinkComponent} is customized {@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent}.
+ * For this component consider:
+ * <ol>
+ * <li>{@link TextComponent#getValue()} as the link href</li>
+ * </ol>
+ * Has additional {@link #getLinkLabel()} that should return the label to be put as the content of {@code <a></a>}
+ * HTML node.
+ * <p/>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 01.06.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@WebConverter(types = {
-		String.class,
-		Boolean.class,
-		Number.class
-})
-public class PrimitivesWebConverter
-		extends AbstractWebConverter {
+public class LinkComponent
+		extends TextComponent {
+	private static final long   serialVersionUID = -1536553355416884697L;
+	private              String linkLabel        = null;
 
-	@Override
-	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
-		final TextComponent component = new TextComponent();
-
-		if (ClassUtils.isAssignableValue(Boolean.class, value)) {
-			final Boolean aBoolean = (Boolean) value;
-			if (aBoolean.equals(true)) {
-				component.setValue(this.messageSource.getMessage("boolean.true", (java.util.Locale) webRequest.getValues().get("locale")));
-			} else {
-				component.setValue(this.messageSource.getMessage("boolean.false", (java.util.Locale) webRequest.getValues().get("locale")));
-			}
-		} else {
-			component.setValue(String.valueOf(value));
-		}
-
-		component.setRawValueType(value.getClass());
-		component.setKey(key);
-		component.setTitle(this.getLabel(key, persistable));
-
-		return component;
+	public String getLinkLabel() {
+		return linkLabel;
 	}
 
+	public LinkComponent setLinkLabel(final String linkLabel) {
+		this.linkLabel = linkLabel;
+		return this;
+	}
+
+	@Override
+	public String getUiType() {
+		return "link";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(linkLabel, super.hashCode());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		LinkComponent that = (LinkComponent) o;
+
+		return Objects.equal(this.linkLabel, that.linkLabel) && super.equals(o);
+	}
 }

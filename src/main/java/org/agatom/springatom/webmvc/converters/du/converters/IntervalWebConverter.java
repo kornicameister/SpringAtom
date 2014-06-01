@@ -30,6 +30,8 @@ import java.io.Serializable;
 import java.util.Locale;
 
 /**
+ * {@code IntervalWebConverter} supports creating {@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent}
+ * out of {@link org.joda.time.Interval} or {@link org.joda.time.Duration}
  * <small>Class is a part of <b>SpringAtom</b> and was created at 01.06.14</small>
  *
  * @author kornicameister

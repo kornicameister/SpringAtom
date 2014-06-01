@@ -22,24 +22,30 @@ import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
 import org.agatom.springatom.webmvc.converters.du.component.core.TextComponent;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.ClassUtils;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
+ * {@code DateTimeWebConverter} creates {@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent}
+ * from following classes that supports:
+ * <ol>
+ * <li>{@link org.joda.time.DateTime}</li>
+ * <li>{@link org.joda.time.LocalDateTime}</li>
+ * <li>{@link java.util.Date}</li>
+ * </ol>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 31.05.14</small>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
-@WebConverter(types = {
-		DateTime.class,
-		LocalDateTime.class
-})
-public class DataTimeWebConverter
+@WebConverter(types = {DateTime.class, LocalDateTime.class, Date.class})
+public class DateTimeWebConverter
 		extends AbstractWebConverter {
 
 	@Override
@@ -56,6 +62,9 @@ public class DataTimeWebConverter
 				data = ((LocalDateTime) value).toString(format);
 			}
 			dataComponent.setValue(data);
+		} else if (ClassUtils.isAssignableValue(Date.class, value)) {
+			final Date date = (Date) value;
+			dataComponent.setValue(DateTimeFormat.forPattern(format).print(date.getTime()));
 		}
 
 		dataComponent.setKey(key);
