@@ -20,12 +20,16 @@ package org.agatom.springatom.web.component.infopages.link;
 import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
 import org.agatom.springatom.AbstractSpringTestCase;
+import org.agatom.springatom.server.model.beans.car.SCar;
+import org.agatom.springatom.server.repository.repositories.car.SCarRepository;
+import org.joor.Reflect;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,13 +39,14 @@ public class InfoPageLinkHelperImplTest
 	private Map<InternalKey, String> uris       = Maps.newHashMap();
 	@Autowired
 	private InfoPageLinkHelper       linkHelper = null;
+	@Autowired
+	private SCarRepository repository = null;
 
 	@Before
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		uris.put(new InternalKey("appointment", 1), "/app/cmp/ip/appointment/1");
-		uris.put(new InternalKey("car", 1), "/app/cmp/ip/car/1");
 		uris.put(new InternalKey("car-master", 1), "/app/cmp/ip/car-master/1");
 		uris.put(new InternalKey("brand-model", 1), "/app/cmp/ip/brand-model/1");
 	}
@@ -53,6 +58,27 @@ public class InfoPageLinkHelperImplTest
 			final Link infoPageLink = this.linkHelper.getInfoPageLink(internalKey.path, internalKey.id);
 			Assert.assertEquals(this.uris.get(internalKey), infoPageLink.getHref());
 		}
+	}
+
+	@Test
+	public void testGetVersioned() throws Exception {
+		final Map<Long, String> mock = Maps.newHashMap();
+		final String format = "/app/cmp/ip/car/%s/%s";
+
+		final List<SCar> all = this.repository.findAll();
+		for (SCar car : all) {
+			for (Long version : mock.keySet()) {
+				car.setVersion(version);
+				final Link infoPageLink = this.linkHelper.getInfoPageLink(car);
+				Assert.assertEquals(String.format(format, car.getId(), version), infoPageLink.getHref());
+			}
+		}
+
+
+	}
+
+	private SCar createCar(final Long version) {
+		return Reflect.on(SCar.class).create().set("id", 1).set("version", version).get();
 	}
 
 	/**

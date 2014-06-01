@@ -18,6 +18,7 @@
 package org.agatom.springatom.web.component.infopages.link;
 
 import com.google.common.collect.Maps;
+import org.agatom.springatom.server.model.types.PersistentVersionedBean;
 import org.agatom.springatom.web.component.infopages.InfoPageNotFoundException;
 import org.agatom.springatom.web.component.infopages.mapping.InfoPageMappingService;
 import org.apache.log4j.Logger;
@@ -29,6 +30,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriTemplate;
 
@@ -41,7 +43,7 @@ import java.util.Map;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 20.03.14</small>
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.3
  * @since 0.0.1
  */
 @Component
@@ -77,34 +79,20 @@ class InfoPageLinkHelperImpl
 		final T id = persistable.getId();
 
 		try {
-			return this.getInfoPageLink(rel, id);
+			if (ClassUtils.isAssignableValue(PersistentVersionedBean.class, persistable)) {
+				return this.getInfoPageLink(rel, id, ((PersistentVersionedBean) persistable).getVersion());
+			} else {
+				return this.getInfoPageLink(rel, id);
+			}
 		} catch (Throwable e) {
 			LOGGER.error(String.format("Failed to generate link for InfoPage=%s, returning null", persistable), e);
-			return null;
+			throw new InfoPageNotFoundException(persistable.getClass());
 		}
 	}
 
 	@Override
 	public <T extends Serializable> Link getInfoPageLink(final String path, final T id) {
-		LOGGER.trace(String.format("getInfoPageLink(path=%s,id=%s)", path, id));
-
-		Assert.notNull(path, "Path can not be null");
-		Assert.isTrue(!path.isEmpty(), "Path can not be empty");
-		Assert.notNull(id, "Id can not be null");
-
-		final UriTemplate localTemplate = new UriTemplate(String.format("/app/cmp/ip/{%s}/{%s}",
-				PathElement.OBJECT_PATH.getInternalKey(),
-				PathElement.OBJECT_ID.getInternalKey()
-		));
-		final Map<String, Object> expandVars = Maps.newHashMap();
-		expandVars.put(PathElement.OBJECT_ID.getInternalKey(), id.toString());
-		expandVars.put(PathElement.OBJECT_PATH.getInternalKey(), path);
-
-		Link infoPage = new Link(localTemplate.expand(expandVars).toString());
-
-		LOGGER.trace(String.format("Resulting link is => %s", infoPage));
-
-		return infoPage;
+		return this.getInfoPageLink(path, id, null);
 	}
 
 	@Override
@@ -147,6 +135,42 @@ class InfoPageLinkHelperImpl
 		}
 
 		return link;
+	}
+
+	public <T extends Serializable> Link getInfoPageLink(final String path, final T id, final Long version) {
+		LOGGER.trace(String.format("getInfoPageLink(path=%s,id=%s,version=%s)", path, id, version));
+
+		Assert.notNull(path, "Path can not be null");
+		Assert.isTrue(!path.isEmpty(), "Path can not be empty");
+		Assert.notNull(id, "Id can not be null");
+
+		final UriTemplate localTemplate;
+
+		if (version != null && version != 0l) {
+			localTemplate = new UriTemplate(String.format("/app/cmp/ip/{%s}/{%s}/{%s}",
+					PathElement.OBJECT_PATH.getInternalKey(),
+					PathElement.OBJECT_ID.getInternalKey(),
+					"_version_"
+			));
+		} else {
+			localTemplate = new UriTemplate(String.format("/app/cmp/ip/{%s}/{%s}",
+					PathElement.OBJECT_PATH.getInternalKey(),
+					PathElement.OBJECT_ID.getInternalKey()
+			));
+		}
+
+		final Map<String, Object> expandVars = Maps.newHashMap();
+		expandVars.put(PathElement.OBJECT_ID.getInternalKey(), id.toString());
+		expandVars.put(PathElement.OBJECT_PATH.getInternalKey(), path);
+		if (version != null && version != 0l) {
+			expandVars.put("_version_", version.toString());
+		}
+
+		Link infoPage = new Link(localTemplate.expand(expandVars).toString());
+
+		LOGGER.trace(String.format("Resulting link is => %s", infoPage));
+
+		return infoPage;
 	}
 
 	private static enum PathElement {
