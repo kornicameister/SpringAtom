@@ -36,23 +36,28 @@ import javax.validation.constraints.NotNull;
 @Table(name = SReportNumberSetting.TABLE_NAME)
 @PrimaryKeyJoinColumn(name = "idSReportSetting")
 public class SReportNumberSetting
-        extends SReportSetting<Number> {
-    private static final long   serialVersionUID = -1700305423116775408L;
-    public static final  String ENTITY_NAME      = "SReportNumberSetting";
-    public static final  String TABLE_NAME       = "reports_settings_number";
-    @NotNull
-    @Range(min = Long.MIN_VALUE, max = Long.MAX_VALUE)
-    @Column(name = "report_setting_number_val", unique = false, updatable = true, insertable = true)
-    private Number value;
+		extends SReportSetting<Number> {
+	public static final  String ENTITY_NAME      = "SReportNumberSetting";
+	public static final  String TABLE_NAME       = "reports_settings_number";
+	private static final long   serialVersionUID = -1700305423116775408L;
+	@NotNull
+	@Range(min = Long.MIN_VALUE, max = Long.MAX_VALUE)
+	@Column(name = "report_setting_number_val", unique = false, updatable = true, insertable = true)
+	private Number value;
 
-    @Override
-    public Number getValue() {
-        return this.value;
-    }
+	@Override
+	public Number getValue() {
+		return this.value;
+	}
 
-    public SReportNumberSetting setValue(final Number value) {
-        this.value = value;
-        return this;
-    }
+	public SReportNumberSetting setValue(final Number value) {
+		this.value = value;
+		return this;
+	}
+
+	@Override
+	public String getIdentity() {
+		return String.format("%s - %s", super.getIdentity(), this.value);
+	}
 
 }

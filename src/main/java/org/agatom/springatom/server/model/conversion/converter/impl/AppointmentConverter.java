@@ -18,6 +18,7 @@
 package org.agatom.springatom.server.model.conversion.converter.impl;
 
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
+import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.conversion.annotation.PersistableConverterUtility;
 import org.agatom.springatom.server.model.conversion.converter.PersistableConverterImpl;
 
@@ -37,15 +38,16 @@ import org.agatom.springatom.server.model.conversion.converter.PersistableConver
 
 @PersistableConverterUtility
 public class AppointmentConverter
-        extends PersistableConverterImpl<SAppointment> {
+		extends PersistableConverterImpl<SAppointment> {
 
-    @Override
-    public String convert(final SAppointment source) {
-        return String.format("%s\n%s\n%s",
-                this.conversionService.convert(source.getBegin(), STRING_CLASS),
-                this.conversionService.convert(source.getEnd(), STRING_CLASS),
-                this.converterPicker.getConverterForSelector("vinNumber").convert(source.getCar())
-        );
-    }
+	@Override
+	public String convert(final SAppointment source) {
+		final SCar car = source.getCar();
+		return String.format("%s\n%s\n%s",
+				this.conversionService.convert(source.getBegin(), STRING_CLASS),
+				this.conversionService.convert(source.getEnd(), STRING_CLASS),
+				this.converterPicker.getConverterForSelector("vinNumber", car).convert(car)
+		);
+	}
 
 }

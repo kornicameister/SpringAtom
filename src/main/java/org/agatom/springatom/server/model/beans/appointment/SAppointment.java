@@ -285,6 +285,11 @@ public class SAppointment
 	}
 
 	@Override
+	public String getIdentity() {
+		return String.format("%s - %s", this.assignee.getIdentity(), this.getCar().getIdentity());
+	}
+
+	@Override
 	public Iterator<SAppointmentTask> iterator() {
 		return this.tasks.iterator();
 	}

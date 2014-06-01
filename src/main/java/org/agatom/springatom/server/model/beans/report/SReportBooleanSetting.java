@@ -39,22 +39,26 @@ import javax.validation.constraints.NotNull;
 @Table(name = SReportBooleanSetting.TABLE_NAME)
 @PrimaryKeyJoinColumn(name = "idSReportSetting")
 public class SReportBooleanSetting
-        extends SReportSetting<Boolean> {
-    private static final long   serialVersionUID = -1700305423116775408L;
-    public static final  String ENTITY_NAME      = "SReportBooleanSetting";
-    public static final  String TABLE_NAME       = "reports_settings_boolean";
-    @NotNull
-    @Column(name = "report_setting_boolean_val", unique = false, updatable = true, insertable = true)
-    private Boolean value;
+		extends SReportSetting<Boolean> {
+	public static final  String ENTITY_NAME      = "SReportBooleanSetting";
+	public static final  String TABLE_NAME       = "reports_settings_boolean";
+	private static final long   serialVersionUID = -1700305423116775408L;
+	@NotNull
+	@Column(name = "report_setting_boolean_val", unique = false, updatable = true, insertable = true)
+	private Boolean value;
 
-    @Override
-    public Boolean getValue() {
-        return this.value;
-    }
+	@Override
+	public Boolean getValue() {
+		return this.value;
+	}
 
-    public SReportBooleanSetting setValue(final Boolean value) {
-        this.value = value;
-        return this;
-    }
+	public SReportBooleanSetting setValue(final Boolean value) {
+		this.value = value;
+		return this;
+	}
 
+	@Override
+	public String getIdentity() {
+		return String.format("%s - %s", super.getIdentity(), this.value);
+	}
 }

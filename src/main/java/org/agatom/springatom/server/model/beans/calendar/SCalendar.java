@@ -44,53 +44,58 @@ import java.awt.*;
 @ReportableEntity
 @AttributeOverride(name = "id", column = @Column(name = "id_user_calendar", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SCalendar
-        extends PersistentObject<Long> {
-    public static final  String TABLE_NAME       = "suser_calendar";
-    public static final  String ENTITY_NAME      = "org.springatom.calendar.SCalendar";
-    private static final long   serialVersionUID = -3784841008638697396L;
-    /**
-     * {@code name} is this calendar name assigned via {@link #owner}
-     */
-    @Column(name = "cal_name", nullable = false, length = 50)
-    private String name;
-    /**
-     * {@code color} is the {@link java.awt.Color} representation of the color associated with calendar
-     */
-    @Column(name = "cal_hex_color", nullable = false)
-    private Color  color;
-    /**
-     * {@code owner} of the <b>this</b> calendar
-     */
-    @NotNull
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "cal_owner", referencedColumnName = "idSUser", updatable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private SUser  owner;
+		extends PersistentObject<Long> {
+	public static final  String TABLE_NAME       = "suser_calendar";
+	public static final  String ENTITY_NAME      = "org.springatom.calendar.SCalendar";
+	private static final long   serialVersionUID = -3784841008638697396L;
+	/**
+	 * {@code name} is this calendar name assigned via {@link #owner}
+	 */
+	@Column(name = "cal_name", nullable = false, length = 50)
+	private String name;
+	/**
+	 * {@code color} is the {@link java.awt.Color} representation of the color associated with calendar
+	 */
+	@Column(name = "cal_hex_color", nullable = false)
+	private Color  color;
+	/**
+	 * {@code owner} of the <b>this</b> calendar
+	 */
+	@NotNull
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@JoinColumn(name = "cal_owner", referencedColumnName = "idSUser", updatable = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private SUser  owner;
 
-    public String getName() {
-        return name;
-    }
+	public Color getColor() {
+		return color;
+	}
 
-    public SCalendar setName(final String name) {
-        this.name = name;
-        return this;
-    }
+	public SCalendar setColor(final Color color) {
+		this.color = color;
+		return this;
+	}
 
-    public Color getColor() {
-        return color;
-    }
+	public SUser getOwner() {
+		return owner;
+	}
 
-    public SCalendar setColor(final Color color) {
-        this.color = color;
-        return this;
-    }
+	public SCalendar setOwner(final SUser owner) {
+		this.owner = owner;
+		return this;
+	}
 
-    public SUser getOwner() {
-        return owner;
-    }
+	@Override
+	public String getIdentity() {
+		return this.getName();
+	}
 
-    public SCalendar setOwner(final SUser owner) {
-        this.owner = owner;
-        return this;
-    }
+	public String getName() {
+		return name;
+	}
+
+	public SCalendar setName(final String name) {
+		this.name = name;
+		return this;
+	}
 }

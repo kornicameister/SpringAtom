@@ -155,4 +155,9 @@ public class SCar
 		this.vinNumber = vinNumber;
 		return this;
 	}
+
+	@Override
+	public String getIdentity() {
+		return String.format("%s [%s]", this.licencePlate, this.vinNumber);
+	}
 }

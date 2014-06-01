@@ -48,16 +48,15 @@ public class PersistableConverterPicker {
 	private              Set<PersistableConverter<?>>        converters               = null;
 
 	@SuppressWarnings("unchecked")
-	public <T extends Persistable> Converter<T, String> getConverterForSelector(final String key) {
+	public <T extends Persistable> Converter<T, String> getConverterForSelector(final String key, final Persistable<?> persistable) {
 		final Predicate<PersistableConverter<?>> selector = new Predicate<PersistableConverter<?>>() {
 			@Override
 			public boolean apply(@Nullable final PersistableConverter<?> input) {
 				assert input != null;
-				final PersistableConverterUtility annotation = input
-						.getClass()
-						.getAnnotation(PersistableConverterUtility.class);
+				final PersistableConverterUtility annotation = AnnotationUtils.findAnnotation(input.getClass(), PersistableConverterUtility.class);
 				return annotation != null
-						&& AnnotationUtils.getValue(annotation, "selector").equals(key);
+						&& AnnotationUtils.getValue(annotation, "selector").equals(key)
+						&& input.matches(TypeDescriptor.forObject(persistable), TypeDescriptor.valueOf(String.class));
 			}
 		};
 		final Optional<PersistableConverter<?>> match = FluentIterable.from(this.converters).firstMatch(selector);

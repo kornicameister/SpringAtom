@@ -54,8 +54,8 @@ import java.util.Set;
 public class SPerson
 		extends PersistentContactable
 		implements SMultiContactable {
-	protected static final String ENTITY_NAME = "SPerson";
-	protected static final String TABLE_NAME  = "sperson";
+	protected static final String ENTITY_NAME      = "SPerson";
+	protected static final String TABLE_NAME       = "sperson";
 	private static final   long   serialVersionUID = -8306142304138446067L;
 	@NotEmpty
 	@Length(min = 3, max = 45)
@@ -86,6 +86,7 @@ public class SPerson
 		this.lastName = lastName;
 	}
 
+	@Override
 	public String getIdentity() {
 		return String.format("%s %s", this.firstName, this.lastName);
 	}

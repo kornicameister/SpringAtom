@@ -74,4 +74,9 @@ public class SAuthority
 	public void setAuthority(final String role) {
 		this.role = SRole.valueOf(role);
 	}
+
+	@Override
+	public String getIdentity() {
+		return this.role.toString();
+	}
 }

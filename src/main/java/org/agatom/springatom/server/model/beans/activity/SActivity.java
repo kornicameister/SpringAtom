@@ -99,5 +99,8 @@ abstract public class SActivity<PK extends Serializable>
 		return this;
 	}
 
-
+	@Override
+	public String getIdentity() {
+		return String.valueOf(this.getId());
+	}
 }

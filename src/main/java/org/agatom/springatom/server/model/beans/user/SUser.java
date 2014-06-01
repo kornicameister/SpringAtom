@@ -216,4 +216,9 @@ public class SUser
 	public void setPerson(final SPerson person) {
 		this.person = person;
 	}
+
+	@Override
+	public String getIdentity() {
+		return this.person != null ? this.person.getIdentity() : this.getUsername();
+	}
 }

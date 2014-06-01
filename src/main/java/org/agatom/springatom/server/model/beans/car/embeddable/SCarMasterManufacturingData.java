@@ -19,6 +19,7 @@ package org.agatom.springatom.server.model.beans.car.embeddable;
 
 import com.google.common.base.Objects;
 import com.neovisionaries.i18n.CountryCode;
+import org.agatom.springatom.server.model.types.PersistentIdentity;
 import org.agatom.springatom.server.model.types.car.ManufacturingData;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.util.StringUtils;
@@ -41,8 +42,8 @@ import static org.agatom.springatom.core.RegexpPatterns.BIG_FIRST_LETTER_PATTERN
  */
 @Embeddable
 public class SCarMasterManufacturingData
-		implements ManufacturingData {
-	private static final long serialVersionUID = 545689870492641597L;
+		implements ManufacturingData, PersistentIdentity {
+	private static final long   serialVersionUID = 545689870492641597L;
 	@NotBlank
 	@Pattern(regexp = BIG_FIRST_LETTER_PATTERN)
 	@Column(nullable = false, length = 45, updatable = true, insertable = true, name = "brand")
@@ -108,6 +109,7 @@ public class SCarMasterManufacturingData
 		return this;
 	}
 
+	@Override
 	public String getIdentity() {
 		return String.format("%s %s", this.brand, this.model);
 	}

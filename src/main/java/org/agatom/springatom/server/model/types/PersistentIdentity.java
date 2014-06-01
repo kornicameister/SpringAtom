@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,45 +15,15 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.beans.person;
-
-import org.agatom.springatom.server.model.beans.contact.SAbstractContact;
-import org.agatom.springatom.server.model.types.ReportableEntity;
-import org.hibernate.envers.AuditJoinTable;
-import org.hibernate.envers.AuditOverride;
-import org.hibernate.envers.Audited;
-
-import javax.persistence.*;
+package org.agatom.springatom.server.model.types;
 
 /**
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 01.06.14</small>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@Entity
-@Audited
-@AuditOverride(name = "contact",
-		forClass = SAbstractContact.class,
-		auditJoinTable = @AuditJoinTable(
-				name = "spersoncontact_history"
-		)
-)
-@ReportableEntity
-@DiscriminatorValue("person")
-public class SPersonContact
-		extends SAbstractContact<SPerson> {
-	private static final long    serialVersionUID = 86397657105677805L;
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "assigned", updatable = true)
-	protected            SPerson assigned         = null;
-
-	@Override
-	public SPerson getAssigned() {
-		return this.assigned;
-	}
-
-	@Override
-	public void setAssigned(final SPerson assigned) {
-		this.assigned = assigned;
-	}
+public interface PersistentIdentity {
+	String getIdentity();
 }

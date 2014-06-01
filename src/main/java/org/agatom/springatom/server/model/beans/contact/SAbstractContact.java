@@ -40,37 +40,42 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = SAbstractContact.CONTACT_FOR, discriminatorType = DiscriminatorType.STRING)
 abstract public class SAbstractContact<SC_H extends PersistentContactable>
-        extends PersistentObject<Long>
-        implements SContact<SC_H> {
-    public static final    String TABLE_NAME  = "contacts";
-    public static final    String ENTITY_NAME = "SAbstractContact";
-    protected static final String CONTACT_FOR = "sac_for";
-    private static final   long   serialVersionUID = 8494361809629647372L;
-    @Length(min = 5, max = 60)
-    @Column(name = "contact", length = 60)
-    protected String      contact;
-    @Type(type = "org.hibernate.type.EnumType")
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "type", length = 60)
-    protected ContactType type;
+		extends PersistentObject<Long>
+		implements SContact<SC_H> {
+	public static final    String TABLE_NAME       = "contacts";
+	public static final    String ENTITY_NAME      = "SAbstractContact";
+	protected static final String CONTACT_FOR      = "sac_for";
+	private static final   long   serialVersionUID = 8494361809629647372L;
+	@Length(min = 5, max = 60)
+	@Column(name = "contact", length = 60)
+	protected String      contact;
+	@Type(type = "org.hibernate.type.EnumType")
+	@Enumerated(value = EnumType.STRING)
+	@Column(name = "type", length = 60)
+	protected ContactType type;
 
-    @Override
-    public final String getContact() {
-        return contact;
-    }
+	@Override
+	public final String getContact() {
+		return contact;
+	}
 
-    @Override
-    public final void setContact(final String contact) {
-        this.contact = contact;
-    }
+	@Override
+	public final void setContact(final String contact) {
+		this.contact = contact;
+	}
 
-    @Override
-    public ContactType getType() {
-        return this.type;
-    }
+	@Override
+	public ContactType getType() {
+		return this.type;
+	}
 
-    @Override
-    public void setType(final ContactType type) {
-        this.type = type;
-    }
+	@Override
+	public void setType(final ContactType type) {
+		this.type = type;
+	}
+
+	@Override
+	public String getIdentity() {
+		return this.contact;
+	}
 }

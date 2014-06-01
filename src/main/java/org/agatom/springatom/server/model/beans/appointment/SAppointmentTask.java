@@ -74,6 +74,10 @@ public class SAppointmentTask
 		return type;
 	}
 
+	public SAppointmentTask setType(final String type) {
+		return this.setType(AppointmentTaskType.valueOf(type));
+	}
+
 	public SAppointmentTask setType(final AppointmentTaskType type) {
 		this.type = type;
 		return this;
@@ -84,7 +88,8 @@ public class SAppointmentTask
 		return this;
 	}
 
-	public SAppointmentTask setType(final String type) {
-		return this.setType(AppointmentTaskType.valueOf(type));
+	@Override
+	public String getIdentity() {
+		return this.getType().toString();
 	}
 }

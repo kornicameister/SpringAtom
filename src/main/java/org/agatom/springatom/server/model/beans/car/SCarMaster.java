@@ -58,15 +58,6 @@ public class SCarMaster
 		this.manufacturingData = new SCarMasterManufacturingData();
 	}
 
-	public SCarMasterManufacturingData getManufacturingData() {
-		return manufacturingData;
-	}
-
-	public SCarMaster setManufacturingData(final SCarMasterManufacturingData manufacturingData) {
-		this.manufacturingData = manufacturingData;
-		return this;
-	}
-
 	public String getThumbnailPath() {
 		return thumbnailPath;
 	}
@@ -127,6 +118,20 @@ public class SCarMaster
 
 	public SCarMaster setChildren(final Collection<SCar> children) {
 		this.children = Sets.newHashSet(children);
+		return this;
+	}
+
+	@Override
+	public String getIdentity() {
+		return this.getManufacturingData().getIdentity();
+	}
+
+	public SCarMasterManufacturingData getManufacturingData() {
+		return manufacturingData;
+	}
+
+	public SCarMaster setManufacturingData(final SCarMasterManufacturingData manufacturingData) {
+		this.manufacturingData = manufacturingData;
 		return this;
 	}
 }

@@ -46,35 +46,40 @@ import java.io.Serializable;
 @AttributeOverride(name = "id", column = @Column(name = "idSReportSetting", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 @Inheritance(strategy = InheritanceType.JOINED)
 abstract class SReportSetting<HOLDS extends Serializable>
-        extends PersistentObject<Long>
-        implements ReportSetting<HOLDS> {
-    private static final   long   serialVersionUID = -1700305423116775408L;
-    protected static final String TABLE_NAME       = "reports_settings";
-    protected static final String ENTITY_NAME      = "SReportSetting";
-    @NotNull
-    @Length(min = 3, max = 200)
-    @Column(name = "report_setting_name", nullable = false, unique = false, updatable = true, insertable = true, length = 200)
-    protected String  name;
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    protected SReport report;
+		extends PersistentObject<Long>
+		implements ReportSetting<HOLDS> {
+	protected static final String TABLE_NAME       = "reports_settings";
+	protected static final String ENTITY_NAME      = "SReportSetting";
+	private static final   long   serialVersionUID = -1700305423116775408L;
+	@NotNull
+	@Length(min = 3, max = 200)
+	@Column(name = "report_setting_name", nullable = false, unique = false, updatable = true, insertable = true, length = 200)
+	protected String  name;
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	protected SReport report;
 
-    @Override
-    public final String getName() {
-        return this.name;
-    }
+	@Override
+	public String getIdentity() {
+		return this.getName();
+	}
 
-    @Override
-    public final Report getReport() {
-        return report;
-    }
+	@Override
+	public final String getName() {
+		return this.name;
+	}
 
-    public final SReportSetting<HOLDS> setName(final String name) {
-        this.name = name;
-        return this;
-    }
+	@Override
+	public final Report getReport() {
+		return report;
+	}
 
-    public final SReportSetting<HOLDS> setReport(final SReport report) {
-        this.report = report;
-        return this;
-    }
+	public final SReportSetting<HOLDS> setReport(final SReport report) {
+		this.report = report;
+		return this;
+	}
+
+	public final SReportSetting<HOLDS> setName(final String name) {
+		this.name = name;
+		return this;
+	}
 }

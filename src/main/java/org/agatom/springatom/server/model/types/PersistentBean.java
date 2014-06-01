@@ -29,6 +29,7 @@ import org.agatom.springatom.core.util.StringAdaptable;
  * @since 0.0.1
  */
 public interface PersistentBean
-        extends StringAdaptable,
-                Localized {
+		extends StringAdaptable,
+		PersistentIdentity,
+		Localized {
 }

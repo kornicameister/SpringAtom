@@ -44,65 +44,71 @@ import java.util.Comparator;
 @MappedSuperclass
 @Access(value = AccessType.FIELD)
 abstract public class PersistentObject<PK extends Serializable>
-        extends AbstractPersistable<PK>
-        implements PersistentBean,
-                   Comparable<PersistentObject<PK>> {
+		extends AbstractPersistable<PK>
+		implements PersistentBean,
+		Comparable<PersistentObject<PK>> {
 
-    @Transient
-    private static final Comparator<Serializable> ID_COMPARATOR    = new Comparator<Serializable>() {
-        private static final String COMPARED_KEYS_ARE_NOT_EQUAL_IN_TYPE_O1_S_O2_S = "Compared keys are not equal in type >> o1=%s != o2=%s";
+	private static final long serialVersionUID = -6950914229850313642L;
+	@Transient
+	private static final Comparator<Serializable> ID_COMPARATOR = new Comparator<Serializable>() {
+		private static final String COMPARED_KEYS_ARE_NOT_EQUAL_IN_TYPE_O1_S_O2_S = "Compared keys are not equal in type >> o1=%s != o2=%s";
 
-        @Override
-        public int compare(final Serializable o1, final Serializable o2) {
-            Preconditions.checkArgument(o1 != null, "o1 key can not be null");
-            Preconditions.checkArgument(o2 != null, "o2 key can not be null");
-            assert o1 != null;
-            assert o2 != null;
-            final TypeToken<? extends Serializable> typeToken1 = TypeToken.of(o1.getClass());
-            final TypeToken<? extends Serializable> typeToken2 = TypeToken.of(o2.getClass());
-            if (this.areLongs(typeToken1, typeToken2)) {
-                return Longs.compare((Long) o1, (Long) o2);
-            } else if (this.areStrings(typeToken1, typeToken2)) {
-                return ((String) o1).compareTo((String) o2);
-            }
-            throw new IllegalArgumentException(String
-                    .format(COMPARED_KEYS_ARE_NOT_EQUAL_IN_TYPE_O1_S_O2_S, typeToken1.getType(), typeToken2
-                            .getType()));
-        }
+		@Override
+		public int compare(final Serializable o1, final Serializable o2) {
+			Preconditions.checkArgument(o1 != null, "o1 key can not be null");
+			Preconditions.checkArgument(o2 != null, "o2 key can not be null");
+			assert o1 != null;
+			assert o2 != null;
+			final TypeToken<? extends Serializable> typeToken1 = TypeToken.of(o1.getClass());
+			final TypeToken<? extends Serializable> typeToken2 = TypeToken.of(o2.getClass());
+			if (this.areLongs(typeToken1, typeToken2)) {
+				return Longs.compare((Long) o1, (Long) o2);
+			} else if (this.areStrings(typeToken1, typeToken2)) {
+				return ((String) o1).compareTo((String) o2);
+			}
+			throw new IllegalArgumentException(String
+					.format(COMPARED_KEYS_ARE_NOT_EQUAL_IN_TYPE_O1_S_O2_S, typeToken1.getType(), typeToken2
+							.getType()));
+		}
 
-        private boolean areStrings(final TypeToken<? extends Serializable> typeToken1, final TypeToken<? extends Serializable> typeToken2) {
-            return typeToken1.isAssignableFrom(String.class) && typeToken2
-                    .isAssignableFrom(String.class);
-        }
+		private boolean areLongs(final TypeToken<? extends Serializable> typeToken1, final TypeToken<? extends Serializable> typeToken2) {
+			return typeToken1.isAssignableFrom(Long.class) && typeToken2
+					.isAssignableFrom(Long.class);
+		}
 
-        private boolean areLongs(final TypeToken<? extends Serializable> typeToken1, final TypeToken<? extends Serializable> typeToken2) {
-            return typeToken1.isAssignableFrom(Long.class) && typeToken2
-                    .isAssignableFrom(Long.class);
-        }
-    };
-    private static final long                     serialVersionUID = -6950914229850313642L;
+		private boolean areStrings(final TypeToken<? extends Serializable> typeToken1, final TypeToken<? extends Serializable> typeToken2) {
+			return typeToken1.isAssignableFrom(String.class) && typeToken2
+					.isAssignableFrom(String.class);
+		}
+	};
+	public PersistentObject() {
+		super();
+	}
 
-    public PersistentObject() {
-        super();
-    }
+	@Override
+	@Transient
+	public String getMessageKey() {
+		return ClassUtils.getShortName(this.getClass()).toLowerCase(LocaleContextHolder.getLocale());
+	}
 
-    @Override
-    @Transient
-    public String getMessageKey() {
-        return ClassUtils.getShortName(this.getClass()).toLowerCase(LocaleContextHolder.getLocale());
-    }
+	@Override
+	@Transient
+	public String asString() {
+		return String.format("%s=%s", ClassUtils.getShortName(this.getClass()), this.getId());
+	}
 
-    @Override
-    @Transient
-    public String asString() {
-        return String.format("%s=%s", ClassUtils.getShortName(this.getClass()), this.getId());
-    }
+	@Override
+	public String getIdentity() {
+		return String.valueOf(this.getId());
+	}
 
-    @Override
-    public int compareTo(@Nonnull final PersistentObject<PK> pObject) {
-        return ComparisonChain
-                .start()
-                .compare(this.getId(), pObject.getId(), ID_COMPARATOR)
-                .result();
-    }
+	@Override
+	public int compareTo(@Nonnull final PersistentObject<PK> pObject) {
+		return ComparisonChain
+				.start()
+				.compare(this.getId(), pObject.getId(), ID_COMPARATOR)
+				.result();
+	}
+
+
 }
