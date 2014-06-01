@@ -99,11 +99,13 @@ class InfoPageMappingServiceImpl
 	}
 
 	@Override
+	@SuppressWarnings({"UnusedDeclaration", "unchecked"})
 	public <T extends Persistable<?>> boolean hasInfoPage(final Class<T> persistableClass) {
+		final Class<T> cleanedClass = (Class<T>) ClassUtils.getUserClass(persistableClass);
 		return FluentIterable.from(this.relToClassMap.values()).firstMatch(new Predicate<Class<?>>() {
 			@Override
 			public boolean apply(@Nullable final Class<?> input) {
-				return ClassUtils.isAssignable(persistableClass, input);
+				return ClassUtils.isAssignable(cleanedClass, input);
 			}
 		}).isPresent();
 	}
@@ -123,14 +125,16 @@ class InfoPageMappingServiceImpl
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T extends Persistable<?>> String getMappedRel(final Class<T> clazz) throws InfoPageNotFoundException {
-		if (!this.hasInfoPage(clazz)) {
+		final Class<T> cleanedClazz = (Class<T>) ClassUtils.getUserClass(clazz);
+		if (!this.hasInfoPage(cleanedClazz)) {
 			throw new InfoPageNotFoundException(clazz);
 		}
 		return FluentIterable.from(this.relToClassMap.keySet()).firstMatch(new Predicate<String>() {
 			@Override
 			public boolean apply(@Nullable final String input) {
-				return input != null && relToClassMap.get(input).equals(clazz);
+				return input != null && relToClassMap.get(input).equals(cleanedClazz);
 			}
 		}).get();
 	}
