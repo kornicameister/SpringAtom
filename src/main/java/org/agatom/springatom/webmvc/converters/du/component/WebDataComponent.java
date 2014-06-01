@@ -35,7 +35,7 @@ import org.agatom.springatom.web.component.core.EmbeddableComponent;
  * @since 0.0.1
  */
 public interface WebDataComponent<T>
-		extends Component, EmbeddableComponent {
+		extends Component, EmbeddableComponent, WebDataUITyped {
 	/**
 	 * Returns {@link java.io.Serializable} and {@link java.lang.Comparable} value to be rendered in the client
 	 *

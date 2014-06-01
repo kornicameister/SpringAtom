@@ -27,4 +27,9 @@ package org.agatom.springatom.webmvc.converters.du.component.core;
 public class TextComponent
 		extends DefaultWebDataComponent<String> {
 	private static final long serialVersionUID = -1035402964649329298L;
+
+	@Override
+	public String getUiType() {
+		return "text";
+	}
 }

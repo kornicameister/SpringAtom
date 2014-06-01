@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class DefaultWebDataComponent<T>
+abstract public class DefaultWebDataComponent<T>
 		extends DefaultComponent
 		implements WebDataComponent<T> {
 	private static final long     serialVersionUID = -9193939519358944467L;

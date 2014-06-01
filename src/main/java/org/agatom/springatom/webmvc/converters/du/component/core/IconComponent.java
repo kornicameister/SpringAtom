@@ -17,10 +17,7 @@
 
 package org.agatom.springatom.webmvc.converters.du.component.core;
 
-import com.google.common.collect.ComparisonChain;
-import org.agatom.springatom.web.component.core.EmbeddableComponent;
-
-import javax.annotation.Nonnull;
+import org.agatom.springatom.webmvc.converters.du.component.WebDataUITyped;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 31.05.14</small>
@@ -30,44 +27,20 @@ import javax.annotation.Nonnull;
  * @since 0.0.1
  */
 public class IconComponent
-		implements EmbeddableComponent {
-	private static final long   serialVersionUID = -1035402964649329298L;
-	private              int    position         = -1;
-	private              String iconClass        = null;
-	private              String iconPath         = null;
+		extends DefaultWebDataComponent<String>
+		implements WebDataUITyped {
+	private static final long serialVersionUID = -1035402964649329298L;
 
-	public String getIconClass() {
-		return this.iconClass;
-	}
-
-	public IconComponent setIconClass(final String iconClass) {
-		this.iconClass = iconClass;
-		return this;
-	}
-
-	public String getIconPath() {
-		return this.iconPath;
+	@Override
+	public String getUiType() {
+		return "icon";
 	}
 
 	public IconComponent setIconPath(final String iconPath) {
-		this.iconPath = iconPath;
-		return this;
+		return (IconComponent) this.setValue(iconPath);
 	}
 
-	@Override
-	public int getPosition() {
-		return this.position;
-	}
-
-	@Override
-	public void setPosition(final int position) {
-		this.position = position;
-	}
-
-	@Override
-	public int compareTo(@Nonnull final EmbeddableComponent o) {
-		return ComparisonChain.start()
-				.compare(this.position, o.getPosition())
-				.result();
+	public IconComponent setIconClass(final String iconClass) {
+		return (IconComponent) this.setValue(iconClass);
 	}
 }

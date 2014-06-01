@@ -42,4 +42,8 @@ public class WebDataComponentsArray
 		return properties;
 	}
 
+	@Override
+	public String getUiType() {
+		return "multiObjects";
+	}
 }

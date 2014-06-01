@@ -30,6 +30,7 @@ import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisp
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
 import org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent;
+import org.agatom.springatom.webmvc.converters.du.component.core.TextComponent;
 import org.agatom.springatom.webmvc.converters.du.converters.ToInfoPageLinkWebConverter;
 import org.agatom.springatom.webmvc.converters.du.converters.ToTableRequestWebConverter;
 import org.agatom.springatom.webmvc.converters.du.exception.WebConverterException;
@@ -140,11 +141,11 @@ public class WebDataGenericConverter
 		if (capable.size() > 1) {
 			final String message = String.format("Unambiguous web convert choice, for key=%s, type=%s found %d converters", key, value, capable.size());
 			LOGGER.warn(message);
-			serializable = new DefaultWebDataComponent<>().setValue(message);
+			serializable = new TextComponent().setValue(message).setKey(localKey).setRawValueType(valueType);
 		} else if (capable.size() == 0) {
 			final String message = String.format("No web convert choice, for key=%s, type=%s found %d converters", key, value, capable.size());
 			LOGGER.warn(message);
-			serializable = new DefaultWebDataComponent<>().setValue(message);
+			serializable = new TextComponent().setValue(message).setKey(localKey).setRawValueType(valueType);
 		}
 
 		if (serializable != null) {

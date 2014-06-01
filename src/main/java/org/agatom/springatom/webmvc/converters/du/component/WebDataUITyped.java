@@ -17,8 +17,7 @@
 
 package org.agatom.springatom.webmvc.converters.du.component;
 
-import org.agatom.springatom.web.component.core.Component;
-import org.agatom.springatom.web.component.core.EmbeddableComponent;
+import java.io.Serializable;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 01.06.14</small>
@@ -27,6 +26,7 @@ import org.agatom.springatom.web.component.core.EmbeddableComponent;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface WebDataMultiComponents<T extends EmbeddableComponent>
-		extends Component, Iterable<T>, WebDataUITyped {
+public interface WebDataUITyped
+		extends Serializable {
+	String getUiType();
 }
