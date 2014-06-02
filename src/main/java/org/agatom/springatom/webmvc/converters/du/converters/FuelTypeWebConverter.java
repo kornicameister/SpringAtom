@@ -17,56 +17,34 @@
 
 package org.agatom.springatom.webmvc.converters.du.converters;
 
+import org.agatom.springatom.server.model.types.car.FuelType;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
-import org.agatom.springatom.webmvc.converters.du.component.core.IconComponent;
 import org.agatom.springatom.webmvc.converters.du.component.core.TextComponent;
-import org.agatom.springatom.webmvc.converters.du.component.core.WebDataComponentsArray;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Persistable;
-import org.springframework.util.ClassUtils;
 
 import java.io.Serializable;
 
 /**
- * {@code PrimaryKeyWebConverter} creates {@link org.agatom.springatom.webmvc.converters.du.component.core.WebDataComponentsArray}
- * containing two other components:
- * <ol>
- * <li>{@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent} with the {@link org.springframework.data.domain.Persistable#getId()}</li>
- * <li>{@link org.agatom.springatom.webmvc.converters.du.component.core.IconComponent} with the icon</li>
- * </ol>
- * <small>Class is a part of <b>SpringAtom</b> and was created at 31.05.14</small>
+ * {@code FuelTypeWebConverter} is designed to return localized value of {@link org.agatom.springatom.server.model.types.car.FuelType}
+ * attribute of the {@link org.agatom.springatom.server.model.beans.car.SCar} persistable object.
+ * <p/>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-@WebConverter(key = "id")
-public class PrimaryKeyWebConverter
-		extends AbstractWebConverter {
+@WebConverter(key = "fuelType", types = FuelType.class)
+public class FuelTypeWebConverter
+		extends PrimitivesWebConverter {
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
-		final WebDataComponentsArray array = new WebDataComponentsArray();
-		final String keyValue = this.getPrimaryKeyValue(value, persistable);
-
-		array.setTitle(this.getLabel(key, persistable));
-		array.addContent(new TextComponent().setKey(key).setValue(keyValue).setRawValueType(ClassUtils.getUserClass(value == null ? keyValue : value)));
-		array.addContent(new IconComponent().setIconClass("fa fa-key"));
-
-		return array;
+		final TextComponent tc = (TextComponent) super.doConvert(key, value, persistable, webRequest);
+		final FuelType fuelType = (FuelType) value;
+		tc.setValue(this.messageSource.getMessage(fuelType.name(), LocaleContextHolder.getLocale()));
+		return tc;
 	}
-
-	/**
-	 * Returns primary key value. If {@code value} is null, method tries to extract the value from {@link Persistable#getId()}
-	 *
-	 * @param value       current "id" value
-	 * @param persistable persistable having the value
-	 *
-	 * @return primary key value
-	 */
-	protected String getPrimaryKeyValue(final Object value, final Persistable<?> persistable) {
-		return String.valueOf(value != null ? value : persistable.getId());
-	}
-
 }

@@ -1,0 +1,45 @@
+{
+	"id"     : "car_ip_v_1",
+	"domain" : "org.agatom.springatom.server.model.beans.car.SCar",
+	"content": [
+		{
+			"id"        : "basicAttributes",
+			"layout"    : "VERTICAL",
+			"messageKey": "springatom.infopage.rb.basicAttributesPanel.title",
+			"attributes": [
+				{
+					"path": "idVersion"
+				},
+				{
+					"path": "carMaster"
+				},
+				{
+					"path": "licencePlate"
+				},
+				{
+					"path": "yearOfProduction"
+				},
+				{
+					"path": "vinNumber"
+				},
+				{
+					"path": "fuelType"
+				},
+				{
+					"path": "owner"
+				}
+			]
+		},
+		{
+			"id"        : "carInformation",
+			"layout"    : "VERTICAL",
+			"messageKey": "springatom.infopage.rb.manyToOnePanel.title",
+			"attributes": [
+				{
+					"path"      : "appointments",
+					"messageKey": "sappointment"
+				}
+			]
+		}
+	]
+}

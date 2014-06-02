@@ -36,7 +36,8 @@ import java.io.Serializable;
 @WebConverter(types = {
 		String.class,
 		Boolean.class,
-		Number.class
+		Number.class,
+		Enum.class
 })
 public class PrimitivesWebConverter
 		extends AbstractWebConverter {
@@ -52,6 +53,9 @@ public class PrimitivesWebConverter
 			} else {
 				component.setValue(this.messageSource.getMessage("boolean.false", (java.util.Locale) webRequest.getValues().get("locale")));
 			}
+		} else if (ClassUtils.isAssignableValue(Enum.class, value)) {
+			component.setValue(((Enum<?>) value).name());
+			component.addDynamicProperty("rawEnumValue", value);
 		} else {
 			component.setValue(String.valueOf(value));
 		}

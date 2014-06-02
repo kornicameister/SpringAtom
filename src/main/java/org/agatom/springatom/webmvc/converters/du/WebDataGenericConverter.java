@@ -118,7 +118,7 @@ public class WebDataGenericConverter
 		final Object value = webData.getValue();
 		final Persistable<?> persistable = webData.getSource();
 		final String key = webData.getKey();
-		final Class<?> valueType = ClassUtils.getUserClass(value.getClass());
+		final Class<?> valueType = ClassUtils.getUserClass(value != null ? value.getClass() : Void.class);
 		final AttributeDisplayAs displayAs = this.getValueRenderType(((AbstractComponentRequest) webData.getRequest().getComponentRequest()).getAttributes(), key);
 
 		String localKey = null;
@@ -153,7 +153,7 @@ public class WebDataGenericConverter
 			DefaultWebDataComponent<?> dataComponent = (DefaultWebDataComponent<?>) serializable;
 
 			dataComponent = dataComponent.setKey(key).setRawValueType(String.class);
-			dataComponent.setTitle(this.messageSource.getLocalizedClassAttribute(persistable.getClass(), key, (java.util.Locale) request.getValues().get("locale")).getLabel());
+			dataComponent.setTitle(key);
 
 			return dataComponent;
 		}

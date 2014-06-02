@@ -40,6 +40,11 @@ abstract public class DefaultWebDataComponent<T>
 	private              String   key              = null;
 	private              int      position         = -1;
 
+	public DefaultWebDataComponent<T> setLabel(final String label) {
+		this.setTitle(label);
+		return this;
+	}
+
 	@Override
 	public T getValue() {
 		return this.value;

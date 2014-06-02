@@ -25,6 +25,7 @@ import org.agatom.springatom.web.locale.beans.LocalizedClassAttribute;
 import org.agatom.springatom.webmvc.converters.du.WebDataConverter;
 import org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent;
 import org.agatom.springatom.webmvc.converters.du.component.core.TextComponent;
+import org.agatom.springatom.webmvc.converters.du.component.core.WebDataComponentsArray;
 import org.agatom.springatom.webmvc.converters.du.exception.WebConverterException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,16 +124,25 @@ abstract public class AbstractWebConverter
 			if (!StringUtils.hasText(component.getTitle())) {
 				component.setTitle(this.getLabel(key, persistable));
 			}
+		} else if (ClassUtils.isAssignableValue(WebDataComponentsArray.class, convertedValue)) {
+			final WebDataComponentsArray component = (WebDataComponentsArray) convertedValue;
+
+			component.addDynamicProperty("converter", ClassUtils.getShortName(this.getClass()));
+			component.addDynamicProperty("time", conversionTime);
+			
+			if (!StringUtils.hasText(component.getTitle())) {
+				component.setTitle(this.getLabel(key, persistable));
+			}
 		}
 		return convertedValue;
 	}
 
 	protected String getLabel(final String key, final Persistable<?> persistable) {
 		final LocalizedClassAttribute localizedClassAttribute = this.messageSource.getLocalizedClassAttribute(persistable.getClass(), key, LocaleContextHolder.getLocale());
-		if (localizedClassAttribute.isFound()) {
+		if (localizedClassAttribute != null && localizedClassAttribute.isFound()) {
 			return localizedClassAttribute.getLabel();
 		}
-		return key;
+		return this.getLabel(key);
 	}
 
 	protected String getLabel(final String key) {
