@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,43 +15,20 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core.data;
+package org.agatom.springatom.web.component.core.request;
 
-import org.agatom.springatom.web.component.core.Component;
-import org.agatom.springatom.web.component.core.request.ComponentRequest;
-import org.springframework.ui.ModelMap;
+import java.io.Serializable;
 
 /**
- * {@code ComponentDataRequest} wraps {@link org.agatom.springatom.web.component.core.request.ComponentRequest} (marshalled
- * from Ajax], {@link #component} and {@link #values} of the request
+ * {@code ComponentRequest} marks implementing class as carrying the component request.
+ * Request can concern either definition or data.
+ * <p/>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 02.06.14</small>
  *
  * @author kornicameister
- * @version 0.0.5
+ * @version 0.0.1
  * @since 0.0.1
  */
-public class ComponentDataRequest {
-	protected final ModelMap         values;
-	protected final ComponentRequest request;
-	private         Component        component;
-
-	public ComponentDataRequest(final ModelMap modelMap, final ComponentRequest request) {
-		this.values = modelMap;
-		this.request = request;
-	}
-
-	public Component getComponent() {
-		return component;
-	}
-
-	public void setComponent(final Component component) {
-		this.component = component;
-	}
-
-	public ModelMap getValues() {
-		return this.values;
-	}
-
-	public ComponentRequest getComponentRequest() {
-		return request;
-	}
+public interface ComponentRequest
+		extends Serializable {
 }

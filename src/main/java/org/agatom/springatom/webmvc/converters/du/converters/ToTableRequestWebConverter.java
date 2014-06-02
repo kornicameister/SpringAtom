@@ -60,7 +60,7 @@ public class ToTableRequestWebConverter
 	private              ComponentBuilderRepository builderRepository = null;
 
 	@Override
-	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) throws Exception {
 		LOGGER.trace(String.format("doConverter(key=%s,value=%s)", key, value));
 		final EntityDescriptor<? extends Persistable> descriptor = this.entityDescriptors.getDescriptor(persistable.getClass());
 
@@ -84,7 +84,7 @@ public class ToTableRequestWebConverter
 
 			request.setTitle(this.getLabel(key, persistable));
 			request.addDynamicProperty("builderId", builderId);
-			request.addDynamicProperty("configurationUrl", linkTo(methodOn(SVComponentsDefinitionController.class).onTableConfigRequest(null)).withSelfRel().getHref());
+			request.addDynamicProperty("configurationUrl", linkTo(methodOn(SVComponentsDefinitionController.class).onTableConfigRequest(null, null)).withSelfRel().getHref());
 			request.addDynamicProperty("dataUrl", linkTo(methodOn(SVComponentsDataController.class).onTableDataRequest(null, null)).withSelfRel().getHref());
 			request.addDynamicProperty("domain", associatedType.getName());
 

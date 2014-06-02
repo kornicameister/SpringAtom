@@ -25,6 +25,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.core.request.AbstractComponentRequest;
 import org.agatom.springatom.web.component.core.request.ComponentRequestAttribute;
 import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.web.locale.SMessageSource;
@@ -72,7 +73,7 @@ import java.util.concurrent.TimeUnit;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 30.05.14</small>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @Lazy(false)
@@ -118,7 +119,7 @@ public class WebDataGenericConverter
 		final Persistable<?> persistable = webData.getSource();
 		final String key = webData.getKey();
 		final Class<?> valueType = ClassUtils.getUserClass(value.getClass());
-		final AttributeDisplayAs displayAs = this.getValueRenderType(webData.getRequest().getAttributes(), key);
+		final AttributeDisplayAs displayAs = this.getValueRenderType(((AbstractComponentRequest) webData.getRequest().getComponentRequest()).getAttributes(), key);
 
 		String localKey = null;
 		switch (displayAs) {

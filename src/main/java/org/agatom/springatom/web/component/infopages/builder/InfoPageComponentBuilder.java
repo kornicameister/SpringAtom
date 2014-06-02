@@ -28,6 +28,7 @@ import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
 import org.agatom.springatom.web.component.core.request.ComponentRequestAttribute;
 import org.agatom.springatom.web.component.infopages.link.InfoPageLinkHelper;
+import org.agatom.springatom.web.component.infopages.request.InfoPageComponentRequest;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -46,7 +47,7 @@ import java.util.Set;
  * @param <Y> marker for {@link org.springframework.data.domain.Persistable} that builder builds data for
  *
  * @author kornicameister
- * @version 0.0.4
+ * @version 0.0.5
  * @since 0.0.1
  */
 public abstract class InfoPageComponentBuilder<Y extends Persistable<?>>
@@ -77,10 +78,11 @@ public abstract class InfoPageComponentBuilder<Y extends Persistable<?>>
 	@Override
 	protected Object buildData(final ComponentDataRequest request) throws ComponentException {
 		this.logger.trace(String.format("buildData(dataRequest=%s)", request));
+		final InfoPageComponentRequest ipRequest = (InfoPageComponentRequest) request.getComponentRequest();
 
-		final Long objectId = request.getId();
-		final Long objectVersion = request.getVersion();
-		final Set<ComponentRequestAttribute> attributes = request.getAttributes();
+		final Long objectId = ipRequest.getId();
+		final Long objectVersion = ipRequest.getVersion();
+		final Set<ComponentRequestAttribute> attributes = ipRequest.getAttributes();
 
 		final Y object = this.getOne(objectId, objectVersion);
 		final BeanWrapper bw = new BeanWrapperImpl(object);

@@ -19,18 +19,17 @@ package org.agatom.springatom.web.component.core.request;
 
 import com.google.common.base.Objects;
 
-import java.io.Serializable;
 import java.util.Set;
 
 /**
- * {@code ComponentRequest} is a bean describing single request specified by either <b>table</b> or <b>infopage</b>
+ * {@code AbstractComponentRequest} is a bean describing single request specified by either <b>table</b> or <b>infopage</b>
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.3
  * @since 0.0.1
  */
 abstract public class AbstractComponentRequest
-		implements Serializable {
+		implements ComponentRequest {
 	private static final long                           serialVersionUID = 8264945607694867245L;
 	protected            Set<ComponentRequestAttribute> attributes       = null;
 	protected            Class<?>                       domain           = null;

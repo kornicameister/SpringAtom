@@ -84,7 +84,7 @@ abstract public class AbstractWebConverter
 		}
 	}
 
-	protected abstract Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest);
+	protected abstract Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) throws Exception;
 
 	@SuppressWarnings("unchecked")
 	private Serializable getAsString(final String key, final Object value, final Persistable<?> persistable) {
