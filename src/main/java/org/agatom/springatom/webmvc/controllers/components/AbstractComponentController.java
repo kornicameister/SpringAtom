@@ -36,6 +36,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * {@code AbstractComponentController} is a foundation for <b>components controller</b>
+ * Contains logic required to create {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest}
+ * and for exception handling
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 02.06.14</small>
  *
  * @author kornicameister
