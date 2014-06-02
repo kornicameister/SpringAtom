@@ -22,7 +22,7 @@ import org.agatom.springatom.web.component.core.elements.table.TableColumnCompon
 import org.agatom.springatom.web.component.core.elements.table.TableComponent;
 import org.agatom.springatom.web.component.core.helper.TableComponentHelper;
 import org.agatom.springatom.web.component.infopages.link.InfoPageLinkHelper;
-import org.agatom.springatom.webmvc.controllers.components.SVTableBuilderController;
+import org.agatom.springatom.webmvc.controllers.components.SVComponentsDataController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -73,7 +73,7 @@ class DefaultTableComponentHelper
 	@Override
 	public Link getTableLink(final String tableId, final String builderId) {
 		try {
-			return linkTo(methodOn(SVTableBuilderController.class).getBuilderData(builderId, null, null)).withRel(tableId);
+			return linkTo(methodOn(SVComponentsDataController.class).onTableDataRequest(null, null)).withRel(tableId);
 		} catch (Exception linkRetrievalException) {
 			LOGGER.trace(
 					String.format("Could not have resolved link to TableBuilder[builderId=%s,tableId=%s] using %s",
