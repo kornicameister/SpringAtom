@@ -69,6 +69,7 @@ class InfoPageLinkHelperImpl
 		return this.infoPageUriTemplate;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public <T extends Serializable> Link getInfoPageLink(final Persistable<T> persistable) throws InfoPageNotFoundException {
 		LOGGER.trace(String.format("getInfoPageLink(persistable=%s)", persistable));
@@ -90,16 +91,19 @@ class InfoPageLinkHelperImpl
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public <T extends Serializable> Link getInfoPageLink(final String path, final T id) {
 		return this.getInfoPageLink(path, id, null);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isInfoPageLink(final String path) {
 		return !StringUtils.hasText(path) || this.infoPageUriTemplate.matches(path);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public InfoPageRequest toInfoPageRequest(final HttpServletRequest request) throws InfoPageNotFoundException {
 		final String path = request.getRequestURI();
@@ -137,6 +141,16 @@ class InfoPageLinkHelperImpl
 		return link;
 	}
 
+	/**
+	 * <p>getInfoPageLink.</p>
+	 *
+	 * @param path    a {@link java.lang.String} object.
+	 * @param id      a T object.
+	 * @param version a {@link java.lang.Long} object.
+	 * @param <T>     a T object.
+	 *
+	 * @return a {@link org.springframework.hateoas.Link} object.
+	 */
 	public <T extends Serializable> Link getInfoPageLink(final String path, final T id, final Long version) {
 		LOGGER.trace(String.format("getInfoPageLink(path=%s,id=%s,version=%s)", path, id, version));
 

@@ -29,6 +29,8 @@ import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * <p>Abstract AbstractComponentDefinitionBuilder class.</p>
+ *
  * @author kornicameister
  * @version 0.0.3
  * @since 0.0.1
@@ -39,6 +41,7 @@ abstract public class AbstractComponentDefinitionBuilder<COMP extends Serializab
 	private Class<?>          builds            = getBuilds();
 	private ComponentProduces componentProduces = getProduces();
 
+	/** {@inheritDoc} */
 	@Override
 	public final ComponentProduces getProduces() {
 		if (this.componentProduces == null) {
@@ -52,6 +55,7 @@ abstract public class AbstractComponentDefinitionBuilder<COMP extends Serializab
 		return componentProduces;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public final Class<?> getBuilds() {
 		if (this.builds == null) {
@@ -61,6 +65,7 @@ abstract public class AbstractComponentDefinitionBuilder<COMP extends Serializab
 		return this.builds;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public final COMP getDefinition(final ComponentDataRequest dataRequest) throws ComponentException {
 		this.logger.debug(String.format("getDefinition(dataRequest=%s)", dataRequest));
@@ -96,7 +101,7 @@ abstract public class AbstractComponentDefinitionBuilder<COMP extends Serializab
 	 *
 	 * @return the definition of {@link #getBuilds()}
 	 *
-	 * @throws ComponentException if any
+	 * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException if any
 	 */
 	protected abstract COMP buildDefinition(final ComponentDataRequest dataRequest) throws ComponentException;
 

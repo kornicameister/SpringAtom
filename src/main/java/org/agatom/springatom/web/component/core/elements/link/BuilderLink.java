@@ -24,6 +24,8 @@ import org.springframework.hateoas.Link;
 import java.io.Serializable;
 
 /**
+ * <p>BuilderLink class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -36,6 +38,14 @@ public class BuilderLink
 	private final String       builderId;
 	private final Link         link;
 
+	/**
+	 * <p>Constructor for BuilderLink.</p>
+	 *
+	 * @param builderId    a {@link java.lang.String} object.
+	 * @param contextClass a {@link java.lang.Class} object.
+	 * @param contextKey   a {@link java.io.Serializable} object.
+	 * @param link         a {@link org.springframework.hateoas.Link} object.
+	 */
 	public BuilderLink(final String builderId,
 	                   final Class<?> contextClass,
 	                   final Serializable contextKey,
@@ -46,31 +56,58 @@ public class BuilderLink
 		this.link = link;
 	}
 
+	/**
+	 * <p>Getter for the field <code>contextKey</code>.</p>
+	 *
+	 * @return a {@link java.io.Serializable} object.
+	 */
 	public Serializable getContextKey() {
 		return contextKey;
 	}
 
+	/**
+	 * <p>Getter for the field <code>contextClass</code>.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
 	public Class<?> getContextClass() {
 		return contextClass;
 	}
 
+	/**
+	 * <p>getContextClassName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getContextClassName() {
 		return contextClass.getName();
 	}
 
+	/**
+	 * <p>Getter for the field <code>builderId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getBuilderId() {
 		return builderId;
 	}
 
+	/**
+	 * <p>Getter for the field <code>link</code>.</p>
+	 *
+	 * @return a {@link org.springframework.hateoas.Link} object.
+	 */
 	public Link getLink() {
 		return this.link;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(builderId, contextClass, contextKey);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -87,6 +124,7 @@ public class BuilderLink
 				Objects.equal(this.contextKey, that.contextKey);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)

@@ -25,6 +25,8 @@ import org.springframework.context.annotation.*;
 import org.springframework.core.io.FileSystemResourceLoader;
 
 /**
+ * <p>InfoPageModuleConfiguration class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -33,10 +35,17 @@ import org.springframework.core.io.FileSystemResourceLoader;
 @PropertySource(value = InfoPageModuleConfiguration.LOCATION)
 public class InfoPageModuleConfiguration
 		extends AbstractModuleConfiguration {
+	/** Constant <code>MODULE_NAME="ipConfiguration"</code> */
 	protected static final String MODULE_NAME = "ipConfiguration";
-	protected static final String LOCATION = "classpath:org/agatom/springatom/web/component/infopages/infopages.properties";
+	/** Constant <code>LOCATION="classpath:org/agatom/springatom/web/com"{trunked}</code> */
+	protected static final String LOCATION    = "classpath:org/agatom/springatom/web/component/infopages/infopages.properties";
 	private static final   Logger LOGGER      = Logger.getLogger(InfoPageModuleConfiguration.class);
 
+	/**
+	 * <p>getInfoPageMappingProperties.</p>
+	 *
+	 * @return a {@link org.springframework.beans.factory.config.PropertiesFactoryBean} object.
+	 */
 	@Bean(name = "infoPageProperties")
 	@Scope(BeanDefinition.SCOPE_SINGLETON)
 	@Role(BeanDefinition.ROLE_SUPPORT)

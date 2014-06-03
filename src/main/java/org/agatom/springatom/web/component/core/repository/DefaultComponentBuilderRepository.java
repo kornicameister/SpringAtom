@@ -154,26 +154,31 @@ class DefaultComponentBuilderRepository
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Builder getBuilder(final String componentId) {
 		return (Builder) this.context.getBean(componentId);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasBuilder(final Class<?> target) {
 		return this.hasBuilder(target, ComponentProduces.TABLE_COMPONENT);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasBuilder(final Class<?> target, final ComponentProduces produces) {
 		return this.getBuilderId(target, produces) != null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getBuilderId(final Class<?> target) {
 		return this.getBuilderId(target, ComponentProduces.TABLE_COMPONENT);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getBuilderId(final Class<?> target, final ComponentProduces produces) {
 		final Optional<DefinitionHolder> match = FluentIterable.from(this.definitionToBuilderMap.keySet()).firstMatch(new Predicate<DefinitionHolder>() {
@@ -189,11 +194,13 @@ class DefaultComponentBuilderRepository
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
 		this.context = applicationContext;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
 		this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;

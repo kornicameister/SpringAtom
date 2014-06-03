@@ -73,6 +73,8 @@ public interface ComponentBuilderRepository {
 	 *
 	 * @see #getBuilderId(Class, org.agatom.springatom.web.component.core.builders.ComponentProduces)
 	 * @see #getBuilder(String)
+	 * @see #getBuilderId(Class, org.agatom.springatom.web.component.core.builders.ComponentProduces)
+	 * @see #getBuilder(String)
 	 */
 	String getBuilderId(Class<?> target);
 

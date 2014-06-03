@@ -20,6 +20,8 @@ package org.agatom.springatom.web.component.core;
 import java.io.Serializable;
 
 /**
+ * <p>ComponentValue interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1

@@ -31,10 +31,22 @@ public class InfoPageComponentRequest
 	private static final long   serialVersionUID = 5993317754887000242L;
 	private              String pageId           = null;
 
+	/**
+	 * <p>Getter for the field <code>pageId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getPageId() {
 		return pageId;
 	}
 
+	/**
+	 * <p>Setter for the field <code>pageId</code>.</p>
+	 *
+	 * @param pageId a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.request.InfoPageComponentRequest} object.
+	 */
 	public InfoPageComponentRequest setPageId(final String pageId) {
 		this.pageId = pageId;
 		return this;

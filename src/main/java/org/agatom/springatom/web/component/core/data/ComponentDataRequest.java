@@ -34,23 +34,49 @@ public class ComponentDataRequest {
 	protected final ComponentRequest request;
 	private         Component        component;
 
+	/**
+	 * <p>Constructor for ComponentDataRequest.</p>
+	 *
+	 * @param modelMap a {@link org.springframework.ui.ModelMap} object.
+	 * @param request  a {@link org.agatom.springatom.web.component.core.request.ComponentRequest} object.
+	 */
 	public ComponentDataRequest(final ModelMap modelMap, final ComponentRequest request) {
 		this.values = modelMap;
 		this.request = request;
 	}
 
+	/**
+	 * <p>Getter for the field <code>component</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.Component} object.
+	 */
 	public Component getComponent() {
 		return component;
 	}
 
+	/**
+	 * <p>Setter for the field <code>component</code>.</p>
+	 *
+	 * @param component a {@link org.agatom.springatom.web.component.core.Component} object.
+	 */
 	public void setComponent(final Component component) {
 		this.component = component;
 	}
 
+	/**
+	 * <p>Getter for the field <code>values</code>.</p>
+	 *
+	 * @return a {@link org.springframework.ui.ModelMap} object.
+	 */
 	public ModelMap getValues() {
 		return this.values;
 	}
 
+	/**
+	 * <p>getComponentRequest.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.request.ComponentRequest} object.
+	 */
 	public ComponentRequest getComponentRequest() {
 		return request;
 	}

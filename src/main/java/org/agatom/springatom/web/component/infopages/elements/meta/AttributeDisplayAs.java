@@ -18,6 +18,8 @@
 package org.agatom.springatom.web.component.infopages.elements.meta;
 
 /**
+ * <p>AttributeDisplayAs class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1

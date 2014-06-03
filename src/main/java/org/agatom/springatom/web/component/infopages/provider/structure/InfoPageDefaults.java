@@ -34,10 +34,17 @@ import java.util.HashMap;
  */
 public class InfoPageDefaults
 		extends HashMap<String, Object> {
+	/** Constant <code>COLLAPSIBLE="collapsible"</code> */
 	public static final  String COLLAPSIBLE      = "collapsible";
+	/** Constant <code>LAYOUT="layout"</code> */
 	public static final  String LAYOUT           = "layout";
 	private static final long   serialVersionUID = -4311432020224431919L;
 
+	/**
+	 * <p>isCollapsible.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isCollapsible() {
 		final Object value = this.get(COLLAPSIBLE);
 		if (value == null) {
@@ -53,6 +60,11 @@ public class InfoPageDefaults
 		return false;
 	}
 
+	/**
+	 * <p>getLayout.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPageLayout} object.
+	 */
 	public InfoPageLayout getLayout() {
 		final String value = (String) this.get(LAYOUT);
 		if (StringUtils.hasText(value)) {

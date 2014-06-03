@@ -46,67 +46,133 @@ public class InfoPagePanel
 	private              boolean                collapsible      = false;
 	private              boolean                frozen           = false;
 
+	/**
+	 * <p>isFrozen.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isFrozen() {
 		return this.frozen;
 	}
 
+	/**
+	 * <p>Setter for the field <code>frozen</code>.</p>
+	 *
+	 * @param frozen a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPagePanel} object.
+	 */
 	public InfoPagePanel setFrozen(final boolean frozen) {
 		this.frozen = frozen;
 		return this;
 	}
 
+	/**
+	 * <p>isCollapsible.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isCollapsible() {
 		return this.collapsible;
 	}
 
+	/**
+	 * <p>Setter for the field <code>collapsible</code>.</p>
+	 *
+	 * @param collapsible a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPagePanel} object.
+	 */
 	public InfoPagePanel setCollapsible(final boolean collapsible) {
 		this.collapsible = collapsible;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getId() {
 		return this.id;
 	}
 
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPagePanel} object.
+	 */
 	public InfoPagePanel setId(final String id) {
 		this.id = id;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>layout</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPageLayout} object.
+	 */
 	public InfoPageLayout getLayout() {
 		return this.layout;
 	}
 
+	/**
+	 * <p>Setter for the field <code>layout</code>.</p>
+	 *
+	 * @param layout a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPageLayout} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPagePanel} object.
+	 */
 	public InfoPagePanel setLayout(final InfoPageLayout layout) {
 		this.layout = layout;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>attributes</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<InfoPageAttribute> getAttributes() {
 		return this.attributes;
 	}
 
+	/**
+	 * <p>Setter for the field <code>attributes</code>.</p>
+	 *
+	 * @param attributes a {@link java.util.Set} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPagePanel} object.
+	 */
 	public InfoPagePanel setAttributes(final Set<InfoPageAttribute> attributes) {
 		this.attributes = attributes;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getMessageKey() {
 		return this.messageKey;
 	}
 
+	/**
+	 * <p>Setter for the field <code>messageKey</code>.</p>
+	 *
+	 * @param messageKey a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPagePanel} object.
+	 */
 	public InfoPagePanel setMessageKey(final String messageKey) {
 		this.messageKey = messageKey;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(id, layout, messageKey, attributes, collapsible, frozen);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -122,6 +188,7 @@ public class InfoPagePanel
 				Objects.equal(this.frozen, that.frozen);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Iterator<InfoPageAttribute> iterator() {
 		return this.attributes.iterator();

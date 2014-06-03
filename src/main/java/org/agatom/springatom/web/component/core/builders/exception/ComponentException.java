@@ -18,6 +18,8 @@
 package org.agatom.springatom.web.component.core.builders.exception;
 
 /**
+ * <p>ComponentException class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -26,14 +28,30 @@ public class ComponentException
 		extends Exception {
 	private static final long serialVersionUID = -6181041823249235155L;
 
+	/**
+	 * <p>Constructor for ComponentException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
 	public ComponentException(final String message) {
 		super(message);
 	}
 
+	/**
+	 * <p>Constructor for ComponentException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
 	public ComponentException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * <p>Constructor for ComponentException.</p>
+	 *
+	 * @param cause a {@link java.lang.Throwable} object.
+	 */
 	public ComponentException(final Throwable cause) {
 		super(cause);
 	}

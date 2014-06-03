@@ -58,8 +58,9 @@ public interface InfoPageComponentBuilderService {
 	 *
 	 * @return complete {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent}
 	 *
-	 * @throws SException in case of a failure
+	 * @throws org.agatom.springatom.core.exception.SException in case of a failure
 	 * @see #buildInfoPage(org.agatom.springatom.web.component.infopages.provider.structure.InfoPage)
+	 * @see org.agatom.springatom.web.component.infopages.mapping.InfoPageMappingService#getMappedClass(String)
 	 * @see org.agatom.springatom.web.component.infopages.mapping.InfoPageMappingService#getMappedClass(String)
 	 */
 	@Cacheable(value = "InfoPageComponentBuilderService.cache.path")
@@ -70,11 +71,10 @@ public interface InfoPageComponentBuilderService {
 	 * out of {@code domainClass} corresponding to the {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent}
 	 *
 	 * @param domainClass class associated to the {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent}
-	 * @param <T>         persistable indicator
 	 *
 	 * @return complete {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent}
 	 *
-	 * @throws SException in case of a failure
+	 * @throws org.agatom.springatom.core.exception.SException in case of a failure
 	 * @see org.agatom.springatom.web.component.infopages.provider.InfoPageProviderService#getInfoPage(Class)
 	 */
 	@Cacheable(value = "InfoPageComponentBuilderService.cache.domainClass")

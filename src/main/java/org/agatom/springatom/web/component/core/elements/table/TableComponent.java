@@ -21,31 +21,47 @@ import com.google.common.base.Objects;
 import org.agatom.springatom.web.component.core.elements.ContentComponent;
 
 /**
+ * <p>Abstract TableComponent class.</p>
+ *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
-public class TableComponent
-		extends ContentComponent<TableColumnComponent> {
+abstract public class TableComponent<T extends TableColumnComponent>
+		extends ContentComponent<T> {
 	private static final long    serialVersionUID = 3527305242535311855L;
 	protected            String  tableId          = null;
 	protected            int     rowsOnPage       = 10;
 	protected            boolean filterable       = true;
 
+	/**
+	 * <p>Getter for the field <code>tableId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getTableId() {
 		return tableId;
 	}
 
+	/**
+	 * <p>Setter for the field <code>tableId</code>.</p>
+	 *
+	 * @param tableId a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.TableComponent} object.
+	 */
 	public TableComponent setTableId(final String tableId) {
 		this.tableId = tableId;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(tableId);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -60,6 +76,7 @@ public class TableComponent
 		return Objects.equal(this.tableId, that.tableId);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)

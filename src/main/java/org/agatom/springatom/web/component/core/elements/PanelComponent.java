@@ -22,6 +22,8 @@ import org.agatom.springatom.web.component.core.EmbeddableComponent;
 import javax.annotation.Nonnull;
 
 /**
+ * <p>PanelComponent class.</p>
+ *
  * @author kornicameister
  * @version 0.0.2
  * @since 0.0.1
@@ -33,25 +35,40 @@ public class PanelComponent<T extends EmbeddableComponent>
 	protected            int    position         = -1;
 	protected            String layout           = null;
 
+	/**
+	 * <p>Getter for the field <code>layout</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getLayout() {
 		return this.layout;
 	}
 
+	/**
+	 * <p>Setter for the field <code>layout</code>.</p>
+	 *
+	 * @param layout a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.PanelComponent} object.
+	 */
 	public PanelComponent<T> setLayout(final String layout) {
 		this.layout = layout;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int getPosition() {
 		return position;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setPosition(final int position) {
 		this.position = position;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(final @Nonnull EmbeddableComponent panel) {
 		return Integer.compare(this.position, panel.getPosition());

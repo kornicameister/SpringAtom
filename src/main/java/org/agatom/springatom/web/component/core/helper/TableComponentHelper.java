@@ -17,23 +17,58 @@
 
 package org.agatom.springatom.web.component.core.helper;
 
-import org.agatom.springatom.web.component.core.elements.table.DandelionTableComponent;
-import org.agatom.springatom.web.component.core.elements.table.TableColumnComponent;
 import org.agatom.springatom.web.component.core.elements.table.TableComponent;
+import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent;
+import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent;
 import org.springframework.hateoas.Link;
 
 /**
+ * <p>TableComponentHelper interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface TableComponentHelper
 		extends ComponentHelper {
+	/**
+	 * <p>getInfoPageLink.</p>
+	 *
+	 * @param path a {@link java.lang.String} object.
+	 * @param id   a {@link java.lang.Long} object.
+	 *
+	 * @return a {@link org.springframework.hateoas.Link} object.
+	 */
 	Link getInfoPageLink(String path, Long id);
 
+	/**
+	 * <p>newDandelionTable.</p>
+	 *
+	 * @param tableId   a {@link java.lang.String} object.
+	 * @param builderId a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent} object.
+	 */
 	DandelionTableComponent newDandelionTable(final String tableId, final String builderId);
 
+	/**
+	 * <p>getTableLink.</p>
+	 *
+	 * @param tableId   a {@link java.lang.String} object.
+	 * @param builderId a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.springframework.hateoas.Link} object.
+	 */
 	Link getTableLink(final String tableId, final String builderId);
 
-	TableColumnComponent newTableColumn(final TableComponent cmp, final String path, final String rbKey);
+	/**
+	 * <p>newTableColumn.</p>
+	 *
+	 * @param cmp   a {@link org.agatom.springatom.web.component.core.elements.table.TableComponent} object.
+	 * @param path  a {@link java.lang.String} object.
+	 * @param rbKey a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 */
+	DandelionTableColumnComponent newTableColumn(final TableComponent cmp, final String path, final String rbKey);
 }

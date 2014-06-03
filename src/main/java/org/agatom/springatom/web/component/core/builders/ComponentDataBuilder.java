@@ -40,7 +40,7 @@ public interface ComponentDataBuilder
 	 *
 	 * @return the data
 	 *
-	 * @throws ComponentException if any
+	 * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException if any
 	 */
 	ComponentDataResponse getData(final ComponentDataRequest dataRequest) throws ComponentException;
 }

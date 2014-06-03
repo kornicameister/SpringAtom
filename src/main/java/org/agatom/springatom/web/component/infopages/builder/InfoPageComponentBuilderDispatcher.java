@@ -60,6 +60,14 @@ public class InfoPageComponentBuilderDispatcher {
 		this.repos = new Repositories(this.beanFactory);
 	}
 
+	/**
+	 * <p>getInfoPageComponentBuilder.</p>
+	 *
+	 * @param domainClass a {@link java.lang.Class} object.
+	 * @param <T>         a T object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.builder.InfoPageComponentBuilder} object.
+	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Persistable<?>> InfoPageComponentBuilder<T> getInfoPageComponentBuilder(final Class<T> domainClass) {
 		final InfoPageComponentBuilder<T> builder = new InfoPageComponentBuilder<T>(domainClass) {

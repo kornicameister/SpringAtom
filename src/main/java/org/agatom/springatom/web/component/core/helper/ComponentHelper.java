@@ -21,12 +21,26 @@ import org.agatom.springatom.core.util.Localized;
 import org.springframework.hateoas.Link;
 
 /**
+ * <p>ComponentHelper interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface ComponentHelper {
+	/**
+	 * <p>entitleFromMessageKey.</p>
+	 *
+	 * @param localized a {@link org.agatom.springatom.core.util.Localized} object.
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String entitleFromMessageKey(final Localized localized);
 
+	/**
+	 * <p>getBuilderLink.</p>
+	 *
+	 * @return a {@link org.springframework.hateoas.Link} object.
+	 */
 	Link getBuilderLink();
 }

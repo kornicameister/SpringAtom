@@ -43,7 +43,7 @@ public class InfoPage
 	private              Set<InfoPagePanel> content          = null;
 
 	/**
-	 * Retrieves the panels count of this {@link InfoPage}. Will return <pre>-1</pre> if content is not set
+	 * Retrieves the panels count of this {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}. Will return <pre>-1</pre> if content is not set
 	 *
 	 * @return the size of the page
 	 */
@@ -51,10 +51,22 @@ public class InfoPage
 		return this.content != null ? this.content.size() : -1;
 	}
 
+	/**
+	 * <p>Getter for the field <code>content</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<InfoPagePanel> getContent() {
 		return this.content;
 	}
 
+	/**
+	 * <p>Setter for the field <code>content</code>.</p>
+	 *
+	 * @param content a {@link java.util.Set} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} object.
+	 */
 	public InfoPage setContent(final Set<InfoPagePanel> content) {
 		this.content = content;
 		return this;
@@ -69,21 +81,35 @@ public class InfoPage
 		return this.domain;
 	}
 
+	/**
+	 * <p>Setter for the field <code>domain</code>.</p>
+	 *
+	 * @param domain a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} object.
+	 */
 	public InfoPage setDomain(final Class<?> domain) {
 		this.domain = domain;
 		return this;
 	}
 
 	/**
-	 * Retrieves unique identifier of this page.
+	 * {@inheritDoc}
 	 *
-	 * @return unique identifier
+	 * Retrieves unique identifier of this page.
 	 */
 	@Override
 	public String getId() {
 		return this.id;
 	}
 
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} object.
+	 */
 	public InfoPage setId(final String id) {
 		this.id = id;
 		return this;
@@ -99,11 +125,19 @@ public class InfoPage
 		return this.defaults;
 	}
 
+	/**
+	 * <p>Setter for the field <code>defaults</code>.</p>
+	 *
+	 * @param defaults a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPageDefaults} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} object.
+	 */
 	public InfoPage setDefaults(final InfoPageDefaults defaults) {
 		this.defaults = defaults;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Iterator<InfoPagePanel> iterator() {
 		if (this.content == null) {

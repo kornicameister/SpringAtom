@@ -17,9 +17,9 @@
 
 package org.agatom.springatom.web.component.core.helper.impl;
 
-import org.agatom.springatom.web.component.core.elements.table.DandelionTableComponent;
-import org.agatom.springatom.web.component.core.elements.table.TableColumnComponent;
 import org.agatom.springatom.web.component.core.elements.table.TableComponent;
+import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent;
+import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent;
 import org.agatom.springatom.web.component.core.helper.TableComponentHelper;
 import org.agatom.springatom.web.component.infopages.link.InfoPageLinkHelper;
 import org.agatom.springatom.webmvc.controllers.components.SVComponentsDataController;
@@ -51,6 +51,7 @@ class DefaultTableComponentHelper
 	@Autowired
 	private              InfoPageLinkHelper infoPageLinkHelper = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public Link getInfoPageLink(String path, Long id) {
 		try {
@@ -63,6 +64,7 @@ class DefaultTableComponentHelper
 		return new Link(String.format("/app/ip/%s/%d", path, id)).withRel(String.format("infopage.%s", path));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public DandelionTableComponent newDandelionTable(final String tableId, final String builderId) {
 		return (DandelionTableComponent) new DandelionTableComponent()
@@ -70,6 +72,7 @@ class DefaultTableComponentHelper
 				.setTableId(tableId);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Link getTableLink(final String tableId, final String builderId) {
 		try {
@@ -86,14 +89,15 @@ class DefaultTableComponentHelper
 		return new Link(String.format("/app/tableBuilder/data/%s", builderId)).withRel(tableId);
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public TableColumnComponent newTableColumn(final TableComponent cmp, final String path, final String rbKey) {
-		final TableColumnComponent column = new TableColumnComponent();
+	public DandelionTableColumnComponent newTableColumn(final TableComponent cmp, final String path, final String rbKey) {
+		final DandelionTableColumnComponent column = new DandelionTableColumnComponent();
 		this.initColumn(cmp, path, rbKey, column);
 		return column;
 	}
 
-	private void initColumn(final TableComponent cmp, final String path, final String rbKey, final TableColumnComponent column) {
+	private void initColumn(final TableComponent cmp, final String path, final String rbKey, final DandelionTableColumnComponent column) {
 		column.setProperty(path);
 		column.setTitleKey(rbKey);
 		column.setTitle(this.entitleFromMessageKey(column));

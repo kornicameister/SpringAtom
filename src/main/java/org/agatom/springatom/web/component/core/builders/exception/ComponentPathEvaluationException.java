@@ -18,6 +18,8 @@
 package org.agatom.springatom.web.component.core.builders.exception;
 
 /**
+ * <p>ComponentPathEvaluationException class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -27,14 +29,30 @@ public class ComponentPathEvaluationException
 
 	private static final long serialVersionUID = 4322042989281394202L;
 
+	/**
+	 * <p>Constructor for ComponentPathEvaluationException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
 	public ComponentPathEvaluationException(final String message) {
 		super(message);
 	}
 
+	/**
+	 * <p>Constructor for ComponentPathEvaluationException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
 	public ComponentPathEvaluationException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * <p>Constructor for ComponentPathEvaluationException.</p>
+	 *
+	 * @param cause a {@link java.lang.Throwable} object.
+	 */
 	public ComponentPathEvaluationException(final Throwable cause) {
 		super(cause);
 	}

@@ -47,24 +47,53 @@ public class InfoPageAttribute
 	 */
 	private              String messageKey       = null;
 
+	/**
+	 * <p>Getter for the field <code>path</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getPath() {
 		return this.path;
 	}
 
+	/**
+	 * <p>Setter for the field <code>path</code>.</p>
+	 *
+	 * @param path a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPageAttribute} object.
+	 */
 	public InfoPageAttribute setPath(final String path) {
 		this.path = path;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>converter</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getConverter() {
 		return this.converter;
 	}
 
+	/**
+	 * <p>Setter for the field <code>converter</code>.</p>
+	 *
+	 * @param converter a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPageAttribute} object.
+	 */
 	public InfoPageAttribute setConverter(final String converter) {
 		this.converter = converter;
 		return this;
 	}
 
+	/**
+	 * <p>getFixedConverterClass.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
 	public Class<?> getFixedConverterClass() {
 		if (this.hasFixedConverter()) {
 			return ClassUtils.resolveClassName(this.converter, this.getClass().getClassLoader());
@@ -72,6 +101,11 @@ public class InfoPageAttribute
 		return null;
 	}
 
+	/**
+	 * <p>hasFixedConverter.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean hasFixedConverter() {
 		if (StringUtils.hasText(this.converter)) {
 			try {
@@ -84,16 +118,25 @@ public class InfoPageAttribute
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getMessageKey() {
 		return this.messageKey;
 	}
 
+	/**
+	 * <p>Setter for the field <code>messageKey</code>.</p>
+	 *
+	 * @param messageKey a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPageAttribute} object.
+	 */
 	public InfoPageAttribute setMessageKey(final String messageKey) {
 		this.messageKey = messageKey;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(@Nonnull final InfoPageAttribute o) {
 		return ComparisonChain.start()
@@ -101,11 +144,13 @@ public class InfoPageAttribute
 				.result();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(path, converter);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

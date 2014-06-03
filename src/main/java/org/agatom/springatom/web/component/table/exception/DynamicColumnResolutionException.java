@@ -18,6 +18,8 @@
 package org.agatom.springatom.web.component.table.exception;
 
 /**
+ * <p>DynamicColumnResolutionException class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -27,14 +29,30 @@ public class DynamicColumnResolutionException
 
 	private static final long serialVersionUID = -6331209247827860887L;
 
+	/**
+	 * <p>Constructor for DynamicColumnResolutionException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
 	public DynamicColumnResolutionException(final String message) {
 		super(message);
 	}
 
+	/**
+	 * <p>Constructor for DynamicColumnResolutionException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
 	public DynamicColumnResolutionException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * <p>Constructor for DynamicColumnResolutionException.</p>
+	 *
+	 * @param cause a {@link java.lang.Throwable} object.
+	 */
 	public DynamicColumnResolutionException(final Throwable cause) {
 		super(cause);
 	}

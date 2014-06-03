@@ -24,6 +24,8 @@ import org.agatom.springatom.web.component.core.elements.table.TableColumnCompon
 import org.springframework.data.domain.Sort;
 
 /**
+ * <p>DandelionTableColumnComponent class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -42,74 +44,166 @@ public class DandelionTableColumnComponent
 	private              String         titleKey           = null;
 	private              String         renderFunctionName = "renderValue";
 
+	/**
+	 * <p>Getter for the field <code>renderFunctionName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getRenderFunctionName() {
 		return renderFunctionName;
 	}
 
+	/**
+	 * <p>Setter for the field <code>renderFunctionName</code>.</p>
+	 *
+	 * @param renderFunctionName a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 */
 	public DandelionTableColumnComponent setRenderFunctionName(final String renderFunctionName) {
 		this.renderFunctionName = renderFunctionName;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>property</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getProperty() {
 		return property;
 	}
 
+	/**
+	 * <p>Setter for the field <code>property</code>.</p>
+	 *
+	 * @param property a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 */
 	public DandelionTableColumnComponent setProperty(final String property) {
 		this.property = property;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>sortDirection</code>.</p>
+	 *
+	 * @return a {@link org.springframework.data.domain.Sort.Direction} object.
+	 */
 	public Sort.Direction getSortDirection() {
 		return sortDirection;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sortDirection</code>.</p>
+	 *
+	 * @param sortDirection a {@link org.springframework.data.domain.Sort.Direction} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 */
 	public DandelionTableColumnComponent setSortDirection(final Sort.Direction sortDirection) {
 		this.sortDirection = sortDirection;
 		return this;
 	}
 
+	/**
+	 * <p>isSortable.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isSortable() {
 		return sortable;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sortable</code>.</p>
+	 *
+	 * @param sortable a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 */
 	public DandelionTableColumnComponent setSortable(final boolean sortable) {
 		this.sortable = sortable;
 		return this;
 	}
 
+	/**
+	 * <p>isFilterable.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isFilterable() {
 		return filterable;
 	}
 
+	/**
+	 * <p>Setter for the field <code>filterable</code>.</p>
+	 *
+	 * @param filterable a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 */
 	public DandelionTableColumnComponent setFilterable(final boolean filterable) {
 		this.filterable = filterable;
 		return this;
 	}
 
+	/**
+	 * <p>isVisible.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isVisible() {
 		return visible;
 	}
 
+	/**
+	 * <p>Setter for the field <code>visible</code>.</p>
+	 *
+	 * @param visible a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 */
 	public DandelionTableColumnComponent setVisible(final boolean visible) {
 		this.visible = visible;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getMessageKey() {
 		return this.getTitleKey();
 	}
 
+	/**
+	 * <p>Getter for the field <code>titleKey</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getTitleKey() {
 		return titleKey;
 	}
 
+	/**
+	 * <p>Setter for the field <code>titleKey</code>.</p>
+	 *
+	 * @param titleKey a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 */
 	public DandelionTableColumnComponent setTitleKey(final String titleKey) {
 		this.titleKey = titleKey;
 		return this;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(title, property, sortDirection, sortable, filterable, visible, titleKey, title, super.hashCode());
+	}
+
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -132,11 +226,7 @@ public class DandelionTableColumnComponent
 				super.equals(o);
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(title, property, sortDirection, sortable, filterable, visible, titleKey, title, super.hashCode());
-	}
-
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)

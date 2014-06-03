@@ -69,6 +69,7 @@ class InfoPageComponentBuilderServiceImpl
 	@Autowired
 	private              SMessageSource          messageSource     = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public InfoPageComponent buildInfoPage(@Nonnull final InfoPage page) {
 		LOGGER.debug(String.format("buildInfoPage(page=%s)", page));
@@ -79,12 +80,14 @@ class InfoPageComponentBuilderServiceImpl
 		return component;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public InfoPageComponent buildInfoPage(@Nonnull final String path) throws SException {
 		LOGGER.debug(String.format("buildInfoPage(path=%s)", path));
 		return this.buildInfoPage(this.mapping.getMappedClass(path));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public <T extends Persistable<?>> InfoPageComponent buildInfoPage(@Nonnull final Class<T> domainClass) throws SException {
 		LOGGER.debug(String.format("buildInfoPage(domainClass=%s)", domainClass));
@@ -148,6 +151,7 @@ class InfoPageComponentBuilderServiceImpl
 			final LocalizedClassModel<?> rbModel,
 			final Attribute<?, ?> descriptor,
 			final Locale locale) {
+		LOGGER.debug(String.format("buildAttributeComponent(path=%s)", attribute.getPath()));
 		final InfoPageAttributeComponent cmp = new InfoPageAttributeComponent();
 
 		cmp.setTitle(StringUtils.hasText(attribute.getMessageKey()) ? this.messageSource.getMessage(attribute.getMessageKey(), locale) : rbModel.getLocalizedAttribute(attribute.getPath()));

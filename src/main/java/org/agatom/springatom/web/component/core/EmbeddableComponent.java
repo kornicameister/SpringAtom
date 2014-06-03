@@ -29,7 +29,17 @@ import java.io.Serializable;
 public interface EmbeddableComponent
 		extends Serializable,
 		Comparable<EmbeddableComponent> {
+	/**
+	 * <p>getPosition.</p>
+	 *
+	 * @return a int.
+	 */
 	int getPosition();
 
+	/**
+	 * <p>setPosition.</p>
+	 *
+	 * @param position a int.
+	 */
 	void setPosition(int position);
 }

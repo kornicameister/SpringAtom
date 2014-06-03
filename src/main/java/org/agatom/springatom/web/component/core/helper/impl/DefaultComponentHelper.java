@@ -42,6 +42,7 @@ class DefaultComponentHelper
 	@Autowired
 	protected SMessageSource messageSource;
 
+	/** {@inheritDoc} */
 	@Override
 	public String entitleFromMessageKey(final Localized localized) {
 		return this.messageSource.getMessage(
@@ -50,6 +51,7 @@ class DefaultComponentHelper
 		);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Link getBuilderLink() {
 		return new Link(String.format("/app/tableBuilder/inContext")).withRel("inContextBuilder");

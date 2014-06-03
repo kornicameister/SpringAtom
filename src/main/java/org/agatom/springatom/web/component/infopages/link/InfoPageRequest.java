@@ -43,41 +43,76 @@ public class InfoPageRequest
 	private              Long                            objectId         = null;
 	private              Class<? extends Persistable<?>> objectClass      = null;
 
+	/**
+	 * <p>Constructor for InfoPageRequest.</p>
+	 *
+	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
+	 */
 	public InfoPageRequest(final HttpServletRequest request) {
 		this.request = request;
 	}
 
+	/**
+	 * <p>Getter for the field <code>context</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getContext() {
 		return context;
 	}
 
+	/**
+	 * <p>Setter for the field <code>context</code>.</p>
+	 *
+	 * @param context a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.link.InfoPageRequest} object.
+	 */
 	public InfoPageRequest setContext(final String context) {
 		this.context = context;
 		return this;
 	}
 
+	/**
+	 * <p>isValid.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isValid() {
 		return this.objectClass != null && (this.objectId != null && this.objectId > 0);
 	}
 
+	/**
+	 * <p>getURI.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getURI() {
 		return this.request.getRequestURI();
 	}
 
+	/**
+	 * <p>Getter for the field <code>request</code>.</p>
+	 *
+	 * @return a {@link javax.servlet.http.HttpServletRequest} object.
+	 */
 	public HttpServletRequest getRequest() {
 		return request;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getBeanId() {
 		return BEAN_ID;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(context, objectVersion, objectId, objectClass);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -91,6 +126,7 @@ public class InfoPageRequest
 				Objects.equal(this.objectClass, that.objectClass);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Map<String, Object> asMap() {
 		final Map<String, Object> map = Maps.newHashMap();
@@ -100,29 +136,68 @@ public class InfoPageRequest
 		return map;
 	}
 
+	/**
+	 * <p>Getter for the field <code>objectId</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getObjectId() {
 		return objectId;
 	}
 
+	/**
+	 * <p>Setter for the field <code>objectId</code>.</p>
+	 *
+	 * @param objectId a {@link java.lang.Long} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.link.InfoPageRequest} object.
+	 */
 	public InfoPageRequest setObjectId(final Long objectId) {
 		this.objectId = objectId;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>objectVersion</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getObjectVersion() {
 		return objectVersion;
 	}
 
+	/**
+	 * <p>Setter for the field <code>objectVersion</code>.</p>
+	 *
+	 * @param objectVersion a {@link java.lang.Long} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.link.InfoPageRequest} object.
+	 */
 	public InfoPageRequest setObjectVersion(final Long objectVersion) {
 		this.objectVersion = objectVersion;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>objectClass</code>.</p>
+	 *
+	 * @param <T> a T object.
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Persistable<?>> Class<T> getObjectClass() {
 		return (Class<T>) objectClass;
 	}
 
+	/**
+	 * <p>Setter for the field <code>objectClass</code>.</p>
+	 *
+	 * @param objectClass a {@link java.lang.Class} object.
+	 * @param <T>         a T object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.link.InfoPageRequest} object.
+	 */
 	public <T extends Persistable<?>> InfoPageRequest setObjectClass(final Class<T> objectClass) {
 		this.objectClass = objectClass;
 		return this;

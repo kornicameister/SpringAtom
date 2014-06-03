@@ -30,19 +30,43 @@ import org.springframework.data.domain.Persistable;
  * @since 0.0.1
  */
 public interface InfoPageMappingService {
+	/**
+	 * <p>hasInfoPage.</p>
+	 *
+	 * @param rel a {@link java.lang.String} object.
+	 *
+	 * @return a boolean.
+	 */
 	boolean hasInfoPage(final String rel);
 
+	/**
+	 * <p>hasInfoPage.</p>
+	 *
+	 * @param persistableClass a {@link java.lang.Class} object.
+	 * @param <T>              a T object.
+	 *
+	 * @return a boolean.
+	 */
 	<T extends Persistable<?>> boolean hasInfoPage(final Class<T> persistableClass);
 
+	/**
+	 * <p>hasInfoPage.</p>
+	 *
+	 * @param persistable a T object.
+	 * @param <T>         a T object.
+	 *
+	 * @return a boolean.
+	 */
 	<T extends Persistable<?>> boolean hasInfoPage(final T persistable);
 
 	/**
 	 * Retrieves mapped {@link org.springframework.data.domain.Persistable} class associated with registered {@code rel}
 	 *
 	 * @param rel mapping key
-	 * @param <T> {@link org.springframework.data.domain.Persistable} class generic type
 	 *
 	 * @return mapped {@link org.springframework.data.domain.Persistable} class
+	 *
+	 * @throws org.agatom.springatom.web.component.infopages.InfoPageNotFoundException if any.
 	 */
 	<T extends Persistable<?>> Class<T> getMappedClass(final String rel) throws InfoPageNotFoundException;
 
@@ -50,9 +74,10 @@ public interface InfoPageMappingService {
 	 * Retrieves mapped <b>rel</b> from {@link org.springframework.data.domain.Persistable} class
 	 *
 	 * @param clazz {@link org.springframework.data.domain.Persistable} class
-	 * @param <T>   {@link org.springframework.data.domain.Persistable} class generic type
 	 *
 	 * @return <b>rel</b>
+	 *
+	 * @throws org.agatom.springatom.web.component.infopages.InfoPageNotFoundException if any.
 	 */
 	<T extends Persistable<?>> String getMappedRel(final Class<T> clazz) throws InfoPageNotFoundException;
 }

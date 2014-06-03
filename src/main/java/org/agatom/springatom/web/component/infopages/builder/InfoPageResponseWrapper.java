@@ -35,24 +35,49 @@ public class InfoPageResponseWrapper {
 	private Map<String, Object> data   = null;
 	private Persistable<?>      source = null;
 
+	/**
+	 * <p>Getter for the field <code>data</code>.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
 	public Map<String, Object> getData() {
 		return data;
 	}
 
+	/**
+	 * <p>Setter for the field <code>data</code>.</p>
+	 *
+	 * @param data a {@link java.util.Map} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.builder.InfoPageResponseWrapper} object.
+	 */
 	public InfoPageResponseWrapper setData(final Map<String, Object> data) {
 		this.data = data;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>source</code>.</p>
+	 *
+	 * @return a {@link org.springframework.data.domain.Persistable} object.
+	 */
 	public Persistable<?> getSource() {
 		return source;
 	}
 
+	/**
+	 * <p>Setter for the field <code>source</code>.</p>
+	 *
+	 * @param source a {@link org.springframework.data.domain.Persistable} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.builder.InfoPageResponseWrapper} object.
+	 */
 	public InfoPageResponseWrapper setSource(final Persistable<?> source) {
 		this.source = source;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)

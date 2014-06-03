@@ -31,6 +31,11 @@ public class InfoPageNotFoundException
 		extends SException {
 	private static final long serialVersionUID = -9214937287759107097L;
 
+	/**
+	 * <p>Constructor for InfoPageNotFoundException.</p>
+	 *
+	 * @param rel a {@link java.lang.String} object.
+	 */
 	public InfoPageNotFoundException(final String rel) {
 		super(getMsg(rel));
 	}
@@ -39,6 +44,12 @@ public class InfoPageNotFoundException
 		return String.format("InfoPage not found for REL=%s", rel);
 	}
 
+	/**
+	 * <p>Constructor for InfoPageNotFoundException.</p>
+	 *
+	 * @param clazz a {@link java.lang.Class} object.
+	 * @param <T>   a T object.
+	 */
 	public <T extends Persistable<?>> InfoPageNotFoundException(final Class<T> clazz) {
 		super(getMsg(clazz));
 	}

@@ -67,6 +67,7 @@ public class InfoPageInterceptor
 	@Autowired
 	private              InfoPageComponentBuilderService builderService     = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
 		LOGGER.debug(String.format("preHandle(request=%s,response=%s,handler=%s)", request, response, handler));
@@ -88,6 +89,7 @@ public class InfoPageInterceptor
 		return goOn;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void postHandle(final HttpServletRequest request,
 	                       final HttpServletResponse response,

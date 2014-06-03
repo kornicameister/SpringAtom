@@ -37,6 +37,7 @@ abstract class AbstractBuilder
 		implements Builder {
 	protected final Logger logger = Logger.getLogger(getClass());
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)
@@ -44,6 +45,7 @@ abstract class AbstractBuilder
 				.toString();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getId() {
 		final Class<? extends AbstractBuilder> clazz = this.getClass();

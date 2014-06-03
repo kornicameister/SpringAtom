@@ -33,7 +33,7 @@ public interface ComponentDefinitionBuilder<COMP extends Serializable>
 		extends ComponentDataBuilder {
 
 	/**
-	 * Returns value of {@link ComponentProduces}
+	 * Returns value of {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
 	 *
 	 * @return what builder produces
 	 */
@@ -53,7 +53,7 @@ public interface ComponentDefinitionBuilder<COMP extends Serializable>
 	 *
 	 * @return builder definition
 	 *
-	 * @throws ComponentException in case of an error
+	 * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException in case of an error
 	 */
 	COMP getDefinition(final ComponentDataRequest dataRequest) throws ComponentException;
 

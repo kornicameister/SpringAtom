@@ -39,6 +39,7 @@ public interface InfoPageProviderService {
 	 * domain class
 	 *
 	 * @param persistableClass domain class to execute search
+	 * @param <T>              a T object.
 	 *
 	 * @return {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
 	 *
@@ -51,7 +52,6 @@ public interface InfoPageProviderService {
 	 * Retrieves path to the file containing {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} declaration
 	 *
 	 * @param persistableClass domain class to get the path from
-	 * @param <T>              {@link org.springframework.data.domain.Persistable} subclasses
 	 *
 	 * @return the path
 	 */

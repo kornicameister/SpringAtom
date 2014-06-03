@@ -45,7 +45,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Set;
 
-
 @Component
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @Scope(BeanDefinition.SCOPE_SINGLETON)
@@ -64,6 +63,7 @@ class JSONInfoPageProviderService
 		Assert.notNull(this.objectMapper, "ObjectMapper not initialized");
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public <T extends Persistable<?>> InfoPage getInfoPage(final Class<T> persistableClass) throws SException {
 		LOGGER.debug(String.format("getInfoPage(persistableClass=%s)", persistableClass));
@@ -83,6 +83,7 @@ class JSONInfoPageProviderService
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public <T extends Persistable<?>> String getFilePath(final Class<T> persistableClass) {
 		final String name = ClassUtils.getShortName(persistableClass).toLowerCase();
@@ -91,6 +92,7 @@ class JSONInfoPageProviderService
 		return StringUtils.cleanPath(path);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public InfoPage getInfoPage(final Persistable<?> persistable) throws SException {
 		LOGGER.debug(String.format("getInfoPage(persistable=%s)", persistable));
@@ -129,7 +131,7 @@ class JSONInfoPageProviderService
 	 *
 	 * @param filePath path to get a file from
 	 *
-	 * @return {@link java.io.File} with {@link org.agatom.springatom.web.component.infopages.SInfoPage} definition
+	 * @return {@link java.io.File} with {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} definition
 	 *
 	 * @throws SException If file not found or not readable
 	 */

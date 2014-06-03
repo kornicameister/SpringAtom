@@ -39,26 +39,31 @@ abstract public class TableColumnComponent
 	private static final long serialVersionUID = 7798481976595660140L;
 	private              int  position         = -1;
 
+	/** {@inheritDoc} */
 	@Override
 	public int getPosition() {
 		return this.position;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setPosition(final int position) {
 		this.position = position;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(@Nonnull final EmbeddableComponent ec) {
 		return Integer.compare(this.position, ec.getPosition());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(position);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

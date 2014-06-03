@@ -21,6 +21,8 @@ import org.agatom.springatom.web.component.core.ComponentValue;
 import org.springframework.hateoas.Link;
 
 /**
+ * <p>DelegatedLink class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -31,27 +33,61 @@ public class DelegatedLink
 	private final Link   link;
 	private       String label;
 
+	/**
+	 * <p>Constructor for DelegatedLink.</p>
+	 *
+	 * @param link a {@link org.springframework.hateoas.Link} object.
+	 */
 	public DelegatedLink(final Link link) {
 		this.link = link;
 	}
 
+	/**
+	 * <p>Getter for the field <code>label</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getLabel() {
 		return label;
 	}
 
+	/**
+	 * <p>withLabel.</p>
+	 *
+	 * @param label a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.link.DelegatedLink} object.
+	 */
 	public DelegatedLink withLabel(final String label) {
 		this.label = label;
 		return this;
 	}
 
+	/**
+	 * <p>getHref.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getHref() {
 		return link.getHref();
 	}
 
+	/**
+	 * <p>getRel.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getRel() {
 		return link.getRel();
 	}
 
+	/**
+	 * <p>withRel.</p>
+	 *
+	 * @param rel a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.link.DelegatedLink} object.
+	 */
 	public DelegatedLink withRel(final String rel) {
 		link.withRel(rel);
 		return this;

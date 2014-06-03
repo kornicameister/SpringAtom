@@ -37,24 +37,49 @@ public class TableDefinitionRequest
 	private              String   builderId        = null;
 	private              Class<?> gridDataType     = null;
 
+	/**
+	 * <p>Getter for the field <code>builderId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getBuilderId() {
 		return builderId;
 	}
 
+	/**
+	 * <p>Setter for the field <code>builderId</code>.</p>
+	 *
+	 * @param builderId a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.table.request.TableDefinitionRequest} object.
+	 */
 	public TableDefinitionRequest setBuilderId(final String builderId) {
 		this.builderId = builderId;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>gridDataType</code>.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
 	public Class<?> getGridDataType() {
 		return gridDataType;
 	}
 
+	/**
+	 * <p>Setter for the field <code>gridDataType</code>.</p>
+	 *
+	 * @param gridDataType a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.table.request.TableDefinitionRequest} object.
+	 */
 	public TableDefinitionRequest setGridDataType(final Class<?> gridDataType) {
 		this.gridDataType = gridDataType;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)

@@ -17,6 +17,9 @@
 
 package org.agatom.springatom.web.component.infopages.builder;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
@@ -36,6 +39,8 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.history.Revision;
 import org.springframework.util.ClassUtils;
 
+import javax.annotation.Nullable;
+import java.beans.PropertyDescriptor;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,6 +57,7 @@ import java.util.Set;
  */
 public abstract class InfoPageComponentBuilder<Y extends Persistable<?>>
 		extends AbstractComponentDataBuilder {
+	/** Constant <code>BUILDER_ID="genericInfoPageBuilder"</code> */
 	protected static final String                     BUILDER_ID                 = "genericInfoPageBuilder";
 	protected              SBasicRepository<Y, Long>  repository                 = null;
 	protected              EntityDescriptors          descriptors                = null;
@@ -60,21 +66,27 @@ public abstract class InfoPageComponentBuilder<Y extends Persistable<?>>
 	protected              Class<Y>                   entity                     = null;
 	protected              InfoPageLinkHelper         linkHelper                 = null;
 
+	/**
+	 * <p>Constructor for InfoPageComponentBuilder.</p>
+	 *
+	 * @param domainClass a {@link java.lang.Class} object.
+	 */
 	public InfoPageComponentBuilder(final Class<Y> domainClass) {
 		super();
 		this.entity = domainClass;
 	}
 
 	/**
-	 * Returns fixed <b>ID</b> of {@link org.agatom.springatom.web.component.infopages.builder.InfoPageComponentBuilder}
+	 * {@inheritDoc}
 	 *
-	 * @return {@link #BUILDER_ID}
+	 * Returns fixed <b>ID</b> of {@link org.agatom.springatom.web.component.infopages.builder.InfoPageComponentBuilder}
 	 */
 	@Override
 	public String getId() {
 		return BUILDER_ID;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected Object buildData(final ComponentDataRequest request) throws ComponentException {
 		this.logger.trace(String.format("buildData(dataRequest=%s)", request));
@@ -85,7 +97,29 @@ public abstract class InfoPageComponentBuilder<Y extends Persistable<?>>
 		final Set<ComponentRequestAttribute> attributes = ipRequest.getAttributes();
 
 		final Y object = this.getOne(objectId, objectVersion);
+		if (object == null) {
+			throw new ComponentException(String.format("For ipRequest=%s found no object of type %s", ipRequest, ClassUtils.getShortName(this.entity)));
+		}
+
 		final BeanWrapper bw = new BeanWrapperImpl(object);
+		final Map<String, PropertyDescriptor> properties = FluentIterable
+				.from(Lists.newArrayList(bw.getPropertyDescriptors()))
+				.transform(new Function<PropertyDescriptor, String>() {
+
+					@Nullable
+					@Override
+					public String apply(@Nullable final PropertyDescriptor input) {
+						assert input != null;
+						return input.getName();
+					}
+				})
+				.toMap(new Function<String, PropertyDescriptor>() {
+					@Nullable
+					@Override
+					public PropertyDescriptor apply(@Nullable final String input) {
+						return bw.getPropertyDescriptor(input);
+					}
+				});
 
 		this.logger.trace(String.format("processing object %s=%s", object, object.getId()));
 
@@ -95,7 +129,7 @@ public abstract class InfoPageComponentBuilder<Y extends Persistable<?>>
 			this.logger.trace(String.format("Processing attribute for path=%s from %s", attribute.getPath(), attribute));
 
 			final String path = attribute.getPath();
-			final Object propertyValue = bw.getPropertyValue(path);
+			final Object propertyValue = properties.containsKey(path) ? bw.getPropertyValue(path) : null;
 
 			this.logger.trace(String.format("Processed attribute for path=%s to %s", path, propertyValue));
 
@@ -130,16 +164,23 @@ public abstract class InfoPageComponentBuilder<Y extends Persistable<?>>
 		return this.repository.findOne(id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected EntityDescriptor<Y> getEntityDescriptor() {
 		return this.descriptors.getDescriptor(this.entity);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected EntityDescriptor getEntityDescriptor(final Class<?> forClass) {
 		return this.descriptors.getDescriptor(forClass);
 	}
 
+	/**
+	 * <p>getEntityName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	protected String getEntityName() {
 		return this.getEntityDescriptor().getEntityType().getName();
 	}

@@ -48,7 +48,7 @@
     <properties>
 
         <!-- Generic properties -->
-        <jdk.version>1.7</jdk.version>
+        <jdk.version>1.8</jdk.version>
         <project.compiler.sourceEncoding>UTF-8</project.compiler.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -204,6 +204,11 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+        </dependency>
         <dependency>
             <groupId>com.neovisionaries</groupId>
             <artifactId>nv-i18n</artifactId>
@@ -979,6 +984,9 @@
                     <detail>true</detail>
                     <printSummary>true</printSummary>
                     <forkMode>once</forkMode>
+                    <excludes>
+                        <exclude>**/*Test*</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -1037,7 +1045,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
@@ -1053,15 +1060,21 @@
                     </systemProperties>
                 </configuration>
             </plugin>
-        </plugins>
-    </build>
-
-    <reporting>
-        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.7</version>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <sourceEncoding>utf-8</sourceEncoding>
+                    <minimumTokens>100</minimumTokens>
+                    <targetJdk>1.7</targetJdk>
+                    <excludes>
+                        <exclude>**/generated/Q*.java</exclude>
+                    </excludes>
+                    <excludeRoots>
+                        <excludeRoot>target/generated-sources/</excludeRoot>
+                    </excludeRoots>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -1070,8 +1083,50 @@
                 <configuration>
                     <show>private</show>
                     <nohelp>true</nohelp>
+                    <groups>
+                        <group>
+                            <title>AOP</title>
+                            <packages>org.agatom.springatom.aop</packages>
+                        </group>
+                        <group>
+                            <title>CORE</title>
+                            <packages>org.agatom.springatom.core</packages>
+                        </group>
+                        <group>
+                            <title>REST</title>
+                            <packages>org.agatom.springatom.rest</packages>
+                        </group>
+                        <group>
+                            <title>SERVER</title>
+                            <packages>org.agatom.springatom.server</packages>
+                        </group>
+                        <group>
+                            <title>WEB</title>
+                            <packages>org.agatom.springatom.web</packages>
+                        </group>
+                        <group>
+                            <title>WEB-MVC</title>
+                            <packages>org.agatom.springatom.webmvc</packages>
+                        </group>
+                    </groups>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/Q*.java</exclude>
+                    </excludes>
+                    <linkJavadoc>true</linkJavadoc>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changelog-plugin</artifactId>
@@ -1094,7 +1149,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.5</version>
+                <version>2.17</version>
                 <configuration>
                     <outputName>SpringAtomTestReport</outputName>
                 </configuration>
@@ -1102,7 +1157,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>
-                <version>2.9</version>
+                <version>2.10</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -1110,11 +1165,6 @@
                         </reports>
                     </reportSet>
                 </reportSets>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.0.1</version>
             </plugin>
         </plugins>
     </reporting>

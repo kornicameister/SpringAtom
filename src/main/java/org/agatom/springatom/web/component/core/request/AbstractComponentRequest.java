@@ -36,47 +36,97 @@ abstract public class AbstractComponentRequest
 	protected            Long                           id               = null;
 	protected            Long                           version          = null;
 
+	/**
+	 * <p>Getter for the field <code>attributes</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<ComponentRequestAttribute> getAttributes() {
 		return this.attributes;
 	}
 
+	/**
+	 * <p>Setter for the field <code>attributes</code>.</p>
+	 *
+	 * @param attributes a {@link java.util.Set} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.request.AbstractComponentRequest} object.
+	 */
 	public AbstractComponentRequest setAttributes(final Set<ComponentRequestAttribute> attributes) {
 		this.attributes = attributes;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>domain</code>.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
 	public Class<?> getDomain() {
 		return this.domain;
 	}
 
+	/**
+	 * <p>Setter for the field <code>domain</code>.</p>
+	 *
+	 * @param domain a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.request.AbstractComponentRequest} object.
+	 */
 	public AbstractComponentRequest setDomain(final Class<?> domain) {
 		this.domain = domain;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getId() {
 		return this.id;
 	}
 
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.request.AbstractComponentRequest} object.
+	 */
 	public AbstractComponentRequest setId(final Long id) {
 		this.id = id;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>version</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	public Long getVersion() {
 		return this.version;
 	}
 
+	/**
+	 * <p>Setter for the field <code>version</code>.</p>
+	 *
+	 * @param version a {@link java.lang.Long} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.request.AbstractComponentRequest} object.
+	 */
 	public AbstractComponentRequest setVersion(final Long version) {
 		this.version = version;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(attributes, domain, id, version);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

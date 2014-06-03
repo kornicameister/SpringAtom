@@ -20,6 +20,8 @@ package org.agatom.springatom.web.component.core.elements;
 import com.google.common.base.Objects;
 
 /**
+ * <p>ThumbnailComponent class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -31,38 +33,76 @@ public class ThumbnailComponent
 	private              String alt              = null;
 	private              String tooltip          = null;
 
+	/**
+	 * <p>Getter for the field <code>href</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getHref() {
 		return href;
 	}
 
+	/**
+	 * <p>Setter for the field <code>href</code>.</p>
+	 *
+	 * @param href a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.ThumbnailComponent} object.
+	 */
 	public ThumbnailComponent setHref(final String href) {
 		this.href = href;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>alt</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getAlt() {
 		return alt;
 	}
 
+	/**
+	 * <p>Setter for the field <code>alt</code>.</p>
+	 *
+	 * @param alt a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.ThumbnailComponent} object.
+	 */
 	public ThumbnailComponent setAlt(final String alt) {
 		this.alt = alt;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>tooltip</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getTooltip() {
 		return tooltip;
 	}
 
+	/**
+	 * <p>Setter for the field <code>tooltip</code>.</p>
+	 *
+	 * @param tooltip a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.elements.ThumbnailComponent} object.
+	 */
 	public ThumbnailComponent setTooltip(final String tooltip) {
 		this.tooltip = tooltip;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(href, alt, tooltip, title);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -80,6 +120,7 @@ public class ThumbnailComponent
 				Objects.equal(this.title, that.title);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)

@@ -93,11 +93,13 @@ class InfoPageMappingServiceImpl
 		LOGGER.debug(String.format("Analyzed %s in %d ms", MAPPING_PROPERTIES, analyzeTime));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasInfoPage(final String rel) {
 		return this.relToClassMap.containsKey(rel);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings({"UnusedDeclaration", "unchecked"})
 	public <T extends Persistable<?>> boolean hasInfoPage(final Class<T> persistableClass) {
@@ -110,11 +112,13 @@ class InfoPageMappingServiceImpl
 		}).isPresent();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public <T extends Persistable<?>> boolean hasInfoPage(final T persistable) {
 		return this.hasInfoPage(persistable.getClass());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends Persistable<?>> Class<T> getMappedClass(final String rel) throws InfoPageNotFoundException {
@@ -124,6 +128,7 @@ class InfoPageMappingServiceImpl
 		return (Class<T>) this.relToClassMap.get(rel);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends Persistable<?>> String getMappedRel(final Class<T> clazz) throws InfoPageNotFoundException {

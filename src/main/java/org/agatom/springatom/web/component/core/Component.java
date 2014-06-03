@@ -20,13 +20,25 @@ package org.agatom.springatom.web.component.core;
 import java.io.Serializable;
 
 /**
+ * <p>Component interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface Component
 		extends Serializable {
+	/**
+	 * <p>getTitle.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getTitle();
 
+	/**
+	 * <p>setTitle.</p>
+	 *
+	 * @param title a {@link java.lang.String} object.
+	 */
 	void setTitle(final String title);
 }

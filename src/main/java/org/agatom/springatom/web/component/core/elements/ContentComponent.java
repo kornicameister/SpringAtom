@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
+ * <p>Abstract ContentComponent class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -34,10 +36,22 @@ abstract public class ContentComponent<T extends EmbeddableComponent>
 	private static final long   serialVersionUID = -8072389645215572550L;
 	protected            Set<T> content          = null;
 
+	/**
+	 * <p>removeContent.</p>
+	 *
+	 * @param o a {@link java.lang.Object} object.
+	 *
+	 * @return a boolean.
+	 */
 	public boolean removeContent(final Object o) {
 		return this.getContent().remove(o);
 	}
 
+	/**
+	 * <p>Getter for the field <code>content</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	public Set<T> getContent() {
 		if (this.content == null) {
 			this.content = Sets.newTreeSet();
@@ -45,6 +59,11 @@ abstract public class ContentComponent<T extends EmbeddableComponent>
 		return this.content;
 	}
 
+	/**
+	 * <p>Setter for the field <code>content</code>.</p>
+	 *
+	 * @param content a {@link java.util.Set} object.
+	 */
 	public void setContent(final Set<T> content) {
 		this.getContent().clear();
 		for (final T t : content) {
@@ -52,11 +71,19 @@ abstract public class ContentComponent<T extends EmbeddableComponent>
 		}
 	}
 
+	/**
+	 * <p>addContent.</p>
+	 *
+	 * @param t a T object.
+	 *
+	 * @return a boolean.
+	 */
 	public boolean addContent(final T t) {
 		t.setPosition(this.getContent().size());
 		return this.getContent().add(t);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Iterator<T> iterator() {
 		return this.getContent().iterator();

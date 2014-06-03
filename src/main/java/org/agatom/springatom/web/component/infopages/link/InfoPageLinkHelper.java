@@ -38,11 +38,10 @@ public interface InfoPageLinkHelper {
 	 * from passed {@link org.springframework.data.domain.Persistable}
 	 *
 	 * @param persistable persistable object
-	 * @param <T>         {@link org.springframework.data.domain.Persistable} class generic type
 	 *
 	 * @return a link to open {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
 	 *
-	 * @throws InfoPageNotFoundException if page does not exists for associated {@link java.lang.Class}
+	 * @throws org.agatom.springatom.web.component.infopages.InfoPageNotFoundException if page does not exists for associated {@link java.lang.Class}
 	 */
 	<T extends Serializable> Link getInfoPageLink(final Persistable<T> persistable) throws InfoPageNotFoundException;
 
@@ -52,7 +51,6 @@ public interface InfoPageLinkHelper {
 	 *
 	 * @param path <b>rel</b> under which {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} is accessible
 	 * @param id   <b>{@link org.springframework.data.domain.Persistable#getId()} value
-	 * @param <T>  {@link org.springframework.data.domain.Persistable} class generic type
 	 *
 	 * @return a link to open {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
 	 */
@@ -73,6 +71,8 @@ public interface InfoPageLinkHelper {
 	 * @param request to extract params
 	 *
 	 * @return map of params
+	 *
+	 * @throws org.agatom.springatom.web.component.infopages.InfoPageNotFoundException if any.
 	 */
 	InfoPageRequest toInfoPageRequest(final HttpServletRequest request) throws InfoPageNotFoundException;
 }

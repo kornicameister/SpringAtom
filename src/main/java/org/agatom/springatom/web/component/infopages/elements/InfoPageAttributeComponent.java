@@ -41,69 +41,124 @@ public class InfoPageAttributeComponent
 	protected            AttributeDisplayAs displayAs        = null;
 	protected            String             messageKey       = null;
 
+	/**
+	 * <p>Getter for the field <code>path</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getPath() {
 		return path;
 	}
 
+	/**
+	 * <p>Setter for the field <code>path</code>.</p>
+	 *
+	 * @param path a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.elements.InfoPageAttributeComponent} object.
+	 */
 	public InfoPageAttributeComponent setPath(final String path) {
 		this.path = path;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>displayAs</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs} object.
+	 */
 	public AttributeDisplayAs getDisplayAs() {
 		return displayAs;
 	}
 
+	/**
+	 * <p>Setter for the field <code>displayAs</code>.</p>
+	 *
+	 * @param displayAs a {@link org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.elements.InfoPageAttributeComponent} object.
+	 */
 	public InfoPageAttributeComponent setDisplayAs(final AttributeDisplayAs displayAs) {
 		this.displayAs = displayAs;
 		return this;
 	}
 
+	/**
+	 * <p>isValueAttribute.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isValueAttribute() {
 		return this.displayAs.equals(AttributeDisplayAs.VALUE_ATTRIBUTE);
 	}
 
+	/**
+	 * <p>isInfoPageAttribute.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isInfoPageAttribute() {
 		return this.displayAs.equals(AttributeDisplayAs.LINK_ATTRIBUTE);
 	}
 
+	/**
+	 * <p>isEmbeddedAttribute.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isEmbeddedAttribute() {
 		return this.displayAs.equals(AttributeDisplayAs.EMBEDDED_ATTRIBUTE);
 	}
 
+	/**
+	 * <p>isTableAttribute.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isTableAttribute() {
 		return this.displayAs.equals(AttributeDisplayAs.TABLE_ATTRIBUTE);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getMessageKey() {
 		return this.messageKey;
 	}
 
+	/**
+	 * <p>Setter for the field <code>messageKey</code>.</p>
+	 *
+	 * @param messageKey a {@link java.lang.String} object.
+	 */
 	public void setMessageKey(final String messageKey) {
 		this.messageKey = messageKey;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int getPosition() {
 		return position;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setPosition(final int position) {
 		this.position = position;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(final @Nonnull EmbeddableComponent panel) {
 		return Integer.compare(this.position, panel.getPosition());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(position, path, displayAs, messageKey, title);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -122,6 +177,7 @@ public class InfoPageAttributeComponent
 				Objects.equal(this.title, that.title);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)

@@ -38,6 +38,15 @@ public class ComponentDataResponse
 	private              Throwable error            = null;
 	private              long      time             = 0;
 
+	/**
+	 * <p>success.</p>
+	 *
+	 * @param builtBy a {@link java.lang.String} object.
+	 * @param data    a {@link java.lang.Object} object.
+	 * @param time    a long.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.data.ComponentDataResponse} object.
+	 */
 	public static ComponentDataResponse success(final String builtBy, final Object data, final long time) {
 		return new ComponentDataResponse()
 				.setBuiltBy(builtBy)
@@ -46,6 +55,15 @@ public class ComponentDataResponse
 				.setSuccess(true);
 	}
 
+	/**
+	 * <p>error.</p>
+	 *
+	 * @param builtBy a {@link java.lang.String} object.
+	 * @param error   a {@link java.lang.Throwable} object.
+	 * @param time    a long.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.data.ComponentDataResponse} object.
+	 */
 	public static ComponentDataResponse error(final String builtBy, final Throwable error, final long time) {
 		return new ComponentDataResponse()
 				.setBuiltBy(builtBy)
@@ -54,6 +72,11 @@ public class ComponentDataResponse
 				.setSuccess(false);
 	}
 
+	/**
+	 * <p>Getter for the field <code>builtBy</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getBuiltBy() {
 		return this.builtBy;
 	}
@@ -63,6 +86,11 @@ public class ComponentDataResponse
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>data</code>.</p>
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 */
 	public Object getData() {
 		return this.data;
 	}
@@ -72,6 +100,11 @@ public class ComponentDataResponse
 		return this;
 	}
 
+	/**
+	 * <p>isSuccess.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isSuccess() {
 		return this.success;
 	}
@@ -81,6 +114,11 @@ public class ComponentDataResponse
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>error</code>.</p>
+	 *
+	 * @return a {@link java.lang.Throwable} object.
+	 */
 	public Throwable getError() {
 		return this.error;
 	}
@@ -90,6 +128,11 @@ public class ComponentDataResponse
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>time</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getTime() {
 		return this.time;
 	}

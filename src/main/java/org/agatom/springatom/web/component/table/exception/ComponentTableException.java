@@ -20,6 +20,8 @@ package org.agatom.springatom.web.component.table.exception;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 
 /**
+ * <p>ComponentTableException class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -28,14 +30,30 @@ public class ComponentTableException
 		extends ComponentException {
 	private static final long serialVersionUID = -5087620558468679894L;
 
+	/**
+	 * <p>Constructor for ComponentTableException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
 	public ComponentTableException(final String message) {
 		super(message);
 	}
 
+	/**
+	 * <p>Constructor for ComponentTableException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
 	public ComponentTableException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * <p>Constructor for ComponentTableException.</p>
+	 *
+	 * @param cause a {@link java.lang.Throwable} object.
+	 */
 	public ComponentTableException(final Throwable cause) {
 		super(cause);
 	}

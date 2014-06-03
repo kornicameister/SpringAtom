@@ -44,6 +44,7 @@ abstract public class AbstractComponentDataBuilder
 		extends AbstractBuilder
 		implements ComponentDataBuilder {
 
+	/** {@inheritDoc} */
 	@Override
 	public final ComponentDataResponse getData(final ComponentDataRequest dataRequest) throws ComponentException {
 		this.logger.debug(String.format("getData(dataRequest=%s)", dataRequest));
@@ -76,7 +77,7 @@ abstract public class AbstractComponentDataBuilder
 	 *
 	 * @return response for this builder
 	 *
-	 * @throws ComponentException if any
+	 * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException if any
 	 */
 	protected abstract Object buildData(final ComponentDataRequest dataRequest) throws ComponentException;
 

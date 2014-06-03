@@ -21,11 +21,12 @@ import org.agatom.springatom.web.component.core.elements.ContentComponent;
 import org.springframework.hateoas.Identifiable;
 
 /**
+ * <p>InfoPageComponent class.</p>
+ *
  * @author kornicameister
  * @version 0.0.2
  * @since 0.0.1
  */
-
 public class InfoPageComponent
 		extends ContentComponent<InfoPagePanelComponent>
 		implements Identifiable<String> {
@@ -33,24 +34,49 @@ public class InfoPageComponent
 	private              String id               = null;
 	private Class<?> domain;
 
+	/** {@inheritDoc} */
 	@Override
 	public String getId() {
 		return this.id;
 	}
 
+	/**
+	 * <p>Setter for the field <code>id</code>.</p>
+	 *
+	 * @param id a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent} object.
+	 */
 	public InfoPageComponent setId(final String id) {
 		this.id = id;
 		return this;
 	}
 
+	/**
+	 * <p>getSize.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getSize() {
 		return this.content.size();
 	}
 
+	/**
+	 * <p>Getter for the field <code>domain</code>.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
 	public Class<?> getDomain() {
 		return this.domain;
 	}
 
+	/**
+	 * <p>Setter for the field <code>domain</code>.</p>
+	 *
+	 * @param domain a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent} object.
+	 */
 	public InfoPageComponent setDomain(final Class<?> domain) {
 		this.domain = domain;
 		return this;

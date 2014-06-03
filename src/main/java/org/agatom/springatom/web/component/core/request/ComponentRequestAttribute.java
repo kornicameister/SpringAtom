@@ -34,29 +34,55 @@ public class ComponentRequestAttribute
 	private              String path             = null;
 	private              String type             = null;
 
+	/**
+	 * <p>Getter for the field <code>type</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * <p>Setter for the field <code>type</code>.</p>
+	 *
+	 * @param displayAs a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.request.ComponentRequestAttribute} object.
+	 */
 	public ComponentRequestAttribute setType(final String displayAs) {
 		this.type = displayAs;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>path</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getPath() {
 		return this.path;
 	}
 
+	/**
+	 * <p>Setter for the field <code>path</code>.</p>
+	 *
+	 * @param path a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.request.ComponentRequestAttribute} object.
+	 */
 	public ComponentRequestAttribute setPath(final String path) {
 		this.path = path;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(path, type);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

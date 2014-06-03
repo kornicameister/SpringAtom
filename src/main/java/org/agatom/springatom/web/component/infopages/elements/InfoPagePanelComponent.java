@@ -26,6 +26,8 @@ import org.agatom.springatom.web.component.core.elements.PanelComponent;
 import javax.annotation.Nullable;
 
 /**
+ * <p>InfoPagePanelComponent class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -34,10 +36,24 @@ public class InfoPagePanelComponent
 		extends PanelComponent<InfoPageAttributeComponent> {
 	private static final long serialVersionUID = 4239054882163081910L;
 
+	/**
+	 * <p>containsAttributeForPath.</p>
+	 *
+	 * @param path a {@link java.lang.String} object.
+	 *
+	 * @return a boolean.
+	 */
 	public boolean containsAttributeForPath(final String path) {
 		return this.getAttributeForPath(path) != null;
 	}
 
+	/**
+	 * <p>getAttributeForPath.</p>
+	 *
+	 * @param path a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.infopages.elements.InfoPageAttributeComponent} object.
+	 */
 	public InfoPageAttributeComponent getAttributeForPath(final String path) {
 		final Optional<InfoPageAttributeComponent> match = FluentIterable.from(this.content).firstMatch(new Predicate<InfoPageAttributeComponent>() {
 			@Override
@@ -48,11 +64,13 @@ public class InfoPagePanelComponent
 		return match.isPresent() ? match.get() : null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(position, layout, content, title, dynamicProperties);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
