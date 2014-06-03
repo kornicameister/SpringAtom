@@ -32,7 +32,7 @@ import org.springframework.webflow.execution.RequestContext;
 /**
  * {@code NewUserWizardStep1} handles data preparation for first step of new {@link org.agatom.springatom.server.model.beans.user.SUser}
  * creation
- * <p/>
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 17.03.14</small>
  *
  * @author kornicameister

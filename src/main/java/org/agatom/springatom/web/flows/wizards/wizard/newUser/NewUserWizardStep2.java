@@ -58,7 +58,7 @@ import java.util.Set;
  * the set of {@link org.agatom.springatom.server.model.beans.user.authority.SAuthority} for
  * given {@link org.agatom.springatom.server.model.beans.user.SUser}
  * [{@link org.agatom.springatom.web.flows.wizards.wizard.newUser.NewUserWizardStep2#getCommandBean(org.springframework.webflow.execution.RequestContext)}].
- * <p/>
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 17.03.14</small>
  *
  * @author kornicameister
@@ -187,7 +187,8 @@ public class NewUserWizardStep2
 	 * and its localized value under {@link org.agatom.springatom.web.flows.wizards.wizard.newUser.NewUserWizardStep2.LocalizedRole#label}
 	 * value
 	 */
-	private class LocalizedRole implements Serializable {
+	private class LocalizedRole
+			implements Serializable {
 		private static final long   serialVersionUID = -6064570964928557059L;
 		private              String label            = null;
 		private              SRole  role             = null;

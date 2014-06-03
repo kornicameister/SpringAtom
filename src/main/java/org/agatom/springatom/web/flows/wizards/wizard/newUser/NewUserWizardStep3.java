@@ -94,7 +94,7 @@ public class NewUserWizardStep3
 	/**
 	 * Effectively register new {@link org.agatom.springatom.server.model.beans.user.SUser}
 	 * by calling {@link org.agatom.springatom.server.service.domain.SUserService#registerNewUser(org.agatom.springatom.server.model.beans.user.SUser)}.
-	 * <p/>
+	 *
 	 * Failure may occur due to:
 	 * <ul>
 	 * <li>{@link javax.validation.ConstraintViolationException}</li>
@@ -160,7 +160,8 @@ public class NewUserWizardStep3
 	 * and its localized value under {@link org.agatom.springatom.web.flows.wizards.wizard.newUser.NewUserWizardStep3.LocalizedContact#label}
 	 * value
 	 */
-	private class LocalizedContact implements Serializable {
+	private class LocalizedContact
+			implements Serializable {
 		private static final long        serialVersionUID = -1940243718109904998L;
 		private              String      label            = null;
 		private              ContactType contactType      = null;
