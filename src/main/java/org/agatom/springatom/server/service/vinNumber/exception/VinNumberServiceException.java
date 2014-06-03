@@ -32,10 +32,21 @@ public class VinNumberServiceException
 		extends VinServiceException {
 	private static final long serialVersionUID = -1394976719659781258L;
 
+	/**
+	 * <p>Constructor for VinNumberServiceException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
 	public VinNumberServiceException(final String message) {
 		super(message);
 	}
 
+	/**
+	 * <p>Constructor for VinNumberServiceException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param exp     a {@link java.lang.Throwable} object.
+	 */
 	public VinNumberServiceException(final String message, final Throwable exp) {
 		super(message, exp);
 	}

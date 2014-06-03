@@ -20,15 +20,32 @@ package org.agatom.springatom.server.model.descriptors;
 import java.io.Serializable;
 
 /**
+ * <p>EntityDescriptorColumn interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface EntityDescriptorColumn<X>
-        extends Serializable {
-    String getName();
+		extends Serializable {
+	/**
+	 * <p>getName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getName();
 
-    Class<?> getColumnClass();
+	/**
+	 * <p>getColumnClass.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
+	Class<?> getColumnClass();
 
-    SlimEntityDescriptor<X> getEntityDescriptor();
+	/**
+	 * <p>getEntityDescriptor.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor} object.
+	 */
+	SlimEntityDescriptor<X> getEntityDescriptor();
 }

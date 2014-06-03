@@ -29,42 +29,55 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.util.StringUtils;
 
 /**
+ * <p>OXMModuleConfiguration class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 @Configuration(value = OXMModuleConfiguration.MODULE_NAME)
 @PropertySource(
-        name = "oxmModuleProperties",
-        value = {
-                "classpath:org/agatom/springatom/server/xml/xml.properties"
-        }
+		name = "oxmModuleProperties",
+		value = {
+				"classpath:org/agatom/springatom/server/xml/xml.properties"
+		}
 )
 public class OXMModuleConfiguration {
-    public static final String MODULE_NAME = "OXMModule";
-    @Autowired
-    private Environment        environment;
-    @Autowired
-    private ApplicationContext applicationContext;
+	/** Constant <code>MODULE_NAME="OXMModule"</code> */
+	public static final String MODULE_NAME = "OXMModule";
+	@Autowired
+	private Environment        environment;
+	@Autowired
+	private ApplicationContext applicationContext;
 
-    @Bean(name = "jaxbMarshaller")
-    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public Jaxb2Marshaller getJaxbMarshaller() {
-        final Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-        jaxb2Marshaller.setLazyInit(this.environment.getProperty("springatom.oxm.lazyInit", Boolean.class));
-        jaxb2Marshaller.setPackagesToScan(StringUtils.split(this.environment.getProperty("springatom.oxm.packagesToScan"), ","));
-        jaxb2Marshaller.setCheckForXmlRootElement(true);
-        jaxb2Marshaller.setProcessExternalEntities(true);
-        return jaxb2Marshaller;
-    }
+	/**
+	 * <p>getOXMEngine.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.xml.OXMLEngine} object.
+	 */
+	@Bean(name = "OXMEngine")
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public OXMLEngine getOXMEngine() {
+		final OXMLEngine OXMLEngine = new OXMLEngine();
+		OXMLEngine.setMarshaller(this.getJaxbMarshaller());
+		OXMLEngine.setUnmarshaller(this.getJaxbMarshaller());
+		return OXMLEngine;
+	}
 
-    @Bean(name = "OXMEngine")
-    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public OXMLEngine getOXMEngine() {
-        final OXMLEngine OXMLEngine = new OXMLEngine();
-        OXMLEngine.setMarshaller(this.getJaxbMarshaller());
-        OXMLEngine.setUnmarshaller(this.getJaxbMarshaller());
-        return OXMLEngine;
-    }
+	/**
+	 * <p>getJaxbMarshaller.</p>
+	 *
+	 * @return a {@link org.springframework.oxm.jaxb.Jaxb2Marshaller} object.
+	 */
+	@Bean(name = "jaxbMarshaller")
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public Jaxb2Marshaller getJaxbMarshaller() {
+		final Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
+		jaxb2Marshaller.setLazyInit(this.environment.getProperty("springatom.oxm.lazyInit", Boolean.class));
+		jaxb2Marshaller.setPackagesToScan(StringUtils.split(this.environment.getProperty("springatom.oxm.packagesToScan"), ","));
+		jaxb2Marshaller.setCheckForXmlRootElement(true);
+		jaxb2Marshaller.setProcessExternalEntities(true);
+		return jaxb2Marshaller;
+	}
 
 }

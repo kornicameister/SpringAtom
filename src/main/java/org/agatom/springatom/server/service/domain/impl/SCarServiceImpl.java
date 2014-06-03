@@ -59,6 +59,7 @@ import java.util.Set;
 class SCarServiceImpl
 		extends SServiceImpl<SCar, Long, Integer>
 		implements SCarService {
+	/** Constant <code>SERVICE_NAME="SCarService"</code> */
 	public static final  String               SERVICE_NAME   = "SCarService";
 	private static final Logger               LOGGER         = Logger.getLogger(SCarServiceImpl.class);
 	@Autowired
@@ -66,6 +67,7 @@ class SCarServiceImpl
 	@Autowired
 	private              SUserRepository      userRepository = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public SCar save(final SCar car) {
 		try {
@@ -109,24 +111,28 @@ class SCarServiceImpl
 		return this.masterService.findOne(brandEq.and(modelEq));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@CacheEvict(value = "cars", allEntries = true, beforeInvocation = true)
 	public List<SCar> findByMaster(final String brand, final String model) {
 		return (List<SCar>) this.repository.findAll(QSCar.sCar.carMaster.eq(this.getMaster(brand, model)));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@CacheEvict(value = "cars", allEntries = true, beforeInvocation = true)
 	public List<SCar> findByMaster(final Long... masterId) {
 		return (List<SCar>) this.repository.findAll(QSCar.sCar.carMaster.id.in(masterId));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Cacheable(value = "cars", key = "#carId")
 	public SCarMaster findMaster(final long carId) {
 		return this.masterService.findOne(QSCarMaster.sCarMaster.children.any().id.eq(carId));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Cacheable(value = "cars")
 	@Transactional(
@@ -154,6 +160,7 @@ class SCarServiceImpl
 		return cars;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transactional(readOnly = false, rollbackFor = EntityDoesNotExistsServiceException.class)
 	public SCar newCar(final String brand,
@@ -177,6 +184,7 @@ class SCarServiceImpl
 		return sCar;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transactional(readOnly = false,
 			rollbackFor = EntityDoesNotExistsServiceException.class,
@@ -209,6 +217,7 @@ class SCarServiceImpl
 		return updatedCar;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Collection<Owner> getOwners() {
 		final Set<Owner> ownerSet = Sets.newHashSet();

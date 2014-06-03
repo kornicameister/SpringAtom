@@ -20,14 +20,38 @@ package org.agatom.springatom.server.model.descriptors;
 import java.util.Set;
 
 /**
+ * <p>EntityDescriptorReader interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface EntityDescriptorReader {
-    Set<EntityDescriptor<?>> getDefinitions();
+	/**
+	 * <p>getDefinitions.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	Set<EntityDescriptor<?>> getDefinitions();
 
-    <X> EntityDescriptor<X> getDefinition(final Class<X> xClass);
+	/**
+	 * <p>getDefinition.</p>
+	 *
+	 * @param xClass a {@link java.lang.Class} object.
+	 * @param <X>    a X object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.descriptors.EntityDescriptor} object.
+	 */
+	<X> EntityDescriptor<X> getDefinition(final Class<X> xClass);
 
-    <X> EntityDescriptor<X> getDefinition(final Class<X> xClass, boolean initialize);
+	/**
+	 * <p>getDefinition.</p>
+	 *
+	 * @param xClass     a {@link java.lang.Class} object.
+	 * @param initialize a boolean.
+	 * @param <X>        a X object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.descriptors.EntityDescriptor} object.
+	 */
+	<X> EntityDescriptor<X> getDefinition(final Class<X> xClass, boolean initialize);
 }

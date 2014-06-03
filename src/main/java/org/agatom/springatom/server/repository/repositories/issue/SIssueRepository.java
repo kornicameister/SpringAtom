@@ -40,10 +40,20 @@ import java.util.List;
 @RepositoryRestResource(itemResourceRel = SIssueRepository.REST_REPO_REL, path = SIssueRepository.REST_REPO_PATH)
 public interface SIssueRepository
 		extends SAbstractIssueRepository<SIssue> {
+	/** Constant <code>REPO_NAME="IssuesRepository"</code> */
 	String REPO_NAME      = "IssuesRepository";
+	/** Constant <code>REST_REPO_REL="rest.issue"</code> */
 	String REST_REPO_REL  = "rest.issue";
+	/** Constant <code>REST_REPO_PATH="issues"</code> */
 	String REST_REPO_PATH = "issues";
 
+	/**
+	 * <p>findByTypeAsList.</p>
+	 *
+	 * @param issueType a {@link org.agatom.springatom.server.model.types.issue.IssueType} object.
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	@RestResource(rel = "byTypeAsList", path = "byType_list")
 	@Query(name = "byTypeAsListQuery", value = "select si from SIssue as si where si.type=:type")
 	List<SIssue> findByTypeAsList(@Param(value = "type") IssueType issueType);

@@ -35,165 +35,168 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
+ * <p>SAuthorityHierarchyResolver class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class SAuthorityHierarchyResolver
-        implements RoleHierarchy,
-                   InitializingBean {
-    private static final Logger LOGGER = Logger.getLogger(SAuthorityHierarchyResolver.class);
-    private Properties hierarchyBundle;
-    /**
-     * rolesReachableInOneStepMap is a Map that under the key of a specific role name contains a set of all roles
-     * reachable from this role in 1 step
-     */
-    private Map<GrantedAuthority, Set<GrantedAuthority>> rolesReachableInOneStepMap        = null;
-    /**
-     * rolesReachableInOneOrMoreStepsMap is a Map that under the key of a specific role name contains a set of all
-     * roles reachable from this role in 1 or more steps
-     */
-    private Map<GrantedAuthority, Set<GrantedAuthority>> rolesReachableInOneOrMoreStepsMap = null;
+		implements RoleHierarchy,
+		InitializingBean {
+	private static final Logger LOGGER = Logger.getLogger(SAuthorityHierarchyResolver.class);
+	private Properties hierarchyBundle;
+	/**
+	 * rolesReachableInOneStepMap is a Map that under the key of a specific role name contains a set of all roles
+	 * reachable from this role in 1 step
+	 */
+	private Map<GrantedAuthority, Set<GrantedAuthority>> rolesReachableInOneStepMap        = null;
+	/**
+	 * rolesReachableInOneOrMoreStepsMap is a Map that under the key of a specific role name contains a set of all
+	 * roles reachable from this role in 1 or more steps
+	 */
+	private Map<GrantedAuthority, Set<GrantedAuthority>> rolesReachableInOneOrMoreStepsMap = null;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (this.hierarchyBundle != null) {
-            LOGGER.debug("afterPropertiesSet() - The following role hierarchyBundle was set: " + this.hierarchyBundle);
-            this.buildRolesReachableInOneStepMap();
-            this.buildRolesReachableInOneOrMoreStepsMap();
-        } else {
-            throw new Exception("hierarchyBundle is null which is forbidden and prevents from building the hierarchy");
-        }
-    }
+	/** {@inheritDoc} */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		if (this.hierarchyBundle != null) {
+			LOGGER.debug("afterPropertiesSet() - The following role hierarchyBundle was set: " + this.hierarchyBundle);
+			this.buildRolesReachableInOneStepMap();
+			this.buildRolesReachableInOneOrMoreStepsMap();
+		} else {
+			throw new Exception("hierarchyBundle is null which is forbidden and prevents from building the hierarchy");
+		}
+	}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getReachableGrantedAuthorities(final Collection<? extends GrantedAuthority> authorities) {
-        if (authorities == null || authorities.isEmpty()) {
-            return AuthorityUtils.NO_AUTHORITIES;
-        }
+	/**
+	 * Parse input and build the map for the roles reachable in one step: the higher role will become a key that
+	 * references a set of the reachable lower roles.
+	 */
+	private void buildRolesReachableInOneStepMap() throws Exception {
+		this.rolesReachableInOneStepMap = Maps.newHashMap();
+		for (final String key : this.hierarchyBundle.stringPropertyNames()) {
+			final String[] rawEntry = this.hierarchyBundle.getProperty(key).split(",");
+			final GrantedAuthority higherRole = new SAuthority(key);
+			for (final String lowerRawRole : rawEntry) {
+				final GrantedAuthority lowerRole = new SAuthority(lowerRawRole);
+				final Set<GrantedAuthority> rolesReachableInOneStepSet;
+				if (!this.rolesReachableInOneStepMap.containsKey(higherRole)) {
+					rolesReachableInOneStepSet = Sets.newHashSet();
+					this.rolesReachableInOneStepMap.put(higherRole, rolesReachableInOneStepSet);
+				} else {
+					rolesReachableInOneStepSet = this.rolesReachableInOneStepMap.get(higherRole);
+				}
+				this.addReachableRoles(rolesReachableInOneStepSet, lowerRole);
+				LOGGER.debug(String
+						.format("buildRolesReachableInOneStepMap() - From role %s one can reach role %s in one step.", higherRole, lowerRole));
+			}
+		}
+	}
 
-        final Set<GrantedAuthority> reachableRoles = Sets.newHashSet();
+	/**
+	 * For every higher role from rolesReachableInOneStepMap store all roles that are reachable from it in the map of
+	 * roles reachable in one or more steps. (Or throw a CycleInRoleHierarchyException if a cycle in the role
+	 * hierarchy definition is detected)
+	 */
+	private void buildRolesReachableInOneOrMoreStepsMap() {
+		this.rolesReachableInOneOrMoreStepsMap = Maps.newHashMap();
+		// iterate over all higher roles from rolesReachableInOneStepMap
 
-        for (final GrantedAuthority authority : authorities) {
-            this.addReachableRoles(reachableRoles, authority);
-            final Set<GrantedAuthority> additionalReachableRoles = this.getRolesReachableInOneOrMoreSteps(authority);
-            if (additionalReachableRoles != null) {
-                reachableRoles.addAll(additionalReachableRoles);
-            }
-        }
+		for (final GrantedAuthority role : rolesReachableInOneStepMap.keySet()) {
+			final Set<GrantedAuthority> rolesToVisitSet = Sets.newHashSet();
 
-        LOGGER.debug(String
-                .format("getReachableGrantedAuthorities() - From the roles %s one can reach %s in zero or more steps.", authorities, reachableRoles));
+			if (this.rolesReachableInOneStepMap.containsKey(role)) {
+				rolesToVisitSet.addAll(this.rolesReachableInOneStepMap.get(role));
+			}
 
-        return Lists.newArrayList(reachableRoles);
-    }
+			final Set<GrantedAuthority> visitedRolesSet = Sets.newHashSet();
 
-    private void addReachableRoles(Set<GrantedAuthority> reachableRoles,
-                                   GrantedAuthority authority) {
-        for (final GrantedAuthority testAuthority : reachableRoles) {
-            final String testKey = testAuthority.getAuthority();
-            if ((testKey != null) && (testKey.equals(authority.getAuthority()))) {
-                return;
-            }
-        }
-        reachableRoles.add(authority);
-    }
+			while (!rolesToVisitSet.isEmpty()) {
+				// take a role from the rolesToVisit set
+				final GrantedAuthority aRole = rolesToVisitSet.iterator().next();
+				rolesToVisitSet.remove(aRole);
+				this.addReachableRoles(visitedRolesSet, aRole);
+				if (this.rolesReachableInOneStepMap.containsKey(aRole)) {
+					final Set<GrantedAuthority> newReachableRoles = rolesReachableInOneStepMap.get(aRole);
 
-    // SEC-863
-    private Set<GrantedAuthority> getRolesReachableInOneOrMoreSteps(
-            GrantedAuthority authority) {
+					// definition of a cycle: you can reach the role you are starting from
+					if (rolesToVisitSet.contains(role) || visitedRolesSet.contains(role)) {
+						throw new CycleInRoleHierarchyException();
+					} else {
+						// no cycle
+						rolesToVisitSet.addAll(newReachableRoles);
+					}
+				}
+			}
+			this.rolesReachableInOneOrMoreStepsMap.put(role, visitedRolesSet);
 
-        if (authority.getAuthority() == null) {
-            return null;
-        }
+			LOGGER.debug(String
+					.format("buildRolesReachableInOneOrMoreStepsMap() - From role %s one can reach %s in one or more steps.", role, visitedRolesSet));
+		}
 
-        for (GrantedAuthority testAuthority : rolesReachableInOneOrMoreStepsMap.keySet()) {
-            String testKey = testAuthority.getAuthority();
-            if ((testKey != null) && (testKey.equals(authority.getAuthority()))) {
-                return rolesReachableInOneOrMoreStepsMap.get(testAuthority);
-            }
-        }
+	}
 
-        return null;
-    }
+	private void addReachableRoles(Set<GrantedAuthority> reachableRoles,
+	                               GrantedAuthority authority) {
+		for (final GrantedAuthority testAuthority : reachableRoles) {
+			final String testKey = testAuthority.getAuthority();
+			if ((testKey != null) && (testKey.equals(authority.getAuthority()))) {
+				return;
+			}
+		}
+		reachableRoles.add(authority);
+	}
 
-    /**
-     * Parse input and build the map for the roles reachable in one step: the higher role will become a key that
-     * references a set of the reachable lower roles.
-     */
-    private void buildRolesReachableInOneStepMap() throws Exception {
-        this.rolesReachableInOneStepMap = Maps.newHashMap();
-        for (final String key : this.hierarchyBundle.stringPropertyNames()) {
-            final String[] rawEntry = this.hierarchyBundle.getProperty(key).split(",");
-            final GrantedAuthority higherRole = new SAuthority(key);
-            for (final String lowerRawRole : rawEntry) {
-                final GrantedAuthority lowerRole = new SAuthority(lowerRawRole);
-                final Set<GrantedAuthority> rolesReachableInOneStepSet;
-                if (!this.rolesReachableInOneStepMap.containsKey(higherRole)) {
-                    rolesReachableInOneStepSet = Sets.newHashSet();
-                    this.rolesReachableInOneStepMap.put(higherRole, rolesReachableInOneStepSet);
-                } else {
-                    rolesReachableInOneStepSet = this.rolesReachableInOneStepMap.get(higherRole);
-                }
-                this.addReachableRoles(rolesReachableInOneStepSet, lowerRole);
-                LOGGER.debug(String
-                        .format("buildRolesReachableInOneStepMap() - From role %s one can reach role %s in one step.", higherRole, lowerRole));
-            }
-        }
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Collection<? extends GrantedAuthority> getReachableGrantedAuthorities(final Collection<? extends GrantedAuthority> authorities) {
+		if (authorities == null || authorities.isEmpty()) {
+			return AuthorityUtils.NO_AUTHORITIES;
+		}
 
-    /**
-     * For every higher role from rolesReachableInOneStepMap store all roles that are reachable from it in the map of
-     * roles reachable in one or more steps. (Or throw a CycleInRoleHierarchyException if a cycle in the role
-     * hierarchy definition is detected)
-     */
-    private void buildRolesReachableInOneOrMoreStepsMap() {
-        this.rolesReachableInOneOrMoreStepsMap = Maps.newHashMap();
-        // iterate over all higher roles from rolesReachableInOneStepMap
+		final Set<GrantedAuthority> reachableRoles = Sets.newHashSet();
 
-        for (final GrantedAuthority role : rolesReachableInOneStepMap.keySet()) {
-            final Set<GrantedAuthority> rolesToVisitSet = Sets.newHashSet();
+		for (final GrantedAuthority authority : authorities) {
+			this.addReachableRoles(reachableRoles, authority);
+			final Set<GrantedAuthority> additionalReachableRoles = this.getRolesReachableInOneOrMoreSteps(authority);
+			if (additionalReachableRoles != null) {
+				reachableRoles.addAll(additionalReachableRoles);
+			}
+		}
 
-            if (this.rolesReachableInOneStepMap.containsKey(role)) {
-                rolesToVisitSet.addAll(this.rolesReachableInOneStepMap.get(role));
-            }
+		LOGGER.debug(String
+				.format("getReachableGrantedAuthorities() - From the roles %s one can reach %s in zero or more steps.", authorities, reachableRoles));
 
-            final Set<GrantedAuthority> visitedRolesSet = Sets.newHashSet();
+		return Lists.newArrayList(reachableRoles);
+	}
 
-            while (!rolesToVisitSet.isEmpty()) {
-                // take a role from the rolesToVisit set
-                final GrantedAuthority aRole = rolesToVisitSet.iterator().next();
-                rolesToVisitSet.remove(aRole);
-                this.addReachableRoles(visitedRolesSet, aRole);
-                if (this.rolesReachableInOneStepMap.containsKey(aRole)) {
-                    final Set<GrantedAuthority> newReachableRoles = rolesReachableInOneStepMap.get(aRole);
+	// SEC-863
+	private Set<GrantedAuthority> getRolesReachableInOneOrMoreSteps(
+			GrantedAuthority authority) {
 
-                    // definition of a cycle: you can reach the role you are starting from
-                    if (rolesToVisitSet.contains(role) || visitedRolesSet.contains(role)) {
-                        throw new CycleInRoleHierarchyException();
-                    } else {
-                        // no cycle
-                        rolesToVisitSet.addAll(newReachableRoles);
-                    }
-                }
-            }
-            this.rolesReachableInOneOrMoreStepsMap.put(role, visitedRolesSet);
+		if (authority.getAuthority() == null) {
+			return null;
+		}
 
-            LOGGER.debug(String
-                    .format("buildRolesReachableInOneOrMoreStepsMap() - From role %s one can reach %s in one or more steps.", role, visitedRolesSet));
-        }
+		for (GrantedAuthority testAuthority : rolesReachableInOneOrMoreStepsMap.keySet()) {
+			String testKey = testAuthority.getAuthority();
+			if ((testKey != null) && (testKey.equals(authority.getAuthority()))) {
+				return rolesReachableInOneOrMoreStepsMap.get(testAuthority);
+			}
+		}
 
-    }
+		return null;
+	}
 
-    /**
-     * Sets the path to hierarchy bundle file.
-     *
-     * @param hierarchyBundle
-     *         path to the hierarchy bundle file (*.properties)
-     */
-    @Required
-    public void setHierarchyBundle(final Properties hierarchyBundle) {
-        this.hierarchyBundle = hierarchyBundle;
-    }
+	/**
+	 * Sets the path to hierarchy bundle file.
+	 *
+	 * @param hierarchyBundle path to the hierarchy bundle file (*.properties)
+	 */
+	@Required
+	public void setHierarchyBundle(final Properties hierarchyBundle) {
+		this.hierarchyBundle = hierarchyBundle;
+	}
 
 }

@@ -32,10 +32,22 @@ import java.util.Set;
  * @since 0.0.1
  */
 public interface SConcerningNotification<SN_C extends Persistable<PK>, SN_T extends Persistable<PK>, PK extends Serializable>
-        extends STargetedNotification<SN_T, PK> {
+		extends STargetedNotification<SN_T, PK> {
 
-    Set<SN_C> getConcerning();
+	/**
+	 * <p>getConcerning.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	Set<SN_C> getConcerning();
 
-    SConcerningNotification<SN_C, SN_T, PK> setConcerning(final Collection<SN_C> concerning);
+	/**
+	 * <p>setConcerning.</p>
+	 *
+	 * @param concerning a {@link java.util.Collection} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.notification.SConcerningNotification} object.
+	 */
+	SConcerningNotification<SN_C, SN_T, PK> setConcerning(final Collection<SN_C> concerning);
 
 }

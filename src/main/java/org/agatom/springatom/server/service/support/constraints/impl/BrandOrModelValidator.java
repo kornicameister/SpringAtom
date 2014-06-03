@@ -32,12 +32,15 @@ import java.util.List;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class BrandOrModelValidator implements ConstraintValidator<BrandOrModel, String[]> {
+public class BrandOrModelValidator
+		implements ConstraintValidator<BrandOrModel, String[]> {
 
+	/** {@inheritDoc} */
 	@Override
 	public void initialize(final BrandOrModel constraintAnnotation) {
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isValid(final String[] value, final ConstraintValidatorContext context) {
 		final List<?> list = CollectionUtils.arrayToList(value);

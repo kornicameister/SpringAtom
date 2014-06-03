@@ -29,6 +29,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
+ * <p>SUserNotificationRepository interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -36,66 +38,147 @@ import org.springframework.data.rest.core.annotation.RestResource;
 @Qualifier(value = SUserNotificationRepository.REPO_NAME)
 @RepositoryRestResource(itemResourceRel = SUserNotificationRepository.REST_REPO_REL, path = SUserNotificationRepository.REST_REPO_PATH)
 public interface SUserNotificationRepository
-        extends SBasicRepository<SUserNotification, Long> {
-    String REPO_NAME      = "UserNotificationsRepo";
-    String REST_REPO_REL  = "rest.user.notification";
-    String REST_REPO_PATH = "user_notification";
+		extends SBasicRepository<SUserNotification, Long> {
+	/** Constant <code>REPO_NAME="UserNotificationsRepo"</code> */
+	String REPO_NAME      = "UserNotificationsRepo";
+	/** Constant <code>REST_REPO_REL="rest.user.notification"</code> */
+	String REST_REPO_REL  = "rest.user.notification";
+	/** Constant <code>REST_REPO_PATH="user_notification"</code> */
+	String REST_REPO_PATH = "user_notification";
 
-    @RestResource(rel = "byUser", path = "user")
-    Page<SUserNotification> findByUserOrderByUserCredentialsDesc(
-            @Param("user") final SUser user,
-            final Pageable pageable
-    );
+	/**
+	 * <p>findByUserOrderByUserCredentialsDesc.</p>
+	 *
+	 * @param user     a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byUser", path = "user")
+	Page<SUserNotification> findByUserOrderByUserCredentialsDesc(
+			@Param("user") final SUser user,
+			final Pageable pageable
+	);
 
-    @RestResource(rel = "byRead", path = "read")
-    Page<SUserNotification> findByReadTrue(
-            final Pageable pageable
-    );
+	/**
+	 * <p>findByReadTrue.</p>
+	 *
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byRead", path = "read")
+	Page<SUserNotification> findByReadTrue(
+			final Pageable pageable
+	);
 
-    @RestResource(rel = "byUnread", path = "unread")
-    Page<SUserNotification> findByReadFalse(
-            final Pageable pageable
-    );
+	/**
+	 * <p>findByReadFalse.</p>
+	 *
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byUnread", path = "unread")
+	Page<SUserNotification> findByReadFalse(
+			final Pageable pageable
+	);
 
-    @RestResource(rel = "byReadAndSentBefore", path = "readAndSentBefore")
-    Page<SUserNotification> findByReadTrueAndSentBefore(
-            @Param("date") final DateTime time,
-            final Pageable pageable
-    );
+	/**
+	 * <p>findByReadTrueAndSentBefore.</p>
+	 *
+	 * @param time     a {@link org.joda.time.DateTime} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byReadAndSentBefore", path = "readAndSentBefore")
+	Page<SUserNotification> findByReadTrueAndSentBefore(
+			@Param("date") final DateTime time,
+			final Pageable pageable
+	);
 
-    @RestResource(rel = "byReadAndSentAfter", path = "readAndSentAfter")
-    Page<SUserNotification> findByReadTrueAndSentAfter(
-            @Param("date") final DateTime time,
-            final Pageable pageable
-    );
+	/**
+	 * <p>findByReadTrueAndSentAfter.</p>
+	 *
+	 * @param time     a {@link org.joda.time.DateTime} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byReadAndSentAfter", path = "readAndSentAfter")
+	Page<SUserNotification> findByReadTrueAndSentAfter(
+			@Param("date") final DateTime time,
+			final Pageable pageable
+	);
 
-    @RestResource(rel = "byUnreadAndSentAfter", path = "unreadAndSentAfter")
-    Page<SUserNotification> findByReadFalseAndSentAfter(
-            @Param("date") final DateTime time,
-            final Pageable pageable
-    );
+	/**
+	 * <p>findByReadFalseAndSentAfter.</p>
+	 *
+	 * @param time     a {@link org.joda.time.DateTime} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byUnreadAndSentAfter", path = "unreadAndSentAfter")
+	Page<SUserNotification> findByReadFalseAndSentAfter(
+			@Param("date") final DateTime time,
+			final Pageable pageable
+	);
 
-    @RestResource(rel = "byUnreadAndSentBefore", path = "unreadAndSentBefore")
-    Page<SUserNotification> findByReadFalseAndSentBefore(
-            @Param("date") final DateTime time,
-            final Pageable pageable
-    );
+	/**
+	 * <p>findByReadFalseAndSentBefore.</p>
+	 *
+	 * @param time     a {@link org.joda.time.DateTime} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byUnreadAndSentBefore", path = "unreadAndSentBefore")
+	Page<SUserNotification> findByReadFalseAndSentBefore(
+			@Param("date") final DateTime time,
+			final Pageable pageable
+	);
 
-    @RestResource(rel = "byReadAndSentBetween", path = "readAndSentBetween")
-    Page<SUserNotification> findByReadTrueAndSentBetween(
-            @Param("date") final DateTime time,
-            final Pageable pageable
-    );
+	/**
+	 * <p>findByReadTrueAndSentBetween.</p>
+	 *
+	 * @param time     a {@link org.joda.time.DateTime} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byReadAndSentBetween", path = "readAndSentBetween")
+	Page<SUserNotification> findByReadTrueAndSentBetween(
+			@Param("date") final DateTime time,
+			final Pageable pageable
+	);
 
-    @RestResource(rel = "byUnreadAndSentBetween", path = "unreadAndSentBetween")
-    Page<SUserNotification> findByReadFalseAndSentBetween(
-            @Param("date") final DateTime time,
-            final Pageable pageable
-    );
+	/**
+	 * <p>findByReadFalseAndSentBetween.</p>
+	 *
+	 * @param time     a {@link org.joda.time.DateTime} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byUnreadAndSentBetween", path = "unreadAndSentBetween")
+	Page<SUserNotification> findByReadFalseAndSentBetween(
+			@Param("date") final DateTime time,
+			final Pageable pageable
+	);
 
-    @RestResource(rel = "byUnreadForUser", path = "unreadByUser")
-    Page<SUserNotification> findByReadFalseAndUser(
-            @Param("user") final SUser user,
-            final Pageable pageable
-    );
+	/**
+	 * <p>findByReadFalseAndUser.</p>
+	 *
+	 * @param user     a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byUnreadForUser", path = "unreadByUser")
+	Page<SUserNotification> findByReadFalseAndUser(
+			@Param("user") final SUser user,
+			final Pageable pageable
+	);
 }

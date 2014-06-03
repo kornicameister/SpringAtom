@@ -29,9 +29,15 @@ import javax.validation.constraints.NotNull;
  * @version 0.0.1
  * @since 0.0.1
  */
-
 public interface WMIManufacturedInResolver {
 
+	/**
+	 * <p>getCountryCode.</p>
+	 *
+	 * @param wmi a {@link java.lang.String} object.
+	 *
+	 * @return a {@link com.neovisionaries.i18n.CountryCode} object.
+	 */
 	@Cacheable(value = "wmiManufacturedInResolver")
 	CountryCode getCountryCode(@NotNull String wmi);
 }

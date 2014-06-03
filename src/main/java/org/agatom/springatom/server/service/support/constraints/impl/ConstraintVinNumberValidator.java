@@ -35,6 +35,7 @@ public class ConstraintVinNumberValidator
 		implements ConstraintValidator<VinNumber, String> {
 	private static final Logger LOGGER = Logger.getLogger(ConstraintVinNumberValidator.class);
 
+	/** {@inheritDoc} */
 	@Override
 	public void initialize(final VinNumber constraintAnnotation) {
 		if (LOGGER.isTraceEnabled()) {
@@ -44,6 +45,7 @@ public class ConstraintVinNumberValidator
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isValid(final String vinNumber, final ConstraintValidatorContext context) {
 		return new VinNumberValidator().validate(vinNumber);

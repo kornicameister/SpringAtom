@@ -25,7 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
  * {@code SUserAuthorityRepository} is the {@link org.springframework.data.repository.Repository} designated to
@@ -39,11 +38,22 @@ import org.springframework.data.rest.core.annotation.RestResource;
 @Qualifier(SUserAuthorityRepository.REPO_NAME)
 @RepositoryRestResource(itemResourceRel = SUserAuthorityRepository.REST_REPO_REL, path = SUserAuthorityRepository.REST_REPO_PATH)
 public interface SUserAuthorityRepository
-        extends SBasicRepository<SUserAuthority, Long> {
-    String REPO_NAME      = "UserAuthorityRepo";
-    String REST_REPO_REL  = "rest.user.authority";
-    String REST_REPO_PATH = "user_authority";
+		extends SBasicRepository<SUserAuthority, Long> {
+	/** Constant <code>REPO_NAME="UserAuthorityRepo"</code> */
+	String REPO_NAME      = "UserAuthorityRepo";
+	/** Constant <code>REST_REPO_REL="rest.user.authority"</code> */
+	String REST_REPO_REL  = "rest.user.authority";
+	/** Constant <code>REST_REPO_PATH="user_authority"</code> */
+	String REST_REPO_PATH = "user_authority";
 
-    Page<SUserAuthority> findByPkUser(@Param("user") final SUser user, final Pageable pageable);
+	/**
+	 * <p>findByPkUser.</p>
+	 *
+	 * @param user     a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	Page<SUserAuthority> findByPkUser(@Param("user") final SUser user, final Pageable pageable);
 
 }

@@ -26,23 +26,29 @@ import org.springframework.data.repository.history.support.RevisionEntityInforma
  * @since 0.0.1
  */
 class AuditingRevisionEntityInformation
-        implements RevisionEntityInformation {
-    public AuditingRevisionEntityInformation() {
-        super();
-    }
+		implements RevisionEntityInformation {
+	/**
+	 * <p>Constructor for AuditingRevisionEntityInformation.</p>
+	 */
+	public AuditingRevisionEntityInformation() {
+		super();
+	}
 
-    @Override
-    public Class<?> getRevisionNumberType() {
-        return Integer.class;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Class<?> getRevisionNumberType() {
+		return Integer.class;
+	}
 
-    @Override
-    public boolean isDefaultRevisionEntity() {
-        return false;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public boolean isDefaultRevisionEntity() {
+		return false;
+	}
 
-    @Override
-    public Class<?> getRevisionEntityClass() {
-        return AuditedRevisionEntity.class;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Class<?> getRevisionEntityClass() {
+		return AuditedRevisionEntity.class;
+	}
 }

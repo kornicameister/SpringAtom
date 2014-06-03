@@ -43,6 +43,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 /**
+ * <p>SUserServiceImpl class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -52,6 +54,7 @@ import org.springframework.util.CollectionUtils;
 public class SUserServiceImpl
 		extends SServiceImpl<SUser, Long, Integer>
 		implements SUserService {
+	/** Constant <code>SERVICE_NAME="SUserService"</code> */
 	protected static final String          SERVICE_NAME    = "SUserService";
 	private static final   Logger          LOGGER          = Logger.getLogger(SUserServiceImpl.class);
 	@Lazy
@@ -62,6 +65,7 @@ public class SUserServiceImpl
 	@Autowired(required = false)
 	private                SPersonService  personService   = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 		final SUser user = this.repository.findOne(QSUser.sUser.credentials.username.eq(username));
@@ -72,6 +76,7 @@ public class SUserServiceImpl
 		return user;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transactional(readOnly = false, rollbackFor = UserRegistrationException.class)
 	public SUser registerNewUser(final String userName,
@@ -96,6 +101,7 @@ public class SUserServiceImpl
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transactional(readOnly = false, rollbackFor = UserRegistrationException.class)
 	public SUser registerNewUser(final SUser user) throws UserRegistrationException {
@@ -123,6 +129,7 @@ public class SUserServiceImpl
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SUser getAuthenticatedUser() {
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -160,6 +167,7 @@ public class SUserServiceImpl
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SUser save(final SUser persistable) {
 		try {

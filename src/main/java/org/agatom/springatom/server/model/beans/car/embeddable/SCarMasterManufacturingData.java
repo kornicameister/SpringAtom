@@ -57,35 +57,61 @@ public class SCarMasterManufacturingData
 	@Column(nullable = false, length = 100, updatable = true, insertable = true, name = "scd_md_mb")
 	private              String manufacturedBy   = null;
 
+	/**
+	 * <p>Constructor for SCarMasterManufacturingData.</p>
+	 */
 	public SCarMasterManufacturingData() {
 		super();
 	}
 
+	/**
+	 * <p>Constructor for SCarMasterManufacturingData.</p>
+	 *
+	 * @param brand a {@link java.lang.String} object.
+	 * @param model a {@link java.lang.String} object.
+	 */
 	public SCarMasterManufacturingData(final String brand, final String model) {
 		this.brand = brand;
 		this.model = model;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getBrand() {
 		return brand;
 	}
 
+	/**
+	 * <p>Setter for the field <code>brand</code>.</p>
+	 *
+	 * @param brand a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData} object.
+	 */
 	public SCarMasterManufacturingData setBrand(final String brand) {
 		this.brand = brand;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getModel() {
 		return model;
 	}
 
+	/**
+	 * <p>Setter for the field <code>model</code>.</p>
+	 *
+	 * @param model a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData} object.
+	 */
 	public SCarMasterManufacturingData setModel(final String model) {
 		this.model = model;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public CountryCode getManufacturedIn() {
 		if (StringUtils.hasText(this.manufacturedIn)) {
@@ -94,31 +120,49 @@ public class SCarMasterManufacturingData
 		return null;
 	}
 
+	/**
+	 * <p>Setter for the field <code>manufacturedIn</code>.</p>
+	 *
+	 * @param manufacturedIn a {@link com.neovisionaries.i18n.CountryCode} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData} object.
+	 */
 	public SCarMasterManufacturingData setManufacturedIn(final CountryCode manufacturedIn) {
 		this.manufacturedIn = manufacturedIn.getAlpha3();
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getManufacturedBy() {
 		return manufacturedBy;
 	}
 
+	/**
+	 * <p>Setter for the field <code>manufacturedBy</code>.</p>
+	 *
+	 * @param manufacturedBy a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData} object.
+	 */
 	public SCarMasterManufacturingData setManufacturedBy(final String manufacturedBy) {
 		this.manufacturedBy = manufacturedBy;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return String.format("%s %s", this.brand, this.model);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(brand, model, manufacturedIn, manufacturedBy);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

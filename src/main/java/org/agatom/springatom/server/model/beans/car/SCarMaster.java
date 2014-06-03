@@ -31,6 +31,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
+ * <p>SCarMaster class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -42,7 +44,9 @@ import java.util.Set;
 public class SCarMaster
 		extends PersistentObject<Long>
 		implements CarMaster<SCar> {
+	/** Constant <code>TABLE_NAME="car_master"</code> */
 	public static final  String                      TABLE_NAME        = "car_master";
+	/** Constant <code>ENTITY_NAME="SCarMaster"</code> */
 	public static final  String                      ENTITY_NAME       = "SCarMaster";
 	private static final long                        serialVersionUID  = -4932035593494629555L;
 	@Embedded
@@ -53,61 +57,110 @@ public class SCarMaster
 	@Column(nullable = true, length = 1000, name = "thumbnailPath")
 	private              String                      thumbnailPath     = null;
 
+	/**
+	 * <p>Constructor for SCarMaster.</p>
+	 */
 	public SCarMaster() {
 		super();
 		this.manufacturingData = new SCarMasterManufacturingData();
 	}
 
+	/**
+	 * <p>Getter for the field <code>thumbnailPath</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getThumbnailPath() {
 		return thumbnailPath;
 	}
 
+	/**
+	 * <p>Setter for the field <code>thumbnailPath</code>.</p>
+	 *
+	 * @param thumbnailPath a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCarMaster} object.
+	 */
 	public SCarMaster setThumbnailPath(final String thumbnailPath) {
 		this.thumbnailPath = thumbnailPath;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getBrand() {
 		return this.manufacturingData.getBrand();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getModel() {
 		return this.manufacturingData.getModel();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public CountryCode getManufacturedIn() {
 		return this.manufacturingData.getManufacturedIn();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getManufacturedBy() {
 		return this.manufacturingData.getManufacturedBy();
 	}
 
+	/**
+	 * <p>setBrand.</p>
+	 *
+	 * @param brand a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData} object.
+	 */
 	public SCarMasterManufacturingData setBrand(final String brand) {
 		return this.manufacturingData.setBrand(brand);
 	}
 
+	/**
+	 * <p>setModel.</p>
+	 *
+	 * @param model a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData} object.
+	 */
 	public SCarMasterManufacturingData setModel(final String model) {
 		return this.manufacturingData.setModel(model);
 	}
 
+	/**
+	 * <p>setManufacturedIn.</p>
+	 *
+	 * @param manufacturedIn a {@link com.neovisionaries.i18n.CountryCode} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData} object.
+	 */
 	public SCarMasterManufacturingData setManufacturedIn(final CountryCode manufacturedIn) {
 		return this.manufacturingData.setManufacturedIn(manufacturedIn);
 	}
 
+	/**
+	 * <p>setManufacturedBy.</p>
+	 *
+	 * @param manufacturedBy a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData} object.
+	 */
 	public SCarMasterManufacturingData setManufacturedBy(final String manufacturedBy) {
 		return this.manufacturingData.setManufacturedBy(manufacturedBy);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Iterator<SCar> iterator() {
 		return this.getChildren().iterator();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<SCar> getChildren() {
 		if (this.children == null) {
@@ -116,20 +169,40 @@ public class SCarMaster
 		return children;
 	}
 
+	/**
+	 * <p>Setter for the field <code>children</code>.</p>
+	 *
+	 * @param children a {@link java.util.Collection} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCarMaster} object.
+	 */
 	public SCarMaster setChildren(final Collection<SCar> children) {
 		this.children = Sets.newHashSet(children);
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return this.getManufacturingData().getIdentity();
 	}
 
+	/**
+	 * <p>Getter for the field <code>manufacturingData</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData} object.
+	 */
 	public SCarMasterManufacturingData getManufacturingData() {
 		return manufacturingData;
 	}
 
+	/**
+	 * <p>Setter for the field <code>manufacturingData</code>.</p>
+	 *
+	 * @param manufacturingData a {@link org.agatom.springatom.server.model.beans.car.embeddable.SCarMasterManufacturingData} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCarMaster} object.
+	 */
 	public SCarMaster setManufacturingData(final SCarMasterManufacturingData manufacturingData) {
 		this.manufacturingData = manufacturingData;
 		return this;

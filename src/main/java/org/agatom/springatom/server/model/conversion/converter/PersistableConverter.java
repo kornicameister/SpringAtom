@@ -22,11 +22,13 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Persistable;
 
 /**
+ * <p>PersistableConverter interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface PersistableConverter<S extends Persistable>
-        extends Converter<S, String>,
-                ConditionalConverter {
+		extends Converter<S, String>,
+		ConditionalConverter {
 }

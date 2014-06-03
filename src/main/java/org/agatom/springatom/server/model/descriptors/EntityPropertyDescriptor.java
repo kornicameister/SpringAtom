@@ -23,25 +23,67 @@ import java.io.Serializable;
 import java.lang.reflect.Member;
 
 /**
+ * <p>EntityPropertyDescriptor interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface EntityPropertyDescriptor
-        extends Serializable {
-    String getName();
+		extends Serializable {
+	/**
+	 * <p>getName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getName();
 
-    Attribute.PersistentAttributeType getPersistentAttributeType();
+	/**
+	 * <p>getPersistentAttributeType.</p>
+	 *
+	 * @return a {@link javax.persistence.metamodel.Attribute.PersistentAttributeType} object.
+	 */
+	Attribute.PersistentAttributeType getPersistentAttributeType();
 
-    Class<?> getJavaType();
+	/**
+	 * <p>getJavaType.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
+	Class<?> getJavaType();
 
-    Member getJavaMember();
+	/**
+	 * <p>getJavaMember.</p>
+	 *
+	 * @return a {@link java.lang.reflect.Member} object.
+	 */
+	Member getJavaMember();
 
-    ManagedType<?> getDeclaringType();
+	/**
+	 * <p>getDeclaringType.</p>
+	 *
+	 * @return a {@link javax.persistence.metamodel.ManagedType} object.
+	 */
+	ManagedType<?> getDeclaringType();
 
-    boolean isAssociation();
+	/**
+	 * <p>isAssociation.</p>
+	 *
+	 * @return a boolean.
+	 */
+	boolean isAssociation();
 
-    boolean isCollection();
+	/**
+	 * <p>isCollection.</p>
+	 *
+	 * @return a boolean.
+	 */
+	boolean isCollection();
 
-    Attribute<?, ?> getAttribute();
+	/**
+	 * <p>getAttribute.</p>
+	 *
+	 * @return a {@link javax.persistence.metamodel.Attribute} object.
+	 */
+	Attribute<?, ?> getAttribute();
 }

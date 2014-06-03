@@ -45,7 +45,9 @@ import java.awt.*;
 @AttributeOverride(name = "id", column = @Column(name = "id_user_calendar", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SCalendar
 		extends PersistentObject<Long> {
+	/** Constant <code>TABLE_NAME="suser_calendar"</code> */
 	public static final  String TABLE_NAME       = "suser_calendar";
+	/** Constant <code>ENTITY_NAME="org.springatom.calendar.SCalendar"</code> */
 	public static final  String ENTITY_NAME      = "org.springatom.calendar.SCalendar";
 	private static final long   serialVersionUID = -3784841008638697396L;
 	/**
@@ -67,33 +69,70 @@ public class SCalendar
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private SUser  owner;
 
+	/**
+	 * <p>Getter for the field <code>color</code>.</p>
+	 *
+	 * @return a {@link java.awt.Color} object.
+	 */
 	public Color getColor() {
 		return color;
 	}
 
+	/**
+	 * <p>Setter for the field <code>color</code>.</p>
+	 *
+	 * @param color a {@link java.awt.Color} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.calendar.SCalendar} object.
+	 */
 	public SCalendar setColor(final Color color) {
 		this.color = color;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>owner</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 */
 	public SUser getOwner() {
 		return owner;
 	}
 
+	/**
+	 * <p>Setter for the field <code>owner</code>.</p>
+	 *
+	 * @param owner a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.calendar.SCalendar} object.
+	 */
 	public SCalendar setOwner(final SUser owner) {
 		this.owner = owner;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return this.getName();
 	}
 
+	/**
+	 * <p>Getter for the field <code>name</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * <p>Setter for the field <code>name</code>.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.calendar.SCalendar} object.
+	 */
 	public SCalendar setName(final String name) {
 		this.name = name;
 		return this;

@@ -39,26 +39,28 @@ import java.io.Serializable;
  */
 @MappedSuperclass
 abstract public class SAssignedActivity<PK extends Serializable>
-        extends SActivity<PK>
-        implements AssignedActivity {
-    private static final long serialVersionUID = -8389898294284589238L;
-    @NotNull
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "activity_assignee", referencedColumnName = "idSUser", updatable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    protected SUser assignee;
+		extends SActivity<PK>
+		implements AssignedActivity {
+	private static final long serialVersionUID = -8389898294284589238L;
+	@NotNull
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@JoinColumn(name = "activity_assignee", referencedColumnName = "idSUser", updatable = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	protected SUser assignee;
 
-    @Override
-    public SUser getAssignee() {
-        if (this.assignee == null) {
-            this.assignee = new SUser();
-        }
-        return this.assignee;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public SUser getAssignee() {
+		if (this.assignee == null) {
+			this.assignee = new SUser();
+		}
+		return this.assignee;
+	}
 
-    @Override
-    public AssignedActivity setAssignee(final SUser assignee) {
-        this.assignee = assignee;
-        return this;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public AssignedActivity setAssignee(final SUser assignee) {
+		this.assignee = assignee;
+		return this;
+	}
 }

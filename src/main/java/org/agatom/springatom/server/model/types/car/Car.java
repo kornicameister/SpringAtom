@@ -32,15 +32,45 @@ import java.io.Serializable;
  */
 public interface Car
 		extends Serializable {
+	/**
+	 * <p>getLicencePlate.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getLicencePlate();
 
+	/**
+	 * <p>getOwner.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 */
 	SUser getOwner();
 
+	/**
+	 * <p>getBrand.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getBrand();
 
+	/**
+	 * <p>getModel.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getModel();
 
+	/**
+	 * <p>getFuelType.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.car.FuelType} object.
+	 */
 	FuelType getFuelType();
 
+	/**
+	 * <p>getYearOfProduction.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
 	Long getYearOfProduction();
 }

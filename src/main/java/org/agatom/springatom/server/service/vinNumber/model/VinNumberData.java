@@ -42,42 +42,102 @@ public class VinNumberData
 	private              FuelType             fuelType          = null;
 	private              List<Integer>        years             = null;
 
+	/**
+	 * <p>getBrand.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getBrand() {
 		return this.manufacturingData.getBrand();
 	}
 
+	/**
+	 * <p>getModel.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getModel() {
 		return this.manufacturingData.getModel();
 	}
 
+	/**
+	 * <p>getManufacturedIn.</p>
+	 *
+	 * @return a {@link com.neovisionaries.i18n.CountryCode} object.
+	 */
 	public CountryCode getManufacturedIn() {
 		return this.manufacturingData.getManufacturedIn();
 	}
 
+	/**
+	 * <p>getManufacturedBy.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getManufacturedBy() {
 		return this.manufacturingData.getManufacturedBy();
 	}
 
+	/**
+	 * <p>setBrand.</p>
+	 *
+	 * @param brand a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.car.ManufacturingData} object.
+	 */
 	public ManufacturingData setBrand(final String brand) {
 		return this.manufacturingData.setBrand(brand);
 	}
 
+	/**
+	 * <p>setModel.</p>
+	 *
+	 * @param model a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.car.ManufacturingData} object.
+	 */
 	public ManufacturingData setModel(final String model) {
 		return this.manufacturingData.setModel(model);
 	}
 
+	/**
+	 * <p>setManufacturedBy.</p>
+	 *
+	 * @param manufacturedBy a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.service.vinNumber.model.VinManufacturingData} object.
+	 */
 	public VinManufacturingData setManufacturedBy(final String manufacturedBy) {
 		return this.manufacturingData.setManufacturedBy(manufacturedBy);
 	}
 
+	/**
+	 * <p>setManufacturedIn.</p>
+	 *
+	 * @param manufacturedIn a {@link com.neovisionaries.i18n.CountryCode} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.service.vinNumber.model.VinManufacturingData} object.
+	 */
 	public VinManufacturingData setManufacturedIn(final CountryCode manufacturedIn) {
 		return this.manufacturingData.setManufacturedIn(manufacturedIn);
 	}
 
+	/**
+	 * <p>Getter for the field <code>years</code>.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	public List<Integer> getYears() {
 		return this.years;
 	}
 
+	/**
+	 * <p>Setter for the field <code>years</code>.</p>
+	 *
+	 * @param years a {@link java.util.List} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.service.vinNumber.model.VinNumberData} object.
+	 */
 	public VinNumberData setYears(final List<Integer> years) {
 		this.years = years;
 		return this;

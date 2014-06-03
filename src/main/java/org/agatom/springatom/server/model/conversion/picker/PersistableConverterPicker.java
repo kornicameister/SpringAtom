@@ -36,6 +36,8 @@ import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
+ * <p>PersistableConverterPicker class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -47,6 +49,15 @@ public class PersistableConverterPicker {
 	@Autowired
 	private              Set<PersistableConverter<?>>        converters               = null;
 
+	/**
+	 * <p>getConverterForSelector.</p>
+	 *
+	 * @param key         a {@link java.lang.String} object.
+	 * @param persistable a {@link org.springframework.data.domain.Persistable} object.
+	 * @param <T>         a T object.
+	 *
+	 * @return a {@link org.springframework.core.convert.converter.Converter} object.
+	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Persistable> Converter<T, String> getConverterForSelector(final String key, final Persistable<?> persistable) {
 		final Predicate<PersistableConverter<?>> selector = new Predicate<PersistableConverter<?>>() {
@@ -66,6 +77,14 @@ public class PersistableConverterPicker {
 		return new DefaultPickedConverter<>();
 	}
 
+	/**
+	 * <p>getDefaultConverter.</p>
+	 *
+	 * @param sourceType a {@link org.springframework.core.convert.TypeDescriptor} object.
+	 * @param <T>        a T object.
+	 *
+	 * @return a {@link org.springframework.core.convert.converter.Converter} object.
+	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Persistable> Converter<T, String> getDefaultConverter(final TypeDescriptor sourceType) {
 		final Predicate<PersistableConverter<?>> filter = new Predicate<PersistableConverter<?>>() {

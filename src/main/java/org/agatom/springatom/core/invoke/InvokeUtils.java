@@ -48,6 +48,30 @@ public class InvokeUtils {
 	/**
 	 * Invokes method described as property of the {@code target} bean.
 	 * Supports nested getter call, if passed property is {@link java.lang.String} delimited by <b>.[dot] character</b>
+	 * <p/>
+	 * Runs
+	 *
+	 * @param target      to call getter from
+	 * @param targetClazz class that retrieved value will be cast to
+	 * @param property    either single property or nested properties' path delimited by by <b>.[dot] character</b>
+	 * @param targetClazz class that retrieved value will be cast to
+	 * @param <RR>        generic type parameter
+	 *
+	 * @return value as <code>&lt;RR&gt;</code>
+	 */
+	@SuppressWarnings("unchecked")
+	public static <RR> RR invokeGetter(final Object target, final String property, final Class<RR> targetClazz) {
+		final Object value = InvokeUtils.invokeGetter(target, property);
+		if (ClassUtils.isAssignableValue(targetClazz, value)) {
+			return (RR) value;
+		} else {
+			return Reflect.on(value.getClass()).create(value).get();
+		}
+	}
+
+	/**
+	 * Invokes method described as property of the {@code target} bean.
+	 * Supports nested getter call, if passed property is {@link java.lang.String} delimited by <b>.[dot] character</b>
 	 *
 	 * @param target   to call getter from
 	 * @param property either single property or nested properties' path delimited by by <b>.[dot] character</b>
@@ -76,37 +100,6 @@ public class InvokeUtils {
 		return value;
 	}
 
-	/**
-	 * Invokes method described as property of the {@code target} bean.
-	 * Supports nested getter call, if passed property is {@link java.lang.String} delimited by <b>.[dot] character</b>
-	 * <p/>
-	 * Runs
-	 *
-	 * @param target      to call getter from
-	 * @param property    either single property or nested properties' path delimited by by <b>.[dot] character</b>
-	 * @param targetClazz class that retrieved value will be cast to
-	 * @param <RR>        generic type parameter
-	 *
-	 * @return value as <code>&lt;RR&gt;</code>
-	 */
-	@SuppressWarnings("unchecked")
-	public static <RR> RR invokeGetter(final Object target, final String property, final Class<RR> targetClazz) {
-		final Object value = InvokeUtils.invokeGetter(target, property);
-		if (ClassUtils.isAssignableValue(targetClazz, value)) {
-			return (RR) value;
-		} else {
-			return Reflect.on(value.getClass()).create(value).get();
-		}
-	}
-
-	private static String getGetterName(final String property) {
-		return String.format(GETTER_PREFIX, StringUtils.capitalize(property));
-	}
-
-	private static String getBooleanGetterName(final String property) {
-		return String.format(IS_GETTER, StringUtils.capitalize(property));
-	}
-
 	private static List<String> splitProperty(final String property) {
 		final List<String> props = Lists.newArrayListWithExpectedSize(1);
 		if (property.contains(".")) {
@@ -119,5 +112,13 @@ public class InvokeUtils {
 			props.add(property);
 		}
 		return props;
+	}
+
+	private static String getGetterName(final String property) {
+		return String.format(GETTER_PREFIX, StringUtils.capitalize(property));
+	}
+
+	private static String getBooleanGetterName(final String property) {
+		return String.format(IS_GETTER, StringUtils.capitalize(property));
 	}
 }

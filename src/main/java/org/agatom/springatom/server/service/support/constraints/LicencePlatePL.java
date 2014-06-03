@@ -37,14 +37,14 @@ import static java.lang.annotation.ElementType.*;
 
 //business-logic
 @Length(
-        min = 3,
-        max = 8,
-        message = "Invalid licence plate length"
+		min = 3,
+		max = 8,
+		message = "Invalid licence plate length"
 )
 @Pattern(
-        regexp = "^(\\w{2}\\s\\w{1,5})|(\\w{3}\\s\\w{1,4})$",
-        flags = Pattern.Flag.CASE_INSENSITIVE,
-        message = "Invalid licence plate format"
+		regexp = "^(\\w{2}\\s\\w{1,5})|(\\w{3}\\s\\w{1,4})$",
+		flags = Pattern.Flag.CASE_INSENSITIVE,
+		message = "Invalid licence plate format"
 )
 //business-logic
 @Target(value = {METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
@@ -53,9 +53,9 @@ import static java.lang.annotation.ElementType.*;
 @Documented
 @ReportAsSingleViolation
 public @interface LicencePlatePL {
-    String message() default "{org.agatom.springatom.server.service.support.constraints.LicencePlatePL}";
+	String message() default "{org.agatom.springatom.server.service.support.constraints.LicencePlatePL}";
 
-    Class<?>[] groups() default {};
+	Class<?>[] groups() default {};
 
-    @Deprecated Class<? extends Payload>[] payload() default {};
+	@Deprecated Class<? extends Payload>[] payload() default {};
 }

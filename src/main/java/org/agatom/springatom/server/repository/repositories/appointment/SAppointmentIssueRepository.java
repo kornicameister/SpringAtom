@@ -25,7 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
  * {@code SAppointmentRepository} supports CRUD operations, backend with {@link org.springframework.data.jpa.repository.support.Querydsl}
@@ -40,9 +39,20 @@ import org.springframework.data.rest.core.annotation.RestResource;
 @RepositoryRestResource(itemResourceRel = SAppointmentIssueRepository.REST_REPO_REL, path = SAppointmentIssueRepository.REST_REPO_PATH)
 public interface SAppointmentIssueRepository
 		extends SAbstractIssueRepository<SAppointmentIssue> {
+	/** Constant <code>REPO_NAME="SAppointmentIssueRepository"</code> */
 	String REPO_NAME      = "SAppointmentIssueRepository";
+	/** Constant <code>REST_REPO_REL="rest.appointment.issue"</code> */
 	String REST_REPO_REL  = "rest.appointment.issue";
+	/** Constant <code>REST_REPO_PATH="appointment_issues"</code> */
 	String REST_REPO_PATH = "appointment_issues";
 
+	/**
+	 * <p>findByAppointment.</p>
+	 *
+	 * @param appointment a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 * @param pageable    a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SAppointmentIssue> findByAppointment(@Param(value = "appointment") SAppointment appointment, Pageable pageable);
 }

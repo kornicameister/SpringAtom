@@ -29,7 +29,9 @@ import org.agatom.springatom.server.model.conversion.converter.PersistableConver
  * @since 0.0.1
  */
 @PersistableConverterUtility
-public class SPersonContactConvert extends PersistableConverterImpl<SPersonContact> {
+public class SPersonContactConvert
+		extends PersistableConverterImpl<SPersonContact> {
+	/** {@inheritDoc} */
 	@Override
 	public String convert(final SPersonContact source) {
 		return String.format("%s\n", source.getContact());

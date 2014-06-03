@@ -36,53 +36,73 @@ import java.util.Set;
 
 class AttributesHolder {
 
-    private Set<BasicPropertyDescriptor>     basic     = Sets.newHashSet();
-    private Set<OneToManyPropertyDescriptor> oneToMany = Sets.newHashSet();
-    private Set<ManyToOnePropertyDescriptor> manyToOne = Sets.newHashSet();
-    private Set<SystemPropertyDescriptor>    system    = Sets.newHashSet();
-    private Map<Class<?>, Set<?>>            internal  = Maps.newHashMap();
+	private Set<BasicPropertyDescriptor>     basic     = Sets.newHashSet();
+	private Set<OneToManyPropertyDescriptor> oneToMany = Sets.newHashSet();
+	private Set<ManyToOnePropertyDescriptor> manyToOne = Sets.newHashSet();
+	private Set<SystemPropertyDescriptor>    system    = Sets.newHashSet();
+	private Map<Class<?>, Set<?>>            internal  = Maps.newHashMap();
 
-    AttributesHolder() {
-        super();
-        this.internal.put(BasicPropertyDescriptor.class, this.basic);
-        this.internal.put(OneToManyPropertyDescriptor.class, this.oneToMany);
-        this.internal.put(ManyToOnePropertyDescriptor.class, this.manyToOne);
-        this.internal.put(SystemPropertyDescriptor.class, this.system);
-    }
+	AttributesHolder() {
+		super();
+		this.internal.put(BasicPropertyDescriptor.class, this.basic);
+		this.internal.put(OneToManyPropertyDescriptor.class, this.oneToMany);
+		this.internal.put(ManyToOnePropertyDescriptor.class, this.manyToOne);
+		this.internal.put(SystemPropertyDescriptor.class, this.system);
+	}
 
-    boolean hasProperties(final Class<?> clazz) {
-        return this.internal.containsKey(clazz) && this.internal.get(clazz).size() > 0;
-    }
+	boolean hasProperties(final Class<?> clazz) {
+		return this.internal.containsKey(clazz) && this.internal.get(clazz).size() > 0;
+	}
 
-    Set<BasicPropertyDescriptor> getBasicProperties() {
-        return Collections.unmodifiableSet(this.basic);
-    }
+	Set<BasicPropertyDescriptor> getBasicProperties() {
+		return Collections.unmodifiableSet(this.basic);
+	}
 
-    Set<SystemPropertyDescriptor> getSystemProperties() {
-        return Collections.unmodifiableSet(this.system);
-    }
+	Set<SystemPropertyDescriptor> getSystemProperties() {
+		return Collections.unmodifiableSet(this.system);
+	}
 
-    Set<ManyToOnePropertyDescriptor> getManyToOneProperties() {
-        return Collections.unmodifiableSet(this.manyToOne);
-    }
+	Set<ManyToOnePropertyDescriptor> getManyToOneProperties() {
+		return Collections.unmodifiableSet(this.manyToOne);
+	}
 
-    Set<OneToManyPropertyDescriptor> getOneToManyProperties() {
-        return Collections.unmodifiableSet(this.oneToMany);
-    }
+	Set<OneToManyPropertyDescriptor> getOneToManyProperties() {
+		return Collections.unmodifiableSet(this.oneToMany);
+	}
 
-    public void addAllOneToManyProperties(final Set<OneToManyPropertyDescriptor> pds) {
-        this.oneToMany.addAll(pds);
-    }
+	/**
+	 * <p>addAllOneToManyProperties.</p>
+	 *
+	 * @param pds a {@link java.util.Set} object.
+	 */
+	public void addAllOneToManyProperties(final Set<OneToManyPropertyDescriptor> pds) {
+		this.oneToMany.addAll(pds);
+	}
 
-    public void addBasicProperties(final Set<BasicPropertyDescriptor> pds) {
-        this.basic.addAll(pds);
-    }
+	/**
+	 * <p>addBasicProperties.</p>
+	 *
+	 * @param pds a {@link java.util.Set} object.
+	 */
+	public void addBasicProperties(final Set<BasicPropertyDescriptor> pds) {
+		this.basic.addAll(pds);
+	}
 
-    public void addSystemProperties(final Set<SystemPropertyDescriptor> pds) {
-        this.system.addAll(pds);
-    }
+	/**
+	 * <p>addSystemProperties.</p>
+	 *
+	 * @param pds a {@link java.util.Set} object.
+	 */
+	public void addSystemProperties(final Set<SystemPropertyDescriptor> pds) {
+		this.system.addAll(pds);
+	}
 
-    public void addAllManyToOneProperties(final Set<ManyToOnePropertyDescriptor> pds) {
-        this.manyToOne.addAll(pds);
-    }
+	/**
+	 * <p>addAllManyToOneProperties.</p>
+	 *
+	 * @param pds a {@link java.util.Set} object.
+	 */
+	public void addAllManyToOneProperties(final Set<ManyToOnePropertyDescriptor> pds) {
+		this.manyToOne.addAll(pds);
+	}
 }

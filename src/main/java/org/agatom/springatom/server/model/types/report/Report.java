@@ -24,34 +24,100 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
+ * <p>Report interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface Report
-        extends Serializable,
-                MapAdaptable<String, Serializable> {
-    ReportResource getResource();
+		extends Serializable,
+		MapAdaptable<String, Serializable> {
+	/**
+	 * <p>getResource.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.report.ReportResource} object.
+	 */
+	ReportResource getResource();
 
-    String getDescription();
+	/**
+	 * <p>getDescription.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getDescription();
 
-    String getTitle();
+	/**
+	 * <p>getTitle.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getTitle();
 
-    String getSubtitle();
+	/**
+	 * <p>getSubtitle.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getSubtitle();
 
-    Set<ReportSetting<?>> getSettings();
+	/**
+	 * <p>getSettings.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	Set<ReportSetting<?>> getSettings();
 
-    Serializable getSetting(String key);
+	/**
+	 * <p>getSetting.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 *
+	 * @return a {@link java.io.Serializable} object.
+	 */
+	Serializable getSetting(String key);
 
-    boolean hasSetting(@Nonnull String key);
+	/**
+	 * <p>hasSetting.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 *
+	 * @return a boolean.
+	 */
+	boolean hasSetting(@Nonnull String key);
 
-    boolean hasSettings();
+	/**
+	 * <p>hasSettings.</p>
+	 *
+	 * @return a boolean.
+	 */
+	boolean hasSettings();
 
-    Report getReportMaster();
+	/**
+	 * <p>getReportMaster.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.report.Report} object.
+	 */
+	Report getReportMaster();
 
-    Set<Report> getSubReports();
+	/**
+	 * <p>getSubReports.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	Set<Report> getSubReports();
 
-    boolean isDynamic();
+	/**
+	 * <p>isDynamic.</p>
+	 *
+	 * @return a boolean.
+	 */
+	boolean isDynamic();
 
-    Class<?> getReportedClass();
+	/**
+	 * <p>getReportedClass.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
+	Class<?> getReportedClass();
 }

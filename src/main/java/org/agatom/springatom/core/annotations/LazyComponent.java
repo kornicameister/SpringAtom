@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.*;
 
 /**
- * {@link LazyComponent} combines three annotations:
+ * {@link org.agatom.springatom.core.annotations.LazyComponent} combines three annotations:
  * <ol>
  * <li>{@link org.springframework.stereotype.Component}</li>
  * <li>{@link org.springframework.context.annotation.Lazy}</li>
@@ -47,11 +47,11 @@ import java.lang.annotation.*;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public @interface LazyComponent {
-    /**
-     * The value may indicate a suggestion for a logical component name,
-     * to be turned into a Spring bean in case of an autodetected component.
-     *
-     * @return the suggested component name, if any
-     */
-    String value() default "";
+	/**
+	 * The value may indicate a suggestion for a logical component name,
+	 * to be turned into a Spring bean in case of an autodetected component.
+	 *
+	 * @return the suggested component name, if any
+	 */
+	String value() default "";
 }

@@ -25,9 +25,24 @@ package org.agatom.springatom.server.model.types.appointment;
  * @since 0.0.1
  */
 public interface AppointmentTask {
+	/**
+	 * <p>getTask.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getTask();
 
+	/**
+	 * <p>getAppointment.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.appointment.Appointment} object.
+	 */
 	Appointment getAppointment();
 
+	/**
+	 * <p>getType.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.appointment.AppointmentTaskType} object.
+	 */
 	AppointmentTaskType getType();
 }

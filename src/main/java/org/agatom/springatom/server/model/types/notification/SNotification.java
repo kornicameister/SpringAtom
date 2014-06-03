@@ -32,17 +32,51 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 public interface SNotification<PK extends Serializable>
-        extends PersistentBean,
-                Persistable<PK> {
-    String getMessage();
+		extends PersistentBean,
+		Persistable<PK> {
+	/**
+	 * <p>getMessage.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getMessage();
 
-    SNotification<PK> setMessage(final String notification);
+	/**
+	 * <p>setMessage.</p>
+	 *
+	 * @param notification a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.notification.SNotification} object.
+	 */
+	SNotification<PK> setMessage(final String notification);
 
-    DateTime getSent();
+	/**
+	 * <p>getSent.</p>
+	 *
+	 * @return a {@link org.joda.time.DateTime} object.
+	 */
+	DateTime getSent();
 
-    SNotification<PK> setSent(final DateTime sent);
+	/**
+	 * <p>setSent.</p>
+	 *
+	 * @param sent a {@link org.joda.time.DateTime} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.notification.SNotification} object.
+	 */
+	SNotification<PK> setSent(final DateTime sent);
 
-    Boolean isRead();
+	/**
+	 * <p>isRead.</p>
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
+	Boolean isRead();
 
-    SNotification<PK> readNotification();
+	/**
+	 * <p>readNotification.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.notification.SNotification} object.
+	 */
+	SNotification<PK> readNotification();
 }

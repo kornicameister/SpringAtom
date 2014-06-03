@@ -18,12 +18,14 @@
 package org.agatom.springatom.core;
 
 /**
+ * <p>DateType class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public enum DateType {
-    DAY,
-    MONTH,
-    YEAR
+	DAY,
+	MONTH,
+	YEAR
 }

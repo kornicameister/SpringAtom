@@ -36,14 +36,15 @@ import org.agatom.springatom.server.model.conversion.converter.PersistableConver
  */
 @PersistableConverterUtility
 public class CarConverter
-        extends PersistableConverterImpl<SCar> {
+		extends PersistableConverterImpl<SCar> {
 
-    @Override
-    public String convert(final SCar source) {
-        return String.format("%s\n%s\n%s",
-                this.conversionService.convert(source.getLicencePlate(), STRING_CLASS),
-                this.conversionService.convert(source.getVinNumber(), STRING_CLASS),
-                this.conversionService.convert(source.getOwner(), STRING_CLASS));
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String convert(final SCar source) {
+		return String.format("%s\n%s\n%s",
+				this.conversionService.convert(source.getLicencePlate(), STRING_CLASS),
+				this.conversionService.convert(source.getVinNumber(), STRING_CLASS),
+				this.conversionService.convert(source.getOwner(), STRING_CLASS));
+	}
 
 }

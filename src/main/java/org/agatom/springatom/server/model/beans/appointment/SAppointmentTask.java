@@ -28,6 +28,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 
 /**
+ * <p>SAppointmentTask class.</p>
+ *
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
@@ -39,7 +41,9 @@ import javax.persistence.*;
 public class SAppointmentTask
 		extends PersistentObject<Long>
 		implements AppointmentTask {
+	/** Constant <code>TABLE_NAME="appointment_task"</code> */
 	public static final  String TABLE_NAME       = "appointment_task";
+	/** Constant <code>ENTITY_NAME="SAppointmentTask"</code> */
 	public static final  String ENTITY_NAME      = "SAppointmentTask";
 	private static final long   serialVersionUID = -300491275397373687L;
 	@NotEmpty
@@ -54,40 +58,72 @@ public class SAppointmentTask
 	@JoinColumn(name = "sat_app", referencedColumnName = "idSAppointment", updatable = false)
 	private SAppointment        appointment;
 
+	/** {@inheritDoc} */
 	@Override
 	public String getTask() {
 		return task;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SAppointment getAppointment() {
 		return this.appointment;
 	}
 
+	/**
+	 * <p>Setter for the field <code>appointment</code>.</p>
+	 *
+	 * @param appointments a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointmentTask} object.
+	 */
 	public SAppointmentTask setAppointment(final SAppointment appointments) {
 		this.appointment = appointments;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public AppointmentTaskType getType() {
 		return type;
 	}
 
-	public SAppointmentTask setType(final String type) {
-		return this.setType(AppointmentTaskType.valueOf(type));
-	}
-
+	/**
+	 * <p>Setter for the field <code>type</code>.</p>
+	 *
+	 * @param type a {@link org.agatom.springatom.server.model.types.appointment.AppointmentTaskType} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointmentTask} object.
+	 */
 	public SAppointmentTask setType(final AppointmentTaskType type) {
 		this.type = type;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>task</code>.</p>
+	 *
+	 * @param task a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointmentTask} object.
+	 */
 	public SAppointmentTask setTask(final String task) {
 		this.task = task;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>type</code>.</p>
+	 *
+	 * @param type a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointmentTask} object.
+	 */
+	public SAppointmentTask setType(final String type) {
+		return this.setType(AppointmentTaskType.valueOf(type));
+	}
+
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return this.getType().toString();

@@ -44,13 +44,15 @@ import java.util.Collection;
  * @since 0.0.1
  */
 @EventListener
-public class SUserAuthoritiesSavingListener extends AbstractRepositoryEventListener<SUser> {
+public class SUserAuthoritiesSavingListener
+		extends AbstractRepositoryEventListener<SUser> {
 	private static final Logger                   LOGGER                  = Logger.getLogger(SUserAuthoritiesSavingListener.class);
 	@Autowired
 	private              SUserAuthorityRepository userAuthorityRepository = null;
 	@Autowired
 	private              SAuthorityRepository     authorityRepository     = null;
 
+	/** {@inheritDoc} */
 	@Override
 	protected void onAfterCreate(final SUser user) {
 		LOGGER.trace(String.format("onAfterCreate(user=%s)", user));

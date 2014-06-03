@@ -20,16 +20,23 @@ package org.agatom.springatom.server.model.descriptors.properties;
 import javax.persistence.metamodel.SingularAttribute;
 
 /**
+ * <p>ManyToOnePropertyDescriptor class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class ManyToOnePropertyDescriptor
-        extends BasicPropertyDescriptor {
+		extends BasicPropertyDescriptor {
 
-    private static final long serialVersionUID = -7114420767275680568L;
+	private static final long serialVersionUID = -7114420767275680568L;
 
-    public ManyToOnePropertyDescriptor(final SingularAttribute<?, ?> attribute) {
-        super(attribute);
-    }
+	/**
+	 * <p>Constructor for ManyToOnePropertyDescriptor.</p>
+	 *
+	 * @param attribute a {@link javax.persistence.metamodel.SingularAttribute} object.
+	 */
+	public ManyToOnePropertyDescriptor(final SingularAttribute<?, ?> attribute) {
+		super(attribute);
+	}
 }

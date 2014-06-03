@@ -65,8 +65,11 @@ import java.util.Set;
 public class SReport
 		extends PersistentVersionedObject
 		implements Report {
+	/** Constant <code>TABLE_NAME="reports"</code> */
 	public static final  String TABLE_NAME       = "reports";
+	/** Constant <code>ENTITY_NAME="SReport"</code> */
 	public static final  String ENTITY_NAME      = "SReport";
+	/** Constant <code>ID_COLUMN="idSReport"</code> */
 	public static final  String ID_COLUMN        = "idSReport";
 	private static final long   serialVersionUID = -2542100437128982892L;
 	@Transient
@@ -98,30 +101,38 @@ public class SReport
 	@Column(name = "report_class", nullable = false, updatable = true, insertable = true)
 	protected               Class<?>                  reportedClass;
 
+	/**
+	 * <p>Constructor for SReport.</p>
+	 */
 	public SReport() {
 		this.mappedSettings = Maps.newHashMap();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ReportResource getResource() {
 		return this.resource;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getDescription() {
 		return description;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getTitle() {
 		return title;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getSubtitle() {
 		return subtitle;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<ReportSetting<?>> getSettings() {
 		this.requireSettings();
@@ -136,11 +147,13 @@ public class SReport
 				}).toSet();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Serializable getSetting(final String key) {
 		return this.asMap().get(key);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Map<String, Serializable> asMap() {
 		this.getSettings();
@@ -159,21 +172,25 @@ public class SReport
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasSetting(@Nonnull final String key) {
 		return this.asMap().containsKey(key);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasSettings() {
 		return this.settings != null && !this.settings.isEmpty();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Report getReportMaster() {
 		return reportMaster;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<Report> getSubReports() {
 		this.requireSubReports();
@@ -189,6 +206,7 @@ public class SReport
 				.toSet();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isDynamic() {
 		if (this.dynamic == null) {
@@ -197,21 +215,43 @@ public class SReport
 		return this.dynamic;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Class<?> getReportedClass() {
 		return this.reportedClass;
 	}
 
+	/**
+	 * <p>Setter for the field <code>reportedClass</code>.</p>
+	 *
+	 * @param reportedClass a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 */
 	public SReport setReportedClass(final Class<?> reportedClass) {
 		this.reportedClass = reportedClass;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>dynamic</code>.</p>
+	 *
+	 * @param dynamic a {@link java.lang.Boolean} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 */
 	public SReport setDynamic(final Boolean dynamic) {
 		this.dynamic = dynamic;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>subReports</code>.</p>
+	 *
+	 * @param subReports a {@link java.util.Set} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 */
 	public SReport setSubReports(final Set<SReport> subReports) {
 		this.subReports = subReports;
 		return this;
@@ -223,6 +263,13 @@ public class SReport
 		}
 	}
 
+	/**
+	 * <p>Setter for the field <code>reportMaster</code>.</p>
+	 *
+	 * @param reportMaster a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 */
 	public SReport setReportMaster(final SReport reportMaster) {
 		this.reportMaster = reportMaster;
 		if (!reportMaster.hasSubReport(this)) {
@@ -231,16 +278,37 @@ public class SReport
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>subtitle</code>.</p>
+	 *
+	 * @param subtitle a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 */
 	public SReport setSubtitle(final String subtitle) {
 		this.subtitle = subtitle;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>title</code>.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 */
 	public SReport setTitle(final String name) {
 		this.title = name;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>description</code>.</p>
+	 *
+	 * @param description a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 */
 	public SReport setDescription(final String description) {
 		this.description = description;
 		return this;
@@ -250,11 +318,26 @@ public class SReport
 		return !this.equals(report) && (this.subReports != null && !this.subReports.contains(report));
 	}
 
+	/**
+	 * <p>Setter for the field <code>resource</code>.</p>
+	 *
+	 * @param jasperPath    a {@link java.lang.String} object.
+	 * @param reportCfgPath a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 */
 	public SReport setResource(final String jasperPath, final String reportCfgPath) {
 		this.resource = new SReportResource().setJasperPath(jasperPath).setConfigurationPath(reportCfgPath);
 		return this;
 	}
 
+	/**
+	 * <p>putSubReport.</p>
+	 *
+	 * @param report a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 */
 	public SReport putSubReport(final SReport report) {
 		this.requireSubReports();
 		if (report.reportMaster == null || !report.reportMaster.equals(this)) {
@@ -264,6 +347,17 @@ public class SReport
 		return this;
 	}
 
+	/**
+	 * <p>putSetting.</p>
+	 *
+	 * @param key   a {@link java.lang.String} object.
+	 * @param value a VAL object.
+	 * @param <VAL> a VAL object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReportSetting} object.
+	 *
+	 * @throws java.lang.IllegalArgumentException if any.
+	 */
 	public <VAL extends Serializable> SReportSetting<?> putSetting(final String key, final VAL value) throws IllegalArgumentException {
 		final Class<? extends Serializable> valueClass = value.getClass();
 		SReportSetting<?> setting = null;
@@ -287,6 +381,13 @@ public class SReport
 		return this.putSetting(setting);
 	}
 
+	/**
+	 * <p>putSetting.</p>
+	 *
+	 * @param setting a {@link org.agatom.springatom.server.model.beans.report.SReportSetting} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReportSetting} object.
+	 */
 	public SReportSetting<?> putSetting(final SReportSetting<?> setting) {
 		this.requireSettings();
 		this.settings.add(setting.setReport(this));
@@ -294,6 +395,7 @@ public class SReport
 		return setting;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return this.getTitle();

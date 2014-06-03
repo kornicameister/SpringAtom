@@ -42,17 +42,17 @@ import static java.lang.annotation.ElementType.*;
 @NotNull
 @NotEmpty
 @Length(
-        min = 4,
-        max = 16,
-        message = "Invalid phone number length"
+		min = 4,
+		max = 16,
+		message = "Invalid phone number length"
 )
 @Pattern(
-        regexp = "^(\\+\\(?\\d{1,2}\\)?\\s)?" +         //area code
-                "((\\d{7,9})|" +                        //no whitespaces, no dashes
-                "((\\d{3}(-|\\s)){2}\\d{3})|" +         //home number
-                "(\\d{3}(-|\\s)\\d{2}(-|\\s)\\d{2}))$", //cell phone number
-        flags = Pattern.Flag.CASE_INSENSITIVE,
-        message = "Invalid phone number format"
+		regexp = "^(\\+\\(?\\d{1,2}\\)?\\s)?" +         //area code
+				"((\\d{7,9})|" +                        //no whitespaces, no dashes
+				"((\\d{3}(-|\\s)){2}\\d{3})|" +         //home number
+				"(\\d{3}(-|\\s)\\d{2}(-|\\s)\\d{2}))$", //cell phone number
+		flags = Pattern.Flag.CASE_INSENSITIVE,
+		message = "Invalid phone number format"
 )
 //business-logic
 @Target(value = {METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
@@ -62,9 +62,9 @@ import static java.lang.annotation.ElementType.*;
 @Constraint(validatedBy = {})
 @ReportAsSingleViolation
 public @interface PhoneNumber {
-    String message() default "{org.agatom.springatom.server.service.support.constraints.PhoneNumber}";
+	String message() default "{org.agatom.springatom.server.service.support.constraints.PhoneNumber}";
 
-    Class<?>[] groups() default {};
+	Class<?>[] groups() default {};
 
-    @Deprecated Class<? extends Payload>[] payload() default {};
+	@Deprecated Class<? extends Payload>[] payload() default {};
 }

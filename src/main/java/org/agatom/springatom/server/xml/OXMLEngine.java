@@ -29,63 +29,110 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
+ * <p>OXMLEngine class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
 public class OXMLEngine {
-    private static final Logger LOGGER = Logger.getLogger(OXMLEngine.class);
-    protected Marshaller   marshaller;
-    protected Unmarshaller unmarshaller;
+	private static final Logger LOGGER = Logger.getLogger(OXMLEngine.class);
+	protected Marshaller   marshaller;
+	protected Unmarshaller unmarshaller;
 
-    public Marshaller getMarshaller() {
-        return marshaller;
-    }
+	/**
+	 * <p>convertFromObjectToXML.</p>
+	 *
+	 * @param object   a {@link java.lang.Object} object.
+	 * @param filePath a {@link java.lang.String} object.
+	 *
+	 * @throws java.io.IOException if any.
+	 */
+	public void convertFromObjectToXML(Object object, String filePath)
+			throws IOException {
+		FileOutputStream os = null;
+		try {
+			os = new FileOutputStream(filePath);
+			getMarshaller().marshal(object, new StreamResult(os));
+		} catch (NullPointerException exception) {
+			LOGGER.fatal("Marshaller is null, could not convert xml>object", exception);
+		} finally {
+			if (os != null) {
+				os.close();
+			}
+		}
+	}
 
-    public void setMarshaller(Marshaller marshaller) {
-        this.marshaller = marshaller;
-    }
+	/**
+	 * <p>Getter for the field <code>marshaller</code>.</p>
+	 *
+	 * @return a {@link org.springframework.oxm.Marshaller} object.
+	 */
+	public Marshaller getMarshaller() {
+		return marshaller;
+	}
 
-    public Unmarshaller getUnmarshaller() {
-        return unmarshaller;
-    }
+	/**
+	 * <p>Setter for the field <code>marshaller</code>.</p>
+	 *
+	 * @param marshaller a {@link org.springframework.oxm.Marshaller} object.
+	 */
+	public void setMarshaller(Marshaller marshaller) {
+		this.marshaller = marshaller;
+	}
 
-    public void setUnmarshaller(Unmarshaller unmarshaller) {
-        this.unmarshaller = unmarshaller;
-    }
+	/**
+	 * <p>convertFromXMLToObject.</p>
+	 *
+	 * @param xmlFile a {@link java.io.File} object.
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 *
+	 * @throws java.io.IOException if any.
+	 */
+	public Object convertFromXMLToObject(File xmlFile) throws IOException {
+		return this.convertFromXMLToObject(xmlFile.getAbsolutePath());
+	}
 
-    public void convertFromObjectToXML(Object object, String filePath)
-            throws IOException {
-        FileOutputStream os = null;
-        try {
-            os = new FileOutputStream(filePath);
-            getMarshaller().marshal(object, new StreamResult(os));
-        } catch (NullPointerException exception) {
-            LOGGER.fatal("Marshaller is null, could not convert xml>object", exception);
-        } finally {
-            if (os != null) {
-                os.close();
-            }
-        }
-    }
+	/**
+	 * <p>convertFromXMLToObject.</p>
+	 *
+	 * @param xmlFile a {@link java.lang.String} object.
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 *
+	 * @throws java.io.IOException if any.
+	 */
+	public Object convertFromXMLToObject(String xmlFile) throws IOException {
+		FileInputStream is = null;
+		try {
+			is = new FileInputStream(xmlFile);
+			return getUnmarshaller().unmarshal(new StreamSource(is));
+		} catch (NullPointerException exception) {
+			LOGGER.fatal("Unmarshaller is null, could not convert xml>object", exception);
+		} finally {
+			if (is != null) {
+				is.close();
+			}
+		}
+		return null;
+	}
 
-    public Object convertFromXMLToObject(String xmlFile) throws IOException {
-        FileInputStream is = null;
-        try {
-            is = new FileInputStream(xmlFile);
-            return getUnmarshaller().unmarshal(new StreamSource(is));
-        } catch (NullPointerException exception) {
-            LOGGER.fatal("Unmarshaller is null, could not convert xml>object", exception);
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-        return null;
-    }
+	/**
+	 * <p>Getter for the field <code>unmarshaller</code>.</p>
+	 *
+	 * @return a {@link org.springframework.oxm.Unmarshaller} object.
+	 */
+	public Unmarshaller getUnmarshaller() {
+		return unmarshaller;
+	}
 
-    public Object convertFromXMLToObject(File xmlFile) throws IOException {
-        return this.convertFromXMLToObject(xmlFile.getAbsolutePath());
-    }
+	/**
+	 * <p>Setter for the field <code>unmarshaller</code>.</p>
+	 *
+	 * @param unmarshaller a {@link org.springframework.oxm.Unmarshaller} object.
+	 */
+	public void setUnmarshaller(Unmarshaller unmarshaller) {
+		this.unmarshaller = unmarshaller;
+	}
 }

@@ -24,17 +24,36 @@ import java.util.List;
  * {@code SMultiContactable} means that the type that extends such type
  * can be accessed in that or another way.
  * For example it could be an <b>email</b> or <b>phone number</b>.
- * Generally all kind of {@link SContact} are valid for this interface to serve as contact points.
+ * Generally all kind of {@link org.agatom.springatom.server.model.types.contact.SContact} are valid for this interface to serve as contact points.
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface SMultiContactable
-        extends SContactable {
+		extends SContactable {
+	/**
+	 * <p>getContacts.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	List<? extends SContact> getContacts();
 
+	/**
+	 * <p>addContact.</p>
+	 *
+	 * @param contacts a {@link java.util.Collection} object.
+	 *
+	 * @return a boolean.
+	 */
 	boolean addContact(final Collection<? extends SContact> contacts);
 
+	/**
+	 * <p>removeContact.</p>
+	 *
+	 * @param contacts a {@link java.util.Collection} object.
+	 *
+	 * @return a boolean.
+	 */
 	boolean removeContact(final Collection<? extends SContact> contacts);
 }

@@ -32,6 +32,9 @@ public class SARepositoryRestDispatcherServlet
 		extends DispatcherServlet {
 	private static final long serialVersionUID = 8217867511809606982L;
 
+	/**
+	 * <p>Constructor for SARepositoryRestDispatcherServlet.</p>
+	 */
 	public SARepositoryRestDispatcherServlet() {
 		configure();
 	}
@@ -41,6 +44,11 @@ public class SARepositoryRestDispatcherServlet
 		this.setContextConfigLocation(SARepositoryRestMvcConfiguration.class.getName());
 	}
 
+	/**
+	 * <p>Constructor for SARepositoryRestDispatcherServlet.</p>
+	 *
+	 * @param webApplicationContext a {@link org.springframework.web.context.WebApplicationContext} object.
+	 */
 	public SARepositoryRestDispatcherServlet(final WebApplicationContext webApplicationContext) {
 		super(webApplicationContext);
 		configure();

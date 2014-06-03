@@ -18,12 +18,19 @@
 package org.agatom.springatom.core.util;
 
 /**
+ * <p>LocalizationAware interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface LocalizationAware
-        extends Localized {
+		extends Localized {
 
-    void setValueForMessageKey(final String msg);
+	/**
+	 * <p>setValueForMessageKey.</p>
+	 *
+	 * @param msg a {@link java.lang.String} object.
+	 */
+	void setValueForMessageKey(final String msg);
 }

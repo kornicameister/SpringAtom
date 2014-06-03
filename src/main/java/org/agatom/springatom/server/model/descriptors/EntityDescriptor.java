@@ -25,21 +25,53 @@ import javax.persistence.metamodel.EntityType;
 import java.util.Set;
 
 /**
+ * <p>EntityDescriptor interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface EntityDescriptor<X>
-        extends SlimEntityDescriptor<X> {
-    EntityType<X> getEntityType();
+		extends SlimEntityDescriptor<X> {
+	/**
+	 * <p>getEntityType.</p>
+	 *
+	 * @return a {@link javax.persistence.metamodel.EntityType} object.
+	 */
+	EntityType<X> getEntityType();
 
-    Set<BasicPropertyDescriptor> getBasicProperties();
+	/**
+	 * <p>getBasicProperties.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	Set<BasicPropertyDescriptor> getBasicProperties();
 
-    Set<OneToManyPropertyDescriptor> getOneToManyProperties();
+	/**
+	 * <p>getOneToManyProperties.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	Set<OneToManyPropertyDescriptor> getOneToManyProperties();
 
-    Set<ManyToOnePropertyDescriptor> getManyToOneProperties();
+	/**
+	 * <p>getManyToOneProperties.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	Set<ManyToOnePropertyDescriptor> getManyToOneProperties();
 
-    boolean isAbstract();
+	/**
+	 * <p>isAbstract.</p>
+	 *
+	 * @return a boolean.
+	 */
+	boolean isAbstract();
 
-    boolean isVersionable();
+	/**
+	 * <p>isVersionable.</p>
+	 *
+	 * @return a boolean.
+	 */
+	boolean isVersionable();
 }

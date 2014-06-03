@@ -35,54 +35,80 @@ import java.io.Serializable;
 
 @Embeddable
 public class SUserCredentials
-        implements Serializable {
-    private static final long serialVersionUID = -4152612128922561019L;
-    @NotEmpty
-    @NaturalId
-    @Column(name = "username", length = 45, unique = true, nullable = false)
-    private String username;
-    @NotEmpty
-    @Column(name = "password", length = 66, nullable = false)
-    private String password;
+		implements Serializable {
+	private static final long serialVersionUID = -4152612128922561019L;
+	@NotEmpty
+	@NaturalId
+	@Column(name = "username", length = 45, unique = true, nullable = false)
+	private String username;
+	@NotEmpty
+	@Column(name = "password", length = 66, nullable = false)
+	private String password;
 
-    public String getUserName() {
-        return username;
-    }
+	/**
+	 * <p>getUserName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getUserName() {
+		return username;
+	}
 
-    public SUserCredentials setUsername(final String login) {
-        this.username = login;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>username</code>.</p>
+	 *
+	 * @param login a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.embeddable.SUserCredentials} object.
+	 */
+	public SUserCredentials setUsername(final String login) {
+		this.username = login;
+		return this;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	/**
+	 * <p>Getter for the field <code>password</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getPassword() {
+		return password;
+	}
 
-    public SUserCredentials setPassword(final String password) {
-        this.password = password;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>password</code>.</p>
+	 *
+	 * @param password a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.embeddable.SUserCredentials} object.
+	 */
+	public SUserCredentials setPassword(final String password) {
+		this.password = password;
+		return this;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = username != null ? username.hashCode() : 0;
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        return result;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		int result = username != null ? username.hashCode() : 0;
+		result = 31 * result + (password != null ? password.hashCode() : 0);
+		return result;
+	}
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SUserCredentials)) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof SUserCredentials)) {
+			return false;
+		}
 
-        final SUserCredentials that = (SUserCredentials) o;
+		final SUserCredentials that = (SUserCredentials) o;
 
-        return !(username != null ? !username
-                .equals(that.username) : that.username != null) && !(password != null ? !password
-                .equals(that.password) : that.password != null);
-    }
+		return !(username != null ? !username
+				.equals(that.username) : that.username != null) && !(password != null ? !password
+				.equals(that.password) : that.password != null);
+	}
 }

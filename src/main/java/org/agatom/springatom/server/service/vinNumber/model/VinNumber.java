@@ -72,7 +72,7 @@ public class VinNumber
 	 *
 	 * @return {@code VinNumber}
 	 *
-	 * @throws VinNumberServiceException in case of any error
+	 * @throws org.agatom.springatom.server.service.vinNumber.exception.VinNumberServiceException in case of any error
 	 */
 	public static VinNumber newVinNumber(final String vinNumber) throws VinNumberServiceException {
 		return new VinNumber(vinNumber);
@@ -105,10 +105,18 @@ public class VinNumber
 		return this.elementMap.get(VinNumberElement.VIS);
 	}
 
+	/**
+	 * <p>getElement.</p>
+	 *
+	 * @param element a {@link org.agatom.springatom.server.service.vinNumber.model.VinNumberElement} object.
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getElement(final VinNumberElement element) {
 		return this.elementMap.get(element);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(@Nonnull final VinNumber vinNumber) {
 		return ComparisonChain.start()
@@ -116,20 +124,28 @@ public class VinNumber
 				.result();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getId() {
 		return this.getVinNumber();
 	}
 
+	/**
+	 * <p>Getter for the field <code>vinNumber</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getVinNumber() {
 		return vinNumber;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(elementMap, vinNumber);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -141,6 +157,7 @@ public class VinNumber
 				Objects.equal(this.vinNumber, that.vinNumber);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)

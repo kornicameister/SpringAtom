@@ -34,6 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
+ * <p>SCarMasterServiceImpl class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -41,40 +43,46 @@ import java.util.List;
 @Service(value = SCarMasterServiceImpl.SERVICE_NAME)
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SCarMasterServiceImpl
-        extends SBasicServiceImpl<SCarMaster, Long>
-        implements SCarMasterService {
-    public static final String SERVICE_NAME = "CarMasterService";
-    @Autowired
-    private SCarRepository carRepository;
+		extends SBasicServiceImpl<SCarMaster, Long>
+		implements SCarMasterService {
+	/** Constant <code>SERVICE_NAME="CarMasterService"</code> */
+	public static final String SERVICE_NAME = "CarMasterService";
+	@Autowired
+	private SCarRepository carRepository;
 
-    @Override
-    public SCarMaster withFullLoad(final SCarMaster obj) {
-        final BooleanExpression predicate = QSCar.sCar.carMaster.id.eq(obj.getId());
-        final List<SCar> sCars = (List<SCar>) this.carRepository.findAll(predicate);
-        obj.setChildren(sCars);
-        return obj;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public SCarMaster withFullLoad(final SCarMaster obj) {
+		final BooleanExpression predicate = QSCar.sCar.carMaster.id.eq(obj.getId());
+		final List<SCar> sCars = (List<SCar>) this.carRepository.findAll(predicate);
+		obj.setChildren(sCars);
+		return obj;
+	}
 
-    @Override
-    public List<SCarMaster> findByBrand(final String... brand) {
-        return (List<SCarMaster>) this.repository.findAll(QSCarMaster.sCarMaster.manufacturingData.brand.in(brand));
-    }
+	/** {@inheritDoc} */
+	@Override
+	public List<SCarMaster> findByBrand(final String... brand) {
+		return (List<SCarMaster>) this.repository.findAll(QSCarMaster.sCarMaster.manufacturingData.brand.in(brand));
+	}
 
-    @Override
-    public List<SCarMaster> findByModel(final String... model) {
-        return (List<SCarMaster>) this.repository.findAll(QSCarMaster.sCarMaster.manufacturingData.model.in(model));
-    }
+	/** {@inheritDoc} */
+	@Override
+	public List<SCarMaster> findByModel(final String... model) {
+		return (List<SCarMaster>) this.repository.findAll(QSCarMaster.sCarMaster.manufacturingData.model.in(model));
+	}
 
-    @Override
-    public SCarMaster findOne(final String brand, final String model) {
-        final QSCarMasterManufacturingData manufacturingData = QSCarMaster.sCarMaster.manufacturingData;
-        final BooleanExpression brandEq = manufacturingData.brand.eq(brand);
-        final BooleanExpression modelEq = manufacturingData.model.eq(model);
-        return this.repository.findOne(brandEq.and(modelEq));
-    }
+	/** {@inheritDoc} */
+	@Override
+	public SCarMaster findOne(final String brand, final String model) {
+		final QSCarMasterManufacturingData manufacturingData = QSCarMaster.sCarMaster.manufacturingData;
+		final BooleanExpression brandEq = manufacturingData.brand.eq(brand);
+		final BooleanExpression modelEq = manufacturingData.model.eq(model);
+		return this.repository.findOne(brandEq.and(modelEq));
+	}
 
-    @Override
-    public List<SCar> findChildren(final Long... masterId) {
-        return (List<SCar>) this.carRepository.findAll(QSCar.sCar.carMaster.id.in(masterId));
-    }
+	/** {@inheritDoc} */
+	@Override
+	public List<SCar> findChildren(final Long... masterId) {
+		return (List<SCar>) this.carRepository.findAll(QSCar.sCar.carMaster.id.in(masterId));
+	}
 }

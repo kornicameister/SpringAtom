@@ -26,9 +26,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
+ * <p>SAppointmentTaskRepository interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -38,13 +39,40 @@ import org.springframework.data.rest.core.annotation.RestResource;
 @RepositoryRestResource(itemResourceRel = SAppointmentTaskRepository.REST_REPO_REL, path = SAppointmentTaskRepository.REST_REPO_PATH)
 public interface SAppointmentTaskRepository
 		extends SBasicRepository<SAppointmentTask, Long> {
+	/** Constant <code>REPO_NAME="AppointmentTaskRepo"</code> */
 	String REPO_NAME      = "AppointmentTaskRepo";
+	/** Constant <code>REST_REPO_REL="rest.appointment.task"</code> */
 	String REST_REPO_REL  = "rest.appointment.task";
+	/** Constant <code>REST_REPO_PATH="appointment_tasks"</code> */
 	String REST_REPO_PATH = "appointment_tasks";
 
+	/**
+	 * <p>findByAppointment.</p>
+	 *
+	 * @param appointment a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 * @param pageable    a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SAppointmentTask> findByAppointment(@Param(value = "appointment") SAppointment appointment, Pageable pageable);
 
+	/**
+	 * <p>findByTaskContaining.</p>
+	 *
+	 * @param taskLike a {@link java.lang.String} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SAppointmentTask> findByTaskContaining(@Param(value = "task") String taskLike, Pageable pageable);
 
+	/**
+	 * <p>findByType.</p>
+	 *
+	 * @param type     a {@link org.agatom.springatom.server.model.types.appointment.AppointmentTaskType} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SAppointmentTask> findByType(@Param(value = "type") AppointmentTaskType type, Pageable pageable);
 }

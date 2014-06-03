@@ -52,20 +52,28 @@ public enum SRole
 		this.roleId = id;
 	}
 
+	/**
+	 * <p>Getter for the field <code>roleId</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getRoleId() {
 		return this.roleId;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String[] getColumns() {
 		return new String[]{"authority"};
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getTable() {
 		return "sauthority";
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String[] getData() {
 		return new String[]{this.toString()};

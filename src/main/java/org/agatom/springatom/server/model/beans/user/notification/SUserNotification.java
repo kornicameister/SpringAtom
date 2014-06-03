@@ -26,6 +26,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 
 /**
+ * <p>SUserNotification class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -34,20 +36,33 @@ import javax.persistence.*;
 @ReportableEntity
 @DiscriminatorValue(value = "sun")
 public class SUserNotification
-        extends SAbstractNotification {
-    public static final  String ENTITY_NAME      = "UserNotificiation";
-    private static final long   serialVersionUID = 5952975044391002047L;
-    @ManyToOne(cascade = {CascadeType.REMOVE}, optional = false, fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "sur_user", referencedColumnName = "idSUser", updatable = false, nullable = false)
-    private SUser user;
+		extends SAbstractNotification {
+	/** Constant <code>ENTITY_NAME="UserNotificiation"</code> */
+	public static final  String ENTITY_NAME      = "UserNotificiation";
+	private static final long   serialVersionUID = 5952975044391002047L;
+	@ManyToOne(cascade = {CascadeType.REMOVE}, optional = false, fetch = FetchType.LAZY)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JoinColumn(name = "sur_user", referencedColumnName = "idSUser", updatable = false, nullable = false)
+	private SUser user;
 
-    public SUserNotification setUser(final SUser user) {
-        this.user = user;
-        return this;
-    }
+	/**
+	 * <p>Getter for the field <code>user</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 */
+	public SUser getUser() {
+		return user;
+	}
 
-    public SUser getUser() {
-        return user;
-    }
+	/**
+	 * <p>Setter for the field <code>user</code>.</p>
+	 *
+	 * @param user a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.notification.SUserNotification} object.
+	 */
+	public SUserNotification setUser(final SUser user) {
+		this.user = user;
+		return this;
+	}
 }

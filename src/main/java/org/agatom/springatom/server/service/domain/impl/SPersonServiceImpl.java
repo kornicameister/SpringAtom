@@ -35,6 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
+ * <p>SPersonServiceImpl class.</p>
+ *
  * @author Tomasz
  * @version 0.0.1
  * @since 0.0.1
@@ -44,56 +46,62 @@ import java.util.List;
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 @SuppressWarnings("unchecked")
 public class SPersonServiceImpl
-        extends SServiceImpl<SPerson, Long, Integer>
-        implements SPersonService {
-    public static final String                SERVICE_NAME         = "SPersonService";
-    @Autowired
-    private             SPersonContactService personContactService = null;
+		extends SServiceImpl<SPerson, Long, Integer>
+		implements SPersonService {
+	/** Constant <code>SERVICE_NAME="SPersonService"</code> */
+	public static final String                SERVICE_NAME         = "SPersonService";
+	@Autowired
+	private             SPersonContactService personContactService = null;
 
-    @Override
-    @Transactional(readOnly = false,
-            isolation = Isolation.SERIALIZABLE,
-            propagation = Propagation.SUPPORTS,
-            rollbackFor = EntityDoesNotExistsServiceException.class)
-    public SContact<SPerson> newContactData(final String value, final long clientPk,
-                                            final SContact clientContact) throws EntityDoesNotExistsServiceException {
-        final SPerson client = this.revisionRepository.findOne(clientPk);
+	/** {@inheritDoc} */
+	@Override
+	@Transactional(readOnly = false,
+			isolation = Isolation.SERIALIZABLE,
+			propagation = Propagation.SUPPORTS,
+			rollbackFor = EntityDoesNotExistsServiceException.class)
+	public SContact<SPerson> newContactData(final String value, final long clientPk,
+	                                        final SContact clientContact) throws EntityDoesNotExistsServiceException {
+		final SPerson client = this.revisionRepository.findOne(clientPk);
 
-        if (client == null) {
-            throw new EntityDoesNotExistsServiceException(SPerson.class, clientPk);
-        }
+		if (client == null) {
+			throw new EntityDoesNotExistsServiceException(SPerson.class, clientPk);
+		}
 
-        final SContact<SPerson> contact = new SPersonContact();
+		final SContact<SPerson> contact = new SPersonContact();
 
-        contact.setContact(value);
-        contact.setAssigned(client);
-        contact.setType(clientContact.getType());
+		contact.setContact(value);
+		contact.setAssigned(client);
+		contact.setType(clientContact.getType());
 
-        return this.personContactService.save((SPersonContact) contact);
-    }
+		return this.personContactService.save((SPersonContact) contact);
+	}
 
-    @Override
-    @CacheEvict(value = "clients", key = "#idClient", beforeInvocation = true)
-    public List<SPersonContact> findAllContacts(final Long idClient) {
-        return ImmutableList.copyOf(this.personContactService.findByAssigned(idClient));
-    }
+	/** {@inheritDoc} */
+	@Override
+	@CacheEvict(value = "clients", key = "#idClient", beforeInvocation = true)
+	public List<SPersonContact> findAllContacts(final Long idClient) {
+		return ImmutableList.copyOf(this.personContactService.findByAssigned(idClient));
+	}
 
-    @Override
-    @CacheEvict(value = "clients", key = "#firstName", beforeInvocation = true)
-    public List<SPerson> findByFirstName(final String firstName) {
-        return ImmutableList.copyOf(this.revisionRepository.findAll(QSPerson.sPerson.firstName.eq(firstName)));
-    }
+	/** {@inheritDoc} */
+	@Override
+	@CacheEvict(value = "clients", key = "#firstName", beforeInvocation = true)
+	public List<SPerson> findByFirstName(final String firstName) {
+		return ImmutableList.copyOf(this.revisionRepository.findAll(QSPerson.sPerson.firstName.eq(firstName)));
+	}
 
-    @Override
-    @CacheEvict(value = "clients", key = "#lastName", beforeInvocation = true)
-    public List<SPerson> findByLastName(final String lastName) {
-        return ImmutableList.copyOf(this.revisionRepository.findAll(QSPerson.sPerson.lastName.eq(lastName)));
-    }
+	/** {@inheritDoc} */
+	@Override
+	@CacheEvict(value = "clients", key = "#lastName", beforeInvocation = true)
+	public List<SPerson> findByLastName(final String lastName) {
+		return ImmutableList.copyOf(this.revisionRepository.findAll(QSPerson.sPerson.lastName.eq(lastName)));
+	}
 
-    @Override
-    @CacheEvict(value = "clients", key = "#email", beforeInvocation = true)
-    public SPerson findByEmail(final String email) {
-        return this.revisionRepository.findOne(QSPerson.sPerson.primaryMail.eq(email));
-    }
+	/** {@inheritDoc} */
+	@Override
+	@CacheEvict(value = "clients", key = "#email", beforeInvocation = true)
+	public SPerson findByEmail(final String email) {
+		return this.revisionRepository.findOne(QSPerson.sPerson.primaryMail.eq(email));
+	}
 
 }

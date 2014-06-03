@@ -51,9 +51,11 @@ import java.util.Properties;
 		includeFilters = @ComponentScan.Filter(RepositoryRestController.class),
 		useDefaultFilters = false
 )
-public class SARepositoryRestMvcConfiguration extends RepositoryRestMvcConfiguration {
+public class SARepositoryRestMvcConfiguration
+		extends RepositoryRestMvcConfiguration {
+	/** Constant <code>STRING_TO_ENUM</code> */
 	public static final  StringToEnum               STRING_TO_ENUM        = new StringToEnum();
-	private static final Logger LOGGER = Logger.getLogger(SARepositoryRestMvcConfiguration.class);
+	private static final Logger                     LOGGER                = Logger.getLogger(SARepositoryRestMvcConfiguration.class);
 	@Autowired
 	@Qualifier("restProperties")
 	private              Properties                 restProperties        = null;
@@ -101,6 +103,7 @@ public class SARepositoryRestMvcConfiguration extends RepositoryRestMvcConfigura
 		);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void configureJacksonObjectMapper(final ObjectMapper objectMapper) {
 		super.configureJacksonObjectMapper(objectMapper);

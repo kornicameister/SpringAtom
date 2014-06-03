@@ -36,12 +36,32 @@ import org.agatom.springatom.server.model.types.activity.AssignedActivity;
  * @since 0.0.1
  */
 public interface Issue
-        extends AssignedActivity {
-    String getMessage();
+		extends AssignedActivity {
+	/**
+	 * <p>getMessage.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getMessage();
 
-    void setMessage(final String issue);
+	/**
+	 * <p>setMessage.</p>
+	 *
+	 * @param issue a {@link java.lang.String} object.
+	 */
+	void setMessage(final String issue);
 
-    IssueType getType();
+	/**
+	 * <p>getType.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.issue.IssueType} object.
+	 */
+	IssueType getType();
 
-    void setType(final IssueType type);
+	/**
+	 * <p>setType.</p>
+	 *
+	 * @param type a {@link org.agatom.springatom.server.model.types.issue.IssueType} object.
+	 */
+	void setType(final IssueType type);
 }

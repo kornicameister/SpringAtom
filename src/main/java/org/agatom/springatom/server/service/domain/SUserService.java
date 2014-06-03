@@ -28,6 +28,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
+ * <p>SUserService interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -46,7 +48,6 @@ public interface SUserService
 	 * because
 	 * each instance of the {@link org.agatom.springatom.server.model.beans.user.SUser} with it
 	 * </b>
-	 * </p>
 	 *
 	 * @param userName username (length=[5,20]
 	 * @param password password (can not be empty,null, its length must be between 6,20 and must be in special format)
@@ -54,7 +55,7 @@ public interface SUserService
 	 *
 	 * @return an instance of the {@link org.agatom.springatom.server.model.beans.user.SUser}
 	 *
-	 * @throws UserRegistrationException if any
+	 * @throws org.agatom.springatom.server.service.exceptions.UserRegistrationException if any
 	 */
 	@NotNull
 	SUser registerNewUser(@UserName final String userName, @Password final String password,
@@ -72,7 +73,7 @@ public interface SUserService
 	 *
 	 * @return registered user
 	 *
-	 * @throws UserRegistrationException if any
+	 * @throws org.agatom.springatom.server.service.exceptions.UserRegistrationException if any
 	 */
 	@NotNull
 	SUser registerNewUser(@ValidUser final SUser user) throws UserRegistrationException;

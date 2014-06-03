@@ -18,12 +18,14 @@
 package org.agatom.springatom.server.model.types.appointment;
 
 /**
+ * <p>AppointmentTaskType class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public enum AppointmentTaskType {
-    SAT_REPAIR,
-    SAT_NORMAL,
-    SAT_OIL_CHANGE
+	SAT_REPAIR,
+	SAT_NORMAL,
+	SAT_OIL_CHANGE
 }

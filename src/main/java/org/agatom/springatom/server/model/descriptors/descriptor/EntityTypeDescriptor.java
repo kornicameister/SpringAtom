@@ -34,99 +34,116 @@ import java.util.Set;
  * @since 0.0.1
  */
 class EntityTypeDescriptor<X>
-        implements EntityDescriptor<X> {
-    private static final long             serialVersionUID = -2920522446371170224L;
-    private              EntityType<X>    entityType       = null;
-    private              AttributesHolder attributes       = new AttributesHolder();
+		implements EntityDescriptor<X> {
+	private static final long             serialVersionUID = -2920522446371170224L;
+	private              EntityType<X>    entityType       = null;
+	private              AttributesHolder attributes       = new AttributesHolder();
 
-    public EntityTypeDescriptor(final EntityType<X> entityType) {
-        this.entityType = entityType;
-    }
+	/**
+	 * <p>Constructor for EntityTypeDescriptor.</p>
+	 *
+	 * @param entityType a {@link javax.persistence.metamodel.EntityType} object.
+	 */
+	public EntityTypeDescriptor(final EntityType<X> entityType) {
+		this.entityType = entityType;
+	}
 
-    @Override
-    public EntityType<X> getEntityType() {
-        return entityType;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public EntityType<X> getEntityType() {
+		return entityType;
+	}
 
-    @Override
-    public Set<BasicPropertyDescriptor> getBasicProperties() {
-        if (!this.attributes.hasProperties(BasicPropertyDescriptor.class)) {
-            final Set<BasicPropertyDescriptor> pds = Sets.newHashSet();
-            final Set<? extends SingularAttribute<? super X, ?>> attributeSet = this.entityType.getSingularAttributes();
+	/** {@inheritDoc} */
+	@Override
+	public Set<BasicPropertyDescriptor> getBasicProperties() {
+		if (!this.attributes.hasProperties(BasicPropertyDescriptor.class)) {
+			final Set<BasicPropertyDescriptor> pds = Sets.newHashSet();
+			final Set<? extends SingularAttribute<? super X, ?>> attributeSet = this.entityType.getSingularAttributes();
 
-            for (final SingularAttribute<?, ?> attribute : attributeSet) {
-                if (attribute.getPersistentAttributeType().equals(Attribute.PersistentAttributeType.BASIC)) {
-                    pds.add(new BasicPropertyDescriptor(attribute));
-                }
-            }
+			for (final SingularAttribute<?, ?> attribute : attributeSet) {
+				if (attribute.getPersistentAttributeType().equals(Attribute.PersistentAttributeType.BASIC)) {
+					pds.add(new BasicPropertyDescriptor(attribute));
+				}
+			}
 
-            this.attributes.addBasicProperties(pds);
-        }
-        return this.attributes.getBasicProperties();
-    }
+			this.attributes.addBasicProperties(pds);
+		}
+		return this.attributes.getBasicProperties();
+	}
 
-    @Override
-    public Set<OneToManyPropertyDescriptor> getOneToManyProperties() {
-        if (!this.attributes.hasProperties(OneToManyPropertyDescriptor.class)) {
-            final Set<OneToManyPropertyDescriptor> pds = Sets.newHashSet();
-            final Set<PluralAttribute<? super X, ?, ?>> attributeSet = this.entityType.getPluralAttributes();
+	/** {@inheritDoc} */
+	@Override
+	public Set<OneToManyPropertyDescriptor> getOneToManyProperties() {
+		if (!this.attributes.hasProperties(OneToManyPropertyDescriptor.class)) {
+			final Set<OneToManyPropertyDescriptor> pds = Sets.newHashSet();
+			final Set<PluralAttribute<? super X, ?, ?>> attributeSet = this.entityType.getPluralAttributes();
 
-            for (final PluralAttribute<? super X, ?, ?> attribute : attributeSet) {
-                if (attribute.getPersistentAttributeType().equals(Attribute.PersistentAttributeType.ONE_TO_MANY)) {
-                    pds.add(new OneToManyPropertyDescriptor(attribute));
-                }
-            }
+			for (final PluralAttribute<? super X, ?, ?> attribute : attributeSet) {
+				if (attribute.getPersistentAttributeType().equals(Attribute.PersistentAttributeType.ONE_TO_MANY)) {
+					pds.add(new OneToManyPropertyDescriptor(attribute));
+				}
+			}
 
-            this.attributes.addAllOneToManyProperties(pds);
-        }
-        return this.attributes.getOneToManyProperties();
-    }
+			this.attributes.addAllOneToManyProperties(pds);
+		}
+		return this.attributes.getOneToManyProperties();
+	}
 
-    @Override
-    public Set<ManyToOnePropertyDescriptor> getManyToOneProperties() {
-        if (!this.attributes.hasProperties(ManyToOnePropertyDescriptor.class)) {
-            final Set<ManyToOnePropertyDescriptor> pds = Sets.newHashSet();
-            final Set<? extends SingularAttribute<? super X, ?>> attributeSet = this.entityType.getSingularAttributes();
+	/** {@inheritDoc} */
+	@Override
+	public Set<ManyToOnePropertyDescriptor> getManyToOneProperties() {
+		if (!this.attributes.hasProperties(ManyToOnePropertyDescriptor.class)) {
+			final Set<ManyToOnePropertyDescriptor> pds = Sets.newHashSet();
+			final Set<? extends SingularAttribute<? super X, ?>> attributeSet = this.entityType.getSingularAttributes();
 
-            for (final SingularAttribute<?, ?> attribute : attributeSet) {
-                if (attribute.getPersistentAttributeType().equals(Attribute.PersistentAttributeType.MANY_TO_ONE)) {
-                    pds.add(new ManyToOnePropertyDescriptor(attribute));
-                }
-            }
+			for (final SingularAttribute<?, ?> attribute : attributeSet) {
+				if (attribute.getPersistentAttributeType().equals(Attribute.PersistentAttributeType.MANY_TO_ONE)) {
+					pds.add(new ManyToOnePropertyDescriptor(attribute));
+				}
+			}
 
-            this.attributes.addAllManyToOneProperties(pds);
-        }
-        return this.attributes.getManyToOneProperties();
-    }
+			this.attributes.addAllManyToOneProperties(pds);
+		}
+		return this.attributes.getManyToOneProperties();
+	}
 
-    @Override
-    public boolean isAbstract() {
-        return this.entityType.getPersistenceType().equals(Type.PersistenceType.MAPPED_SUPERCLASS);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public boolean isAbstract() {
+		return this.entityType.getPersistenceType().equals(Type.PersistenceType.MAPPED_SUPERCLASS);
+	}
 
-    @Override
-    public boolean isVersionable() {
-        return ClassUtils.isAssignable(AbstractAuditable.class, this.entityType.getJavaType());
-    }
+	/** {@inheritDoc} */
+	@Override
+	public boolean isVersionable() {
+		return ClassUtils.isAssignable(AbstractAuditable.class, this.entityType.getJavaType());
+	}
 
-    public void initialize() {
-        this.getBasicProperties();
-        this.getOneToManyProperties();
-        this.getManyToOneProperties();
-    }
+	/**
+	 * <p>initialize.</p>
+	 */
+	public void initialize() {
+		this.getBasicProperties();
+		this.getOneToManyProperties();
+		this.getManyToOneProperties();
+	}
 
-    @Override
-    public String getName() {
-        return this.entityType.getName();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getName() {
+		return this.entityType.getName();
+	}
 
-    @Override
-    public Class<X> getJavaClass() {
-        return this.entityType.getJavaType();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Class<X> getJavaClass() {
+		return this.entityType.getJavaType();
+	}
 
-    @Override
-    public String getJavaClassName() {
-        return this.entityType.getJavaType().getName();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getJavaClassName() {
+		return this.entityType.getJavaType().getName();
+	}
 }

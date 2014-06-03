@@ -45,7 +45,6 @@ import static java.lang.annotation.ElementType.*;
  * </ol>
  * </li>
  * </ol>
- * </p>
  *
  * @author kornicameister
  * @version 0.0.1

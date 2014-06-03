@@ -26,40 +26,50 @@ import org.agatom.springatom.server.model.descriptors.EntityDescriptorCollection
  * @since 0.0.1
  */
 class EntityTypeDescriptorCollectionColumn<X>
-        extends EntityTypeDescriptorColumn<X>
-        implements EntityDescriptorCollectionColumn<X> {
-    private static final long serialVersionUID = 5084669095081694602L;
-    private Class<?> elementClass;
+		extends EntityTypeDescriptorColumn<X>
+		implements EntityDescriptorCollectionColumn<X> {
+	private static final long serialVersionUID = 5084669095081694602L;
+	private Class<?> elementClass;
 
-    public EntityTypeDescriptorCollectionColumn<X> setElementClass(final Class<?> elementClass) {
-        this.elementClass = elementClass;
-        return this;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Class<?> getElementClass() {
+		return elementClass;
+	}
 
-    @Override
-    public Class<?> getElementClass() {
-        return elementClass;
-    }
+	/**
+	 * <p>Setter for the field <code>elementClass</code>.</p>
+	 *
+	 * @param elementClass a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.descriptors.descriptor.EntityTypeDescriptorCollectionColumn} object.
+	 */
+	public EntityTypeDescriptorCollectionColumn<X> setElementClass(final Class<?> elementClass) {
+		this.elementClass = elementClass;
+		return this;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(elementClass, name, columnClass, entityDescriptor);
+	}
 
-        EntityTypeDescriptorCollectionColumn that = (EntityTypeDescriptorCollectionColumn) o;
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        return Objects.equal(this.elementClass, that.elementClass) &&
-                Objects.equal(this.name, that.name) &&
-                Objects.equal(this.columnClass, that.columnClass) &&
-                Objects.equal(this.entityDescriptor, that.entityDescriptor);
-    }
+		EntityTypeDescriptorCollectionColumn that = (EntityTypeDescriptorCollectionColumn) o;
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(elementClass, name, columnClass, entityDescriptor);
-    }
+		return Objects.equal(this.elementClass, that.elementClass) &&
+				Objects.equal(this.name, that.name) &&
+				Objects.equal(this.columnClass, that.columnClass) &&
+				Objects.equal(this.entityDescriptor, that.entityDescriptor);
+	}
 }

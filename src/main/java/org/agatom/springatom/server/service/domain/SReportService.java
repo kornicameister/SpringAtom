@@ -25,17 +25,36 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
+ * <p>SReportService interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
 public interface SReportService
-        extends SService<SReport, Long, Integer> {
+		extends SService<SReport, Long, Integer> {
 
-    @NotNull
-    SReport getReport(@Min(value = 1) final Long reportId) throws ReportBuilderServiceException;
+	/**
+	 * <p>getReport.</p>
+	 *
+	 * @param reportId a {@link java.lang.Long} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 *
+	 * @throws org.agatom.springatom.web.rbuilder.data.exception.ReportBuilderServiceException if any.
+	 */
+	@NotNull
+	SReport getReport(@Min(value = 1) final Long reportId) throws ReportBuilderServiceException;
 
-    @NotNull
-    SReport findByTitle(@NotNull @Length(min = 1) final String title) throws ReportBuilderServiceException;
+	/**
+	 * <p>findByTitle.</p>
+	 *
+	 * @param title a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 *
+	 * @throws org.agatom.springatom.web.rbuilder.data.exception.ReportBuilderServiceException if any.
+	 */
+	@NotNull
+	SReport findByTitle(@NotNull @Length(min = 1) final String title) throws ReportBuilderServiceException;
 }

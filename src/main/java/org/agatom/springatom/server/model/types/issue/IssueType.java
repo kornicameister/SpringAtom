@@ -18,16 +18,18 @@
 package org.agatom.springatom.server.model.types.issue;
 
 /**
+ * <p>IssueType class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public enum IssueType {
-    SCPR_DEBTS,
-    SCPR_FAKE_ID,
-    SCPR_MISSED_APP,
-    SCPR_NO_PAYMENT,
-    SNT_APP_CANCELED,
-    SNT_APP_DONE,
-    SNT_APP_REJECTED
+	SCPR_DEBTS,
+	SCPR_FAKE_ID,
+	SCPR_MISSED_APP,
+	SCPR_NO_PAYMENT,
+	SNT_APP_CANCELED,
+	SNT_APP_DONE,
+	SNT_APP_REJECTED
 }

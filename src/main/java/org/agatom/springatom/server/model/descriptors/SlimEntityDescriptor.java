@@ -20,15 +20,32 @@ package org.agatom.springatom.server.model.descriptors;
 import java.io.Serializable;
 
 /**
+ * <p>SlimEntityDescriptor interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface SlimEntityDescriptor<X>
-        extends Serializable {
-    String getName();
+		extends Serializable {
+	/**
+	 * <p>getName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getName();
 
-    Class<X> getJavaClass();
+	/**
+	 * <p>getJavaClass.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
+	Class<X> getJavaClass();
 
-    String getJavaClassName();
+	/**
+	 * <p>getJavaClassName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getJavaClassName();
 }

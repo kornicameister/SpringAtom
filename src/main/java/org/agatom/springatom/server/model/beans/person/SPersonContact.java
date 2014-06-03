@@ -26,6 +26,8 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 
 /**
+ * <p>SPersonContact class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -47,11 +49,13 @@ public class SPersonContact
 	@JoinColumn(name = "assigned", updatable = true)
 	protected            SPerson assigned         = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public SPerson getAssigned() {
 		return this.assigned;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setAssigned(final SPerson assigned) {
 		this.assigned = assigned;

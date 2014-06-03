@@ -46,6 +46,11 @@ public class AdditionalRestConfiguration {
 		Assert.notNull(this.infoPageLinkHelper, "infoPageLinkHelper not found [null]");
 	}
 
+	/**
+	 * <p>getPersistableProcessor.</p>
+	 *
+	 * @return a {@link org.springframework.hateoas.ResourceProcessor} object.
+	 */
 	@Bean
 	public ResourceProcessor<Resource<? extends Persistable<?>>> getPersistableProcessor() {
 		final InfoPageResourceProcessor processor = new InfoPageResourceProcessor();

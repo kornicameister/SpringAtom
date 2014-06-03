@@ -17,8 +17,6 @@
 
 package org.agatom.springatom.server.service.domain;
 
-import com.mysema.query.types.Expression;
-import com.mysema.query.types.OrderSpecifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
@@ -35,9 +33,9 @@ import java.util.List;
  * It takes advantage from <b>fluent-interface approach</b> allowing to add complex criteria to the
  * request such as:
  * <ol>
- * <li>{@link Pageable} - paging the request</li>
- * <li>{@link OrderSpecifier} - ordering</li>
- * <li>{@link Expression} - grouping</li>
+ * <li>{@link org.springframework.data.domain.Pageable} - paging the request</li>
+ * <li>{@link com.mysema.query.types.OrderSpecifier} - ordering</li>
+ * <li>{@link com.mysema.query.types.Expression} - grouping</li>
  * </ol>
  *
  * @author kornicameister
@@ -47,66 +45,93 @@ import java.util.List;
 
 @Validated
 public interface SBasicService<T extends Persistable<ID>, ID extends Serializable> {
-    /**
-     * Returns single entity by provided ID of the {@code SBasicService}'s <b>domain class</b>
-     *
-     * @param id
-     *         the id
-     *
-     * @return the entity with the given {@code ID}
-     */
-    @NotNull
-    T findOne(ID id);
+	/**
+	 * Returns single entity by provided ID of the {@code SBasicService}'s <b>domain class</b>
+	 *
+	 * @param id the id
+	 *
+	 * @return the entity with the given {@code ID}
+	 */
+	@NotNull
+	T findOne(ID id);
 
-    /**
-     * Returns all entities of the type for which {@code SBasicService} was defined (<b>domain class</b>)
-     *
-     * @return all entities of the {@code SBasicService}'s domain class
-     */
-    @NotNull
-    List<T> findAll();
+	/**
+	 * Returns all entities of the type for which {@code SBasicService} was defined (<b>domain class</b>)
+	 *
+	 * @return all entities of the {@code SBasicService}'s domain class
+	 */
+	@NotNull
+	List<T> findAll();
 
-    @NotNull
-    Page<T> findAll(final Pageable pageable);
+	/**
+	 * <p>findAll.</p>
+	 *
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@NotNull
+	Page<T> findAll(final Pageable pageable);
 
-    /**
-     * Saves the {@code SBasicService}'s <b>domain class</b> object and returns its persisted version,
-     * This method can be used to either save or update the entity thanks to {@link
-     * org.springframework.data.jpa.repository.support.SimpleJpaRepository#save(Object)} method
-     *
-     * @param persistable
-     *         to be saved
-     *
-     * @return persisted entity
-     */
-    @NotNull
-    T save(final @NotNull T persistable);
+	/**
+	 * Saves the {@code SBasicService}'s <b>domain class</b> object and returns its persisted version,
+	 * This method can be used to either save or update the entity thanks to {@link
+	 * org.springframework.data.jpa.repository.support.SimpleJpaRepository#save(Object)} method
+	 *
+	 * @param persistable to be saved
+	 *
+	 * @return persisted entity
+	 */
+	@NotNull
+	T save(final @NotNull T persistable);
 
-    /**
-     * Returns how many objects of {@code SBasicService}'s <b>domain class</b> exists
-     *
-     * @return row count
-     */
-    long count();
+	/**
+	 * Returns how many objects of {@code SBasicService}'s <b>domain class</b> exists
+	 *
+	 * @return row count
+	 */
+	long count();
 
-    /**
-     * Deletes only one entity of {@code SBasicService}'s <b>domain class</b> for given {@code ID}
-     *
-     * @param pk
-     *         the entity's {@code ID}
-     */
-    T deleteOne(final @NotNull ID pk);
+	/**
+	 * Deletes only one entity of {@code SBasicService}'s <b>domain class</b> for given {@code ID}
+	 *
+	 * @param pk the entity's {@code ID}
+	 *
+	 * @return a T object.
+	 */
+	T deleteOne(final @NotNull ID pk);
 
-    /**
-     * Deletes all entities of {@code SBasicService}'s <b>domain class</b>
-     */
-    void deleteAll();
+	/**
+	 * Deletes all entities of {@code SBasicService}'s <b>domain class</b>
+	 */
+	void deleteAll();
 
-    @NotNull
-    T withFullLoad(@NotNull T obj);
+	/**
+	 * <p>withFullLoad.</p>
+	 *
+	 * @param obj a T object.
+	 *
+	 * @return a T object.
+	 */
+	@NotNull
+	T withFullLoad(@NotNull T obj);
 
-    @NotNull
-    List<T> withFullLoad(@NotNull Iterable<T> objects);
+	/**
+	 * <p>withFullLoad.</p>
+	 *
+	 * @param objects a {@link java.lang.Iterable} object.
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
+	@NotNull
+	List<T> withFullLoad(@NotNull Iterable<T> objects);
 
-    T detach(@NotNull T report);
+	/**
+	 * <p>detach.</p>
+	 *
+	 * @param report a T object.
+	 *
+	 * @return a T object.
+	 */
+	T detach(@NotNull T report);
 }

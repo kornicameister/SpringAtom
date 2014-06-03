@@ -43,80 +43,88 @@ import java.util.concurrent.TimeUnit;
  */
 @Qualifier(value = "dynamicDescriptorReader")
 public class DynamicEntityDescriptorReader
-        implements EntityDescriptorReader {
-    private static final Logger                               LOGGER    = Logger.getLogger(DynamicEntityDescriptorReader.class);
-    private              Cache<Class<?>, EntityDescriptor<?>> cache     = null;
-    private              Metamodel                            metamodel = null;
+		implements EntityDescriptorReader {
+	private static final Logger                               LOGGER    = Logger.getLogger(DynamicEntityDescriptorReader.class);
+	private              Cache<Class<?>, EntityDescriptor<?>> cache     = null;
+	private              Metamodel                            metamodel = null;
 
-    @PostConstruct
-    private void initialize() {
-        this.cache = CacheBuilder.<Class<?>, EntityDescriptor<?>>newBuilder()
-                                 .maximumSize(200)
-                                 .expireAfterAccess(60, TimeUnit.MINUTES)
-                                 .expireAfterWrite(60, TimeUnit.MINUTES)
-                                 .build();
-        Assert.notNull(this.cache);
-    }
+	@PostConstruct
+	private void initialize() {
+		this.cache = CacheBuilder.<Class<?>, EntityDescriptor<?>>newBuilder()
+				.maximumSize(200)
+				.expireAfterAccess(60, TimeUnit.MINUTES)
+				.expireAfterWrite(60, TimeUnit.MINUTES)
+				.build();
+		Assert.notNull(this.cache);
+	}
 
-    public void setMetamodel(final Metamodel metamodel) {
-        this.metamodel = metamodel;
-    }
+	/**
+	 * <p>Setter for the field <code>metamodel</code>.</p>
+	 *
+	 * @param metamodel a {@link javax.persistence.metamodel.Metamodel} object.
+	 */
+	public void setMetamodel(final Metamodel metamodel) {
+		this.metamodel = metamodel;
+	}
 
-    private EntityType<?> getEntityType(final Class<?> xClass) {
-        try {
-            return this.metamodel.entity(xClass);
-        } catch (Exception e) {
-            LOGGER.warn(String.format("Could not retrieve %s for %s, error is=\n%s", ClassUtils.getShortName(EntityType.class), ClassUtils
-                    .getShortName(xClass), e.getMessage()));
-        }
-        return null;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Set<EntityDescriptor<?>> getDefinitions() {
+		final Set<EntityDescriptor<?>> descriptors = Sets.newHashSet();
+		final Set<EntityType<?>> entities = this.metamodel.getEntities();
+		for (final EntityType<?> entityType : entities) {
+			final Class<?> javaType = entityType.getJavaType();
+			if (javaType != null) {
+				descriptors.add(this.getDefinition(javaType, false));
+			} else {
+				LOGGER.warn(String.format("%s return null javaType...skipping", entityType.getName()));
+			}
+		}
+		return descriptors;
+	}
 
-    @Override
-    public Set<EntityDescriptor<?>> getDefinitions() {
-        final Set<EntityDescriptor<?>> descriptors = Sets.newHashSet();
-        final Set<EntityType<?>> entities = this.metamodel.getEntities();
-        for (final EntityType<?> entityType : entities) {
-            final Class<?> javaType = entityType.getJavaType();
-            if (javaType != null) {
-                descriptors.add(this.getDefinition(javaType, false));
-            } else {
-                LOGGER.warn(String.format("%s return null javaType...skipping", entityType.getName()));
-            }
-        }
-        return descriptors;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public <X> EntityDescriptor<X> getDefinition(final Class<X> xClass) {
+		return this.getDefinition(xClass, true);
+	}
 
-    @Override
-    public <X> EntityDescriptor<X> getDefinition(final Class<X> xClass) {
-        return this.getDefinition(xClass, true);
-    }
+	/** {@inheritDoc} */
+	@Override
+	@SuppressWarnings("unchecked")
+	public <X> EntityDescriptor<X> getDefinition(final Class<X> xClass, final boolean initialize) {
+		LOGGER.trace(String.format("/getDefinition => xClass -> %s\tinitialize -> %s", ClassUtils.getShortName(xClass), initialize));
+		if (this.containsKey(xClass)) {
+			return (EntityDescriptor<X>) this.cache.getIfPresent(xClass);
+		}
+		final EntityType<?> entityType = this.getEntityType(xClass);
+		if (entityType != null) {
+			final EntityTypeDescriptor<?> descriptor = new EntityTypeDescriptor<>(entityType);
+			if (initialize) {
+				descriptor.initialize();
+			}
+			this.cache.put(xClass, descriptor);
+			return (EntityDescriptor<X>) descriptor;
+		}
+		LOGGER.trace(String.format("Could not retrieve %s for %s", ClassUtils.getShortName(EntityDescriptor.class), ClassUtils.getShortName(xClass)));
+		return null;
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <X> EntityDescriptor<X> getDefinition(final Class<X> xClass, final boolean initialize) {
-        LOGGER.trace(String.format("/getDefinition => xClass -> %s\tinitialize -> %s", ClassUtils.getShortName(xClass), initialize));
-        if (this.containsKey(xClass)) {
-            return (EntityDescriptor<X>) this.cache.getIfPresent(xClass);
-        }
-        final EntityType<?> entityType = this.getEntityType(xClass);
-        if (entityType != null) {
-            final EntityTypeDescriptor<?> descriptor = new EntityTypeDescriptor<>(entityType);
-            if (initialize) {
-                descriptor.initialize();
-            }
-            this.cache.put(xClass, descriptor);
-            return (EntityDescriptor<X>) descriptor;
-        }
-        LOGGER.trace(String.format("Could not retrieve %s for %s", ClassUtils.getShortName(EntityDescriptor.class), ClassUtils.getShortName(xClass)));
-        return null;
-    }
+	private <X> boolean containsKey(final Class<X> xClass) {
+		final boolean isPresent = this.cache.getIfPresent(xClass) != null;
+		if (!isPresent) {
+			this.cache.invalidate(xClass);
+		}
+		return isPresent;
+	}
 
-    private <X> boolean containsKey(final Class<X> xClass) {
-        final boolean isPresent = this.cache.getIfPresent(xClass) != null;
-        if (!isPresent) {
-            this.cache.invalidate(xClass);
-        }
-        return isPresent;
-    }
+	private EntityType<?> getEntityType(final Class<?> xClass) {
+		try {
+			return this.metamodel.entity(xClass);
+		} catch (Exception e) {
+			LOGGER.warn(String.format("Could not retrieve %s for %s, error is=\n%s", ClassUtils.getShortName(EntityType.class), ClassUtils
+					.getShortName(xClass), e.getMessage()));
+		}
+		return null;
+	}
 }

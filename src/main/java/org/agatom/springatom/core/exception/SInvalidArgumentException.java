@@ -28,6 +28,11 @@ public class SInvalidArgumentException
 		extends SException {
 	private static final long serialVersionUID = -440145598477615431L;
 
+	/**
+	 * <p>Constructor for SInvalidArgumentException.</p>
+	 *
+	 * @param attrName a {@link java.lang.String} object.
+	 */
 	public SInvalidArgumentException(final String attrName) {
 		super(SInvalidArgumentException.getMessage(attrName));
 	}
@@ -36,6 +41,12 @@ public class SInvalidArgumentException
 		return String.format("Invalid argument %s", attrName);
 	}
 
+	/**
+	 * <p>Constructor for SInvalidArgumentException.</p>
+	 *
+	 * @param attrName a {@link java.lang.String} object.
+	 * @param cause    a {@link java.lang.Throwable} object.
+	 */
 	public SInvalidArgumentException(final String attrName, final Throwable cause) {
 		super(SInvalidArgumentException.getMessage(attrName), cause);
 	}

@@ -23,6 +23,8 @@ import javax.persistence.*;
 import java.util.Collection;
 
 /**
+ * <p>SAclClass class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -31,29 +33,51 @@ import java.util.Collection;
 @Entity(name = SAclClass.ENTITY_NAME)
 @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false, insertable = true, updatable = true, length = 19, precision = 0))
 public class SAclClass
-        extends PersistentObject<Long> {
-    public static final  String TABLE_NAME       = "acl_class";
-    public static final  String ENTITY_NAME      = "SAclClass";
-    private static final long   serialVersionUID = 2345236487666417725L;
-    @Basic
-    @Column(name = "class", nullable = false, insertable = true, updatable = true, length = 255, precision = 0)
-    private String                         clazz;
-    @OneToMany(mappedBy = "aclClass")
-    private Collection<SAclObjectIdentity> aclObjectIdentities;
+		extends PersistentObject<Long> {
+	/** Constant <code>TABLE_NAME="acl_class"</code> */
+	public static final  String TABLE_NAME       = "acl_class";
+	/** Constant <code>ENTITY_NAME="SAclClass"</code> */
+	public static final  String ENTITY_NAME      = "SAclClass";
+	private static final long   serialVersionUID = 2345236487666417725L;
+	@Basic
+	@Column(name = "class", nullable = false, insertable = true, updatable = true, length = 255, precision = 0)
+	private String                         clazz;
+	@OneToMany(mappedBy = "aclClass")
+	private Collection<SAclObjectIdentity> aclObjectIdentities;
 
-    public String getClazz() {
-        return clazz;
-    }
+	/**
+	 * <p>Getter for the field <code>clazz</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getClazz() {
+		return clazz;
+	}
 
-    public void setClazz(final String clazz) {
-        this.clazz = clazz;
-    }
+	/**
+	 * <p>Setter for the field <code>clazz</code>.</p>
+	 *
+	 * @param clazz a {@link java.lang.String} object.
+	 */
+	public void setClazz(final String clazz) {
+		this.clazz = clazz;
+	}
 
-    public Collection<SAclObjectIdentity> getAclObjectIdentities() {
-        return aclObjectIdentities;
-    }
+	/**
+	 * <p>Getter for the field <code>aclObjectIdentities</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
+	public Collection<SAclObjectIdentity> getAclObjectIdentities() {
+		return aclObjectIdentities;
+	}
 
-    public void setAclObjectIdentities(final Collection<SAclObjectIdentity> aclObjectIdentitiesById) {
-        this.aclObjectIdentities = aclObjectIdentitiesById;
-    }
+	/**
+	 * <p>Setter for the field <code>aclObjectIdentities</code>.</p>
+	 *
+	 * @param aclObjectIdentitiesById a {@link java.util.Collection} object.
+	 */
+	public void setAclObjectIdentities(final Collection<SAclObjectIdentity> aclObjectIdentitiesById) {
+		this.aclObjectIdentities = aclObjectIdentitiesById;
+	}
 }

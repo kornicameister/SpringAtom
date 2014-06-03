@@ -20,10 +20,12 @@ package org.agatom.springatom.server.model.types;
 import java.io.Serializable;
 
 /**
+ * <p>PersistentEmbeddable interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface PersistentEmbeddable
-        extends Serializable {
+		extends Serializable {
 }

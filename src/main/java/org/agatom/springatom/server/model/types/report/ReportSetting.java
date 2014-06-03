@@ -20,14 +20,31 @@ package org.agatom.springatom.server.model.types.report;
 import java.io.Serializable;
 
 /**
+ * <p>ReportSetting interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface ReportSetting<HOLDS extends Serializable> {
-    String getName();
+	/**
+	 * <p>getName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getName();
 
-    HOLDS getValue();
+	/**
+	 * <p>getValue.</p>
+	 *
+	 * @return a HOLDS object.
+	 */
+	HOLDS getValue();
 
-    Report getReport();
+	/**
+	 * <p>getReport.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.report.Report} object.
+	 */
+	Report getReport();
 }

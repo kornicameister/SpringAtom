@@ -34,18 +34,64 @@ import java.util.Collection;
 public interface SSecuredUser
 		extends UserDetails {
 
+	/**
+	 * <p>setPassword.</p>
+	 *
+	 * @param password a {@link java.lang.String} object.
+	 */
 	void setPassword(final String password);
 
+	/**
+	 * <p>setUsername.</p>
+	 *
+	 * @param userName a {@link java.lang.String} object.
+	 */
 	void setUsername(final String userName);
 
+	/**
+	 * <p>setEnabled.</p>
+	 *
+	 * @param disabled a boolean.
+	 */
 	void setEnabled(final boolean disabled);
 
+	/**
+	 * <p>addAuthority.</p>
+	 *
+	 * @param authority a T object.
+	 * @param <T>       a T object.
+	 *
+	 * @return a boolean.
+	 */
 	<T extends GrantedAuthority> boolean addAuthority(final T authority);
 
+	/**
+	 * <p>removeAuthority.</p>
+	 *
+	 * @param authority a T object.
+	 * @param <T>       a T object.
+	 *
+	 * @return a boolean.
+	 */
 	<T extends GrantedAuthority> boolean removeAuthority(final T authority);
 
+	/**
+	 * <p>hasAuthority.</p>
+	 *
+	 * @param authority a T object.
+	 * @param <T>       a T object.
+	 *
+	 * @return a boolean.
+	 */
 	<T extends GrantedAuthority> boolean hasAuthority(final T authority);
 
+	/**
+	 * <p>hasAuthorities.</p>
+	 *
+	 * @param authorities a {@link java.util.Collection} object.
+	 *
+	 * @return a boolean.
+	 */
 	boolean hasAuthorities(final Collection<? extends GrantedAuthority> authorities);
 
 }

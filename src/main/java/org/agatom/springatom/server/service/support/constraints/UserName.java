@@ -37,7 +37,6 @@ import static java.lang.annotation.ElementType.*;
  * <li>user name can not be null</li>
  * <li>user name length must be between <b>5</b> and <b>20</b> inclusively</li>
  * </ol>
- * </p>
  *
  * @author kornicameister
  * @version 0.0.1
@@ -53,9 +52,9 @@ import static java.lang.annotation.ElementType.*;
 @Constraint(validatedBy = {})
 @ReportAsSingleViolation
 public @interface UserName {
-    String message() default "{org.agatom.springatom.server.service.support.constraints.UserName}";
+	String message() default "{org.agatom.springatom.server.service.support.constraints.UserName}";
 
-    Class<?>[] groups() default {};
+	Class<?>[] groups() default {};
 
-    @Deprecated Class<? extends Payload>[] payload() default {};
+	@Deprecated Class<? extends Payload>[] payload() default {};
 }

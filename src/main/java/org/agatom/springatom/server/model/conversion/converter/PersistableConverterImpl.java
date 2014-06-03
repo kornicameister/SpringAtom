@@ -28,29 +28,32 @@ import org.springframework.util.ClassUtils;
 import static org.springframework.core.GenericTypeResolver.resolveTypeArgument;
 
 /**
+ * <p>Abstract PersistableConverterImpl class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
 abstract public class PersistableConverterImpl<S extends Persistable>
-        implements PersistableConverter<S> {
+		implements PersistableConverter<S> {
 
-    protected static final Class<String> STRING_CLASS = String.class;
-    private final          Class<?>      SOURCE_TYPE  = resolveTypeArgument(getClass(), PersistableConverterImpl.class);
+	/** Constant <code>STRING_CLASS</code> */
+	protected static final Class<String> STRING_CLASS = String.class;
+	private final          Class<?>      SOURCE_TYPE  = resolveTypeArgument(getClass(), PersistableConverterImpl.class);
 
-    @Autowired(required = false)
-    protected FormattingConversionService conversionService;
-    @Autowired(required = false)
-    protected SMessageSource              messageSource;
-    @Autowired(required = false)
-    protected PersistableConverterPicker  converterPicker;
+	@Autowired(required = false)
+	protected FormattingConversionService conversionService;
+	@Autowired(required = false)
+	protected SMessageSource              messageSource;
+	@Autowired(required = false)
+	protected PersistableConverterPicker  converterPicker;
 
-    @Override
-    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        final Class<?> type = sourceType.getObjectType();
-        final Class<?> tType = targetType.getObjectType();
-        return ClassUtils.isAssignable(SOURCE_TYPE, type) && ClassUtils.isAssignable(String.class, tType);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+		final Class<?> type = sourceType.getObjectType();
+		final Class<?> tType = targetType.getObjectType();
+		return ClassUtils.isAssignable(SOURCE_TYPE, type) && ClassUtils.isAssignable(String.class, tType);
+	}
 
 }

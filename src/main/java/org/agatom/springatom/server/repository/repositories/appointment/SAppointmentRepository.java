@@ -49,9 +49,13 @@ import org.springframework.data.rest.core.annotation.RestResource;
 )
 public interface SAppointmentRepository
 		extends SBasicRepository<SAppointment, Long> {
+	/** Constant <code>REPO_NAME="AppointmentsRepository"</code> */
 	String REPO_NAME      = "AppointmentsRepository";
+	/** Constant <code>REST_REPO_REL="rest.appointment"</code> */
 	String REST_REPO_REL  = "rest.appointment";
+	/** Constant <code>REST_REPO_PATH="appointment"</code> */
 	String REST_REPO_PATH = "appointment";
+	/** Constant <code>COLLECTION_REL="appointments"</code> */
 	String COLLECTION_REL = "appointments";
 
 	/**
@@ -71,6 +75,15 @@ public interface SAppointmentRepository
 	)
 	Page<SAppointment> findByBeginAfterAndEndBefore(@Param(value = "begin") DateTime begin, @Param(value = "end") DateTime end, Pageable pageable);
 
+	/**
+	 * <p>findByBeginAfterAndEndBefore.</p>
+	 *
+	 * @param begin    a long.
+	 * @param end      a long.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	@RestResource(
 			rel = "beginAfterAndEndBeforeTimestamp",
 			path = "beginAfterAndEndBeforeTimestamp",
@@ -79,17 +92,73 @@ public interface SAppointmentRepository
 	@Query(value = "select t from SAppointment as t where t.beginTs >= :begin and t.endTs <= :end")
 	Page<SAppointment> findByBeginAfterAndEndBefore(@Param(value = "begin") long begin, @Param(value = "end") long end, Pageable pageable);
 
+	/**
+	 * <p>findByBeginAfter.</p>
+	 *
+	 * @param begin    a {@link org.joda.time.DateTime} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SAppointment> findByBeginAfter(@Param(value = "begin") DateTime begin, Pageable pageable);
 
+	/**
+	 * <p>findByBeginBefore.</p>
+	 *
+	 * @param begin    a {@link org.joda.time.DateTime} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SAppointment> findByBeginBefore(@Param(value = "begin") DateTime begin, Pageable pageable);
 
+	/**
+	 * <p>findByEndAfter.</p>
+	 *
+	 * @param begin    a {@link org.joda.time.DateTime} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SAppointment> findByEndAfter(@Param(value = "end") DateTime begin, Pageable pageable);
 
+	/**
+	 * <p>findByEndBefore.</p>
+	 *
+	 * @param begin    a {@link org.joda.time.DateTime} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SAppointment> findByEndBefore(@Param(value = "end") DateTime begin, Pageable pageable);
 
+	/**
+	 * <p>findByCarLicencePlate.</p>
+	 *
+	 * @param licencePlate a {@link java.lang.String} object.
+	 * @param pageable     a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SAppointment> findByCarLicencePlate(@Param(value = "licencePlate") String licencePlate, Pageable pageable);
 
+	/**
+	 * <p>findByAssignee.</p>
+	 *
+	 * @param assignee a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SAppointment> findByAssignee(@Param(value = "assignee") SUser assignee, Pageable pageable);
 
+	/**
+	 * <p>findByReporter.</p>
+	 *
+	 * @param assignee a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SAppointment> findByReporter(@Param(value = "reporter") SUser assignee, Pageable pageable);
 }

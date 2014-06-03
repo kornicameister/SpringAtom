@@ -22,15 +22,25 @@ import org.springframework.data.domain.Persistable;
 import java.io.Serializable;
 
 /**
+ * <p>SecurityViolationServiceException class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class SecurityViolationServiceException
-        extends ServiceException {
-    private static final long serialVersionUID = 622035483718925698L;
+		extends ServiceException {
+	private static final long serialVersionUID = 622035483718925698L;
 
-    public <T extends Persistable<ID>, ID extends Serializable> SecurityViolationServiceException(final Class<T> target, final String message) {
-        super(target, message);
-    }
+	/**
+	 * <p>Constructor for SecurityViolationServiceException.</p>
+	 *
+	 * @param target  a {@link java.lang.Class} object.
+	 * @param message a {@link java.lang.String} object.
+	 * @param <T>     a T object.
+	 * @param <ID>    a ID object.
+	 */
+	public <T extends Persistable<ID>, ID extends Serializable> SecurityViolationServiceException(final Class<T> target, final String message) {
+		super(target, message);
+	}
 }

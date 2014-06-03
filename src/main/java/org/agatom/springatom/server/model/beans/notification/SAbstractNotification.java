@@ -28,6 +28,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Past;
 
 /**
+ * <p>Abstract SAbstractNotification class.</p>
+ *
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
@@ -43,7 +45,9 @@ import javax.validation.constraints.Past;
 abstract public class SAbstractNotification
 		extends PersistentObject<Long>
 		implements SNotification<Long> {
+	/** Constant <code>TABLE_NAME="notifications"</code> */
 	public static final  String TABLE_NAME       = "notifications";
+	/** Constant <code>ENTITY_NAME="SAbstractNotification"</code> */
 	public static final  String ENTITY_NAME      = "SAbstractNotification";
 	private static final String DATE_TIME_TYPE   = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
 	private static final long   serialVersionUID = -5518002639762454805L;
@@ -59,39 +63,46 @@ abstract public class SAbstractNotification
 	@Column(name = "sent", nullable = false)
 	private DateTime sent;
 
+	/** {@inheritDoc} */
 	@Override
 	public String getMessage() {
 		return message;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SAbstractNotification setMessage(final String notification) {
 		this.message = notification;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public DateTime getSent() {
 		return null == this.sent ? null : this.sent;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SAbstractNotification setSent(final DateTime sent) {
 		this.sent = sent;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Boolean isRead() {
 		return this.read;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SAbstractNotification readNotification() {
 		this.read = true;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return String.valueOf(this.getId());

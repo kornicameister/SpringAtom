@@ -31,85 +31,108 @@ import javax.validation.constraints.NotNull;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Embeddable class SReportResource
-        implements ReportResource {
-    private static final long serialVersionUID = -4655265596984988537L;
+@Embeddable
+class SReportResource
+		implements ReportResource {
+	private static final long serialVersionUID = -4655265596984988537L;
 
-    @NotNull
-    @Length(min = 5, max = 300)
-    @Column(name = "report_jasper_path", nullable = false, unique = false, updatable = true, insertable = true, length = 300)
-    protected String jasperPath;
-    @NotNull
-    @Length(min = 5, max = 300)
-    @Column(name = "report_cfg_path", nullable = false, unique = false, updatable = true, insertable = true, length = 300)
-    protected String configurationPath;
+	@NotNull
+	@Length(min = 5, max = 300)
+	@Column(name = "report_jasper_path", nullable = false, unique = false, updatable = true, insertable = true, length = 300)
+	protected String jasperPath;
+	@NotNull
+	@Length(min = 5, max = 300)
+	@Column(name = "report_cfg_path", nullable = false, unique = false, updatable = true, insertable = true, length = 300)
+	protected String configurationPath;
 
-    public SReportResource setJasperPath(final String reportPath) {
-        this.jasperPath = reportPath;
-        return this;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getJasperPath() {
+		return this.jasperPath;
+	}
 
-    public SReportResource setConfigurationPath(final String configurationPath) {
-        this.configurationPath = configurationPath;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>jasperPath</code>.</p>
+	 *
+	 * @param reportPath a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReportResource} object.
+	 */
+	public SReportResource setJasperPath(final String reportPath) {
+		this.jasperPath = reportPath;
+		return this;
+	}
 
-    @Override
-    public String getJasperFilename() {
-        return StringUtils.getFilename(this.jasperPath);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getJasperFilename() {
+		return StringUtils.getFilename(this.jasperPath);
+	}
 
-    @Override
-    public String getJasperExtension() {
-        return StringUtils.getFilenameExtension(this.jasperPath);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getJasperExtension() {
+		return StringUtils.getFilenameExtension(this.jasperPath);
+	}
 
-    @Override
-    public String getJasperPath() {
-        return this.jasperPath;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getConfigurationPath() {
+		return this.configurationPath;
+	}
 
-    @Override
-    public String getConfigurationPath() {
-        return this.configurationPath;
-    }
+	/**
+	 * <p>Setter for the field <code>configurationPath</code>.</p>
+	 *
+	 * @param configurationPath a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReportResource} object.
+	 */
+	public SReportResource setConfigurationPath(final String configurationPath) {
+		this.configurationPath = configurationPath;
+		return this;
+	}
 
-    @Override
-    public String getConfigurationFilename() {
-        return StringUtils.getFilename(this.configurationPath);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getConfigurationFilename() {
+		return StringUtils.getFilename(this.configurationPath);
+	}
 
-    @Override
-    public String getConfigurationExtension() {
-        return StringUtils.getFilenameExtension(this.configurationPath);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getConfigurationExtension() {
+		return StringUtils.getFilenameExtension(this.configurationPath);
+	}
 
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(jasperPath, configurationPath);
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        SReportResource that = (SReportResource) o;
+		SReportResource that = (SReportResource) o;
 
-        return Objects.equal(this.jasperPath, that.jasperPath) &&
-                Objects.equal(this.configurationPath, that.configurationPath);
-    }
+		return Objects.equal(this.jasperPath, that.jasperPath) &&
+				Objects.equal(this.configurationPath, that.configurationPath);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(jasperPath, configurationPath);
-    }
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(jasperPath)
-                      .addValue(configurationPath)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(jasperPath)
+				.addValue(configurationPath)
+				.toString();
+	}
 }

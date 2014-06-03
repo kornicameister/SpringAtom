@@ -23,6 +23,8 @@ import org.agatom.springatom.server.model.types.ReportableEntity;
 import javax.persistence.*;
 
 /**
+ * <p>SAppointmentIssue class.</p>
+ *
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
@@ -31,19 +33,32 @@ import javax.persistence.*;
 @ReportableEntity
 @DiscriminatorValue(value = "appointment")
 public class SAppointmentIssue
-        extends SIssue {
-    public static final  String ENTITY_NAME      = "SAppointmentIssue";
-    private static final long   serialVersionUID = 8658810841216821601L;
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "sai_app", referencedColumnName = "idSAppointment", updatable = false)
-    private SAppointment appointment;
+		extends SIssue {
+	/** Constant <code>ENTITY_NAME="SAppointmentIssue"</code> */
+	public static final  String ENTITY_NAME      = "SAppointmentIssue";
+	private static final long   serialVersionUID = 8658810841216821601L;
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@JoinColumn(name = "sai_app", referencedColumnName = "idSAppointment", updatable = false)
+	private SAppointment appointment;
 
-    public SAppointment getAppointment() {
-        return appointment;
-    }
+	/**
+	 * <p>Getter for the field <code>appointment</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
+	public SAppointment getAppointment() {
+		return appointment;
+	}
 
-    public SAppointmentIssue setAppointment(final SAppointment appointment) {
-        this.appointment = appointment;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>appointment</code>.</p>
+	 *
+	 * @param appointment a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointmentIssue} object.
+	 */
+	public SAppointmentIssue setAppointment(final SAppointment appointment) {
+		this.appointment = appointment;
+		return this;
+	}
 }

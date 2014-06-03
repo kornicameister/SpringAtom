@@ -44,17 +44,27 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * <p>SCarService interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
 public interface SCarService
 		extends SService<SCar, Long, Integer> {
 
+	/** {@inheritDoc} */
 	@Override
 	SCar save(final SCar persistable);
 
+	/**
+	 * <p>findByMaster.</p>
+	 *
+	 * @param brand a {@link java.lang.String} object.
+	 * @param model a {@link java.lang.String} object.
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	@NotNull
 	List<SCar> findByMaster(
 			@BrandOrModel
@@ -62,15 +72,39 @@ public interface SCarService
 			@BrandOrModel
 			final String model);
 
+	/**
+	 * <p>findByMaster.</p>
+	 *
+	 * @param masterId a {@link java.lang.Long} object.
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	@NotNull
 	List<SCar> findByMaster(
 			@NotNull
 			@NotEmpty
 			final Long... masterId);
 
+	/**
+	 * <p>findMaster.</p>
+	 *
+	 * @param carId a long.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCarMaster} object.
+	 */
 	@NotNull
 	SCarMaster findMaster(final long carId);
 
+	/**
+	 * <p>findBy.</p>
+	 *
+	 * @param attribute a {@link org.agatom.springatom.server.service.domain.SCarService.SCarAttribute} object.
+	 * @param value     a {@link java.lang.Object} object.
+	 *
+	 * @return a {@link java.util.List} object.
+	 *
+	 * @throws org.agatom.springatom.server.service.support.exceptions.UnambiguousResultServiceException if any.
+	 */
 	@NotNull
 	List<SCar> findBy(
 			@NotNull
@@ -79,6 +113,19 @@ public interface SCarService
 			final Object value) throws
 			UnambiguousResultServiceException;
 
+	/**
+	 * <p>newCar.</p>
+	 *
+	 * @param brand        a {@link java.lang.String} object.
+	 * @param model        a {@link java.lang.String} object.
+	 * @param licencePlate a {@link java.lang.String} object.
+	 * @param vinNumber    a {@link java.lang.String} object.
+	 * @param ownerId      a long.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCar} object.
+	 *
+	 * @throws org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException if any.
+	 */
 	@NotNull
 	SCar newCar(
 			@Pattern(regexp = RegexpPatterns.BIG_FIRST_LETTER_PATTERN, message = "Brand or service must starts with the capitalized letter")
@@ -91,6 +138,17 @@ public interface SCarService
 			final String vinNumber,
 			final long ownerId) throws EntityDoesNotExistsServiceException;
 
+	/**
+	 * <p>newOwner.</p>
+	 *
+	 * @param idCar    a long.
+	 * @param idClient a long.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCar} object.
+	 *
+	 * @throws org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException if any.
+	 * @throws org.agatom.springatom.server.service.domain.SCarService$InvalidOwnerException               if any.
+	 */
 	@NotNull
 	SCar newOwner(final long idCar, final long idClient) throws EntityDoesNotExistsServiceException, InvalidOwnerException;
 

@@ -32,6 +32,8 @@ import javax.persistence.Version;
 import javax.validation.constraints.Min;
 
 /**
+ * <p>Abstract PersistentVersionedObject class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -39,35 +41,42 @@ import javax.validation.constraints.Min;
 @MappedSuperclass
 @EntityListeners(value = AuditingEntityListener.class)
 abstract public class PersistentVersionedObject
-        extends AbstractAuditable<SUser, Long>
-        implements PersistentVersionedBean {
-    private static final long serialVersionUID = -3113664043161581649L;
-    @Version
-    private Long version;
+		extends AbstractAuditable<SUser, Long>
+		implements PersistentVersionedBean {
+	private static final long serialVersionUID = -3113664043161581649L;
+	@Version
+	private Long version;
 
-    public PersistentVersionedObject() {
-        super();
-    }
+	/**
+	 * <p>Constructor for PersistentVersionedObject.</p>
+	 */
+	public PersistentVersionedObject() {
+		super();
+	}
 
-    @Override
-    @Transient
-    public String getMessageKey() {
-        return ClassUtils.getShortName(this.getClass()).toLowerCase(LocaleContextHolder.getLocale());
-    }
+	/** {@inheritDoc} */
+	@Override
+	@Transient
+	public String getMessageKey() {
+		return ClassUtils.getShortName(this.getClass()).toLowerCase(LocaleContextHolder.getLocale());
+	}
 
-    @Override
-    @Transient
-    public String asString() {
-        return String.format("%s=%s[%d]", ClassUtils.getShortName(this.getClass()), this.getId(), this.version);
-    }
+	/** {@inheritDoc} */
+	@Override
+	@Transient
+	public String asString() {
+		return String.format("%s=%s[%d]", ClassUtils.getShortName(this.getClass()), this.getId(), this.version);
+	}
 
-    @Override
-    public Long getVersion() {
-        return this.version;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Long getVersion() {
+		return this.version;
+	}
 
-    @Override
-    public void setVersion(@Nonnull @Min(value = 0) final Long version) {
-        this.version = version;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public void setVersion(@Nonnull @Min(value = 0) final Long version) {
+		this.version = version;
+	}
 }

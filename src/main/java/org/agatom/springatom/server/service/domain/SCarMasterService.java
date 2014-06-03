@@ -25,28 +25,59 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
+ * <p>SCarMasterService interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface SCarMasterService
-        extends SBasicService<SCarMaster, Long> {
+		extends SBasicService<SCarMaster, Long> {
 
-    List<SCarMaster> findByBrand(
-            @BrandOrModel
-            final String... brand);
+	/**
+	 * <p>findByBrand.</p>
+	 *
+	 * @param brand a {@link java.lang.String} object.
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
+	List<SCarMaster> findByBrand(
+			@BrandOrModel
+			final String... brand);
 
-    List<SCarMaster> findByModel(
-            @BrandOrModel
-            final String... model);
+	/**
+	 * <p>findByModel.</p>
+	 *
+	 * @param model a {@link java.lang.String} object.
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
+	List<SCarMaster> findByModel(
+			@BrandOrModel
+			final String... model);
 
-    SCarMaster findOne(
-            @BrandOrModel
-            final String brand,
-            @BrandOrModel
-            final String model);
+	/**
+	 * <p>findOne.</p>
+	 *
+	 * @param brand a {@link java.lang.String} object.
+	 * @param model a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCarMaster} object.
+	 */
+	SCarMaster findOne(
+			@BrandOrModel
+			final String brand,
+			@BrandOrModel
+			final String model);
 
-    List<SCar> findChildren(
-            @NotNull
-            final Long... masterIds);
+	/**
+	 * <p>findChildren.</p>
+	 *
+	 * @param masterIds a {@link java.lang.Long} object.
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
+	List<SCar> findChildren(
+			@NotNull
+			final Long... masterIds);
 }

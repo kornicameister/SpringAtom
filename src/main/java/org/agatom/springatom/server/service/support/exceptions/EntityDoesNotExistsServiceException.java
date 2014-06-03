@@ -23,22 +23,39 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
+ * <p>EntityDoesNotExistsServiceException class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
 public class EntityDoesNotExistsServiceException
-        extends ServiceException {
-    private static final String MSG_1            = "No entry exists for %s with PK=%s";
-    private static final String MSG_2            = "No entry exists for %s for ARGS=%s";
-    private static final long   serialVersionUID = -7853712771424308741L;
+		extends ServiceException {
+	private static final String MSG_1            = "No entry exists for %s with PK=%s";
+	private static final String MSG_2            = "No entry exists for %s for ARGS=%s";
+	private static final long   serialVersionUID = -7853712771424308741L;
 
-    public <T extends Persistable<ID>, ID extends Serializable> EntityDoesNotExistsServiceException(final Class<T> entityClazz, final Serializable pk) {
-        super(entityClazz, String.format(MSG_1, entityClazz.getName(), pk));
-    }
+	/**
+	 * <p>Constructor for EntityDoesNotExistsServiceException.</p>
+	 *
+	 * @param entityClazz a {@link java.lang.Class} object.
+	 * @param pk          a {@link java.io.Serializable} object.
+	 * @param <T>         a T object.
+	 * @param <ID>        a ID object.
+	 */
+	public <T extends Persistable<ID>, ID extends Serializable> EntityDoesNotExistsServiceException(final Class<T> entityClazz, final Serializable pk) {
+		super(entityClazz, String.format(MSG_1, entityClazz.getName(), pk));
+	}
 
-    public <T extends Persistable<ID>, ID extends Serializable> EntityDoesNotExistsServiceException(final Class<T> entityClazz, final Object... args) {
-        super(entityClazz, String.format(MSG_2, entityClazz.getName(), Arrays.deepToString(args)));
-    }
+	/**
+	 * <p>Constructor for EntityDoesNotExistsServiceException.</p>
+	 *
+	 * @param entityClazz a {@link java.lang.Class} object.
+	 * @param args        a {@link java.lang.Object} object.
+	 * @param <T>         a T object.
+	 * @param <ID>        a ID object.
+	 */
+	public <T extends Persistable<ID>, ID extends Serializable> EntityDoesNotExistsServiceException(final Class<T> entityClazz, final Object... args) {
+		super(entityClazz, String.format(MSG_2, entityClazz.getName(), Arrays.deepToString(args)));
+	}
 }

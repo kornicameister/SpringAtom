@@ -40,8 +40,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * {@code SAppointment} is the business object describing the event.
- * <b>Appointment</b> is an object that can be placed in time and in particular assigned to the {@link SCar}.
- * The business requirement dictates that it also holds the list od tasks ({@link SAppointmentTask}).
+ * <b>Appointment</b> is an object that can be placed in time and in particular assigned to the {@link org.agatom.springatom.server.model.beans.car.SCar}.
+ * The business requirement dictates that it also holds the list od tasks ({@link org.agatom.springatom.server.model.beans.appointment.SAppointmentTask}).
  *
  * @author kornicamaister
  * @version 0.0.2
@@ -54,7 +54,9 @@ import java.util.concurrent.TimeUnit;
 public class SAppointment
 		extends SAssignedActivity<Long>
 		implements Iterable<SAppointmentTask>, Appointment {
+	/** Constant <code>TABLE_NAME="appointment"</code> */
 	public static final  String                 TABLE_NAME       = "appointment";
+	/** Constant <code>ENTITY_NAME="SAppointment"</code> */
 	public static final  String                 ENTITY_NAME      = "SAppointment";
 	private static final String                 DATE_TIME_TYPE   = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
 	private static final long                   serialVersionUID = -3158182089097228777L;
@@ -83,37 +85,68 @@ public class SAppointment
 	@Column(name = "closed", nullable = true)
 	private              boolean                closed           = false;
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isClosed() {
 		return this.closed;
 	}
 
+	/**
+	 * <p>Setter for the field <code>closed</code>.</p>
+	 *
+	 * @param closed a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment setClosed(final boolean closed) {
 		this.closed = closed;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isAllDay() {
 		return allDay;
 	}
 
+	/**
+	 * <p>Setter for the field <code>allDay</code>.</p>
+	 *
+	 * @param allDay a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment setAllDay(final boolean allDay) {
 		this.allDay = allDay;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<SAppointmentTask> getTasks() {
 		this.requireTaskList();
 		return tasks;
 	}
 
+	/**
+	 * <p>Setter for the field <code>tasks</code>.</p>
+	 *
+	 * @param tasks a {@link java.util.Collection} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment setTasks(final Collection<SAppointmentTask> tasks) {
 		Assert.notNull(tasks);
 		return this.addTask(tasks);
 	}
 
+	/**
+	 * <p>addTask.</p>
+	 *
+	 * @param tasks a {@link java.util.Collection} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment addTask(final Collection<SAppointmentTask> tasks) {
 		this.requireTaskList();
 		for (final SAppointmentTask task : tasks) {
@@ -124,39 +157,64 @@ public class SAppointment
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public DateTime getBegin() {
 		this.requireBeginDate();
 		return this.begin.toDateTime();
 	}
 
+	/**
+	 * <p>Setter for the field <code>begin</code>.</p>
+	 *
+	 * @param begin a {@link org.joda.time.DateTime} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment setBegin(final DateTime begin) {
 		this.begin = begin;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public DateTime getEnd() {
 		this.requireEndDate();
 		return this.end.toDateTime();
 	}
 
+	/**
+	 * <p>Setter for the field <code>end</code>.</p>
+	 *
+	 * @param end a {@link org.joda.time.DateTime} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment setEnd(final DateTime end) {
 		this.end = end;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Interval getInterval() {
 		return new Interval(this.begin, this.end);
 	}
 
+	/**
+	 * <p>setInterval.</p>
+	 *
+	 * @param duration a {@link org.joda.time.ReadableInterval} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment setInterval(final ReadableInterval duration) {
 		this.setBegin(duration.getStart());
 		this.setEnd(duration.getEnd());
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SCar getCar() {
 		if (this.car == null) {
@@ -165,6 +223,13 @@ public class SAppointment
 		return this.car;
 	}
 
+	/**
+	 * <p>Setter for the field <code>car</code>.</p>
+	 *
+	 * @param car a {@link org.agatom.springatom.server.model.beans.car.SCar} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment setCar(final SCar car) {
 		this.car = car;
 		return this;
@@ -176,6 +241,13 @@ public class SAppointment
 		}
 	}
 
+	/**
+	 * <p>removeTask.</p>
+	 *
+	 * @param tasks a {@link org.agatom.springatom.server.model.beans.appointment.SAppointmentTask} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment removeTask(final SAppointmentTask... tasks) {
 		if (this.tasks == null) {
 			return this;
@@ -184,11 +256,19 @@ public class SAppointment
 		return this;
 	}
 
+	/**
+	 * <p>clearTasks.</p>
+	 */
 	public void clearTasks() {
 		this.tasks.clear();
 		this.tasks = null;
 	}
 
+	/**
+	 * <p>assignTasks.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment assignTasks() {
 		if (!CollectionUtils.isEmpty(this.tasks)) {
 			for (final SAppointmentTask task : this.tasks) {
@@ -198,6 +278,11 @@ public class SAppointment
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>beginTs</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getBeginTs() {
 		if (this.beginTs != null) {
 			return this.beginTs;
@@ -205,6 +290,11 @@ public class SAppointment
 		return TimeUnit.MILLISECONDS.toSeconds(this.begin.getMillis());
 	}
 
+	/**
+	 * <p>Getter for the field <code>endTs</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getEndTs() {
 		if (this.endTs != null) {
 			return this.endTs;
@@ -212,6 +302,14 @@ public class SAppointment
 		return TimeUnit.MILLISECONDS.toSeconds(this.end.getMillis());
 	}
 
+	/**
+	 * <p>postpone.</p>
+	 *
+	 * @param duration a {@link org.joda.time.ReadableDuration} object.
+	 * @param toFuture a boolean.
+	 *
+	 * @return a boolean.
+	 */
 	public boolean postpone(final ReadableDuration duration, final boolean toFuture) {
 		if (this.begin != null && this.end != null) {
 			final int scalar = toFuture ? 1 : -1;
@@ -222,11 +320,23 @@ public class SAppointment
 		return false;
 	}
 
+	/**
+	 * <p>getBeginTime.</p>
+	 *
+	 * @return a {@link org.joda.time.LocalTime} object.
+	 */
 	public LocalTime getBeginTime() {
 		this.requireBeginDate();
 		return this.begin.toLocalTime();
 	}
 
+	/**
+	 * <p>setBeginTime.</p>
+	 *
+	 * @param localTime a {@link org.joda.time.LocalTime} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment setBeginTime(final LocalTime localTime) {
 		this.requireBeginDate();
 		final MutableDateTime mutableDateTime = this.begin.toMutableDateTime();
@@ -241,11 +351,23 @@ public class SAppointment
 		}
 	}
 
+	/**
+	 * <p>getEndTime.</p>
+	 *
+	 * @return a {@link org.joda.time.LocalTime} object.
+	 */
 	public LocalTime getEndTime() {
 		this.requireEndDate();
 		return this.end.toLocalTime();
 	}
 
+	/**
+	 * <p>setEndTime.</p>
+	 *
+	 * @param localTime a {@link org.joda.time.LocalTime} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment setEndTime(final LocalTime localTime) {
 		this.requireEndDate();
 		final MutableDateTime mutableDateTime = this.end.toMutableDateTime();
@@ -260,10 +382,22 @@ public class SAppointment
 		}
 	}
 
+	/**
+	 * <p>getBeginDate.</p>
+	 *
+	 * @return a {@link org.joda.time.LocalDate} object.
+	 */
 	public LocalDate getBeginDate() {
 		return this.getBegin().toLocalDate();
 	}
 
+	/**
+	 * <p>setBeginDate.</p>
+	 *
+	 * @param localDate a {@link org.joda.time.LocalDate} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment setBeginDate(final LocalDate localDate) {
 		this.requireBeginDate();
 		final MutableDateTime mutableDateTime = this.begin.toMutableDateTime();
@@ -272,10 +406,22 @@ public class SAppointment
 		return this;
 	}
 
+	/**
+	 * <p>getEndDate.</p>
+	 *
+	 * @return a {@link org.joda.time.LocalDate} object.
+	 */
 	public LocalDate getEndDate() {
 		return this.getEnd().toLocalDate();
 	}
 
+	/**
+	 * <p>setEndDate.</p>
+	 *
+	 * @param localDate a {@link org.joda.time.LocalDate} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 */
 	public SAppointment setEndDate(final LocalDate localDate) {
 		this.requireEndDate();
 		final MutableDateTime mutableDateTime = this.end.toMutableDateTime();
@@ -284,11 +430,13 @@ public class SAppointment
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return String.format("%s - %s", this.assignee.getIdentity(), this.getCar().getIdentity());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Iterator<SAppointmentTask> iterator() {
 		return this.tasks.iterator();

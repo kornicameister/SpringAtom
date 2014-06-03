@@ -37,7 +37,7 @@ public interface VISYearResolver {
 	 *
 	 * @return {@link java.util.List} of all possible years
 	 *
-	 * @throws VinNumberServiceException
+	 * @throws org.agatom.springatom.server.service.vinNumber.exception.VinNumberServiceException if any.
 	 */
 	@Cacheable(value = "visYearResolver")
 	List<Integer> getYear(final String visNumber) throws VinNumberServiceException;

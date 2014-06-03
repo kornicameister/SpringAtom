@@ -47,6 +47,7 @@ public class UserCombinedValidator
 	private              int    maxPasswordLength = -1;
 	private              String passwordPattern   = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public void initialize(final ValidUser constraintAnnotation) {
 		LOGGER.trace(String.format("%s initialized", ClassUtils.getShortName(UserCombinedValidator.class)));
@@ -63,6 +64,7 @@ public class UserCombinedValidator
 		this.passwordPattern = Password.class.getAnnotation(Pattern.class).regexp();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isValid(final SUser value, final ConstraintValidatorContext context) {
 		if (this.minUserNameLength != -1 && this.maxUserNameLength != -1) {

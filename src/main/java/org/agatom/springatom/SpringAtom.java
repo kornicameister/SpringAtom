@@ -28,7 +28,12 @@ package org.agatom.springatom;
  * @since 0.0.1
  */
 public class SpringAtom {
-    public static void main(String[] args) {
+	/**
+	 * <p>main.</p>
+	 *
+	 * @param args an array of {@link java.lang.String} objects.
+	 */
+	public static void main(String[] args) {
 
-    }
+	}
 }

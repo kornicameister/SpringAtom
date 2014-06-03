@@ -28,43 +28,51 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 
 /**
- * {@code SBasicRepositoryImpl} implements {@link SBasicRepository}
+ * {@code SBasicRepositoryImpl} implements {@link org.agatom.springatom.server.repository.SBasicRepository}
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class SBasicRepositoryImpl<T, ID extends Serializable>
-        extends QueryDslJpaRepository<T, ID>
-        implements SBasicRepository<T, ID> {
+		extends QueryDslJpaRepository<T, ID>
+		implements SBasicRepository<T, ID> {
 
-    private static final Logger LOGGER = Logger.getLogger(SBasicRepositoryImpl.class);
-    protected final JpaEntityInformation<T, ID> entityInformation;
-    protected final EntityManager               entityManager;
+	private static final Logger LOGGER = Logger.getLogger(SBasicRepositoryImpl.class);
+	protected final JpaEntityInformation<T, ID> entityInformation;
+	protected final EntityManager               entityManager;
 
-    public SBasicRepositoryImpl(final JpaEntityInformation<T, ID> entityInformation,
-                                final EntityManager entityManager) {
-        super(entityInformation, entityManager);
-        this.entityInformation = entityInformation;
-        this.entityManager = entityManager;
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace(String
-                    .format("Created %s for arguments=[em=%s,ei=%s]", SBasicRepositoryImpl.class
-                            .getSimpleName(), entityManager, entityInformation));
-        }
-    }
+	/**
+	 * <p>Constructor for SBasicRepositoryImpl.</p>
+	 *
+	 * @param entityInformation a {@link org.springframework.data.jpa.repository.support.JpaEntityInformation} object.
+	 * @param entityManager     a {@link javax.persistence.EntityManager} object.
+	 */
+	public SBasicRepositoryImpl(final JpaEntityInformation<T, ID> entityInformation,
+	                            final EntityManager entityManager) {
+		super(entityInformation, entityManager);
+		this.entityInformation = entityInformation;
+		this.entityManager = entityManager;
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace(String
+					.format("Created %s for arguments=[em=%s,ei=%s]", SBasicRepositoryImpl.class
+							.getSimpleName(), entityManager, entityInformation));
+		}
+	}
 
-    @Override
-    public T detach(final T t) {
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace(String.format("detach(%s)", t));
-        }
-        this.entityManager.detach(t);
-        return t;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public T detach(final T t) {
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace(String.format("detach(%s)", t));
+		}
+		this.entityManager.detach(t);
+		return t;
+	}
 
-    @Override
-    public JPQLQuery createCustomQuery() {
-        return new JPAQuery(this.entityManager);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public JPQLQuery createCustomQuery() {
+		return new JPAQuery(this.entityManager);
+	}
 }

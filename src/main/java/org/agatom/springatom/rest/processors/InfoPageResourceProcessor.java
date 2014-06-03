@@ -43,6 +43,7 @@ public class InfoPageResourceProcessor
 	private static final Logger             LOGGER             = Logger.getLogger(InfoPageResourceProcessor.class);
 	private              InfoPageLinkHelper infoPageLinkHelper = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public Resource<? extends Persistable<?>> process(final Resource<? extends Persistable<?>> resource) {
 		if (resource == null) {
@@ -64,6 +65,11 @@ public class InfoPageResourceProcessor
 		return resource;
 	}
 
+	/**
+	 * <p>Setter for the field <code>infoPageLinkHelper</code>.</p>
+	 *
+	 * @param infoPageLinkHelper a {@link org.agatom.springatom.web.component.infopages.link.InfoPageLinkHelper} object.
+	 */
 	public void setInfoPageLinkHelper(final InfoPageLinkHelper infoPageLinkHelper) {
 		Assert.notNull(infoPageLinkHelper, "infoPageLinkHelper can not be null");
 		this.infoPageLinkHelper = infoPageLinkHelper;

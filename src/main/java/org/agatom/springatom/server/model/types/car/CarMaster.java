@@ -31,5 +31,10 @@ import java.util.Set;
  */
 public interface CarMaster<T extends Car>
 		extends ManufacturingData, Iterable<T> {
+	/**
+	 * <p>getChildren.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	Set<T> getChildren();
 }

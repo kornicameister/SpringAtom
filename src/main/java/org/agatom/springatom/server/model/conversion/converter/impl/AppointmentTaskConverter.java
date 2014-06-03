@@ -37,11 +37,12 @@ import org.agatom.springatom.server.model.conversion.converter.PersistableConver
 
 @PersistableConverterUtility
 public class AppointmentTaskConverter
-        extends PersistableConverterImpl<SAppointmentTask> {
+		extends PersistableConverterImpl<SAppointmentTask> {
 
-    @Override
-    public String convert(final SAppointmentTask source) {
-        return String.format("%s - %s", source.getType(), source.getTask());
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String convert(final SAppointmentTask source) {
+		return String.format("%s - %s", source.getType(), source.getTask());
+	}
 
 }

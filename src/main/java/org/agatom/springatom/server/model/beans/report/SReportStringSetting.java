@@ -27,7 +27,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * {@code SReportStringSetting} takes any {@link java.lang.String} as the value
- * for given {@link SReportSetting}
+ * for given {@link org.agatom.springatom.server.model.beans.report.SReportSetting}
  *
  * @author kornicameister
  * @version 0.0.1
@@ -38,7 +38,9 @@ import javax.validation.constraints.NotNull;
 @PrimaryKeyJoinColumn(name = "idSReportSetting")
 public class SReportStringSetting
 		extends SReportSetting<String> {
+	/** Constant <code>ENTITY_NAME="SReportStringSetting"</code> */
 	public static final  String ENTITY_NAME      = "SReportStringSetting";
+	/** Constant <code>TABLE_NAME="reports_settings_string"</code> */
 	public static final  String TABLE_NAME       = "reports_settings_string";
 	private static final long   serialVersionUID = -1700305423116775408L;
 	@NotNull
@@ -46,16 +48,25 @@ public class SReportStringSetting
 	@Column(name = "report_setting_string_value", unique = false, updatable = true, insertable = true, length = 300)
 	private String value;
 
+	/** {@inheritDoc} */
 	@Override
 	public String getValue() {
 		return this.value;
 	}
 
+	/**
+	 * <p>Setter for the field <code>value</code>.</p>
+	 *
+	 * @param value a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReportStringSetting} object.
+	 */
 	public SReportStringSetting setValue(final String value) {
 		this.value = value;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return String.format("%s - %s", super.getIdentity(), this.value);

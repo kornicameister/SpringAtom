@@ -50,10 +50,16 @@ public class SRepositoriesFactoryBean<T extends SBasicRepository<S, ID>, S, ID e
 		extends JpaRepositoryFactoryBean<T, S, ID> {
 	private Class<?> revisionEntityClass = null;
 
+	/**
+	 * <p>Setter for the field <code>revisionEntityClass</code>.</p>
+	 *
+	 * @param revisionEntityClass a {@link java.lang.Class} object.
+	 */
 	public void setRevisionEntityClass(Class<?> revisionEntityClass) {
 		this.revisionEntityClass = revisionEntityClass;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected RepositoryFactorySupport createRepositoryFactory(final EntityManager entityManager) {
 		return new SRepositoryFactory(entityManager, this.revisionEntityClass);

@@ -34,42 +34,99 @@ import java.io.Serializable;
  * @version 0.0.2
  * @since 0.0.1
  */
-
 public interface SService<T extends Persistable<ID>, ID extends Serializable, N extends Number & Comparable<N>>
-        extends SBasicService<T, ID> {
+		extends SBasicService<T, ID> {
 
-    Revision<N, T> findFirstRevision(
-            @NotNull
-            final ID id);
+	/**
+	 * <p>findFirstRevision.</p>
+	 *
+	 * @param id a ID object.
+	 *
+	 * @return a {@link org.springframework.data.history.Revision} object.
+	 */
+	Revision<N, T> findFirstRevision(
+			@NotNull
+			final ID id);
 
-    Revisions<N, T> findAllRevisions(
-            @NotNull
-            final ID id);
+	/**
+	 * <p>findAllRevisions.</p>
+	 *
+	 * @param id a ID object.
+	 *
+	 * @return a {@link org.springframework.data.history.Revisions} object.
+	 */
+	Revisions<N, T> findAllRevisions(
+			@NotNull
+			final ID id);
 
-    Revision<N, T> findLatestRevision(
-            @NotNull
-            final ID id);
+	/**
+	 * <p>findLatestRevision.</p>
+	 *
+	 * @param id a ID object.
+	 *
+	 * @return a {@link org.springframework.data.history.Revision} object.
+	 */
+	Revision<N, T> findLatestRevision(
+			@NotNull
+			final ID id);
 
-    long countRevisions(
-            @NotNull
-            final ID id);
+	/**
+	 * <p>countRevisions.</p>
+	 *
+	 * @param id a ID object.
+	 *
+	 * @return a long.
+	 */
+	long countRevisions(
+			@NotNull
+			final ID id);
 
-    Revisions<N, T> findModifiedBefore(
-            @NotNull
-            final ID id,
-            @NotNull
-            final DateTime dateTime) throws EntityInRevisionDoesNotExists;
+	/**
+	 * <p>findModifiedBefore.</p>
+	 *
+	 * @param id       a ID object.
+	 * @param dateTime a {@link org.joda.time.DateTime} object.
+	 *
+	 * @return a {@link org.springframework.data.history.Revisions} object.
+	 *
+	 * @throws org.agatom.springatom.server.repository.exceptions.EntityInRevisionDoesNotExists if any.
+	 */
+	Revisions<N, T> findModifiedBefore(
+			@NotNull
+			final ID id,
+			@NotNull
+			final DateTime dateTime) throws EntityInRevisionDoesNotExists;
 
-    Revisions<N, T> findModifiedAfter(
-            @NotNull
-            final ID id,
-            @NotNull
-            final DateTime dateTime) throws EntityInRevisionDoesNotExists;
+	/**
+	 * <p>findModifiedAfter.</p>
+	 *
+	 * @param id       a ID object.
+	 * @param dateTime a {@link org.joda.time.DateTime} object.
+	 *
+	 * @return a {@link org.springframework.data.history.Revisions} object.
+	 *
+	 * @throws org.agatom.springatom.server.repository.exceptions.EntityInRevisionDoesNotExists if any.
+	 */
+	Revisions<N, T> findModifiedAfter(
+			@NotNull
+			final ID id,
+			@NotNull
+			final DateTime dateTime) throws EntityInRevisionDoesNotExists;
 
-    Revisions<N, T> findModifiedAt(
-            @NotNull
-            final ID id,
-            @NotNull
-            final DateTime dateTime) throws EntityInRevisionDoesNotExists;
+	/**
+	 * <p>findModifiedAt.</p>
+	 *
+	 * @param id       a ID object.
+	 * @param dateTime a {@link org.joda.time.DateTime} object.
+	 *
+	 * @return a {@link org.springframework.data.history.Revisions} object.
+	 *
+	 * @throws org.agatom.springatom.server.repository.exceptions.EntityInRevisionDoesNotExists if any.
+	 */
+	Revisions<N, T> findModifiedAt(
+			@NotNull
+			final ID id,
+			@NotNull
+			final DateTime dateTime) throws EntityInRevisionDoesNotExists;
 
 }

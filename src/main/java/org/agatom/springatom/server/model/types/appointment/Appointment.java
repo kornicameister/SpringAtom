@@ -34,17 +34,52 @@ import java.util.List;
  */
 public interface Appointment
 		extends AssignedActivity {
+	/**
+	 * <p>isClosed.</p>
+	 *
+	 * @return a boolean.
+	 */
 	boolean isClosed();
 
+	/**
+	 * <p>isAllDay.</p>
+	 *
+	 * @return a boolean.
+	 */
 	boolean isAllDay();
 
+	/**
+	 * <p>getTasks.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	List<SAppointmentTask> getTasks();
 
+	/**
+	 * <p>getBegin.</p>
+	 *
+	 * @return a {@link org.joda.time.DateTime} object.
+	 */
 	DateTime getBegin();
 
+	/**
+	 * <p>getEnd.</p>
+	 *
+	 * @return a {@link org.joda.time.DateTime} object.
+	 */
 	DateTime getEnd();
 
+	/**
+	 * <p>getInterval.</p>
+	 *
+	 * @return a {@link org.joda.time.Interval} object.
+	 */
 	Interval getInterval();
 
+	/**
+	 * <p>getCar.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCar} object.
+	 */
 	SCar getCar();
 }

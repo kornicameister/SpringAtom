@@ -18,11 +18,18 @@
 package org.agatom.springatom.server.model.descriptors;
 
 /**
+ * <p>EntityDescriptorCollectionColumn interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface EntityDescriptorCollectionColumn<X>
-        extends EntityDescriptorColumn<X> {
-    Class<?> getElementClass();
+		extends EntityDescriptorColumn<X> {
+	/**
+	 * <p>getElementClass.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
+	Class<?> getElementClass();
 }

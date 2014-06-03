@@ -40,23 +40,34 @@ import javax.validation.constraints.NotNull;
 @PrimaryKeyJoinColumn(name = "idSReportSetting")
 public class SReportBooleanSetting
 		extends SReportSetting<Boolean> {
+	/** Constant <code>ENTITY_NAME="SReportBooleanSetting"</code> */
 	public static final  String ENTITY_NAME      = "SReportBooleanSetting";
+	/** Constant <code>TABLE_NAME="reports_settings_boolean"</code> */
 	public static final  String TABLE_NAME       = "reports_settings_boolean";
 	private static final long   serialVersionUID = -1700305423116775408L;
 	@NotNull
 	@Column(name = "report_setting_boolean_val", unique = false, updatable = true, insertable = true)
 	private Boolean value;
 
+	/** {@inheritDoc} */
 	@Override
 	public Boolean getValue() {
 		return this.value;
 	}
 
+	/**
+	 * <p>Setter for the field <code>value</code>.</p>
+	 *
+	 * @param value a {@link java.lang.Boolean} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReportBooleanSetting} object.
+	 */
 	public SReportBooleanSetting setValue(final Boolean value) {
 		this.value = value;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return String.format("%s - %s", super.getIdentity(), this.value);

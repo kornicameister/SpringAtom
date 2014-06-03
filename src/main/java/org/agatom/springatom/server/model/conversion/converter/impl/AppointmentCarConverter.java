@@ -41,6 +41,7 @@ import org.apache.log4j.Logger;
 public class AppointmentCarConverter
 		extends PersistableConverterImpl<SAppointment> {
 
+	/** {@inheritDoc} */
 	@Override
 	public String convert(final SAppointment source) {
 		try {

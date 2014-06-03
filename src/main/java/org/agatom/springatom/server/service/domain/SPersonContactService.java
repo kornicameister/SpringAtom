@@ -18,26 +18,26 @@
 package org.agatom.springatom.server.service.domain;
 
 import org.agatom.springatom.server.model.beans.person.SPersonContact;
-import org.agatom.springatom.server.model.types.contact.SContact;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
+ * <p>SPersonContactService interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface SPersonContactService
-        extends SBasicService<SPersonContact, Long> {
-    /**
-     * Returns all {@link SContact} entities for the given {@link org.agatom.springatom.server.model.types.contact.SMultiContactable#getId()}
-     *
-     * @param idAssigned
-     *         id of the {@link org.agatom.springatom.server.model.types.contact.SMultiContactable}
-     *
-     * @return the list of all {@link SContact}s for given {@code SMultiContactable}
-     */
-    @NotNull
-    List<SPersonContact> findByAssigned(final long idAssigned);
+		extends SBasicService<SPersonContact, Long> {
+	/**
+	 * Returns all {@link org.agatom.springatom.server.model.types.contact.SContact} entities for the given {@link org.agatom.springatom.server.model.types.contact.SMultiContactable#getId()}
+	 *
+	 * @param idAssigned id of the {@link org.agatom.springatom.server.model.types.contact.SMultiContactable}
+	 *
+	 * @return the list of all {@link org.agatom.springatom.server.model.types.contact.SContact}s for given {@code SMultiContactable}
+	 */
+	@NotNull
+	List<SPersonContact> findByAssigned(final long idAssigned);
 }

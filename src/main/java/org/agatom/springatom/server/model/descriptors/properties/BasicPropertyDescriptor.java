@@ -21,34 +21,61 @@ import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.Type;
 
 /**
+ * <p>BasicPropertyDescriptor class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class BasicPropertyDescriptor
-        extends AbstractPropertyDescriptor {
+		extends AbstractPropertyDescriptor {
 
-    private static final long serialVersionUID = -2082514178668619298L;
-    private final SingularAttribute<?, ?> attribute;
+	private static final long serialVersionUID = -2082514178668619298L;
+	private final SingularAttribute<?, ?> attribute;
 
-    public BasicPropertyDescriptor(final SingularAttribute<?, ?> attribute) {
-        super(attribute);
-        this.attribute = attribute;
-    }
+	/**
+	 * <p>Constructor for BasicPropertyDescriptor.</p>
+	 *
+	 * @param attribute a {@link javax.persistence.metamodel.SingularAttribute} object.
+	 */
+	public BasicPropertyDescriptor(final SingularAttribute<?, ?> attribute) {
+		super(attribute);
+		this.attribute = attribute;
+	}
 
-    public boolean isId() {
-        return this.attribute.isId();
-    }
+	/**
+	 * <p>isId.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isId() {
+		return this.attribute.isId();
+	}
 
-    public boolean isVersion() {
-        return this.attribute.isVersion();
-    }
+	/**
+	 * <p>isVersion.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isVersion() {
+		return this.attribute.isVersion();
+	}
 
-    public boolean isOptional() {
-        return this.attribute.isOptional();
-    }
+	/**
+	 * <p>isOptional.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isOptional() {
+		return this.attribute.isOptional();
+	}
 
-    public Type<?> getType() {
-        return this.attribute.getType();
-    }
+	/**
+	 * <p>getType.</p>
+	 *
+	 * @return a {@link javax.persistence.metamodel.Type} object.
+	 */
+	public Type<?> getType() {
+		return this.attribute.getType();
+	}
 }

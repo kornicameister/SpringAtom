@@ -24,24 +24,35 @@ import org.springframework.util.ClassUtils;
 
 
 /**
+ * <p>Abstract AbstractModuleConfiguration class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 abstract public class AbstractModuleConfiguration {
 
-    private final String moduleName;
+	private final String moduleName;
 
-    protected AbstractModuleConfiguration() {
-        this.moduleName = this.getModuleName();
-    }
+	/**
+	 * <p>Constructor for AbstractModuleConfiguration.</p>
+	 */
+	protected AbstractModuleConfiguration() {
+		this.moduleName = this.getModuleName();
+	}
 
-    private String getModuleName() {
-        final Configuration annotation = AnnotationUtils.findAnnotation(this.getClass(), Configuration.class);
-        return (String) AnnotationUtils.getValue(annotation);
-    }
+	private String getModuleName() {
+		final Configuration annotation = AnnotationUtils.findAnnotation(this.getClass(), Configuration.class);
+		return (String) AnnotationUtils.getValue(annotation);
+	}
 
-    protected void logRegistering(final Class<?> clazz, final Logger logger) {
-        logger.info(String.format("%s > %s registering...", this.moduleName, ClassUtils.getShortName(clazz)));
-    }
+	/**
+	 * <p>logRegistering.</p>
+	 *
+	 * @param clazz  a {@link java.lang.Class} object.
+	 * @param logger a {@link org.apache.log4j.Logger} object.
+	 */
+	protected void logRegistering(final Class<?> clazz, final Logger logger) {
+		logger.info(String.format("%s > %s registering...", this.moduleName, ClassUtils.getShortName(clazz)));
+	}
 }

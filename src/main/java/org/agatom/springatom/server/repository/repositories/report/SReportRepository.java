@@ -19,28 +19,40 @@ package org.agatom.springatom.server.repository.repositories.report;
 
 import org.agatom.springatom.server.model.beans.report.SReport;
 import org.agatom.springatom.server.repository.SRepository;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.LockModeType;
 
 /**
+ * <p>SReportRepository interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 @RepositoryRestResource(itemResourceRel = SReportRepository.REST_REPO_REL, path = SReportRepository.REST_REPO_PATH)
 public interface SReportRepository
-        extends SRepository<SReport, Long, Integer> {
-    String REPO_NAME      = "reportsRepository";
-    String REST_REPO_REL  = "rest.reports";
-    String REST_REPO_PATH = "reports";
+		extends SRepository<SReport, Long, Integer> {
+	/** Constant <code>REPO_NAME="reportsRepository"</code> */
+	String REPO_NAME      = "reportsRepository";
+	/** Constant <code>REST_REPO_REL="rest.reports"</code> */
+	String REST_REPO_REL  = "rest.reports";
+	/** Constant <code>REST_REPO_PATH="reports"</code> */
+	String REST_REPO_PATH = "reports";
 
-    @Lock(value = LockModeType.READ)
-    @Transactional(rollbackFor = Exception.class)
-    SReport findByTitle(@Param(value = "title") final String title) throws Exception;
+	/**
+	 * <p>findByTitle.</p>
+	 *
+	 * @param title a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
+	@Lock(value = LockModeType.READ)
+	@Transactional(rollbackFor = Exception.class)
+	SReport findByTitle(@Param(value = "title") final String title) throws Exception;
 }

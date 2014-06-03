@@ -29,52 +29,65 @@ import java.lang.reflect.Member;
  * @since 0.0.1
  */
 abstract class AbstractPropertyDescriptor
-        implements EntityPropertyDescriptor {
+		implements EntityPropertyDescriptor {
 
-    private static final long serialVersionUID = 1930984532936877108L;
-    private final Attribute<?, ?> attribute;
+	private static final long serialVersionUID = 1930984532936877108L;
+	private final Attribute<?, ?> attribute;
 
-    protected AbstractPropertyDescriptor(final Attribute<?, ?> attribute) {
-        this.attribute = attribute;
-    }
+	/**
+	 * <p>Constructor for AbstractPropertyDescriptor.</p>
+	 *
+	 * @param attribute a {@link javax.persistence.metamodel.Attribute} object.
+	 */
+	protected AbstractPropertyDescriptor(final Attribute<?, ?> attribute) {
+		this.attribute = attribute;
+	}
 
-    @Override
-    public String getName() {
-        return this.attribute.getName();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getName() {
+		return this.attribute.getName();
+	}
 
-    @Override
-    public Attribute.PersistentAttributeType getPersistentAttributeType() {
-        return this.attribute.getPersistentAttributeType();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Attribute.PersistentAttributeType getPersistentAttributeType() {
+		return this.attribute.getPersistentAttributeType();
+	}
 
-    @Override
-    public Class<?> getJavaType() {
-        return this.attribute.getJavaType();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Class<?> getJavaType() {
+		return this.attribute.getJavaType();
+	}
 
-    @Override
-    public Member getJavaMember() {
-        return this.attribute.getJavaMember();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Member getJavaMember() {
+		return this.attribute.getJavaMember();
+	}
 
-    @Override
-    public ManagedType<?> getDeclaringType() {
-        return this.attribute.getDeclaringType();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public ManagedType<?> getDeclaringType() {
+		return this.attribute.getDeclaringType();
+	}
 
-    @Override
-    public boolean isAssociation() {
-        return this.attribute.isAssociation();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public boolean isAssociation() {
+		return this.attribute.isAssociation();
+	}
 
-    @Override
-    public boolean isCollection() {
-        return this.attribute.isCollection();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public boolean isCollection() {
+		return this.attribute.isCollection();
+	}
 
-    @Override
-    public final Attribute<?, ?> getAttribute() {
-        return this.attribute;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public final Attribute<?, ?> getAttribute() {
+		return this.attribute;
+	}
 }

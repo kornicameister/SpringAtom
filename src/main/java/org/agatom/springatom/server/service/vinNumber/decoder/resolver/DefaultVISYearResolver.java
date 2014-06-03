@@ -46,6 +46,7 @@ class DefaultVISYearResolver
 	private static final int                     BEGIN_YEAR_YEAR = 1980;
 	private static final int                     LOOP_STEP       = 30;
 
+	/** {@inheritDoc} */
 	@Override
 	public List<Integer> getYear(final String visNumber) throws VinNumberServiceException {
 		final List<Integer> years = Lists.newArrayList();

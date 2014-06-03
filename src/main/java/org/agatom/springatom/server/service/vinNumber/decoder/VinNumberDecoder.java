@@ -49,6 +49,7 @@ class VinNumberDecoder
 	@Autowired
 	private              WMIManufacturedInResolver wmiManufacturedInResolver = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public VinNumberData decode(final String vinNumber) throws VinDecodingException {
 		try {
@@ -63,6 +64,7 @@ class VinNumberDecoder
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public VinNumberData decode(final VinNumber vinNumber) throws VinDecodingException {
 		final VinNumberData vinNumberData = new VinNumberData();

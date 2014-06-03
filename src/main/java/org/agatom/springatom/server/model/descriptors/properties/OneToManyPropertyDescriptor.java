@@ -21,59 +21,121 @@ import javax.persistence.metamodel.*;
 import java.lang.reflect.Member;
 
 /**
+ * <p>OneToManyPropertyDescriptor class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class OneToManyPropertyDescriptor {
 
-    private final PluralAttribute<?, ?, ?> attribute;
+	private final PluralAttribute<?, ?, ?> attribute;
 
-    public OneToManyPropertyDescriptor(final PluralAttribute<?, ?, ?> attribute) {
-        this.attribute = attribute;
-    }
+	/**
+	 * <p>Constructor for OneToManyPropertyDescriptor.</p>
+	 *
+	 * @param attribute a {@link javax.persistence.metamodel.PluralAttribute} object.
+	 */
+	public OneToManyPropertyDescriptor(final PluralAttribute<?, ?, ?> attribute) {
+		this.attribute = attribute;
+	}
 
-    public PluralAttribute.CollectionType getCollectionType() {
-        return attribute.getCollectionType();
-    }
+	/**
+	 * <p>getCollectionType.</p>
+	 *
+	 * @return a {@link javax.persistence.metamodel.PluralAttribute.CollectionType} object.
+	 */
+	public PluralAttribute.CollectionType getCollectionType() {
+		return attribute.getCollectionType();
+	}
 
-    public boolean isAssociation() {
-        return attribute.isAssociation();
-    }
+	/**
+	 * <p>isAssociation.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isAssociation() {
+		return attribute.isAssociation();
+	}
 
-    public Member getJavaMember() {
-        return attribute.getJavaMember();
-    }
+	/**
+	 * <p>getJavaMember.</p>
+	 *
+	 * @return a {@link java.lang.reflect.Member} object.
+	 */
+	public Member getJavaMember() {
+		return attribute.getJavaMember();
+	}
 
-    public Bindable.BindableType getBindableType() {
-        return attribute.getBindableType();
-    }
+	/**
+	 * <p>getBindableType.</p>
+	 *
+	 * @return a {@link javax.persistence.metamodel.Bindable.BindableType} object.
+	 */
+	public Bindable.BindableType getBindableType() {
+		return attribute.getBindableType();
+	}
 
-    public String getName() {
-        return attribute.getName();
-    }
+	/**
+	 * <p>getName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getName() {
+		return attribute.getName();
+	}
 
-    public Class<?> getBindableJavaType() {
-        return attribute.getBindableJavaType();
-    }
+	/**
+	 * <p>getBindableJavaType.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
+	public Class<?> getBindableJavaType() {
+		return attribute.getBindableJavaType();
+	}
 
-    public Attribute.PersistentAttributeType getPersistentAttributeType() {
-        return attribute.getPersistentAttributeType();
-    }
+	/**
+	 * <p>getPersistentAttributeType.</p>
+	 *
+	 * @return a {@link javax.persistence.metamodel.Attribute.PersistentAttributeType} object.
+	 */
+	public Attribute.PersistentAttributeType getPersistentAttributeType() {
+		return attribute.getPersistentAttributeType();
+	}
 
-    public Type<?> getElementType() {
-        return attribute.getElementType();
-    }
+	/**
+	 * <p>getElementType.</p>
+	 *
+	 * @return a {@link javax.persistence.metamodel.Type} object.
+	 */
+	public Type<?> getElementType() {
+		return attribute.getElementType();
+	}
 
-    public boolean isCollection() {
-        return attribute.isCollection();
-    }
+	/**
+	 * <p>isCollection.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isCollection() {
+		return attribute.isCollection();
+	}
 
-    public ManagedType<?> getDeclaringType() {
-        return attribute.getDeclaringType();
-    }
+	/**
+	 * <p>getDeclaringType.</p>
+	 *
+	 * @return a {@link javax.persistence.metamodel.ManagedType} object.
+	 */
+	public ManagedType<?> getDeclaringType() {
+		return attribute.getDeclaringType();
+	}
 
-    public Class<?> getJavaType() {
-        return attribute.getJavaType();
-    }
+	/**
+	 * <p>getJavaType.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
+	public Class<?> getJavaType() {
+		return attribute.getJavaType();
+	}
 }

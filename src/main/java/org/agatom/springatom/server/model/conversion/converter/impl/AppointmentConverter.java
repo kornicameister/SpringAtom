@@ -40,6 +40,7 @@ import org.agatom.springatom.server.model.conversion.converter.PersistableConver
 public class AppointmentConverter
 		extends PersistableConverterImpl<SAppointment> {
 
+	/** {@inheritDoc} */
 	@Override
 	public String convert(final SAppointment source) {
 		final SCar car = source.getCar();

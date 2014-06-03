@@ -23,6 +23,8 @@ import javax.persistence.*;
 import java.util.Collection;
 
 /**
+ * <p>SAclSid class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -31,50 +33,92 @@ import java.util.Collection;
 @Entity(name = SAclSid.ENTITY_NAME)
 @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SAclSid
-        extends PersistentObject<Long> {
-    public static final  String TABLE_NAME       = "acl_sid";
-    public static final  String ENTITY_NAME      = "SAclSid";
-    private static final long   serialVersionUID = 5934704955111593386L;
-    @Basic
-    @Column(name = "principal", nullable = false, insertable = true, updatable = true, length = 0, precision = 0)
-    private boolean                        principal;
-    @Basic
-    @Column(name = "sid", nullable = false, insertable = true, updatable = true, length = 100, precision = 0)
-    private String                         sid;
-    @OneToMany(mappedBy = "aclSidBySid")
-    private Collection<SAclEntry>          aclEntries;
-    @OneToMany(mappedBy = "aclSid")
-    private Collection<SAclObjectIdentity> aclObjectIdentities;
+		extends PersistentObject<Long> {
+	/** Constant <code>TABLE_NAME="acl_sid"</code> */
+	public static final  String TABLE_NAME       = "acl_sid";
+	/** Constant <code>ENTITY_NAME="SAclSid"</code> */
+	public static final  String ENTITY_NAME      = "SAclSid";
+	private static final long   serialVersionUID = 5934704955111593386L;
+	@Basic
+	@Column(name = "principal", nullable = false, insertable = true, updatable = true, length = 0, precision = 0)
+	private boolean                        principal;
+	@Basic
+	@Column(name = "sid", nullable = false, insertable = true, updatable = true, length = 100, precision = 0)
+	private String                         sid;
+	@OneToMany(mappedBy = "aclSidBySid")
+	private Collection<SAclEntry>          aclEntries;
+	@OneToMany(mappedBy = "aclSid")
+	private Collection<SAclObjectIdentity> aclObjectIdentities;
 
-    public boolean isPrincipal() {
-        return principal;
-    }
+	/**
+	 * <p>isPrincipal.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isPrincipal() {
+		return principal;
+	}
 
-    public void setPrincipal(final boolean principal) {
-        this.principal = principal;
-    }
+	/**
+	 * <p>Setter for the field <code>principal</code>.</p>
+	 *
+	 * @param principal a boolean.
+	 */
+	public void setPrincipal(final boolean principal) {
+		this.principal = principal;
+	}
 
-    public String getSid() {
-        return sid;
-    }
+	/**
+	 * <p>Getter for the field <code>sid</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getSid() {
+		return sid;
+	}
 
-    public void setSid(final String sid) {
-        this.sid = sid;
-    }
+	/**
+	 * <p>Setter for the field <code>sid</code>.</p>
+	 *
+	 * @param sid a {@link java.lang.String} object.
+	 */
+	public void setSid(final String sid) {
+		this.sid = sid;
+	}
 
-    public Collection<SAclEntry> getAclEntries() {
-        return aclEntries;
-    }
+	/**
+	 * <p>Getter for the field <code>aclEntries</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
+	public Collection<SAclEntry> getAclEntries() {
+		return aclEntries;
+	}
 
-    public void setAclEntries(final Collection<SAclEntry> aclEntriesById) {
-        this.aclEntries = aclEntriesById;
-    }
+	/**
+	 * <p>Setter for the field <code>aclEntries</code>.</p>
+	 *
+	 * @param aclEntriesById a {@link java.util.Collection} object.
+	 */
+	public void setAclEntries(final Collection<SAclEntry> aclEntriesById) {
+		this.aclEntries = aclEntriesById;
+	}
 
-    public Collection<SAclObjectIdentity> getAclObjectIdentities() {
-        return aclObjectIdentities;
-    }
+	/**
+	 * <p>Getter for the field <code>aclObjectIdentities</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
+	public Collection<SAclObjectIdentity> getAclObjectIdentities() {
+		return aclObjectIdentities;
+	}
 
-    public void setAclObjectIdentities(final Collection<SAclObjectIdentity> aclObjectIdentitiesById) {
-        this.aclObjectIdentities = aclObjectIdentitiesById;
-    }
+	/**
+	 * <p>Setter for the field <code>aclObjectIdentities</code>.</p>
+	 *
+	 * @param aclObjectIdentitiesById a {@link java.util.Collection} object.
+	 */
+	public void setAclObjectIdentities(final Collection<SAclObjectIdentity> aclObjectIdentitiesById) {
+		this.aclObjectIdentities = aclObjectIdentitiesById;
+	}
 }

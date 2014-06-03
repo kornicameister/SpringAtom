@@ -29,8 +29,18 @@ import javax.validation.constraints.Min;
  * @since 0.0.1
  */
 public interface PersistentVersionedBean
-        extends PersistentBean {
-    Long getVersion();
+		extends PersistentBean {
+	/**
+	 * <p>getVersion.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
+	Long getVersion();
 
-    void setVersion(@Nonnull @Min(value = 0) final Long version);
+	/**
+	 * <p>setVersion.</p>
+	 *
+	 * @param version a {@link java.lang.Long} object.
+	 */
+	void setVersion(@Nonnull @Min(value = 0) final Long version);
 }

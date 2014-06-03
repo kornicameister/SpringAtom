@@ -64,7 +64,9 @@ import java.util.Set;
 public class SUser
 		extends PersistentVersionedObject
 		implements SSecuredUser {
+	/** Constant <code>ENTITY_NAME="SUser"</code> */
 	protected static final String              ENTITY_NAME           = "SUser";
+	/** Constant <code>TABLE_NAME="suser"</code> */
 	protected static final String              TABLE_NAME            = "suser";
 	private static final   long                serialVersionUID      = -5918876176226057267L;
 	@Audited
@@ -89,10 +91,14 @@ public class SUser
 	@Column(name = "credentialsNonExpired")
 	private                boolean             credentialsNonExpired = Boolean.TRUE;
 
+	/**
+	 * <p>Constructor for SUser.</p>
+	 */
 	public SUser() {
 		this.credentials = new SUserCredentials();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		if (this.roles == null) {
@@ -105,46 +111,55 @@ public class SUser
 		return roles;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getPassword() {
 		return this.credentials.getPassword();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getUsername() {
 		return this.credentials.getUserName();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isAccountNonExpired() {
 		return this.accountNonExpired;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isAccountNonLocked() {
 		return this.accountNonLocked;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return this.credentialsNonExpired;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setEnabled(final boolean disabled) {
 		this.enabled = disabled;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean addAuthority(final GrantedAuthority authority) {
 		return roles.add(new SUserAuthority(this, (SAuthority) authority));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean removeAuthority(final GrantedAuthority role) {
 		SUserAuthority toDelete = null;
@@ -157,12 +172,14 @@ public class SUser
 		return toDelete != null && this.roles.remove(toDelete);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasAuthority(final GrantedAuthority role) {
 		final Set<? extends GrantedAuthority> rolesOut = Sets.newHashSet(role);
 		return this.hasAuthorities(rolesOut);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasAuthorities(final Collection<? extends GrantedAuthority> roles) {
 		final Set<SRole> rolesIn = Sets.newHashSet();
@@ -188,14 +205,21 @@ public class SUser
 		).size() > 0;
 	}
 
+	/** {@inheritDoc} */
 	public void setUsername(final String login) {
 		this.credentials.setUsername(login);
 	}
 
+	/** {@inheritDoc} */
 	public void setPassword(final String password) {
 		this.credentials.setPassword(password);
 	}
 
+	/**
+	 * <p>setAuthorities.</p>
+	 *
+	 * @param roles a {@link java.util.Set} object.
+	 */
 	public void setAuthorities(final Set<? extends GrantedAuthority> roles) {
 		if (this.roles == null) {
 			this.roles = new HashSet<>();
@@ -205,18 +229,32 @@ public class SUser
 		}
 	}
 
+	/**
+	 * <p>clearAuthorities.</p>
+	 */
 	public void clearAuthorities() {
 		this.roles = null;
 	}
 
+	/**
+	 * <p>Getter for the field <code>person</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.person.SPerson} object.
+	 */
 	public SPerson getPerson() {
 		return person;
 	}
 
+	/**
+	 * <p>Setter for the field <code>person</code>.</p>
+	 *
+	 * @param person a {@link org.agatom.springatom.server.model.beans.person.SPerson} object.
+	 */
 	public void setPerson(final SPerson person) {
 		this.person = person;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return this.person != null ? this.person.getIdentity() : this.getUsername();

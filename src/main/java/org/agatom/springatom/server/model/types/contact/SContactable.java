@@ -28,7 +28,19 @@ import org.hibernate.validator.constraints.Email;
  * @since 0.0.1
  */
 public interface SContactable {
-    String getPrimaryMail();
+	/**
+	 * <p>getPrimaryMail.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getPrimaryMail();
 
-    SContactable setPrimaryMail(final @Email String mail);
+	/**
+	 * <p>setPrimaryMail.</p>
+	 *
+	 * @param mail a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.contact.SContactable} object.
+	 */
+	SContactable setPrimaryMail(final @Email String mail);
 }

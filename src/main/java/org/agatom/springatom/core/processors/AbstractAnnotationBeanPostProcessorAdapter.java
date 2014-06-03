@@ -34,83 +34,105 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * <p>Abstract AbstractAnnotationBeanPostProcessorAdapter class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 // TODO implement AnnotationBeanUtils !!!!
 public abstract class AbstractAnnotationBeanPostProcessorAdapter
-        extends InstantiationAwareBeanPostProcessorAdapter
-        implements AnnotationBeanPostProcessor,
-                   InitializingBean {
+		extends InstantiationAwareBeanPostProcessorAdapter
+		implements AnnotationBeanPostProcessor,
+		InitializingBean {
 
-    protected Logger                          logger;
-    protected ConfigurableListableBeanFactory contextFactory;
+	protected Logger                          logger;
+	protected ConfigurableListableBeanFactory contextFactory;
 
-    @Override
-    public final void afterPropertiesSet() throws Exception {
-        this.logger = this.getLogger();
-        this.initProcessor();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public final void afterPropertiesSet() throws Exception {
+		this.logger = this.getLogger();
+		this.initProcessor();
+	}
 
-    protected void initProcessor() {
-    }
+	/**
+	 * <p>Getter for the field <code>logger</code>.</p>
+	 *
+	 * @return a {@link org.apache.log4j.Logger} object.
+	 */
+	protected abstract Logger getLogger();
 
-    protected abstract Logger getLogger();
+	/**
+	 * <p>initProcessor.</p>
+	 */
+	protected void initProcessor() {
+	}
 
-    protected abstract boolean isProcessable(Object bean);
+	/** {@inheritDoc} */
+	@Override
+	public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
+		this.contextFactory = (ConfigurableListableBeanFactory) beanFactory;
+	}
 
-    @Override
-    public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
-        this.contextFactory = (ConfigurableListableBeanFactory) beanFactory;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public final PropertyValues postProcessPropertyValues(PropertyValues pvs, final PropertyDescriptor[] pds, final Object bean, final String beanName) throws
+			BeansException {
+		if (this.isProcessable(bean)) {
+			logger.debug(String.format("/postProcessPropertyValues for bean => %s", beanName));
+			pvs = this.postProcessOverAnnotation(pvs, pds, beanName);
+			logger.debug(String.format("/postProcessPropertyValues for bean finished => %s", beanName));
+		}
+		return pvs;
+	}
 
-    @Override
-    public final PropertyValues postProcessPropertyValues(PropertyValues pvs, final PropertyDescriptor[] pds, final Object bean, final String beanName) throws
-            BeansException {
-        if (this.isProcessable(bean)) {
-            logger.debug(String.format("/postProcessPropertyValues for bean => %s", beanName));
-            pvs = this.postProcessOverAnnotation(pvs, pds, beanName);
-            logger.debug(String.format("/postProcessPropertyValues for bean finished => %s", beanName));
-        }
-        return pvs;
-    }
+	/**
+	 * <p>isProcessable.</p>
+	 *
+	 * @param bean a {@link java.lang.Object} object.
+	 *
+	 * @return a boolean.
+	 */
+	protected abstract boolean isProcessable(Object bean);
 
-    @Override
-    public PropertyValues postProcessOverAnnotation(final PropertyValues pvs, final PropertyDescriptor[] pds, final String beanName) {
-        MutablePropertyValues values = new MutablePropertyValues(pvs);
-        for (final PropertyDescriptor pd : pds) {
-            final String pdName = pd.getName();
-            final Object propertyValue = this.resolveValueFromAnnotation(pdName, beanName);
-            if (propertyValue != null) {
-                values = values.add(pdName, propertyValue);
-            }
-        }
-        return values;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public PropertyValues postProcessOverAnnotation(final PropertyValues pvs, final PropertyDescriptor[] pds, final String beanName) {
+		MutablePropertyValues values = new MutablePropertyValues(pvs);
+		for (final PropertyDescriptor pd : pds) {
+			final String pdName = pd.getName();
+			final Object propertyValue = this.resolveValueFromAnnotation(pdName, beanName);
+			if (propertyValue != null) {
+				values = values.add(pdName, propertyValue);
+			}
+		}
+		return values;
+	}
 
-    @Override
-    public Object resolveValueFromAnnotation(final String pdName, final String beanName) {
-        logger.trace(String.format("/resolveValueFromAnnotation \n\tproperty=>%s\n\tbean=>%s", pdName, beanName));
+	/** {@inheritDoc} */
+	@Override
+	public Object resolveValueFromAnnotation(final String pdName, final String beanName) {
+		logger.trace(String.format("/resolveValueFromAnnotation \n\tproperty=>%s\n\tbean=>%s", pdName, beanName));
 
-        final BeanDefinition beanDefinition = this.contextFactory.getBeanDefinition(beanName);
-        AnnotationMetadata metadata = null;
-        Object value = null;
+		final BeanDefinition beanDefinition = this.contextFactory.getBeanDefinition(beanName);
+		AnnotationMetadata metadata = null;
+		Object value = null;
 
-        if (beanDefinition instanceof ScannedGenericBeanDefinition) {
-            final ScannedGenericBeanDefinition definition = (ScannedGenericBeanDefinition) beanDefinition;
-            metadata = definition.getMetadata();
-        }
-        if (metadata != null) {
-            final Set<String> annotationTypes = metadata.getAnnotationTypes();
-            for (final String annotationType : annotationTypes) {
-                final Map<String, Object> annotationAttributes = metadata.getAnnotationAttributes(annotationType);
-                value = annotationAttributes.get(pdName);
-                if (value != null) {
-                    break;
-                }
-            }
-        }
-        return value;
-    }
+		if (beanDefinition instanceof ScannedGenericBeanDefinition) {
+			final ScannedGenericBeanDefinition definition = (ScannedGenericBeanDefinition) beanDefinition;
+			metadata = definition.getMetadata();
+		}
+		if (metadata != null) {
+			final Set<String> annotationTypes = metadata.getAnnotationTypes();
+			for (final String annotationType : annotationTypes) {
+				final Map<String, Object> annotationAttributes = metadata.getAnnotationAttributes(annotationType);
+				value = annotationAttributes.get(pdName);
+				if (value != null) {
+					break;
+				}
+			}
+		}
+		return value;
+	}
 }

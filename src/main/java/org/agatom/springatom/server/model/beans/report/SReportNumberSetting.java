@@ -37,7 +37,9 @@ import javax.validation.constraints.NotNull;
 @PrimaryKeyJoinColumn(name = "idSReportSetting")
 public class SReportNumberSetting
 		extends SReportSetting<Number> {
+	/** Constant <code>ENTITY_NAME="SReportNumberSetting"</code> */
 	public static final  String ENTITY_NAME      = "SReportNumberSetting";
+	/** Constant <code>TABLE_NAME="reports_settings_number"</code> */
 	public static final  String TABLE_NAME       = "reports_settings_number";
 	private static final long   serialVersionUID = -1700305423116775408L;
 	@NotNull
@@ -45,16 +47,25 @@ public class SReportNumberSetting
 	@Column(name = "report_setting_number_val", unique = false, updatable = true, insertable = true)
 	private Number value;
 
+	/** {@inheritDoc} */
 	@Override
 	public Number getValue() {
 		return this.value;
 	}
 
+	/**
+	 * <p>Setter for the field <code>value</code>.</p>
+	 *
+	 * @param value a {@link java.lang.Number} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReportNumberSetting} object.
+	 */
 	public SReportNumberSetting setValue(final Number value) {
 		this.value = value;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return String.format("%s - %s", super.getIdentity(), this.value);

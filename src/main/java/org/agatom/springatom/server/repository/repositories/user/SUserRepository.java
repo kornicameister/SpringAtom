@@ -31,6 +31,8 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import java.util.Collection;
 
 /**
+ * <p>SUserRepository interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -40,38 +42,94 @@ import java.util.Collection;
 @RepositoryRestResource(itemResourceRel = SUserRepository.REST_REPO_REL, path = SUserRepository.REST_REPO_PATH)
 public interface SUserRepository
 		extends SRepository<SUser, Long, Integer> {
+	/** Constant <code>REPO_NAME="UserRepo"</code> */
 	String REPO_NAME      = "UserRepo";
+	/** Constant <code>REST_REPO_PATH="user"</code> */
 	String REST_REPO_PATH = "user";
+	/** Constant <code>REST_REPO_REL="rest.user"</code> */
 	String REST_REPO_REL  = "rest.user";
 
+	/**
+	 * <p>findByPersonLastNameContainingOrPersonFirstNameContaining.</p>
+	 *
+	 * @param lastName  a {@link java.lang.String} object.
+	 * @param firstName a {@link java.lang.String} object.
+	 * @param pageable  a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	@RestResource(rel = "byPersonIdentityContaining", path = "identity_contains")
 	Page<SUser> findByPersonLastNameContainingOrPersonFirstNameContaining(
 			@Param("lastName") final String lastName,
 			@Param("firstName") final String firstName,
 			Pageable pageable);
 
+	/**
+	 * <p>findByPersonPrimaryMail.</p>
+	 *
+	 * @param mail a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 */
 	@RestResource(rel = "byPersonMail", path = "mail")
 	SUser findByPersonPrimaryMail(
 			@Param("mail") final String mail
 	);
 
+	/**
+	 * <p>findByPerson.</p>
+	 *
+	 * @param person a {@link org.agatom.springatom.server.model.beans.person.SPerson} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 */
 	@RestResource(rel = "byPerson", path = "person")
 	SUser findByPerson(
 			@Param("person") final SPerson person
 	);
 
+	/**
+	 * <p>findByCredentialsUsername.</p>
+	 *
+	 * @param login a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 */
 	@RestResource(rel = "byLogin", path = "login")
 	SUser findByCredentialsUsername(
 			@Param("login") final String login
 	);
 
+	/**
+	 * <p>findByCredentialsUsernameContaining.</p>
+	 *
+	 * @param login    a {@link java.lang.String} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	@RestResource(rel = "byLoginContaining", path = "login_contains")
 	Page<SUser> findByCredentialsUsernameContaining(
 			@Param("login") final String login,
 			final Pageable pageable
 	);
 
+	/**
+	 * <p>findByRolesIn.</p>
+	 *
+	 * @param role a {@link java.util.Collection} object.
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
 	Collection<SUser> findByRolesIn(final Collection<SRole> role);
 
+	/**
+	 * <p>findByRolesIn.</p>
+	 *
+	 * @param role     a {@link java.util.Collection} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SUser> findByRolesIn(final Collection<SRole> role, final Pageable pageable);
 }

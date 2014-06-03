@@ -23,6 +23,8 @@ import javax.persistence.*;
 import java.util.Collection;
 
 /**
+ * <p>SAclObjectIdentity class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -31,83 +33,155 @@ import java.util.Collection;
 @Entity(name = SAclObjectIdentity.ENTITY_NAME)
 @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false, insertable = true, updatable = false, length = 19, precision = 0))
 public class SAclObjectIdentity
-        extends PersistentObject<Long> {
-    public static final  String TABLE_NAME       = "acl_object_identity";
-    public static final  String ENTITY_NAME      = "SAclObjectIdentity";
-    private static final long   serialVersionUID = -2283824509477652149L;
-    @Basic
-    @Column(name = "object_id_identity", nullable = false, insertable = true, updatable = true, length = 19, precision = 0)
-    private long                           objectIdIdentity;
-    @Basic
-    @Column(name = "entries_inheriting", nullable = false, insertable = true, updatable = true, length = 0, precision = 0)
-    private boolean                        entriesInheriting;
-    @OneToMany(mappedBy = "aclObjectIdentity")
-    private Collection<SAclEntry>          aclEntriesById;
-    @ManyToOne
-    @JoinColumn(name = "parent_object", referencedColumnName = "id")
-    private SAclObjectIdentity             parent;
-    @OneToMany(mappedBy = "parent")
-    private Collection<SAclObjectIdentity> children;
-    @ManyToOne
-    @JoinColumn(name = "object_id_class", referencedColumnName = "id", nullable = false)
-    private SAclClass                      aclClass;
-    @ManyToOne
-    @JoinColumn(name = "owner_sid", referencedColumnName = "id")
-    private SAclSid                        aclSid;
+		extends PersistentObject<Long> {
+	/** Constant <code>TABLE_NAME="acl_object_identity"</code> */
+	public static final  String TABLE_NAME       = "acl_object_identity";
+	/** Constant <code>ENTITY_NAME="SAclObjectIdentity"</code> */
+	public static final  String ENTITY_NAME      = "SAclObjectIdentity";
+	private static final long   serialVersionUID = -2283824509477652149L;
+	@Basic
+	@Column(name = "object_id_identity", nullable = false, insertable = true, updatable = true, length = 19, precision = 0)
+	private long                           objectIdIdentity;
+	@Basic
+	@Column(name = "entries_inheriting", nullable = false, insertable = true, updatable = true, length = 0, precision = 0)
+	private boolean                        entriesInheriting;
+	@OneToMany(mappedBy = "aclObjectIdentity")
+	private Collection<SAclEntry>          aclEntriesById;
+	@ManyToOne
+	@JoinColumn(name = "parent_object", referencedColumnName = "id")
+	private SAclObjectIdentity             parent;
+	@OneToMany(mappedBy = "parent")
+	private Collection<SAclObjectIdentity> children;
+	@ManyToOne
+	@JoinColumn(name = "object_id_class", referencedColumnName = "id", nullable = false)
+	private SAclClass                      aclClass;
+	@ManyToOne
+	@JoinColumn(name = "owner_sid", referencedColumnName = "id")
+	private SAclSid                        aclSid;
 
-    public long getObjectIdIdentity() {
-        return objectIdIdentity;
-    }
+	/**
+	 * <p>Getter for the field <code>objectIdIdentity</code>.</p>
+	 *
+	 * @return a long.
+	 */
+	public long getObjectIdIdentity() {
+		return objectIdIdentity;
+	}
 
-    public void setObjectIdIdentity(final long objectIdIdentity) {
-        this.objectIdIdentity = objectIdIdentity;
-    }
+	/**
+	 * <p>Setter for the field <code>objectIdIdentity</code>.</p>
+	 *
+	 * @param objectIdIdentity a long.
+	 */
+	public void setObjectIdIdentity(final long objectIdIdentity) {
+		this.objectIdIdentity = objectIdIdentity;
+	}
 
-    public boolean isEntriesInheriting() {
-        return entriesInheriting;
-    }
+	/**
+	 * <p>isEntriesInheriting.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isEntriesInheriting() {
+		return entriesInheriting;
+	}
 
-    public void setEntriesInheriting(final boolean entriesInheriting) {
-        this.entriesInheriting = entriesInheriting;
-    }
+	/**
+	 * <p>Setter for the field <code>entriesInheriting</code>.</p>
+	 *
+	 * @param entriesInheriting a boolean.
+	 */
+	public void setEntriesInheriting(final boolean entriesInheriting) {
+		this.entriesInheriting = entriesInheriting;
+	}
 
-    public Collection<SAclEntry> getAclEntriesById() {
-        return aclEntriesById;
-    }
+	/**
+	 * <p>Getter for the field <code>aclEntriesById</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
+	public Collection<SAclEntry> getAclEntriesById() {
+		return aclEntriesById;
+	}
 
-    public void setAclEntriesById(final Collection<SAclEntry> aclEntriesById) {
-        this.aclEntriesById = aclEntriesById;
-    }
+	/**
+	 * <p>Setter for the field <code>aclEntriesById</code>.</p>
+	 *
+	 * @param aclEntriesById a {@link java.util.Collection} object.
+	 */
+	public void setAclEntriesById(final Collection<SAclEntry> aclEntriesById) {
+		this.aclEntriesById = aclEntriesById;
+	}
 
-    public SAclObjectIdentity getParent() {
-        return parent;
-    }
+	/**
+	 * <p>Getter for the field <code>parent</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.acl.SAclObjectIdentity} object.
+	 */
+	public SAclObjectIdentity getParent() {
+		return parent;
+	}
 
-    public void setParent(final SAclObjectIdentity aclObjectIdentityByParentObject) {
-        this.parent = aclObjectIdentityByParentObject;
-    }
+	/**
+	 * <p>Setter for the field <code>parent</code>.</p>
+	 *
+	 * @param aclObjectIdentityByParentObject a {@link org.agatom.springatom.server.model.beans.acl.SAclObjectIdentity} object.
+	 */
+	public void setParent(final SAclObjectIdentity aclObjectIdentityByParentObject) {
+		this.parent = aclObjectIdentityByParentObject;
+	}
 
-    public Collection<SAclObjectIdentity> getChildren() {
-        return children;
-    }
+	/**
+	 * <p>Getter for the field <code>children</code>.</p>
+	 *
+	 * @return a {@link java.util.Collection} object.
+	 */
+	public Collection<SAclObjectIdentity> getChildren() {
+		return children;
+	}
 
-    public void setChildren(final Collection<SAclObjectIdentity> aclObjectIdentitiesById) {
-        this.children = aclObjectIdentitiesById;
-    }
+	/**
+	 * <p>Setter for the field <code>children</code>.</p>
+	 *
+	 * @param aclObjectIdentitiesById a {@link java.util.Collection} object.
+	 */
+	public void setChildren(final Collection<SAclObjectIdentity> aclObjectIdentitiesById) {
+		this.children = aclObjectIdentitiesById;
+	}
 
-    public SAclClass getAclClass() {
-        return aclClass;
-    }
+	/**
+	 * <p>Getter for the field <code>aclClass</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.acl.SAclClass} object.
+	 */
+	public SAclClass getAclClass() {
+		return aclClass;
+	}
 
-    public void setAclClass(final SAclClass aclClassByObjectIdClass) {
-        this.aclClass = aclClassByObjectIdClass;
-    }
+	/**
+	 * <p>Setter for the field <code>aclClass</code>.</p>
+	 *
+	 * @param aclClassByObjectIdClass a {@link org.agatom.springatom.server.model.beans.acl.SAclClass} object.
+	 */
+	public void setAclClass(final SAclClass aclClassByObjectIdClass) {
+		this.aclClass = aclClassByObjectIdClass;
+	}
 
-    public SAclSid getAclSid() {
-        return aclSid;
-    }
+	/**
+	 * <p>Getter for the field <code>aclSid</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.acl.SAclSid} object.
+	 */
+	public SAclSid getAclSid() {
+		return aclSid;
+	}
 
-    public void setAclSid(final SAclSid aclSidByOwnerSid) {
-        this.aclSid = aclSidByOwnerSid;
-    }
+	/**
+	 * <p>Setter for the field <code>aclSid</code>.</p>
+	 *
+	 * @param aclSidByOwnerSid a {@link org.agatom.springatom.server.model.beans.acl.SAclSid} object.
+	 */
+	public void setAclSid(final SAclSid aclSidByOwnerSid) {
+		this.aclSid = aclSidByOwnerSid;
+	}
 }

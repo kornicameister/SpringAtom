@@ -29,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
+ * <p>SPersonContactServiceImpl class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -37,13 +39,15 @@ import java.util.List;
 @Service(value = SPersonContactServiceImpl.SERVICE_NAME)
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.SUPPORTS)
 public class SPersonContactServiceImpl
-        extends SBasicServiceImpl<SPersonContact, Long>
-        implements SPersonContactService {
+		extends SBasicServiceImpl<SPersonContact, Long>
+		implements SPersonContactService {
 
-    public static final String SERVICE_NAME = "PersonContactService";
+	/** Constant <code>SERVICE_NAME="PersonContactService"</code> */
+	public static final String SERVICE_NAME = "PersonContactService";
 
-    @Override
-    public List<SPersonContact> findByAssigned(final long idAssigned) {
-        return ImmutableList.copyOf(this.repository.findAll(QSPersonContact.sPersonContact.assigned.id.eq(idAssigned)));
-    }
+	/** {@inheritDoc} */
+	@Override
+	public List<SPersonContact> findByAssigned(final long idAssigned) {
+		return ImmutableList.copyOf(this.repository.findAll(QSPersonContact.sPersonContact.assigned.id.eq(idAssigned)));
+	}
 }

@@ -20,11 +20,18 @@ package org.agatom.springatom.server.model.support;
 import java.io.Serializable;
 
 /**
+ * <p>EntityColumn interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface EntityColumn
-        extends Serializable {
-    String getName();
+		extends Serializable {
+	/**
+	 * <p>getName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getName();
 }

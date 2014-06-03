@@ -36,11 +36,13 @@ public class VinNumberValidator
 	private static final int    VIN_LENGTH = 17;
 	private static final int[]  WEIGHTS    = {8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2};
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean supports(final Class<?> clazz) {
 		return ClassUtils.isAssignable(VinNumber.class, clazz) || ClassUtils.isAssignable(String.class, clazz);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void validate(final Object target, final Errors errors) {
 		String vinNumber;
@@ -54,6 +56,13 @@ public class VinNumberValidator
 		}
 	}
 
+	/**
+	 * <p>validate.</p>
+	 *
+	 * @param vinNumber a {@link java.lang.String} object.
+	 *
+	 * @return a boolean.
+	 */
 	public boolean validate(final String vinNumber) {
 		int crc = 0;
 		for (int i = 0; i < VIN_LENGTH; i++) {

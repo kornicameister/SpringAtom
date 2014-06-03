@@ -28,6 +28,8 @@ import java.lang.annotation.*;
 import static java.lang.annotation.ElementType.*;
 
 /**
+ * <p>ValidUser class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1

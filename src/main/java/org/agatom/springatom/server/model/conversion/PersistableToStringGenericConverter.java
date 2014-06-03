@@ -36,50 +36,55 @@ import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
+ * <p>PersistableToStringGenericConverter class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
 public class PersistableToStringGenericConverter
-        implements GenericConverter,
-                   ConditionalConverter,
-                   InitializingBean {
-    private static final Function<SlimEntityDescriptor<?>, ConvertiblePair> CONVERTIBLE_PAIR_FUNCTION = new Function<SlimEntityDescriptor<?>, ConvertiblePair>() {
-        @Nullable
-        @Override
-        public ConvertiblePair apply(@Nullable final SlimEntityDescriptor<?> input) {
-            assert input != null;
-            return new ConvertiblePair(input.getJavaClass(), String.class);
-        }
-    };
-    @Autowired
-    private EntityDescriptors           descriptors;
-    @Autowired
-    private PersistableConverterPicker  keyAwarePicker;
-    @Autowired
-    private FormattingConversionService conversionService;
+		implements GenericConverter,
+		ConditionalConverter,
+		InitializingBean {
+	private static final Function<SlimEntityDescriptor<?>, ConvertiblePair> CONVERTIBLE_PAIR_FUNCTION = new Function<SlimEntityDescriptor<?>, ConvertiblePair>() {
+		@Nullable
+		@Override
+		public ConvertiblePair apply(@Nullable final SlimEntityDescriptor<?> input) {
+			assert input != null;
+			return new ConvertiblePair(input.getJavaClass(), String.class);
+		}
+	};
+	@Autowired
+	private EntityDescriptors           descriptors;
+	@Autowired
+	private PersistableConverterPicker  keyAwarePicker;
+	@Autowired
+	private FormattingConversionService conversionService;
 
-    @Override
-    public Set<ConvertiblePair> getConvertibleTypes() {
-        return FluentIterable.from(this.descriptors.getSlimDescriptors()).transform(CONVERTIBLE_PAIR_FUNCTION).toSet();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Set<ConvertiblePair> getConvertibleTypes() {
+		return FluentIterable.from(this.descriptors.getSlimDescriptors()).transform(CONVERTIBLE_PAIR_FUNCTION).toSet();
+	}
 
-    @Override
-    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        final Class<?> type = sourceType.getObjectType();
-        final Class<?> tType = targetType.getObjectType();
-        return ClassUtils.isAssignable(Persistable.class, type) && ClassUtils.isAssignable(String.class, tType);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Object convert(final Object source, final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+		final Converter<Persistable, String> defaultConverter = this.keyAwarePicker.getDefaultConverter(sourceType);
+		return defaultConverter.convert((Persistable) source);
+	}
 
-    @Override
-    public Object convert(final Object source, final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        final Converter<Persistable, String> defaultConverter = this.keyAwarePicker.getDefaultConverter(sourceType);
-        return defaultConverter.convert((Persistable) source);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+		final Class<?> type = sourceType.getObjectType();
+		final Class<?> tType = targetType.getObjectType();
+		return ClassUtils.isAssignable(Persistable.class, type) && ClassUtils.isAssignable(String.class, tType);
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        this.conversionService.addConverter(this);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		this.conversionService.addConverter(this);
+	}
 }

@@ -29,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 /**
+ * <p>SReportServiceImpl class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -36,31 +38,34 @@ import org.springframework.util.Assert;
 @Service(value = SReportServiceImpl.SERVICE_NAME)
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
 public class SReportServiceImpl
-        extends SServiceImpl<SReport, Long, Integer>
-        implements SReportService {
-    protected static final String SERVICE_NAME = "reportService";
-    private static final   String CACHE_NAME   = "reports";
+		extends SServiceImpl<SReport, Long, Integer>
+		implements SReportService {
+	/** Constant <code>SERVICE_NAME="reportService"</code> */
+	protected static final String SERVICE_NAME = "reportService";
+	private static final   String CACHE_NAME   = "reports";
 
-    @Override
-    @Cacheable(value = CACHE_NAME)
-    public SReport getReport(final Long reportId) throws ReportBuilderServiceException {
-        try {
-            Assert.notNull(reportId, "Report#ID can not be null");
-            return this.findOne(reportId);
-        } catch (Exception e) {
-            throw new ReportBuilderServiceException(String.format("Failed to retrieve report for ID=%d", reportId), e);
-        }
-    }
+	/** {@inheritDoc} */
+	@Override
+	@Cacheable(value = CACHE_NAME)
+	public SReport getReport(final Long reportId) throws ReportBuilderServiceException {
+		try {
+			Assert.notNull(reportId, "Report#ID can not be null");
+			return this.findOne(reportId);
+		} catch (Exception e) {
+			throw new ReportBuilderServiceException(String.format("Failed to retrieve report for ID=%d", reportId), e);
+		}
+	}
 
-    @Override
-    @Cacheable(value = CACHE_NAME)
-    public SReport findByTitle(final String title) throws ReportBuilderServiceException {
-        try {
-            Assert.notNull(title, "Report#title can not be null");
-            return ((SReportRepository) this.repository).findByTitle(title);
-        } catch (Exception e) {
-            throw new ReportBuilderServiceException(String.format("Failed to retrieve report for title=%s", title), e);
-        }
-    }
+	/** {@inheritDoc} */
+	@Override
+	@Cacheable(value = CACHE_NAME)
+	public SReport findByTitle(final String title) throws ReportBuilderServiceException {
+		try {
+			Assert.notNull(title, "Report#title can not be null");
+			return ((SReportRepository) this.repository).findByTitle(title);
+		} catch (Exception e) {
+			throw new ReportBuilderServiceException(String.format("Failed to retrieve report for title=%s", title), e);
+		}
+	}
 
 }

@@ -22,6 +22,8 @@ import org.agatom.springatom.server.model.types.PersistentEmbeddable;
 import org.joda.time.DateTime;
 
 /**
+ * <p>Activity interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -29,15 +31,51 @@ import org.joda.time.DateTime;
 public interface Activity
 		extends PersistentEmbeddable {
 
+	/**
+	 * <p>getReporter.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 */
 	SUser getReporter();
 
+	/**
+	 * <p>setReporter.</p>
+	 *
+	 * @param user a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.activity.Activity} object.
+	 */
 	Activity setReporter(SUser user);
 
+	/**
+	 * <p>getAssigned.</p>
+	 *
+	 * @return a {@link org.joda.time.DateTime} object.
+	 */
 	DateTime getAssigned();
 
+	/**
+	 * <p>setAssigned.</p>
+	 *
+	 * @param assigned a {@link org.joda.time.DateTime} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.activity.Activity} object.
+	 */
 	Activity setAssigned(DateTime assigned);
 
+	/**
+	 * <p>getComment.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getComment();
 
+	/**
+	 * <p>setComment.</p>
+	 *
+	 * @param comment a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.activity.Activity} object.
+	 */
 	Activity setComment(String comment);
 }

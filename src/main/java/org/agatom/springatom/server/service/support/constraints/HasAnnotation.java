@@ -43,11 +43,11 @@ import static java.lang.annotation.ElementType.*;
 @Constraint(validatedBy = HasAnnotationValidator.class)
 @ReportAsSingleViolation
 public @interface HasAnnotation {
-    String message() default "{org.agatom.springatom.server.service.support.constraints.IsReportableEntity}";
+	String message() default "{org.agatom.springatom.server.service.support.constraints.IsReportableEntity}";
 
-    Class<? extends Annotation> annotation();
+	Class<? extends Annotation> annotation();
 
-    Class<?>[] groups() default {};
+	Class<?>[] groups() default {};
 
-    @Deprecated Class<? extends Payload>[] payload() default {};
+	@Deprecated Class<? extends Payload>[] payload() default {};
 }

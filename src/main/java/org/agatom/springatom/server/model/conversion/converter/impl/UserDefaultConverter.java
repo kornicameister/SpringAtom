@@ -39,6 +39,7 @@ import org.apache.log4j.Logger;
 public class UserDefaultConverter
 		extends PersistableConverterImpl<SUser> {
 
+	/** {@inheritDoc} */
 	@Override
 	public String convert(final SUser source) {
 		try {

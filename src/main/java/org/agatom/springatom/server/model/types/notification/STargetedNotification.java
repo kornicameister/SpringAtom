@@ -22,13 +22,27 @@ import org.springframework.data.domain.Persistable;
 import java.io.Serializable;
 
 /**
+ * <p>STargetedNotification interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface STargetedNotification<SN_T extends Persistable<PK>, PK extends Serializable>
-        extends SNotification<PK> {
-    SN_T getTarget();
+		extends SNotification<PK> {
+	/**
+	 * <p>getTarget.</p>
+	 *
+	 * @return a SN_T object.
+	 */
+	SN_T getTarget();
 
-    STargetedNotification<SN_T, PK> setTarget(final SN_T target);
+	/**
+	 * <p>setTarget.</p>
+	 *
+	 * @param target a SN_T object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.notification.STargetedNotification} object.
+	 */
+	STargetedNotification<SN_T, PK> setTarget(final SN_T target);
 }

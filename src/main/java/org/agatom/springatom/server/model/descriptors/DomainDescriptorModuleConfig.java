@@ -28,6 +28,8 @@ import org.springframework.context.annotation.*;
 import javax.persistence.EntityManagerFactory;
 
 /**
+ * <p>DomainDescriptorModuleConfig class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -36,30 +38,40 @@ import javax.persistence.EntityManagerFactory;
 @Lazy(value = false)
 @Configuration(value = "DDMConfiguration")
 @ComponentScan(
-        basePackages = {"org.agatom.springatom.server.model.descriptors.descriptor"}
+		basePackages = {"org.agatom.springatom.server.model.descriptors.descriptor"}
 )
 public class DomainDescriptorModuleConfig
-        extends AbstractModuleConfiguration {
-    private static final Logger LOGGER = Logger.getLogger(DomainDescriptorModuleConfig.class);
-    @Autowired
-    private EntityManagerFactory manager;
+		extends AbstractModuleConfiguration {
+	private static final Logger LOGGER = Logger.getLogger(DomainDescriptorModuleConfig.class);
+	@Autowired
+	private EntityManagerFactory manager;
 
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public EntityDescriptorReader getDomainTypeReader() {
-        this.logRegistering(DynamicEntityDescriptorReader.class, LOGGER);
-        final DynamicEntityDescriptorReader reader = new DynamicEntityDescriptorReader();
-        reader.setMetamodel(this.manager.getMetamodel());
-        return reader;
-    }
+	/**
+	 * <p>getEntityDescriptors.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors} object.
+	 */
+	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public EntityDescriptors getEntityDescriptors() {
+		this.logRegistering(EntityDescriptors.class, LOGGER);
+		final EntityDescriptors entityDescriptors = new EntityDescriptors();
+		entityDescriptors.setReader(this.getDomainTypeReader());
+		return entityDescriptors;
+	}
 
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public EntityDescriptors getEntityDescriptors() {
-        this.logRegistering(EntityDescriptors.class, LOGGER);
-        final EntityDescriptors entityDescriptors = new EntityDescriptors();
-        entityDescriptors.setReader(this.getDomainTypeReader());
-        return entityDescriptors;
-    }
+	/**
+	 * <p>getDomainTypeReader.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.descriptors.EntityDescriptorReader} object.
+	 */
+	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public EntityDescriptorReader getDomainTypeReader() {
+		this.logRegistering(DynamicEntityDescriptorReader.class, LOGGER);
+		final DynamicEntityDescriptorReader reader = new DynamicEntityDescriptorReader();
+		reader.setMetamodel(this.manager.getMetamodel());
+		return reader;
+	}
 
 }

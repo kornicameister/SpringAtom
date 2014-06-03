@@ -28,6 +28,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
+ * <p>SPersonContactRepository interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -38,15 +40,42 @@ import org.springframework.data.rest.core.annotation.RestResource;
 public interface SPersonContactRepository
 		extends SBasicRepository<SPersonContact, Long> {
 
+	/** Constant <code>REST_REPO_REL="rest.person.contact"</code> */
 	String REST_REPO_REL  = "rest.person.contact";
+	/** Constant <code>REST_REPO_PATH="person_contact"</code> */
 	String REST_REPO_PATH = "person_contact";
+	/** Constant <code>REPO_NAME="SPersonContactRepository"</code> */
 	String REPO_NAME      = "SPersonContactRepository";
 
+	/**
+	 * <p>findByAssignedLastNameContaining.</p>
+	 *
+	 * @param lastName a {@link java.lang.String} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	@RestResource(rel = "byAssignedLastName", path = "assigned_lastName")
 	Page<SPersonContact> findByAssignedLastNameContaining(@Param("lastName") final String lastName, Pageable pageable);
 
+	/**
+	 * <p>findByContactContaining.</p>
+	 *
+	 * @param contact  a {@link java.lang.String} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SPersonContact> findByContactContaining(@Param("contact") final String contact, Pageable pageable);
 
+	/**
+	 * <p>findByType.</p>
+	 *
+	 * @param type     a {@link org.agatom.springatom.server.model.types.contact.ContactType} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	Page<SPersonContact> findByType(@Param("type") final ContactType type, Pageable pageable);
 
 }

@@ -24,21 +24,29 @@ import org.springframework.core.type.filter.AssignableTypeFilter;
 import java.io.IOException;
 
 /**
+ * <p>InterfaceTypeFilter class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class InterfaceTypeFilter
-        extends AssignableTypeFilter {
-    public InterfaceTypeFilter(final Class<?> targetType) {
-        super(targetType);
-    }
+		extends AssignableTypeFilter {
+	/**
+	 * <p>Constructor for InterfaceTypeFilter.</p>
+	 *
+	 * @param targetType a {@link java.lang.Class} object.
+	 */
+	public InterfaceTypeFilter(final Class<?> targetType) {
+		super(targetType);
+	}
 
-    @Override
-    public boolean match(
-            final MetadataReader metadataReader,
-            final MetadataReaderFactory metadataReaderFactory) throws IOException {
-        return metadataReader.getClassMetadata().isInterface()
-                && super.match(metadataReader, metadataReaderFactory);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public boolean match(
+			final MetadataReader metadataReader,
+			final MetadataReaderFactory metadataReaderFactory) throws IOException {
+		return metadataReader.getClassMetadata().isInterface()
+				&& super.match(metadataReader, metadataReaderFactory);
+	}
 }

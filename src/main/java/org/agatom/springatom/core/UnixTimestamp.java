@@ -24,50 +24,70 @@ import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * <p>UnixTimestamp class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class UnixTimestamp
-        implements Serializable {
-    private static final long serialVersionUID = -2419335050409513828L;
-    private DateTime time;
+		implements Serializable {
+	private static final long serialVersionUID = -2419335050409513828L;
+	private DateTime time;
 
-    public UnixTimestamp(final long ts) {
-        this.setTime(ts);
-    }
+	/**
+	 * <p>Constructor for UnixTimestamp.</p>
+	 *
+	 * @param ts time in miliseconds.
+	 */
+	public UnixTimestamp(final long ts) {
+		this.setTime(ts);
+	}
 
-    public DateTime getTime() {
-        return time;
-    }
+	/**
+	 * <p>Getter for the field <code>time</code>.</p>
+	 *
+	 * @return a {@link org.joda.time.DateTime} object.
+	 */
+	public DateTime getTime() {
+		return time;
+	}
 
-    public void setTime(final long ts) {
-        this.time = new DateTime(TimeUnit.SECONDS.toMillis(ts));
-    }
+	/**
+	 * <p>Setter for the field <code>time</code>.</p>
+	 *
+	 * @param ts a long.
+	 */
+	public void setTime(final long ts) {
+		this.time = new DateTime(TimeUnit.SECONDS.toMillis(ts));
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(time);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(time);
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        UnixTimestamp that = (UnixTimestamp) o;
+		UnixTimestamp that = (UnixTimestamp) o;
 
-        return Objects.equal(this.time, that.time);
-    }
+		return Objects.equal(this.time, that.time);
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(time)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(time)
+				.toString();
+	}
 }

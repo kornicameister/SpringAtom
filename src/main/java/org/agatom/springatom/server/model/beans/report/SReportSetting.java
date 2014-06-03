@@ -48,7 +48,9 @@ import java.io.Serializable;
 abstract class SReportSetting<HOLDS extends Serializable>
 		extends PersistentObject<Long>
 		implements ReportSetting<HOLDS> {
+	/** Constant <code>TABLE_NAME="reports_settings"</code> */
 	protected static final String TABLE_NAME       = "reports_settings";
+	/** Constant <code>ENTITY_NAME="SReportSetting"</code> */
 	protected static final String ENTITY_NAME      = "SReportSetting";
 	private static final   long   serialVersionUID = -1700305423116775408L;
 	@NotNull
@@ -58,26 +60,43 @@ abstract class SReportSetting<HOLDS extends Serializable>
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	protected SReport report;
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return this.getName();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public final String getName() {
 		return this.name;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public final Report getReport() {
 		return report;
 	}
 
+	/**
+	 * <p>Setter for the field <code>report</code>.</p>
+	 *
+	 * @param report a {@link org.agatom.springatom.server.model.beans.report.SReport} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReportSetting} object.
+	 */
 	public final SReportSetting<HOLDS> setReport(final SReport report) {
 		this.report = report;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>name</code>.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.report.SReportSetting} object.
+	 */
 	public final SReportSetting<HOLDS> setName(final String name) {
 		this.name = name;
 		return this;

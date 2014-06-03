@@ -27,10 +27,10 @@ import javax.persistence.MappedSuperclass;
 
 /**
  * {@code PersistentContactable} is superclass for all entities that can be accesses using
- * {@link SContactable} information.
- * {@code PersistentContactable} extends from {@link PersistentVersionedObject} because of the nature of
+ * {@link org.agatom.springatom.server.model.types.contact.SContactable} information.
+ * {@code PersistentContactable} extends from {@link org.agatom.springatom.server.model.beans.PersistentVersionedObject} because of the nature of
  * the data known further as contact information.
- * In this particular class it is rather obvious that {@link PersistentContactable#primaryMail} is an immutable
+ * In this particular class it is rather obvious that {@link org.agatom.springatom.server.model.beans.PersistentContactable#primaryMail} is an immutable
  * value that can be changed in the future.
  *
  * @author kornicameister
@@ -40,23 +40,25 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 abstract public class PersistentContactable
-        extends PersistentVersionedObject
-        implements SContactable {
-    private static final long serialVersionUID = 8693440343386488007L;
-    @Email
-    @NotBlank
-    @NaturalId
-    @Column(name = "primaryMail", length = 45, nullable = false, unique = true)
-    private String primaryMail;
+		extends PersistentVersionedObject
+		implements SContactable {
+	private static final long serialVersionUID = 8693440343386488007L;
+	@Email
+	@NotBlank
+	@NaturalId
+	@Column(name = "primaryMail", length = 45, nullable = false, unique = true)
+	private String primaryMail;
 
-    @Override
-    public String getPrimaryMail() {
-        return this.primaryMail;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getPrimaryMail() {
+		return this.primaryMail;
+	}
 
-    @Override
-    public SContactable setPrimaryMail(final String email) {
-        this.primaryMail = email;
-        return this;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public SContactable setPrimaryMail(final String email) {
+		this.primaryMail = email;
+		return this;
+	}
 }

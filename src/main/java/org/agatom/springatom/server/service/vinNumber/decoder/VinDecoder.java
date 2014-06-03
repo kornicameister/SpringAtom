@@ -31,9 +31,27 @@ import org.springframework.cache.annotation.Cacheable;
  */
 public interface VinDecoder {
 
+	/**
+	 * <p>decode.</p>
+	 *
+	 * @param vinNumber a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.service.vinNumber.model.VinNumberData} object.
+	 *
+	 * @throws org.agatom.springatom.server.service.vinNumber.exception.VinDecodingException if any.
+	 */
 	@Cacheable(value = "vinDecoder")
 	VinNumberData decode(final String vinNumber) throws VinDecodingException;
 
+	/**
+	 * <p>decode.</p>
+	 *
+	 * @param vinNumber a {@link org.agatom.springatom.server.service.vinNumber.model.VinNumber} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.service.vinNumber.model.VinNumberData} object.
+	 *
+	 * @throws org.agatom.springatom.server.service.vinNumber.exception.VinDecodingException if any.
+	 */
 	@Cacheable(value = "vinDecoder")
 	VinNumberData decode(final VinNumber vinNumber) throws VinDecodingException;
 

@@ -103,6 +103,7 @@ class DefaultWMIManufacturedInResolver
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public CountryCode getCountryCode(final String wmi) {
 		final String cc = wmi.substring(0, 2);

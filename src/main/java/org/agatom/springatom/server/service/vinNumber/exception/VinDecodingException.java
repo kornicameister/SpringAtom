@@ -30,14 +30,30 @@ public class VinDecodingException
 		extends VinServiceException {
 	private static final long serialVersionUID = 6260529301188575535L;
 
+	/**
+	 * <p>Constructor for VinDecodingException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
 	public VinDecodingException(final String message) {
 		super(message);
 	}
 
+	/**
+	 * <p>Constructor for VinDecodingException.</p>
+	 *
+	 * @param cause a {@link java.lang.Throwable} object.
+	 */
 	public VinDecodingException(final Throwable cause) {
 		super(cause);
 	}
 
+	/**
+	 * <p>Constructor for VinDecodingException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
 	public VinDecodingException(final String message, final Throwable cause) {
 		super(message, cause);
 	}

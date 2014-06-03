@@ -25,6 +25,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
+ * <p>AuditedRevisionEntity class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -33,16 +35,26 @@ import javax.persistence.Table;
 @Entity(name = "revinfo")
 @RevisionEntity(value = AuditingRevisionEntity.class)
 public class AuditedRevisionEntity
-        extends DefaultTrackingModifiedEntitiesRevisionEntity {
-    private static final long serialVersionUID = -3255456739922989639L;
-    @Column(length = 50)
-    private String user;
+		extends DefaultTrackingModifiedEntitiesRevisionEntity {
+	private static final long serialVersionUID = -3255456739922989639L;
+	@Column(length = 50)
+	private String user;
 
-    public String getUser() {
-        return user;
-    }
+	/**
+	 * <p>Getter for the field <code>user</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getUser() {
+		return user;
+	}
 
-    public void setUser(final String user) {
-        this.user = user;
-    }
+	/**
+	 * <p>Setter for the field <code>user</code>.</p>
+	 *
+	 * @param user a {@link java.lang.String} object.
+	 */
+	public void setUser(final String user) {
+		this.user = user;
+	}
 }

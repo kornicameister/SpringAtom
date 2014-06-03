@@ -20,12 +20,14 @@ package org.agatom.springatom.server.service.domain;
 import org.agatom.springatom.server.model.beans.issue.SIssue;
 
 /**
+ * <p>SIssueService interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface SIssueService
-        extends SBasicService<SIssue, Long> {
+		extends SBasicService<SIssue, Long> {
 
 
 }

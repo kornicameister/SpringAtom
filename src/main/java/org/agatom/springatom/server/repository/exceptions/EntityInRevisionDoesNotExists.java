@@ -29,17 +29,29 @@ import java.util.Arrays;
  * @version 0.0.1
  * @since 0.0.1
  */
-
 public class EntityInRevisionDoesNotExists
-        extends Exception {
-    private static final String MSG              = "No entry exists for %s with revision=%s";
-    private static final long   serialVersionUID = -7403813105949944889L;
+		extends Exception {
+	private static final String MSG              = "No entry exists for %s with revision=%s";
+	private static final long   serialVersionUID = -7403813105949944889L;
 
-    public <T extends Persistable<ID>, ID extends Serializable> EntityInRevisionDoesNotExists(final Class<T> entityClazz, final Object... revision) {
-        this(String.format(MSG, entityClazz.getName(), Arrays.toString(revision)));
-    }
+	/**
+	 * <p>Constructor for EntityInRevisionDoesNotExists.</p>
+	 *
+	 * @param entityClazz a {@link java.lang.Class} object.
+	 * @param revision    a {@link java.lang.Object} object.
+	 * @param <T>         a T object.
+	 * @param <ID>        a ID object.
+	 */
+	public <T extends Persistable<ID>, ID extends Serializable> EntityInRevisionDoesNotExists(final Class<T> entityClazz, final Object... revision) {
+		this(String.format(MSG, entityClazz.getName(), Arrays.toString(revision)));
+	}
 
-    public EntityInRevisionDoesNotExists(final String msg) {
-        super(msg);
-    }
+	/**
+	 * <p>Constructor for EntityInRevisionDoesNotExists.</p>
+	 *
+	 * @param msg a {@link java.lang.String} object.
+	 */
+	public EntityInRevisionDoesNotExists(final String msg) {
+		super(msg);
+	}
 }

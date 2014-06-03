@@ -25,6 +25,8 @@ import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
 
 /**
+ * <p>SAuthority class.</p>
+ *
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
@@ -35,7 +37,9 @@ import javax.persistence.*;
 public class SAuthority
 		extends PersistentObject<Long>
 		implements GrantedAuthority {
+	/** Constant <code>ENTITY_NAME="SAuthority"</code> */
 	protected static final String ENTITY_NAME      = "SAuthority";
+	/** Constant <code>TABLE_NAME="sauthority"</code> */
 	protected static final String TABLE_NAME       = "sauthority";
 	private static final   long   serialVersionUID = 2893594861541235345L;
 	@Type(type = "org.hibernate.type.EnumType")
@@ -43,38 +47,75 @@ public class SAuthority
 	@Enumerated(value = EnumType.STRING)
 	private                SRole  role             = null;
 
+	/**
+	 * <p>Constructor for SAuthority.</p>
+	 */
 	public SAuthority() {
 	}
 
+	/**
+	 * <p>Constructor for SAuthority.</p>
+	 *
+	 * @param role a {@link java.lang.String} object.
+	 */
 	public SAuthority(final String role) {
 		this.role = SRole.valueOf(role);
 	}
 
+	/**
+	 * <p>fromRole.</p>
+	 *
+	 * @param roleMechanic a {@link org.agatom.springatom.server.model.types.user.SRole} object.
+	 *
+	 * @return a {@link org.springframework.security.core.GrantedAuthority} object.
+	 */
 	public static GrantedAuthority fromRole(final SRole roleMechanic) {
 		return new SAuthority(roleMechanic.toString());
 	}
 
+	/**
+	 * <p>Getter for the field <code>role</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.user.SRole} object.
+	 */
 	public SRole getRole() {
 		return role;
 	}
 
+	/**
+	 * <p>Setter for the field <code>role</code>.</p>
+	 *
+	 * @param role a {@link org.agatom.springatom.server.model.types.user.SRole} object.
+	 */
 	public void setRole(final SRole role) {
 		this.role = role;
 	}
 
+	/**
+	 * <p>getRoleId.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getRoleId() {
 		return this.role.getRoleId();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getAuthority() {
 		return this.role.toString();
 	}
 
+	/**
+	 * <p>setAuthority.</p>
+	 *
+	 * @param role a {@link java.lang.String} object.
+	 */
 	public void setAuthority(final String role) {
 		this.role = SRole.valueOf(role);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return this.role.toString();

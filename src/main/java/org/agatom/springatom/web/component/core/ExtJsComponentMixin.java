@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,12 +15,36 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-@javax.xml.bind.annotation.XmlSchema(
-        namespace = "http://www.example.org/SpringAtom",
-        xmlns = {
-                @XmlNs(prefix = "sa", namespaceURI = "http://www.example.org/SpringAtom")
-        },
-        elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED
-) package org.agatom.springatom.server.xml.beans;
+package org.agatom.springatom.web.component.core;
 
-import javax.xml.bind.annotation.XmlNs;
+/**
+ * {@code ExtJsComponentMixin} marks class as capable of being rendered in context of <a href="http://docs.sencha.com/extjs/4.2.2/">ExtJS</a>
+ *
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
+ *
+ * @author kornicameister
+ * @version 0.0.1
+ * @since 0.0.1
+ */
+public interface ExtJsComponentMixin {
+	/**
+	 * <p>isAnimCollapse.</p>
+	 *
+	 * @return a boolean.
+	 */
+	boolean isAnimCollapse();
+
+	/**
+	 * <p>isCollapsible.</p>
+	 *
+	 * @return a boolean.
+	 */
+	boolean isCollapsible();
+
+	/**
+	 * <p>isBorder.</p>
+	 *
+	 * @return a boolean.
+	 */
+	boolean isBorder();
+}

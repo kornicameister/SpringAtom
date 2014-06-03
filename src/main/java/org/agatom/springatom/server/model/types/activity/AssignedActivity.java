@@ -20,13 +20,27 @@ package org.agatom.springatom.server.model.types.activity;
 import org.agatom.springatom.server.model.beans.user.SUser;
 
 /**
+ * <p>AssignedActivity interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface AssignedActivity
-        extends Activity {
-    SUser getAssignee();
+		extends Activity {
+	/**
+	 * <p>getAssignee.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 */
+	SUser getAssignee();
 
-    AssignedActivity setAssignee(final SUser assignee);
+	/**
+	 * <p>setAssignee.</p>
+	 *
+	 * @param assignee a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.activity.AssignedActivity} object.
+	 */
+	AssignedActivity setAssignee(final SUser assignee);
 }

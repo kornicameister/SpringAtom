@@ -47,28 +47,29 @@ import java.io.File;
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @Description("Handles removing files from the FileSystem after report was successfully deleted")
 public class SReportEventListener
-        extends AbstractRepositoryEventListener<SReport> {
+		extends AbstractRepositoryEventListener<SReport> {
 
-    private static final Logger                   LOGGER      = Logger.getLogger(SReportEventListener.class);
-    private static final Class<BeforeDeleteEvent> EVENT_CLASS = BeforeDeleteEvent.class;
+	private static final Logger                   LOGGER      = Logger.getLogger(SReportEventListener.class);
+	private static final Class<BeforeDeleteEvent> EVENT_CLASS = BeforeDeleteEvent.class;
 
-    @Override
-    protected void onBeforeDelete(final SReport entity) {
-        final String displayString = ObjectUtils.getDisplayString(entity);
-        LOGGER.trace(String.format("Handling %s for %s", ClassUtils.getShortName(EVENT_CLASS), displayString));
-        try {
-            final ReportResource resource = entity.getResource();
-            final File jasperFile = ResourceUtils.getFile(resource.getJasperPath());
-            final File cfgFile = ResourceUtils.getFile(resource.getConfigurationPath());
+	/** {@inheritDoc} */
+	@Override
+	protected void onBeforeDelete(final SReport entity) {
+		final String displayString = ObjectUtils.getDisplayString(entity);
+		LOGGER.trace(String.format("Handling %s for %s", ClassUtils.getShortName(EVENT_CLASS), displayString));
+		try {
+			final ReportResource resource = entity.getResource();
+			final File jasperFile = ResourceUtils.getFile(resource.getJasperPath());
+			final File cfgFile = ResourceUtils.getFile(resource.getConfigurationPath());
 
-            Assert.isTrue(jasperFile.exists());
-            Assert.isTrue(jasperFile.delete());
+			Assert.isTrue(jasperFile.exists());
+			Assert.isTrue(jasperFile.delete());
 
-            Assert.isTrue(cfgFile.exists());
-            Assert.isTrue(cfgFile.delete());
-        } catch (Exception exception) {
-            LOGGER.fatal(String.format("Failed to delete resources for report=%s", displayString));
-        }
-        LOGGER.trace(String.format("Handled %s for %s", ClassUtils.getShortName(EVENT_CLASS), displayString));
-    }
+			Assert.isTrue(cfgFile.exists());
+			Assert.isTrue(cfgFile.delete());
+		} catch (Exception exception) {
+			LOGGER.fatal(String.format("Failed to delete resources for report=%s", displayString));
+		}
+		LOGGER.trace(String.format("Handled %s for %s", ClassUtils.getShortName(EVENT_CLASS), displayString));
+	}
 }

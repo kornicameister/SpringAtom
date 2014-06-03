@@ -28,6 +28,8 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 
 /**
+ * <p>Abstract SAbstractContact class.</p>
+ *
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
@@ -42,8 +44,11 @@ import javax.persistence.*;
 abstract public class SAbstractContact<SC_H extends PersistentContactable>
 		extends PersistentObject<Long>
 		implements SContact<SC_H> {
+	/** Constant <code>TABLE_NAME="contacts"</code> */
 	public static final    String TABLE_NAME       = "contacts";
+	/** Constant <code>ENTITY_NAME="SAbstractContact"</code> */
 	public static final    String ENTITY_NAME      = "SAbstractContact";
+	/** Constant <code>CONTACT_FOR="sac_for"</code> */
 	protected static final String CONTACT_FOR      = "sac_for";
 	private static final   long   serialVersionUID = 8494361809629647372L;
 	@Length(min = 5, max = 60)
@@ -54,26 +59,31 @@ abstract public class SAbstractContact<SC_H extends PersistentContactable>
 	@Column(name = "type", length = 60)
 	protected ContactType type;
 
+	/** {@inheritDoc} */
 	@Override
 	public final String getContact() {
 		return contact;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public final void setContact(final String contact) {
 		this.contact = contact;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ContactType getType() {
 		return this.type;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setType(final ContactType type) {
 		this.type = type;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return this.contact;

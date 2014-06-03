@@ -35,11 +35,21 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class UserRegistrationException extends ServiceException {
+public class UserRegistrationException
+		extends ServiceException {
 	private static final long   serialVersionUID = 734212521196222534L;
 	private              SUser  user             = null;
 	private              String userName         = null;
 
+	/**
+	 * <p>Constructor for UserRegistrationException.</p>
+	 *
+	 * @param user    a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 * @param <T>     a T object.
+	 * @param <ID>    a ID object.
+	 */
 	public <T extends Persistable<ID>, ID extends Serializable> UserRegistrationException(
 			final SUser user,
 			final String message,
@@ -48,15 +58,32 @@ public class UserRegistrationException extends ServiceException {
 		this.user = new Cloner().deepClone(user);
 	}
 
+	/**
+	 * <p>Constructor for UserRegistrationException.</p>
+	 *
+	 * @param userName a {@link java.lang.String} object.
+	 * @param message  a {@link java.lang.String} object.
+	 * @param exp      a {@link java.lang.Exception} object.
+	 */
 	public UserRegistrationException(final String userName, final String message, final Exception exp) {
 		super(message, exp);
 		this.userName = userName;
 	}
 
+	/**
+	 * <p>Getter for the field <code>user</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 */
 	public SUser getUser() {
 		return this.user;
 	}
 
+	/**
+	 * <p>Getter for the field <code>userName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getUserName() {
 		return this.userName == null ? (this.user != null ? this.user.getUsername() : "") : this.userName;
 	}

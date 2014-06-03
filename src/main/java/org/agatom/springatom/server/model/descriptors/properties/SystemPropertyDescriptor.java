@@ -20,15 +20,22 @@ package org.agatom.springatom.server.model.descriptors.properties;
 import javax.persistence.metamodel.SingularAttribute;
 
 /**
+ * <p>SystemPropertyDescriptor class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class SystemPropertyDescriptor
-        extends BasicPropertyDescriptor {
-    private static final long serialVersionUID = 3775651163181736999L;
+		extends BasicPropertyDescriptor {
+	private static final long serialVersionUID = 3775651163181736999L;
 
-    public SystemPropertyDescriptor(final SingularAttribute<?, ?> attribute) {
-        super(attribute);
-    }
+	/**
+	 * <p>Constructor for SystemPropertyDescriptor.</p>
+	 *
+	 * @param attribute a {@link javax.persistence.metamodel.SingularAttribute} object.
+	 */
+	public SystemPropertyDescriptor(final SingularAttribute<?, ?> attribute) {
+		super(attribute);
+	}
 }

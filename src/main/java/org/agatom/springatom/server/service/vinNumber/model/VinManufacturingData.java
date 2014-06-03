@@ -39,51 +39,85 @@ public class VinManufacturingData
 	private              CountryCode manufacturedIn   = null;
 	private              String      manufacturedBy   = null;
 
+	/**
+	 * <p>Setter for the field <code>brand</code>.</p>
+	 *
+	 * @param brand a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.car.ManufacturingData} object.
+	 */
 	public ManufacturingData setBrand(final String brand) {
 		this.brand = brand;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>model</code>.</p>
+	 *
+	 * @param model a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.car.ManufacturingData} object.
+	 */
 	public ManufacturingData setModel(final String model) {
 		this.model = model;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getBrand() {
 		return this.brand;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getModel() {
 		return this.model;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public CountryCode getManufacturedIn() {
 		return this.manufacturedIn;
 	}
 
+	/**
+	 * <p>Setter for the field <code>manufacturedIn</code>.</p>
+	 *
+	 * @param manufacturedIn a {@link com.neovisionaries.i18n.CountryCode} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.service.vinNumber.model.VinManufacturingData} object.
+	 */
 	public VinManufacturingData setManufacturedIn(final CountryCode manufacturedIn) {
 		this.manufacturedIn = manufacturedIn;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getManufacturedBy() {
 		return this.manufacturedBy;
 	}
 
+	/**
+	 * <p>Setter for the field <code>manufacturedBy</code>.</p>
+	 *
+	 * @param manufacturedBy a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.service.vinNumber.model.VinManufacturingData} object.
+	 */
 	public VinManufacturingData setManufacturedBy(final String manufacturedBy) {
 		this.manufacturedBy = manufacturedBy;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(brand, model, manufacturedIn, manufacturedBy);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -97,6 +131,7 @@ public class VinManufacturingData
 				Objects.equal(this.manufacturedBy, that.manufacturedBy);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)

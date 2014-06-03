@@ -27,9 +27,19 @@ import java.util.regex.Pattern;
  * @since 0.0.1
  */
 public class RegexpPatterns {
+	/** Constant <code>BIG_FIRST_LETTER_PATTERN="^([A-Z]|[0-9]).*$"</code> */
 	public static final String BIG_FIRST_LETTER_PATTERN = "^([A-Z]|[0-9]).*$";
+	/** Constant <code>LOWER_CASE_STRING="^(a-z)?([\\w|\\d])*$"</code> */
 	public static final String LOWER_CASE_STRING        = "^(a-z)?([\\w|\\d])*$";
 
+	/**
+	 * <p>matches.</p>
+	 *
+	 * @param value a {@link java.lang.String} object.
+	 * @param regex a {@link java.lang.String} object.
+	 *
+	 * @return a boolean.
+	 */
 	public static boolean matches(final String value, final String regex) {
 		final Pattern pattern = Pattern.compile(regex);
 		return pattern.matcher(value).matches();

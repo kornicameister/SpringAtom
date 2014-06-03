@@ -22,6 +22,8 @@ import org.agatom.springatom.core.annotations.LazyComponent;
 import java.lang.annotation.*;
 
 /**
+ * <p>PersistableConverterUtility class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -32,21 +34,21 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @LazyComponent
 public @interface PersistableConverterUtility {
-    /**
-     * The value may indicate a suggestion for a logical component name,
-     * to be turned into a Spring bean in case of an autodetected component.
-     *
-     * @return the suggested component name, if any
-     */
-    String value() default "";
+	/**
+	 * The value may indicate a suggestion for a logical component name,
+	 * to be turned into a Spring bean in case of an autodetected component.
+	 *
+	 * @return the suggested component name, if any
+	 */
+	String value() default "";
 
-    /**
-     * Defines the selector for which selector may be used. For instance it can be a name of property of given {@link
-     * org.springframework.data.domain.Persistable}
-     * <p/>
-     * If this value remains {@code empty} it means that default converter will be used
-     *
-     * @return selector
-     */
-    String selector() default "";
+	/**
+	 * Defines the selector for which selector may be used. For instance it can be a name of property of given {@link
+	 * org.springframework.data.domain.Persistable}
+	 * <p/>
+	 * If this value remains {@code empty} it means that default converter will be used
+	 *
+	 * @return selector
+	 */
+	String selector() default "";
 }

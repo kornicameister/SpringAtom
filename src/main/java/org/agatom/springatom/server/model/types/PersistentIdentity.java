@@ -25,5 +25,10 @@ package org.agatom.springatom.server.model.types;
  * @since 0.0.1
  */
 public interface PersistentIdentity {
+	/**
+	 * <p>getIdentity.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getIdentity();
 }

@@ -26,16 +26,46 @@ package org.agatom.springatom.server.model.types.contact;
  * @since 0.0.1
  */
 public interface SContact<SC_H extends SContactable> {
-    String getContact();
+	/**
+	 * <p>getContact.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getContact();
 
-    void setContact(final String contact);
+	/**
+	 * <p>setContact.</p>
+	 *
+	 * @param contact a {@link java.lang.String} object.
+	 */
+	void setContact(final String contact);
 
-    SC_H getAssigned();
+	/**
+	 * <p>getAssigned.</p>
+	 *
+	 * @return a SC_H object.
+	 */
+	SC_H getAssigned();
 
-    void setAssigned(final SC_H assigned);
+	/**
+	 * <p>setAssigned.</p>
+	 *
+	 * @param assigned a SC_H object.
+	 */
+	void setAssigned(final SC_H assigned);
 
-    ContactType getType();
+	/**
+	 * <p>getType.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.contact.ContactType} object.
+	 */
+	ContactType getType();
 
-    void setType(ContactType type);
+	/**
+	 * <p>setType.</p>
+	 *
+	 * @param type a {@link org.agatom.springatom.server.model.types.contact.ContactType} object.
+	 */
+	void setType(ContactType type);
 
 }

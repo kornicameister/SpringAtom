@@ -22,49 +22,103 @@ import org.springframework.data.domain.Persistable;
 import java.io.Serializable;
 
 /**
+ * <p>ServiceException class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class ServiceException
-        extends Exception {
-    private static final String MSG_PATTERN      = "For target=%s exception occurred\nmsg=%s";
-    private static final String MSG_PATTERN_2    = "For target=%s exception occurred";
-    private static final long   serialVersionUID = 5939562098957474953L;
+		extends Exception {
+	private static final String MSG_PATTERN      = "For target=%s exception occurred\nmsg=%s";
+	private static final String MSG_PATTERN_2    = "For target=%s exception occurred";
+	private static final long   serialVersionUID = 5939562098957474953L;
 
-    public ServiceException(final String message) {
-        super(message);
-    }
+	/**
+	 * <p>Constructor for ServiceException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
+	public ServiceException(final String message) {
+		super(message);
+	}
 
-    public ServiceException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * <p>Constructor for ServiceException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
+	public ServiceException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 
-    public <T extends Persistable<ID>, ID extends Serializable> ServiceException(final Class<T> target,
-                                                                                 final String message) {
-        super(String.format(MSG_PATTERN, target, message));
-    }
+	/**
+	 * <p>Constructor for ServiceException.</p>
+	 *
+	 * @param target  a {@link java.lang.Class} object.
+	 * @param message a {@link java.lang.String} object.
+	 * @param <T>     a T object.
+	 * @param <ID>    a ID object.
+	 */
+	public <T extends Persistable<ID>, ID extends Serializable> ServiceException(final Class<T> target,
+	                                                                             final String message) {
+		super(String.format(MSG_PATTERN, target, message));
+	}
 
-    public <T extends Persistable<ID>, ID extends Serializable> ServiceException(final Class<T> target,
-                                                                                 final String message,
-                                                                                 final Throwable cause) {
-        super(String.format(MSG_PATTERN, target, message), cause);
-    }
+	/**
+	 * <p>Constructor for ServiceException.</p>
+	 *
+	 * @param target  a {@link java.lang.Class} object.
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 * @param <T>     a T object.
+	 * @param <ID>    a ID object.
+	 */
+	public <T extends Persistable<ID>, ID extends Serializable> ServiceException(final Class<T> target,
+	                                                                             final String message,
+	                                                                             final Throwable cause) {
+		super(String.format(MSG_PATTERN, target, message), cause);
+	}
 
-    public <T extends Persistable<ID>, ID extends Serializable> ServiceException(final Class<T> target,
-                                                                                 final Throwable cause) {
-        super(String.format(MSG_PATTERN_2, target), cause);
-    }
+	/**
+	 * <p>Constructor for ServiceException.</p>
+	 *
+	 * @param target a {@link java.lang.Class} object.
+	 * @param cause  a {@link java.lang.Throwable} object.
+	 * @param <T>    a T object.
+	 * @param <ID>   a ID object.
+	 */
+	public <T extends Persistable<ID>, ID extends Serializable> ServiceException(final Class<T> target,
+	                                                                             final Throwable cause) {
+		super(String.format(MSG_PATTERN_2, target), cause);
+	}
 
-    public <T extends Persistable<ID>, ID extends Serializable> ServiceException(final Class<T> target,
-                                                                                 final String message,
-                                                                                 final Throwable cause,
-                                                                                 final boolean enableSuppression,
-                                                                                 final boolean writableStackTrace) {
-        super(String.format(MSG_PATTERN, target, message), cause, enableSuppression, writableStackTrace);
-    }
+	/**
+	 * <p>Constructor for ServiceException.</p>
+	 *
+	 * @param target             a {@link java.lang.Class} object.
+	 * @param message            a {@link java.lang.String} object.
+	 * @param cause              a {@link java.lang.Throwable} object.
+	 * @param enableSuppression  a boolean.
+	 * @param writableStackTrace a boolean.
+	 * @param <T>                a T object.
+	 * @param <ID>               a ID object.
+	 */
+	public <T extends Persistable<ID>, ID extends Serializable> ServiceException(final Class<T> target,
+	                                                                             final String message,
+	                                                                             final Throwable cause,
+	                                                                             final boolean enableSuppression,
+	                                                                             final boolean writableStackTrace) {
+		super(String.format(MSG_PATTERN, target, message), cause, enableSuppression, writableStackTrace);
+	}
 
-    public ServiceException(final Throwable cause) {
-        super(cause);
-    }
+	/**
+	 * <p>Constructor for ServiceException.</p>
+	 *
+	 * @param cause a {@link java.lang.Throwable} object.
+	 */
+	public ServiceException(final Throwable cause) {
+		super(cause);
+	}
 }

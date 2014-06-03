@@ -27,69 +27,96 @@ import org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor;
  * @since 0.0.1
  */
 class EntityTypeDescriptorColumn<X>
-        implements EntityDescriptorColumn<X> {
-    private static final long serialVersionUID = 955310404047484434L;
-    protected String                  name;
-    protected Class<?>                columnClass;
-    protected SlimEntityDescriptor<X> entityDescriptor;
+		implements EntityDescriptorColumn<X> {
+	private static final long serialVersionUID = 955310404047484434L;
+	protected String                  name;
+	protected Class<?>                columnClass;
+	protected SlimEntityDescriptor<X> entityDescriptor;
 
-    @Override
-    public String getName() {
-        return this.name;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getName() {
+		return this.name;
+	}
 
-    @Override
-    public Class<?> getColumnClass() {
-        return this.columnClass;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Class<?> getColumnClass() {
+		return this.columnClass;
+	}
 
-    @Override
-    public SlimEntityDescriptor<X> getEntityDescriptor() {
-        return this.entityDescriptor;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public SlimEntityDescriptor<X> getEntityDescriptor() {
+		return this.entityDescriptor;
+	}
 
-    public EntityTypeDescriptorColumn<X> setEntityDescriptor(final SlimEntityDescriptor<X> entityDescriptor) {
-        this.entityDescriptor = entityDescriptor;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>entityDescriptor</code>.</p>
+	 *
+	 * @param entityDescriptor a {@link org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.descriptors.descriptor.EntityTypeDescriptorColumn} object.
+	 */
+	public EntityTypeDescriptorColumn<X> setEntityDescriptor(final SlimEntityDescriptor<X> entityDescriptor) {
+		this.entityDescriptor = entityDescriptor;
+		return this;
+	}
 
-    public EntityTypeDescriptorColumn<X> setColumnClass(final Class<?> columnClass) {
-        this.columnClass = columnClass;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>columnClass</code>.</p>
+	 *
+	 * @param columnClass a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.descriptors.descriptor.EntityTypeDescriptorColumn} object.
+	 */
+	public EntityTypeDescriptorColumn<X> setColumnClass(final Class<?> columnClass) {
+		this.columnClass = columnClass;
+		return this;
+	}
 
-    public EntityTypeDescriptorColumn<X> setName(final String name) {
-        this.name = name;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>name</code>.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.descriptors.descriptor.EntityTypeDescriptorColumn} object.
+	 */
+	public EntityTypeDescriptorColumn<X> setName(final String name) {
+		this.name = name;
+		return this;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(name, columnClass, entityDescriptor);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(name, columnClass, entityDescriptor);
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        EntityTypeDescriptorColumn<?> that = (EntityTypeDescriptorColumn<?>) o;
+		EntityTypeDescriptorColumn<?> that = (EntityTypeDescriptorColumn<?>) o;
 
-        return Objects.equal(this.name, that.name) &&
-                Objects.equal(this.columnClass, that.columnClass) &&
-                Objects.equal(this.entityDescriptor, that.entityDescriptor);
-    }
+		return Objects.equal(this.name, that.name) &&
+				Objects.equal(this.columnClass, that.columnClass) &&
+				Objects.equal(this.entityDescriptor, that.entityDescriptor);
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(name)
-                      .addValue(columnClass)
-                      .addValue(entityDescriptor)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(name)
+				.addValue(columnClass)
+				.addValue(entityDescriptor)
+				.toString();
+	}
 }

@@ -28,6 +28,12 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface Localized extends Serializable {
+public interface Localized
+		extends Serializable {
+	/**
+	 * <p>getMessageKey.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getMessageKey();
 }

@@ -30,18 +30,42 @@ public class SException
 		extends Exception {
 	private static final long serialVersionUID = 3514890170028160055L;
 
+	/**
+	 * <p>Constructor for SException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
 	public SException(final String message) {
 		super(message);
 	}
 
+	/**
+	 * <p>Constructor for SException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
 	public SException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * <p>Constructor for SException.</p>
+	 *
+	 * @param cause a {@link java.lang.Throwable} object.
+	 */
 	public SException(final Throwable cause) {
 		super(cause);
 	}
 
+	/**
+	 * <p>Constructor for SException.</p>
+	 *
+	 * @param message            a {@link java.lang.String} object.
+	 * @param cause              a {@link java.lang.Throwable} object.
+	 * @param enableSuppression  a boolean.
+	 * @param writableStackTrace a boolean.
+	 */
 	public SException(final String message,
 	                  final Throwable cause,
 	                  final boolean enableSuppression,

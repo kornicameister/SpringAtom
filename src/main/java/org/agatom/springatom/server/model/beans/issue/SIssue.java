@@ -42,37 +42,44 @@ import javax.validation.constraints.NotNull;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = SIssue.ISSUE_TYPE, discriminatorType = DiscriminatorType.STRING)
 public class SIssue
-        extends SAssignedActivity<Long>
-        implements Issue {
-    public static final    String ENTITY_NAME      = "SIssue";
-    public static final    String TABLE_NAME       = "issues";
-    protected static final String ISSUE_TYPE       = "sit";
-    private static final   long   serialVersionUID = 9153732479122207895L;
-    @NotNull
-    @Column(name = "issue_msg", nullable = false)
-    private String    message;
-    @Type(type = "org.hibernate.type.EnumType")
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "issue_type", nullable = false)
-    private IssueType type;
+		extends SAssignedActivity<Long>
+		implements Issue {
+	/** Constant <code>ENTITY_NAME="SIssue"</code> */
+	public static final    String ENTITY_NAME      = "SIssue";
+	/** Constant <code>TABLE_NAME="issues"</code> */
+	public static final    String TABLE_NAME       = "issues";
+	/** Constant <code>ISSUE_TYPE="sit"</code> */
+	protected static final String ISSUE_TYPE       = "sit";
+	private static final   long   serialVersionUID = 9153732479122207895L;
+	@NotNull
+	@Column(name = "issue_msg", nullable = false)
+	private String    message;
+	@Type(type = "org.hibernate.type.EnumType")
+	@Enumerated(value = EnumType.STRING)
+	@Column(name = "issue_type", nullable = false)
+	private IssueType type;
 
-    @Override
-    public String getMessage() {
-        return this.message;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getMessage() {
+		return this.message;
+	}
 
-    @Override
-    public void setMessage(final String message) {
-        this.message = message;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public void setMessage(final String message) {
+		this.message = message;
+	}
 
-    @Override
-    public IssueType getType() {
-        return this.type;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public IssueType getType() {
+		return this.type;
+	}
 
-    @Override
-    public void setType(final IssueType type) {
-        this.type = type;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public void setType(final IssueType type) {
+		this.type = type;
+	}
 }

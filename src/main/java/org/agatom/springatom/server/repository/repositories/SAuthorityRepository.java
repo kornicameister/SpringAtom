@@ -22,12 +22,15 @@ import org.agatom.springatom.server.repository.SBasicRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
+ * <p>SAuthorityRepository interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 @Qualifier(value = SAuthorityRepository.REPO_NAME)
 public interface SAuthorityRepository
-        extends SBasicRepository<SAuthority, Long> {
-    String REPO_NAME = "AuthorityRepo";
+		extends SBasicRepository<SAuthority, Long> {
+	/** Constant <code>REPO_NAME="AuthorityRepo"</code> */
+	String REPO_NAME = "AuthorityRepo";
 }

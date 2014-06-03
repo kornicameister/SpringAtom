@@ -26,31 +26,72 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
+ * <p>SPersonService interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface SPersonService
-        extends SService<SPerson, Long, Integer> {
+		extends SService<SPerson, Long, Integer> {
 
-    SContact<SPerson> newContactData(
-            @NotNull
-            final String contact,
-            final long assignTo,
-            @NotNull
-            final SContact assignToContact) throws EntityDoesNotExistsServiceException;
+	/**
+	 * <p>newContactData.</p>
+	 *
+	 * @param contact         a {@link java.lang.String} object.
+	 * @param assignTo        a long.
+	 * @param assignToContact a {@link org.agatom.springatom.server.model.types.contact.SContact} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.contact.SContact} object.
+	 *
+	 * @throws org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException if any.
+	 */
+	SContact<SPerson> newContactData(
+			@NotNull
+			final String contact,
+			final long assignTo,
+			@NotNull
+			final SContact assignToContact) throws EntityDoesNotExistsServiceException;
 
-    List<SPersonContact> findAllContacts(final Long idClient);
+	/**
+	 * <p>findAllContacts.</p>
+	 *
+	 * @param idClient a {@link java.lang.Long} object.
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
+	List<SPersonContact> findAllContacts(final Long idClient);
 
-    List<SPerson> findByFirstName(
-            @NotNull
-            final String firstName);
+	/**
+	 * <p>findByFirstName.</p>
+	 *
+	 * @param firstName a {@link java.lang.String} object.
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
+	List<SPerson> findByFirstName(
+			@NotNull
+			final String firstName);
 
-    List<SPerson> findByLastName(
-            @NotNull
-            final String lastName);
+	/**
+	 * <p>findByLastName.</p>
+	 *
+	 * @param lastName a {@link java.lang.String} object.
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
+	List<SPerson> findByLastName(
+			@NotNull
+			final String lastName);
 
-    SPerson findByEmail(
-            @NotNull
-            final String email);
+	/**
+	 * <p>findByEmail.</p>
+	 *
+	 * @param email a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.person.SPerson} object.
+	 */
+	SPerson findByEmail(
+			@NotNull
+			final String email);
 }

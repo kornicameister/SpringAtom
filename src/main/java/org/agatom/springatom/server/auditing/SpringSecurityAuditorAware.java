@@ -30,31 +30,35 @@ import org.springframework.data.domain.AuditorAware;
 import static org.apache.log4j.Logger.getLogger;
 
 /**
+ * <p>SpringSecurityAuditorAware class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class SpringSecurityAuditorAware
-        implements AuditorAware<SUser>,
-                   ApplicationListener<ContextRefreshedEvent> {
-    private static final Logger LOGGER = getLogger(SpringSecurityAuditorAware.class);
-    @Autowired
-    @Qualifier(value = "UserRepo")
-    SUserRepository repository;
-    private SUser systemUser;
+		implements AuditorAware<SUser>,
+		ApplicationListener<ContextRefreshedEvent> {
+	private static final Logger LOGGER = getLogger(SpringSecurityAuditorAware.class);
+	@Autowired
+	@Qualifier(value = "UserRepo")
+	SUserRepository repository;
+	private SUser systemUser;
 
-    @Override
-    public SUser getCurrentAuditor() {
-        SUser principal = systemUser;
-        LOGGER.info(String.format("Current auditor is >>> %s", principal));
-        return principal;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public SUser getCurrentAuditor() {
+		SUser principal = systemUser;
+		LOGGER.info(String.format("Current auditor is >>> %s", principal));
+		return principal;
+	}
 
-    @Override
-    public void onApplicationEvent(final ContextRefreshedEvent event) {
-        if (this.systemUser == null) {
-            LOGGER.info("%s >>> loading system user");
-            systemUser = this.repository.findOne(QSUser.sUser.credentials.username.eq("SYSTEM"));
-        }
-    }
+	/** {@inheritDoc} */
+	@Override
+	public void onApplicationEvent(final ContextRefreshedEvent event) {
+		if (this.systemUser == null) {
+			LOGGER.info("%s >>> loading system user");
+			systemUser = this.repository.findOne(QSUser.sUser.credentials.username.eq("SYSTEM"));
+		}
+	}
 }

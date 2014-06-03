@@ -33,11 +33,31 @@ import java.io.Serializable;
  */
 public interface ManufacturingData
 		extends Serializable {
+	/**
+	 * <p>getBrand.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getBrand();
 
+	/**
+	 * <p>getModel.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getModel();
 
+	/**
+	 * <p>getManufacturedIn.</p>
+	 *
+	 * @return a {@link com.neovisionaries.i18n.CountryCode} object.
+	 */
 	CountryCode getManufacturedIn();
 
+	/**
+	 * <p>getManufacturedBy.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getManufacturedBy();
 }

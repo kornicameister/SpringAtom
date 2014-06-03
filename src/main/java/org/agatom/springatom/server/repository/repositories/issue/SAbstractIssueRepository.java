@@ -38,19 +38,59 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 @NoRepositoryBean
 public interface SAbstractIssueRepository<T extends SIssue>
-        extends SBasicRepository<T, Long> {
-    @RestResource(rel = "byType", path = "type")
-    Page<T> findByType(@Param(value = "type") IssueType issueType, Pageable pageable);
+		extends SBasicRepository<T, Long> {
+	/**
+	 * <p>findByType.</p>
+	 *
+	 * @param issueType a {@link org.agatom.springatom.server.model.types.issue.IssueType} object.
+	 * @param pageable  a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byType", path = "type")
+	Page<T> findByType(@Param(value = "type") IssueType issueType, Pageable pageable);
 
-    @RestResource(rel = "byAssignee", path = "assignee")
-    Page<T> findByAssignee(@Param(value = "assignee") SUser assignee, Pageable pageable);
+	/**
+	 * <p>findByAssignee.</p>
+	 *
+	 * @param assignee a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byAssignee", path = "assignee")
+	Page<T> findByAssignee(@Param(value = "assignee") SUser assignee, Pageable pageable);
 
-    @RestResource(rel = "byAssigneeLastName", path = "assignee_lastName")
-    Page<T> findByAssigneePersonLastNameContaining(@Param(value = "assigneeLastName") String assigneeLastName, Pageable pageable);
+	/**
+	 * <p>findByAssigneePersonLastNameContaining.</p>
+	 *
+	 * @param assigneeLastName a {@link java.lang.String} object.
+	 * @param pageable         a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byAssigneeLastName", path = "assignee_lastName")
+	Page<T> findByAssigneePersonLastNameContaining(@Param(value = "assigneeLastName") String assigneeLastName, Pageable pageable);
 
-    @RestResource(rel = "byReporter", path = "reporter")
-    Page<T> findByReporter(@Param(value = "reporter") SUser assignee, Pageable pageable);
+	/**
+	 * <p>findByReporter.</p>
+	 *
+	 * @param assignee a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byReporter", path = "reporter")
+	Page<T> findByReporter(@Param(value = "reporter") SUser assignee, Pageable pageable);
 
-    @RestResource(rel = "byReporterLastName", path = "reporter_lastName")
-    Page<T> findByReporterPersonLastNameContaining(@Param(value = "reporterLastName") String reporterLastName, Pageable pageable);
+	/**
+	 * <p>findByReporterPersonLastNameContaining.</p>
+	 *
+	 * @param reporterLastName a {@link java.lang.String} object.
+	 * @param pageable         a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
+	@RestResource(rel = "byReporterLastName", path = "reporter_lastName")
+	Page<T> findByReporterPersonLastNameContaining(@Param(value = "reporterLastName") String reporterLastName, Pageable pageable);
 }

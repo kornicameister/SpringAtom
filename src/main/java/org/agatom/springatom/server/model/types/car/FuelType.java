@@ -39,6 +39,11 @@ public enum FuelType {
 		this.key = internalIdentifier;
 	}
 
+	/**
+	 * <p>Getter for the field <code>key</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getKey() {
 		return key;
 	}

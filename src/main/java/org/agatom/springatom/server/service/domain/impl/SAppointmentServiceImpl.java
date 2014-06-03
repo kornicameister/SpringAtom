@@ -53,8 +53,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import org.springframework.validation.Errors;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -65,6 +63,8 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
+ * <p>SAppointmentServiceImpl class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -84,6 +84,7 @@ public class SAppointmentServiceImpl
 	@Autowired
 	private              SUserRepository            userRepository             = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public SAppointment withFullLoad(final SAppointment obj) {
 		final long idAppointment = obj.getId();
@@ -106,6 +107,7 @@ public class SAppointmentServiceImpl
 		return obj;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SAppointment newAppointment(final ReadableInterval interval,
 	                                   final long carId,
@@ -137,6 +139,7 @@ public class SAppointmentServiceImpl
 		return this.repository.save(newAppointment);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transactional(readOnly = false, rollbackFor = {EntityDoesNotExistsServiceException.class, IllegalArgumentException.class}, isolation = Isolation.READ_COMMITTED)
 	public SAppointment addTask(final long idAppointment, final SAppointmentTask... tasks) throws
@@ -158,6 +161,7 @@ public class SAppointmentServiceImpl
 				.findAll(QSAppointmentTask.sAppointmentTask.appointment.id.eq(idAppointment)));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<SAppointmentTask> findTasks(final long idAppointment) {
 		final QSAppointmentTask task = QSAppointmentTask.sAppointmentTask;
@@ -165,6 +169,7 @@ public class SAppointmentServiceImpl
 		return (List<SAppointmentTask>) this.taskRepository.findAll(eq);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transactional(readOnly = false, rollbackFor = {EntityDoesNotExistsServiceException.class, IllegalArgumentException.class}, isolation = Isolation.READ_COMMITTED)
 	public SAppointment removeTask(final long idAppointment, final long... tasksId) throws EntityDoesNotExistsServiceException {
@@ -180,6 +185,7 @@ public class SAppointmentServiceImpl
 		return this.repository.findOne(idAppointment);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transactional(rollbackFor = IllegalArgumentException.class)
 	public SAppointment findByTask(final long... tasks) {
@@ -187,12 +193,14 @@ public class SAppointmentServiceImpl
 		return this.repository.findOne(QSAppointment.sAppointment.tasks.any().id.in(Longs.asList(tasks)));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<SAppointment> findByCar(final long carId) {
 		final QSAppointment sAppointment = QSAppointment.sAppointment;
 		return (List<SAppointment>) this.repository.findAll(sAppointment.car.id.eq(carId));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transactional(rollbackFor = IllegalArgumentException.class)
 	public List<SAppointment> findBetween(final DateTime startDate, final DateTime endDate) {
@@ -203,6 +211,7 @@ public class SAppointmentServiceImpl
 		return Lists.newArrayList();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<SAppointment> findBetween(final DateTime startDate, final DateTime endDate, final boolean currentUserOnly) throws
 			SecurityViolationServiceException {
@@ -227,6 +236,7 @@ public class SAppointmentServiceImpl
 		return (List<SAppointment>) this.repository.findAll(expression);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<SAppointment> findLater(final DateTime dateTime) {
 		final DateTimePath<DateTime> begin = QSAppointment.sAppointment.begin;
@@ -234,6 +244,7 @@ public class SAppointmentServiceImpl
 		return (List<SAppointment>) this.repository.findAll(end.goe(dateTime).and(end.gt(begin)));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<SAppointment> findEarlier(final DateTime dateTime) {
 		final DateTimePath<DateTime> begin = QSAppointment.sAppointment.begin;
@@ -241,6 +252,7 @@ public class SAppointmentServiceImpl
 		return (List<SAppointment>) this.repository.findAll(end.loe(dateTime).and(end.gt(begin)));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transactional(readOnly = false, rollbackFor = ServiceException.class)
 	public SAppointment postponeToFuture(final long idAppointment, final ReadableDuration duration)
@@ -256,6 +268,7 @@ public class SAppointmentServiceImpl
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transactional(readOnly = false, rollbackFor = ServiceException.class)
 	public SAppointment postponeToPast(final long idAppointment, final ReadableDuration duration) throws
@@ -271,6 +284,7 @@ public class SAppointmentServiceImpl
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<SFreeSlot> findSlots(final SFreeSlot.Slot slot, final long... idAppointment) {
 		final List<SFreeSlot> freeSlots = this.findSlots(idAppointment);
@@ -289,6 +303,7 @@ public class SAppointmentServiceImpl
 				.toList();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<SFreeSlot> findSlots(final long... idAppointment) {
 
@@ -326,6 +341,7 @@ public class SAppointmentServiceImpl
 		return ImmutableList.copyOf(freeSlots);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Collection<SUser> findReporters() {
 		// TODO tmp solution before introducing ACL
@@ -339,6 +355,7 @@ public class SAppointmentServiceImpl
 		return Collections.unmodifiableList(Lists.newArrayList(this.userRepository.findAll(predicate)));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Collection<SUser> findReporters(final Pageable pageable) {
 		// TODO tmp solution before introducing ACL
@@ -352,6 +369,7 @@ public class SAppointmentServiceImpl
 		return Collections.unmodifiableList(Lists.newArrayList(this.userRepository.findAll(predicate, pageable)));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Collection<SUser> findAssignees() {
 		// TODO tmp solution before introducing ACL
@@ -365,6 +383,7 @@ public class SAppointmentServiceImpl
 		return Collections.unmodifiableList(Lists.newArrayList(this.userRepository.findAll(predicate)));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Collection<SUser> findAssignees(final Pageable pageable) {
 		// TODO tmp solution before introducing ACL
@@ -376,26 +395,6 @@ public class SAppointmentServiceImpl
 		);
 		predicate = predicate.and(user.accountNonLocked.eq(true)).and(user.accountNonExpired.eq(true));
 		return Collections.unmodifiableList(Lists.newArrayList(this.userRepository.findAll(predicate, pageable)));
-	}
-
-	private SUser getMechanic(final long mechanicId) throws EntityDoesNotExistsServiceException {
-		final Revision<Integer, SUser> changeRevision = this.userRepository.findLastChangeRevision(mechanicId);
-		final SUser mechanic = changeRevision.getEntity();
-		if (mechanic == null) {
-			throw new EntityDoesNotExistsServiceException(SUser.class, mechanicId);
-		}
-		if (!mechanic.hasAuthority(SAuthority.fromRole(SRole.ROLE_MECHANIC))) {
-			throw new AccessDeniedException(String.format("%s is not in role %s", mechanic.getUsername(), SRole.ROLE_MECHANIC));
-		}
-		return mechanic;
-	}
-
-	private SCar getCar(final long carId) throws EntityDoesNotExistsServiceException {
-		final SCar car = this.carRepository.findOne(carId);
-		if (car == null) {
-			throw new EntityDoesNotExistsServiceException(SCar.class, carId);
-		}
-		return car;
 	}
 
 	private SAppointment postpone(final long idAppointment, final ReadableDuration duration, final boolean toFuture) throws
@@ -420,6 +419,26 @@ public class SAppointmentServiceImpl
 			}
 		}
 		return appointment;
+	}
+
+	private SCar getCar(final long carId) throws EntityDoesNotExistsServiceException {
+		final SCar car = this.carRepository.findOne(carId);
+		if (car == null) {
+			throw new EntityDoesNotExistsServiceException(SCar.class, carId);
+		}
+		return car;
+	}
+
+	private SUser getMechanic(final long mechanicId) throws EntityDoesNotExistsServiceException {
+		final Revision<Integer, SUser> changeRevision = this.userRepository.findLastChangeRevision(mechanicId);
+		final SUser mechanic = changeRevision.getEntity();
+		if (mechanic == null) {
+			throw new EntityDoesNotExistsServiceException(SUser.class, mechanicId);
+		}
+		if (!mechanic.hasAuthority(SAuthority.fromRole(SRole.ROLE_MECHANIC))) {
+			throw new AccessDeniedException(String.format("%s is not in role %s", mechanic.getUsername(), SRole.ROLE_MECHANIC));
+		}
+		return mechanic;
 	}
 
 	protected class AppointmentNotPostponedServiceException

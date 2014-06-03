@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * <p>SPerson class.</p>
+ *
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
@@ -54,7 +56,9 @@ import java.util.Set;
 public class SPerson
 		extends PersistentContactable
 		implements SMultiContactable {
+	/** Constant <code>ENTITY_NAME="SPerson"</code> */
 	protected static final String ENTITY_NAME      = "SPerson";
+	/** Constant <code>TABLE_NAME="sperson"</code> */
 	protected static final String TABLE_NAME       = "sperson";
 	private static final   long   serialVersionUID = -8306142304138446067L;
 	@NotEmpty
@@ -70,31 +74,56 @@ public class SPerson
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "assigned")
 	private Set<SPersonContact> contacts;
 
+	/**
+	 * <p>Getter for the field <code>firstName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getFirstName() {
 		return firstName;
 	}
 
+	/**
+	 * <p>Setter for the field <code>firstName</code>.</p>
+	 *
+	 * @param firstName a {@link java.lang.String} object.
+	 */
 	public void setFirstName(final String firstName) {
 		this.firstName = firstName;
 	}
 
+	/**
+	 * <p>Getter for the field <code>lastName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getLastName() {
 		return lastName;
 	}
 
+	/**
+	 * <p>Setter for the field <code>lastName</code>.</p>
+	 *
+	 * @param lastName a {@link java.lang.String} object.
+	 */
 	public void setLastName(final String lastName) {
 		this.lastName = lastName;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return String.format("%s %s", this.firstName, this.lastName);
 	}
 
+	/**
+	 * <p>clearContacts.</p>
+	 */
 	public void clearContacts() {
 		this.contacts = null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<SPersonContact> getContacts() {
 		if (this.contacts == null) {
@@ -103,11 +132,19 @@ public class SPerson
 		return Lists.newArrayList(this.contacts);
 	}
 
+	/**
+	 * <p>Setter for the field <code>contacts</code>.</p>
+	 *
+	 * @param contacts a {@link java.util.List} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.person.SPerson} object.
+	 */
 	public SPerson setContacts(final List<SPersonContact> contacts) {
 		this.addContact(contacts);
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean addContact(final Collection<? extends SContact> contacts) {
 		if (!CollectionUtils.isEmpty(contacts)) {
@@ -122,6 +159,7 @@ public class SPerson
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean removeContact(final Collection<? extends SContact> contacts) {
 		if (contacts.size() > 0 && this.contacts != null) {

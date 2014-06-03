@@ -32,26 +32,28 @@ import java.lang.annotation.Annotation;
  * @since 0.0.1
  */
 public class HasAnnotationValidator
-        implements ConstraintValidator<HasAnnotation, Class<?>> {
-    private static final Logger                      LOGGER          = Logger.getLogger(HasAnnotationValidator.class);
-    private              String                      message         = null;
-    private              Class<? extends Annotation> annotationClass = null;
+		implements ConstraintValidator<HasAnnotation, Class<?>> {
+	private static final Logger                      LOGGER          = Logger.getLogger(HasAnnotationValidator.class);
+	private              String                      message         = null;
+	private              Class<? extends Annotation> annotationClass = null;
 
-    @Override
-    public void initialize(final HasAnnotation constraintAnnotation) {
-        if (LOGGER.isTraceEnabled()) {
-            this.message = constraintAnnotation.message();
-            this.annotationClass = constraintAnnotation.annotation();
-            LOGGER.trace(String.format("%s initialized", HasAnnotationValidator.class.getSimpleName()));
-        }
-    }
+	/** {@inheritDoc} */
+	@Override
+	public void initialize(final HasAnnotation constraintAnnotation) {
+		if (LOGGER.isTraceEnabled()) {
+			this.message = constraintAnnotation.message();
+			this.annotationClass = constraintAnnotation.annotation();
+			LOGGER.trace(String.format("%s initialized", HasAnnotationValidator.class.getSimpleName()));
+		}
+	}
 
-    @Override
-    public boolean isValid(final Class<?> vinNumber, final ConstraintValidatorContext context) {
-        final boolean annotationPresent = vinNumber.isAnnotationPresent(this.annotationClass);
-        if (!annotationPresent) {
-            context.buildConstraintViolationWithTemplate(this.message).addPropertyNode("annotation").addBeanNode().addConstraintViolation();
-        }
-        return annotationPresent;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public boolean isValid(final Class<?> vinNumber, final ConstraintValidatorContext context) {
+		final boolean annotationPresent = vinNumber.isAnnotationPresent(this.annotationClass);
+		if (!annotationPresent) {
+			context.buildConstraintViolationWithTemplate(this.message).addPropertyNode("annotation").addBeanNode().addConstraintViolation();
+		}
+		return annotationPresent;
+	}
 }

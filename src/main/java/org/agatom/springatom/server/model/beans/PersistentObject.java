@@ -34,6 +34,8 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 /**
+ * <p>Abstract PersistentObject class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -48,9 +50,9 @@ abstract public class PersistentObject<PK extends Serializable>
 		implements PersistentBean,
 		Comparable<PersistentObject<PK>> {
 
-	private static final long serialVersionUID = -6950914229850313642L;
+	private static final long                     serialVersionUID = -6950914229850313642L;
 	@Transient
-	private static final Comparator<Serializable> ID_COMPARATOR = new Comparator<Serializable>() {
+	private static final Comparator<Serializable> ID_COMPARATOR    = new Comparator<Serializable>() {
 		private static final String COMPARED_KEYS_ARE_NOT_EQUAL_IN_TYPE_O1_S_O2_S = "Compared keys are not equal in type >> o1=%s != o2=%s";
 
 		@Override
@@ -81,27 +83,35 @@ abstract public class PersistentObject<PK extends Serializable>
 					.isAssignableFrom(String.class);
 		}
 	};
+
+	/**
+	 * <p>Constructor for PersistentObject.</p>
+	 */
 	public PersistentObject() {
 		super();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transient
 	public String getMessageKey() {
 		return ClassUtils.getShortName(this.getClass()).toLowerCase(LocaleContextHolder.getLocale());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transient
 	public String asString() {
 		return String.format("%s=%s", ClassUtils.getShortName(this.getClass()), this.getId());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return String.valueOf(this.getId());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(@Nonnull final PersistentObject<PK> pObject) {
 		return ComparisonChain

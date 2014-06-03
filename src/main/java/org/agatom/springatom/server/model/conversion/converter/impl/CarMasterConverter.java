@@ -22,7 +22,7 @@ import org.agatom.springatom.server.model.conversion.annotation.PersistableConve
 import org.agatom.springatom.server.model.conversion.converter.PersistableConverterImpl;
 
 /**
- * {@code CarMasterConverter} handles default conversion from {@link org.agatom.springatom.server.model.beans.car.SCarMaster} to {@link String}.
+ * {@code CarMasterConverter} handles default conversion from {@link org.agatom.springatom.server.model.beans.car.SCarMaster} to {@link java.lang.String}.
  * Default representation returns following fields:
  * <ul>
  * <li>{@link org.agatom.springatom.server.model.beans.car.SCarMaster#getManufacturingData()}</li>
@@ -34,11 +34,12 @@ import org.agatom.springatom.server.model.conversion.converter.PersistableConver
  */
 @PersistableConverterUtility
 public class CarMasterConverter
-        extends PersistableConverterImpl<SCarMaster> {
+		extends PersistableConverterImpl<SCarMaster> {
 
-    @Override
-    public String convert(final SCarMaster source) {
-        return source.getManufacturingData().getIdentity();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String convert(final SCarMaster source) {
+		return source.getManufacturingData().getIdentity();
+	}
 
 }

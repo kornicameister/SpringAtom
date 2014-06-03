@@ -22,21 +22,24 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
+ * <p>AuditingRevisionEntity class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class AuditingRevisionEntity
-        implements RevisionListener {
-    @Override
-    public void newRevision(final Object revisionEntity) {
-        final AuditedRevisionEntity auditedRevisionEntity = (AuditedRevisionEntity) revisionEntity;
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            final String userName = authentication.getName();
-            auditedRevisionEntity.setUser(userName);
-        } else {
-            auditedRevisionEntity.setUser("SYSTEM");
-        }
-    }
+		implements RevisionListener {
+	/** {@inheritDoc} */
+	@Override
+	public void newRevision(final Object revisionEntity) {
+		final AuditedRevisionEntity auditedRevisionEntity = (AuditedRevisionEntity) revisionEntity;
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null) {
+			final String userName = authentication.getName();
+			auditedRevisionEntity.setUser(userName);
+		} else {
+			auditedRevisionEntity.setUser("SYSTEM");
+		}
+	}
 }

@@ -23,6 +23,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
+ * <p>SUserAuthority class.</p>
+ *
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
@@ -36,43 +38,84 @@ import java.io.Serializable;
 public class SUserAuthority
 		implements Serializable {
 
-	private static final   long             serialVersionUID = -61697944597116291L;
+	/** Constant <code>TABLE_NAME="suserauthority"</code> */
 	protected static final String           TABLE_NAME       = "suserauthority";
+	/** Constant <code>ENTITY_NAME="SUserAuthority"</code> */
 	protected static final String           ENTITY_NAME      = "SUserAuthority";
+	private static final   long             serialVersionUID = -61697944597116291L;
 	@EmbeddedId
 	private                SUserAuthorityPK pk               = null;
 
+	/**
+	 * <p>Constructor for SUserAuthority.</p>
+	 */
 	public SUserAuthority() {
 		this.pk = new SUserAuthorityPK();
 	}
 
+	/**
+	 * <p>Constructor for SUserAuthority.</p>
+	 *
+	 * @param user a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 * @param role a {@link org.agatom.springatom.server.model.beans.user.authority.SAuthority} object.
+	 */
 	public SUserAuthority(final SUser user, final SAuthority role) {
 		this.pk = new SUserAuthorityPK(user, role);
 	}
 
+	/**
+	 * <p>Getter for the field <code>pk</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.authority.SUserAuthorityPK} object.
+	 */
 	public SUserAuthorityPK getPk() {
 		return pk;
 	}
 
+	/**
+	 * <p>Setter for the field <code>pk</code>.</p>
+	 *
+	 * @param pk a {@link org.agatom.springatom.server.model.beans.user.authority.SUserAuthorityPK} object.
+	 */
 	public void setPk(final SUserAuthorityPK pk) {
 		this.pk = pk;
 	}
 
+	/**
+	 * <p>getUser.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 */
 	@Transient
 	public SUser getUser() {
 		return pk.getUser();
 	}
 
+	/**
+	 * <p>setUser.</p>
+	 *
+	 * @param user a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 */
 	@Transient
 	public void setUser(final SUser user) {
 		pk.setUser(user);
 	}
 
+	/**
+	 * <p>getAuthority.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.authority.SAuthority} object.
+	 */
 	@Transient
 	public SAuthority getAuthority() {
 		return this.pk.getAuthority();
 	}
 
+	/**
+	 * <p>setAuthority.</p>
+	 *
+	 * @param role a {@link org.agatom.springatom.server.model.beans.user.authority.SAuthority} object.
+	 */
 	@Transient
 	public void setAuthority(final SAuthority role) {
 		pk.setAuthority(role);

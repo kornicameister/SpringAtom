@@ -58,6 +58,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
 	@Autowired
 	protected            SRepository<T, ID, N> revisionRepository = null;
 
+	/** {@inheritDoc} */
 	@Override
 	@Cacheable(value = CACHE_NAME_F)
 	public Revision<N, T> findFirstRevision(final ID id) {
@@ -67,6 +68,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
 		return this.revisionRepository.findRevisions(id).iterator().next();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Cacheable(value = CACHE_NAME)
 	public Revisions<N, T> findAllRevisions(final ID id) {
@@ -76,6 +78,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
 		return this.revisionRepository.findRevisions(id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Cacheable(value = CACHE_NAME_L)
 	public Revision<N, T> findLatestRevision(final ID id) {
@@ -85,6 +88,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
 		return this.revisionRepository.findLastChangeRevision(id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Cacheable(value = CACHE_NAME_COUNT)
 	public long countRevisions(final ID id) {
@@ -94,6 +98,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
 		return this.revisionRepository.countRevisions(id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Revisions<N, T> findModifiedBefore(final ID id, final DateTime dateTime) throws
 			EntityInRevisionDoesNotExists {
@@ -103,6 +108,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
 		return this.revisionRepository.findRevisions(id, dateTime, SBasicRepository.Operators.BEFORE);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Revisions<N, T> findModifiedAfter(final ID id, final DateTime dateTime) throws
 			EntityInRevisionDoesNotExists {
@@ -112,6 +118,7 @@ abstract class SServiceImpl<T extends Persistable<ID>, ID extends Serializable, 
 		return this.revisionRepository.findRevisions(id, dateTime, SBasicRepository.Operators.AFTER);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Revisions<N, T> findModifiedAt(final ID id, final DateTime dateTime)
 			throws EntityInRevisionDoesNotExists {

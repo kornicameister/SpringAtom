@@ -27,6 +27,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
+ * <p>SCarRepository interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -38,45 +40,104 @@ import org.springframework.data.rest.core.annotation.RestResource;
 )
 public interface SCarRepository
 		extends SRepository<SCar, Long, Integer> {
+	/** Constant <code>REST_REPO_PATH="car"</code> */
 	String REST_REPO_PATH = "car";
+	/** Constant <code>REST_REPO_REL="rest.car"</code> */
 	String REST_REPO_REL  = "rest.car";
+	/** Constant <code>REPO_NAME="CarRepository"</code> */
 	String REPO_NAME      = "CarRepository";
 
+	/**
+	 * <p>findByLicencePlate.</p>
+	 *
+	 * @param licencePlate a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCar} object.
+	 */
 	@RestResource(rel = "byLicencePlate", path = "lp_equal")
 	SCar findByLicencePlate(
 			@Param(value = "lp") final String licencePlate
 	);
 
+	/**
+	 * <p>findByLicencePlateStartingWith.</p>
+	 *
+	 * @param licencePlate a {@link java.lang.String} object.
+	 * @param pageable     a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	@RestResource(rel = "byLicencePlateStarting", path = "lp_starts")
 	Page<SCar> findByLicencePlateStartingWith(
 			@Param(value = "lp") final String licencePlate,
 			final Pageable pageable
 	);
 
+	/**
+	 * <p>findByLicencePlateEndingWith.</p>
+	 *
+	 * @param licencePlate a {@link java.lang.String} object.
+	 * @param pageable     a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	@RestResource(rel = "byLicencePlateEnding", path = "lp_ends")
 	Page<SCar> findByLicencePlateEndingWith(
 			@Param(value = "lp") final String licencePlate,
 			final Pageable pageable
 	);
 
+	/**
+	 * <p>findByLicencePlateContaining.</p>
+	 *
+	 * @param licencePlate a {@link java.lang.String} object.
+	 * @param pageable     a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	@RestResource(rel = "byLicencePlateContaining", path = "lp_contains")
 	Page<SCar> findByLicencePlateContaining(
 			@Param(value = "lp") final String licencePlate,
 			final Pageable pageable
 	);
 
+	/**
+	 * <p>findByCarMasterManufacturingDataBrand.</p>
+	 *
+	 * @param brand    a {@link java.lang.String} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	@RestResource(rel = "byBrand", path = "brand")
 	Page<SCar> findByCarMasterManufacturingDataBrand(
 			@Param(value = "brand") final String brand,
 			final Pageable pageable
 	);
 
+	/**
+	 * <p>findByCarMasterManufacturingDataModel.</p>
+	 *
+	 * @param model    a {@link java.lang.String} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	@RestResource(rel = "byModel", path = "model")
 	Page<SCar> findByCarMasterManufacturingDataModel(
 			@Param(value = "model") final String model,
 			final Pageable pageable
 	);
 
+	/**
+	 * <p>findByCarMasterManufacturingDataBrandAndCarMasterManufacturingDataModel.</p>
+	 *
+	 * @param brand    a {@link java.lang.String} object.
+	 * @param model    a {@link java.lang.String} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	@RestResource(rel = "byBrandAndModel", path = "brandAndModel")
 	Page<SCar> findByCarMasterManufacturingDataBrandAndCarMasterManufacturingDataModel(
 			@Param(value = "brand") final String brand,
@@ -84,17 +145,40 @@ public interface SCarRepository
 			final Pageable pageable
 	);
 
+	/**
+	 * <p>findByOwnerPersonLastNameContaining.</p>
+	 *
+	 * @param lastName a {@link java.lang.String} object.
+	 * @param pageable a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	@RestResource(rel = "byOwnerLastName", path = "ownerLastName")
 	Page<SCar> findByOwnerPersonLastNameContaining(
 			@Param(value = "ownerLastName") final String lastName,
 			final Pageable pageable
 	);
 
+	/**
+	 * <p>findByVinNumber.</p>
+	 *
+	 * @param vinNumber a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCar} object.
+	 */
 	@RestResource(rel = "byVinNumber", path = "vin")
 	SCar findByVinNumber(
 			@Param(value = "vin") final String vinNumber
 	);
 
+	/**
+	 * <p>findByVinNumberContaining.</p>
+	 *
+	 * @param vinNumber a {@link java.lang.String} object.
+	 * @param pageable  a {@link org.springframework.data.domain.Pageable} object.
+	 *
+	 * @return a {@link org.springframework.data.domain.Page} object.
+	 */
 	@RestResource(rel = "byVinNumberContaining", path = "vin_contains")
 	Page<SCar> findByVinNumberContaining(
 			@Param(value = "vin") final String vinNumber,

@@ -57,9 +57,9 @@ abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializa
 		ApplicationEventPublisherAware {
 	@Autowired
 	protected SBasicRepository<T, ID>   repository  = null;
-	@Autowired(required = false)
-	private   SUserService              userService = null;
 	protected ApplicationEventPublisher publisher   = null;
+	@Autowired(required = false)
+	private SUserService userService = null;
 
 	@PostConstruct
 	private void initUserService() {
@@ -68,26 +68,46 @@ abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializa
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setApplicationEventPublisher(final ApplicationEventPublisher applicationEventPublisher) {
 		this.publisher = applicationEventPublisher;
 	}
 
+	/**
+	 * <p>toLong.</p>
+	 *
+	 * @param longs an array of long.
+	 *
+	 * @return an array of {@link java.lang.Long} objects.
+	 */
+	protected Long[] toLong(final long[] longs) {
+		final Long[] bigLongs = new Long[longs.length];
+		for (int i = 0, size = longs.length; i < size; i++) {
+			bigLongs[i] = longs[i];
+		}
+		return bigLongs;
+	}
+
+	/** {@inheritDoc} */
 	@Override
 	public T findOne(final ID id) {
 		return this.repository.findOne(id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<T> findAll() {
 		return this.repository.findAll();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Page<T> findAll(final Pageable pageable) {
 		return this.repository.findAll(pageable);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
 	public T save(final T persistable) {
@@ -125,11 +145,13 @@ abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializa
 		return object;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public long count() {
 		return this.repository.count();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transactional(readOnly = false, rollbackFor = IllegalArgumentException.class)
 	public synchronized T deleteOne(final ID pk) {
@@ -143,17 +165,20 @@ abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializa
 		return source;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@Transactional(readOnly = false)
 	public void deleteAll() {
 		this.repository.deleteAll();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public T withFullLoad(final T obj) {
 		return obj;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<T> withFullLoad(final Iterable<T> objects) {
 		final List<T> tList = Lists.newArrayList();
@@ -163,16 +188,11 @@ abstract class SBasicServiceImpl<T extends Persistable<ID>, ID extends Serializa
 		return tList;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public T detach(@NotNull final T object) {
 		return this.repository.detach(object);
 	}
 
-	protected Long[] toLong(final long[] longs) {
-		final Long[] bigLongs = new Long[longs.length];
-		for (int i = 0, size = longs.length; i < size; i++) {
-			bigLongs[i] = longs[i];
-		}
-		return bigLongs;
-	}
+
 }

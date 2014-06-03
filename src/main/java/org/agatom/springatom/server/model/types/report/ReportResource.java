@@ -20,21 +20,53 @@ package org.agatom.springatom.server.model.types.report;
 import java.io.Serializable;
 
 /**
+ * <p>ReportResource interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface ReportResource
-        extends Serializable {
-    String getJasperPath();
+		extends Serializable {
+	/**
+	 * <p>getJasperPath.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getJasperPath();
 
-    String getJasperFilename();
+	/**
+	 * <p>getJasperFilename.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getJasperFilename();
 
-    String getJasperExtension();
+	/**
+	 * <p>getJasperExtension.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getJasperExtension();
 
-    String getConfigurationPath();
+	/**
+	 * <p>getConfigurationPath.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getConfigurationPath();
 
-    String getConfigurationFilename();
+	/**
+	 * <p>getConfigurationFilename.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getConfigurationFilename();
 
-    String getConfigurationExtension();
+	/**
+	 * <p>getConfigurationExtension.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getConfigurationExtension();
 }

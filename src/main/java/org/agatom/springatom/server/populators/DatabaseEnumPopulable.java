@@ -18,7 +18,7 @@
 package org.agatom.springatom.server.populators;
 
 /**
- * {@code DatabaseEnumPopulable} is the interface that is used by {@link EnumDatabasePopulator}.
+ * {@code DatabaseEnumPopulable} is the interface that is used by {@link org.agatom.springatom.server.populators.EnumDatabasePopulator}.
  * Defines the functionality required to built <b>INSERT</b> statements during populating the database data.
  *
  * @author kornicameister
@@ -26,9 +26,24 @@ package org.agatom.springatom.server.populators;
  * @since 0.0.1
  */
 public interface DatabaseEnumPopulable {
-    String[] getColumns();
+	/**
+	 * <p>getColumns.</p>
+	 *
+	 * @return an array of {@link java.lang.String} objects.
+	 */
+	String[] getColumns();
 
-    String getTable();
+	/**
+	 * <p>getTable.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getTable();
 
-    String[] getData();
+	/**
+	 * <p>getData.</p>
+	 *
+	 * @return an array of {@link java.lang.String} objects.
+	 */
+	String[] getData();
 }

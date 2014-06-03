@@ -25,24 +25,68 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
+ * <p>EntityAssociation interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface EntityAssociation
-        extends Serializable,
-                Identifiable<String> {
-    SlimEntityDescriptor<?> getMaster();
+		extends Serializable,
+		Identifiable<String> {
+	/**
+	 * <p>getMaster.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor} object.
+	 */
+	SlimEntityDescriptor<?> getMaster();
 
-    Set<SlimEntityDescriptor<?>> getAssociations();
+	/**
+	 * <p>getAssociations.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	Set<SlimEntityDescriptor<?>> getAssociations();
 
-    boolean containsAssociation(Class<?> clazz);
+	/**
+	 * <p>containsAssociation.</p>
+	 *
+	 * @param clazz a {@link java.lang.Class} object.
+	 *
+	 * @return a boolean.
+	 */
+	boolean containsAssociation(Class<?> clazz);
 
-    boolean containsAssociation(SlimEntityDescriptor<?> association);
+	/**
+	 * <p>containsAssociation.</p>
+	 *
+	 * @param association a {@link org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor} object.
+	 *
+	 * @return a boolean.
+	 */
+	boolean containsAssociation(SlimEntityDescriptor<?> association);
 
-    <V extends SlimEntityDescriptor<?>> boolean containsAssociations(@NotNull Collection<V> associations);
+	/**
+	 * <p>containsAssociations.</p>
+	 *
+	 * @param associations a {@link java.util.Collection} object.
+	 * @param <V>          a V object.
+	 *
+	 * @return a boolean.
+	 */
+	<V extends SlimEntityDescriptor<?>> boolean containsAssociations(@NotNull Collection<V> associations);
 
-    int size();
+	/**
+	 * <p>size.</p>
+	 *
+	 * @return a int.
+	 */
+	int size();
 
-    boolean isEmpty();
+	/**
+	 * <p>isEmpty.</p>
+	 *
+	 * @return a boolean.
+	 */
+	boolean isEmpty();
 }

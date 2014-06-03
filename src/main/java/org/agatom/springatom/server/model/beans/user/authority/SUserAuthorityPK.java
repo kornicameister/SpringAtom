@@ -25,43 +25,74 @@ import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 /**
+ * <p>SUserAuthorityPK class.</p>
+ *
  * @author kornicamaister
  * @version 0.0.1
  * @since 0.0.1
  */
 @Embeddable
 public class SUserAuthorityPK
-        implements Serializable {
-    private static final long serialVersionUID = -605204180160028113L;
-    @ManyToOne
-    @JoinColumn(name = "user", referencedColumnName = "idSUser")
-    private SUser      user;
-    @ManyToOne
-    @JoinColumn(name = "authority", referencedColumnName = "idSAuthority")
-    private SAuthority authority;
+		implements Serializable {
+	private static final long serialVersionUID = -605204180160028113L;
+	@ManyToOne
+	@JoinColumn(name = "user", referencedColumnName = "idSUser")
+	private SUser      user;
+	@ManyToOne
+	@JoinColumn(name = "authority", referencedColumnName = "idSAuthority")
+	private SAuthority authority;
 
-    public SUserAuthorityPK() {
-        super();
-    }
+	/**
+	 * <p>Constructor for SUserAuthorityPK.</p>
+	 */
+	public SUserAuthorityPK() {
+		super();
+	}
 
-    public SUserAuthorityPK(final SUser user, final SAuthority authority) {
-        this.user = user;
-        this.authority = authority;
-    }
+	/**
+	 * <p>Constructor for SUserAuthorityPK.</p>
+	 *
+	 * @param user      a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 * @param authority a {@link org.agatom.springatom.server.model.beans.user.authority.SAuthority} object.
+	 */
+	public SUserAuthorityPK(final SUser user, final SAuthority authority) {
+		this.user = user;
+		this.authority = authority;
+	}
 
-    public SUser getUser() {
-        return user;
-    }
+	/**
+	 * <p>Getter for the field <code>user</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 */
+	public SUser getUser() {
+		return user;
+	}
 
-    public void setUser(final SUser user) {
-        this.user = user;
-    }
+	/**
+	 * <p>Setter for the field <code>user</code>.</p>
+	 *
+	 * @param user a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 */
+	public void setUser(final SUser user) {
+		this.user = user;
+	}
 
-    public SAuthority getAuthority() {
-        return authority;
-    }
+	/**
+	 * <p>Getter for the field <code>authority</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.authority.SAuthority} object.
+	 */
+	public SAuthority getAuthority() {
+		return authority;
+	}
 
-    public void setAuthority(final SAuthority role) {
-        this.authority = role;
-    }
+	/**
+	 * <p>Setter for the field <code>authority</code>.</p>
+	 *
+	 * @param role a {@link org.agatom.springatom.server.model.beans.user.authority.SAuthority} object.
+	 */
+	public void setAuthority(final SAuthority role) {
+		this.authority = role;
+	}
 }

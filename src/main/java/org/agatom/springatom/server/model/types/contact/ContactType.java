@@ -18,6 +18,8 @@
 package org.agatom.springatom.server.model.types.contact;
 
 /**
+ * <p>ContactType class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1

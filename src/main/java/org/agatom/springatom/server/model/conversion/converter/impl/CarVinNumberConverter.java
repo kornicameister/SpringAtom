@@ -22,17 +22,20 @@ import org.agatom.springatom.server.model.conversion.annotation.PersistableConve
 import org.agatom.springatom.server.model.conversion.converter.PersistableConverterImpl;
 
 /**
+ * <p>CarVinNumberConverter class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 @PersistableConverterUtility(selector = "vinNumber")
 public class CarVinNumberConverter
-        extends PersistableConverterImpl<SCar> {
+		extends PersistableConverterImpl<SCar> {
 
-    @Override
-    public String convert(final SCar source) {
-        return String.valueOf(source.getVinNumber());
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String convert(final SCar source) {
+		return String.valueOf(source.getVinNumber());
+	}
 
 }

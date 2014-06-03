@@ -59,10 +59,14 @@ abstract public class SActivity<PK extends Serializable>
 	@Column(name = "activity_comment", nullable = true, length = 500)
 	private   String   comment;
 
+	/**
+	 * <p>Constructor for SActivity.</p>
+	 */
 	public SActivity() {
 		this.assigned = DateTime.now();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SUser getReporter() {
 		if (this.reporter == null) {
@@ -71,34 +75,40 @@ abstract public class SActivity<PK extends Serializable>
 		return reporter;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Activity setReporter(final SUser user) {
 		this.reporter = user;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public DateTime getAssigned() {
 		return null == this.assigned ? null : new DateTime(this.assigned);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Activity setAssigned(final DateTime assigned) {
 		this.assigned = assigned;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getComment() {
 		return comment;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Activity setComment(final String comment) {
 		this.comment = comment;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getIdentity() {
 		return String.valueOf(this.getId());

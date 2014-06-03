@@ -26,27 +26,35 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * <p>AllTypeFilter class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class AllTypeFilter
-        implements TypeFilter {
-    private final List<TypeFilter> delegates;
+		implements TypeFilter {
+	private final List<TypeFilter> delegates;
 
-    public AllTypeFilter(final List<TypeFilter> delegates) {
-        Assert.notNull(delegates);
-        this.delegates = delegates;
-    }
+	/**
+	 * <p>Constructor for AllTypeFilter.</p>
+	 *
+	 * @param delegates a {@link java.util.List} object.
+	 */
+	public AllTypeFilter(final List<TypeFilter> delegates) {
+		Assert.notNull(delegates);
+		this.delegates = delegates;
+	}
 
-    public boolean match(
-            final MetadataReader metadataReader,
-            final MetadataReaderFactory metadataReaderFactory) throws IOException {
-        for (final TypeFilter filter : delegates) {
-            if (!filter.match(metadataReader, metadataReaderFactory)) {
-                return false;
-            }
-        }
-        return true;
-    }
+	/** {@inheritDoc} */
+	public boolean match(
+			final MetadataReader metadataReader,
+			final MetadataReaderFactory metadataReaderFactory) throws IOException {
+		for (final TypeFilter filter : delegates) {
+			if (!filter.match(metadataReader, metadataReaderFactory)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

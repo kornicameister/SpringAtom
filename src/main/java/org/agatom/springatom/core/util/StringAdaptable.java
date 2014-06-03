@@ -18,10 +18,17 @@
 package org.agatom.springatom.core.util;
 
 /**
+ * <p>StringAdaptable interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface StringAdaptable {
-    String asString();
+	/**
+	 * <p>asString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String asString();
 }

@@ -35,11 +35,12 @@ import org.agatom.springatom.server.model.conversion.converter.PersistableConver
 
 @PersistableConverterUtility(selector = "userName")
 public class UserUserNameConverter
-        extends PersistableConverterImpl<SUser> {
+		extends PersistableConverterImpl<SUser> {
 
-    @Override
-    public String convert(final SUser source) {
-        return source.getPerson().getIdentity();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String convert(final SUser source) {
+		return source.getPerson().getIdentity();
+	}
 
 }
