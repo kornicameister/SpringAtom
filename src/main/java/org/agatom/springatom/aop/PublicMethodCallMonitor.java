@@ -38,7 +38,16 @@ import java.util.concurrent.TimeUnit;
 public class PublicMethodCallMonitor {
     private static final Logger LOGGER = Logger.getLogger(PublicMethodCallMonitor.class);
 
-    @Around("org.agatom.springatom.aop.SSharedPointcuts.inSpringAtom() " +
+	/**
+	 * <p>publicMethodCall.</p>
+	 *
+	 * @param pjp a {@link org.aspectj.lang.ProceedingJoinPoint} object.
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 *
+	 * @throws java.lang.Throwable if any.
+	 */
+	@Around("org.agatom.springatom.aop.SSharedPointcuts.inSpringAtom() " +
             "&& org.agatom.springatom.aop.SSharedPointcuts.publicMethod()")
     protected Object publicMethodCall(final ProceedingJoinPoint pjp) throws Throwable {
         return this.logMethodCallAround(pjp);

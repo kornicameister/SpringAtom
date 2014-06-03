@@ -21,6 +21,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
 /**
+ * <p>SSharedPointcuts class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -28,23 +30,38 @@ import org.aspectj.lang.annotation.Pointcut;
 @Aspect
 @SuppressWarnings("EmptyMethod")
 public class SSharedPointcuts {
-    @Pointcut("within(org.agatom.springatom.server.service..*)")
+	/**
+	 * <p>inServiceLayer.</p>
+	 */
+	@Pointcut("within(org.agatom.springatom.server.service..*)")
     protected void inServiceLayer() {
     }
 
-    @Pointcut("within(org.agatom.springatom.webmvc.controllers..*)")
+	/**
+	 * <p>inController.</p>
+	 */
+	@Pointcut("within(org.agatom.springatom.webmvc.controllers..*)")
     protected void inController() {
     }
 
-    @Pointcut("execution(public * *(..))")
+	/**
+	 * <p>publicMethod.</p>
+	 */
+	@Pointcut("execution(public * *(..))")
     protected void publicMethod() {
     }
 
-    @Pointcut("execution(protected * *(..))")
+	/**
+	 * <p>protectedMethod.</p>
+	 */
+	@Pointcut("execution(protected * *(..))")
     protected void protectedMethod() {
     }
 
-    @Pointcut("within(org.agatom.springatom..*)")
+	/**
+	 * <p>inSpringAtom.</p>
+	 */
+	@Pointcut("within(org.agatom.springatom..*)")
     protected void inSpringAtom() {
     }
 }

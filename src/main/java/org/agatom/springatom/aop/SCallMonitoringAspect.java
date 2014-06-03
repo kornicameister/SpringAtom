@@ -27,6 +27,8 @@ import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.util.StopWatch;
 
 /**
+ * <p>SCallMonitoringAspect class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -39,17 +41,30 @@ public class SCallMonitoringAspect {
     private              int     callCount           = 0;
     private              long    accumulatedCallTime = 0;
 
-    @ManagedAttribute
+	/**
+	 * <p>isEnabled.</p>
+	 *
+	 * @return a boolean.
+	 */
+	@ManagedAttribute
     public boolean isEnabled() {
         return enabled;
     }
 
-    @ManagedAttribute
+	/**
+	 * <p>Setter for the field <code>enabled</code>.</p>
+	 *
+	 * @param enabled a boolean.
+	 */
+	@ManagedAttribute
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    @ManagedOperation
+	/**
+	 * <p>reset.</p>
+	 */
+	@ManagedOperation
     public void reset() {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("Resetting...");
@@ -58,17 +73,36 @@ public class SCallMonitoringAspect {
         this.accumulatedCallTime = 0;
     }
 
-    @ManagedAttribute
+	/**
+	 * <p>Getter for the field <code>callCount</code>.</p>
+	 *
+	 * @return a int.
+	 */
+	@ManagedAttribute
     public int getCallCount() {
         return callCount;
     }
 
-    @ManagedAttribute
+	/**
+	 * <p>getCallTime.</p>
+	 *
+	 * @return a long.
+	 */
+	@ManagedAttribute
     public long getCallTime() {
         return (this.callCount > 0 ? this.accumulatedCallTime / this.callCount : 0);
     }
 
-    @Around("within(@org.springframework.stereotype.Service *)")
+	/**
+	 * <p>invoke.</p>
+	 *
+	 * @param joinPoint a {@link org.aspectj.lang.ProceedingJoinPoint} object.
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 *
+	 * @throws java.lang.Throwable if any.
+	 */
+	@Around("within(@org.springframework.stereotype.Service *)")
     public Object invoke(ProceedingJoinPoint joinPoint) throws Throwable {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(String
