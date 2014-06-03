@@ -22,7 +22,7 @@ import java.io.Serializable;
 /**
  * {@code ComponentRequest} marks implementing class as carrying the component request.
  * Request can concern either definition or data.
- * <p/>
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 02.06.14</small>
  *
  * @author kornicameister
