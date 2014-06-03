@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -18,86 +18,26 @@
 package org.agatom.springatom.web.component.core.elements.table;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.core.util.Localized;
 import org.agatom.springatom.web.component.core.EmbeddableComponent;
 import org.agatom.springatom.web.component.core.elements.DefaultComponent;
-import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nonnull;
 
 /**
+ * {@code TableColumnComponent} in an abstract representation of the single <b>column</b>.
+ * Each <b>column</b> is part of the {@link org.agatom.springatom.web.component.core.elements.table.TableComponent}
+ * <p/>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class TableColumnComponent
+abstract public class TableColumnComponent
 		extends DefaultComponent
-		implements EmbeddableComponent,
-		Localized {
-	private static final long           serialVersionUID   = 1814716311674625618L;
-	protected            String         title              = null;
-	protected            String         property           = null;
-	protected            Sort.Direction sortDirection      = Sort.Direction.ASC;
-	protected            boolean        sortable           = true;
-	protected            boolean        filterable         = false;
-	protected            boolean        visible            = true;
-	private              int            position           = -1;
-	private              String         titleKey           = null;
-	private              String         renderFunctionName = "renderValue";
-
-	public String getRenderFunctionName() {
-		return renderFunctionName;
-	}
-
-	public TableColumnComponent setRenderFunctionName(final String renderFunctionName) {
-		this.renderFunctionName = renderFunctionName;
-		return this;
-	}
-
-	public String getProperty() {
-		return property;
-	}
-
-	public TableColumnComponent setProperty(final String property) {
-		this.property = property;
-		return this;
-	}
-
-	public Sort.Direction getSortDirection() {
-		return sortDirection;
-	}
-
-	public TableColumnComponent setSortDirection(final Sort.Direction sortDirection) {
-		this.sortDirection = sortDirection;
-		return this;
-	}
-
-	public boolean isSortable() {
-		return sortable;
-	}
-
-	public TableColumnComponent setSortable(final boolean sortable) {
-		this.sortable = sortable;
-		return this;
-	}
-
-	public boolean isFilterable() {
-		return filterable;
-	}
-
-	public TableColumnComponent setFilterable(final boolean filterable) {
-		this.filterable = filterable;
-		return this;
-	}
-
-	public boolean isVisible() {
-		return visible;
-	}
-
-	public TableColumnComponent setVisible(final boolean visible) {
-		this.visible = visible;
-		return this;
-	}
+		implements EmbeddableComponent {
+	private static final long serialVersionUID = 7798481976595660140L;
+	private              int  position         = -1;
 
 	@Override
 	public int getPosition() {
@@ -115,59 +55,18 @@ public class TableColumnComponent
 	}
 
 	@Override
-	public String getMessageKey() {
-		return this.getTitleKey();
-	}
-
-	public String getTitleKey() {
-		return titleKey;
-	}
-
-	public TableColumnComponent setTitleKey(final String titleKey) {
-		this.titleKey = titleKey;
-		return this;
-	}
-
-	@Override
 	public int hashCode() {
-		return Objects.hashCode(title, property, sortDirection, sortable, filterable, visible,
-				position, titleKey, title);
+		return Objects.hashCode(position);
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
 		TableColumnComponent that = (TableColumnComponent) o;
 
-		return Objects.equal(this.title, that.title) &&
-				Objects.equal(this.property, that.property) &&
-				Objects.equal(this.sortDirection, that.sortDirection) &&
-				Objects.equal(this.sortable, that.sortable) &&
-				Objects.equal(this.filterable, that.filterable) &&
-				Objects.equal(this.visible, that.visible) &&
-				Objects.equal(this.position, that.position) &&
-				Objects.equal(this.titleKey, that.titleKey) &&
-				Objects.equal(this.title, that.title);
+		return Objects.equal(this.position, that.position);
 	}
 
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this)
-				.addValue(title)
-				.addValue(property)
-				.addValue(sortDirection)
-				.addValue(sortable)
-				.addValue(filterable)
-				.addValue(visible)
-				.addValue(position)
-				.addValue(titleKey)
-				.addValue(title)
-				.toString();
-	}
 }
