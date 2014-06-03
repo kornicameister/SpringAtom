@@ -24,7 +24,7 @@ import org.agatom.springatom.web.component.core.request.ComponentRequest;
  * {@link org.agatom.springatom.web.component.table.request.TableDefinitionRequest} carries information
  * about {@link #builderId} and {@link #gridDataType}. These information are required to call {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder}
  * to return valid table definition
- * <p/>
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 02.06.14</small>
  *
  * @author kornicameister
