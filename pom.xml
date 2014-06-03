@@ -48,7 +48,7 @@
     <properties>
 
         <!-- Generic properties -->
-        <jdk.version>1.8</jdk.version>
+        <jdk.version>1.7</jdk.version>
         <project.compiler.sourceEncoding>UTF-8</project.compiler.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -68,7 +68,6 @@
         <!-- logging -->
 
         <!-- spring -->
-        <!-- TODO 4.0.0 -->
         <spring.version>4.0.4.RELEASE</spring.version>
         <spring-webflow.version>2.4.0.RC1</spring-webflow.version>
         <spring-security.version>3.2.3.RELEASE</spring-security.version>
@@ -77,7 +76,6 @@
         <spring-data-envers.version>0.2.0.BUILD-SNAPSHOT</spring-data-envers.version>
         <spring-data-rest-webmvc.version>2.0.2.RELEASE</spring-data-rest-webmvc.version>
         <spring.hateoas.version>0.10.0.RELEASE</spring.hateoas.version>
-        <!-- TODO 4.0.0 -->
         <!-- spring -->
 
         <!-- servlet and jsp -->
@@ -1067,7 +1065,7 @@
                 <configuration>
                     <sourceEncoding>utf-8</sourceEncoding>
                     <minimumTokens>100</minimumTokens>
-                    <targetJdk>1.7</targetJdk>
+                    <targetJdk>${jdk.version}</targetJdk>
                     <excludes>
                         <exclude>**/generated/Q*.java</exclude>
                     </excludes>
