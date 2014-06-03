@@ -42,6 +42,7 @@ import java.util.Locale;
 public class IntervalWebConverter
 		extends AbstractWebConverter {
 
+	/** {@inheritDoc} */
 	@Override
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
 		if (value != null) {

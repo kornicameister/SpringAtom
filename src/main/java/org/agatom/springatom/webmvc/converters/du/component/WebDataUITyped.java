@@ -28,5 +28,10 @@ import java.io.Serializable;
  */
 public interface WebDataUITyped
 		extends Serializable {
+	/**
+	 * <p>getUiType.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getUiType();
 }

@@ -61,6 +61,14 @@ public class CDRReturnValueConverter {
 	@Qualifier("springAtomConversionService")
 	private              FormattingConversionService conversionService = null;
 
+	/**
+	 * <p>convert.</p>
+	 *
+	 * @param response a {@link org.agatom.springatom.web.component.core.data.ComponentDataResponse} object.
+	 * @param request  a {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest} object.
+	 *
+	 * @return a {@link java.util.HashMap} object.
+	 */
 	public HashMap<String, Object> convert(final ComponentDataResponse response, final ComponentDataRequest request) {
 		LOGGER.trace(String.format("convert(returnValue=%s)", response));
 

@@ -57,6 +57,7 @@ abstract public class AbstractWebConverter
 	@Autowired
 	protected            SUserService      userService       = null;
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	public final Serializable convert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest request) throws WebConverterException {
@@ -85,6 +86,18 @@ abstract public class AbstractWebConverter
 		}
 	}
 
+	/**
+	 * <p>doConvert.</p>
+	 *
+	 * @param key         a {@link java.lang.String} object.
+	 * @param value       a {@link java.lang.Object} object.
+	 * @param persistable a {@link org.springframework.data.domain.Persistable} object.
+	 * @param webRequest  a {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest} object.
+	 *
+	 * @return a {@link java.io.Serializable} object.
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	protected abstract Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) throws Exception;
 
 	@SuppressWarnings("unchecked")
@@ -129,7 +142,7 @@ abstract public class AbstractWebConverter
 
 			component.addDynamicProperty("converter", ClassUtils.getShortName(this.getClass()));
 			component.addDynamicProperty("time", conversionTime);
-			
+
 			if (!StringUtils.hasText(component.getTitle())) {
 				component.setTitle(this.getLabel(key, persistable));
 			}
@@ -137,6 +150,14 @@ abstract public class AbstractWebConverter
 		return convertedValue;
 	}
 
+	/**
+	 * <p>getLabel.</p>
+	 *
+	 * @param key         a {@link java.lang.String} object.
+	 * @param persistable a {@link org.springframework.data.domain.Persistable} object.
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	protected String getLabel(final String key, final Persistable<?> persistable) {
 		final LocalizedClassAttribute localizedClassAttribute = this.messageSource.getLocalizedClassAttribute(persistable.getClass(), key, LocaleContextHolder.getLocale());
 		if (localizedClassAttribute != null && localizedClassAttribute.isFound()) {
@@ -145,6 +166,13 @@ abstract public class AbstractWebConverter
 		return this.getLabel(key);
 	}
 
+	/**
+	 * <p>getLabel.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	protected String getLabel(final String key) {
 		return this.messageSource.getMessage(key, LocaleContextHolder.getLocale());
 	}

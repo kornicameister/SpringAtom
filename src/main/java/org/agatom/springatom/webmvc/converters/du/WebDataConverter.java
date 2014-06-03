@@ -41,6 +41,8 @@ public interface WebDataConverter<T extends Serializable> {
 	 * @param request     request
 	 *
 	 * @return the converted value
+	 *
+	 * @throws org.agatom.springatom.webmvc.converters.du.exception.WebConverterException if any.
 	 */
 	T convert(String key, Object value, Persistable<?> persistable, ComponentDataRequest request) throws WebConverterException;
 }

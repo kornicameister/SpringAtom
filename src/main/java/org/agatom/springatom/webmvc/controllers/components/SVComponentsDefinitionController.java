@@ -62,7 +62,7 @@ public class SVComponentsDefinitionController
 	 *
 	 * @return the definition
 	 *
-	 * @throws ControllerTierException if failed
+	 * @throws org.agatom.springatom.webmvc.exceptions.ControllerTierException if failed
 	 */
 	@ResponseBody
 	@RequestMapping(

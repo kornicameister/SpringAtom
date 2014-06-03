@@ -22,6 +22,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
+ * <p>SVUserController class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -30,13 +32,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller(value = SVUserController.CONTROLLER_NAME)
 @RequestMapping(value = "/data/user")
 public class SVUserController
-        extends SVDefaultController {
+		extends SVDefaultController {
 
-    public static final String CONTROLLER_NAME = "UserController";
+	/** Constant <code>CONTROLLER_NAME="UserController"</code> */
+	public static final String CONTROLLER_NAME = "UserController";
 
-    public SVUserController() {
-        super(CONTROLLER_NAME);
-    }
+	/**
+	 * <p>Constructor for SVUserController.</p>
+	 */
+	public SVUserController() {
+		super(CONTROLLER_NAME);
+	}
 
 
 }

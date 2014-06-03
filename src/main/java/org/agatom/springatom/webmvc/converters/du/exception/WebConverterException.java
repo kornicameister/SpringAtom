@@ -30,27 +30,62 @@ public class WebConverterException
 	private              String conversionKey    = null;
 	private              Object conversionValue  = null;
 
+	/**
+	 * <p>Constructor for WebConverterException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
 	public WebConverterException(final String message) {
 		super(message);
 	}
 
+	/**
+	 * <p>Constructor for WebConverterException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
 	public WebConverterException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * <p>Getter for the field <code>conversionKey</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getConversionKey() {
 		return conversionKey;
 	}
 
+	/**
+	 * <p>Setter for the field <code>conversionKey</code>.</p>
+	 *
+	 * @param conversionKey a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.webmvc.converters.du.exception.WebConverterException} object.
+	 */
 	public WebConverterException setConversionKey(final String conversionKey) {
 		this.conversionKey = conversionKey;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>conversionValue</code>.</p>
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 */
 	public Object getConversionValue() {
 		return conversionValue;
 	}
 
+	/**
+	 * <p>Setter for the field <code>conversionValue</code>.</p>
+	 *
+	 * @param conversionValue a {@link java.lang.Object} object.
+	 *
+	 * @return a {@link org.agatom.springatom.webmvc.converters.du.exception.WebConverterException} object.
+	 */
 	public WebConverterException setConversionValue(final Object conversionValue) {
 		this.conversionValue = conversionValue;
 		return this;

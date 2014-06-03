@@ -47,6 +47,7 @@ import java.io.Serializable;
 @WebConverter(key = ToInfoPageLinkWebConverter.SELECTOR)
 public class ToInfoPageLinkWebConverter
 		extends AbstractWebConverter {
+	/** Constant <code>SELECTOR="infoPageLink"</code> */
 	public static final  String                     SELECTOR   = "infoPageLink";
 	private static final Logger                     LOGGER     = Logger.getLogger(ToInfoPageLinkWebConverter.class);
 	@Autowired
@@ -54,6 +55,7 @@ public class ToInfoPageLinkWebConverter
 	@Autowired
 	private              PersistableConverterPicker picker     = null;
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {

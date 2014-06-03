@@ -38,6 +38,9 @@ import java.util.Set;
 /**
  * {@code SVTilesViewController} is generic controller mapping requests to views.
  * Views are loaded from {@code urlMappingProperties}
+ *
+ * @author kornicameister
+ * @version $Id: $Id
  */
 public class SVTilesViewController
 		extends AbstractUrlViewController {
@@ -72,6 +75,7 @@ public class SVTilesViewController
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected String getViewNameForRequest(final HttpServletRequest request) {
 		final String path = this.getUrlPathHelper().getLookupPathForRequest(request);

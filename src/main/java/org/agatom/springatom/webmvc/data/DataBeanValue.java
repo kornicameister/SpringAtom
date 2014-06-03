@@ -26,73 +26,100 @@ import javax.annotation.meta.When;
 import java.io.Serializable;
 
 /**
+ * <p>DataBeanValue class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class DataBeanValue
-        implements Serializable,
-                   Comparable<DataBeanValue>,
-                   Identifiable<String> {
+		implements Serializable,
+		Comparable<DataBeanValue>,
+		Identifiable<String> {
 
-    private static final long   serialVersionUID = 6148280377072447300L;
-    protected            String key              = null;
-    protected            String value            = null;
+	private static final long   serialVersionUID = 6148280377072447300L;
+	protected            String key              = null;
+	protected            String value            = null;
 
-    public String getKey() {
-        return key;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getId() {
+		return this.key;
+	}
 
-    public void setKey(final String key) {
-        this.key = key;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public int compareTo(@Nonnull(when = When.ALWAYS) final DataBeanValue dataBean) {
+		return ComparisonChain.start()
+				.compare(this.key, dataBean.getKey())
+				.compare(this.value, dataBean.getValue())
+				.result();
+	}
 
-    public String getValue() {
-        return value;
-    }
+	/**
+	 * <p>Getter for the field <code>key</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getKey() {
+		return key;
+	}
 
-    public void setValue(final String value) {
-        this.value = value;
-    }
+	/**
+	 * <p>Setter for the field <code>key</code>.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 */
+	public void setKey(final String key) {
+		this.key = key;
+	}
 
-    @Override
-    public String getId() {
-        return this.key;
-    }
+	/**
+	 * <p>Getter for the field <code>value</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getValue() {
+		return value;
+	}
 
-    @Override
-    public int compareTo(@Nonnull(when = When.ALWAYS) final DataBeanValue dataBean) {
-        return ComparisonChain.start()
-                              .compare(this.key, dataBean.getKey())
-                              .compare(this.value, dataBean.getValue())
-                              .result();
-    }
+	/**
+	 * <p>Setter for the field <code>value</code>.</p>
+	 *
+	 * @param value a {@link java.lang.String} object.
+	 */
+	public void setValue(final String value) {
+		this.value = value;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(key, value);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(key, value);
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        DataBeanValue that = (DataBeanValue) o;
+		DataBeanValue that = (DataBeanValue) o;
 
-        return Objects.equal(this.key, that.key) &&
-                Objects.equal(this.value, that.value);
-    }
+		return Objects.equal(this.key, that.key) &&
+				Objects.equal(this.value, that.value);
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(key)
-                      .addValue(value)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(key)
+				.addValue(value)
+				.toString();
+	}
 }

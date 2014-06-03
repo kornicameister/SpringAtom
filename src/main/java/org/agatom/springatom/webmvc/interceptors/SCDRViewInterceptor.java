@@ -42,37 +42,48 @@ import javax.servlet.http.HttpServletResponse;
  * @since 0.0.1
  */
 public class SCDRViewInterceptor
-        extends HandlerInterceptorAdapter {
-    private static final Logger LOGGER = Logger.getLogger(SCDRViewInterceptor.class);
-    @Value(value = "#{webProperties['sa.locale.requestParam']}")
-    private String              localeParamKey;
-    private SViewTitleResolver  titleResolver;
-    private SBreadcrumbResolver breadcrumbResolver;
+		extends HandlerInterceptorAdapter {
+	private static final Logger LOGGER = Logger.getLogger(SCDRViewInterceptor.class);
+	@Value(value = "#{webProperties['sa.locale.requestParam']}")
+	private String              localeParamKey;
+	private SViewTitleResolver  titleResolver;
+	private SBreadcrumbResolver breadcrumbResolver;
 
-    @Override
-    public void postHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler, final ModelAndView modelAndView) throws
-            Exception {
-        if (modelAndView != null && modelAndView.getModelMap() != null) {
-            final ModelMap modelMap = modelAndView.getModelMap();
+	/** {@inheritDoc} */
+	@Override
+	public void postHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler, final ModelAndView modelAndView) throws
+			Exception {
+		if (modelAndView != null && modelAndView.getModelMap() != null) {
+			final ModelMap modelMap = modelAndView.getModelMap();
 
-            modelMap.put(this.localeParamKey, LocaleContextHolder.getLocale());
-            SWebBeanHelper.addToModelMap(modelMap, new SSearchCommandBean());
-            SWebBeanHelper.addToModelMap(modelMap, this.titleResolver.getViewTitle(modelAndView.getViewName()));
-            SWebBeanHelper.addToModelMap(modelMap, this.breadcrumbResolver.getBreadcrumbPath(modelAndView.getView()));
+			modelMap.put(this.localeParamKey, LocaleContextHolder.getLocale());
+			SWebBeanHelper.addToModelMap(modelMap, new SSearchCommandBean());
+			SWebBeanHelper.addToModelMap(modelMap, this.titleResolver.getViewTitle(modelAndView.getViewName()));
+			SWebBeanHelper.addToModelMap(modelMap, this.breadcrumbResolver.getBreadcrumbPath(modelAndView.getView()));
 
-            if (LOGGER.isTraceEnabled()) {
-                LOGGER.trace(String.format("SCDR=%s(%s)", modelAndView.getViewName(), modelMap));
-            }
-        }
-    }
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace(String.format("SCDR=%s(%s)", modelAndView.getViewName(), modelMap));
+			}
+		}
+	}
 
-    @Required
-    public void setTitleResolver(final SViewTitleResolver titleResolver) {
-        this.titleResolver = titleResolver;
-    }
+	/**
+	 * <p>Setter for the field <code>titleResolver</code>.</p>
+	 *
+	 * @param titleResolver a {@link org.agatom.springatom.web.view.SViewTitleResolver} object.
+	 */
+	@Required
+	public void setTitleResolver(final SViewTitleResolver titleResolver) {
+		this.titleResolver = titleResolver;
+	}
 
-    @Required
-    public void setBreadcrumbResolver(SBreadcrumbResolver breadcrumbResolver) {
-        this.breadcrumbResolver = breadcrumbResolver;
-    }
+	/**
+	 * <p>Setter for the field <code>breadcrumbResolver</code>.</p>
+	 *
+	 * @param breadcrumbResolver a {@link org.agatom.springatom.web.breadcrumbs.SBreadcrumbResolver} object.
+	 */
+	@Required
+	public void setBreadcrumbResolver(SBreadcrumbResolver breadcrumbResolver) {
+		this.breadcrumbResolver = breadcrumbResolver;
+	}
 }

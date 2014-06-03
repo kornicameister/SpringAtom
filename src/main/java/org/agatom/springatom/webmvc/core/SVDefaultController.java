@@ -21,24 +21,32 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 
 /**
+ * <p>Abstract SVDefaultController class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 @Component(value = "SDefaultController")
 public abstract class SVDefaultController
-        extends WebApplicationObjectSupport
-        implements SController {
+		extends WebApplicationObjectSupport
+		implements SController {
 
-    private final String controllerName;
+	private final String controllerName;
 
-    protected SVDefaultController(final String controllerName) {
-        this.controllerName = controllerName;
-    }
+	/**
+	 * <p>Constructor for SVDefaultController.</p>
+	 *
+	 * @param controllerName a {@link java.lang.String} object.
+	 */
+	protected SVDefaultController(final String controllerName) {
+		this.controllerName = controllerName;
+	}
 
-    @Override
-    public final String getControllerName() {
-        return this.controllerName;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public final String getControllerName() {
+		return this.controllerName;
+	}
 
 }

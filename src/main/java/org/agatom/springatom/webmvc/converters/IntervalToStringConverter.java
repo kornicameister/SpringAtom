@@ -25,23 +25,27 @@ import org.springframework.core.convert.converter.ConditionalConverter;
 import org.springframework.core.convert.converter.Converter;
 
 /**
+ * <p>IntervalToStringConverter class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class IntervalToStringConverter
-        implements Converter<Interval, String>,
-                   ConditionalConverter {
+		implements Converter<Interval, String>,
+		ConditionalConverter {
 
-    @Override
-    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        return sourceType.getType().isAssignableFrom(Interval.class)
-                && targetType.getType().isAssignableFrom(String.class);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+		return sourceType.getType().isAssignableFrom(Interval.class)
+				&& targetType.getType().isAssignableFrom(String.class);
+	}
 
-    @Override
-    public String convert(final Interval source) {
-        Preconditions.checkNotNull(source);
-        return String.valueOf(source.toPeriod(PeriodType.minutes()).getMinutes());
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String convert(final Interval source) {
+		Preconditions.checkNotNull(source);
+		return String.valueOf(source.toPeriod(PeriodType.minutes()).getMinutes());
+	}
 }

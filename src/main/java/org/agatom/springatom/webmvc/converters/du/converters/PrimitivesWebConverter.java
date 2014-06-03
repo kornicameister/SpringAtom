@@ -42,6 +42,7 @@ import java.io.Serializable;
 public class PrimitivesWebConverter
 		extends AbstractWebConverter {
 
+	/** {@inheritDoc} */
 	@Override
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
 		final TextComponent component = new TextComponent();

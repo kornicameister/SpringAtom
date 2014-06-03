@@ -18,28 +18,49 @@
 package org.agatom.springatom.webmvc.exceptions;
 
 /**
+ * <p>ControllerTierException class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class ControllerTierException
-        extends Exception {
+		extends Exception {
 
-    private static final String MSG_PATTERN_1    = "ControllerTierException=\n\t=>%s\n";
-    private static final long   serialVersionUID = -61989976957896637L;
+	private static final String MSG_PATTERN_1    = "ControllerTierException=\n\t=>%s\n";
+	private static final long   serialVersionUID = -61989976957896637L;
 
-    public ControllerTierException() {
-    }
+	/**
+	 * <p>Constructor for ControllerTierException.</p>
+	 */
+	public ControllerTierException() {
+	}
 
-    public ControllerTierException(final String message) {
-        super(String.format(MSG_PATTERN_1, message));
-    }
+	/**
+	 * <p>Constructor for ControllerTierException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
+	public ControllerTierException(final String message) {
+		super(String.format(MSG_PATTERN_1, message));
+	}
 
-    public ControllerTierException(final Throwable cause) {
-        super(cause);
-    }
+	/**
+	 * <p>Constructor for ControllerTierException.</p>
+	 *
+	 * @param cause a {@link java.lang.Throwable} object.
+	 */
+	public ControllerTierException(final Throwable cause) {
+		super(cause);
+	}
 
-    public ControllerTierException(final String message, final Throwable cause) {
-        super(String.format("ControllerTierException=\n\t=>%s\n", message), cause);
-    }
+	/**
+	 * <p>Constructor for ControllerTierException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
+	public ControllerTierException(final String message, final Throwable cause) {
+		super(String.format("ControllerTierException=\n\t=>%s\n", message), cause);
+	}
 }

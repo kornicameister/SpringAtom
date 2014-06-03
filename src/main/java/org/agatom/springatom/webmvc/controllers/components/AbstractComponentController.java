@@ -50,7 +50,7 @@ abstract class AbstractComponentController {
 	private static final Logger LOGGER = Logger.getLogger(AbstractComponentController.class);
 
 	/**
-	 * Combines {@link ComponentRequest} and {@link org.springframework.web.context.request.WebRequest}
+	 * Combines {@link org.agatom.springatom.web.component.core.request.ComponentRequest} and {@link org.springframework.web.context.request.WebRequest}
 	 * into valid {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest}.
 	 *
 	 * @param cmpRequest component request
@@ -92,16 +92,42 @@ abstract class AbstractComponentController {
 		return new ComponentDataRequest(modelMap, cmpRequest);
 	}
 
+	/**
+	 * <p>handleNPE.</p>
+	 *
+	 * @param npe a {@link org.agatom.springatom.webmvc.exceptions.ControllerTierException} object.
+	 *
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
 	@ResponseBody
 	@ExceptionHandler({ControllerTierException.class})
 	public ResponseEntity<?> handleNPE(final ControllerTierException npe) {
 		return errorResponse(npe, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	/**
+	 * <p>errorResponse.</p>
+	 *
+	 * @param throwable a T object.
+	 * @param status    a {@link org.springframework.http.HttpStatus} object.
+	 * @param <T>       a T object.
+	 *
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
 	public <T extends Throwable> ResponseEntity<ExceptionMessage> errorResponse(final T throwable, final HttpStatus status) {
 		return errorResponse(null, throwable, status);
 	}
 
+	/**
+	 * <p>errorResponse.</p>
+	 *
+	 * @param headers   a {@link org.springframework.http.HttpHeaders} object.
+	 * @param throwable a T object.
+	 * @param status    a {@link org.springframework.http.HttpStatus} object.
+	 * @param <T>       a T object.
+	 *
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
 	public <T extends Throwable> ResponseEntity<ExceptionMessage> errorResponse(final HttpHeaders headers, final T throwable, final HttpStatus status) {
 		if (null != throwable && null != throwable.getMessage()) {
 			LOGGER.error(throwable.getMessage(), throwable);
@@ -111,6 +137,16 @@ abstract class AbstractComponentController {
 		}
 	}
 
+	/**
+	 * <p>response.</p>
+	 *
+	 * @param headers a {@link org.springframework.http.HttpHeaders} object.
+	 * @param body    a T object.
+	 * @param status  a {@link org.springframework.http.HttpStatus} object.
+	 * @param <T>     a T object.
+	 *
+	 * @return a {@link org.springframework.http.ResponseEntity} object.
+	 */
 	public <T> ResponseEntity<T> response(final HttpHeaders headers, final T body, final HttpStatus status) {
 		final HttpHeaders httpHeaders = new HttpHeaders();
 		if (null != headers) {

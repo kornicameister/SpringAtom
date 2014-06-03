@@ -37,17 +37,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller(value = SVSearchController.CONTROLLER_NAME)
 @RequestMapping(value = "/search")
 public class SVSearchController
-        extends SVDefaultController {
-    public static final  String CONTROLLER_NAME = "sa.controller.search.DefaultSearchControllers";
-    private static final Logger LOGGER          = Logger.getLogger(SVSearchController.class);
+		extends SVDefaultController {
+	/** Constant <code>CONTROLLER_NAME="sa.controller.search.DefaultSearchContr"{trunked}</code> */
+	public static final  String CONTROLLER_NAME = "sa.controller.search.DefaultSearchControllers";
+	private static final Logger LOGGER          = Logger.getLogger(SVSearchController.class);
 
-    public SVSearchController() {
-        super(CONTROLLER_NAME);
-    }
+	/**
+	 * <p>Constructor for SVSearchController.</p>
+	 */
+	public SVSearchController() {
+		super(CONTROLLER_NAME);
+	}
 
-    @RequestMapping(value = "/global", method = RequestMethod.POST)
-    public String doSearch(@ModelAttribute final SSearchCommandBean bean) {
-        LOGGER.debug(String.format("Searching for = %s", bean));
-        return "redirect:/app";
-    }
+	/**
+	 * <p>doSearch.</p>
+	 *
+	 * @param bean a {@link org.agatom.springatom.web.beans.search.SSearchCommandBean} object.
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	@RequestMapping(value = "/global", method = RequestMethod.POST)
+	public String doSearch(@ModelAttribute final SSearchCommandBean bean) {
+		LOGGER.debug(String.format("Searching for = %s", bean));
+		return "redirect:/app";
+	}
 }

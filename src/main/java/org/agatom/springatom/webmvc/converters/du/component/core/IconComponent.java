@@ -31,15 +31,30 @@ public class IconComponent
 		implements WebDataUITyped {
 	private static final long serialVersionUID = -1035402964649329298L;
 
+	/** {@inheritDoc} */
 	@Override
 	public String getUiType() {
 		return "icon";
 	}
 
+	/**
+	 * <p>setIconPath.</p>
+	 *
+	 * @param iconPath a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.IconComponent} object.
+	 */
 	public IconComponent setIconPath(final String iconPath) {
 		return (IconComponent) this.setValue(iconPath);
 	}
 
+	/**
+	 * <p>setIconClass.</p>
+	 *
+	 * @param iconClass a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.IconComponent} object.
+	 */
 	public IconComponent setIconClass(final String iconClass) {
 		return (IconComponent) this.setValue(iconClass);
 	}

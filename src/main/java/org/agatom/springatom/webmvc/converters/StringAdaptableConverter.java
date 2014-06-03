@@ -25,23 +25,27 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.ClassUtils;
 
 /**
+ * <p>StringAdaptableConverter class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class StringAdaptableConverter
-        implements Converter<StringAdaptable, String>,
-                   ConditionalConverter {
-    @Override
-    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        return ClassUtils.isAssignable(String.class, targetType.getType()) && (ClassUtils
-                .isAssignable(StringAdaptable.class, ClassUtils.getUserClass(sourceType
-                        .getType())));
-    }
+		implements Converter<StringAdaptable, String>,
+		ConditionalConverter {
+	/** {@inheritDoc} */
+	@Override
+	public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+		return ClassUtils.isAssignable(String.class, targetType.getType()) && (ClassUtils
+				.isAssignable(StringAdaptable.class, ClassUtils.getUserClass(sourceType
+						.getType())));
+	}
 
-    @Override
-    public String convert(final StringAdaptable source) {
-        Preconditions.checkNotNull(source, "Target can not be null");
-        return source.asString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String convert(final StringAdaptable source) {
+		Preconditions.checkNotNull(source, "Target can not be null");
+		return source.asString();
+	}
 }

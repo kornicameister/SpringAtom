@@ -20,12 +20,19 @@ package org.agatom.springatom.webmvc;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * <p>ViewHelper class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class ViewHelper {
-    public static void asDojoModal(final HttpServletResponse response) {
-        response.setHeader("Spring-Modal-View", Boolean.TRUE.toString());
-    }
+	/**
+	 * <p>asDojoModal.</p>
+	 *
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 */
+	public static void asDojoModal(final HttpServletResponse response) {
+		response.setHeader("Spring-Modal-View", Boolean.TRUE.toString());
+	}
 }

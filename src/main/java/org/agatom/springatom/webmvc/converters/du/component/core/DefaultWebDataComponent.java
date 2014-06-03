@@ -40,51 +40,85 @@ abstract public class DefaultWebDataComponent<T>
 	private              String   key              = null;
 	private              int      position         = -1;
 
+	/**
+	 * <p>setLabel.</p>
+	 *
+	 * @param label a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent} object.
+	 */
 	public DefaultWebDataComponent<T> setLabel(final String label) {
 		this.setTitle(label);
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public T getValue() {
 		return this.value;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Class<?> getRawValueType() {
 		return this.rawValueType;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getKey() {
 		return this.key;
 	}
 
+	/**
+	 * <p>Setter for the field <code>key</code>.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent} object.
+	 */
 	public DefaultWebDataComponent setKey(final String key) {
 		this.key = key;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>rawValueType</code>.</p>
+	 *
+	 * @param rawValueType a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent} object.
+	 */
 	public DefaultWebDataComponent setRawValueType(final Class<?> rawValueType) {
 		this.rawValueType = rawValueType;
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>value</code>.</p>
+	 *
+	 * @param value a T object.
+	 *
+	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent} object.
+	 */
 	public DefaultWebDataComponent setValue(final T value) {
 		this.value = value;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int getPosition() {
 		return this.position;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setPosition(final int position) {
 		this.position = position;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(@Nonnull final EmbeddableComponent o) {
 		return ComparisonChain.start()

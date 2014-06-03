@@ -22,11 +22,13 @@ import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.elements.table.DandelionTableComponent;
+import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
 import org.springframework.util.StringUtils;
 
 /**
+ * <p>AppointmentsTableBuilder class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -35,9 +37,11 @@ import org.springframework.util.StringUtils;
 @ComponentBuilder(AppointmentsTableBuilder.BUILDER_ID)
 public class AppointmentsTableBuilder
 		extends TableComponentBuilder<DandelionTableComponent, SAppointment> {
+	/** Constant <code>BUILDER_ID="appointmentsTableBuilder"</code> */
 	protected static final String BUILDER_ID = "appointmentsTableBuilder";
 	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointment.ENTITY_NAME));
 
+	/** {@inheritDoc} */
 	@Override
 	protected DandelionTableComponent buildDefinition(final ComponentDataRequest dataRequest) {
 		final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
@@ -52,6 +56,7 @@ public class AppointmentsTableBuilder
 		return component;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected Object handleColumnConversion(final SAppointment object, final Object value, final String path) {
 		switch (path) {
@@ -65,6 +70,7 @@ public class AppointmentsTableBuilder
 		return super.handleColumnConversion(object, value, path);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected Predicate getPredicate(final Long appointmentId, final Class<?> contextClass) {
 		return null;

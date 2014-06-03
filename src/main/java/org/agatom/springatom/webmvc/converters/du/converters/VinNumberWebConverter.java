@@ -45,6 +45,7 @@ public class VinNumberWebConverter
 	@Autowired
 	private VinDecoder vinDecoder = null;
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) throws Exception {

@@ -23,11 +23,13 @@ import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.elements.table.DandelionTableComponent;
+import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
 import org.springframework.util.StringUtils;
 
 /**
+ * <p>AppointmentTaskTableBuilder class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -36,9 +38,11 @@ import org.springframework.util.StringUtils;
 @ComponentBuilder(AppointmentTaskTableBuilder.BUILDER_ID)
 public class AppointmentTaskTableBuilder
 		extends TableComponentBuilder<DandelionTableComponent, SAppointmentTask> {
+	/** Constant <code>BUILDER_ID="appointmentTaskTableBuilder"</code> */
 	protected static final String BUILDER_ID = "appointmentTaskTableBuilder";
 	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointmentTask.ENTITY_NAME));
 
+	/** {@inheritDoc} */
 	@Override
 	protected DandelionTableComponent buildDefinition(final ComponentDataRequest dataRequest) {
 		final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
@@ -48,6 +52,7 @@ public class AppointmentTaskTableBuilder
 		return component;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected Predicate getPredicate(final Long appointmentId, final Class<?> contextClass) {
 		return QSAppointmentTask.sAppointmentTask.appointment.id.eq(appointmentId);

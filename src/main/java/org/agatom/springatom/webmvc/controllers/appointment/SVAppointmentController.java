@@ -46,6 +46,8 @@ import java.util.Locale;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 /**
+ * <p>SVAppointmentController class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -53,77 +55,93 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @Controller(value = SVAppointmentController.CONTROLLER_NAME)
 @RequestMapping(value = "/data/appointment")
 public class SVAppointmentController
-        extends SVDefaultController {
-    public static final  String CONTROLLER_NAME = "AppointmentController";
-    private static final Logger LOGGER          = Logger.getLogger(SVAppointmentController.class);
-    @Autowired
-    private SAppointmentService appointmentService;
-    @Value("#{T(java.lang.Boolean).valueOf(webProperties['org.agatom.springatom.server.model.beans.appointment.SAppointment.currentUserOnly']).booleanValue()}")
-    private Boolean             currentUserOnly;
-    @Autowired
-    private SMessageSource      messageSource;
+		extends SVDefaultController {
+	/** Constant <code>CONTROLLER_NAME="AppointmentController"</code> */
+	public static final  String CONTROLLER_NAME = "AppointmentController";
+	private static final Logger LOGGER          = Logger.getLogger(SVAppointmentController.class);
+	@Autowired
+	private SAppointmentService appointmentService;
+	@Value("#{T(java.lang.Boolean).valueOf(webProperties['org.agatom.springatom.server.model.beans.appointment.SAppointment.currentUserOnly']).booleanValue()}")
+	private Boolean             currentUserOnly;
+	@Autowired
+	private SMessageSource      messageSource;
 
-    public SVAppointmentController() {
-        super(CONTROLLER_NAME);
-    }
+	/**
+	 * <p>Constructor for SVAppointmentController.</p>
+	 */
+	public SVAppointmentController() {
+		super(CONTROLLER_NAME);
+	}
 
-    @ResponseBody
-    @RequestMapping(
-            value = "/feed",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
-    )
-    public List<CalendarEvent> getAllAppointmentsInRange(
-            @RequestParam(value = "domainClass", required = true) final String domainClass,
-            @RequestParam(value = "start", required = true) final UnixTimestamp start,
-            @RequestParam(value = "end", required = true) final UnixTimestamp end,
-            final Locale locale
-    ) throws ControllerTierException {
-        LOGGER.debug(String.format("/feed request [%s]", Lists.newArrayList(domainClass, start, end)));
-        final List<SAppointment> list;
-        try {
-            list = this.appointmentService.findBetween(
-                    start.getTime(),
-                    end.getTime(),
-                    this.currentUserOnly
-            );
-        } catch (Exception exception) {
-            throw new ControllerTierException("Exception in processing /feed", exception);
-        }
-        LOGGER.debug(String.format("/feed will return %d for %s", list.size(), Lists.newArrayList(domainClass, start, end)));
+	/**
+	 * <p>getAllAppointmentsInRange.</p>
+	 *
+	 * @param domainClass a {@link java.lang.String} object.
+	 * @param start       a {@link org.agatom.springatom.core.UnixTimestamp} object.
+	 * @param end         a {@link org.agatom.springatom.core.UnixTimestamp} object.
+	 * @param locale      a {@link java.util.Locale} object.
+	 *
+	 * @return a {@link java.util.List} object.
+	 *
+	 * @throws org.agatom.springatom.webmvc.exceptions.ControllerTierException if any.
+	 */
+	@ResponseBody
+	@RequestMapping(
+			value = "/feed",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
+	)
+	public List<CalendarEvent> getAllAppointmentsInRange(
+			@RequestParam(value = "domainClass", required = true) final String domainClass,
+			@RequestParam(value = "start", required = true) final UnixTimestamp start,
+			@RequestParam(value = "end", required = true) final UnixTimestamp end,
+			final Locale locale
+	) throws ControllerTierException {
+		LOGGER.debug(String.format("/feed request [%s]", Lists.newArrayList(domainClass, start, end)));
+		final List<SAppointment> list;
+		try {
+			list = this.appointmentService.findBetween(
+					start.getTime(),
+					end.getTime(),
+					this.currentUserOnly
+			);
+		} catch (Exception exception) {
+			throw new ControllerTierException("Exception in processing /feed", exception);
+		}
+		LOGGER.debug(String.format("/feed will return %d for %s", list.size(), Lists.newArrayList(domainClass, start, end)));
 
-        final String eventTitleRBKey = String.format("%s.title", CalendarEvent.class.getName());
+		final String eventTitleRBKey = String.format("%s.title", CalendarEvent.class.getName());
 
-        return FluentIterable
-                .from(list)
-                .transform(new Function<SAppointment, CalendarEvent>() {
-                    @Nullable
-                    @Override
-                    public CalendarEvent apply(@Nullable final SAppointment input) {
-                        Assert.notNull(input);
-                        assert input != null;
-                        final Object[] args = {
-                                input.getId(),
-                                input.getCar().getLicencePlate()
-                        };
-                        final CalendarEvent event = new CalendarEvent()
-                                .setPrimaryKey(input.getId())
-                                .setTitle(messageSource.getMessage(eventTitleRBKey, args, locale))
-                                .setStart(input.getBegin())
-                                .setEnd(input.getEnd());
+		return FluentIterable
+				.from(list)
+				.transform(new Function<SAppointment, CalendarEvent>() {
+					@Nullable
+					@Override
+					public CalendarEvent apply(@Nullable final SAppointment input) {
+						Assert.notNull(input);
+						assert input != null;
+						final Object[] args = {
+								input.getId(),
+								input.getCar().getLicencePlate()
+						};
+						final CalendarEvent event = new CalendarEvent()
+								.setPrimaryKey(input.getId())
+								.setTitle(messageSource.getMessage(eventTitleRBKey, args, locale))
+								.setStart(input.getBegin())
+								.setEnd(input.getEnd());
 
-                        event.add(linkTo(SVAppointmentController.class).slash(input.getId()).withSelfRel());
-                        event.add(linkTo(SVAppointmentController.class).slash(input.getId()).withRel("domainClazzId"));
-                        event.add(linkTo(SVUserController.class).slash(input.getAssignee().getId()).withRel("assignee"));
-                        event.add(linkTo(SVUserController.class).slash(input.getReporter().getId()).withRel("reporter"));
-                        event.add(linkTo(SVAppointmentController.class).slash(input.getCar().getId()).withRel("car"));
+						event.add(linkTo(SVAppointmentController.class).slash(input.getId()).withSelfRel());
+						event.add(linkTo(SVAppointmentController.class).slash(input.getId()).withRel("domainClazzId"));
+						event.add(linkTo(SVUserController.class).slash(input.getAssignee().getId()).withRel("assignee"));
+						event.add(linkTo(SVUserController.class).slash(input.getReporter().getId()).withRel("reporter"));
+						event.add(linkTo(SVAppointmentController.class).slash(input.getCar().getId()).withRel("car"));
 
-                        return event;
-                    }
-                })
-                .toList();
-    }
+						return event;
+					}
+				})
+				.toList();
+	}
 
 
 }

@@ -36,38 +36,79 @@ public class ConvertibleValueWrapper {
 	private String         key;
 	private Persistable<?> source;
 
+	/**
+	 * <p>Getter for the field <code>value</code>.</p>
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 */
 	public Object getValue() {
 		return value;
 	}
 
+	/**
+	 * <p>Setter for the field <code>value</code>.</p>
+	 *
+	 * @param value a {@link java.lang.Object} object.
+	 */
 	public void setValue(final Object value) {
 		this.value = value;
 	}
 
+	/**
+	 * <p>Getter for the field <code>request</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest} object.
+	 */
 	public ComponentDataRequest getRequest() {
 		return request;
 	}
 
+	/**
+	 * <p>Setter for the field <code>request</code>.</p>
+	 *
+	 * @param request a {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest} object.
+	 */
 	public void setRequest(final ComponentDataRequest request) {
 		this.request = request;
 	}
 
+	/**
+	 * <p>Getter for the field <code>key</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getKey() {
 		return key;
 	}
 
+	/**
+	 * <p>Setter for the field <code>key</code>.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 */
 	public void setKey(final String key) {
 		this.key = key;
 	}
 
+	/**
+	 * <p>Getter for the field <code>source</code>.</p>
+	 *
+	 * @return a {@link org.springframework.data.domain.Persistable} object.
+	 */
 	public Persistable<?> getSource() {
 		return source;
 	}
 
+	/**
+	 * <p>Setter for the field <code>source</code>.</p>
+	 *
+	 * @param source a {@link org.springframework.data.domain.Persistable} object.
+	 */
 	public void setSource(final Persistable<?> source) {
 		this.source = source;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)

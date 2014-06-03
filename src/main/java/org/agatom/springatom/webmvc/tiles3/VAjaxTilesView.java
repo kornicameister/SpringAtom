@@ -59,18 +59,16 @@ public class VAjaxTilesView
 	private              ApplicationContext applicationContext = null;
 	private              AjaxHandler        ajaxHandler        = new SpringJavascriptAjaxHandler();
 
+	/**
+	 * <p>afterPropertiesSet.</p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
 	}
 
-	public AjaxHandler getAjaxHandler() {
-		return ajaxHandler;
-	}
-
-	public void setAjaxHandler(AjaxHandler ajaxHandler) {
-		this.ajaxHandler = ajaxHandler;
-	}
-
+	/** {@inheritDoc} */
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		final ServletContext servletContext = this.getServletContext();
@@ -126,6 +124,33 @@ public class VAjaxTilesView
 		}
 	}
 
+	/**
+	 * <p>Getter for the field <code>ajaxHandler</code>.</p>
+	 *
+	 * @return a {@link org.springframework.js.ajax.AjaxHandler} object.
+	 */
+	public AjaxHandler getAjaxHandler() {
+		return ajaxHandler;
+	}
+
+	/**
+	 * <p>Setter for the field <code>ajaxHandler</code>.</p>
+	 *
+	 * @param ajaxHandler a {@link org.springframework.js.ajax.AjaxHandler} object.
+	 */
+	public void setAjaxHandler(AjaxHandler ajaxHandler) {
+		this.ajaxHandler = ajaxHandler;
+	}
+
+	/**
+	 * <p>getRenderFragments.</p>
+	 *
+	 * @param model    a {@link java.util.Map} object.
+	 * @param request  a {@link javax.servlet.http.HttpServletRequest} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 *
+	 * @return an array of {@link java.lang.String} objects.
+	 */
 	protected String[] getRenderFragments(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) {
 		final String attrName = request.getParameter(FRAGMENTS_PARAM);
 		final String[] renderFragments = StringUtils.commaDelimitedListToStringArray(attrName);
@@ -137,12 +162,12 @@ public class VAjaxTilesView
 	 * Iterate over all attributes in the given Tiles definition. Every attribute value that represents a template (i.e.
 	 * start with "/") or is a nested definition is added to a Map. The method class itself recursively to traverse
 	 * nested definitions.
-	 * </p>
 	 *
 	 * @param container           the TilesContainer
 	 * @param requestContext      the TilesRequestContext
 	 * @param resultMap           the output Map where attributes of interest are added to.
 	 * @param compositeDefinition the definition to search for attributes of interest.
+	 * @param requestContext      the TilesRequestContext
 	 * @param request             the servlet request
 	 * @param response            the servlet response
 	 */
@@ -196,7 +221,6 @@ public class VAjaxTilesView
 	 * <p>
 	 * Iterate over dynamically added Tiles attributes (see "Runtime Composition" in the Tiles documentation) and add
 	 * them to the output Map passed as input.
-	 * </p>
 	 *
 	 * @param container the Tiles container
 	 * @param resultMap the output Map where attributes of interest are added to.

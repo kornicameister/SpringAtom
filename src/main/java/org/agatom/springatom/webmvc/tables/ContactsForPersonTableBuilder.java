@@ -24,12 +24,14 @@ import org.agatom.springatom.server.model.beans.person.SPersonContact;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.elements.table.DandelionTableComponent;
+import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * <p>ContactsForPersonTableBuilder class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -38,9 +40,11 @@ import org.springframework.util.StringUtils;
 @ComponentBuilder(ContactsForPersonTableBuilder.BUILDER_ID)
 public class ContactsForPersonTableBuilder
 		extends TableComponentBuilder<DandelionTableComponent, SPersonContact> {
+	/** Constant <code>BUILDER_ID="contactsForPersonTableBuilder"</code> */
 	protected static final String BUILDER_ID = "contactsForPersonTableBuilder";
 	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SPersonContact.ENTITY_NAME));
 
+	/** {@inheritDoc} */
 	@Override
 	protected Predicate getPredicate(final Long id, final Class<?> contextClass) {
 		if (ClassUtils.isAssignable(SPerson.class, contextClass)) {
@@ -51,6 +55,7 @@ public class ContactsForPersonTableBuilder
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected DandelionTableComponent buildDefinition(final ComponentDataRequest dataRequest) {
 		final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);

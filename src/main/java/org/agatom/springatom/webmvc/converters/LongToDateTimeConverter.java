@@ -17,7 +17,6 @@
 
 package org.agatom.springatom.webmvc.converters;
 
-import org.agatom.springatom.core.UnixTimestamp;
 import org.joda.time.DateTime;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalConverter;
@@ -32,14 +31,17 @@ import java.util.Date;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class LongToDateTimeConverter implements Converter<Long, DateTime>,
+public class LongToDateTimeConverter
+		implements Converter<Long, DateTime>,
 		ConditionalConverter {
+	/** {@inheritDoc} */
 	@Override
 	public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
 		return sourceType.getType().isAssignableFrom(Long.class)
 				&& targetType.getType().isAssignableFrom(DateTime.class);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public DateTime convert(final Long source) {
 		final Date date = new Date(source);

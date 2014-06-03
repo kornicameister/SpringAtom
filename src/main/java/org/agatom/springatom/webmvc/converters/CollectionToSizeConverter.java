@@ -22,16 +22,19 @@ import org.springframework.core.convert.converter.Converter;
 import java.util.List;
 
 /**
+ * <p>CollectionToSizeConverter class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class CollectionToSizeConverter
-        implements Converter<List, Integer> {
+		implements Converter<List, Integer> {
 
-    @Override
-    public Integer convert(final List source) {
-        return source.size();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Integer convert(final List source) {
+		return source.size();
+	}
 
 }

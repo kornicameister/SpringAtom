@@ -23,7 +23,7 @@ import com.google.common.base.Objects;
  * {@code LinkComponent} is customized {@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent}.
  * For this component consider:
  * <ol>
- * <li>{@link TextComponent#getValue()} as the link href</li>
+ * <li>{@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent#getValue()} as the link href</li>
  * </ol>
  * Has additional {@link #getLinkLabel()} that should return the label to be put as the content of {@code <a></a>}
  * HTML node.
@@ -39,25 +39,40 @@ public class LinkComponent
 	private static final long   serialVersionUID = -1536553355416884697L;
 	private              String linkLabel        = null;
 
+	/**
+	 * <p>Getter for the field <code>linkLabel</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getLinkLabel() {
 		return linkLabel;
 	}
 
+	/**
+	 * <p>Setter for the field <code>linkLabel</code>.</p>
+	 *
+	 * @param linkLabel a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.LinkComponent} object.
+	 */
 	public LinkComponent setLinkLabel(final String linkLabel) {
 		this.linkLabel = linkLabel;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getUiType() {
 		return "link";
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(linkLabel, super.hashCode());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

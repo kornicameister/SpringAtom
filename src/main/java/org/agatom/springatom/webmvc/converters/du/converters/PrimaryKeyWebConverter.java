@@ -44,6 +44,7 @@ import java.io.Serializable;
 public class PrimaryKeyWebConverter
 		extends AbstractWebConverter {
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
@@ -58,7 +59,7 @@ public class PrimaryKeyWebConverter
 	}
 
 	/**
-	 * Returns primary key value. If {@code value} is null, method tries to extract the value from {@link Persistable#getId()}
+	 * Returns primary key value. If {@code value} is null, method tries to extract the value from {@link org.springframework.data.domain.Persistable#getId()}
 	 *
 	 * @param value       current "id" value
 	 * @param persistable persistable having the value

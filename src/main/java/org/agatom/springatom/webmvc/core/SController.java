@@ -18,10 +18,17 @@
 package org.agatom.springatom.webmvc.core;
 
 /**
+ * <p>SController interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface SController {
-    String getControllerName();
+	/**
+	 * <p>getControllerName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getControllerName();
 }

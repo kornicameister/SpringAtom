@@ -40,6 +40,7 @@ import java.io.Serializable;
 public class FuelTypeWebConverter
 		extends PrimitivesWebConverter {
 
+	/** {@inheritDoc} */
 	@Override
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
 		final TextComponent tc = (TextComponent) super.doConvert(key, value, persistable, webRequest);

@@ -53,6 +53,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
+ * <p>ReportBuilderController class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -60,92 +62,133 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @Controller(value = ReportBuilderController.CONTROLLER_NAME)
 @RequestMapping(value = "/reportBuilder")
 public class ReportBuilderController
-        extends WebApplicationObjectSupport {
-    public static final  String CONTROLLER_NAME = "reportBuilderController";
-    private static final String VIEW_NAME       = "springatom.tiles.dashboard.reports.Download";
-    private static final Logger LOGGER          = Logger.getLogger(ReportBuilderController.class);
+		extends WebApplicationObjectSupport {
+	/** Constant <code>CONTROLLER_NAME="reportBuilderController"</code> */
+	public static final  String CONTROLLER_NAME = "reportBuilderController";
+	private static final String VIEW_NAME       = "springatom.tiles.dashboard.reports.Download";
+	private static final Logger LOGGER          = Logger.getLogger(ReportBuilderController.class);
 
-    @Autowired
-    private ReportBuilderService builderService;
-    @Autowired
-    private SReportService       domainService;
-    @Autowired
-    private SMessageSource       messageSource;
-    @Autowired
-    private ReportViewDescriptor descriptor;
+	@Autowired
+	private ReportBuilderService builderService;
+	@Autowired
+	private SReportService       domainService;
+	@Autowired
+	private SMessageSource       messageSource;
+	@Autowired
+	private ReportViewDescriptor descriptor;
 
-    @RequestMapping(value = "/{reportId}", method = {RequestMethod.POST})
-    public ModelAndView buildReport(@PathVariable("reportId") final Long reportId, final ModelMap modelMap, final HttpServletResponse response) throws
-            ControllerTierException {
-        try {
-            final SReport report = this.domainService.getReport(reportId);
-            final Map<String, ReportRepresentation> availableRepresentations = this.builderService.getAvailableRepresentations();
+	/**
+	 * <p>buildReport.</p>
+	 *
+	 * @param reportId a {@link java.lang.Long} object.
+	 * @param modelMap a {@link org.springframework.ui.ModelMap} object.
+	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
+	 *
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 *
+	 * @throws org.agatom.springatom.webmvc.exceptions.ControllerTierException if any.
+	 */
+	@RequestMapping(value = "/{reportId}", method = {RequestMethod.POST})
+	public ModelAndView buildReport(@PathVariable("reportId") final Long reportId, final ModelMap modelMap, final HttpServletResponse response) throws
+			ControllerTierException {
+		try {
+			final SReport report = this.domainService.getReport(reportId);
+			final Map<String, ReportRepresentation> availableRepresentations = this.builderService.getAvailableRepresentations();
 
-            LOGGER.info(String.format("/buildReport report=%s :: formats=%s", report, availableRepresentations));
+			LOGGER.info(String.format("/buildReport report=%s :: formats=%s", report, availableRepresentations));
 
-            modelMap.put("report", report);
-            modelMap.put("representations", availableRepresentations);
-            modelMap.put("links", this.createDownloadLinks(availableRepresentations.keySet(), report));
-            modelMap.put("title", this.messageSource.getMessage("sa.msg.download.what", new Object[]{report.getTitle()}, LocaleContextHolder
-                    .getLocale()));
+			modelMap.put("report", report);
+			modelMap.put("representations", availableRepresentations);
+			modelMap.put("links", this.createDownloadLinks(availableRepresentations.keySet(), report));
+			modelMap.put("title", this.messageSource.getMessage("sa.msg.download.what", new Object[]{report.getTitle()}, LocaleContextHolder
+					.getLocale()));
 
-            ViewHelper.asDojoModal(response);
+			ViewHelper.asDojoModal(response);
 
-            return new ModelAndView(VIEW_NAME, modelMap);
-        } catch (Exception se) {
-            final String message = String.format("/buildReport threw exception during processing report=%d", reportId);
-            LOGGER.error(message, se);
-            throw new ControllerTierException(message, se);
-        }
-    }
+			return new ModelAndView(VIEW_NAME, modelMap);
+		} catch (Exception se) {
+			final String message = String.format("/buildReport threw exception during processing report=%d", reportId);
+			LOGGER.error(message, se);
+			throw new ControllerTierException(message, se);
+		}
+	}
 
-    @ResponseBody
-    @RequestMapping(value = "/{reportId}", method = {RequestMethod.DELETE})
-    public Report deleteReport(@PathVariable("reportId") final Long reportId, final ModelMap modelMap) throws
-            ControllerTierException {
-        try {
-            final Report report = this.domainService.deleteOne(reportId);
-            modelMap.addAttribute(ClassUtils.getShortName(Report.class), report);
-            return report;
-        } catch (Exception se) {
-            final String message = String.format("/deleteReport threw exception during processing report=%d", reportId);
-            LOGGER.error(message, se);
-            throw new ControllerTierException(message, se);
-        }
-    }
+	private Map<String, Link> createDownloadLinks(final Set<String> availableRepresentations, final SReport report) {
+		return FluentIterable.from(availableRepresentations)
+				.toMap(new Function<String, Link>() {
+					@Nullable
+					@Override
+					public Link apply(@Nullable final String format) {
+						try {
+							return linkTo(methodOn(ReportBuilderController.class).downloadReportInFormat(report.getId(), format))
+									.withRel(format);
+						} catch (Exception e) {
+							LOGGER.warn(String.format("Failed to generate link report=%s/format=%s", report.getTitle(), format));
+						}
+						return null;
+					}
+				});
+	}
 
-    @RequestMapping(value = "/download/{reportId}")
-    public ModelAndView downloadReport(@PathVariable("reportId") final Long reportId) throws ServiceException {
-        LOGGER.info(String.format("/downloadReport name=%s", reportId));
-        return this.downloadReportInFormat(reportId, Representation.EXCEL.getId());
-    }
+	/**
+	 * <p>downloadReportInFormat.</p>
+	 *
+	 * @param reportId a {@link java.lang.Long} object.
+	 * @param format   a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 *
+	 * @throws org.agatom.springatom.server.service.support.exceptions.ServiceException if any.
+	 */
+	@RequestMapping(value = "/download/{reportId}/{format}")
+	public ModelAndView downloadReportInFormat(@PathVariable("reportId") final Long reportId,
+	                                           @PathVariable("format") final String format) throws ServiceException {
+		LOGGER.info(String.format("/downloadReportInFormat name=%s :: format=%s", reportId, format));
+		this.builderService.populateReportViewDescriptor(reportId, format, this.descriptor);
+		return new ModelAndView(
+				this.descriptor.getViewName(),
+				this.descriptor.getParameters()
+		);
+	}
 
-    @RequestMapping(value = "/download/{reportId}/{format}")
-    public ModelAndView downloadReportInFormat(@PathVariable("reportId") final Long reportId,
-                                               @PathVariable("format") final String format) throws ServiceException {
-        LOGGER.info(String.format("/downloadReportInFormat name=%s :: format=%s", reportId, format));
-        this.builderService.populateReportViewDescriptor(reportId, format, this.descriptor);
-        return new ModelAndView(
-                this.descriptor.getViewName(),
-                this.descriptor.getParameters()
-        );
-    }
+	/**
+	 * <p>deleteReport.</p>
+	 *
+	 * @param reportId a {@link java.lang.Long} object.
+	 * @param modelMap a {@link org.springframework.ui.ModelMap} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.report.Report} object.
+	 *
+	 * @throws org.agatom.springatom.webmvc.exceptions.ControllerTierException if any.
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/{reportId}", method = {RequestMethod.DELETE})
+	public Report deleteReport(@PathVariable("reportId") final Long reportId, final ModelMap modelMap) throws
+			ControllerTierException {
+		try {
+			final Report report = this.domainService.deleteOne(reportId);
+			modelMap.addAttribute(ClassUtils.getShortName(Report.class), report);
+			return report;
+		} catch (Exception se) {
+			final String message = String.format("/deleteReport threw exception during processing report=%d", reportId);
+			LOGGER.error(message, se);
+			throw new ControllerTierException(message, se);
+		}
+	}
 
-    private Map<String, Link> createDownloadLinks(final Set<String> availableRepresentations, final SReport report) {
-        return FluentIterable.from(availableRepresentations)
-                             .toMap(new Function<String, Link>() {
-                                 @Nullable
-                                 @Override
-                                 public Link apply(@Nullable final String format) {
-                                     try {
-                                         return linkTo(methodOn(ReportBuilderController.class).downloadReportInFormat(report.getId(), format))
-                                                 .withRel(format);
-                                     } catch (Exception e) {
-                                         LOGGER.warn(String.format("Failed to generate link report=%s/format=%s", report.getTitle(), format));
-                                     }
-                                     return null;
-                                 }
-                             });
-    }
+	/**
+	 * <p>downloadReport.</p>
+	 *
+	 * @param reportId a {@link java.lang.Long} object.
+	 *
+	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+	 *
+	 * @throws org.agatom.springatom.server.service.support.exceptions.ServiceException if any.
+	 */
+	@RequestMapping(value = "/download/{reportId}")
+	public ModelAndView downloadReport(@PathVariable("reportId") final Long reportId) throws ServiceException {
+		LOGGER.info(String.format("/downloadReport name=%s", reportId));
+		return this.downloadReportInFormat(reportId, Representation.EXCEL.getId());
+	}
 
 }

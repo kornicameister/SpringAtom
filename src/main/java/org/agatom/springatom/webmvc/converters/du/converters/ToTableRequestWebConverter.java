@@ -54,11 +54,13 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @WebConverter(key = ToTableRequestWebConverter.SELECTOR)
 public class ToTableRequestWebConverter
 		extends AbstractWebConverter {
+	/** Constant <code>SELECTOR="tableRequestInitMaker"</code> */
 	public static final  String                     SELECTOR          = "tableRequestInitMaker";
 	private static final Logger                     LOGGER            = Logger.getLogger(ToTableRequestWebConverter.class);
 	@Autowired
 	private              ComponentBuilderRepository builderRepository = null;
 
+	/** {@inheritDoc} */
 	@Override
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) throws Exception {
 		LOGGER.trace(String.format("doConverter(key=%s,value=%s)", key, value));

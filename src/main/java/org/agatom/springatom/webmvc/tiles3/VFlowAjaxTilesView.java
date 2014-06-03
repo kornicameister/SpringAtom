@@ -47,6 +47,7 @@ public class VFlowAjaxTilesView
 	private static final String DEFAULT_ATTR_NAME      = "fragments";
 	private              String fragmentsAttributeName = DEFAULT_ATTR_NAME;
 
+	/** {@inheritDoc} */
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
@@ -61,6 +62,7 @@ public class VFlowAjaxTilesView
 		}
 	}
 
+	/** {@inheritDoc} */
 	protected String[] getRenderFragments(Map<String, Object> model, HttpServletRequest request,
 	                                      HttpServletResponse response) {
 		final RequestContext context = RequestContextHolder.getRequestContext();

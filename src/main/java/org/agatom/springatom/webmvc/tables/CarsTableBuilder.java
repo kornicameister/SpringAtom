@@ -23,11 +23,13 @@ import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.elements.table.DandelionTableComponent;
+import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
 import org.springframework.util.StringUtils;
 
 /**
+ * <p>CarsTableBuilder class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -36,9 +38,11 @@ import org.springframework.util.StringUtils;
 @ComponentBuilder(CarsTableBuilder.BUILDER_ID)
 public class CarsTableBuilder
 		extends TableComponentBuilder<DandelionTableComponent, SCar> {
+	/** Constant <code>BUILDER_ID="carsTableBuilder"</code> */
 	protected static final String BUILDER_ID = "carsTableBuilder";
 	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SCar.ENTITY_NAME));
 
+	/** {@inheritDoc} */
 	@Override
 	protected Object handleColumnConversion(final SCar object, final Object value, final String path) {
 		switch (path) {
@@ -49,11 +53,13 @@ public class CarsTableBuilder
 		return super.handleColumnConversion(object, value, path);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected Predicate getPredicate(final Long id, final Class<?> contextClass) {
 		return QSCar.sCar.carMaster.id.eq(id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected DandelionTableComponent buildDefinition(final ComponentDataRequest dataRequest) {
 		final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);

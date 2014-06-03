@@ -61,13 +61,13 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * {@code WebDataGenericConverter} is a facade hiding all {@link WebDataConverter} and exposing them
- * after unpacking {@link ConvertibleValueWrapper}, being a convert of conversion process.
+ * {@code WebDataGenericConverter} is a facade hiding all {@link org.agatom.springatom.webmvc.converters.du.WebDataConverter} and exposing them
+ * after unpacking {@link org.agatom.springatom.webmvc.converters.du.ConvertibleValueWrapper}, being a convert of conversion process.
  * Therefore this class will return {@code true} from {@link #matches(org.springframework.core.convert.TypeDescriptor, org.springframework.core.convert.TypeDescriptor)}
  * only for following configuration:
  * <ol>
- * <li>convert: {@link ConvertibleValueWrapper} or subclass</li>
- * <li>target: {@link java.lang.String}, because {@link WebDataConverter} returned value will be translated to {@link java.lang.String}</li>
+ * <li>convert: {@link org.agatom.springatom.webmvc.converters.du.ConvertibleValueWrapper} or subclass</li>
+ * <li>target: {@link java.lang.String}, because {@link org.agatom.springatom.webmvc.converters.du.WebDataConverter} returned value will be translated to {@link java.lang.String}</li>
  * </ol>
  * <p/>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 30.05.14</small>
@@ -94,6 +94,7 @@ public class WebDataGenericConverter
 	@Autowired
 	private              SMessageSource                                messageSource     = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
 		final Class<?> sType = sourceType.getObjectType();
@@ -101,11 +102,13 @@ public class WebDataGenericConverter
 		return ClassUtils.isAssignable(ConvertibleValueWrapper.class, sType) && ClassUtils.isAssignable(Object.class, tType);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<ConvertiblePair> getConvertibleTypes() {
 		return Sets.newHashSet(new ConvertiblePair(ConvertibleValueWrapper.class, Object.class));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object convert(final Object source, final TypeDescriptor sourceType, final TypeDescriptor targetType) {

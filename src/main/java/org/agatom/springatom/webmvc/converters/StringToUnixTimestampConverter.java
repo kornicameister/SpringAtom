@@ -24,22 +24,26 @@ import org.springframework.core.convert.converter.ConditionalConverter;
 import org.springframework.core.convert.converter.Converter;
 
 /**
+ * <p>StringToUnixTimestampConverter class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class StringToUnixTimestampConverter
-        implements Converter<String, UnixTimestamp>,
-                   ConditionalConverter {
-    @Override
-    public UnixTimestamp convert(final String source) {
-        Preconditions.checkNotNull(source);
-        return new UnixTimestamp(Long.parseLong(source));
-    }
+		implements Converter<String, UnixTimestamp>,
+		ConditionalConverter {
+	/** {@inheritDoc} */
+	@Override
+	public UnixTimestamp convert(final String source) {
+		Preconditions.checkNotNull(source);
+		return new UnixTimestamp(Long.parseLong(source));
+	}
 
-    @Override
-    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        return sourceType.getType().isAssignableFrom(String.class)
-                && targetType.getType().isAssignableFrom(UnixTimestamp.class);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+		return sourceType.getType().isAssignableFrom(String.class)
+				&& targetType.getType().isAssignableFrom(UnixTimestamp.class);
+	}
 }

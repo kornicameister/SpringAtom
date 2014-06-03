@@ -35,6 +35,7 @@ public class WebDataComponentsArray
 		implements WebDataMultiComponents<EmbeddableComponent> {
 	private static final long serialVersionUID = -145702440703847256L;
 
+	/** {@inheritDoc} */
 	@Override
 	public Map<String, Object> getDynamicProperties() {
 		final Map<String, Object> properties = super.getDynamicProperties();
@@ -42,6 +43,7 @@ public class WebDataComponentsArray
 		return properties;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getUiType() {
 		return "multiObjects";
