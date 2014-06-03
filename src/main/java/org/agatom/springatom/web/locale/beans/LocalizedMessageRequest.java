@@ -22,39 +22,66 @@ import com.google.common.base.Objects;
 import java.io.Serializable;
 
 /**
+ * <p>LocalizedMessageRequest class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class LocalizedMessageRequest
-        implements Serializable {
-    private static final long serialVersionUID = 5395003418793746321L;
-    private String[] keys;
-    private boolean  pattern;
+		implements Serializable {
+	private static final long serialVersionUID = 5395003418793746321L;
+	private String[] keys;
+	private boolean  pattern;
 
-    public String[] getKeys() {
-        return keys;
-    }
+	/**
+	 * <p>Getter for the field <code>keys</code>.</p>
+	 *
+	 * @return an array of {@link java.lang.String} objects.
+	 */
+	public String[] getKeys() {
+		return keys;
+	}
 
-    public LocalizedMessageRequest setKeys(final String[] keys) {
-        this.keys = keys;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>keys</code>.</p>
+	 *
+	 * @param keys an array of {@link java.lang.String} objects.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.LocalizedMessageRequest} object.
+	 */
+	public LocalizedMessageRequest setKeys(final String[] keys) {
+		this.keys = keys;
+		return this;
+	}
 
-    public boolean isPattern() {
-        return pattern;
-    }
+	/**
+	 * <p>isPattern.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isPattern() {
+		return pattern;
+	}
 
-    public LocalizedMessageRequest setPattern(final boolean pattern) {
-        this.pattern = pattern;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>pattern</code>.</p>
+	 *
+	 * @param pattern a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.LocalizedMessageRequest} object.
+	 */
+	public LocalizedMessageRequest setPattern(final boolean pattern) {
+		this.pattern = pattern;
+		return this;
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(keys)
-                      .addValue(pattern)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(keys)
+				.addValue(pattern)
+				.toString();
+	}
 }

@@ -21,11 +21,20 @@ import org.agatom.springatom.web.view.bean.SViewTitle;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
+ * <p>SViewTitleResolver interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public interface SViewTitleResolver
-        extends InitializingBean {
-    SViewTitle getViewTitle(final String viewName);
+		extends InitializingBean {
+	/**
+	 * <p>getViewTitle.</p>
+	 *
+	 * @param viewName a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.view.bean.SViewTitle} object.
+	 */
+	SViewTitle getViewTitle(final String viewName);
 }

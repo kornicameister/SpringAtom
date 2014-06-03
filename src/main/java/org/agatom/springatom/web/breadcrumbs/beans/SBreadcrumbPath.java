@@ -23,18 +23,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * <p>SBreadcrumbPath class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class SBreadcrumbPath
-        implements WebBean {
-    private static final String           BEAN_ID          = "breadcrumbPath";
-    private static final long             serialVersionUID = 1310718821671212848L;
-    private              Set<SBreadcrumb> breadcrumbs      = new HashSet<>();
+		implements WebBean {
+	private static final String           BEAN_ID          = "breadcrumbPath";
+	private static final long             serialVersionUID = 1310718821671212848L;
+	private              Set<SBreadcrumb> breadcrumbs      = new HashSet<>();
 
-    @Override
-    public String getBeanId() {
-        return BEAN_ID;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getBeanId() {
+		return BEAN_ID;
+	}
 }

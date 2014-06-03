@@ -36,12 +36,27 @@ import java.util.Set;
 @Validated
 public interface ConversionHelper<T extends RBuilderBean> {
 
-    String CACHE_NAME = "org.agatom.springatom.web.rbuilder.conversion.ConversionHelper";
+	/** Constant <code>CACHE_NAME="org.agatom.springatom.web.rbuilder.conv"{trunked}</code> */
+	String CACHE_NAME = "org.agatom.springatom.web.rbuilder.conversion.ConversionHelper";
 
-    @Cacheable(value = CACHE_NAME, key = "#column.columnClass + '.ConvertiblePairs'")
-    Set<RBuilderConvertiblePair> getConvertiblePairs(@NotNull final T column);
+	/**
+	 * <p>getConvertiblePairs.</p>
+	 *
+	 * @param column a T object.
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	@Cacheable(value = CACHE_NAME, key = "#column.columnClass + '.ConvertiblePairs'")
+	Set<RBuilderConvertiblePair> getConvertiblePairs(@NotNull final T column);
 
-    @Cacheable(value = CACHE_NAME, key = "#column.columnClass + '.PossibleColumnType'")
-    ColumnTypeConversionBranch getPossibleColumnType(Class<?> columnClass);
+	/**
+	 * <p>getPossibleColumnType.</p>
+	 *
+	 * @param columnClass a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.conversion.ColumnTypeConversionBranch} object.
+	 */
+	@Cacheable(value = CACHE_NAME, key = "#column.columnClass + '.PossibleColumnType'")
+	ColumnTypeConversionBranch getPossibleColumnType(Class<?> columnClass);
 
 }

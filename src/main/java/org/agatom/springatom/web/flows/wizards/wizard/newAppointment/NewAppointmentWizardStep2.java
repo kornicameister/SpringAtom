@@ -45,23 +45,28 @@ public class NewAppointmentWizardStep2
 	private static final Logger LOGGER           = Logger.getLogger(NewAppointmentWizardStep2.class);
 	private static final String FORM_OBJECT_NAME = "appointment";
 
+	/**
+	 * <p>Constructor for NewAppointmentWizardStep2.</p>
+	 */
 	public NewAppointmentWizardStep2() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
 		this.setValidator(new TaskValidator());
 	}
 
-	@Override
-	public Event resetForm(final RequestContext context) throws Exception {
-		this.getCommandBean(context).clearTasks();
-		return success();
-	}
-
+	/** {@inheritDoc} */
 	@Override
 	public Event bindAndValidate(final RequestContext context) throws Exception {
 		final Event event = super.bindAndValidate(context);
 		this.getCommandBean(context).assignTasks();
 		return event;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Event resetForm(final RequestContext context) throws Exception {
+		this.getCommandBean(context).clearTasks();
+		return success();
 	}
 
 	private class TaskValidator

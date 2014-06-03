@@ -68,6 +68,7 @@ import java.util.Set;
 @WizardAction("newUserWizardStep2")
 public class NewUserWizardStep2
 		extends WizardFormAction<SUser> {
+	/** Constant <code>AUTHORITIES_REQUIRED_FIELD="authorities"</code> */
 	public static final  String          AUTHORITIES_REQUIRED_FIELD        = "authorities";
 	private static final Logger          LOGGER                            = Logger.getLogger(NewUserWizardStep2.class);
 	private static final String          FORM_OBJECT_NAME                  = "user";
@@ -78,11 +79,15 @@ public class NewUserWizardStep2
 	@Autowired
 	private              SMessageSource  messageSource                     = null;
 
+	/**
+	 * <p>Constructor for NewUserWizardStep2.</p>
+	 */
 	public NewUserWizardStep2() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void initAction() {
 		super.initAction();
@@ -120,6 +125,7 @@ public class NewUserWizardStep2
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Event setupForm(final RequestContext context) throws Exception {
 		LOGGER.trace(String.format("setupForm(context=%s)", context));
@@ -140,12 +146,14 @@ public class NewUserWizardStep2
 		return super.setupForm(context);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Event resetForm(final RequestContext context) throws Exception {
 		this.getCommandBean(context).clearAuthorities();
 		return super.resetForm(context);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
 		conversionService.addConverter(STRING_ARR_TO_GRANTED_AUTHORITIES);

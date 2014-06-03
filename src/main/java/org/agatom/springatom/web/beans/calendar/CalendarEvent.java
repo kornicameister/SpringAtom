@@ -23,59 +23,110 @@ import org.joda.time.DateTime;
 import org.springframework.hateoas.ResourceSupport;
 
 /**
+ * <p>CalendarEvent class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class CalendarEvent
-        extends ResourceSupport
-        implements WebBean {
-    private static final String BEAN_ID          = "calendar_event";
-    private static final long   serialVersionUID = -2274909215740956251L;
-    @JsonProperty(value = "id")
-    private Long     primaryKey;
-    private String   title;
-    private DateTime start;
-    private DateTime end;
+		extends ResourceSupport
+		implements WebBean {
+	private static final String BEAN_ID          = "calendar_event";
+	private static final long   serialVersionUID = -2274909215740956251L;
+	@JsonProperty(value = "id")
+	private Long     primaryKey;
+	private String   title;
+	private DateTime start;
+	private DateTime end;
 
-    public Long getPrimaryKey() {
-        return primaryKey;
-    }
+	/**
+	 * <p>Getter for the field <code>primaryKey</code>.</p>
+	 *
+	 * @return a {@link java.lang.Long} object.
+	 */
+	public Long getPrimaryKey() {
+		return primaryKey;
+	}
 
-    public CalendarEvent setPrimaryKey(final Long id) {
-        this.primaryKey = id;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>primaryKey</code>.</p>
+	 *
+	 * @param id a {@link java.lang.Long} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.beans.calendar.CalendarEvent} object.
+	 */
+	public CalendarEvent setPrimaryKey(final Long id) {
+		this.primaryKey = id;
+		return this;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	/**
+	 * <p>Getter for the field <code>title</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getTitle() {
+		return title;
+	}
 
-    public CalendarEvent setTitle(final String title) {
-        this.title = title;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>title</code>.</p>
+	 *
+	 * @param title a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.beans.calendar.CalendarEvent} object.
+	 */
+	public CalendarEvent setTitle(final String title) {
+		this.title = title;
+		return this;
+	}
 
-    public DateTime getStart() {
-        return start;
-    }
+	/**
+	 * <p>Getter for the field <code>start</code>.</p>
+	 *
+	 * @return a {@link org.joda.time.DateTime} object.
+	 */
+	public DateTime getStart() {
+		return start;
+	}
 
-    public CalendarEvent setStart(final DateTime start) {
-        this.start = start;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>start</code>.</p>
+	 *
+	 * @param start a {@link org.joda.time.DateTime} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.beans.calendar.CalendarEvent} object.
+	 */
+	public CalendarEvent setStart(final DateTime start) {
+		this.start = start;
+		return this;
+	}
 
-    public DateTime getEnd() {
-        return end;
-    }
+	/**
+	 * <p>Getter for the field <code>end</code>.</p>
+	 *
+	 * @return a {@link org.joda.time.DateTime} object.
+	 */
+	public DateTime getEnd() {
+		return end;
+	}
 
-    public CalendarEvent setEnd(final DateTime end) {
-        this.end = end;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>end</code>.</p>
+	 *
+	 * @param end a {@link org.joda.time.DateTime} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.beans.calendar.CalendarEvent} object.
+	 */
+	public CalendarEvent setEnd(final DateTime end) {
+		this.end = end;
+		return this;
+	}
 
-    @Override
-    public String getBeanId() {
-        return BEAN_ID;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getBeanId() {
+		return BEAN_ID;
+	}
 }

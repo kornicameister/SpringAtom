@@ -26,80 +26,125 @@ import java.util.Locale;
 import java.util.Set;
 
 /**
+ * <p>SLocalizedMessages class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class SLocalizedMessages
-        implements Serializable {
-    private static final long serialVersionUID = 4409512355804928387L;
-    private Set<SLocalizedMessage> preferences;
+		implements Serializable {
+	private static final long serialVersionUID = 4409512355804928387L;
+	private Set<SLocalizedMessage> preferences;
 
-    public Set<SLocalizedMessage> getPreferences() {
-        return this.preferences;
-    }
+	/**
+	 * <p>Getter for the field <code>preferences</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	public Set<SLocalizedMessage> getPreferences() {
+		return this.preferences;
+	}
 
-    public SLocalizedMessages setPreferences(final Set<SLocalizedMessage> preferences) {
-        this.preferences = preferences;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>preferences</code>.</p>
+	 *
+	 * @param preferences a {@link java.util.Set} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.SLocalizedMessages} object.
+	 */
+	public SLocalizedMessages setPreferences(final Set<SLocalizedMessage> preferences) {
+		this.preferences = preferences;
+		return this;
+	}
 
-    public SLocalizedMessages put(final SLocalizedMessage localizedMessage) {
-        return this.put(Sets.newHashSet(localizedMessage));
-    }
+	/**
+	 * <p>put.</p>
+	 *
+	 * @param localizedMessage a {@link org.agatom.springatom.web.locale.beans.SLocalizedMessage} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.SLocalizedMessages} object.
+	 */
+	public SLocalizedMessages put(final SLocalizedMessage localizedMessage) {
+		return this.put(Sets.newHashSet(localizedMessage));
+	}
 
-    public SLocalizedMessages put(final Set<SLocalizedMessage> preferences) {
-        if (this.preferences == null) {
-            this.preferences = Sets.newHashSet();
-        }
-        this.preferences.addAll(preferences);
-        return this;
-    }
+	/**
+	 * <p>put.</p>
+	 *
+	 * @param preferences a {@link java.util.Set} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.SLocalizedMessages} object.
+	 */
+	public SLocalizedMessages put(final Set<SLocalizedMessage> preferences) {
+		if (this.preferences == null) {
+			this.preferences = Sets.newHashSet();
+		}
+		this.preferences.addAll(preferences);
+		return this;
+	}
 
-    public SLocalizedMessages put(final String key, final String pref, Locale locale) {
-        if (key != null && pref != null) {
+	/**
+	 * <p>put.</p>
+	 *
+	 * @param key    a {@link java.lang.String} object.
+	 * @param pref   a {@link java.lang.String} object.
+	 * @param locale a {@link java.util.Locale} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.SLocalizedMessages} object.
+	 */
+	public SLocalizedMessages put(final String key, final String pref, Locale locale) {
+		if (key != null && pref != null) {
 
-            if (locale == null) {
-                locale = LocaleContextHolder.getLocale();
-            }
+			if (locale == null) {
+				locale = LocaleContextHolder.getLocale();
+			}
 
-            if (this.preferences == null) {
-                this.preferences = Sets.newHashSet();
-            }
-            this.preferences.add(new SLocalizedMessage().setKey(key).setMessage(pref).setLocale(
-                    SLocale.fromLocale(locale)
-            ));
-        }
-        return this;
-    }
+			if (this.preferences == null) {
+				this.preferences = Sets.newHashSet();
+			}
+			this.preferences.add(new SLocalizedMessage().setKey(key).setMessage(pref).setLocale(
+					SLocale.fromLocale(locale)
+			));
+		}
+		return this;
+	}
 
-    public int size() {
-        return this.preferences.size();
-    }
+	/**
+	 * <p>size.</p>
+	 *
+	 * @return a int.
+	 */
+	public int size() {
+		return this.preferences.size();
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(preferences);
+	}
 
-        SLocalizedMessages that = (SLocalizedMessages) o;
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        return Objects.equal(this.preferences, that.preferences);
-    }
+		SLocalizedMessages that = (SLocalizedMessages) o;
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(preferences);
-    }
+		return Objects.equal(this.preferences, that.preferences);
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(preferences)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(preferences)
+				.toString();
+	}
 }

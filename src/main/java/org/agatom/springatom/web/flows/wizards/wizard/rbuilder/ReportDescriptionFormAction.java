@@ -28,6 +28,8 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 
 /**
+ * <p>ReportDescriptionFormAction class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -35,32 +37,36 @@ import org.springframework.web.bind.WebDataBinder;
 
 @WizardAction(value = "reportDescriptionFormAction")
 public class ReportDescriptionFormAction
-        extends WizardFormAction<ReportConfiguration> {
+		extends WizardFormAction<ReportConfiguration> {
 
-    public ReportDescriptionFormAction() {
-        super();
-        this.setValidator(new AreDescriptionPropertiesValidValidator());
-    }
+	/**
+	 * <p>Constructor for ReportDescriptionFormAction.</p>
+	 */
+	public ReportDescriptionFormAction() {
+		super();
+		this.setValidator(new AreDescriptionPropertiesValidValidator());
+	}
 
-    @Override
-    protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
-        binder.setIgnoreUnknownFields(true);
-        return binder;
-    }
+	/** {@inheritDoc} */
+	@Override
+	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
+		binder.setIgnoreUnknownFields(true);
+		return binder;
+	}
 
-    private class AreDescriptionPropertiesValidValidator
-            implements Validator {
+	private class AreDescriptionPropertiesValidValidator
+			implements Validator {
 
-        @Override
-        public boolean supports(final Class<?> clazz) {
-            return ClassUtils.isAssignable(ReportConfiguration.class, clazz);
-        }
+		@Override
+		public boolean supports(final Class<?> clazz) {
+			return ClassUtils.isAssignable(ReportConfiguration.class, clazz);
+		}
 
-        @Override
-        public void validate(final Object target, final Errors errors) {
-            Preconditions.checkNotNull(target, "Target must not be null");
-            Preconditions.checkArgument(ClassUtils.isAssignable(ReportConfiguration.class, target.getClass()));
-            delegatedValidator.validate(target, errors);
-        }
-    }
+		@Override
+		public void validate(final Object target, final Errors errors) {
+			Preconditions.checkNotNull(target, "Target must not be null");
+			Preconditions.checkArgument(ClassUtils.isAssignable(ReportConfiguration.class, target.getClass()));
+			delegatedValidator.validate(target, errors);
+		}
+	}
 }

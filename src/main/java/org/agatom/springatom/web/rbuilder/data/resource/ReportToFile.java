@@ -37,27 +37,51 @@ import org.agatom.springatom.web.rbuilder.ReportConfiguration;
  * @since 0.0.1
  */
 public final class ReportToFile {
-    private Report              report;
-    private JasperReport        jasperReport;
-    private ReportConfiguration reportConfiguration;
+	private Report              report;
+	private JasperReport        jasperReport;
+	private ReportConfiguration reportConfiguration;
 
-    public static ReportToFile newReportToFile(final Report report, final JasperReport jasperReport, final ReportConfiguration reportConfiguration) {
-        final ReportToFile reportToFile = new ReportToFile();
-        reportToFile.report = report;
-        reportToFile.jasperReport = jasperReport;
-        reportToFile.reportConfiguration = reportConfiguration;
-        return reportToFile;
-    }
+	/**
+	 * <p>newReportToFile.</p>
+	 *
+	 * @param report              a {@link org.agatom.springatom.server.model.types.report.Report} object.
+	 * @param jasperReport        a {@link net.sf.jasperreports.engine.JasperReport} object.
+	 * @param reportConfiguration a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.data.resource.ReportToFile} object.
+	 */
+	public static ReportToFile newReportToFile(final Report report, final JasperReport jasperReport, final ReportConfiguration reportConfiguration) {
+		final ReportToFile reportToFile = new ReportToFile();
+		reportToFile.report = report;
+		reportToFile.jasperReport = jasperReport;
+		reportToFile.reportConfiguration = reportConfiguration;
+		return reportToFile;
+	}
 
-    public Report getReport() {
-        return report;
-    }
+	/**
+	 * <p>Getter for the field <code>report</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.report.Report} object.
+	 */
+	public Report getReport() {
+		return report;
+	}
 
-    public JasperReport getJasperReport() {
-        return jasperReport;
-    }
+	/**
+	 * <p>Getter for the field <code>jasperReport</code>.</p>
+	 *
+	 * @return a {@link net.sf.jasperreports.engine.JasperReport} object.
+	 */
+	public JasperReport getJasperReport() {
+		return jasperReport;
+	}
 
-    public ReportConfiguration getReportConfiguration() {
-        return reportConfiguration;
-    }
+	/**
+	 * <p>Getter for the field <code>reportConfiguration</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 */
+	public ReportConfiguration getReportConfiguration() {
+		return reportConfiguration;
+	}
 }

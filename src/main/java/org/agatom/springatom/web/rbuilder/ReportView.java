@@ -49,96 +49,98 @@ import java.util.Set;
  */
 //TODO needs rework if needed -> at the moment it is unused
 public class ReportView
-        extends JasperReportsMultiFormatView {
+		extends JasperReportsMultiFormatView {
 
-    private Map<String, JasperReport> subReports        = null;
-    private List<String>              subReportDataKeys = null;
-    private ModelMap                  parameters        = null;
-    //    @Autowired
+	private Map<String, JasperReport> subReports        = null;
+	private List<String>              subReportDataKeys = null;
+	private ModelMap                  parameters        = null;
+	//    @Autowired
 //    @Qualifier(value = "rbuilderProperties")
-    private Properties                propertiesHolder  = null;
+	private Properties                propertiesHolder  = null;
 
-    @Override
-    protected void onInit() {
-        final ReportViewDescriptor reportViewDescriptor = this.getReportViewDescriptor();
-        {
-            this.parameters = reportViewDescriptor.getParameters();
-        }
-        this.loadSubreports();
-    }
+	/** {@inheritDoc} */
+	@Override
+	protected void onInit() {
+		final ReportViewDescriptor reportViewDescriptor = this.getReportViewDescriptor();
+		{
+			this.parameters = reportViewDescriptor.getParameters();
+		}
+		this.loadSubreports();
+	}
 
-    private void loadSubreports() {
-        final Set<?> subReports = (Set<?>) this.parameters.get(this.propertiesHolder.getProperty("reports.reportSubReportsKey"));
-        final String reportsPrefix = this.propertiesHolder.getProperty("reports.reportsPrefix");
+	/** {@inheritDoc} */
+	@Override
+	protected void renderMergedOutputModel(
+			final Map<String, Object> model,
+			final HttpServletRequest request,
+			final HttpServletResponse response
+	) throws Exception {
+		if (this.subReports != null) {
+			// Expose sub-reports as model attributes.
+			model.putAll(this.subReports);
 
-        if (!CollectionUtils.isEmpty(subReports)) {
+			// Transform any collections etc into JRDataSources for sub reports.
+			if (this.subReportDataKeys != null) {
+				for (String key : this.subReportDataKeys) {
+					model.put(key, convertReportData(model.get(key.replaceFirst("#", ""))));
+				}
+			}
+		}
+		super.renderMergedOutputModel(model, request, response);
+	}
 
-            this.subReports = Maps.newHashMap();
-            this.subReportDataKeys = Lists.newArrayList();
+	private ReportViewDescriptor getReportViewDescriptor() {
+		final RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+		Assert.notNull(requestAttributes);
 
-            for (final Object subReportObject : subReports) {
-                Assert.isInstanceOf(Report.class, subReportObject);
-                final Report subReport = (Report) subReportObject;
+		final String nameOfBean = StringUtils.uncapitalize(ClassUtils.getShortName(ReportViewDescriptor.class));
+		Object attribute = requestAttributes.getAttribute(nameOfBean, RequestAttributes.SCOPE_SESSION);
 
-                final String jasperPath = String.format("%s%s", reportsPrefix, subReport.getResource().getJasperFilename());
-                final Resource resource = this.getApplicationContext().getResource(jasperPath);
+		if (attribute == null) {
+			try {
+				attribute = this.getWebApplicationContext().getBean(nameOfBean);
+			} catch (BeansException exp) {
+				attribute = null;
+			}
+		}
 
-                this.subReports.put(this.generateFakeLoadedIdForModel((SReport) subReport), this.loadReport(resource));
-                this.subReportDataKeys.add(this.generateFakeLoadedIdForModel((SReport) subReport));
+		Assert.notNull(attribute);
+		Assert.isInstanceOf(ReportViewDescriptor.class, attribute);
 
-            }
-            this.setSubReportDataKeys(this.subReportDataKeys.toArray(new String[this.subReportDataKeys.size()]));
-        }
-    }
+		return (ReportViewDescriptor) attribute;
+	}
 
-    @Override
-    protected void renderMergedOutputModel(
-            final Map<String, Object> model,
-            final HttpServletRequest request,
-            final HttpServletResponse response
-    ) throws Exception {
-        if (this.subReports != null) {
-            // Expose sub-reports as model attributes.
-            model.putAll(this.subReports);
+	private void loadSubreports() {
+		final Set<?> subReports = (Set<?>) this.parameters.get(this.propertiesHolder.getProperty("reports.reportSubReportsKey"));
+		final String reportsPrefix = this.propertiesHolder.getProperty("reports.reportsPrefix");
 
-            // Transform any collections etc into JRDataSources for sub reports.
-            if (this.subReportDataKeys != null) {
-                for (String key : this.subReportDataKeys) {
-                    model.put(key, convertReportData(model.get(key.replaceFirst("#", ""))));
-                }
-            }
-        }
-        super.renderMergedOutputModel(model, request, response);
-    }
+		if (!CollectionUtils.isEmpty(subReports)) {
 
-    private ReportViewDescriptor getReportViewDescriptor() {
-        final RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        Assert.notNull(requestAttributes);
+			this.subReports = Maps.newHashMap();
+			this.subReportDataKeys = Lists.newArrayList();
 
-        final String nameOfBean = StringUtils.uncapitalize(ClassUtils.getShortName(ReportViewDescriptor.class));
-        Object attribute = requestAttributes.getAttribute(nameOfBean, RequestAttributes.SCOPE_SESSION);
+			for (final Object subReportObject : subReports) {
+				Assert.isInstanceOf(Report.class, subReportObject);
+				final Report subReport = (Report) subReportObject;
 
-        if (attribute == null) {
-            try {
-                attribute = this.getWebApplicationContext().getBean(nameOfBean);
-            } catch (BeansException exp) {
-                attribute = null;
-            }
-        }
+				final String jasperPath = String.format("%s%s", reportsPrefix, subReport.getResource().getJasperFilename());
+				final Resource resource = this.getApplicationContext().getResource(jasperPath);
 
-        Assert.notNull(attribute);
-        Assert.isInstanceOf(ReportViewDescriptor.class, attribute);
+				this.subReports.put(this.generateFakeLoadedIdForModel((SReport) subReport), this.loadReport(resource));
+				this.subReportDataKeys.add(this.generateFakeLoadedIdForModel((SReport) subReport));
 
-        return (ReportViewDescriptor) attribute;
-    }
+			}
+			this.setSubReportDataKeys(this.subReportDataKeys.toArray(new String[this.subReportDataKeys.size()]));
+		}
+	}
 
-    private String generateFakeDataKeyId(final SReport subReport) {
-        return String.format("%s_%d", propertiesHolder.getProperty("reports.reportDataKey"), subReport.getId());
-    }
+	private String generateFakeLoadedIdForModel(final SReport subReport) {
+		return String.format("#%s", this.generateFakeDataKeyId(subReport));
+	}
 
-    private String generateFakeLoadedIdForModel(final SReport subReport) {
-        return String.format("#%s", this.generateFakeDataKeyId(subReport));
-    }
+	private String generateFakeDataKeyId(final SReport subReport) {
+		return String.format("%s_%d", propertiesHolder.getProperty("reports.reportDataKey"), subReport.getId());
+	}
 
 
 }

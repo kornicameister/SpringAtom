@@ -32,85 +32,104 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
+ * <p>ReportRepresentation class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class ReportRepresentation
-        implements Serializable,
-                   Comparable<ReportRepresentation> {
+		implements Serializable,
+		Comparable<ReportRepresentation> {
 
-    private static final long                              serialVersionUID = 3606510385045622962L;
-    private static       Map<String, ReportRepresentation> REP              = null;
-    private final String type;
-    private final String key;
+	private static final long                              serialVersionUID = 3606510385045622962L;
+	private static       Map<String, ReportRepresentation> REP              = null;
+	private final String type;
+	private final String key;
 
-    private ReportRepresentation(final Representation representation) {
-        this.key = representation.getId();
-        this.type = representation.name().toLowerCase();
-    }
+	private ReportRepresentation(final Representation representation) {
+		this.key = representation.getId();
+		this.type = representation.name().toLowerCase();
+	}
 
-    public static Map<String, ReportRepresentation> getRepresentation() {
-        if (REP == null) {
-            final Map<String, ReportRepresentation> map = Maps.newHashMap();
-            for (final Representation representation : Representation.values()) {
-                if (representation.isPresent()) {
-                    map.put(representation.getId(),
-                            new ReportRepresentation(representation)
-                    );
-                }
-            }
-            REP = Collections.unmodifiableMap(map);
-        }
-        return REP;
-    }
+	/**
+	 * <p>getRepresentation.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
+	public static Map<String, ReportRepresentation> getRepresentation() {
+		if (REP == null) {
+			final Map<String, ReportRepresentation> map = Maps.newHashMap();
+			for (final Representation representation : Representation.values()) {
+				if (representation.isPresent()) {
+					map.put(representation.getId(),
+							new ReportRepresentation(representation)
+					);
+				}
+			}
+			REP = Collections.unmodifiableMap(map);
+		}
+		return REP;
+	}
 
 
-    public String getType() {
-        return type;
-    }
+	/**
+	 * <p>Getter for the field <code>type</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getType() {
+		return type;
+	}
 
-    public String getKey() {
-        return key;
-    }
+	/**
+	 * <p>Getter for the field <code>key</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getKey() {
+		return key;
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(type)
-                      .addValue(key)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(type)
+				.addValue(key)
+				.toString();
+	}
 
-    @Override
-    public int compareTo(@Nonnull final ReportRepresentation o) {
-        return this.key.compareTo(o.key);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public int compareTo(@Nonnull final ReportRepresentation o) {
+		return this.key.compareTo(o.key);
+	}
 
-    public static enum Representation
-            implements Serializable,
-                       Identifiable<String> {
-        CSV(JasperReportsCsvView.class, "csv"),
-        HTML(JasperReportsHtmlView.class, "html"),
-        PDF(JasperReportsPdfView.class, "pdf"),
-        EXCEL(JasperReportsXlsView.class, "xls");
+	public static enum Representation
+			implements Serializable,
+			Identifiable<String> {
+		CSV(JasperReportsCsvView.class, "csv"),
+		HTML(JasperReportsHtmlView.class, "html"),
+		PDF(JasperReportsPdfView.class, "pdf"),
+		EXCEL(JasperReportsXlsView.class, "xls");
 
-        private final boolean present;
-        private final String  mappingKey;
+		private final boolean present;
+		private final String  mappingKey;
 
-        Representation(final Class<?> exporter, final String mappingKey) {
-            this.present = ClassUtils.isPresent(exporter.getName(), ReportRepresentation.class.getClassLoader());
-            this.mappingKey = mappingKey;
-        }
+		Representation(final Class<?> exporter, final String mappingKey) {
+			this.present = ClassUtils.isPresent(exporter.getName(), ReportRepresentation.class.getClassLoader());
+			this.mappingKey = mappingKey;
+		}
 
-        public boolean isPresent() {
-            return present;
-        }
+		public boolean isPresent() {
+			return present;
+		}
 
-        @Override
-        public String getId() {
-            return this.mappingKey;
-        }
-    }
+		@Override
+		public String getId() {
+			return this.mappingKey;
+		}
+	}
 
 }

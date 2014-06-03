@@ -28,80 +28,104 @@ import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.engine.Flow;
 
 /**
+ * <p>StateIdTag class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class StateIdTag
-        extends RequestContextAwareTag {
-    private static final Logger LOGGER           = Logger.getLogger(StateIdTag.class);
-    private static final long   serialVersionUID = -1317114256305704439L;
-    private FlowDefinition  flow;
-    private StateDefinition state;
-    private Short           index;
-    private String          var;
+		extends RequestContextAwareTag {
+	private static final Logger LOGGER           = Logger.getLogger(StateIdTag.class);
+	private static final long   serialVersionUID = -1317114256305704439L;
+	private FlowDefinition  flow;
+	private StateDefinition state;
+	private Short           index;
+	private String          var;
 
-    public void setFlow(final FlowDefinition flow) {
-        this.flow = flow;
-    }
+	/**
+	 * <p>Setter for the field <code>flow</code>.</p>
+	 *
+	 * @param flow a {@link org.springframework.webflow.definition.FlowDefinition} object.
+	 */
+	public void setFlow(final FlowDefinition flow) {
+		this.flow = flow;
+	}
 
-    public void setState(final StateDefinition state) {
-        this.state = state;
-    }
+	/**
+	 * <p>Setter for the field <code>state</code>.</p>
+	 *
+	 * @param state a {@link org.springframework.webflow.definition.StateDefinition} object.
+	 */
+	public void setState(final StateDefinition state) {
+		this.state = state;
+	}
 
-    public void setIndex(final Short index) {
-        this.index = index;
-    }
+	/**
+	 * <p>Setter for the field <code>index</code>.</p>
+	 *
+	 * @param index a {@link java.lang.Short} object.
+	 */
+	public void setIndex(final Short index) {
+		this.index = index;
+	}
 
-    public void setVar(final String var) {
-        this.var = var;
-    }
+	/**
+	 * <p>Setter for the field <code>var</code>.</p>
+	 *
+	 * @param var a {@link java.lang.String} object.
+	 */
+	public void setVar(final String var) {
+		this.var = var;
+	}
 
-    @Override
-    protected int doStartTagInternal() throws Exception {
-        Preconditions.checkArgument(var != null, "Var to assign stateId can not be null");
-        String stateId = null;
-        if (this.isExtractableFromFlow()) {
-            final String[] stateIds = ((Flow) this.flow).getStateIds();
-            try {
-                if (this.index >= stateIds.length) {
-                    throw new ArrayIndexOutOfBoundsException(index);
-                }
-                stateId = stateIds[index];
-            } catch (ArrayIndexOutOfBoundsException e) {
-                LOGGER.error(e);
-                throw new WebflowTagEvaluationException(String.format("%s is to high state index", this.index), e);
-            } catch (Exception e) {
-                throw new WebflowTagEvaluationException(e);
-            }
-        } else if (this.isExtractableFromState()) {
-            stateId = this.state.getId();
-        }
-        if (stateId != null) {
-            LOGGER.debug(String.format("Resolved stateId -> %s", stateId));
-            pageContext.setAttribute(this.var, stateId);
-            return SKIP_BODY;
-        }
-        throw new WebflowTagEvaluationException("Failed to set stateId");
-    }
+	/** {@inheritDoc} */
+	@Override
+	protected int doStartTagInternal() throws Exception {
+		Preconditions.checkArgument(var != null, "Var to assign stateId can not be null");
+		String stateId = null;
+		if (this.isExtractableFromFlow()) {
+			final String[] stateIds = ((Flow) this.flow).getStateIds();
+			try {
+				if (this.index >= stateIds.length) {
+					throw new ArrayIndexOutOfBoundsException(index);
+				}
+				stateId = stateIds[index];
+			} catch (ArrayIndexOutOfBoundsException e) {
+				LOGGER.error(e);
+				throw new WebflowTagEvaluationException(String.format("%s is to high state index", this.index), e);
+			} catch (Exception e) {
+				throw new WebflowTagEvaluationException(e);
+			}
+		} else if (this.isExtractableFromState()) {
+			stateId = this.state.getId();
+		}
+		if (stateId != null) {
+			LOGGER.debug(String.format("Resolved stateId -> %s", stateId));
+			pageContext.setAttribute(this.var, stateId);
+			return SKIP_BODY;
+		}
+		throw new WebflowTagEvaluationException("Failed to set stateId");
+	}
 
-    private boolean isExtractableFromState() {
-        return this.state != null;
-    }
+	private boolean isExtractableFromFlow() {
+		return (this.flow != null && this.index != null) && ClassUtils.isAssignable(Flow.class, this.flow.getClass());
+	}
 
-    private boolean isExtractableFromFlow() {
-        return (this.flow != null && this.index != null) && ClassUtils.isAssignable(Flow.class, this.flow.getClass());
-    }
+	private boolean isExtractableFromState() {
+		return this.state != null;
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(flow)
-                      .addValue(state)
-                      .addValue(index)
-                      .addValue(var)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(flow)
+				.addValue(state)
+				.addValue(index)
+				.addValue(var)
+				.toString();
+	}
 
 
 }

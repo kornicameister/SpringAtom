@@ -36,58 +36,66 @@ import java.util.List;
 import java.util.Locale;
 
 /**
+ * <p>DynamicTransitionsTag class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class DynamicTransitionsTag
-        extends PossibleTransitionsTag {
+		extends PossibleTransitionsTag {
 
-    private static final long serialVersionUID = -6351231163581572743L;
-    private Flow flow;
+	private static final long serialVersionUID = -6351231163581572743L;
+	private Flow flow;
 
-    public void setFlow(final FlowDefinition flowDefinition) {
-        Preconditions.checkArgument(ClassUtils
-                .isAssignable(Flow.class, flowDefinition.getClass()), "Flow must be an instance of org.springframework.webflow.engine.Flow");
-        this.flow = (Flow) flowDefinition;
-    }
+	/**
+	 * <p>Setter for the field <code>flow</code>.</p>
+	 *
+	 * @param flowDefinition a {@link org.springframework.webflow.definition.FlowDefinition} object.
+	 */
+	public void setFlow(final FlowDefinition flowDefinition) {
+		Preconditions.checkArgument(ClassUtils
+				.isAssignable(Flow.class, flowDefinition.getClass()), "Flow must be an instance of org.springframework.webflow.engine.Flow");
+		this.flow = (Flow) flowDefinition;
+	}
 
-    @Override
-    protected int doStartTagInternal() throws Exception {
-        if (this.state instanceof TransitionableState) {
+	/** {@inheritDoc} */
+	@Override
+	protected int doStartTagInternal() throws Exception {
+		if (this.state instanceof TransitionableState) {
 
-            final Locale locale = LocaleContextHolder.getLocale();
-            final WizardEvents wizardEvents = (WizardEvents) this.getRequestContext().getWebApplicationContext().getBean("wizardEvents");
-            final SMessageSource messageSource = this.getRequestContext().getWebApplicationContext().getBean(SMessageSource.class);
+			final Locale locale = LocaleContextHolder.getLocale();
+			final WizardEvents wizardEvents = (WizardEvents) this.getRequestContext().getWebApplicationContext().getBean("wizardEvents");
+			final SMessageSource messageSource = this.getRequestContext().getWebApplicationContext().getBean(SMessageSource.class);
 
-            final MutableAttributeMap<Object> holder = RequestContextHolder.getRequestContext().getFlowScope();
+			final MutableAttributeMap<Object> holder = RequestContextHolder.getRequestContext().getFlowScope();
 
-            final TransitionableState transitionableState = (TransitionableState) this.state;
-            final TransitionSet set = transitionableState.getTransitionSet();
+			final TransitionableState transitionableState = (TransitionableState) this.state;
+			final TransitionSet set = transitionableState.getTransitionSet();
 
-            final List<WizardDynamicEvent> css = Lists.newArrayListWithExpectedSize(set.size());
+			final List<WizardDynamicEvent> css = Lists.newArrayListWithExpectedSize(set.size());
 
-            for (final Transition ts : set) {
-                final DefaultTransitionCriteria criteria = (DefaultTransitionCriteria) ts.getMatchingCriteria();
-                final String criteriaAsString = criteria.toString();
-                if (!wizardEvents.isWizardEvent(criteriaAsString)) {
-                    css.add(this.entitle(
-                            new WizardDynamicEvent(new WizardEvent().init(criteriaAsString))
-                                    .setWizardId(holder.getString("wizardID"))
-                                    .setStateId(this.state.getId())
-                                    .setFinish(ClassUtils.isAssignable(EndState.class, this.flow.getState(ts.getTargetStateId()).getClass())),
-                            messageSource,
-                            locale
-                    ));
-                }
-            }
+			for (final Transition ts : set) {
+				final DefaultTransitionCriteria criteria = (DefaultTransitionCriteria) ts.getMatchingCriteria();
+				final String criteriaAsString = criteria.toString();
+				if (!wizardEvents.isWizardEvent(criteriaAsString)) {
+					css.add(this.entitle(
+							new WizardDynamicEvent(new WizardEvent().init(criteriaAsString))
+									.setWizardId(holder.getString("wizardID"))
+									.setStateId(this.state.getId())
+									.setFinish(ClassUtils.isAssignable(EndState.class, this.flow.getState(ts.getTargetStateId()).getClass())),
+							messageSource,
+							locale
+					));
+				}
+			}
 
-            this.pageContext.setAttribute(this.var, new JSONArray(css).toString());
-        }
-        return EVAL_BODY_INCLUDE;
-    }
+			this.pageContext.setAttribute(this.var, new JSONArray(css).toString());
+		}
+		return EVAL_BODY_INCLUDE;
+	}
 
-    private WizardDynamicEvent entitle(final WizardDynamicEvent wdad, final SMessageSource messageSource, final Locale locale) {
-        return wdad.setLabelName(messageSource.getMessage(wdad, locale));
-    }
+	private WizardDynamicEvent entitle(final WizardDynamicEvent wdad, final SMessageSource messageSource, final Locale locale) {
+		return wdad.setLabelName(messageSource.getMessage(wdad, locale));
+	}
 }

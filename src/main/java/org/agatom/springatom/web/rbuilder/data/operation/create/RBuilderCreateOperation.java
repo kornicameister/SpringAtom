@@ -25,18 +25,33 @@ import org.agatom.springatom.web.rbuilder.data.operation.RBuilderOperation;
 import javax.validation.constraints.NotNull;
 
 /**
- * {@link RBuilderCreateOperation} is interface defining contract
+ * {@link org.agatom.springatom.web.rbuilder.data.operation.create.RBuilderCreateOperation} is interface defining contract
  * of the particular operation designed to persist new instance of {@link org.agatom.springatom.server.model.types.report.Report}
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
 public interface RBuilderCreateOperation
-        extends RBuilderOperation {
-    @NotNull
-    Report createReport(final ReportConfiguration reportConfiguration) throws ReportCreateOperationException;
+		extends RBuilderOperation {
+	/**
+	 * <p>createReport.</p>
+	 *
+	 * @param reportConfiguration a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.report.Report} object.
+	 *
+	 * @throws org.agatom.springatom.web.rbuilder.data.exception.ReportCreateOperationException if any.
+	 */
+	@NotNull
+	Report createReport(final ReportConfiguration reportConfiguration) throws ReportCreateOperationException;
 
-    boolean canCreate(final ReportConfiguration reportConfiguration);
+	/**
+	 * <p>canCreate.</p>
+	 *
+	 * @param reportConfiguration a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 *
+	 * @return a boolean.
+	 */
+	boolean canCreate(final ReportConfiguration reportConfiguration);
 }

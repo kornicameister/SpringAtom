@@ -26,6 +26,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import java.util.Arrays;
 
 /**
+ * <p>MessageSourceAOP class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -34,29 +36,49 @@ import java.util.Arrays;
 @Aspect(value = "messageSourceValidator")
 public class MessageSourceAOP {
 
-    private static final Logger LOGGER = Logger.getLogger(MessageSourceAOP.class);
+	private static final Logger LOGGER = Logger.getLogger(MessageSourceAOP.class);
 
-    @Pointcut(value = "execution(* get*(..)) && bean(messageSource)")
-    private void mainPointcut() {
-    }
+	@Pointcut(value = "execution(* get*(..)) && bean(messageSource)")
+	private void mainPointcut() {
+	}
 
-    @Pointcut(value = "args(keys,..)")
-    private void keysAsArray(final String[] keys) {
-    }
+	@Pointcut(value = "args(keys,..)")
+	private void keysAsArray(final String[] keys) {
+	}
 
-    @Pointcut(value = "args(key,..)")
-    private void keyAsSingle(final String key) {
-    }
+	@Pointcut(value = "args(key,..)")
+	private void keyAsSingle(final String key) {
+	}
 
-    @Around(value = "mainPointcut() && keysAsArray(keys)", argNames = "pjp,keys")
-    public Object validateMultipleKeys(final ProceedingJoinPoint pjp, final String[] keys) throws Throwable {
-        LOGGER.trace(String.format("/validateMultipleKeys %s [%s]", pjp.getSignature().getName(), Arrays.toString(keys)));
-        return pjp.proceed();
-    }
+	/**
+	 * <p>validateMultipleKeys.</p>
+	 *
+	 * @param pjp  a {@link org.aspectj.lang.ProceedingJoinPoint} object.
+	 * @param keys an array of {@link java.lang.String} objects.
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 *
+	 * @throws java.lang.Throwable if any.
+	 */
+	@Around(value = "mainPointcut() && keysAsArray(keys)", argNames = "pjp,keys")
+	public Object validateMultipleKeys(final ProceedingJoinPoint pjp, final String[] keys) throws Throwable {
+		LOGGER.trace(String.format("/validateMultipleKeys %s [%s]", pjp.getSignature().getName(), Arrays.toString(keys)));
+		return pjp.proceed();
+	}
 
-    @Around(value = "mainPointcut() && keyAsSingle(key)", argNames = "pjp,key")
-    public Object validateSingleKey(final ProceedingJoinPoint pjp, final String key) throws Throwable {
-        LOGGER.trace(String.format("/validateSingleKey %s [%s]", pjp.getSignature().getName(), key));
-        return pjp.proceed();
-    }
+	/**
+	 * <p>validateSingleKey.</p>
+	 *
+	 * @param pjp a {@link org.aspectj.lang.ProceedingJoinPoint} object.
+	 * @param key a {@link java.lang.String} object.
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 *
+	 * @throws java.lang.Throwable if any.
+	 */
+	@Around(value = "mainPointcut() && keyAsSingle(key)", argNames = "pjp,key")
+	public Object validateSingleKey(final ProceedingJoinPoint pjp, final String key) throws Throwable {
+		LOGGER.trace(String.format("/validateSingleKey %s [%s]", pjp.getSignature().getName(), key));
+		return pjp.proceed();
+	}
 }

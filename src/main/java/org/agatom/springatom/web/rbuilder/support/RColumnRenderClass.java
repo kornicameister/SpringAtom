@@ -24,7 +24,7 @@ import java.io.Serializable;
 
 /**
  * {@code RColumnRenderClass} describes the association between original {@link org.agatom.springatom.web.rbuilder.bean.RBuilderColumn#getColumnClass()}
- * and user chosen target class identified by {@link RColumnRenderClass#getTargetClass()}
+ * and user chosen target class identified by {@link org.agatom.springatom.web.rbuilder.support.RColumnRenderClass#getTargetClass()}
  *
  * @author kornicameister
  * @version 0.0.1
@@ -32,59 +32,99 @@ import java.io.Serializable;
  */
 // TODO investigate reusing of code from Converters of Spring
 public class RColumnRenderClass
-        implements Serializable {
-    private static final long serialVersionUID = -3950594352760043269L;
-    private final Class<?> sourceClass;
-    private final Class<?> targetClass;
-    private final String   label;
+		implements Serializable {
+	private static final long serialVersionUID = -3950594352760043269L;
+	private final Class<?> sourceClass;
+	private final Class<?> targetClass;
+	private final String   label;
 
-    public RColumnRenderClass(ConvertiblePair pair, final String name) {
-        this(pair.getSourceType(), pair.getTargetType(), name);
-    }
+	/**
+	 * <p>Constructor for RColumnRenderClass.</p>
+	 *
+	 * @param pair a {@link org.springframework.core.convert.converter.GenericConverter.ConvertiblePair} object.
+	 * @param name a {@link java.lang.String} object.
+	 */
+	public RColumnRenderClass(ConvertiblePair pair, final String name) {
+		this(pair.getSourceType(), pair.getTargetType(), name);
+	}
 
-    public RColumnRenderClass(final Class<?> sourceType, final Class<?> targetType, final String name) {
-        this.sourceClass = sourceType;
-        this.targetClass = targetType;
-        this.label = name;
-    }
+	/**
+	 * <p>Constructor for RColumnRenderClass.</p>
+	 *
+	 * @param sourceType a {@link java.lang.Class} object.
+	 * @param targetType a {@link java.lang.Class} object.
+	 * @param name       a {@link java.lang.String} object.
+	 */
+	public RColumnRenderClass(final Class<?> sourceType, final Class<?> targetType, final String name) {
+		this.sourceClass = sourceType;
+		this.targetClass = targetType;
+		this.label = name;
+	}
 
-    public Class<?> getSourceClass() {
-        return this.sourceClass;
-    }
+	/**
+	 * <p>Getter for the field <code>sourceClass</code>.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
+	public Class<?> getSourceClass() {
+		return this.sourceClass;
+	}
 
-    public Class<?> getTargetClass() {
-        return this.targetClass;
-    }
+	/**
+	 * <p>Getter for the field <code>targetClass</code>.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
+	public Class<?> getTargetClass() {
+		return this.targetClass;
+	}
 
-    public String getSourceClassName() {
-        return this.sourceClass.getName();
-    }
+	/**
+	 * <p>getSourceClassName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getSourceClassName() {
+		return this.sourceClass.getName();
+	}
 
-    public String getTargetClassName() {
-        return this.targetClass.getName();
-    }
+	/**
+	 * <p>getTargetClassName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getTargetClassName() {
+		return this.targetClass.getName();
+	}
 
-    public String getLabel() {
-        return label;
-    }
+	/**
+	 * <p>Getter for the field <code>label</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getLabel() {
+		return label;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(sourceClass, targetClass);
+	}
 
-        RColumnRenderClass that = (RColumnRenderClass) o;
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        return Objects.equal(this.sourceClass, that.sourceClass) &&
-                Objects.equal(this.targetClass, that.targetClass);
-    }
+		RColumnRenderClass that = (RColumnRenderClass) o;
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(sourceClass, targetClass);
-    }
+		return Objects.equal(this.sourceClass, that.sourceClass) &&
+				Objects.equal(this.targetClass, that.targetClass);
+	}
 }

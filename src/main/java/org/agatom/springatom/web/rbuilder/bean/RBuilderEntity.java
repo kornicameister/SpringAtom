@@ -39,134 +39,200 @@ import java.util.Set;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RBuilderEntity
-        extends RBuilderBean
-        implements Comparable<RBuilderEntity> {
-    private static final long serialVersionUID = -5864111277348030161L;
-    @Size(min = 1)
-    private Set<RBuilderColumn> columns;
-    @NotNull
-    private Class<?>            javaClass;
-    @NotNull
-    @Length(min = 5, max = 50)
-    private String              name;
+		extends RBuilderBean
+		implements Comparable<RBuilderEntity> {
+	private static final long serialVersionUID = -5864111277348030161L;
+	@Size(min = 1)
+	private Set<RBuilderColumn> columns;
+	@NotNull
+	private Class<?>            javaClass;
+	@NotNull
+	@Length(min = 5, max = 50)
+	private String              name;
 
-    public Class<?> getJavaClass() {
-        return javaClass;
-    }
+	/**
+	 * <p>Getter for the field <code>javaClass</code>.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
+	public Class<?> getJavaClass() {
+		return javaClass;
+	}
 
-    public String getJavaClassName() {
-        return this.javaClass.getName();
-    }
+	/**
+	 * <p>Setter for the field <code>javaClass</code>.</p>
+	 *
+	 * @param javaClass a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 */
+	public RBuilderEntity setJavaClass(final Class<?> javaClass) {
+		this.javaClass = javaClass;
+		return this;
+	}
 
-    public RBuilderEntity setJavaClass(final Class<?> javaClass) {
-        this.javaClass = javaClass;
-        return this;
-    }
+	/**
+	 * <p>getJavaClassName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getJavaClassName() {
+		return this.javaClass.getName();
+	}
 
-    public RBuilderEntity setName(final String name) {
-        this.name = name;
-        return this;
-    }
+	/**
+	 * <p>Getter for the field <code>name</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getName() {
+		return name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	/**
+	 * <p>Setter for the field <code>name</code>.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 */
+	public RBuilderEntity setName(final String name) {
+		this.name = name;
+		return this;
+	}
 
-    public RBuilderEntity setColumns(final Set<RBuilderColumn> columns) {
-        this.columns = Sets.newLinkedHashSet(columns);
-        return this;
-    }
+	/**
+	 * <p>addColumn.</p>
+	 *
+	 * @param reportableColumn a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderColumn} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 */
+	public RBuilderEntity addColumn(final RBuilderColumn reportableColumn) {
+		this.getColumns();
+		this.columns.add(reportableColumn);
+		return this;
+	}
 
-    public Set<RBuilderColumn> getColumns() {
-        if (this.columns == null) {
-            this.columns = Sets.newLinkedHashSet();
-        }
-        return columns;
-    }
+	/**
+	 * <p>Getter for the field <code>columns</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	public Set<RBuilderColumn> getColumns() {
+		if (this.columns == null) {
+			this.columns = Sets.newLinkedHashSet();
+		}
+		return columns;
+	}
 
-    public RBuilderEntity addColumn(final RBuilderColumn reportableColumn) {
-        this.getColumns();
-        this.columns.add(reportableColumn);
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>columns</code>.</p>
+	 *
+	 * @param columns a {@link java.util.Set} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 */
+	public RBuilderEntity setColumns(final Set<RBuilderColumn> columns) {
+		this.columns = Sets.newLinkedHashSet(columns);
+		return this;
+	}
 
-    /**
-     * Removes single {@link org.agatom.springatom.web.rbuilder.bean.RBuilderColumn} from the set of columns for this {@code entity}
-     *
-     * @param reportableColumn
-     *         column to be removed
-     *
-     * @return this {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity}
-     */
-    public RBuilderEntity removeColumn(final RBuilderColumn reportableColumn) {
-        this.getColumns();
-        this.columns.remove(reportableColumn);
-        return this;
-    }
+	/**
+	 * Removes single {@link org.agatom.springatom.web.rbuilder.bean.RBuilderColumn} from the set of columns for this {@code entity}
+	 *
+	 * @param reportableColumn column to be removed
+	 *
+	 * @return this {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity}
+	 */
+	public RBuilderEntity removeColumn(final RBuilderColumn reportableColumn) {
+		this.getColumns();
+		this.columns.remove(reportableColumn);
+		return this;
+	}
 
-    public boolean hasColumn(final RBuilderColumn reportableColumn) {
-        this.getColumns();
-        return this.columns.contains(reportableColumn);
-    }
+	/**
+	 * <p>hasColumn.</p>
+	 *
+	 * @param reportableColumn a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderColumn} object.
+	 *
+	 * @return a boolean.
+	 */
+	public boolean hasColumn(final RBuilderColumn reportableColumn) {
+		this.getColumns();
+		return this.columns.contains(reportableColumn);
+	}
 
-    public boolean hasColumns() {
-        this.getColumns();
-        return !this.columns.isEmpty();
-    }
+	/**
+	 * <p>hasColumns.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean hasColumns() {
+		this.getColumns();
+		return !this.columns.isEmpty();
+	}
 
-    public void clearColumns() {
-        this.columns.clear();
-    }
+	/**
+	 * <p>clearColumns.</p>
+	 */
+	public void clearColumns() {
+		this.columns.clear();
+	}
 
-    @Override
-    public String getMessageKey() {
-        return ClassUtils.getShortName(this.javaClass).toLowerCase();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getMessageKey() {
+		return ClassUtils.getShortName(this.javaClass).toLowerCase();
+	}
 
-    @Override
-    public int compareTo(@Nonnull final RBuilderEntity entity) {
-        return ComparisonChain
-                .start()
-                .compare(this.label, entity.label)
-                .result() * -1;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public int compareTo(@Nonnull final RBuilderEntity entity) {
+		return ComparisonChain
+				.start()
+				.compare(this.label, entity.label)
+				.result() * -1;
+	}
 
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(javaClass, name, label, id);
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        RBuilderEntity that = (RBuilderEntity) o;
+		RBuilderEntity that = (RBuilderEntity) o;
 
-        return Objects.equal(this.javaClass, that.javaClass) &&
-                Objects.equal(this.name, that.name) &&
-                Objects.equal(this.label, that.label) &&
-                Objects.equal(this.id, that.id);
-    }
+		return Objects.equal(this.javaClass, that.javaClass) &&
+				Objects.equal(this.name, that.name) &&
+				Objects.equal(this.label, that.label) &&
+				Objects.equal(this.id, that.id);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(javaClass, name, label, id);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(javaClass)
+				.addValue(name)
+				.addValue(label)
+				.addValue(id)
+				.toString();
+	}
 
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(javaClass)
-                      .addValue(name)
-                      .addValue(label)
-                      .addValue(id)
-                      .toString();
-    }
-
-    @Override
-    protected Integer calculateId() {
-        return this.javaClass.hashCode();
-    }
+	/** {@inheritDoc} */
+	@Override
+	protected Integer calculateId() {
+		return this.javaClass.hashCode();
+	}
 }

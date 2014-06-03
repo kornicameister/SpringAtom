@@ -24,56 +24,78 @@ import org.springframework.context.annotation.Scope;
 import java.io.Serializable;
 
 /**
+ * <p>WizardEvent class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public final class WizardEvent
-        implements Serializable {
-    private static final long serialVersionUID = 7927406578178789028L;
-    private String name;
-    private String eventName;
+		implements Serializable {
+	private static final long serialVersionUID = 7927406578178789028L;
+	private String name;
+	private String eventName;
 
-    public String getName() {
-        return name;
-    }
+	/**
+	 * <p>Getter for the field <code>name</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getName() {
+		return name;
+	}
 
-    public String getEventName() {
-        return eventName;
-    }
+	/**
+	 * <p>Getter for the field <code>eventName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getEventName() {
+		return eventName;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(name, eventName);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(name, eventName);
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        WizardEvent that = (WizardEvent) o;
+		WizardEvent that = (WizardEvent) o;
 
-        return Objects.equal(this.name, that.name) &&
-                Objects.equal(this.eventName, that.eventName);
-    }
+		return Objects.equal(this.name, that.name) &&
+				Objects.equal(this.eventName, that.eventName);
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(name)
-                      .addValue(eventName)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(name)
+				.addValue(eventName)
+				.toString();
+	}
 
-    public WizardEvent init(final String name) {
-        this.name = name;
-        this.eventName = String.format("_eventId_%s", name);
-        return this;
-    }
+	/**
+	 * <p>init.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.flows.wizards.events.WizardEvent} object.
+	 */
+	public WizardEvent init(final String name) {
+		this.name = name;
+		this.eventName = String.format("_eventId_%s", name);
+		return this;
+	}
 }

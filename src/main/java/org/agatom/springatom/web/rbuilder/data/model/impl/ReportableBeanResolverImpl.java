@@ -39,77 +39,84 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
+ * <p>ReportableBeanResolverImpl class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 @Service(value = ReportableBeanResolverImpl.SERVICE_NAME)
 public class ReportableBeanResolverImpl
-        implements ReportableBeanResolver {
+		implements ReportableBeanResolver {
 
-    private static final   Logger                        LOGGER              = Logger.getLogger(ReportableBeanResolverImpl.class);
-    protected static final String                        SERVICE_NAME        = "reportableBeanResolver";
-    @Autowired
-    private                EntityDescriptors             entityDescriptors   = null;
-    @Autowired
-    private                ReportableEntityResolver      entityResolver      = null;
-    @Autowired
-    private                ReportableAssociationResolver associationResolver = null;
-    @Autowired
-    private                ReportableColumnResolver      columnResolver      = null;
+	/** Constant <code>SERVICE_NAME="reportableBeanResolver"</code> */
+	protected static final String                        SERVICE_NAME        = "reportableBeanResolver";
+	private static final   Logger                        LOGGER              = Logger.getLogger(ReportableBeanResolverImpl.class);
+	@Autowired
+	private                EntityDescriptors             entityDescriptors   = null;
+	@Autowired
+	private                ReportableEntityResolver      entityResolver      = null;
+	@Autowired
+	private                ReportableAssociationResolver associationResolver = null;
+	@Autowired
+	private                ReportableColumnResolver      columnResolver      = null;
 
-    @Override
-    public Set<RBuilderEntity> getReportableEntities() {
-        final Set<RBuilderEntity> entities = Sets.newTreeSet();
-        final Set<SlimEntityDescriptor<?>> descriptors = this.entityDescriptors.getSlimDescriptors();
-        for (SlimEntityDescriptor<?> descriptor : descriptors) {
-            try {
-                final RBuilderEntity entity = this.entityResolver.getReportableEntity(descriptor.getJavaClass());
-                if (entity != null) {
-                    entities.add(entity);
-                } else {
-                    LOGGER.debug(String.format("%s is not %s",
-                            descriptor.getJavaClass(),
-                            ClassUtils.getShortName(ReportableEntity.class)
-                    ));
-                }
-            } catch (Exception exception) {
-                LOGGER.warn(String.format("Exception caught when resolving %s for %s",
-                        ClassUtils.getShortName(RBuilderEntity.class),
-                        descriptor.getJavaClass())
-                );
-            }
-        }
-        LOGGER.trace(String.format("Available %s at count %d", ClassUtils.getShortName(RBuilderEntity.class), entities.size()));
-        return entities;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Set<RBuilderEntity> getReportableEntities() {
+		final Set<RBuilderEntity> entities = Sets.newTreeSet();
+		final Set<SlimEntityDescriptor<?>> descriptors = this.entityDescriptors.getSlimDescriptors();
+		for (SlimEntityDescriptor<?> descriptor : descriptors) {
+			try {
+				final RBuilderEntity entity = this.entityResolver.getReportableEntity(descriptor.getJavaClass());
+				if (entity != null) {
+					entities.add(entity);
+				} else {
+					LOGGER.debug(String.format("%s is not %s",
+							descriptor.getJavaClass(),
+							ClassUtils.getShortName(ReportableEntity.class)
+					));
+				}
+			} catch (Exception exception) {
+				LOGGER.warn(String.format("Exception caught when resolving %s for %s",
+								ClassUtils.getShortName(RBuilderEntity.class),
+								descriptor.getJavaClass())
+				);
+			}
+		}
+		LOGGER.trace(String.format("Available %s at count %d", ClassUtils.getShortName(RBuilderEntity.class), entities.size()));
+		return entities;
+	}
 
-    @Override
-    public Set<RBuilderAssociation> getEntityAssociations(@NotNull final Set<RBuilderEntity> entities) {
-        final Set<RBuilderAssociation> set = Sets.newHashSet();
-        for (RBuilderEntity entity : entities) {
-            final RBuilderAssociation entityAssociation = this.associationResolver.getEntityAssociation(entity);
-            if (entityAssociation != null) {
-                set.add(entityAssociation);
-            }
-        }
-        return set;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Set<RBuilderAssociation> getEntityAssociations(@NotNull final Set<RBuilderEntity> entities) {
+		final Set<RBuilderAssociation> set = Sets.newHashSet();
+		for (RBuilderEntity entity : entities) {
+			final RBuilderAssociation entityAssociation = this.associationResolver.getEntityAssociation(entity);
+			if (entityAssociation != null) {
+				set.add(entityAssociation);
+			}
+		}
+		return set;
+	}
 
-    @Override
-    public Set<RBuilderColumn> getReportableColumns(@NotNull final RBuilderEntity entity) {
-        return this.columnResolver.getReportableColumns(entity);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Set<RBuilderColumn> getReportableColumns(@NotNull final RBuilderEntity entity) {
+		return this.columnResolver.getReportableColumns(entity);
+	}
 
-    @Override
-    public RBuilderBean getReportableBean(final Integer identifier) {
-        final Set<RBuilderEntity> reportableEntities = this.getReportableEntities();
-        final Cloner cloner = new Cloner();
-        for (RBuilderEntity reportableEntity : reportableEntities) {
-            if (reportableEntity.getId().equals(identifier)) {
-                return cloner.shallowClone(reportableEntity);
-            }
-        }
-        return null;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public RBuilderBean getReportableBean(final Integer identifier) {
+		final Set<RBuilderEntity> reportableEntities = this.getReportableEntities();
+		final Cloner cloner = new Cloner();
+		for (RBuilderEntity reportableEntity : reportableEntities) {
+			if (reportableEntity.getId().equals(identifier)) {
+				return cloner.shallowClone(reportableEntity);
+			}
+		}
+		return null;
+	}
 }

@@ -29,71 +29,136 @@ import org.agatom.springatom.web.beans.WebBean;
  * @since 0.0.1
  */
 public class WizardDynamicEvent
-        implements WebBean,
-                   Localized {
-    private static final String BEAN_ID          = "dynamicWizardAction";
-    private static final long   serialVersionUID = -3951680406772922964L;
-    private final WizardEvent event;
-    private       String      stateId;
-    private       String      wizardId;
-    private       String      labelName;
-    private       boolean     isFinish;
+		implements WebBean,
+		Localized {
+	private static final String BEAN_ID          = "dynamicWizardAction";
+	private static final long   serialVersionUID = -3951680406772922964L;
+	private final WizardEvent event;
+	private       String      stateId;
+	private       String      wizardId;
+	private       String      labelName;
+	private       boolean     isFinish;
 
-    public WizardDynamicEvent(final WizardEvent wizardEvent) {
-        this.event = wizardEvent;
-    }
+	/**
+	 * <p>Constructor for WizardDynamicEvent.</p>
+	 *
+	 * @param wizardEvent a {@link org.agatom.springatom.web.flows.wizards.events.WizardEvent} object.
+	 */
+	public WizardDynamicEvent(final WizardEvent wizardEvent) {
+		this.event = wizardEvent;
+	}
 
-    public String getName() {
-        return event.getName();
-    }
+	/**
+	 * <p>getName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getName() {
+		return event.getName();
+	}
 
-    public String getEventName() {
-        return event.getEventName();
-    }
+	/**
+	 * <p>getEventName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getEventName() {
+		return event.getEventName();
+	}
 
-    public String getStateId() {
-        return stateId;
-    }
+	/**
+	 * <p>Getter for the field <code>stateId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getStateId() {
+		return stateId;
+	}
 
-    public WizardDynamicEvent setStateId(final String stateId) {
-        this.stateId = stateId;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>stateId</code>.</p>
+	 *
+	 * @param stateId a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.flows.wizards.events.WizardDynamicEvent} object.
+	 */
+	public WizardDynamicEvent setStateId(final String stateId) {
+		this.stateId = stateId;
+		return this;
+	}
 
-    public String getWizardId() {
-        return wizardId;
-    }
+	/**
+	 * <p>Getter for the field <code>wizardId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getWizardId() {
+		return wizardId;
+	}
 
-    public WizardDynamicEvent setWizardId(final String wizardId) {
-        this.wizardId = wizardId;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>wizardId</code>.</p>
+	 *
+	 * @param wizardId a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.flows.wizards.events.WizardDynamicEvent} object.
+	 */
+	public WizardDynamicEvent setWizardId(final String wizardId) {
+		this.wizardId = wizardId;
+		return this;
+	}
 
-    public String getLabelName() {
-        return labelName;
-    }
+	/**
+	 * <p>Getter for the field <code>labelName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getLabelName() {
+		return labelName;
+	}
 
-    public WizardDynamicEvent setLabelName(final String labelName) {
-        this.labelName = labelName;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>labelName</code>.</p>
+	 *
+	 * @param labelName a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.flows.wizards.events.WizardDynamicEvent} object.
+	 */
+	public WizardDynamicEvent setLabelName(final String labelName) {
+		this.labelName = labelName;
+		return this;
+	}
 
-    public WizardDynamicEvent setFinish(final boolean isFinish) {
-        this.isFinish = isFinish;
-        return this;
-    }
+	/**
+	 * <p>isFinish.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isFinish() {
+		return isFinish;
+	}
 
-    public boolean isFinish() {
-        return isFinish;
-    }
+	/**
+	 * <p>setFinish.</p>
+	 *
+	 * @param isFinish a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.web.flows.wizards.events.WizardDynamicEvent} object.
+	 */
+	public WizardDynamicEvent setFinish(final boolean isFinish) {
+		this.isFinish = isFinish;
+		return this;
+	}
 
-    @Override
-    public String getBeanId() {
-        return BEAN_ID;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getBeanId() {
+		return BEAN_ID;
+	}
 
-    @Override
-    public String getMessageKey() {
-        return String.format("wizard.%s.%s.%s", this.wizardId, this.stateId, this.event.getName());
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getMessageKey() {
+		return String.format("wizard.%s.%s.%s", this.wizardId, this.stateId, this.event.getName());
+	}
 }

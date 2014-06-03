@@ -38,7 +38,7 @@ import java.util.Properties;
  */
 public class CalendarConfigurationTag
 		extends RequestContextAwareTag {
-	private static final long   serialVersionUID      = -1112384114346318149L;
+	private static final long     serialVersionUID      = -1112384114346318149L;
 	private static final String[] EMPTY_ARRAY_OF_STRING = new String[]{};
 	private static final String   DAY_NAMES             = "dayNames";
 	private static final String   DAY_NAMES_SHORT       = "dayNamesShort";
@@ -46,15 +46,16 @@ public class CalendarConfigurationTag
 	private static final String   MONTH_NAMES_SHORT     = "monthNamesShort";
 	private static final String   AXIS_FORMAT           = "axisFormat";
 	private static final String   ALL_DAY_TEXT          = "allDayText";
-	private static final String COLUMN_FORMAT         = "columnFormat";
-	private static final String EVENT_SOURCES         = "eventSources";
-	private static final String MIN_TIME              = "minTime";
-	private static final String MAX_TIME              = "maxTime";
-	private static final String FIRST_HOUR            = "firstHour";
-	private static final String DEFAULT_VIEW          = "defaultView";
-	private static final String DEFAULT_EVENT_MINUTES = "defaultEventMinutes";
-	private static final String WIZARD_HREF           = "wizardHref";
+	private static final String   COLUMN_FORMAT         = "columnFormat";
+	private static final String   EVENT_SOURCES         = "eventSources";
+	private static final String   MIN_TIME              = "minTime";
+	private static final String   MAX_TIME              = "maxTime";
+	private static final String   FIRST_HOUR            = "firstHour";
+	private static final String   DEFAULT_VIEW          = "defaultView";
+	private static final String   DEFAULT_EVENT_MINUTES = "defaultEventMinutes";
+	private static final String   WIZARD_HREF           = "wizardHref";
 
+	/** {@inheritDoc} */
 	@Override
 	protected int doStartTagInternal() throws Exception {
 
@@ -88,13 +89,19 @@ public class CalendarConfigurationTag
 		return EVAL_BODY_INCLUDE;
 	}
 
-	private JSONObject[] getEventSources(final Properties applicationProperties) {
-		final Map<String, String> configuration = Maps.newHashMap();
-		configuration.put("startParam", applicationProperties.getProperty("component.calendar.startParam"));
-		configuration.put("endParam", applicationProperties.getProperty("component.calendar.endParam"));
-		configuration.put("url", applicationProperties.getProperty("component.calendar.eventSource.href"));
-		configuration.put("method", applicationProperties.getProperty("component.calendar.eventSource.method"));
-		return new JSONObject[]{new JSONObject(configuration)};
+	private SMessageSource getMessageSource() {
+		return this.getRequestContext().getWebApplicationContext().getBean(SMessageSource.class);
+	}
+
+	private Properties getApplicationProperties() {
+		return (Properties) this.getRequestContext().getWebApplicationContext().getBean("applicationPropertiesBean");
+	}
+
+	private String[] toJSArray(final String message) {
+		if (!StringUtils.hasText(message)) {
+			return EMPTY_ARRAY_OF_STRING;
+		}
+		return StringUtils.tokenizeToStringArray(message, ",");
 	}
 
 	private JSONObject getColumnFormat(final Properties applicationProperties) {
@@ -105,19 +112,13 @@ public class CalendarConfigurationTag
 		return new JSONObject(map);
 	}
 
-	private String[] toJSArray(final String message) {
-		if (!StringUtils.hasText(message)) {
-			return EMPTY_ARRAY_OF_STRING;
-		}
-		return StringUtils.tokenizeToStringArray(message, ",");
-	}
-
-	private SMessageSource getMessageSource() {
-		return this.getRequestContext().getWebApplicationContext().getBean(SMessageSource.class);
-	}
-
-	private Properties getApplicationProperties() {
-		return (Properties) this.getRequestContext().getWebApplicationContext().getBean("applicationPropertiesBean");
+	private JSONObject[] getEventSources(final Properties applicationProperties) {
+		final Map<String, String> configuration = Maps.newHashMap();
+		configuration.put("startParam", applicationProperties.getProperty("component.calendar.startParam"));
+		configuration.put("endParam", applicationProperties.getProperty("component.calendar.endParam"));
+		configuration.put("url", applicationProperties.getProperty("component.calendar.eventSource.href"));
+		configuration.put("method", applicationProperties.getProperty("component.calendar.eventSource.method"));
+		return new JSONObject[]{new JSONObject(configuration)};
 	}
 
 }

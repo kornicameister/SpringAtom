@@ -45,19 +45,16 @@ public class NewAppointmentWizardStep3
 	@Autowired
 	private              SAppointmentService service          = null;
 
+	/**
+	 * <p>Constructor for NewAppointmentWizardStep3.</p>
+	 */
 	public NewAppointmentWizardStep3() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
 		this.setValidator(new SAppointmentValidator());
 	}
 
-	@Override
-	public Event resetForm(final RequestContext context) throws Exception {
-		final SAppointment appointment = this.getCommandBean(context);
-		appointment.setComment(null);
-		return success(appointment);
-	}
-
+	/** {@inheritDoc} */
 	@Override
 	public Event bindAndValidate(final RequestContext context) throws Exception {
 		final Event event = super.bindAndValidate(context);
@@ -67,6 +64,14 @@ public class NewAppointmentWizardStep3
 			Assert.isTrue(!sAppointment.isNew(), "Failed to save appointment, isNew() returned true");
 		}
 		return event;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Event resetForm(final RequestContext context) throws Exception {
+		final SAppointment appointment = this.getCommandBean(context);
+		appointment.setComment(null);
+		return success(appointment);
 	}
 
 	private class SAppointmentValidator

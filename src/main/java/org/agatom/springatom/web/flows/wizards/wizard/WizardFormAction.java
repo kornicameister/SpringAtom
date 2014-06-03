@@ -35,6 +35,8 @@ import org.springframework.webflow.execution.RequestContext;
 import java.io.Serializable;
 
 /**
+ * <p>Abstract WizardFormAction class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -42,8 +44,9 @@ import java.io.Serializable;
 public abstract class WizardFormAction<T extends Serializable>
 		extends FormAction {
 
-	private static final Logger                      LOGGER             = Logger.getLogger(WizardFormAction.class);
+	/** Constant <code>COMMAND_BEAN_NAME="commandBean"</code> */
 	public static final  String                      COMMAND_BEAN_NAME  = "commandBean";
+	private static final Logger                      LOGGER             = Logger.getLogger(WizardFormAction.class);
 	@Autowired
 	@Qualifier(value = "springAtomConversionService")
 	protected            FormattingConversionService conversionService  = null;
@@ -52,11 +55,15 @@ public abstract class WizardFormAction<T extends Serializable>
 	@Autowired
 	protected            ApplicationContext          applicationContext = null;
 
+	/**
+	 * <p>Constructor for WizardFormAction.</p>
+	 */
 	protected WizardFormAction() {
 		this.setFormObjectName(COMMAND_BEAN_NAME);
 		this.setFormObjectClass(GenericTypeResolver.resolveTypeArgument(this.getClass(), WizardFormAction.class));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void initBinder(final RequestContext context, final DataBinder binder) {
 		LOGGER.trace("initBinder not set...setting");
@@ -70,13 +77,25 @@ public abstract class WizardFormAction<T extends Serializable>
 	}
 
 	/**
+	 * <p>doInitBinder.</p>
+	 *
+	 * @param binder            a {@link org.springframework.web.bind.WebDataBinder} object.
+	 * @param conversionService a {@link org.springframework.format.support.FormattingConversionService} object.
+	 *
+	 * @return a {@link org.springframework.web.bind.WebDataBinder} object.
+	 */
+	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
+		return binder;
+	}
+
+	/**
 	 * TypeSafe version of {@link org.springframework.webflow.action.FormAction#getFormObject(org.springframework.webflow.execution.RequestContext)}.
 	 *
 	 * @param context current webflow context
 	 *
 	 * @return this step form object instance
 	 *
-	 * @throws Exception if any, most likely it can be {@link java.lang.ClassCastException}
+	 * @throws java.lang.Exception if any, most likely it can be {@link java.lang.ClassCastjava.lang.Exception}
 	 */
 	@SuppressWarnings("unchecked")
 	protected T getCommandBean(final RequestContext context) throws Exception {
@@ -85,12 +104,15 @@ public abstract class WizardFormAction<T extends Serializable>
 		return (T) formObject;
 	}
 
+	/**
+	 * <p>isSuccessEvent.</p>
+	 *
+	 * @param event a {@link org.springframework.webflow.execution.Event} object.
+	 *
+	 * @return a boolean.
+	 */
 	protected boolean isSuccessEvent(final Event event) {
 		return event.getId().equals(this.success().getId());
-	}
-
-	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
-		return binder;
 	}
 
 	protected abstract static class MatcherConverter

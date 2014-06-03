@@ -21,54 +21,72 @@ import com.google.common.base.Objects;
 import org.agatom.springatom.web.beans.WebBean;
 
 /**
+ * <p>SSearchCommandBean class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class SSearchCommandBean
-        implements WebBean {
+		implements WebBean {
 
-    private static final String BEAN_ID          = "searchCommandBean";
-    private static final long   serialVersionUID = 3398125574712945412L;
-    private String phrase;
+	private static final String BEAN_ID          = "searchCommandBean";
+	private static final long   serialVersionUID = 3398125574712945412L;
+	private String phrase;
 
-    public String getPhrase() {
-        return phrase;
-    }
+	/**
+	 * <p>Getter for the field <code>phrase</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getPhrase() {
+		return phrase;
+	}
 
-    public SSearchCommandBean setPhrase(final String phrase) {
-        this.phrase = phrase;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>phrase</code>.</p>
+	 *
+	 * @param phrase a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.beans.search.SSearchCommandBean} object.
+	 */
+	public SSearchCommandBean setPhrase(final String phrase) {
+		this.phrase = phrase;
+		return this;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(phrase);
+	}
 
-        SSearchCommandBean that = (SSearchCommandBean) o;
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        return Objects.equal(this.phrase, that.phrase);
-    }
+		SSearchCommandBean that = (SSearchCommandBean) o;
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(phrase);
-    }
+		return Objects.equal(this.phrase, that.phrase);
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(phrase)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(phrase)
+				.toString();
+	}
 
-    @Override
-    public String getBeanId() {
-        return BEAN_ID;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getBeanId() {
+		return BEAN_ID;
+	}
 }

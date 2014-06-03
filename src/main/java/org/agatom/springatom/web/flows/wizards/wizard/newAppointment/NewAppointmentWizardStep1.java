@@ -73,11 +73,15 @@ public class NewAppointmentWizardStep1
 	@Value(value = "#{applicationPropertiesBean['component.calendar.maxTime']}")
 	private              Integer             maxTime            = 0;
 
+	/**
+	 * <p>Constructor for NewAppointmentWizardStep1.</p>
+	 */
 	public NewAppointmentWizardStep1() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void initAction() {
 		final Locale locale = LocaleContextHolder.getLocale();
@@ -86,6 +90,7 @@ public class NewAppointmentWizardStep1
 		super.initAction();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Event setupForm(final RequestContext context) throws Exception {
 
@@ -131,13 +136,15 @@ public class NewAppointmentWizardStep1
 		return convert;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
 		binder.setRequiredFields(REQUIRED_FIELDS);
 		return super.doInitBinder(binder, conversionService);
 	}
 
-	public class CalendarComponentInputs implements Serializable {
+	public class CalendarComponentInputs
+			implements Serializable {
 		private static final long     serialVersionUID = -2820877172701734808L;
 		private              Boolean  calendar         = null;
 		private              DateTime begin            = null;

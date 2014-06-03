@@ -18,23 +18,41 @@
 package org.agatom.springatom.web.rbuilder.data.exception;
 
 /**
+ * <p>ReportGenerationException class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class ReportGenerationException
-        extends ReportException {
-    private static final long serialVersionUID = 7562558272825424453L;
+		extends ReportException {
+	private static final long serialVersionUID = 7562558272825424453L;
 
-    public ReportGenerationException(final String message) {
-        super(message);
-    }
+	/**
+	 * <p>Constructor for ReportGenerationException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
+	public ReportGenerationException(final String message) {
+		super(message);
+	}
 
-    public ReportGenerationException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * <p>Constructor for ReportGenerationException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
+	public ReportGenerationException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 
-    public ReportGenerationException(final Throwable cause) {
-        super(cause);
-    }
+	/**
+	 * <p>Constructor for ReportGenerationException.</p>
+	 *
+	 * @param cause a {@link java.lang.Throwable} object.
+	 */
+	public ReportGenerationException(final Throwable cause) {
+		super(cause);
+	}
 }

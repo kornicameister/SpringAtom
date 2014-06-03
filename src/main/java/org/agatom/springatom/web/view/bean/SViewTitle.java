@@ -27,74 +27,113 @@ import org.agatom.springatom.web.beans.WebBean;
  * @version 0.0.1
  * @since 0.0.1
  */
-
 public class SViewTitle
-        implements WebBean {
-    private final static String BEAN_ID          = "pageTitleBean";
-    private static final long   serialVersionUID = 574303147624174474L;
-    private String paramName;
-    private String paramValue;
-    private String viewKey;
+		implements WebBean {
+	private final static String BEAN_ID          = "pageTitleBean";
+	private static final long   serialVersionUID = 574303147624174474L;
+	private String paramName;
+	private String paramValue;
+	private String viewKey;
 
-    public String getParamName() {
-        return this.paramName;
-    }
+	/**
+	 * <p>Getter for the field <code>paramName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getParamName() {
+		return this.paramName;
+	}
 
-    public SViewTitle setParamName(final String paramName) {
-        this.paramName = paramName;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>paramName</code>.</p>
+	 *
+	 * @param paramName a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.view.bean.SViewTitle} object.
+	 */
+	public SViewTitle setParamName(final String paramName) {
+		this.paramName = paramName;
+		return this;
+	}
 
-    public String getParamValue() {
-        return this.paramValue;
-    }
+	/**
+	 * <p>Getter for the field <code>paramValue</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getParamValue() {
+		return this.paramValue;
+	}
 
-    public SViewTitle setParamValue(final String paramValue) {
-        this.paramValue = paramValue;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>paramValue</code>.</p>
+	 *
+	 * @param paramValue a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.view.bean.SViewTitle} object.
+	 */
+	public SViewTitle setParamValue(final String paramValue) {
+		this.paramValue = paramValue;
+		return this;
+	}
 
-    public String getViewKey() {
-        return this.viewKey;
-    }
+	/**
+	 * <p>Getter for the field <code>viewKey</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getViewKey() {
+		return this.viewKey;
+	}
 
-    public SViewTitle setViewKey(final String viewKey) {
-        this.viewKey = viewKey;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>viewKey</code>.</p>
+	 *
+	 * @param viewKey a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.view.bean.SViewTitle} object.
+	 */
+	public SViewTitle setViewKey(final String viewKey) {
+		this.viewKey = viewKey;
+		return this;
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(paramName)
-                      .addValue(paramValue)
-                      .addValue(viewKey)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(paramName, paramValue, viewKey);
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        SViewTitle that = (SViewTitle) o;
+		SViewTitle that = (SViewTitle) o;
 
-        return Objects.equal(this.paramName, that.paramName) &&
-                Objects.equal(this.paramValue, that.paramValue) &&
-                Objects.equal(this.viewKey, that.viewKey);
-    }
+		return Objects.equal(this.paramName, that.paramName) &&
+				Objects.equal(this.paramValue, that.paramValue) &&
+				Objects.equal(this.viewKey, that.viewKey);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(paramName, paramValue, viewKey);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(paramName)
+				.addValue(paramValue)
+				.addValue(viewKey)
+				.toString();
+	}
 
-    @Override
-    public String getBeanId() {
-        return BEAN_ID;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getBeanId() {
+		return BEAN_ID;
+	}
 }

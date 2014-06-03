@@ -55,226 +55,360 @@ import java.util.*;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportConfiguration
-        implements WebBean,
-                   Iterable<RBuilderEntity>,
-                   MapAdaptable<String, RBuilderEntity> {
-    private static final String                    BEAN_ID          = "reportConfiguration";
-    private static final Logger                    LOGGER           = Logger.getLogger(ReportConfiguration.class);
-    private static final long                      serialVersionUID = 772657130362339934L;
-    @NotNull
-    @Length(min = 5, max = 50)
-    protected            String                    title            = null;
-    @Length(max = 50)
-    protected            String                    subtitle         = null;
-    @Length(max = 200)
-    protected            String                    description      = null;
-    /**
-     * {@link java.util.Map} with values to be used in generating the report instance
-     */
-    protected            Map<String, Serializable> settings         = Maps.newHashMap();
-    @NotNull
-    @Size(min = 1)
-    protected            Set<RBuilderEntity>       entities         = Sets.newTreeSet();
+		implements WebBean,
+		Iterable<RBuilderEntity>,
+		MapAdaptable<String, RBuilderEntity> {
+	private static final String                    BEAN_ID          = "reportConfiguration";
+	private static final Logger                    LOGGER           = Logger.getLogger(ReportConfiguration.class);
+	private static final long                      serialVersionUID = 772657130362339934L;
+	@NotNull
+	@Length(min = 5, max = 50)
+	protected            String                    title            = null;
+	@Length(max = 50)
+	protected            String                    subtitle         = null;
+	@Length(max = 200)
+	protected            String                    description      = null;
+	/**
+	 * {@link java.util.Map} with values to be used in generating the report instance
+	 */
+	protected            Map<String, Serializable> settings         = Maps.newHashMap();
+	@NotNull
+	@Size(min = 1)
+	protected            Set<RBuilderEntity>       entities         = Sets.newTreeSet();
 
-    public ReportConfiguration setTitle(final String title) {
-        this.title = title;
-        return this;
-    }
+	/**
+	 * <p>Getter for the field <code>title</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getTitle() {
+		return title;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	/**
+	 * <p>Setter for the field <code>title</code>.</p>
+	 *
+	 * @param title a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 */
+	public ReportConfiguration setTitle(final String title) {
+		this.title = title;
+		return this;
+	}
 
-    public ReportConfiguration setSubtitle(final String subtitle) {
-        this.subtitle = subtitle;
-        return this;
-    }
+	/**
+	 * <p>Getter for the field <code>subtitle</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getSubtitle() {
+		return subtitle;
+	}
 
-    public String getSubtitle() {
-        return subtitle;
-    }
+	/**
+	 * <p>Setter for the field <code>subtitle</code>.</p>
+	 *
+	 * @param subtitle a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 */
+	public ReportConfiguration setSubtitle(final String subtitle) {
+		this.subtitle = subtitle;
+		return this;
+	}
 
-    public ReportConfiguration setDescription(final String description) {
-        this.description = description;
-        return this;
-    }
+	/**
+	 * <p>Getter for the field <code>description</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getDescription() {
+		return description;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	/**
+	 * <p>Setter for the field <code>description</code>.</p>
+	 *
+	 * @param description a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 */
+	public ReportConfiguration setDescription(final String description) {
+		this.description = description;
+		return this;
+	}
 
-    public ReportConfiguration setSettings(final Map<String, Serializable> settings) {
-        this.settings = settings;
-        return this;
-    }
+	/**
+	 * <p>Getter for the field <code>settings</code>.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
+	public Map<String, Serializable> getSettings() {
+		if (this.settings == null) {
+			this.settings = Maps.newHashMap();
+		}
+		return settings;
+	}
 
-    public Map<String, Serializable> getSettings() {
-        if (this.settings == null) {
-            this.settings = Maps.newHashMap();
-        }
-        return settings;
-    }
+	/**
+	 * <p>Setter for the field <code>settings</code>.</p>
+	 *
+	 * @param settings a {@link java.util.Map} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 */
+	public ReportConfiguration setSettings(final Map<String, Serializable> settings) {
+		this.settings = settings;
+		return this;
+	}
 
-    public ReportConfiguration setEntities(final Set<RBuilderEntity> entities) {
-        for (final RBuilderEntity entity : entities) {
-            this.putEntity(entity);
-        }
-        return this;
-    }
+	/**
+	 * <p>hasEntity.</p>
+	 *
+	 * @param entity a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 *
+	 * @return a boolean.
+	 */
+	public boolean hasEntity(final RBuilderEntity entity) {
+		return this.entities.contains(entity);
+	}
 
-    public boolean hasEntity(final RBuilderEntity entity) {
-        return this.entities.contains(entity);
-    }
+	/**
+	 * <p>hasEntity.</p>
+	 *
+	 * @param javaClass a {@link java.lang.Class} object.
+	 *
+	 * @return a boolean.
+	 */
+	public boolean hasEntity(final Class<?> javaClass) {
+		return FluentIterable
+				.from(this.entities)
+				.firstMatch(new Predicate<RBuilderEntity>() {
+					@Override
+					public boolean apply(@Nullable final RBuilderEntity input) {
+						return input != null && input.getJavaClass().equals(javaClass);
+					}
+				}).isPresent();
+	}
 
-    public boolean hasEntity(final Class<?> javaClass) {
-        return FluentIterable
-                .from(this.entities)
-                .firstMatch(new Predicate<RBuilderEntity>() {
-                    @Override
-                    public boolean apply(@Nullable final RBuilderEntity input) {
-                        return input != null && input.getJavaClass().equals(javaClass);
-                    }
-                }).isPresent();
-    }
+	/**
+	 * <p>hasEntities.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean hasEntities() {
+		return !this.entities.isEmpty();
+	}
 
-    public boolean hasEntities() {
-        return !this.entities.isEmpty();
-    }
+	/**
+	 * <p>clearEntities.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 */
+	public ReportConfiguration clearEntities() {
+		this.clearColumns();
+		this.entities.clear();
+		return this;
+	}
 
-    public ReportConfiguration clearEntities() {
-        this.clearColumns();
-        this.entities.clear();
-        return this;
-    }
+	/**
+	 * <p>clearColumns.</p>
+	 */
+	public void clearColumns() {
+		for (final RBuilderEntity entity : this.entities) {
+			if (this.hasColumn(entity)) {
+				entity.clearColumns();
+			}
+		}
+	}
 
-    public List<RBuilderEntity> getEntities() {
-        return ImmutableList.copyOf(this.entities);
-    }
+	/**
+	 * <p>hasColumn.</p>
+	 *
+	 * @param entity a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 *
+	 * @return a boolean.
+	 */
+	public boolean hasColumn(final RBuilderEntity entity) {
+		return entity.hasColumns();
+	}
 
-    public ReportConfiguration putEntity(final RBuilderEntity entity) {
-        final boolean add = this.entities.add(entity);
-        if (!add) {
-            LOGGER.trace(String.format("%s already exists in context", entity));
-        }
-        return this;
-    }
+	/**
+	 * <p>Getter for the field <code>entities</code>.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
+	public List<RBuilderEntity> getEntities() {
+		return ImmutableList.copyOf(this.entities);
+	}
 
-    /**
-     * Remove single {@code reportableColumn} from {@code entity}
-     *
-     * @param entity
-     *         entity to remove columns from
-     * @param reportableColumn
-     *         columns to be removed
-     *
-     * @return this {@link org.agatom.springatom.web.rbuilder.ReportConfiguration}
-     *
-     * @see org.agatom.springatom.web.rbuilder.bean.RBuilderEntity#removeColumn(org.agatom.springatom.web.rbuilder.bean.RBuilderColumn)
-     */
-    public ReportConfiguration popColumn(final RBuilderEntity entity, final RBuilderColumn reportableColumn) {
-        entity.removeColumn(reportableColumn);
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>entities</code>.</p>
+	 *
+	 * @param entities a {@link java.util.Set} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 */
+	public ReportConfiguration setEntities(final Set<RBuilderEntity> entities) {
+		for (final RBuilderEntity entity : entities) {
+			this.putEntity(entity);
+		}
+		return this;
+	}
 
-    /**
-     * Removes all columns from {@code reportableColumns} for {@code entity}
-     *
-     * @param entity
-     *         entity to remove columns from
-     * @param reportableColumns
-     *         columns to be removed
-     *
-     * @return this {@link org.agatom.springatom.web.rbuilder.ReportConfiguration}
-     *
-     * @see org.agatom.springatom.web.rbuilder.ReportConfiguration#popColumn(org.agatom.springatom.web.rbuilder.bean.RBuilderEntity,
-     * org.agatom.springatom.web.rbuilder.bean.RBuilderColumn)
-     */
-    public ReportConfiguration popColumns(final RBuilderEntity entity, final Collection<RBuilderColumn> reportableColumns) {
-        if (CollectionUtils.isEmpty(reportableColumns)) {
-            return this;
-        }
-        for (final RBuilderColumn column : reportableColumns) {
-            this.popColumn(entity, column);
-        }
-        return this;
-    }
+	/**
+	 * <p>putEntity.</p>
+	 *
+	 * @param entity a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 */
+	public ReportConfiguration putEntity(final RBuilderEntity entity) {
+		final boolean add = this.entities.add(entity);
+		if (!add) {
+			LOGGER.trace(String.format("%s already exists in context", entity));
+		}
+		return this;
+	}
 
-    public ReportConfiguration putColumn(final RBuilderEntity entity, final RBuilderColumn reportableColumn) {
-        this.putEntity(entity);
-        entity.addColumn(reportableColumn);
-        return this;
-    }
+	/**
+	 * Removes all columns from {@code reportableColumns} for {@code entity}
+	 *
+	 * @param entity            entity to remove columns from
+	 * @param reportableColumns columns to be removed
+	 *
+	 * @return this {@link org.agatom.springatom.web.rbuilder.ReportConfiguration}
+	 *
+	 * @see org.agatom.springatom.web.rbuilder.ReportConfiguration#popColumn(org.agatom.springatom.web.rbuilder.bean.RBuilderEntity,
+	 * org.agatom.springatom.web.rbuilder.bean.RBuilderColumn)
+	 */
+	public ReportConfiguration popColumns(final RBuilderEntity entity, final Collection<RBuilderColumn> reportableColumns) {
+		if (CollectionUtils.isEmpty(reportableColumns)) {
+			return this;
+		}
+		for (final RBuilderColumn column : reportableColumns) {
+			this.popColumn(entity, column);
+		}
+		return this;
+	}
 
-    public ReportConfiguration putColumns(final RBuilderEntity entity, final Collection<RBuilderColumn> reportableColumn) {
-        if (CollectionUtils.isEmpty(reportableColumn)) {
-            return this;
-        }
-        this.putEntity(entity);
-        for (final RBuilderColumn column : reportableColumn) {
-            this.putColumn(entity, column);
-        }
-        return this;
-    }
+	/**
+	 * Remove single {@code reportableColumn} from {@code entity}
+	 *
+	 * @param entity           entity to remove columns from
+	 * @param reportableColumn columns to be removed
+	 *
+	 * @return this {@link org.agatom.springatom.web.rbuilder.ReportConfiguration}
+	 *
+	 * @see org.agatom.springatom.web.rbuilder.bean.RBuilderEntity#removeColumn(org.agatom.springatom.web.rbuilder.bean.RBuilderColumn)
+	 */
+	public ReportConfiguration popColumn(final RBuilderEntity entity, final RBuilderColumn reportableColumn) {
+		entity.removeColumn(reportableColumn);
+		return this;
+	}
 
-    public RBuilderEntity hasColumn(final RBuilderColumn reportableColumn) {
-        final Optional<RBuilderEntity> present = FluentIterable
-                .from(this.entities)
-                .firstMatch(new Predicate<RBuilderEntity>() {
-                    @Override
-                    public boolean apply(@Nullable final RBuilderEntity input) {
-                        return input != null && input.hasColumn(reportableColumn);
-                    }
-                });
-        return present.get();
-    }
+	/**
+	 * <p>putColumns.</p>
+	 *
+	 * @param entity           a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 * @param reportableColumn a {@link java.util.Collection} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 */
+	public ReportConfiguration putColumns(final RBuilderEntity entity, final Collection<RBuilderColumn> reportableColumn) {
+		if (CollectionUtils.isEmpty(reportableColumn)) {
+			return this;
+		}
+		this.putEntity(entity);
+		for (final RBuilderColumn column : reportableColumn) {
+			this.putColumn(entity, column);
+		}
+		return this;
+	}
 
-    public boolean hasColumn(final RBuilderEntity entity) {
-        return entity.hasColumns();
-    }
+	/**
+	 * <p>putColumn.</p>
+	 *
+	 * @param entity           a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 * @param reportableColumn a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderColumn} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 */
+	public ReportConfiguration putColumn(final RBuilderEntity entity, final RBuilderColumn reportableColumn) {
+		this.putEntity(entity);
+		entity.addColumn(reportableColumn);
+		return this;
+	}
 
-    public void clearColumns() {
-        for (final RBuilderEntity entity : this.entities) {
-            if (this.hasColumn(entity)) {
-                entity.clearColumns();
-            }
-        }
-    }
+	/**
+	 * <p>hasColumn.</p>
+	 *
+	 * @param reportableColumn a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderColumn} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 */
+	public RBuilderEntity hasColumn(final RBuilderColumn reportableColumn) {
+		final Optional<RBuilderEntity> present = FluentIterable
+				.from(this.entities)
+				.firstMatch(new Predicate<RBuilderEntity>() {
+					@Override
+					public boolean apply(@Nullable final RBuilderEntity input) {
+						return input != null && input.hasColumn(reportableColumn);
+					}
+				});
+		return present.get();
+	}
 
-    @Override
-    public String getBeanId() {
-        return BEAN_ID;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getBeanId() {
+		return BEAN_ID;
+	}
 
-    public int getSize() {
-        return this.entities.size();
-    }
+	/**
+	 * <p>getSize.</p>
+	 *
+	 * @return a int.
+	 */
+	public int getSize() {
+		return this.entities.size();
+	}
 
-    public int getTotalSize() {
-        int size = 0;
-        for (final RBuilderEntity entity : this.entities) {
-            size += entity.getColumns().size();
-        }
-        return size;
-    }
+	/**
+	 * <p>getTotalSize.</p>
+	 *
+	 * @return a int.
+	 */
+	public int getTotalSize() {
+		int size = 0;
+		for (final RBuilderEntity entity : this.entities) {
+			size += entity.getColumns().size();
+		}
+		return size;
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(entities)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(entities)
+				.toString();
+	}
 
-    @Override
-    public Iterator<RBuilderEntity> iterator() {
-        return this.entities.iterator();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Iterator<RBuilderEntity> iterator() {
+		return this.entities.iterator();
+	}
 
-    @Override
-    public Map<String, RBuilderEntity> asMap() {
-        final Map<String, RBuilderEntity> entityMap = Maps.newLinkedHashMap();
-        for (final RBuilderEntity entity : this.entities) {
-            entityMap.put(entity.getName(), entity);
-        }
-        return Collections.unmodifiableMap(entityMap);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Map<String, RBuilderEntity> asMap() {
+		final Map<String, RBuilderEntity> entityMap = Maps.newLinkedHashMap();
+		for (final RBuilderEntity entity : this.entities) {
+			entityMap.put(entity.getName(), entity);
+		}
+		return Collections.unmodifiableMap(entityMap);
+	}
 }

@@ -29,6 +29,8 @@ import javax.validation.constraints.Size;
 import java.util.Set;
 
 /**
+ * <p>ReportableBeanResolver interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -36,17 +38,44 @@ import java.util.Set;
 @Validated
 public interface ReportableBeanResolver {
 
-    static String CACHE_NAME = "org.agatom.springatom.cache.ReportableBeanResolver";
+	/** Constant <code>CACHE_NAME="org.agatom.springatom.cache.ReportableB"{trunked}</code> */
+	static String CACHE_NAME = "org.agatom.springatom.cache.ReportableBeanResolver";
 
-    @Size(min = 1)
-    Set<RBuilderEntity> getReportableEntities();
+	/**
+	 * <p>getReportableEntities.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	@Size(min = 1)
+	Set<RBuilderEntity> getReportableEntities();
 
-    @NotNull
-    Set<RBuilderAssociation> getEntityAssociations(@NotNull final Set<RBuilderEntity> entities);
+	/**
+	 * <p>getEntityAssociations.</p>
+	 *
+	 * @param entities a {@link java.util.Set} object.
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	@NotNull
+	Set<RBuilderAssociation> getEntityAssociations(@NotNull final Set<RBuilderEntity> entities);
 
-    @NotNull
-    Set<RBuilderColumn> getReportableColumns(@NotNull final RBuilderEntity entity);
+	/**
+	 * <p>getReportableColumns.</p>
+	 *
+	 * @param entity a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	@NotNull
+	Set<RBuilderColumn> getReportableColumns(@NotNull final RBuilderEntity entity);
 
-    @Cacheable(value = CACHE_NAME)
-    RBuilderBean getReportableBean(@NotNull final Integer identifier);
+	/**
+	 * <p>getReportableBean.</p>
+	 *
+	 * @param identifier a {@link java.lang.Integer} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderBean} object.
+	 */
+	@Cacheable(value = CACHE_NAME)
+	RBuilderBean getReportableBean(@NotNull final Integer identifier);
 }

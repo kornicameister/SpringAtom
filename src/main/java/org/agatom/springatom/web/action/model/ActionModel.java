@@ -28,54 +28,111 @@ import java.util.Set;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class ActionModel implements Action {
+public class ActionModel
+		implements Action {
 	private static final long        serialVersionUID = -4880614509556359333L;
 	private              String      name             = null;
 	private              String      description      = null;
 	private              Set<Action> content          = null;
 	private              String      label            = null;
 
+	/**
+	 * <p>Getter for the field <code>label</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getLabel() {
+		return label;
+	}
+
+	/**
+	 * <p>Setter for the field <code>label</code>.</p>
+	 *
+	 * @param label a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.ActionModel} object.
+	 */
 	public ActionModel setLabel(final String label) {
 		this.label = label;
 		return this;
 	}
 
-	public String getLabel() {
-		return label;
+	/**
+	 * <p>Getter for the field <code>name</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getName() {
+		return name;
 	}
 
+	/**
+	 * <p>Setter for the field <code>name</code>.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.ActionModel} object.
+	 */
 	public ActionModel setName(final String name) {
 		this.name = name;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>description</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * <p>Setter for the field <code>description</code>.</p>
+	 *
+	 * @param description a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.ActionModel} object.
+	 */
 	public ActionModel setDescription(final String description) {
 		this.description = description;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>content</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	public Set<Action> getContent() {
+		return content;
+	}
+
+	/**
+	 * <p>Setter for the field <code>content</code>.</p>
+	 *
+	 * @param content a {@link java.util.Set} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.ActionModel} object.
+	 */
 	public ActionModel setContent(final Set<Action> content) {
 		this.content = content;
 		return this;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public Set<Action> getContent() {
-		return content;
-	}
-
+	/** {@inheritDoc} */
 	@Override
 	public String getId() {
 		return this.name;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(name, description, content);
+	}
+
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -88,11 +145,7 @@ public class ActionModel implements Action {
 				Objects.equal(this.content, that.content);
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(name, description, content);
-	}
-
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)

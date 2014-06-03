@@ -31,34 +31,39 @@ import org.springframework.stereotype.Service;
 import java.util.Locale;
 
 /**
+ * <p>ReportableEntityResolverImpl class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 @Service(value = ReportableEntityResolverImpl.SERVICE_NAME)
 public class ReportableEntityResolverImpl
-        implements ReportableEntityResolver {
+		implements ReportableEntityResolver {
 
-    protected static final String            SERVICE_NAME      = "reportableEntityResolver";
-    @Autowired
-    private                SMessageSource    messageSource     = null;
-    @Autowired
-    private                EntityDescriptors entityDescriptors = null;
+	/** Constant <code>SERVICE_NAME="reportableEntityResolver"</code> */
+	protected static final String            SERVICE_NAME      = "reportableEntityResolver";
+	@Autowired
+	private                SMessageSource    messageSource     = null;
+	@Autowired
+	private                EntityDescriptors entityDescriptors = null;
 
-    @Override
-    public RBuilderEntity getReportableEntity(final Class<?> clazz) {
-        if (!this.isReportableEntity(clazz)) {
-            return null;
-        }
-        final SlimEntityDescriptor<?> descriptor = this.entityDescriptors.getSlimDescriptor(clazz);
-        final Locale locale = LocaleContextHolder.getLocale();
-        final RBuilderEntity entity = new RBuilderEntity().setJavaClass(descriptor.getJavaClass()).setName(descriptor.getName());
-        final Cloner cloner = new Cloner();
-        return cloner.shallowClone(this.messageSource.localize(entity, locale));
-    }
+	/** {@inheritDoc} */
+	@Override
+	public RBuilderEntity getReportableEntity(final Class<?> clazz) {
+		if (!this.isReportableEntity(clazz)) {
+			return null;
+		}
+		final SlimEntityDescriptor<?> descriptor = this.entityDescriptors.getSlimDescriptor(clazz);
+		final Locale locale = LocaleContextHolder.getLocale();
+		final RBuilderEntity entity = new RBuilderEntity().setJavaClass(descriptor.getJavaClass()).setName(descriptor.getName());
+		final Cloner cloner = new Cloner();
+		return cloner.shallowClone(this.messageSource.localize(entity, locale));
+	}
 
-    @Override
-    public Boolean isReportableEntity(final Class<?> clazz) {
-        return clazz.isAnnotationPresent(ReportableEntity.class);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Boolean isReportableEntity(final Class<?> clazz) {
+		return clazz.isAnnotationPresent(ReportableEntity.class);
+	}
 }

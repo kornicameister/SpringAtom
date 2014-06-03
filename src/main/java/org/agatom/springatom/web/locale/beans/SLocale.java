@@ -28,100 +28,164 @@ import java.util.Locale;
  *
  * @author kornicameister
  * @version 0.0.1
- * @{code }
  * @since 0.0.1
  */
-
 public class SLocale
-        implements WebBean {
-    private static final long   serialVersionUID = -1965000113537795587L;
-    private static final String BEAN_ID          = "sLocale";
-    private String  tag;
-    private String  language;
-    private String  country;
-    private boolean isSet;
+		implements WebBean {
+	private static final long   serialVersionUID = -1965000113537795587L;
+	private static final String BEAN_ID          = "sLocale";
+	private String  tag;
+	private String  language;
+	private String  country;
+	private boolean isSet;
 
-    public static SLocale fromLocale(final Locale locale) {
-        return new SLocale()
-                .setTag(locale.toLanguageTag())
-                .setCountry(locale.getCountry())
-                .setLanguage(locale.getLanguage());
-    }
+	/**
+	 * <p>fromLocale.</p>
+	 *
+	 * @param locale a {@link java.util.Locale} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.SLocale} object.
+	 */
+	public static SLocale fromLocale(final Locale locale) {
+		return new SLocale()
+				.setTag(locale.toLanguageTag())
+				.setCountry(locale.getCountry())
+				.setLanguage(locale.getLanguage());
+	}
 
-    public static Locale toLocale(final SLocale sLocale) {
-        return Locale.forLanguageTag(sLocale.tag);
-    }
+	/**
+	 * <p>toLocale.</p>
+	 *
+	 * @param sLocale a {@link org.agatom.springatom.web.locale.beans.SLocale} object.
+	 *
+	 * @return a {@link java.util.Locale} object.
+	 */
+	public static Locale toLocale(final SLocale sLocale) {
+		return Locale.forLanguageTag(sLocale.tag);
+	}
 
-    public SLocale setIsSet(final boolean isSet) {
-        this.isSet = isSet;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>isSet</code>.</p>
+	 *
+	 * @param isSet a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.SLocale} object.
+	 */
+	public SLocale setIsSet(final boolean isSet) {
+		this.isSet = isSet;
+		return this;
+	}
 
-    public boolean isSet() {
-        return isSet;
-    }
+	/**
+	 * <p>isSet.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isSet() {
+		return isSet;
+	}
 
-    public String getTag() {
-        return tag;
-    }
+	/**
+	 * <p>Getter for the field <code>tag</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getTag() {
+		return tag;
+	}
 
-    public SLocale setTag(final String tag) {
-        this.tag = tag.replace("-", "_");
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>tag</code>.</p>
+	 *
+	 * @param tag a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.SLocale} object.
+	 */
+	public SLocale setTag(final String tag) {
+		this.tag = tag.replace("-", "_");
+		return this;
+	}
 
-    public String getLanguage() {
-        return language;
-    }
+	/**
+	 * <p>Getter for the field <code>language</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getLanguage() {
+		return language;
+	}
 
-    public SLocale setLanguage(final String language) {
-        this.language = language;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>language</code>.</p>
+	 *
+	 * @param language a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.SLocale} object.
+	 */
+	public SLocale setLanguage(final String language) {
+		this.language = language;
+		return this;
+	}
 
-    public String getCountry() {
-        return country;
-    }
+	/**
+	 * <p>Getter for the field <code>country</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getCountry() {
+		return country;
+	}
 
-    public SLocale setCountry(final String country) {
-        this.country = country;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>country</code>.</p>
+	 *
+	 * @param country a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.SLocale} object.
+	 */
+	public SLocale setCountry(final String country) {
+		this.country = country;
+		return this;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(tag, language, country, isSet);
+	}
 
-        SLocale that = (SLocale) o;
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        return Objects.equal(this.tag, that.tag) &&
-                Objects.equal(this.language, that.language) &&
-                Objects.equal(this.country, that.country) &&
-                Objects.equal(this.isSet, that.isSet);
-    }
+		SLocale that = (SLocale) o;
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(tag, language, country, isSet);
-    }
+		return Objects.equal(this.tag, that.tag) &&
+				Objects.equal(this.language, that.language) &&
+				Objects.equal(this.country, that.country) &&
+				Objects.equal(this.isSet, that.isSet);
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(tag)
-                      .addValue(language)
-                      .addValue(country)
-                      .addValue(isSet)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(tag)
+				.addValue(language)
+				.addValue(country)
+				.addValue(isSet)
+				.toString();
+	}
 
-    @Override
-    public String getBeanId() {
-        return BEAN_ID;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getBeanId() {
+		return BEAN_ID;
+	}
 }

@@ -24,6 +24,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
 
 /**
+ * <p>ReportableEntityResolver interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -31,11 +33,26 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public interface ReportableEntityResolver {
 
-    static String CACHE_NAME = "org.agatom.springatom.cache.ReportableBeanResolver";
+	/** Constant <code>CACHE_NAME="org.agatom.springatom.cache.ReportableB"{trunked}</code> */
+	static String CACHE_NAME = "org.agatom.springatom.cache.ReportableBeanResolver";
 
-    @Cacheable(value = CACHE_NAME, key = "#clazz.name + '_entity'")
-    RBuilderEntity getReportableEntity(@HasAnnotation(annotation = ReportableEntity.class) final Class<?> clazz);
+	/**
+	 * <p>getReportableEntity.</p>
+	 *
+	 * @param clazz a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 */
+	@Cacheable(value = CACHE_NAME, key = "#clazz.name + '_entity'")
+	RBuilderEntity getReportableEntity(@HasAnnotation(annotation = ReportableEntity.class) final Class<?> clazz);
 
-    @Cacheable(value = CACHE_NAME, key = "#clazz.name + '_isReportableEntity'")
-    Boolean isReportableEntity(Class<?> clazz);
+	/**
+	 * <p>isReportableEntity.</p>
+	 *
+	 * @param clazz a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link java.lang.Boolean} object.
+	 */
+	@Cacheable(value = CACHE_NAME, key = "#clazz.name + '_isReportableEntity'")
+	Boolean isReportableEntity(Class<?> clazz);
 }

@@ -25,7 +25,7 @@ import org.agatom.springatom.web.action.model.actions.PopupAction;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.elements.table.DandelionTableComponent;
+import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
 import org.agatom.springatom.web.component.table.exception.DynamicColumnResolutionException;
 import org.agatom.springatom.webmvc.controllers.rbuilder.ReportBuilderController;
@@ -37,6 +37,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 /**
+ * <p>ReportTableBuilder class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -45,9 +47,11 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @ComponentBuilder(ReportTableBuilder.BUILDER_ID)
 public class ReportTableBuilder
 		extends TableComponentBuilder<DandelionTableComponent, SReport> {
+	/** Constant <code>BUILDER_ID="reportTableBuilder"</code> */
 	protected static final String BUILDER_ID = "reportTableBuilder";
 	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SReport.ENTITY_NAME));
 
+	/** {@inheritDoc} */
 	@Override
 	protected DandelionTableComponent buildDefinition(final ComponentDataRequest dataRequest) {
 		final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
@@ -66,6 +70,7 @@ public class ReportTableBuilder
 		return component;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected Object handleDynamicColumn(final SReport object, final String path) throws DynamicColumnResolutionException {
 		Object retValue = super.handleDynamicColumn(object, path);
@@ -100,6 +105,7 @@ public class ReportTableBuilder
 		return retValue;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected Predicate getPredicate(final Long reportId, final Class<?> contextClass) {
 		if (!ClassUtils.isAssignable(SReport.class, contextClass)) {

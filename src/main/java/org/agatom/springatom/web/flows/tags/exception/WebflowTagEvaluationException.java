@@ -33,19 +33,35 @@ import javax.servlet.jsp.JspTagException;
  * @since 0.0.1
  */
 public class WebflowTagEvaluationException
-        extends JspTagException {
+		extends JspTagException {
 
-    private static final long serialVersionUID = -3977227748867296477L;
+	private static final long serialVersionUID = -3977227748867296477L;
 
-    public WebflowTagEvaluationException(final String message) {
-        super(message);
-    }
+	/**
+	 * <p>Constructor for WebflowTagEvaluationException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
+	public WebflowTagEvaluationException(final String message) {
+		super(message);
+	}
 
-    public WebflowTagEvaluationException(final Throwable cause) {
-        this("Webflow tag threw exception...", cause);
-    }
+	/**
+	 * <p>Constructor for WebflowTagEvaluationException.</p>
+	 *
+	 * @param cause a {@link java.lang.Throwable} object.
+	 */
+	public WebflowTagEvaluationException(final Throwable cause) {
+		this("Webflow tag threw exception...", cause);
+	}
 
-    public WebflowTagEvaluationException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * <p>Constructor for WebflowTagEvaluationException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
+	public WebflowTagEvaluationException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 }

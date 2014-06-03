@@ -18,19 +18,32 @@
 package org.agatom.springatom.web.view.exception;
 
 /**
+ * <p>SViewTitleResolverException class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class SViewTitleResolverException
-        extends Exception {
-    private static final long serialVersionUID = -3476065773118826585L;
+		extends Exception {
+	private static final long serialVersionUID = -3476065773118826585L;
 
-    public SViewTitleResolverException(final String message) {
-        super("Key must contain character *");
-    }
+	/**
+	 * <p>Constructor for SViewTitleResolverException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
+	public SViewTitleResolverException(final String message) {
+		super("Key must contain character *");
+	}
 
-    public SViewTitleResolverException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * <p>Constructor for SViewTitleResolverException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
+	public SViewTitleResolverException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 }

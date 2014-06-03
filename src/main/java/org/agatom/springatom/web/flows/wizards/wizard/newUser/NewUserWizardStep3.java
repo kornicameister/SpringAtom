@@ -61,11 +61,15 @@ public class NewUserWizardStep3
 	@Autowired
 	private              SUserService   userService              = null;
 
+	/**
+	 * <p>Constructor for NewUserWizardStep3.</p>
+	 */
 	public NewUserWizardStep3() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Event setupForm(final RequestContext context) throws Exception {
 		LOGGER.trace(String.format("setupForm(context=%s)", context));
@@ -82,6 +86,7 @@ public class NewUserWizardStep3
 		return super.setupForm(context);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Event bindAndValidate(final RequestContext context) throws Exception {
 		final Event event = super.bindAndValidate(context);
@@ -132,6 +137,7 @@ public class NewUserWizardStep3
 		return success();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Event resetForm(final RequestContext context) throws Exception {
 		final SPerson person = this.getCommandBean(context);
@@ -141,6 +147,7 @@ public class NewUserWizardStep3
 		return super.resetForm(context);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected Object getFormObject(final RequestContext context) throws Exception {
 		final MutableAttributeMap<Object> scope = this.getFormObjectScope().getScope(context);

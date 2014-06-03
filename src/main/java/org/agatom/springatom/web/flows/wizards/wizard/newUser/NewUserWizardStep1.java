@@ -45,15 +45,28 @@ public class NewUserWizardStep1
 	private static final Logger LOGGER           = Logger.getLogger(NewUserWizardStep1.class);
 	private static final String FORM_OBJECT_NAME = "user";
 
+	/**
+	 * <p>Constructor for NewUserWizardStep1.</p>
+	 */
 	public NewUserWizardStep1() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
 	}
 
+	/**
+	 * <p>getNewUser.</p>
+	 *
+	 * @param context a {@link org.springframework.webflow.execution.RequestContext} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.user.SUser} object.
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	public SUser getNewUser(final RequestContext context) throws Exception {
 		return this.getCommandBean(context);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
 		final QSUser user = QSUser.sUser;
@@ -67,6 +80,7 @@ public class NewUserWizardStep1
 		return super.doInitBinder(binder, conversionService);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Event setupForm(final RequestContext context) throws Exception {
 		final Event event = super.setupForm(context);

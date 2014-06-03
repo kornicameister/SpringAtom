@@ -89,11 +89,15 @@ public class NewCarWizardStep2
 	@Autowired
 	private              SMessageSource     messageSource    = null;
 
+	/**
+	 * <p>Constructor for NewCarWizardStep2.</p>
+	 */
 	public NewCarWizardStep2() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
 		binder.setRequiredFields(REQUIRED_FIELDS);
@@ -102,6 +106,7 @@ public class NewCarWizardStep2
 		return super.doInitBinder(binder, conversionService);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Event setupForm(final RequestContext context) throws Exception {
 		final Event event = super.setupForm(context);
@@ -188,6 +193,7 @@ public class NewCarWizardStep2
 				}).toList();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Event bindAndValidate(final RequestContext context) throws Exception {
 		final Event event = super.bindAndValidate(context);

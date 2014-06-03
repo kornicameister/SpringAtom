@@ -30,22 +30,40 @@ import org.springframework.core.io.Resource;
  * @since 0.0.1
  */
 public class ReportResources {
-    private Resource jasperResource;
-    private Resource configurationResource;
+	private Resource jasperResource;
+	private Resource configurationResource;
 
-    public static ReportResources newReportResources(final Resource jasperResource, final Resource configurationResource) {
-        final ReportResources reportResources = new ReportResources();
-        reportResources.configurationResource = configurationResource;
-        reportResources.jasperResource = jasperResource;
-        return reportResources;
-    }
+	/**
+	 * <p>newReportResources.</p>
+	 *
+	 * @param jasperResource        a {@link org.springframework.core.io.Resource} object.
+	 * @param configurationResource a {@link org.springframework.core.io.Resource} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.data.resource.ReportResources} object.
+	 */
+	public static ReportResources newReportResources(final Resource jasperResource, final Resource configurationResource) {
+		final ReportResources reportResources = new ReportResources();
+		reportResources.configurationResource = configurationResource;
+		reportResources.jasperResource = jasperResource;
+		return reportResources;
+	}
 
-    public Resource getJasperResource() {
-        return jasperResource;
-    }
+	/**
+	 * <p>Getter for the field <code>jasperResource</code>.</p>
+	 *
+	 * @return a {@link org.springframework.core.io.Resource} object.
+	 */
+	public Resource getJasperResource() {
+		return jasperResource;
+	}
 
-    public Resource getConfigurationResource() {
-        return configurationResource;
-    }
+	/**
+	 * <p>Getter for the field <code>configurationResource</code>.</p>
+	 *
+	 * @return a {@link org.springframework.core.io.Resource} object.
+	 */
+	public Resource getConfigurationResource() {
+		return configurationResource;
+	}
 
 }

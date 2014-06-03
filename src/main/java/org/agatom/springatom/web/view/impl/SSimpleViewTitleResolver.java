@@ -23,49 +23,81 @@ import org.agatom.springatom.web.view.exception.SViewTitleResolverException;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
+ * <p>SSimpleViewTitleResolver class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class SSimpleViewTitleResolver
-        implements SViewTitleResolver {
-    public static final String DEFAULT_PAGE_TITLE_KEY = "page.*.title";
-    protected String paramName;
-    protected String key;
+		implements SViewTitleResolver {
+	/** Constant <code>DEFAULT_PAGE_TITLE_KEY="page.*.title"</code> */
+	public static final String DEFAULT_PAGE_TITLE_KEY = "page.*.title";
+	protected String paramName;
+	protected String key;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (this.key == null) {
-            this.key = DEFAULT_PAGE_TITLE_KEY;
-        }
-        this.validateKey(this.key);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		if (this.key == null) {
+			this.key = DEFAULT_PAGE_TITLE_KEY;
+		}
+		this.validateKey(this.key);
+	}
 
-    protected void validateKey(final String key) throws SViewTitleResolverException {
-        if (!key.contains("*")) {
-            throw new SViewTitleResolverException("Key must contain character *");
-        }
-    }
+	/**
+	 * <p>validateKey.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 *
+	 * @throws org.agatom.springatom.web.view.exception.SViewTitleResolverException if any.
+	 */
+	protected void validateKey(final String key) throws SViewTitleResolverException {
+		if (!key.contains("*")) {
+			throw new SViewTitleResolverException("Key must contain character *");
+		}
+	}
 
-    @Override
-    public SViewTitle getViewTitle(final String viewName) {
-        return null;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public SViewTitle getViewTitle(final String viewName) {
+		return null;
+	}
 
-    public String getParamName() {
-        return paramName;
-    }
+	/**
+	 * <p>Getter for the field <code>paramName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getParamName() {
+		return paramName;
+	}
 
-    @Required
-    public void setParamName(final String paramName) {
-        this.paramName = paramName;
-    }
+	/**
+	 * <p>Setter for the field <code>paramName</code>.</p>
+	 *
+	 * @param paramName a {@link java.lang.String} object.
+	 */
+	@Required
+	public void setParamName(final String paramName) {
+		this.paramName = paramName;
+	}
 
-    public String getKey() {
-        return key;
-    }
+	/**
+	 * <p>Getter for the field <code>key</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getKey() {
+		return key;
+	}
 
-    public void setKey(final String key) {
-        this.key = key;
-    }
+	/**
+	 * <p>Setter for the field <code>key</code>.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 */
+	public void setKey(final String key) {
+		this.key = key;
+	}
 }

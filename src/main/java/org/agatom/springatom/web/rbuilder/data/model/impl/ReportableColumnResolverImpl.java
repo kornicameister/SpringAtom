@@ -42,6 +42,8 @@ import java.util.Locale;
 import java.util.Set;
 
 /**
+ * <p>ReportableColumnResolverImpl class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -49,64 +51,66 @@ import java.util.Set;
 
 @Service(value = ReportableColumnResolverImpl.SERVICE_NAME)
 public class ReportableColumnResolverImpl
-        implements ReportableColumnResolver {
-    private static final Logger             LOGGER             = Logger.getLogger(ReportableColumnResolverImpl.class);
-    public static final  String             SERVICE_NAME       = "reportableColumnResolver";
-    @Autowired
-    private              EntityDescriptors  entityDescriptors  = null;
-    private              Collection<String> excludedColumns    = null;
-    @Value("#{rbuilderProperties['reports.objects.columns.exclude.names']}")
-    private              String             rawExcludedColumns = null;
-    @Value("#{webProperties['sa.delimiter']}")
-    private              String             valueDelimiter     = null;
-    @Autowired
-    private              SMessageSource     messageSource      = null;
+		implements ReportableColumnResolver {
+	/** Constant <code>SERVICE_NAME="reportableColumnResolver"</code> */
+	public static final  String             SERVICE_NAME       = "reportableColumnResolver";
+	private static final Logger             LOGGER             = Logger.getLogger(ReportableColumnResolverImpl.class);
+	@Autowired
+	private              EntityDescriptors  entityDescriptors  = null;
+	private              Collection<String> excludedColumns    = null;
+	@Value("#{rbuilderProperties['reports.objects.columns.exclude.names']}")
+	private              String             rawExcludedColumns = null;
+	@Value("#{webProperties['sa.delimiter']}")
+	private              String             valueDelimiter     = null;
+	@Autowired
+	private              SMessageSource     messageSource      = null;
 
 
-    @PostConstruct
-    private void initializeExcludedColumns() {
-        final String property = this.rawExcludedColumns;
-        final Collection<String> excludedColumns = Sets.newHashSet();
-        if (StringUtils.hasText(property)) {
-            final String[] columns = StringUtils.tokenizeToStringArray(property, this.valueDelimiter);
-            CollectionUtils.mergeArrayIntoCollection(columns, excludedColumns);
-        }
-        this.excludedColumns = excludedColumns;
-        LOGGER.debug(String.format("Excluded columns set to %s", excludedColumns));
-    }
+	@PostConstruct
+	private void initializeExcludedColumns() {
+		final String property = this.rawExcludedColumns;
+		final Collection<String> excludedColumns = Sets.newHashSet();
+		if (StringUtils.hasText(property)) {
+			final String[] columns = StringUtils.tokenizeToStringArray(property, this.valueDelimiter);
+			CollectionUtils.mergeArrayIntoCollection(columns, excludedColumns);
+		}
+		this.excludedColumns = excludedColumns;
+		LOGGER.debug(String.format("Excluded columns set to %s", excludedColumns));
+	}
 
 
-    @Override
-    public Set<RBuilderColumn> getReportableColumns(@NotNull final RBuilderEntity entity) {
+	/** {@inheritDoc} */
+	@Override
+	public Set<RBuilderColumn> getReportableColumns(@NotNull final RBuilderEntity entity) {
 
-        final Locale locale = LocaleContextHolder.getLocale();
-        final Set<RBuilderColumn> columns = Sets.newLinkedHashSet();
-        final Cloner cloner = new Cloner();
+		final Locale locale = LocaleContextHolder.getLocale();
+		final Set<RBuilderColumn> columns = Sets.newLinkedHashSet();
+		final Cloner cloner = new Cloner();
 
-        for (EntityDescriptorColumn<?> column : this.entityDescriptors.getColumns(entity.getJavaClass())) {
-            if (this.excludedColumns.contains(column.getName())) {
-                LOGGER.trace(String.format("Excluded column %s from entity %s due it is mentioned in %s",
-                        column.getName(),
-                        entity.getName(), "reports.objects.columns.exclude.names")
-                );
-                continue;
-            }
-            final RBuilderColumn reportableColumn = new RBuilderColumn()
-                    .setPrefix(entity.getMessageKey())
-                    .setColumnName(column.getName())
-                    .setColumnClass(column.getColumnClass());
-            if (ClassUtils.isAssignable(EntityDescriptorCollectionColumn.class, column.getClass())) {
-                reportableColumn.setElementClass(((EntityDescriptorCollectionColumn) column).getElementClass());
-            }
-            columns.add(cloner.shallowClone(this.messageSource.localize(reportableColumn, locale)));
-        }
+		for (EntityDescriptorColumn<?> column : this.entityDescriptors.getColumns(entity.getJavaClass())) {
+			if (this.excludedColumns.contains(column.getName())) {
+				LOGGER.trace(String.format("Excluded column %s from entity %s due it is mentioned in %s",
+								column.getName(),
+								entity.getName(), "reports.objects.columns.exclude.names")
+				);
+				continue;
+			}
+			final RBuilderColumn reportableColumn = new RBuilderColumn()
+					.setPrefix(entity.getMessageKey())
+					.setColumnName(column.getName())
+					.setColumnClass(column.getColumnClass());
+			if (ClassUtils.isAssignable(EntityDescriptorCollectionColumn.class, column.getClass())) {
+				reportableColumn.setElementClass(((EntityDescriptorCollectionColumn) column).getElementClass());
+			}
+			columns.add(cloner.shallowClone(this.messageSource.localize(reportableColumn, locale)));
+		}
 
-        LOGGER.trace(String
-                .format("Available %s for entity %s at count %d", ClassUtils.getShortName(RBuilderColumn.class),
-                        entity.getName(), columns
-                        .size())
-        );
-        return columns;
-    }
+		LOGGER.trace(String
+						.format("Available %s for entity %s at count %d", ClassUtils.getShortName(RBuilderColumn.class),
+								entity.getName(), columns
+										.size())
+		);
+		return columns;
+	}
 
 }

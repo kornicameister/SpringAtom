@@ -63,41 +63,46 @@ import java.util.*;
 
 @WizardAction(value = "pickColumnsFormAction")
 public class PickColumnsFormAction
-        extends WizardFormAction<ReportConfiguration> {
-    private static final Logger LOGGER           = Logger.getLogger(PickColumnsFormAction.class);
-    private static final String ENTITY_TO_COLUMN = "entityToColumn";
-    private static final String RENDER_PROP      = "colToRenderProp";
+		extends WizardFormAction<ReportConfiguration> {
+	private static final Logger LOGGER           = Logger.getLogger(PickColumnsFormAction.class);
+	private static final String ENTITY_TO_COLUMN = "entityToColumn";
+	private static final String RENDER_PROP      = "colToRenderProp";
 
-    @Autowired(required = false)
-    private SMessageSource                   messageSource    = null;
-    @Value("#{webProperties['sa.delimiter']}")
-    private String                           valueDelimiter   = null;
-    @Autowired
-    private ConversionHelper<RBuilderColumn> conversionHelper = null;
-    @Autowired
-    private ReportableColumnResolver         columnResolver   = null;
-    @Autowired
-    private ReportableBeanResolver           beanResolver     = null;
+	@Autowired(required = false)
+	private SMessageSource                   messageSource    = null;
+	@Value("#{webProperties['sa.delimiter']}")
+	private String                           valueDelimiter   = null;
+	@Autowired
+	private ConversionHelper<RBuilderColumn> conversionHelper = null;
+	@Autowired
+	private ReportableColumnResolver         columnResolver   = null;
+	@Autowired
+	private ReportableBeanResolver           beanResolver     = null;
 
-    public PickColumnsFormAction() {
-        super();
-        this.setValidator(new AreColumnsSelectedForAllEntitiesValidator());
-    }
+	/**
+	 * <p>Constructor for PickColumnsFormAction.</p>
+	 */
+	public PickColumnsFormAction() {
+		super();
+		this.setValidator(new AreColumnsSelectedForAllEntitiesValidator());
+	}
 
-    @Override
-    public Event setupForm(final RequestContext context) throws Exception {
-        final Map<RBuilderEntity, Set<RBuilderColumn>> distribution = this.getColumnDistribution(context);
-        context.getViewScope().put(ENTITY_TO_COLUMN, distribution);
-        context.getViewScope().put(RENDER_PROP, this.getColumnsRenderProperties(distribution.values()));
-        return super.setupForm(context);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Event setupForm(final RequestContext context) throws Exception {
+		final Map<RBuilderEntity, Set<RBuilderColumn>> distribution = this.getColumnDistribution(context);
+		context.getViewScope().put(ENTITY_TO_COLUMN, distribution);
+		context.getViewScope().put(RENDER_PROP, this.getColumnsRenderProperties(distribution.values()));
+		return super.setupForm(context);
+	}
 
-    @Override
-    public Event resetForm(final RequestContext context) throws Exception {
-	    final Event event = super.resetForm(context);
-	    this.getCommandBean(context).clearColumns();
-	    return event;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Event resetForm(final RequestContext context) throws Exception {
+		final Event event = super.resetForm(context);
+		this.getCommandBean(context).clearColumns();
+		return event;
+	}
 
 	private Map<RBuilderEntity, Set<RBuilderColumn>> getColumnDistribution(final RequestContext context) throws Exception {
 		final Map<RBuilderEntity, Set<RBuilderColumn>> picked = Maps.newTreeMap();
@@ -139,6 +144,7 @@ public class PickColumnsFormAction
 		return map;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
 		binder.setIgnoreUnknownFields(true);
@@ -147,90 +153,90 @@ public class PickColumnsFormAction
 		return binder;
 	}
 
-    private abstract class BaseConverter
-            extends MatcherConverter {
-        protected Set<RBuilderColumn> doConvert(final Set<String> list) {
-            LOGGER.trace(String.format("converting with selected clazz=%s", list));
-            Preconditions.checkNotNull(list);
-            Preconditions.checkArgument(!list.isEmpty());
-            final Set<RBuilderColumn> reportedColumns = Sets.newLinkedHashSet();
-            for (final String javaClassName : list) {
-                final RBuilderBean bean = beanResolver.getReportableBean(Integer.valueOf(javaClassName));
-                if (ClassUtils.isAssignable(RBuilderColumn.class, bean.getClass())) {
-                    reportedColumns.add((RBuilderColumn) bean);
-                }
-            }
-            return reportedColumns;
-        }
-    }
+	private abstract class BaseConverter
+			extends MatcherConverter {
+		protected Set<RBuilderColumn> doConvert(final Set<String> list) {
+			LOGGER.trace(String.format("converting with selected clazz=%s", list));
+			Preconditions.checkNotNull(list);
+			Preconditions.checkArgument(!list.isEmpty());
+			final Set<RBuilderColumn> reportedColumns = Sets.newLinkedHashSet();
+			for (final String javaClassName : list) {
+				final RBuilderBean bean = beanResolver.getReportableBean(Integer.valueOf(javaClassName));
+				if (ClassUtils.isAssignable(RBuilderColumn.class, bean.getClass())) {
+					reportedColumns.add((RBuilderColumn) bean);
+				}
+			}
+			return reportedColumns;
+		}
+	}
 
-    private class StringArrayToReportColumnListConverter
-            extends BaseConverter
-            implements Converter<String[], Set<RBuilderColumn>> {
+	private class StringArrayToReportColumnListConverter
+			extends BaseConverter
+			implements Converter<String[], Set<RBuilderColumn>> {
 
-        @Override
-        public Set<RBuilderColumn> convert(final String[] attributes) {
-            return this.doConvert(Sets.newHashSet(attributes));
-        }
+		@Override
+		public Set<RBuilderColumn> convert(final String[] attributes) {
+			return this.doConvert(Sets.newHashSet(attributes));
+		}
 
-        @Override
-        public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-            final Class<?> sourceTypeClass = sourceType.getType();
-            return ClassUtils.isAssignable(String[].class, sourceTypeClass)
-                    && ClassUtils.isAssignable(Set.class, targetType.getType());
-        }
-    }
+		@Override
+		public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+			final Class<?> sourceTypeClass = sourceType.getType();
+			return ClassUtils.isAssignable(String[].class, sourceTypeClass)
+					&& ClassUtils.isAssignable(Set.class, targetType.getType());
+		}
+	}
 
-    private class StringToReportColumnListConverter
-            extends BaseConverter
-            implements Converter<String, Set<RBuilderColumn>> {
+	private class StringToReportColumnListConverter
+			extends BaseConverter
+			implements Converter<String, Set<RBuilderColumn>> {
 
-        @Override
-        public Set<RBuilderColumn> convert(final String clazz) {
-            return this.doConvert(Sets.newHashSet(clazz));
-        }
+		@Override
+		public Set<RBuilderColumn> convert(final String clazz) {
+			return this.doConvert(Sets.newHashSet(clazz));
+		}
 
-        @Override
-        public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-            final Class<?> sourceTypeClass = sourceType.getType();
-            return ClassUtils.isAssignable(String.class, sourceTypeClass)
-                    && ClassUtils.isAssignable(Set.class, targetType.getType());
-        }
-    }
+		@Override
+		public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+			final Class<?> sourceTypeClass = sourceType.getType();
+			return ClassUtils.isAssignable(String.class, sourceTypeClass)
+					&& ClassUtils.isAssignable(Set.class, targetType.getType());
+		}
+	}
 
-    private class AreColumnsSelectedForAllEntitiesValidator
-            implements Validator {
-        @Override
-        public boolean supports(final Class<?> clazz) {
-            return ClassUtils.isAssignable(ReportConfiguration.class, clazz);
-        }
+	private class AreColumnsSelectedForAllEntitiesValidator
+			implements Validator {
+		@Override
+		public boolean supports(final Class<?> clazz) {
+			return ClassUtils.isAssignable(ReportConfiguration.class, clazz);
+		}
 
-        @Override
-        public void validate(final Object target, final Errors errors) {
-            Preconditions.checkNotNull(target, "Target must not be null");
-            Preconditions.checkArgument(ClassUtils.isAssignable(ReportConfiguration.class, target.getClass()));
+		@Override
+		public void validate(final Object target, final Errors errors) {
+			Preconditions.checkNotNull(target, "Target must not be null");
+			Preconditions.checkArgument(ClassUtils.isAssignable(ReportConfiguration.class, target.getClass()));
 
-            final String shortName = ClassUtils.getShortName(AreColumnsSelectedForAllEntitiesValidator.class);
-            final ReportConfiguration targetReport = (ReportConfiguration) target;
-            boolean hasNoErrors = true;
+			final String shortName = ClassUtils.getShortName(AreColumnsSelectedForAllEntitiesValidator.class);
+			final ReportConfiguration targetReport = (ReportConfiguration) target;
+			boolean hasNoErrors = true;
 
-            if (!targetReport.hasEntities()) {
-                errors.rejectValue("entities", "wizard.NewReportWizard.error.noEntitiesSelected");
-                hasNoErrors = false;
-            }
-            if (hasNoErrors) {
-                for (final RBuilderEntity entity : targetReport.getEntities()) {
-                    if (!targetReport.hasColumn(entity)) {
-                        errors.rejectValue("entities", "wizard.NewReportWizard.error.noColumnsSelectedForEntity", new Object[]{entity
-                                .getName()}, null);
-                    }
-                }
-            }
-            LOGGER.trace(String.format("%s validated target=%s...valid=%s",
-                    shortName,
-                    target,
-                    errors.hasErrors() ? "true" : "false"
-            ));
-        }
-    }
+			if (!targetReport.hasEntities()) {
+				errors.rejectValue("entities", "wizard.NewReportWizard.error.noEntitiesSelected");
+				hasNoErrors = false;
+			}
+			if (hasNoErrors) {
+				for (final RBuilderEntity entity : targetReport.getEntities()) {
+					if (!targetReport.hasColumn(entity)) {
+						errors.rejectValue("entities", "wizard.NewReportWizard.error.noColumnsSelectedForEntity", new Object[]{entity
+								.getName()}, null);
+					}
+				}
+			}
+			LOGGER.trace(String.format("%s validated target=%s...valid=%s",
+					shortName,
+					target,
+					errors.hasErrors() ? "true" : "false"
+			));
+		}
+	}
 }

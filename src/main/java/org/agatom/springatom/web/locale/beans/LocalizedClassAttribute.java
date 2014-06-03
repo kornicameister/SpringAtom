@@ -26,10 +26,26 @@ import org.agatom.springatom.core.util.Localized;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface LocalizedClassAttribute extends Localized {
+public interface LocalizedClassAttribute
+		extends Localized {
+	/**
+	 * <p>getName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getName();
 
+	/**
+	 * <p>getLabel.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getLabel();
 
+	/**
+	 * <p>isFound.</p>
+	 *
+	 * @return a boolean.
+	 */
 	boolean isFound();
 }

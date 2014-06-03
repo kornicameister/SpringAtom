@@ -23,7 +23,7 @@ import org.springframework.hateoas.Identifiable;
 import java.io.Serializable;
 
 /**
- * {@link RBuilderBean} is an abstract class which defines plain {@code JavaBean}
+ * {@link org.agatom.springatom.web.rbuilder.bean.RBuilderBean} is an abstract class which defines plain {@code JavaBean}
  * used in rendering information in {@link org.agatom.springatom.web.flows.wizards.wizard.rbuilder.ReportWizard}'s forms.
  * It is identified by {@link org.springframework.hateoas.Identifiable#getId()} where the id is calculated and defined by subclasses.
  *
@@ -32,34 +32,53 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 public abstract class RBuilderBean
-implements Serializable,
-                   Identifiable<Integer>,
-                   LocalizationAware {
-    private static final long serialVersionUID = -8556431202961756939L;
-    protected String  label;
-    protected Integer id;
+		implements Serializable,
+		Identifiable<Integer>,
+		LocalizationAware {
+	private static final long serialVersionUID = -8556431202961756939L;
+	protected String  label;
+	protected Integer id;
 
-    @Override
-    public Integer getId() {
-        if (this.id == null) {
-            this.id = this.calculateId();
-        }
-        return id;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Integer getId() {
+		if (this.id == null) {
+			this.id = this.calculateId();
+		}
+		return id;
+	}
 
-    protected abstract Integer calculateId();
+	/**
+	 * <p>calculateId.</p>
+	 *
+	 * @return a {@link java.lang.Integer} object.
+	 */
+	protected abstract Integer calculateId();
 
-    @Override
-    public void setValueForMessageKey(final String msg) {
-        this.label = msg;
-    }
+	/**
+	 * <p>Getter for the field <code>label</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getLabel() {
+		return label;
+	}
 
-    public RBuilderBean setLabel(final String label) {
-        this.setValueForMessageKey(label);
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>label</code>.</p>
+	 *
+	 * @param label a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderBean} object.
+	 */
+	public RBuilderBean setLabel(final String label) {
+		this.setValueForMessageKey(label);
+		return this;
+	}
 
-    public String getLabel() {
-        return label;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public void setValueForMessageKey(final String msg) {
+		this.label = msg;
+	}
 }

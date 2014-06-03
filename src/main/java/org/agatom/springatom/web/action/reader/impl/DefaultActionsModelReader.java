@@ -49,7 +49,8 @@ import java.util.concurrent.TimeUnit;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class DefaultActionsModelReader implements ActionsModelReader {
+public class DefaultActionsModelReader
+		implements ActionsModelReader {
 	private static final Logger                               LOGGER              = Logger.getLogger(DefaultActionsModelReader.class);
 	private static final String                               ACTION_MODELS_KEY   = "actionModels";
 	private static final String                               RESOURCE_BUNDLE_KEY = "resourceBundle";
@@ -60,11 +61,13 @@ public class DefaultActionsModelReader implements ActionsModelReader {
 	private              Map<String, ActionModelReferenceMap> flattenActionModel  = null;
 	private              SMessageSource                       messageSource       = null;
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<ActionModel> getActionModels() {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ActionModel getActionModel(final String name) throws NotFoundException {
 		final ActionModelReferenceMap map = flattenActionModel.get(name);
@@ -212,23 +215,43 @@ public class DefaultActionsModelReader implements ActionsModelReader {
 		return !ClassUtils.isAssignableValue(MissingNode.class, next.findPath("actions"));
 	}
 
+	/**
+	 * <p>Setter for the field <code>modelFile</code>.</p>
+	 *
+	 * @param modelFile a {@link java.lang.String} object.
+	 */
 	public void setModelFile(final String modelFile) {
 		Assert.hasText(modelFile, "modelFile has no text");
 		LOGGER.trace(String.format("Setting modelFile => %s", modelFile));
 		this.modelFile = modelFile;
 	}
 
+	/**
+	 * <p>Setter for the field <code>parseOnLoad</code>.</p>
+	 *
+	 * @param parseOnLoad a {@link java.lang.Boolean} object.
+	 */
 	public void setParseOnLoad(final Boolean parseOnLoad) {
 		LOGGER.trace(String.format("Setting parseOnLoad => %s", parseOnLoad));
 		this.parseOnLoad = parseOnLoad;
 	}
 
+	/**
+	 * <p>Setter for the field <code>objectMapper</code>.</p>
+	 *
+	 * @param objectMapper a {@link com.fasterxml.jackson.databind.ObjectMapper} object.
+	 */
 	public void setObjectMapper(final ObjectMapper objectMapper) {
 		Assert.notNull(objectMapper, "objectMapper has no text");
 		LOGGER.trace(String.format("Setting objectMapper => %s", objectMapper));
 		this.objectMapper = objectMapper;
 	}
 
+	/**
+	 * <p>Setter for the field <code>messageSource</code>.</p>
+	 *
+	 * @param messageSource a {@link org.agatom.springatom.web.locale.SMessageSource} object.
+	 */
 	public void setMessageSource(final SMessageSource messageSource) {
 		Assert.notNull(messageSource, "messageSource has no text");
 		LOGGER.trace(String.format("Setting messageSource => %s", messageSource));

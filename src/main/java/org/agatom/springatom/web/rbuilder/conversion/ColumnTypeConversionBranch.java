@@ -20,10 +20,13 @@ package org.agatom.springatom.web.rbuilder.conversion;
 /**
  * {@code ColumnTypeConversionBranch} describes branches for {@code RBuilder} conversion
  * handling.
+ *
+ * @author kornicameister
+ * @version $Id: $Id
  */
 public enum ColumnTypeConversionBranch {
-    COLLECTION,
-    BASIC,
-    ENTITY,
-    DATE
+	COLLECTION,
+	BASIC,
+	ENTITY,
+	DATE
 }

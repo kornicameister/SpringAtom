@@ -24,51 +24,79 @@ import org.springframework.core.convert.converter.GenericConverter.ConvertiblePa
 import java.io.Serializable;
 
 /**
+ * <p>RBuilderConvertiblePair class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class RBuilderConvertiblePair
-        implements Serializable {
-    private static final long serialVersionUID = 4975825247135266596L;
-    private ConvertiblePair            convertiblePair;
-    private ColumnTypeConversionBranch branch;
+		implements Serializable {
+	private static final long serialVersionUID = 4975825247135266596L;
+	private ConvertiblePair            convertiblePair;
+	private ColumnTypeConversionBranch branch;
 
-    public RBuilderConvertiblePair setConvertiblePair(final ConvertiblePair convertiblePair) {
-        this.convertiblePair = convertiblePair;
-        return this;
-    }
+	/**
+	 * <p>Getter for the field <code>convertiblePair</code>.</p>
+	 *
+	 * @return a {@link org.springframework.core.convert.converter.GenericConverter.ConvertiblePair} object.
+	 */
+	public ConvertiblePair getConvertiblePair() {
+		return convertiblePair;
+	}
 
-    public RBuilderConvertiblePair setBranch(final ColumnTypeConversionBranch branch) {
-        this.branch = branch;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>convertiblePair</code>.</p>
+	 *
+	 * @param convertiblePair a {@link org.springframework.core.convert.converter.GenericConverter.ConvertiblePair} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.conversion.type.RBuilderConvertiblePair} object.
+	 */
+	public RBuilderConvertiblePair setConvertiblePair(final ConvertiblePair convertiblePair) {
+		this.convertiblePair = convertiblePair;
+		return this;
+	}
 
-    public ConvertiblePair getConvertiblePair() {
-        return convertiblePair;
-    }
+	/**
+	 * <p>Getter for the field <code>branch</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.conversion.ColumnTypeConversionBranch} object.
+	 */
+	public ColumnTypeConversionBranch getBranch() {
+		return branch;
+	}
 
-    public ColumnTypeConversionBranch getBranch() {
-        return branch;
-    }
+	/**
+	 * <p>Setter for the field <code>branch</code>.</p>
+	 *
+	 * @param branch a {@link org.agatom.springatom.web.rbuilder.conversion.ColumnTypeConversionBranch} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.conversion.type.RBuilderConvertiblePair} object.
+	 */
+	public RBuilderConvertiblePair setBranch(final ColumnTypeConversionBranch branch) {
+		this.branch = branch;
+		return this;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(convertiblePair, branch);
+	}
 
-        RBuilderConvertiblePair that = (RBuilderConvertiblePair) o;
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        return Objects.equal(this.convertiblePair, that.convertiblePair) &&
-                Objects.equal(this.branch, that.branch);
-    }
+		RBuilderConvertiblePair that = (RBuilderConvertiblePair) o;
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(convertiblePair, branch);
-    }
+		return Objects.equal(this.convertiblePair, that.convertiblePair) &&
+				Objects.equal(this.branch, that.branch);
+	}
 }

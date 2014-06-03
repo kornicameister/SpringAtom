@@ -24,86 +24,140 @@ import org.agatom.springatom.web.beans.WebBean;
 import java.util.List;
 
 /**
+ * <p>WizardHeaderDescriptor class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class WizardHeaderDescriptor
-        implements WebBean {
-    private static final String BEAN_ID          = "wiz_header_descriptor";
-    private static final long   serialVersionUID = -7624407546028312557L;
-    private final String       state;
-    private       List<String> successors;
-    private       List<String> predecessors;
+		implements WebBean {
+	private static final String BEAN_ID          = "wiz_header_descriptor";
+	private static final long   serialVersionUID = -7624407546028312557L;
+	private final String       state;
+	private       List<String> successors;
+	private       List<String> predecessors;
 
-    public WizardHeaderDescriptor(final String state) {
-        this.state = state;
-        this.successors = Lists.newLinkedList();
-        this.predecessors = Lists.newLinkedList();
-    }
+	/**
+	 * <p>Constructor for WizardHeaderDescriptor.</p>
+	 *
+	 * @param state a {@link java.lang.String} object.
+	 */
+	public WizardHeaderDescriptor(final String state) {
+		this.state = state;
+		this.successors = Lists.newLinkedList();
+		this.predecessors = Lists.newLinkedList();
+	}
 
-    public String getState() {
-        return state;
-    }
+	/**
+	 * <p>Getter for the field <code>state</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getState() {
+		return state;
+	}
 
-    public List<String> getSuccessors() {
-        return successors;
-    }
+	/**
+	 * <p>Getter for the field <code>successors</code>.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
+	public List<String> getSuccessors() {
+		return successors;
+	}
 
-    public WizardHeaderDescriptor setSuccessors(final List<String> successors) {
-        this.successors = successors;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>successors</code>.</p>
+	 *
+	 * @param successors a {@link java.util.List} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.flows.wizards.support.WizardHeaderDescriptor} object.
+	 */
+	public WizardHeaderDescriptor setSuccessors(final List<String> successors) {
+		this.successors = successors;
+		return this;
+	}
 
-    public List<String> getPredecessors() {
-        return predecessors;
-    }
+	/**
+	 * <p>Getter for the field <code>predecessors</code>.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
+	public List<String> getPredecessors() {
+		return predecessors;
+	}
 
-    public WizardHeaderDescriptor setPredecessors(final List<String> predecessors) {
-        this.predecessors = predecessors;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>predecessors</code>.</p>
+	 *
+	 * @param predecessors a {@link java.util.List} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.flows.wizards.support.WizardHeaderDescriptor} object.
+	 */
+	public WizardHeaderDescriptor setPredecessors(final List<String> predecessors) {
+		this.predecessors = predecessors;
+		return this;
+	}
 
-    public boolean addSuccessor(final String successor) {
-        return successors.add(successor);
-    }
+	/**
+	 * <p>addSuccessor.</p>
+	 *
+	 * @param successor a {@link java.lang.String} object.
+	 *
+	 * @return a boolean.
+	 */
+	public boolean addSuccessor(final String successor) {
+		return successors.add(successor);
+	}
 
-    public boolean addPredecessor(final String successor) {
-        return predecessors.add(successor);
-    }
+	/**
+	 * <p>addPredecessor.</p>
+	 *
+	 * @param successor a {@link java.lang.String} object.
+	 *
+	 * @return a boolean.
+	 */
+	public boolean addPredecessor(final String successor) {
+		return predecessors.add(successor);
+	}
 
-    @Override
-    public String getBeanId() {
-        return BEAN_ID;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getBeanId() {
+		return BEAN_ID;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(state, successors, predecessors);
-    }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(state, successors, predecessors);
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        WizardHeaderDescriptor that = (WizardHeaderDescriptor) o;
+		WizardHeaderDescriptor that = (WizardHeaderDescriptor) o;
 
-        return Objects.equal(this.state, that.state) &&
-                Objects.equal(this.successors, that.successors) &&
-                Objects.equal(this.predecessors, that.predecessors);
-    }
+		return Objects.equal(this.state, that.state) &&
+				Objects.equal(this.successors, that.successors) &&
+				Objects.equal(this.predecessors, that.predecessors);
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(state)
-                      .addValue(successors)
-                      .addValue(predecessors)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(state)
+				.addValue(successors)
+				.addValue(predecessors)
+				.toString();
+	}
 }

@@ -34,29 +34,55 @@ public class LocalizedEnumHolder<T extends Enum>
 	private              String label            = null;
 	private              T      value            = null;
 
+	/**
+	 * <p>Getter for the field <code>label</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getLabel() {
 		return this.label;
 	}
 
+	/**
+	 * <p>Setter for the field <code>label</code>.</p>
+	 *
+	 * @param label a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.flows.wizards.wizard.LocalizedEnumHolder} object.
+	 */
 	public LocalizedEnumHolder setLabel(final String label) {
 		this.label = label;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>value</code>.</p>
+	 *
+	 * @return a T object.
+	 */
 	public T getValue() {
 		return this.value;
 	}
 
+	/**
+	 * <p>Setter for the field <code>value</code>.</p>
+	 *
+	 * @param value a T object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.flows.wizards.wizard.LocalizedEnumHolder} object.
+	 */
 	public LocalizedEnumHolder setValue(final T value) {
 		this.value = value;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(label, value);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -68,6 +94,7 @@ public class LocalizedEnumHolder<T extends Enum>
 				Objects.equal(this.value, that.value);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)

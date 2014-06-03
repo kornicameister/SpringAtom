@@ -24,114 +24,201 @@ import java.util.Arrays;
 import java.util.Set;
 
 /**
+ * <p>SBreadcrumb class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class SBreadcrumb {
-    private final String           crumb;
-    private final String           uri;
-    private final SBreadcrumb      nextCrumb;
-    private final SBreadcrumb      previousCrumb;
-    private       Set<SBreadcrumb> predecessors;
-    private       Set<SBreadcrumb> successors;
+	private final String           crumb;
+	private final String           uri;
+	private final SBreadcrumb      nextCrumb;
+	private final SBreadcrumb      previousCrumb;
+	private       Set<SBreadcrumb> predecessors;
+	private       Set<SBreadcrumb> successors;
 
-    public SBreadcrumb(final String crumb, final String uri) {
-        this(crumb, uri, null, null);
-    }
+	/**
+	 * <p>Constructor for SBreadcrumb.</p>
+	 *
+	 * @param crumb a {@link java.lang.String} object.
+	 * @param uri   a {@link java.lang.String} object.
+	 */
+	public SBreadcrumb(final String crumb, final String uri) {
+		this(crumb, uri, null, null);
+	}
 
-    public SBreadcrumb(final String crumb, final String uri, final SBreadcrumb nextCrumb, final SBreadcrumb previousCrumb) {
-        this.crumb = crumb;
-        this.uri = uri;
-        this.nextCrumb = nextCrumb;
-        this.previousCrumb = previousCrumb;
-    }
+	/**
+	 * <p>Constructor for SBreadcrumb.</p>
+	 *
+	 * @param crumb         a {@link java.lang.String} object.
+	 * @param uri           a {@link java.lang.String} object.
+	 * @param nextCrumb     a {@link org.agatom.springatom.web.breadcrumbs.beans.SBreadcrumb} object.
+	 * @param previousCrumb a {@link org.agatom.springatom.web.breadcrumbs.beans.SBreadcrumb} object.
+	 */
+	public SBreadcrumb(final String crumb, final String uri, final SBreadcrumb nextCrumb, final SBreadcrumb previousCrumb) {
+		this.crumb = crumb;
+		this.uri = uri;
+		this.nextCrumb = nextCrumb;
+		this.previousCrumb = previousCrumb;
+	}
 
-    public String getUri() {
-        return uri;
-    }
+	/**
+	 * <p>Getter for the field <code>uri</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getUri() {
+		return uri;
+	}
 
-    public String getCrumb() {
-        return crumb;
-    }
+	/**
+	 * <p>Getter for the field <code>crumb</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getCrumb() {
+		return crumb;
+	}
 
-    public SBreadcrumb getNextCrumb() {
-        return nextCrumb;
-    }
+	/**
+	 * <p>Getter for the field <code>nextCrumb</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.breadcrumbs.beans.SBreadcrumb} object.
+	 */
+	public SBreadcrumb getNextCrumb() {
+		return nextCrumb;
+	}
 
-    public SBreadcrumb getPreviousCrumb() {
-        return previousCrumb;
-    }
+	/**
+	 * <p>Getter for the field <code>previousCrumb</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.breadcrumbs.beans.SBreadcrumb} object.
+	 */
+	public SBreadcrumb getPreviousCrumb() {
+		return previousCrumb;
+	}
 
-    public boolean addPredecessors(final SBreadcrumb... crumbs) {
-        if (this.predecessors == null) {
-            this.predecessors = Sets.newHashSet();
-        }
-        return predecessors.addAll(Arrays.asList(crumbs));
-    }
+	/**
+	 * <p>addPredecessors.</p>
+	 *
+	 * @param crumbs a {@link org.agatom.springatom.web.breadcrumbs.beans.SBreadcrumb} object.
+	 *
+	 * @return a boolean.
+	 */
+	public boolean addPredecessors(final SBreadcrumb... crumbs) {
+		if (this.predecessors == null) {
+			this.predecessors = Sets.newHashSet();
+		}
+		return predecessors.addAll(Arrays.asList(crumbs));
+	}
 
-    public boolean addSuccessors(final SBreadcrumb... crumbs) {
-        if (this.successors == null) {
-            this.successors = Sets.newHashSet();
-        }
-        return successors.addAll(Arrays.asList(crumbs));
-    }
+	/**
+	 * <p>addSuccessors.</p>
+	 *
+	 * @param crumbs a {@link org.agatom.springatom.web.breadcrumbs.beans.SBreadcrumb} object.
+	 *
+	 * @return a boolean.
+	 */
+	public boolean addSuccessors(final SBreadcrumb... crumbs) {
+		if (this.successors == null) {
+			this.successors = Sets.newHashSet();
+		}
+		return successors.addAll(Arrays.asList(crumbs));
+	}
 
-    public Set<SBreadcrumb> getPredecessors() {
-        return predecessors;
-    }
+	/**
+	 * <p>Getter for the field <code>predecessors</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	public Set<SBreadcrumb> getPredecessors() {
+		return predecessors;
+	}
 
-    public SBreadcrumb setPredecessors(final Set<SBreadcrumb> predecessors) {
-        this.predecessors = predecessors;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>predecessors</code>.</p>
+	 *
+	 * @param predecessors a {@link java.util.Set} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.breadcrumbs.beans.SBreadcrumb} object.
+	 */
+	public SBreadcrumb setPredecessors(final Set<SBreadcrumb> predecessors) {
+		this.predecessors = predecessors;
+		return this;
+	}
 
-    public Set<SBreadcrumb> getSuccessors() {
-        return successors;
-    }
+	/**
+	 * <p>Getter for the field <code>successors</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	public Set<SBreadcrumb> getSuccessors() {
+		return successors;
+	}
 
-    public SBreadcrumb setSuccessors(final Set<SBreadcrumb> successors) {
-        this.successors = successors;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>successors</code>.</p>
+	 *
+	 * @param successors a {@link java.util.Set} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.breadcrumbs.beans.SBreadcrumb} object.
+	 */
+	public SBreadcrumb setSuccessors(final Set<SBreadcrumb> successors) {
+		this.successors = successors;
+		return this;
+	}
 
-    public boolean hasNext() {
-        return this.nextCrumb != null;
-    }
+	/**
+	 * <p>hasNext.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean hasNext() {
+		return this.nextCrumb != null;
+	}
 
-    public boolean hasPrevious() {
-        return this.previousCrumb != null;
-    }
+	/**
+	 * <p>hasPrevious.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean hasPrevious() {
+		return this.previousCrumb != null;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(crumb, uri);
+	}
 
-        SBreadcrumb that = (SBreadcrumb) o;
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        return Objects.equal(this.crumb, that.crumb) &&
-                Objects.equal(this.uri, that.uri);
-    }
+		SBreadcrumb that = (SBreadcrumb) o;
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(crumb, uri);
-    }
+		return Objects.equal(this.crumb, that.crumb) &&
+				Objects.equal(this.uri, that.uri);
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(crumb)
-                      .addValue(uri)
-                      .addValue(nextCrumb)
-                      .addValue(previousCrumb)
-                      .addValue(predecessors)
-                      .addValue(successors)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(crumb)
+				.addValue(uri)
+				.addValue(nextCrumb)
+				.addValue(previousCrumb)
+				.addValue(predecessors)
+				.addValue(successors)
+				.toString();
+	}
 }

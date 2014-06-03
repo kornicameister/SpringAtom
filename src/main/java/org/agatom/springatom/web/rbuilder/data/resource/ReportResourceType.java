@@ -27,6 +27,6 @@ package org.agatom.springatom.web.rbuilder.data.resource;
  * @since 0.0.1
  */
 public enum ReportResourceType {
-    CONFIGURATION,
-    JASPER
+	CONFIGURATION,
+	JASPER
 }

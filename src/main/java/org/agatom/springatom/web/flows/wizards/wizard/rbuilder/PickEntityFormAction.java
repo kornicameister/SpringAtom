@@ -46,6 +46,8 @@ import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
+ * <p>PickEntityFormAction class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -61,11 +63,15 @@ public class PickEntityFormAction
 	@Autowired
 	private ReportableBeanResolver reportableBeanResolver;
 
+	/**
+	 * <p>Constructor for PickEntityFormAction.</p>
+	 */
 	public PickEntityFormAction() {
 		super();
 		this.setValidator(new AreEntitiesSelectedForReportValidator());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Event setupForm(final RequestContext context) throws Exception {
 		final MutableAttributeMap<Object> scope = this.getFormObjectScope().getScope(context);
@@ -75,6 +81,7 @@ public class PickEntityFormAction
 		return super.setupForm(context);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Event resetForm(final RequestContext context) throws Exception {
 		final Event event = super.resetForm(context);
@@ -117,6 +124,7 @@ public class PickEntityFormAction
 		return this.reportableBeanResolver.getEntityAssociations(ImmutableSet.copyOf(context));
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
 		binder.setRequiredFields("entities");

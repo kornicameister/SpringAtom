@@ -28,6 +28,8 @@ import org.springframework.web.context.WebApplicationContext;
 import java.io.Serializable;
 
 /**
+ * <p>ReportViewDescriptor class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -36,45 +38,82 @@ import java.io.Serializable;
 @Scope(value = WebApplicationContext.SCOPE_REQUEST)
 @Role(value = BeanDefinition.ROLE_APPLICATION)
 public class ReportViewDescriptor
-        implements Serializable {
-    private static final long serialVersionUID = -15235355484985353L;
-    private String   format;
-    private String   viewName;
-    private ModelMap parameters;
+		implements Serializable {
+	private static final long serialVersionUID = -15235355484985353L;
+	private String   format;
+	private String   viewName;
+	private ModelMap parameters;
 
-    public ReportViewDescriptor setFormat(final String format) {
-        this.format = format;
-        return this;
-    }
+	/**
+	 * <p>Getter for the field <code>viewName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getViewName() {
+		return viewName;
+	}
 
-    public ReportViewDescriptor setViewName(final String viewName) {
-        this.viewName = viewName;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>viewName</code>.</p>
+	 *
+	 * @param viewName a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.ReportViewDescriptor} object.
+	 */
+	public ReportViewDescriptor setViewName(final String viewName) {
+		this.viewName = viewName;
+		return this;
+	}
 
-    public ReportViewDescriptor setParameters(final ModelMap parameters) {
-        this.parameters = parameters;
-        return this;
-    }
+	/**
+	 * <p>Getter for the field <code>parameters</code>.</p>
+	 *
+	 * @return a {@link org.springframework.ui.ModelMap} object.
+	 */
+	public ModelMap getParameters() {
+		return parameters;
+	}
 
-    public String getViewName() {
-        return viewName;
-    }
+	/**
+	 * <p>Setter for the field <code>parameters</code>.</p>
+	 *
+	 * @param parameters a {@link org.springframework.ui.ModelMap} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.ReportViewDescriptor} object.
+	 */
+	public ReportViewDescriptor setParameters(final ModelMap parameters) {
+		this.parameters = parameters;
+		return this;
+	}
 
-    public ModelMap getParameters() {
-        return parameters;
-    }
+	/**
+	 * <p>Getter for the field <code>format</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getFormat() {
+		return format;
+	}
 
-    public String getFormat() {
-        return format;
-    }
+	/**
+	 * <p>Setter for the field <code>format</code>.</p>
+	 *
+	 * @param format a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.ReportViewDescriptor} object.
+	 */
+	public ReportViewDescriptor setFormat(final String format) {
+		this.format = format;
+		return this;
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(viewName)
-                      .addValue(format)
-                      .addValue(parameters)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(viewName)
+				.addValue(format)
+				.addValue(parameters)
+				.toString();
+	}
 }

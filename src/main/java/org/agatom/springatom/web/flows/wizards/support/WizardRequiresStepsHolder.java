@@ -23,28 +23,56 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
+ * <p>WizardRequiresStepsHolder class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class WizardRequiresStepsHolder
-        implements Serializable {
-    private static final long        serialVersionUID = -6208292242616190878L;
-    private              Set<String> requiredStepsIds = Sets.newLinkedHashSet();
+		implements Serializable {
+	private static final long        serialVersionUID = -6208292242616190878L;
+	private              Set<String> requiredStepsIds = Sets.newLinkedHashSet();
 
-    public Set<String> getRequiredStepsIds() {
-        return requiredStepsIds;
-    }
+	/**
+	 * <p>Getter for the field <code>requiredStepsIds</code>.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	public Set<String> getRequiredStepsIds() {
+		return requiredStepsIds;
+	}
 
-    public boolean add(final String step) {
-        return this.requiredStepsIds.add(step);
-    }
+	/**
+	 * <p>add.</p>
+	 *
+	 * @param step a {@link java.lang.String} object.
+	 *
+	 * @return a boolean.
+	 */
+	public boolean add(final String step) {
+		return this.requiredStepsIds.add(step);
+	}
 
-    public boolean remove(final Object step) {
-        return this.requiredStepsIds.remove(step);
-    }
+	/**
+	 * <p>remove.</p>
+	 *
+	 * @param step a {@link java.lang.Object} object.
+	 *
+	 * @return a boolean.
+	 */
+	public boolean remove(final Object step) {
+		return this.requiredStepsIds.remove(step);
+	}
 
-    public boolean has(final String stateId) {
-        return this.requiredStepsIds.contains(stateId);
-    }
+	/**
+	 * <p>has.</p>
+	 *
+	 * @param stateId a {@link java.lang.String} object.
+	 *
+	 * @return a boolean.
+	 */
+	public boolean has(final String stateId) {
+		return this.requiredStepsIds.contains(stateId);
+	}
 }

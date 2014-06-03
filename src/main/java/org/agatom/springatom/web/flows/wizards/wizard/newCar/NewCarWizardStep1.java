@@ -42,24 +42,37 @@ import org.springframework.webflow.execution.RequestContext;
 @WizardAction("newCarWizard1")
 public class NewCarWizardStep1
 		extends WizardFormAction<SCar> {
-	private static final Logger   LOGGER           = Logger.getLogger(NewCarWizardStep1.class);
-	private static final String   FORM_OBJECT_NAME = "car";
-	private static final String   VIN_NUMBER_DATA  = "vinNumberData";
-	private static final String[] REQUIRED_FIELDS  = new String[]{
+	private static final Logger     LOGGER           = Logger.getLogger(NewCarWizardStep1.class);
+	private static final String     FORM_OBJECT_NAME = "car";
+	private static final String     VIN_NUMBER_DATA  = "vinNumberData";
+	private static final String[]   REQUIRED_FIELDS  = new String[]{
 			QSCar.sCar.vinNumber.getMetadata().getName()
 	};
 	@Autowired
 	private              VinDecoder vinDecoder       = null;
 
+	/**
+	 * <p>Constructor for NewCarWizardStep1.</p>
+	 */
 	public NewCarWizardStep1() {
 		super();
 		this.setFormObjectName(FORM_OBJECT_NAME);
 	}
 
+	/**
+	 * <p>getNewCar.</p>
+	 *
+	 * @param context a {@link org.springframework.webflow.execution.RequestContext} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCar} object.
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	public SCar getNewCar(final RequestContext context) throws Exception {
 		return this.getCommandBean(context);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
 		binder.setRequiredFields(REQUIRED_FIELDS);
@@ -68,6 +81,7 @@ public class NewCarWizardStep1
 		return super.doInitBinder(binder, conversionService);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Event bindAndValidate(final RequestContext context) throws Exception {
 		final Event event = super.bindAndValidate(context);

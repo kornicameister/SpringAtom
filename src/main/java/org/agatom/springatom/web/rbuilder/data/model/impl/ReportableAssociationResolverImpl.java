@@ -35,47 +35,51 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
+ * <p>ReportableAssociationResolverImpl class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 @Service(value = ReportableAssociationResolverImpl.SERVICE_NAME)
 public class ReportableAssociationResolverImpl
-        implements ReportableAssociationResolver {
+		implements ReportableAssociationResolver {
 
-    private static final   Logger                   LOGGER            = Logger.getLogger(ReportableAssociationResolverImpl.class);
-    protected static final String                   SERVICE_NAME      = "reportableAssociationResolver";
-    @Autowired
-    private                EntityDescriptors        entityDescriptors = null;
-    @Autowired
-    private                ReportableEntityResolver entityResolver    = null;
+	/** Constant <code>SERVICE_NAME="reportableAssociationResolver"</code> */
+	protected static final String                   SERVICE_NAME      = "reportableAssociationResolver";
+	private static final   Logger                   LOGGER            = Logger.getLogger(ReportableAssociationResolverImpl.class);
+	@Autowired
+	private                EntityDescriptors        entityDescriptors = null;
+	@Autowired
+	private                ReportableEntityResolver entityResolver    = null;
 
 
-    @Override
-    @Nullable
-    public RBuilderAssociation getEntityAssociation(@NotNull final RBuilderEntity entity) {
-        LOGGER.debug(String.format("Resolving association for %s", entity));
-        final EntityAssociation association = this.entityDescriptors.getAssociation(entity.getJavaClass());
-        if (association == null) {
-            return null;
-        }
-        final Function<SlimEntityDescriptor<?>, Integer> function = new Function<SlimEntityDescriptor<?>, Integer>() {
-            @Nullable
-            @Override
-            public Integer apply(@Nullable final SlimEntityDescriptor<?> input) {
-                if (input == null) {
-                    return null;
-                }
-                final RBuilderEntity reportableEntity = entityResolver.getReportableEntity(input.getJavaClass());
-                return reportableEntity.getId();
-            }
-        };
-        final Set<Integer> children = FluentIterable
-                .from(association.getAssociations())
-                .transform(function)
-                .toSet();
-        return new RBuilderAssociation().setMaster(entity.getId())
-                                        .setChildren(children);
-    }
+	/** {@inheritDoc} */
+	@Override
+	@Nullable
+	public RBuilderAssociation getEntityAssociation(@NotNull final RBuilderEntity entity) {
+		LOGGER.debug(String.format("Resolving association for %s", entity));
+		final EntityAssociation association = this.entityDescriptors.getAssociation(entity.getJavaClass());
+		if (association == null) {
+			return null;
+		}
+		final Function<SlimEntityDescriptor<?>, Integer> function = new Function<SlimEntityDescriptor<?>, Integer>() {
+			@Nullable
+			@Override
+			public Integer apply(@Nullable final SlimEntityDescriptor<?> input) {
+				if (input == null) {
+					return null;
+				}
+				final RBuilderEntity reportableEntity = entityResolver.getReportableEntity(input.getJavaClass());
+				return reportableEntity.getId();
+			}
+		};
+		final Set<Integer> children = FluentIterable
+				.from(association.getAssociations())
+				.transform(function)
+				.toSet();
+		return new RBuilderAssociation().setMaster(entity.getId())
+				.setChildren(children);
+	}
 
 }

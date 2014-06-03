@@ -38,9 +38,11 @@ import org.springframework.core.env.Environment;
  */
 @Configuration(value = ActionsModuleConfiguration.MODULE_NAME)
 @PropertySource(value = "classpath:org/agatom/springatom/web/action/actions.properties")
-public class ActionsModuleConfiguration extends AbstractModuleConfiguration {
-	private static final   Logger         LOGGER        = Logger.getLogger(ActionsModuleConfiguration.class);
+public class ActionsModuleConfiguration
+		extends AbstractModuleConfiguration {
+	/** Constant <code>MODULE_NAME="actionsModule"</code> */
 	protected static final String         MODULE_NAME   = "actionsModule";
+	private static final   Logger         LOGGER        = Logger.getLogger(ActionsModuleConfiguration.class);
 	@Autowired
 	private                Environment    environment   = null;
 	@Autowired
@@ -49,6 +51,11 @@ public class ActionsModuleConfiguration extends AbstractModuleConfiguration {
 	@Autowired
 	private                SMessageSource messageSource = null;
 
+	/**
+	 * <p>getActionsModelReader.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.reader.ActionsModelReader} object.
+	 */
 	@Lazy(false)
 	@Bean(name = "actionsModelReader")
 	@Scope(BeanDefinition.SCOPE_SINGLETON)

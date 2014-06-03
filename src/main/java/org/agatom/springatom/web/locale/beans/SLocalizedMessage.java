@@ -29,78 +29,128 @@ import org.agatom.springatom.web.beans.WebBean;
  * @since 0.0.1
  */
 public class SLocalizedMessage
-        implements WebBean {
-    private static final long   serialVersionUID = -5800265126575659371L;
-    private static final String BEAN_ID          = "localizedMessage";
-    private String  key;
-    private String  message;
-    private SLocale locale;
+		implements WebBean {
+	private static final long   serialVersionUID = -5800265126575659371L;
+	private static final String BEAN_ID          = "localizedMessage";
+	private String  key;
+	private String  message;
+	private SLocale locale;
 
-    public SLocalizedMessage() {
-        this.setKey("").setMessage("");
-    }
+	/**
+	 * <p>Constructor for SLocalizedMessage.</p>
+	 */
+	public SLocalizedMessage() {
+		this.setKey("").setMessage("");
+	}
 
-    public SLocalizedMessage(final String key, final String message) {
-        this.key = key;
-        this.message = message;
-    }
+	/**
+	 * <p>Constructor for SLocalizedMessage.</p>
+	 *
+	 * @param key     a {@link java.lang.String} object.
+	 * @param message a {@link java.lang.String} object.
+	 */
+	public SLocalizedMessage(final String key, final String message) {
+		this.key = key;
+		this.message = message;
+	}
 
-    public String getKey() {
-        return key;
-    }
+	/**
+	 * <p>Getter for the field <code>key</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getKey() {
+		return key;
+	}
 
-    public SLocalizedMessage setKey(final String key) {
-        this.key = key;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>key</code>.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.SLocalizedMessage} object.
+	 */
+	public SLocalizedMessage setKey(final String key) {
+		this.key = key;
+		return this;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	/**
+	 * <p>Getter for the field <code>message</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getMessage() {
+		return message;
+	}
 
-    public SLocalizedMessage setMessage(final String message) {
-        this.message = message;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>message</code>.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.SLocalizedMessage} object.
+	 */
+	public SLocalizedMessage setMessage(final String message) {
+		this.message = message;
+		return this;
+	}
 
-    public SLocale getLocale() {
-        return locale;
-    }
+	/**
+	 * <p>Getter for the field <code>locale</code>.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.SLocale} object.
+	 */
+	public SLocale getLocale() {
+		return locale;
+	}
 
-    public SLocalizedMessage setLocale(final SLocale locale) {
-        this.locale = locale;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>locale</code>.</p>
+	 *
+	 * @param locale a {@link org.agatom.springatom.web.locale.beans.SLocale} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.locale.beans.SLocalizedMessage} object.
+	 */
+	public SLocalizedMessage setLocale(final SLocale locale) {
+		this.locale = locale;
+		return this;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(key);
+	}
 
-        SLocalizedMessage that = (SLocalizedMessage) o;
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        return Objects.equal(this.key, that.key);
-    }
+		SLocalizedMessage that = (SLocalizedMessage) o;
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(key);
-    }
+		return Objects.equal(this.key, that.key);
+	}
 
-    @Override public String toString() {
-        return Objects.toStringHelper(this)
-                      .add("key", key)
-                      .add("message", message)
-                      .add("locale", locale)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.add("key", key)
+				.add("message", message)
+				.add("locale", locale)
+				.toString();
+	}
 
-    @Override
-    public String getBeanId() {
-        return BEAN_ID;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getBeanId() {
+		return BEAN_ID;
+	}
 }

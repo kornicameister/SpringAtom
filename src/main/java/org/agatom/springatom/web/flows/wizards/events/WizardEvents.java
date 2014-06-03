@@ -30,6 +30,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * <p>WizardEvents class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -38,51 +40,78 @@ import java.util.List;
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public final class WizardEvents {
 
-    private static final String       NEXT_EVENT     = "next";
-    private static final String       PREVIOUS_EVENT = "previous";
-    private static final String       CANCEL_EVENT   = "cancel";
-    private static final String       FINISH_EVENT   = "finish";
-    private static final List<String> EVENTS         = Lists.newArrayList(NEXT_EVENT, PREVIOUS_EVENT, CANCEL_EVENT, FINISH_EVENT);
+	private static final String       NEXT_EVENT     = "next";
+	private static final String       PREVIOUS_EVENT = "previous";
+	private static final String       CANCEL_EVENT   = "cancel";
+	private static final String       FINISH_EVENT   = "finish";
+	private static final List<String> EVENTS         = Lists.newArrayList(NEXT_EVENT, PREVIOUS_EVENT, CANCEL_EVENT, FINISH_EVENT);
 
-    public boolean isWizardEvent(final String eventId) {
-        if (!StringUtils.hasText(eventId)) {
-            return false;
-        }
-        final String anotherString = StringUtils.trimAllWhitespace(eventId);
-        return FluentIterable
-                .from(EVENTS)
-                .filter(new Predicate<String>() {
-                    @Override
-                    public boolean apply(@Nullable final String input) {
-                        assert input != null;
-                        return input.equalsIgnoreCase(anotherString);
-                    }
-                })
-                .first()
-                .isPresent();
-    }
+	/**
+	 * <p>isWizardEvent.</p>
+	 *
+	 * @param eventId a {@link java.lang.String} object.
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isWizardEvent(final String eventId) {
+		if (!StringUtils.hasText(eventId)) {
+			return false;
+		}
+		final String anotherString = StringUtils.trimAllWhitespace(eventId);
+		return FluentIterable
+				.from(EVENTS)
+				.filter(new Predicate<String>() {
+					@Override
+					public boolean apply(@Nullable final String input) {
+						assert input != null;
+						return input.equalsIgnoreCase(anotherString);
+					}
+				})
+				.first()
+				.isPresent();
+	}
 
-    @Bean(name = "WizardNextEvent")
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public WizardEvent getNext() {
-        return new WizardEvent().init(NEXT_EVENT);
-    }
+	/**
+	 * <p>getNext.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.flows.wizards.events.WizardEvent} object.
+	 */
+	@Bean(name = "WizardNextEvent")
+	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public WizardEvent getNext() {
+		return new WizardEvent().init(NEXT_EVENT);
+	}
 
-    @Bean(name = "WizardPreviousEvent")
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public WizardEvent getPrevious() {
-        return new WizardEvent().init(PREVIOUS_EVENT);
-    }
+	/**
+	 * <p>getPrevious.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.flows.wizards.events.WizardEvent} object.
+	 */
+	@Bean(name = "WizardPreviousEvent")
+	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public WizardEvent getPrevious() {
+		return new WizardEvent().init(PREVIOUS_EVENT);
+	}
 
-    @Bean(name = "WizardCancelEvent")
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public WizardEvent getCancel() {
-        return new WizardEvent().init(CANCEL_EVENT);
-    }
+	/**
+	 * <p>getCancel.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.flows.wizards.events.WizardEvent} object.
+	 */
+	@Bean(name = "WizardCancelEvent")
+	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public WizardEvent getCancel() {
+		return new WizardEvent().init(CANCEL_EVENT);
+	}
 
-    @Bean(name = "WizardFinishEvent")
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public WizardEvent getFinish() {
-        return new WizardEvent().init(FINISH_EVENT);
-    }
+	/**
+	 * <p>getFinish.</p>
+	 *
+	 * @return a {@link org.agatom.springatom.web.flows.wizards.events.WizardEvent} object.
+	 */
+	@Bean(name = "WizardFinishEvent")
+	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public WizardEvent getFinish() {
+		return new WizardEvent().init(FINISH_EVENT);
+	}
 }

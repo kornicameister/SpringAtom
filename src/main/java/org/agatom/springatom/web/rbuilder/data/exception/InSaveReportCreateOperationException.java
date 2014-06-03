@@ -18,15 +18,23 @@
 package org.agatom.springatom.web.rbuilder.data.exception;
 
 /**
+ * <p>InSaveReportCreateOperationException class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class InSaveReportCreateOperationException
-        extends ReportException {
-    private static final long serialVersionUID = 923603934447013963L;
+		extends ReportException {
+	private static final long serialVersionUID = 923603934447013963L;
 
-    public InSaveReportCreateOperationException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * <p>Constructor for InSaveReportCreateOperationException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
+	public InSaveReportCreateOperationException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 }

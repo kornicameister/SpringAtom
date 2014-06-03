@@ -28,14 +28,34 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
+ * <p>JasperBuilderService interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 @Validated
 public interface JasperBuilderService {
-    // TODO remove dependency for rbuilder.ban.RBuilderEntity -> replace with something more general
-    JasperReport generateReport(@NotNull final Report report, @NotNull final RBuilderEntity entity) throws ReportGenerationException;
+	// TODO remove dependency for rbuilder.ban.RBuilderEntity -> replace with something more general
 
-    Set<RBuilderColumn> getGroupByColumns(@NotNull final Set<RBuilderColumn> columns);
+	/**
+	 * <p>generateReport.</p>
+	 *
+	 * @param report a {@link org.agatom.springatom.server.model.types.report.Report} object.
+	 * @param entity a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 *
+	 * @return a {@link net.sf.jasperreports.engine.JasperReport} object.
+	 *
+	 * @throws org.agatom.springatom.web.rbuilder.data.exception.ReportGenerationException if any.
+	 */
+	JasperReport generateReport(@NotNull final Report report, @NotNull final RBuilderEntity entity) throws ReportGenerationException;
+
+	/**
+	 * <p>getGroupByColumns.</p>
+	 *
+	 * @param columns a {@link java.util.Set} object.
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
+	Set<RBuilderColumn> getGroupByColumns(@NotNull final Set<RBuilderColumn> columns);
 }

@@ -31,8 +31,22 @@ import java.util.Set;
  * @since 0.0.1
  */
 public interface ActionsModelReader {
+	/**
+	 * <p>getActionModels.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	Set<ActionModel> getActionModels();
 
+	/**
+	 * <p>getActionModel.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.ActionModel} object.
+	 *
+	 * @throws javassist.NotFoundException if any.
+	 */
 	@Cacheable(value = "actionsModels", key = "#name")
 	ActionModel getActionModel(final String name) throws NotFoundException;
 }

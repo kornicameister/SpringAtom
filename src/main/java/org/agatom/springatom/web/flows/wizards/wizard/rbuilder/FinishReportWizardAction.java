@@ -47,74 +47,74 @@ import java.util.Set;
  */
 @WizardAction(value = "finishReportWizardAction")
 public class FinishReportWizardAction
-        extends WizardFormAction<ReportConfiguration> {
-    private static final Logger LOGGER = Logger.getLogger(FinishReportWizardAction.class);
+		extends WizardFormAction<ReportConfiguration> {
+	private static final Logger LOGGER = Logger.getLogger(FinishReportWizardAction.class);
 
-    @Autowired
-    private ReportBuilderService builderService;
+	@Autowired
+	private ReportBuilderService builderService;
 
-    @Override
-    public Event bindAndValidate(final RequestContext context) throws Exception {
-        Event event = super.bindAndValidate(context);
-        if (event.getId().equals(this.success().getId())) {
-            event = this.executeInternal(context);
-        }
-        return event;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public Event bindAndValidate(final RequestContext context) throws Exception {
+		Event event = super.bindAndValidate(context);
+		if (event.getId().equals(this.success().getId())) {
+			event = this.executeInternal(context);
+		}
+		return event;
+	}
 
-    @Override
-    protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
-        return binder;
-    }
+	private Event executeInternal(final RequestContext context) throws Exception {
+		LOGGER.debug(String.format("/saveReport reportWizard=%s,context=%s", this, context));
+		final EventFactorySupport eventFactorySupport = new EventFactorySupport();
+		try {
+			final ReportConfiguration reportConfiguration = this.removeExcludedColumns(this.getCommandBean(context));
+			final Object reports = this.builderService.newReportInstance(reportConfiguration);
+			LOGGER.info(String.format("Persisted new report => %s", reports));
+			return eventFactorySupport.success(this, reports);
+		} catch (Exception persistException) {
+			LOGGER.fatal(persistException);
+			return eventFactorySupport.error(this, new ReportBuilderServiceException(persistException));
+		}
+	}
 
-    private Event executeInternal(final RequestContext context) throws Exception {
-        LOGGER.debug(String.format("/saveReport reportWizard=%s,context=%s", this, context));
-        final EventFactorySupport eventFactorySupport = new EventFactorySupport();
-        try {
-            final ReportConfiguration reportConfiguration = this.removeExcludedColumns(this.getCommandBean(context));
-            final Object reports = this.builderService.newReportInstance(reportConfiguration);
-            LOGGER.info(String.format("Persisted new report => %s", reports));
-            return eventFactorySupport.success(this, reports);
-        } catch (Exception persistException) {
-            LOGGER.fatal(persistException);
-            return eventFactorySupport.error(this, new ReportBuilderServiceException(persistException));
-        }
-    }
+	/**
+	 * Runs trough all {@code entities} and subsequent {@code columns} picking up these columns where {@link
+	 * org.agatom.springatom.web.rbuilder.bean.RBuilderColumnOptions#excluded} is {@link java.lang.Boolean#TRUE}.
+	 * After lookup removes these columns from final list submitted to {@link org.agatom.springatom.web.rbuilder.data.service.ReportBuilderService}
+	 *
+	 * @param cfg reportConfiguration to be used
+	 *
+	 * @return updated reportConfiguration
+	 *
+	 * @throws Exception in case if particular entity has no columns set
+	 */
+	private ReportConfiguration removeExcludedColumns(final ReportConfiguration cfg) throws Exception {
+		Assert.notNull(cfg);
+		for (RBuilderEntity rBuilderEntity : cfg.getEntities()) {
+			if (rBuilderEntity.hasColumns()) {
+				Set<RBuilderColumn> columns = FluentIterable
+						.from(rBuilderEntity.getColumns())
+						.filter(new Predicate<RBuilderColumn>() {
+							@Override
+							public boolean apply(@Nullable final RBuilderColumn input) {
+								assert input != null;
+								return input.getOptions().isExcluded();
+							}
+						}).toSet();
+				if (!columns.isEmpty()) {
+					LOGGER.debug(String.format("%s contains %d columns which were marked as excluded", rBuilderEntity.getName(), columns.size()));
+					cfg.popColumns(rBuilderEntity, columns);
+				}
+			} else {
+				throw new Exception(String.format("No columns in entity %s - that should not happen", rBuilderEntity.getName()));
+			}
+		}
+		return cfg;
+	}
 
-    /**
-     * Runs trough all {@code entities} and subsequent {@code columns} picking up these columns where {@link
-     * org.agatom.springatom.web.rbuilder.bean.RBuilderColumnOptions#excluded} is {@link java.lang.Boolean#TRUE}.
-     * After lookup removes these columns from final list submitted to {@link org.agatom.springatom.web.rbuilder.data.service.ReportBuilderService}
-     *
-     * @param cfg
-     *         reportConfiguration to be used
-     *
-     * @return updated reportConfiguration
-     *
-     * @throws Exception
-     *         in case if particular entity has no columns set
-     */
-    private ReportConfiguration removeExcludedColumns(final ReportConfiguration cfg) throws Exception {
-        Assert.notNull(cfg);
-        for (RBuilderEntity rBuilderEntity : cfg.getEntities()) {
-            if (rBuilderEntity.hasColumns()) {
-                Set<RBuilderColumn> columns = FluentIterable
-                        .from(rBuilderEntity.getColumns())
-                        .filter(new Predicate<RBuilderColumn>() {
-                            @Override
-                            public boolean apply(@Nullable final RBuilderColumn input) {
-                                assert input != null;
-                                return input.getOptions().isExcluded();
-                            }
-                        }).toSet();
-                if (!columns.isEmpty()) {
-                    LOGGER.debug(String.format("%s contains %d columns which were marked as excluded", rBuilderEntity.getName(), columns.size()));
-                    cfg.popColumns(rBuilderEntity, columns);
-                }
-            } else {
-                throw new Exception(String.format("No columns in entity %s - that should not happen", rBuilderEntity.getName()));
-            }
-        }
-        return cfg;
-    }
+	/** {@inheritDoc} */
+	@Override
+	protected WebDataBinder doInitBinder(final WebDataBinder binder, final FormattingConversionService conversionService) {
+		return binder;
+	}
 }

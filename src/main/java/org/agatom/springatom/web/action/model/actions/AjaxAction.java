@@ -22,11 +22,12 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
+ * <p>AjaxAction class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
 public class AjaxAction
 		extends LinkAction {
 	private static final long          serialVersionUID = -1599199447411132454L;
@@ -37,73 +38,140 @@ public class AjaxAction
 	private              MediaType     dataType         = MediaType.APPLICATION_JSON;
 	private              RequestMethod type             = RequestMethod.POST;
 
+	/**
+	 * <p>isAsync.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isAsync() {
+		return async;
+	}
+
+	/**
+	 * <p>Setter for the field <code>async</code>.</p>
+	 *
+	 * @param async a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.actions.AjaxAction} object.
+	 */
 	public AjaxAction setAsync(final boolean async) {
 		this.async = async;
 		return this;
 	}
 
+	/**
+	 * <p>isCache.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isCache() {
+		return cache;
+	}
+
+	/**
+	 * <p>Setter for the field <code>cache</code>.</p>
+	 *
+	 * @param cache a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.actions.AjaxAction} object.
+	 */
 	public AjaxAction setCache(final boolean cache) {
 		this.cache = cache;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>data</code>.</p>
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 */
+	public Object getData() {
+		return data;
+	}
+
+	/**
+	 * <p>Setter for the field <code>data</code>.</p>
+	 *
+	 * @param data a {@link java.lang.Object} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.actions.AjaxAction} object.
+	 */
 	public AjaxAction setData(final Object data) {
 		this.data = data;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>contentType</code>.</p>
+	 *
+	 * @return a {@link org.springframework.http.MediaType} object.
+	 */
+	public MediaType getContentType() {
+		return contentType;
+	}
+
+	/**
+	 * <p>Setter for the field <code>contentType</code>.</p>
+	 *
+	 * @param contentType a {@link org.springframework.http.MediaType} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.actions.AjaxAction} object.
+	 */
 	public AjaxAction setContentType(final MediaType contentType) {
 		this.contentType = contentType;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>dataType</code>.</p>
+	 *
+	 * @return a {@link org.springframework.http.MediaType} object.
+	 */
+	public MediaType getDataType() {
+		return dataType;
+	}
+
+	/**
+	 * <p>Setter for the field <code>dataType</code>.</p>
+	 *
+	 * @param dataType a {@link org.springframework.http.MediaType} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.actions.AjaxAction} object.
+	 */
 	public AjaxAction setDataType(final MediaType dataType) {
 		this.dataType = dataType;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>type</code>.</p>
+	 *
+	 * @return a {@link org.springframework.web.bind.annotation.RequestMethod} object.
+	 */
+	public RequestMethod getType() {
+		return type;
+	}
+
+	/**
+	 * <p>Setter for the field <code>type</code>.</p>
+	 *
+	 * @param type a {@link org.springframework.web.bind.annotation.RequestMethod} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.actions.AjaxAction} object.
+	 */
 	public AjaxAction setType(final RequestMethod type) {
 		this.type = type;
 		return this;
 	}
 
-	public boolean isAsync() {
-		return async;
-	}
-
-	public boolean isCache() {
-		return cache;
-	}
-
-	public Object getData() {
-		return data;
-	}
-
-	public MediaType getContentType() {
-		return contentType;
-	}
-
-	public MediaType getDataType() {
-		return dataType;
-	}
-
-	public RequestMethod getType() {
-		return type;
-	}
-
+	/** {@inheritDoc} */
 	@Override
-	public String toString() {
-		return Objects.toStringHelper(this)
-				.addValue(async)
-				.addValue(cache)
-				.addValue(data)
-				.addValue(contentType)
-				.addValue(dataType)
-				.addValue(type)
-				.addValue(url)
-				.toString();
+	public int hashCode() {
+		return Objects.hashCode(async, cache, data, contentType, dataType, type,
+				url);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -124,9 +192,17 @@ public class AjaxAction
 				Objects.equal(this.url, that.url);
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public int hashCode() {
-		return Objects.hashCode(async, cache, data, contentType, dataType, type,
-				url);
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(async)
+				.addValue(cache)
+				.addValue(data)
+				.addValue(contentType)
+				.addValue(dataType)
+				.addValue(type)
+				.addValue(url)
+				.toString();
 	}
 }

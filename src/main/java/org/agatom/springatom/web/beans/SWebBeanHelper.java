@@ -20,16 +20,24 @@ package org.agatom.springatom.web.beans;
 import org.springframework.ui.ModelMap;
 
 /**
+ * <p>Abstract SWebBeanHelper class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public abstract class SWebBeanHelper {
-    public static void addToModelMap(final ModelMap modelMap, final WebBean webBean) {
-        final String beanId = webBean.getBeanId();
-        if (beanId == null) {
-            modelMap.addAttribute(webBean);
-        }
-        modelMap.addAttribute(beanId, webBean);
-    }
+	/**
+	 * <p>addToModelMap.</p>
+	 *
+	 * @param modelMap a {@link org.springframework.ui.ModelMap} object.
+	 * @param webBean  a {@link org.agatom.springatom.web.beans.WebBean} object.
+	 */
+	public static void addToModelMap(final ModelMap modelMap, final WebBean webBean) {
+		final String beanId = webBean.getBeanId();
+		if (beanId == null) {
+			modelMap.addAttribute(webBean);
+		}
+		modelMap.addAttribute(beanId, webBean);
+	}
 }

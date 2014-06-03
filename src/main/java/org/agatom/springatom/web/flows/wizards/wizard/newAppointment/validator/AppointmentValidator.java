@@ -67,6 +67,12 @@ public class AppointmentValidator {
 	@Autowired
 	private SMessageSource   messageSource       = null;
 
+	/**
+	 * <p>validateStep1.</p>
+	 *
+	 * @param appointment a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
+	 * @param context     a {@link org.springframework.binding.validation.ValidationContext} object.
+	 */
 	public void validateStep1(final SAppointment appointment, final ValidationContext context) {
 		this.validateDates(appointment, context);
 		this.validateCar(appointment, context);

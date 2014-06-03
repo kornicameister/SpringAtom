@@ -27,46 +27,61 @@ import org.springframework.web.servlet.view.tiles3.TilesView;
 import java.util.Map;
 
 /**
+ * <p>SBreadcrumbResolver class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class SBreadcrumbResolver
-        implements InitializingBean {
-    private static final Logger LOGGER = Logger.getLogger(SBreadcrumbResolver.class);
-    private Map<String, SBreadcrumbPath> cache;
-    private boolean useCache = false;
+		implements InitializingBean {
+	private static final Logger LOGGER = Logger.getLogger(SBreadcrumbResolver.class);
+	private Map<String, SBreadcrumbPath> cache;
+	private boolean useCache = false;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (this.useCache) {
-            this.cache = Maps.newConcurrentMap();
-        }
-    }
+	/** {@inheritDoc} */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		if (this.useCache) {
+			this.cache = Maps.newConcurrentMap();
+		}
+	}
 
-    public SBreadcrumbPath getBreadcrumbPath(final View view) {
-        if (view != null) {
-            if (view.getClass().isAssignableFrom(TilesView.class)) {
-                LOGGER.trace(String
-                        .format("Resolving breadcrumb path using=%s", Tiles3ViewBreadcrumbResolver.class
-                                .getSimpleName()));
-                return Tiles3ViewBreadcrumbResolver.getBreadcrumbPath((TilesView) view);
-            }
-        }
-        return new SBreadcrumbPath();
-    }
+	/**
+	 * <p>getBreadcrumbPath.</p>
+	 *
+	 * @param view a {@link org.springframework.web.servlet.View} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.breadcrumbs.beans.SBreadcrumbPath} object.
+	 */
+	public SBreadcrumbPath getBreadcrumbPath(final View view) {
+		if (view != null) {
+			if (view.getClass().isAssignableFrom(TilesView.class)) {
+				LOGGER.trace(String
+						.format("Resolving breadcrumb path using=%s", Tiles3ViewBreadcrumbResolver.class
+								.getSimpleName()));
+				return Tiles3ViewBreadcrumbResolver.getBreadcrumbPath((TilesView) view);
+			}
+		}
+		return new SBreadcrumbPath();
+	}
 
-    public void setUseCache(final boolean useCache) {
-        this.useCache = useCache;
-    }
+	/**
+	 * <p>Setter for the field <code>useCache</code>.</p>
+	 *
+	 * @param useCache a boolean.
+	 */
+	public void setUseCache(final boolean useCache) {
+		this.useCache = useCache;
+	}
 
-    private static class Tiles3ViewBreadcrumbResolver {
-        private static final Logger LOGGER_2 = Logger.getLogger(Tiles3ViewBreadcrumbResolver.class);
+	private static class Tiles3ViewBreadcrumbResolver {
+		private static final Logger LOGGER_2 = Logger.getLogger(Tiles3ViewBreadcrumbResolver.class);
 
-        public static SBreadcrumbPath getBreadcrumbPath(final TilesView tilesView) {
-            LOGGER_2.trace(String.format("Resolving from tilesView=%s", tilesView));
-            final String url = tilesView.getUrl();
-            return new SBreadcrumbPath();
-        }
-    }
+		public static SBreadcrumbPath getBreadcrumbPath(final TilesView tilesView) {
+			LOGGER_2.trace(String.format("Resolving from tilesView=%s", tilesView));
+			final String url = tilesView.getUrl();
+			return new SBreadcrumbPath();
+		}
+	}
 }

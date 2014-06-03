@@ -23,39 +23,93 @@ import org.springframework.data.domain.Persistable;
 import java.io.Serializable;
 
 /**
+ * <p>Abstract ReportException class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 abstract public class ReportException
-        extends ServiceException {
-    private static final long serialVersionUID = 6553574310591708853L;
+		extends ServiceException {
+	private static final long serialVersionUID = 6553574310591708853L;
 
-    public ReportException(final String message) {
-        super(message);
-    }
+	/**
+	 * <p>Constructor for ReportException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
+	public ReportException(final String message) {
+		super(message);
+	}
 
-    public ReportException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * <p>Constructor for ReportException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
+	public ReportException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 
-    public <T extends Persistable<ID>, ID extends Serializable> ReportException(final Class<T> target, final String message) {
-        super(target, message);
-    }
+	/**
+	 * <p>Constructor for ReportException.</p>
+	 *
+	 * @param target  a {@link java.lang.Class} object.
+	 * @param message a {@link java.lang.String} object.
+	 * @param <T>     a T object.
+	 * @param <ID>    a ID object.
+	 */
+	public <T extends Persistable<ID>, ID extends Serializable> ReportException(final Class<T> target, final String message) {
+		super(target, message);
+	}
 
-    public <T extends Persistable<ID>, ID extends Serializable> ReportException(final Class<T> target, final String message, final Throwable cause) {
-        super(target, message, cause);
-    }
+	/**
+	 * <p>Constructor for ReportException.</p>
+	 *
+	 * @param target  a {@link java.lang.Class} object.
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 * @param <T>     a T object.
+	 * @param <ID>    a ID object.
+	 */
+	public <T extends Persistable<ID>, ID extends Serializable> ReportException(final Class<T> target, final String message, final Throwable cause) {
+		super(target, message, cause);
+	}
 
-    public <T extends Persistable<ID>, ID extends Serializable> ReportException(final Class<T> target, final Throwable cause) {
-        super(target, cause);
-    }
+	/**
+	 * <p>Constructor for ReportException.</p>
+	 *
+	 * @param target a {@link java.lang.Class} object.
+	 * @param cause  a {@link java.lang.Throwable} object.
+	 * @param <T>    a T object.
+	 * @param <ID>   a ID object.
+	 */
+	public <T extends Persistable<ID>, ID extends Serializable> ReportException(final Class<T> target, final Throwable cause) {
+		super(target, cause);
+	}
 
-    public <T extends Persistable<ID>, ID extends Serializable> ReportException(final Class<T> target, final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
-        super(target, message, cause, enableSuppression, writableStackTrace);
-    }
+	/**
+	 * <p>Constructor for ReportException.</p>
+	 *
+	 * @param target             a {@link java.lang.Class} object.
+	 * @param message            a {@link java.lang.String} object.
+	 * @param cause              a {@link java.lang.Throwable} object.
+	 * @param enableSuppression  a boolean.
+	 * @param writableStackTrace a boolean.
+	 * @param <T>                a T object.
+	 * @param <ID>               a ID object.
+	 */
+	public <T extends Persistable<ID>, ID extends Serializable> ReportException(final Class<T> target, final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+		super(target, message, cause, enableSuppression, writableStackTrace);
+	}
 
-    public ReportException(final Throwable cause) {
-        super(cause);
-    }
+	/**
+	 * <p>Constructor for ReportException.</p>
+	 *
+	 * @param cause a {@link java.lang.Throwable} object.
+	 */
+	public ReportException(final Throwable cause) {
+		super(cause);
+	}
 }

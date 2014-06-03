@@ -29,20 +29,44 @@ import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 /**
+ * <p>ReportBuilderService interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
 public interface ReportBuilderService {
 
-    @NotNull
-    Map<String, ReportRepresentation> getAvailableRepresentations();
+	/**
+	 * <p>getAvailableRepresentations.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
+	@NotNull
+	Map<String, ReportRepresentation> getAvailableRepresentations();
 
-    @NotNull
-    Report newReportInstance(@NotNull final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException;
+	/**
+	 * <p>newReportInstance.</p>
+	 *
+	 * @param reportConfiguration a {@link org.agatom.springatom.web.rbuilder.ReportConfiguration} object.
+	 *
+	 * @return a {@link org.agatom.springatom.server.model.types.report.Report} object.
+	 *
+	 * @throws org.agatom.springatom.web.rbuilder.data.exception.ReportBuilderServiceException if any.
+	 */
+	@NotNull
+	Report newReportInstance(@NotNull final ReportConfiguration reportConfiguration) throws ReportBuilderServiceException;
 
-    void populateReportViewDescriptor(
-            @Min(value = 1) final Long reportId, @Length(min = 1) final String format, @NotNull final ReportViewDescriptor descriptor) throws
-            ReportBuilderServiceException;
+	/**
+	 * <p>populateReportViewDescriptor.</p>
+	 *
+	 * @param reportId   a {@link java.lang.Long} object.
+	 * @param format     a {@link java.lang.String} object.
+	 * @param descriptor a {@link org.agatom.springatom.web.rbuilder.ReportViewDescriptor} object.
+	 *
+	 * @throws org.agatom.springatom.web.rbuilder.data.exception.ReportBuilderServiceException if any.
+	 */
+	void populateReportViewDescriptor(
+			@Min(value = 1) final Long reportId, @Length(min = 1) final String format, @NotNull final ReportViewDescriptor descriptor) throws
+			ReportBuilderServiceException;
 }

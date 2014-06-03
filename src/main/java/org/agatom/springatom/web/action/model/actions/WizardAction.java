@@ -24,26 +24,51 @@ package org.agatom.springatom.web.action.model.actions;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class WizardAction extends LinkAction {
+public class WizardAction
+		extends LinkAction {
 	private static final long     serialVersionUID = 4681017930494233352L;
 	private              String   wizardName       = null;
 	private              Class<?> type             = null;
 
+	/**
+	 * <p>Getter for the field <code>wizardName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getWizardName() {
+		return wizardName;
+	}
+
+	/**
+	 * <p>Setter for the field <code>wizardName</code>.</p>
+	 *
+	 * @param wizardName a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.actions.WizardAction} object.
+	 */
 	public WizardAction setWizardName(final String wizardName) {
 		this.wizardName = wizardName;
 		return this;
 	}
 
-	public String getWizardName() {
-		return wizardName;
+	/**
+	 * <p>Getter for the field <code>type</code>.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
+	public Class<?> getType() {
+		return type;
 	}
 
+	/**
+	 * <p>Setter for the field <code>type</code>.</p>
+	 *
+	 * @param type a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.actions.WizardAction} object.
+	 */
 	public WizardAction setType(final Class<?> type) {
 		this.type = type;
 		return this;
-	}
-
-	public Class<?> getType() {
-		return type;
 	}
 }

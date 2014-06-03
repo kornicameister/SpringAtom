@@ -23,20 +23,55 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
+ * <p>LocalizedClassModel interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface LocalizedClassModel<T> extends Serializable, MapAdaptable<String, LocalizedClassAttribute> {
+public interface LocalizedClassModel<T>
+		extends Serializable, MapAdaptable<String, LocalizedClassAttribute> {
+	/**
+	 * <p>getSource.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
 	Class<T> getSource();
 
+	/**
+	 * <p>getName.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getName();
 
+	/**
+	 * <p>isFound.</p>
+	 *
+	 * @return a boolean.
+	 */
 	boolean isFound();
 
+	/**
+	 * <p>getAttributes.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
+	 */
 	Set<LocalizedClassAttribute> getAttributes();
 
+	/**
+	 * <p>getLocalizedAttribute.</p>
+	 *
+	 * @param attributeName a {@link java.lang.String} object.
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	String getLocalizedAttribute(final String attributeName);
 
+	/**
+	 * <p>hasAttributes.</p>
+	 *
+	 * @return a boolean.
+	 */
 	boolean hasAttributes();
 }

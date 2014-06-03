@@ -18,11 +18,12 @@
 package org.agatom.springatom.web.action.model.actions;
 
 /**
+ * <p>DownloadAction class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
 public class DownloadAction
 		extends LinkAction {
 	private static final long serialVersionUID = 6937230026509127006L;

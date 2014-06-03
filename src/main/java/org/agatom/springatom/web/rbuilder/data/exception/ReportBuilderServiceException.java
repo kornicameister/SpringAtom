@@ -22,28 +22,54 @@ import org.springframework.data.domain.Persistable;
 import java.io.Serializable;
 
 /**
+ * <p>ReportBuilderServiceException class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class ReportBuilderServiceException
-        extends ReportException {
+		extends ReportException {
 
-    private static final long serialVersionUID = -5282239784661658192L;
+	private static final long serialVersionUID = -5282239784661658192L;
 
-    public ReportBuilderServiceException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * <p>Constructor for ReportBuilderServiceException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 * @param cause   a {@link java.lang.Throwable} object.
+	 */
+	public ReportBuilderServiceException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 
-    public ReportBuilderServiceException(final Throwable cause) {
-        super(cause);
-    }
+	/**
+	 * <p>Constructor for ReportBuilderServiceException.</p>
+	 *
+	 * @param cause a {@link java.lang.Throwable} object.
+	 */
+	public ReportBuilderServiceException(final Throwable cause) {
+		super(cause);
+	}
 
-    public ReportBuilderServiceException(final String message) {
-        super(message);
-    }
+	/**
+	 * <p>Constructor for ReportBuilderServiceException.</p>
+	 *
+	 * @param message a {@link java.lang.String} object.
+	 */
+	public ReportBuilderServiceException(final String message) {
+		super(message);
+	}
 
-    public <T extends Persistable<ID>, ID extends Serializable> ReportBuilderServiceException(final Class<T> target, final String message) {
-        super(target, message);
-    }
+	/**
+	 * <p>Constructor for ReportBuilderServiceException.</p>
+	 *
+	 * @param target  a {@link java.lang.Class} object.
+	 * @param message a {@link java.lang.String} object.
+	 * @param <T>     a T object.
+	 * @param <ID>    a ID object.
+	 */
+	public <T extends Persistable<ID>, ID extends Serializable> ReportBuilderServiceException(final Class<T> target, final String message) {
+		super(target, message);
+	}
 }

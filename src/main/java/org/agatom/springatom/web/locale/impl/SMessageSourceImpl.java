@@ -47,6 +47,8 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
+ * <p>SMessageSourceImpl class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -155,7 +157,8 @@ public class SMessageSourceImpl
 
 		@Override
 		public String getLocalizedAttribute(final String attributeName) {
-			return this.asMap().get(attributeName).getLabel();
+			final LocalizedClassAttribute attribute = this.asMap().get(attributeName);
+			return attribute != null ? attribute.getLabel() : attributeName;
 		}
 
 		@Override
@@ -176,6 +179,7 @@ public class SMessageSourceImpl
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("ConstantConditions")
 	public <T> LocalizedClassModel<T> getLocalizedClassModel(final Class<T> clazz, final Locale locale) {
@@ -285,6 +289,7 @@ public class SMessageSourceImpl
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public <T> LocalizedClassAttribute getLocalizedClassAttribute(final Class<T> clazz, final String attributeName, final Locale locale) {
 		final LocalizedClassModel<T> message = this.getLocalizedClassModel(clazz, locale);
@@ -294,6 +299,7 @@ public class SMessageSourceImpl
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public <LA extends LocalizationAware> LA localize(final LA localizationAware, final Locale locale) {
 		final String messageKey = localizationAware.getMessageKey();
@@ -304,16 +310,19 @@ public class SMessageSourceImpl
 		return localizationAware;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getMessage(final Localized localized, final Locale locale) {
 		return this.getMessage(localized.getMessageKey(), locale);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getMessage(final String key, final Locale locale) {
 		return this.getMessage(key, null, locale);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SLocalizedMessages getLocalizedMessages(final Locale locale) {
 		final SLocalizedMessages preferences = new SLocalizedMessages();
@@ -326,6 +335,7 @@ public class SMessageSourceImpl
 		return preferences;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SLocalizedMessages getLocalizedMessages(final String[] keys, final Locale locale, final boolean usePattern) {
 		if (!usePattern) {
@@ -356,6 +366,7 @@ public class SMessageSourceImpl
 		return messages;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SLocalizedMessage getLocalizedMessage(final String key, final Locale locale) {
 		return new SLocalizedMessage()

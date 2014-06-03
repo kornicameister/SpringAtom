@@ -22,53 +22,81 @@ import com.google.common.base.Objects;
 import java.io.Serializable;
 
 /**
+ * <p>RBuilderColumnOptions class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class RBuilderColumnOptions
-        implements Serializable {
-    private static final long    serialVersionUID = -9114684272818588861L;
-    private static final Boolean DEFAULT_EXCLUDED = Boolean.FALSE;
-    private static final Boolean DEFAULT_GROUP_BY = Boolean.FALSE;
-    private              boolean excluded         = DEFAULT_EXCLUDED;
-    private              boolean groupBy          = DEFAULT_GROUP_BY;
+		implements Serializable {
+	private static final long    serialVersionUID = -9114684272818588861L;
+	private static final Boolean DEFAULT_EXCLUDED = Boolean.FALSE;
+	private              boolean excluded         = DEFAULT_EXCLUDED;
+	private static final Boolean DEFAULT_GROUP_BY = Boolean.FALSE;
+	private              boolean groupBy          = DEFAULT_GROUP_BY;
 
-    public RBuilderColumnOptions setExcluded(final boolean excluded) {
-        this.excluded = excluded;
-        return this;
-    }
+	/**
+	 * <p>isExcluded.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isExcluded() {
+		return excluded;
+	}
 
-    public RBuilderColumnOptions setGroupBy(final boolean groupBy) {
-        this.groupBy = groupBy;
-        return this;
-    }
+	/**
+	 * <p>Setter for the field <code>excluded</code>.</p>
+	 *
+	 * @param excluded a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderColumnOptions} object.
+	 */
+	public RBuilderColumnOptions setExcluded(final boolean excluded) {
+		this.excluded = excluded;
+		return this;
+	}
 
-    public boolean isExcluded() {
-        return excluded;
-    }
+	/**
+	 * <p>isGroupBy.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isGroupBy() {
+		return groupBy;
+	}
 
-    public boolean isGroupBy() {
-        return groupBy;
-    }
+	/**
+	 * <p>Setter for the field <code>groupBy</code>.</p>
+	 *
+	 * @param groupBy a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderColumnOptions} object.
+	 */
+	public RBuilderColumnOptions setGroupBy(final boolean groupBy) {
+		this.groupBy = groupBy;
+		return this;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(excluded, groupBy);
+	}
 
-        RBuilderColumnOptions that = (RBuilderColumnOptions) o;
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        return Objects.equal(this.excluded, that.excluded) &&
-                Objects.equal(this.groupBy, that.groupBy);
-    }
+		RBuilderColumnOptions that = (RBuilderColumnOptions) o;
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(excluded, groupBy);
-    }
+		return Objects.equal(this.excluded, that.excluded) &&
+				Objects.equal(this.groupBy, that.groupBy);
+	}
 }

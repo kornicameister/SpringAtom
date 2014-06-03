@@ -27,50 +27,65 @@ import org.springframework.webflow.engine.TransitionableState;
 import org.springframework.webflow.engine.support.DefaultTransitionCriteria;
 
 /**
+ * <p>PossibleTransitionsTag class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class PossibleTransitionsTag
-        extends RequestContextAwareTag {
+		extends RequestContextAwareTag {
 
-    public static final  String EVENT_ID_S       = "_eventId_%s";
-    private static final long   serialVersionUID = -6092379285742740242L;
-    protected String          var;
-    protected StateDefinition state;
+	/** Constant <code>EVENT_ID_S="_eventId_%s"</code> */
+	public static final  String EVENT_ID_S       = "_eventId_%s";
+	private static final long   serialVersionUID = -6092379285742740242L;
+	protected String          var;
+	protected StateDefinition state;
 
-    public void setState(final StateDefinition state) {
-        this.state = state;
-    }
+	/**
+	 * <p>Setter for the field <code>state</code>.</p>
+	 *
+	 * @param state a {@link org.springframework.webflow.definition.StateDefinition} object.
+	 */
+	public void setState(final StateDefinition state) {
+		this.state = state;
+	}
 
-    public void setVar(final String var) {
-        this.var = var;
-    }
+	/**
+	 * <p>Setter for the field <code>var</code>.</p>
+	 *
+	 * @param var a {@link java.lang.String} object.
+	 */
+	public void setVar(final String var) {
+		this.var = var;
+	}
 
-    @Override
-    protected int doStartTagInternal() throws Exception {
-        if (this.state instanceof TransitionableState) {
-            final TransitionableState transitionableState = (TransitionableState) this.state;
-            final TransitionSet set = transitionableState.getTransitionSet();
+	/** {@inheritDoc} */
+	@Override
+	protected int doStartTagInternal() throws Exception {
+		if (this.state instanceof TransitionableState) {
+			final TransitionableState transitionableState = (TransitionableState) this.state;
+			final TransitionSet set = transitionableState.getTransitionSet();
 
-            final String[] ccs = new String[set.size()];
-            int i = 0;
+			final String[] ccs = new String[set.size()];
+			int i = 0;
 
-            for (final Transition ts : set) {
-                final DefaultTransitionCriteria criteria = (DefaultTransitionCriteria) ts.getMatchingCriteria();
-                ccs[i++] = String.format(EVENT_ID_S, criteria.toString());
-            }
+			for (final Transition ts : set) {
+				final DefaultTransitionCriteria criteria = (DefaultTransitionCriteria) ts.getMatchingCriteria();
+				ccs[i++] = String.format(EVENT_ID_S, criteria.toString());
+			}
 
-            this.pageContext.setAttribute(this.var, new JSONArray(ccs).toString());
-        }
-        return EVAL_BODY_INCLUDE;
-    }
+			this.pageContext.setAttribute(this.var, new JSONArray(ccs).toString());
+		}
+		return EVAL_BODY_INCLUDE;
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                      .addValue(var)
-                      .addValue(state)
-                      .toString();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(var)
+				.addValue(state)
+				.toString();
+	}
 }

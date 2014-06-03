@@ -36,7 +36,7 @@ import java.util.Locale;
 import java.util.Properties;
 
 /**
- * {@link SingleEntityRBuilderCreateOperation} is an implementation
+ * {@link org.agatom.springatom.web.rbuilder.data.operation.create.SingleEntityRBuilderCreateOperation} is an implementation
  * of {ReportCreateOperation} focused on handling the situation where only one {@link javax.persistence.Entity}
  * has been selected to generate report from.
  * <p/>
@@ -51,57 +51,60 @@ import java.util.Properties;
 @Component
 @Description("Handles logic of creating new report instance if only one Entity has been selected.")
 public class SingleEntityRBuilderCreateOperation
-        extends AbstractRBuilderCreateOperation {
+		extends AbstractRBuilderCreateOperation {
 
-    private final static Logger LOGGER = Logger.getLogger(SingleEntityRBuilderCreateOperation.class);
+	private final static Logger LOGGER = Logger.getLogger(SingleEntityRBuilderCreateOperation.class);
 
-    @Autowired
-    @Qualifier("concatenatedReportsBuilder")
-    private JasperBuilderService dynamicBuilder;
+	@Autowired
+	@Qualifier("concatenatedReportsBuilder")
+	private JasperBuilderService dynamicBuilder;
 
-    @Override
-    protected boolean preValidate(final ReportConfiguration reportConfiguration) {
-        return reportConfiguration.getSize() == 1;
-    }
+	/** {@inheritDoc} */
+	@Override
+	protected boolean preValidate(final ReportConfiguration reportConfiguration) {
+		return reportConfiguration.getSize() == 1;
+	}
 
-    @Override
-    protected Report createReport(
-            final ReportConfiguration reportConfiguration,
-            final SUser user,
-            final Locale locale,
-            final Properties propertiesHolder
-    ) throws InSaveReportCreateOperationException {
-        try {
-            LOGGER.info(String.format("Saving using %s", reportConfiguration));
+	/** {@inheritDoc} */
+	@Override
+	protected Report createReport(
+			final ReportConfiguration reportConfiguration,
+			final SUser user,
+			final Locale locale,
+			final Properties propertiesHolder
+	) throws InSaveReportCreateOperationException {
+		try {
+			LOGGER.info(String.format("Saving using %s", reportConfiguration));
 
-            final SReport report = this.newReport(reportConfiguration);
-            final RBuilderEntity entity = this.getEntity(reportConfiguration);
+			final SReport report = this.newReport(reportConfiguration);
+			final RBuilderEntity entity = this.getEntity(reportConfiguration);
 
-            report.setReportedClass(entity.getJavaClass());
-            report.setDynamic(false);
+			report.setReportedClass(entity.getJavaClass());
+			report.setDynamic(false);
 
-            return report;
+			return report;
 
-        } catch (Exception exception) {
-            LOGGER.error(String.format("Failed to save %s to file", reportConfiguration), exception);
-            throw new InSaveReportCreateOperationException("Failed to persist new report", exception);
-        }
-    }
+		} catch (Exception exception) {
+			LOGGER.error(String.format("Failed to save %s to file", reportConfiguration), exception);
+			throw new InSaveReportCreateOperationException("Failed to persist new report", exception);
+		}
+	}
 
-    @Override
-    protected JasperReport generateJasperReport(final Report report, final ReportConfiguration reportConfiguration) throws
-            InSaveReportCreateOperationException {
-        try {
-            return this.dynamicBuilder.generateReport(report, this.getEntity(reportConfiguration));
-        } catch (ReportGenerationException exception) {
-            final String message = String.format("Failed to generate JasperReport of %s", report.getTitle());
-            LOGGER.fatal(message, exception);
-            throw new InSaveReportCreateOperationException(message, exception);
-        }
-    }
+	/** {@inheritDoc} */
+	@Override
+	protected JasperReport generateJasperReport(final Report report, final ReportConfiguration reportConfiguration) throws
+			InSaveReportCreateOperationException {
+		try {
+			return this.dynamicBuilder.generateReport(report, this.getEntity(reportConfiguration));
+		} catch (ReportGenerationException exception) {
+			final String message = String.format("Failed to generate JasperReport of %s", report.getTitle());
+			LOGGER.fatal(message, exception);
+			throw new InSaveReportCreateOperationException(message, exception);
+		}
+	}
 
-    private RBuilderEntity getEntity(final ReportConfiguration reportConfiguration) {
-        return reportConfiguration.getEntities().get(0);
-    }
+	private RBuilderEntity getEntity(final ReportConfiguration reportConfiguration) {
+		return reportConfiguration.getEntities().get(0);
+	}
 }
 

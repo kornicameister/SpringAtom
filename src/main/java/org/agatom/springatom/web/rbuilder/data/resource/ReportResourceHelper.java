@@ -42,6 +42,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
+ * <p>ReportResourceHelper class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -49,94 +51,103 @@ import java.util.Properties;
 @LazyComponent(value = ReportResourceHelper.COMPONENT_NAME)
 public class ReportResourceHelper {
 
-    private static final   Logger LOGGER         = Logger.getLogger(ReportResourceHelper.class);
-    protected static final String COMPONENT_NAME = "org.agatom.springatom.RBReportResourceHelper";
+	/** Constant <code>COMPONENT_NAME="org.agatom.springatom.RBReportResourceH"{trunked}</code> */
+	protected static final String       COMPONENT_NAME   = "org.agatom.springatom.RBReportResourceHelper";
+	private static final   Logger       LOGGER           = Logger.getLogger(ReportResourceHelper.class);
+	@Autowired(required = false)
+	@Qualifier(value = "rbuilderProperties")
+	private                Properties   propertiesHolder = null;
+	@Autowired(required = false)
+	private                ObjectMapper jackson          = null;
 
-    @Autowired(required = false)
-    @Qualifier(value = "rbuilderProperties")
-    private Properties   propertiesHolder = null;
-    @Autowired(required = false)
-    private ObjectMapper jackson          = null;
+	/**
+	 * <p>toFile.</p>
+	 *
+	 * @param reportToFile a {@link org.agatom.springatom.web.rbuilder.data.resource.ReportToFile} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.data.resource.ReportResources} object.
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
+	public ReportResources toFile(final ReportToFile reportToFile) throws Exception {
+		Assert.notNull(reportToFile);
 
-    public ReportResources toFile(final ReportToFile reportToFile) throws Exception {
-        Assert.notNull(reportToFile);
+		final Report report = reportToFile.getReport();
+		final JasperReport jasperReport = reportToFile.getJasperReport();
+		final ReportConfiguration reportConfiguration = reportToFile.getReportConfiguration();
 
-        final Report report = reportToFile.getReport();
-        final JasperReport jasperReport = reportToFile.getJasperReport();
-        final ReportConfiguration reportConfiguration = reportToFile.getReportConfiguration();
+		return this.saveCompiledReportToFile(
+				jasperReport,
+				this.getResource(report, ReportResourceType.JASPER),
+				reportConfiguration,
+				this.getResource(report, ReportResourceType.CONFIGURATION)
+		);
+	}
 
-        return this.saveCompiledReportToFile(
-                jasperReport,
-                this.getResource(report, ReportResourceType.JASPER),
-                reportConfiguration,
-                this.getResource(report, ReportResourceType.CONFIGURATION)
-        );
-    }
+	private ReportResources saveCompiledReportToFile(final JasperReport jasperReport,
+	                                                 final Resource jasperResource,
+	                                                 final ReportConfiguration reportConfiguration,
+	                                                 final Resource reportResource) throws
+			Exception {
+		Assert.notNull(jasperResource);
+		Assert.isTrue(!jasperResource.getFile().exists());
+		JRSaver.saveObject(jasperReport, jasperResource.getFile());
+		Assert.isTrue(jasperResource.getFile().setReadOnly());
 
-    private Resource getResource(final Report report, final ReportResourceType builderResource) throws IOException {
-        final String corePackageName = String.format("%s/", ClassUtils.getPackageName(SpringAtom.class).replaceAll("\\.", "/"));
-        File file;
-        try {
-            file = ResourceUtils.getFile(String.format("classpath:%sjasper", corePackageName));
-        } catch (FileNotFoundException fnfe) {
-            file = this.createJasperHolderDirectory(corePackageName);
-        }
-        final FileSystemResource fileSystemResource = new FileSystemResource(file);
-        return this.getFileSystemResource(fileSystemResource, report, builderResource);
-    }
+		Assert.notNull(reportResource);
+		Assert.isTrue(!reportResource.getFile().exists());
+		this.jackson.writeValue(reportResource.getFile(), reportConfiguration);
+		Assert.isTrue(reportResource.getFile().setReadOnly());
 
-    private ReportResources saveCompiledReportToFile(final JasperReport jasperReport,
-                                                     final Resource jasperResource,
-                                                     final ReportConfiguration reportConfiguration,
-                                                     final Resource reportResource) throws
-            Exception {
-        Assert.notNull(jasperResource);
-        Assert.isTrue(!jasperResource.getFile().exists());
-        JRSaver.saveObject(jasperReport, jasperResource.getFile());
-        Assert.isTrue(jasperResource.getFile().setReadOnly());
+		return ReportResources.newReportResources(jasperResource, reportResource);
+	}
 
-        Assert.notNull(reportResource);
-        Assert.isTrue(!reportResource.getFile().exists());
-        this.jackson.writeValue(reportResource.getFile(), reportConfiguration);
-        Assert.isTrue(reportResource.getFile().setReadOnly());
+	private Resource getResource(final Report report, final ReportResourceType builderResource) throws IOException {
+		final String corePackageName = String.format("%s/", ClassUtils.getPackageName(SpringAtom.class).replaceAll("\\.", "/"));
+		File file;
+		try {
+			file = ResourceUtils.getFile(String.format("classpath:%sjasper", corePackageName));
+		} catch (FileNotFoundException fnfe) {
+			file = this.createJasperHolderDirectory(corePackageName);
+		}
+		final FileSystemResource fileSystemResource = new FileSystemResource(file);
+		return this.getFileSystemResource(fileSystemResource, report, builderResource);
+	}
 
-        return ReportResources.newReportResources(jasperResource, reportResource);
-    }
+	private File createJasperHolderDirectory(final String corePackageName) throws IOException {
+		final FileSystemResource fileSystemResource = new FileSystemResource(ResourceUtils.getFile(String.format("classpath:%s", corePackageName)));
+		final Resource jasper = new FileSystemResource(new File(String.format("%s/jasper", fileSystemResource.getPath())));
+		final boolean mkdir = jasper.getFile().mkdir();
+		if (mkdir) {
+			LOGGER.trace(String.format("Created JasperHolderDirectory at file=%s", jasper.getFile().getPath()));
+			return jasper.getFile();
+		} else {
+			throw new NestedIOException("Failed to created JasperHolderDirectory");
+		}
+	}
 
-    private FileSystemResource getFileSystemResource(final FileSystemResource fileSystemResource, final Report report, final ReportResourceType resourceType) {
-        final String pathname = StringUtils.cleanPath(
-                String.format(LocaleContextHolder.getLocale(), "%s/%s.%s",
-                        fileSystemResource.getPath(),
-                        this.getResourceName(resourceType, this.calculateFileNameHashCode(report)),
-                        resourceType.toString().toLowerCase()
-                )
-        );
-        return new FileSystemResource(new File(pathname));
-    }
+	private FileSystemResource getFileSystemResource(final FileSystemResource fileSystemResource, final Report report, final ReportResourceType resourceType) {
+		final String pathname = StringUtils.cleanPath(
+				String.format(LocaleContextHolder.getLocale(), "%s/%s.%s",
+						fileSystemResource.getPath(),
+						this.getResourceName(resourceType, this.calculateFileNameHashCode(report)),
+						resourceType.toString().toLowerCase()
+				)
+		);
+		return new FileSystemResource(new File(pathname));
+	}
 
-    private String getResourceName(final ReportResourceType resourceType, final String fileName) {
-        switch (resourceType) {
-            case CONFIGURATION:
-                return String.format("%s_%s", this.propertiesHolder.getProperty("reports.files.configuration"), fileName);
-            case JASPER:
-                return String.format("%s_%s", this.propertiesHolder.getProperty("reports.files.jasper"), fileName);
-        }
-        return null;
-    }
+	private String getResourceName(final ReportResourceType resourceType, final String fileName) {
+		switch (resourceType) {
+			case CONFIGURATION:
+				return String.format("%s_%s", this.propertiesHolder.getProperty("reports.files.configuration"), fileName);
+			case JASPER:
+				return String.format("%s_%s", this.propertiesHolder.getProperty("reports.files.jasper"), fileName);
+		}
+		return null;
+	}
 
-    private String calculateFileNameHashCode(final Report report) {
-        return String.valueOf(StringUtils.trimAllWhitespace(report.getTitle()).hashCode());
-    }
-
-    private File createJasperHolderDirectory(final String corePackageName) throws IOException {
-        final FileSystemResource fileSystemResource = new FileSystemResource(ResourceUtils.getFile(String.format("classpath:%s", corePackageName)));
-        final Resource jasper = new FileSystemResource(new File(String.format("%s/jasper", fileSystemResource.getPath())));
-        final boolean mkdir = jasper.getFile().mkdir();
-        if (mkdir) {
-            LOGGER.trace(String.format("Created JasperHolderDirectory at file=%s", jasper.getFile().getPath()));
-            return jasper.getFile();
-        } else {
-            throw new NestedIOException("Failed to created JasperHolderDirectory");
-        }
-    }
+	private String calculateFileNameHashCode(final Report report) {
+		return String.valueOf(StringUtils.trimAllWhitespace(report.getTitle()).hashCode());
+	}
 }

@@ -20,22 +20,35 @@ package org.agatom.springatom.web.action.model.actions;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
+ * <p>PopupAction class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-
 public class PopupAction
 		extends LinkAction {
 	private static final long          serialVersionUID = -2015463566430907903L;
 	private              RequestMethod type             = null;
 
+	/**
+	 * <p>Getter for the field <code>type</code>.</p>
+	 *
+	 * @return a {@link org.springframework.web.bind.annotation.RequestMethod} object.
+	 */
+	public RequestMethod getType() {
+		return type;
+	}
+
+	/**
+	 * <p>Setter for the field <code>type</code>.</p>
+	 *
+	 * @param type a {@link org.springframework.web.bind.annotation.RequestMethod} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.action.model.actions.PopupAction} object.
+	 */
 	public PopupAction setType(final RequestMethod type) {
 		this.type = type;
 		return this;
-	}
-
-	public RequestMethod getType() {
-		return type;
 	}
 }

@@ -28,34 +28,42 @@ import org.springframework.webflow.engine.Flow;
 import java.util.List;
 
 /**
+ * <p>AllStatesOfWebflow class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class AllStatesOfWebflow
-        extends RequestContextAwareTag {
+		extends RequestContextAwareTag {
 
-    private static final long serialVersionUID = -3389154492381887502L;
-    private FlowDefinition flow;
+	private static final long serialVersionUID = -3389154492381887502L;
+	private FlowDefinition flow;
 
-    public void setFlow(final FlowDefinition flow) {
-        this.flow = flow;
-    }
+	/**
+	 * <p>Setter for the field <code>flow</code>.</p>
+	 *
+	 * @param flow a {@link org.springframework.webflow.definition.FlowDefinition} object.
+	 */
+	public void setFlow(final FlowDefinition flow) {
+		this.flow = flow;
+	}
 
-    @Override
-    protected int doStartTagInternal() throws Exception {
-        Preconditions.checkArgument(this.flow != null, "FlowDefinition can not be null");
-        Preconditions.checkArgument(ClassUtils.isAssignable(Flow.class, this.flow.getClass()), "FlowDefinition must be an instance of Flow");
-        final Flow flowDef = (Flow) this.flow;
-        final String[] stateIds = flowDef.getStateIds();
-        final List<String> stateDefinitions = Lists.newArrayListWithExpectedSize(stateIds.length);
-        for (final String stateId : stateIds) {
-            final StateDefinition state = this.flow.getState(stateId);
-            if (state.isViewState()) {
-                stateDefinitions.add(state.getId());
-            }
-        }
-        pageContext.setAttribute("states", stateDefinitions);
-        return EVAL_BODY_INCLUDE;
-    }
+	/** {@inheritDoc} */
+	@Override
+	protected int doStartTagInternal() throws Exception {
+		Preconditions.checkArgument(this.flow != null, "FlowDefinition can not be null");
+		Preconditions.checkArgument(ClassUtils.isAssignable(Flow.class, this.flow.getClass()), "FlowDefinition must be an instance of Flow");
+		final Flow flowDef = (Flow) this.flow;
+		final String[] stateIds = flowDef.getStateIds();
+		final List<String> stateDefinitions = Lists.newArrayListWithExpectedSize(stateIds.length);
+		for (final String stateId : stateIds) {
+			final StateDefinition state = this.flow.getState(stateId);
+			if (state.isViewState()) {
+				stateDefinitions.add(state.getId());
+			}
+		}
+		pageContext.setAttribute("states", stateDefinitions);
+		return EVAL_BODY_INCLUDE;
+	}
 }

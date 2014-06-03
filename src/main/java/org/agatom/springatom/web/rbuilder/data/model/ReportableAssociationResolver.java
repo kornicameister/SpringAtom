@@ -26,6 +26,8 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 /**
+ * <p>ReportableAssociationResolver interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -33,10 +35,18 @@ import javax.validation.constraints.NotNull;
 @Validated
 public interface ReportableAssociationResolver {
 
-    static String CACHE_NAME = "org.agatom.springatom.cache.ReportableBeanResolver";
+	/** Constant <code>CACHE_NAME="org.agatom.springatom.cache.ReportableB"{trunked}</code> */
+	static String CACHE_NAME = "org.agatom.springatom.cache.ReportableBeanResolver";
 
-    @Nullable
-    @Cacheable(value = CACHE_NAME, key = "#entity.javaClass.name + '_association'")
-    RBuilderAssociation getEntityAssociation(@NotNull final RBuilderEntity entity);
+	/**
+	 * <p>getEntityAssociation.</p>
+	 *
+	 * @param entity a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderEntity} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.rbuilder.bean.RBuilderAssociation} object.
+	 */
+	@Nullable
+	@Cacheable(value = CACHE_NAME, key = "#entity.javaClass.name + '_association'")
+	RBuilderAssociation getEntityAssociation(@NotNull final RBuilderEntity entity);
 
 }

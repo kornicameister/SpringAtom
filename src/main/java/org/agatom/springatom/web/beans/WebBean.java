@@ -27,6 +27,11 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 public interface WebBean
-        extends Serializable {
-    String getBeanId();
+		extends Serializable {
+	/**
+	 * <p>getBeanId.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getBeanId();
 }

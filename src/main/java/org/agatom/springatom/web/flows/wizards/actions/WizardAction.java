@@ -25,6 +25,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
+ * <p>WizardAction class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
@@ -34,5 +36,5 @@ import org.springframework.web.context.WebApplicationContext;
 @Scope(WebApplicationContext.SCOPE_SESSION)
 @Component
 public @interface WizardAction {
-    String value() default "";
+	String value() default "";
 }

@@ -18,6 +18,8 @@
 package org.agatom.springatom.web.rbuilder.data.operation;
 
 /**
+ * <p>RBuilderOperation interface.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1

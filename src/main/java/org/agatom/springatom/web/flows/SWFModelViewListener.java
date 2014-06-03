@@ -20,11 +20,13 @@ package org.agatom.springatom.web.flows;
 import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 
 /**
+ * <p>SWFModelViewListener class.</p>
+ *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
 public class SWFModelViewListener
-        extends FlowExecutionListenerAdapter {
+		extends FlowExecutionListenerAdapter {
 
 }
