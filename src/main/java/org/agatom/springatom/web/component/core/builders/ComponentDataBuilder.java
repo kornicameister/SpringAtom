@@ -24,7 +24,7 @@ import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 /**
  * {@code ComponentDataBuilder} is an interface for <b>component builders</b>
  * designed to provide the data for given component without paying attention on its definition
- * <p/>
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 27.05.14</small>
  *
  * @author kornicameister

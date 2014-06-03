@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * {@code AbstractComponentDataBuilder} is a <b>component builder</b> that can be extended
  * for builder returning nothing but data.
- * <p/>
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 27.05.14</small>
  *
  * @author kornicameister
