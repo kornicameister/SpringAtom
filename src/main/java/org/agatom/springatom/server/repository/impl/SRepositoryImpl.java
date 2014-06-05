@@ -59,14 +59,14 @@ public class SRepositoryImpl<T, ID extends Serializable, N extends Number & Comp
 		extends SBasicRepositoryImpl<T, ID>
 		implements SRepository<T, ID, N> {
 	/** Constant <code>ERROR_MESSAGE_INSUFFICIENT_REV_NUMBERS="Insufficient revision numbers"</code> */
-	public static final  String ERROR_MESSAGE_INSUFFICIENT_REV_NUMBERS = "Insufficient revision numbers";
-	private static final Logger LOGGER                                 = Logger.getLogger(SRepositoryImpl.class);
-	private static final String ERROR_MESSAGE_ID                       = "ID must not be null";
-	private static final String ERROR_MESSAGE_PAGEABLE                 = "Pageable must not be null";
-	private static final String ERROR_MESSAGE_REVISION                 = "Revision must not be null";
-	private static final String ERROR_MESSAGE_REI                      = "RevisionEntityInformation must not be null";
-	private final RevisionEntityInformation    revisionEntityInformation;
-	private final RevisionRepository<T, ID, N> repository;
+	public static final  String                       ERROR_MESSAGE_INSUFFICIENT_REV_NUMBERS = "Insufficient revision numbers";
+	private static final Logger                       LOGGER                                 = Logger.getLogger(SRepositoryImpl.class);
+	private static final String                       ERROR_MESSAGE_ID                       = "ID must not be null";
+	private static final String                       ERROR_MESSAGE_PAGEABLE                 = "Pageable must not be null";
+	private static final String                       ERROR_MESSAGE_REVISION                 = "Revision must not be null";
+	private static final String                       ERROR_MESSAGE_REI                      = "RevisionEntityInformation must not be null";
+	private              RevisionEntityInformation    revisionEntityInformation              = null;
+	private              RevisionRepository<T, ID, N> repository                             = null;
 
 	/**
 	 * <p>Constructor for SRepositoryImpl.</p>

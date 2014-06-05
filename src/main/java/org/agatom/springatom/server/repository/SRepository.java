@@ -19,9 +19,9 @@ package org.agatom.springatom.server.repository;
 
 import org.agatom.springatom.server.repository.exceptions.EntityInRevisionDoesNotExists;
 import org.joda.time.DateTime;
+import org.springframework.data.envers.repository.support.EnversRevisionRepository;
 import org.springframework.data.history.Revision;
 import org.springframework.data.history.Revisions;
-import org.springframework.data.repository.history.RevisionRepository;
 
 import java.io.Serializable;
 
@@ -35,7 +35,7 @@ import java.io.Serializable;
  */
 public interface SRepository<T, ID extends Serializable, N extends Number & Comparable<N>>
 		extends SBasicRepository<T, ID>,
-		RevisionRepository<T, ID, N> {
+		EnversRevisionRepository<T, ID, N> {
 	/**
 	 * {@code findInRevision} returns {@link org.springframework.data.history.Revision} of the target underlying target entity in the given revision
 	 * described in {@code revision} param
