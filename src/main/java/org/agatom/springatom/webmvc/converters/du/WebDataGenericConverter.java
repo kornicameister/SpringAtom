@@ -69,7 +69,7 @@ import java.util.concurrent.TimeUnit;
  * <li>convert: {@link org.agatom.springatom.webmvc.converters.du.ConvertibleValueWrapper} or subclass</li>
  * <li>target: {@link java.lang.String}, because {@link org.agatom.springatom.webmvc.converters.du.WebDataConverter} returned value will be translated to {@link java.lang.String}</li>
  * </ol>
- * <p/>
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 30.05.14</small>
  *
  * @author kornicameister
@@ -218,7 +218,7 @@ public class WebDataGenericConverter
 	private void register() {
 		final Map<String, Object> converters = this.beanFactory.getBeansWithAnnotation(WebConverter.class);
 
-		LOGGER.trace(String.format("Registering in %s and %d converters", this.conversionService, converters.size()));
+		LOGGER.trace(String.format("Registering in %d converters", converters.size()));
 
 		final long startTime = System.nanoTime();
 
