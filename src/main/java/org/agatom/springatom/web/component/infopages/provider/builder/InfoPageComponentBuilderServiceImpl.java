@@ -169,17 +169,14 @@ class InfoPageComponentBuilderServiceImpl
 		cmp.addDynamicProperty("isDynamic", descriptor == null);
 
 		if (descriptor != null) {
-			final AttributeDisplayAs displayAs = this.getDisplayAs(descriptor);
-			cmp.setDisplayAs(displayAs);
+			cmp.setDisplayAs(this.getDisplayAs(descriptor));
 			cmp.addDynamicProperty("attributeName", descriptor.getName());
 			cmp.addDynamicProperty("isAssociation", descriptor.isAssociation());
 			cmp.addDynamicProperty("attributeClass", descriptor.getJavaType().getName());
 
-			if (displayAs.equals(AttributeDisplayAs.TABLE_ATTRIBUTE) && attribute.isGridAttribute()) {
-				cmp.addDynamicProperty("grid", true);
-				cmp.addDynamicProperty("builderId", attribute.getBuilderId());
-			}
-
+		} else if (attribute.isGridAttribute()) {
+			cmp.setDisplayAs(AttributeDisplayAs.TABLE_ATTRIBUTE);
+			cmp.addDynamicProperty("builderId", attribute.getBuilderId());
 		} else {
 			cmp.setDisplayAs(AttributeDisplayAs.VALUE_ATTRIBUTE);
 		}
