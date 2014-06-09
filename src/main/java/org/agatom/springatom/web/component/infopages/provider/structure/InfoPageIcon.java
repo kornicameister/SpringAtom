@@ -17,60 +17,32 @@
 
 package org.agatom.springatom.web.component.infopages.provider.structure;
 
-import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
-
 import java.util.HashMap;
 
 /**
- * {@code InfoPageDefaults} contains set of the properties that propagated further
- * to every element of the {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
- * <p/>
- * <small>Class is a part of <b>SpringAtom</b> and was created at 17.05.14</small>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 09.06.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class InfoPageDefaults
-		extends HashMap<String, Object> {
-	/** Constant <code>COLLAPSIBLE="collapsible"</code> */
-	public static final  String COLLAPSIBLE      = "collapsible";
-	/** Constant <code>LAYOUT="layout"</code> */
-	public static final  String LAYOUT           = "layout";
-	private static final long   serialVersionUID = -4311432020224431919L;
+public class InfoPageIcon
+		extends HashMap<String, String> {
+	public static final  String ICON_CLS         = "iconCls";
+	public static final  String ICON_PATH        = "iconPath";
+	public static final  String ICON_GLYPH       = "glyph";
+	private static final long   serialVersionUID = 1816235449787709837L;
 
-	/**
-	 * <p>isCollapsible.</p>
-	 *
-	 * @return a boolean.
-	 */
-	public boolean isCollapsible() {
-		final Object value = this.get(COLLAPSIBLE);
-		if (value == null) {
-			return false;
-		}
-		if (ClassUtils.isAssignableValue(String.class, value)) {
-			if (StringUtils.hasText((String) value)) {
-				return Boolean.valueOf((String) value);
-			}
-		} else if (ClassUtils.isAssignableValue(Boolean.class, value)) {
-			return (Boolean) value;
-		}
-		return false;
+	public String getIconCls() {
+		return this.get(ICON_CLS);
 	}
 
-	/**
-	 * <p>getLayout.</p>
-	 *
-	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPageLayout} object.
-	 */
-	public InfoPageLayout getLayout() {
-		final String value = (String) this.get(LAYOUT);
-		if (StringUtils.hasText(value)) {
-			return InfoPageLayout.valueOf(value);
-		}
-		return null;
+	public String getIconPath() {
+		return this.get(ICON_PATH);
+	}
+
+	public String getIconGlyph() {
+		return this.get(ICON_GLYPH);
 	}
 
 }

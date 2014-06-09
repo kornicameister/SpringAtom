@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,81 +15,64 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core.elements;
+package org.agatom.springatom.web.component.core.elements.table.extjs.feature;
 
-import com.google.common.collect.Sets;
-import org.agatom.springatom.web.component.core.EmbeddableComponent;
-
-import java.util.Iterator;
-import java.util.Set;
+import com.google.common.base.Objects;
 
 /**
- * <p>Abstract ContentComponent class.</p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class ContentComponent<T extends EmbeddableComponent>
-		extends DefaultComponent
-		implements Iterable<T> {
-	private static final long   serialVersionUID = -8072389645215572550L;
-	protected            Set<T> content          = null;
+abstract class AbstractExtJSTableFeature
+		implements ExtJSTableFeature {
+	private static final long   serialVersionUID = 8485389573075863861L;
+	private              String ftype            = null;
 
 	/**
-	 * <p>removeContent.</p>
+	 * <p>Constructor for AbstractExtJSTableFeature.</p>
 	 *
-	 * @param o a {@link java.lang.Object} object.
-	 *
-	 * @return a boolean.
+	 * @param feature a {@link org.agatom.springatom.web.component.core.elements.table.extjs.feature.AbstractExtJSTableFeature.Feature} object.
 	 */
-	public boolean removeContent(final Object o) {
-		return this.getContent().remove(o);
-	}
-
-	/**
-	 * <p>Getter for the field <code>content</code>.</p>
-	 *
-	 * @return a {@link java.util.Set} object.
-	 */
-	public Set<T> getContent() {
-		if (this.content == null) {
-			this.content = Sets.newTreeSet();
-		}
-		return this.content;
-	}
-
-	/**
-	 * <p>Setter for the field <code>content</code>.</p>
-	 *
-	 * @param content a {@link java.util.Set} object.
-	 */
-	public void setContent(final Set<T> content) {
-		this.getContent().clear();
-		for (final T t : content) {
-			this.addContent(t);
-		}
-	}
-
-	/**
-	 * <p>addContent.</p>
-	 *
-	 * @param t a T object.
-	 *
-	 * @return a boolean.
-	 */
-	public boolean addContent(final T t) {
-		if (t.getPosition() < -1) {
-			t.setPosition(this.getContent().size());
-		}
-		return this.getContent().add(t);
+	protected AbstractExtJSTableFeature(final Feature feature) {
+		this.ftype = feature.name().toLowerCase().replaceAll("_", "");
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Iterator<T> iterator() {
-		return this.getContent().iterator();
+	public final String getFtype() {
+		return ftype;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public final int hashCode() {
+		return Objects.hashCode(ftype);
+	}
 
+	/** {@inheritDoc} */
+	@Override
+	public final boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		AbstractExtJSTableFeature that = (AbstractExtJSTableFeature) o;
+
+		return Objects.equal(this.ftype, that.ftype);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.add("ftype", ftype)
+				.toString();
+	}
+
+	protected static enum Feature {
+		GROUPING,
+		SUMMARY
+	}
 }

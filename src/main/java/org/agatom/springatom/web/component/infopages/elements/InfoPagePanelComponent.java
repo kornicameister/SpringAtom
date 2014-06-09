@@ -21,9 +21,11 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Maps;
 import org.agatom.springatom.web.component.core.elements.PanelComponent;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 
 /**
  * <p>InfoPagePanelComponent class.</p>
@@ -34,7 +36,9 @@ import javax.annotation.Nullable;
  */
 public class InfoPagePanelComponent
 		extends PanelComponent<InfoPageAttributeComponent> {
-	private static final long serialVersionUID = 4239054882163081910L;
+	private static final long                serialVersionUID = 4239054882163081910L;
+	private              Map<String, String> layoutCfg        = null;
+	private              Map<String, String> iconCfg          = null;
 
 	/**
 	 * <p>containsAttributeForPath.</p>
@@ -62,6 +66,27 @@ public class InfoPagePanelComponent
 			}
 		});
 		return match.isPresent() ? match.get() : null;
+	}
+
+	public Map<String, String> getIconCfg() {
+		return this.iconCfg == null ? Maps.<String, String>newHashMap() : this.iconCfg;
+	}
+
+	public InfoPagePanelComponent setIconCfg(final Map<String, String> iconCfg) {
+		this.iconCfg = iconCfg;
+		return this;
+	}
+
+	public Map<String, String> getLayoutCfg() {
+		return this.layoutCfg == null ? Maps.<String, String>newHashMap() : this.layoutCfg;
+	}
+
+	public InfoPagePanelComponent setLayoutCfg(final Map<String, String> layoutCfg) {
+		this.layoutCfg = layoutCfg;
+		if (this.layoutCfg.containsKey("type")) {
+			this.setLayout(this.layoutCfg.get("type"));
+		}
+		return this;
 	}
 
 	/** {@inheritDoc} */

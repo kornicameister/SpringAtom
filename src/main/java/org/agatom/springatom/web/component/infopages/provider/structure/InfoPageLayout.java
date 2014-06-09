@@ -17,16 +17,87 @@
 
 package org.agatom.springatom.web.component.infopages.provider.structure;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.common.base.Objects;
+import com.google.common.collect.Maps;
+import org.springframework.binding.collection.MapAdaptable;
+import org.springframework.util.StringUtils;
+
+import java.io.Serializable;
+import java.util.Map;
+
 /**
- * {@code InfoPageLayout} is a simple enumeration describing the order in which
+ * {@code InfoPageLayout} is a simple class describing the order in which
  * attributes of the panel are being layed out
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 17.05.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public enum InfoPageLayout {
-	VERTICAL,
-	HORIZONTAL
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class InfoPageLayout
+		implements Serializable, MapAdaptable<String, String> {
+	private static final long   serialVersionUID = -775925469234496099L;
+	private              String type             = null;
+	private              String align            = null;
+	private              String pack             = null;
+
+	public String getType() {
+		return type;
+	}
+
+	public InfoPageLayout setType(final String type) {
+		this.type = type;
+		return this;
+	}
+
+	public String getAlign() {
+		return align;
+	}
+
+	public InfoPageLayout setAlign(final String align) {
+		this.align = align;
+		return this;
+	}
+
+	public String getPack() {
+		return pack;
+	}
+
+	public InfoPageLayout setPack(final String pack) {
+		this.pack = pack;
+		return this;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(type, align, pack);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		InfoPageLayout that = (InfoPageLayout) o;
+
+		return Objects.equal(this.type, that.type) &&
+				Objects.equal(this.align, that.align) &&
+				Objects.equal(this.pack, that.pack);
+	}
+
+	@Override
+	public Map<String, String> asMap() {
+		final Map<String, String> map = Maps.newHashMap();
+		map.put("type", this.type);
+		if (StringUtils.hasText(this.align)) {
+			map.put("align", this.align);
+		}
+		if (StringUtils.hasText(this.pack)) {
+			map.put("pack", this.pack);
+		}
+		return map;
+	}
 }

@@ -39,7 +39,6 @@ public class InfoPage
 	private static final long               serialVersionUID = -4350752021301908713L;
 	private              String             id               = null;
 	private              Class<?>           domain           = null;
-	private              InfoPageDefaults   defaults         = null;
 	private              Set<InfoPagePanel> content          = null;
 
 	/**
@@ -112,28 +111,6 @@ public class InfoPage
 	 */
 	public InfoPage setId(final String id) {
 		this.id = id;
-		return this;
-	}
-
-	/**
-	 * Retrieves a map of defaults properties applicable for every element being
-	 * a part of this {@code InfoPage}
-	 *
-	 * @return map of default properties
-	 */
-	public InfoPageDefaults getDefaults() {
-		return this.defaults;
-	}
-
-	/**
-	 * <p>Setter for the field <code>defaults</code>.</p>
-	 *
-	 * @param defaults a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPageDefaults} object.
-	 *
-	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} object.
-	 */
-	public InfoPage setDefaults(final InfoPageDefaults defaults) {
-		this.defaults = defaults;
 		return this;
 	}
 

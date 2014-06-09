@@ -21,11 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.agatom.springatom.core.exception.SException;
 import org.agatom.springatom.core.exception.SInvalidArgumentException;
 import org.agatom.springatom.web.component.infopages.provider.structure.InfoPage;
-import org.agatom.springatom.web.component.infopages.provider.structure.InfoPageDefaults;
-import org.agatom.springatom.web.component.infopages.provider.structure.InfoPagePanel;
 import org.apache.log4j.Logger;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -43,7 +39,6 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Set;
 
 @Component
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
@@ -74,9 +69,7 @@ class JSONInfoPageProviderService
 		final File file = this.getFile(filePath);
 
 		try {
-			InfoPage infoPage = this.objectMapper.readValue(file, InfoPage.class);
-			infoPage = this.propagateDefaults(infoPage);
-			return infoPage;
+			return this.objectMapper.readValue(file, InfoPage.class);
 		} catch (IOException e) {
 			LOGGER.fatal(String.format("getInfoPage(persistableClass=%s) failed...", persistableClass), e);
 			throw new SException(e);
@@ -100,30 +93,6 @@ class JSONInfoPageProviderService
 			throw new SInvalidArgumentException("persistable", new NullPointerException());
 		}
 		return this.getInfoPage(persistable.getClass());
-	}
-
-	/**
-	 * Propagates {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPageDefaults} to each panel
-	 *
-	 * @param infoPage infoPage
-	 *
-	 * @return updated infoPage
-	 */
-	private InfoPage propagateDefaults(final InfoPage infoPage) {
-		final InfoPageDefaults defaults = infoPage.getDefaults();
-		if (defaults != null) {
-
-			final Set<String> strings = defaults.keySet();
-
-			for (final InfoPagePanel panel : infoPage) {
-				final BeanWrapper bw = new BeanWrapperImpl(panel);
-				for (final String prop : strings) {
-					bw.setPropertyValue(prop, defaults.get(prop));
-				}
-			}
-
-		}
-		return infoPage;
 	}
 
 	/**

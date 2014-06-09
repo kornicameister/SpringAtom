@@ -29,6 +29,7 @@ import org.agatom.springatom.web.component.infopages.provider.InfoPageProviderSe
 import org.agatom.springatom.web.component.infopages.provider.structure.InfoPage;
 import org.agatom.springatom.web.component.infopages.provider.structure.InfoPageAttribute;
 import org.agatom.springatom.web.component.infopages.provider.structure.InfoPagePanel;
+import org.agatom.springatom.web.component.infopages.provider.structure.InfoPageTitle;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.apache.log4j.Logger;
@@ -39,7 +40,6 @@ import org.springframework.context.annotation.Role;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Persistable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.persistence.metamodel.Attribute;
@@ -72,11 +72,17 @@ class InfoPageComponentBuilderServiceImpl
 	/** {@inheritDoc} */
 	@Override
 	public InfoPageComponent buildInfoPage(@Nonnull final InfoPage page) {
+
 		LOGGER.debug(String.format("buildInfoPage(page=%s)", page));
+
 		final long startTime = System.nanoTime();
 		final InfoPageComponent component = this.buildComponent(new InfoPageComponent(), page);
-		final long endTime = System.nanoTime() - startTime;
-		LOGGER.trace(String.format("Built InfoPageComponent in %dms", TimeUnit.NANOSECONDS.toMillis(endTime)));
+		final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+
+		LOGGER.trace(String.format("Built InfoPageComponent in %dms", endTime));
+
+		component.addDynamicProperty("compilationTime", endTime);
+
 		return component;
 	}
 
@@ -114,8 +120,10 @@ class InfoPageComponentBuilderServiceImpl
 			LOGGER.trace(String.format("Processing InfoPagePanel=%s", panel.getId()));
 
 			final InfoPagePanelComponent panelComponent = new InfoPagePanelComponent();
-			panelComponent.setTitle(this.messageSource.getMessage(panel.getMessageKey(), locale));
-			panelComponent.setLayout(panel.getLayout().toString().toLowerCase());
+			panelComponent.setTitle(panel.getTitle().getTitle(locale));
+			panelComponent.setLayoutCfg(panel.getLayout().asMap());
+			panelComponent.setPosition(panel.getPosition());
+			panelComponent.setIconCfg(panel.getIcon());
 
 			for (final InfoPageAttribute attribute : panel) {
 				Attribute<?, ?> descriptorOfAttribute = null;
@@ -154,24 +162,47 @@ class InfoPageComponentBuilderServiceImpl
 		LOGGER.debug(String.format("buildAttributeComponent(path=%s)", attribute.getPath()));
 		final InfoPageAttributeComponent cmp = new InfoPageAttributeComponent();
 
-		cmp.setTitle(StringUtils.hasText(attribute.getMessageKey()) ? this.messageSource.getMessage(attribute.getMessageKey(), locale) : rbModel.getLocalizedAttribute(attribute.getPath()));
+		cmp.setTitle(this.getAttributeTitle(attribute, locale, rbModel));
 		cmp.setPath(attribute.getPath());
+		cmp.setPosition(attribute.getPosition());
 
 		cmp.addDynamicProperty("isDynamic", descriptor == null);
-		if (attribute.hasFixedConverter()) {
-			cmp.addDynamicProperty("converter", attribute.getConverter());
-		}
 
 		if (descriptor != null) {
-			cmp.setDisplayAs(this.getDisplayAs(descriptor));
+			final AttributeDisplayAs displayAs = this.getDisplayAs(descriptor);
+			cmp.setDisplayAs(displayAs);
 			cmp.addDynamicProperty("attributeName", descriptor.getName());
 			cmp.addDynamicProperty("isAssociation", descriptor.isAssociation());
 			cmp.addDynamicProperty("attributeClass", descriptor.getJavaType().getName());
+
+			if (displayAs.equals(AttributeDisplayAs.TABLE_ATTRIBUTE) && attribute.isGridAttribute()) {
+				cmp.addDynamicProperty("grid", true);
+				cmp.addDynamicProperty("builderId", attribute.getBuilderId());
+			}
+
 		} else {
 			cmp.setDisplayAs(AttributeDisplayAs.VALUE_ATTRIBUTE);
 		}
 
 		return cmp;
+	}
+
+	private String getAttributeTitle(final InfoPageAttribute attribute, final Locale locale, final LocalizedClassModel<?> rbModel) {
+		String localTitle = null;
+		final InfoPageTitle title = attribute.getTitle();
+		if (title != null) {
+			localTitle = title.getTitle(locale);
+		}
+		if (localTitle == null) {
+			final String attributePath = attribute.getPath();
+			try {
+				localTitle = rbModel.getLocalizedAttribute(attributePath);
+			} catch (Exception exp) {
+				LOGGER.warn(String.format("Failed to determing valid title of attribute %s", attributePath));
+				localTitle = attributePath;
+			}
+		}
+		return localTitle;
 	}
 
 	private AttributeDisplayAs getDisplayAs(final Attribute<?, ?> descriptor) {

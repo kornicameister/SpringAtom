@@ -20,8 +20,6 @@ package org.agatom.springatom.web.component.infopages.provider.structure;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
-import org.agatom.springatom.core.util.Localized;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -38,14 +36,40 @@ import java.io.Serializable;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InfoPageAttribute
-		implements Serializable, Comparable<InfoPageAttribute>, Localized {
-	private static final long   serialVersionUID = -8718015686294718467L;
-	private              String path             = null;
-	private              String converter        = null;
-	/**
-	 * Optional: By default localization for attribute comes from domain object localized model
-	 */
-	private              String messageKey       = null;
+		implements Serializable, Comparable<InfoPageAttribute> {
+	private static final long          serialVersionUID = -8718015686294718467L;
+	private              InfoPageTitle title            = null;
+	private              String        path             = null;
+	private              String        type             = "value";
+	private              String        builderId        = null;
+	private              int           position         = 0;
+
+	public String getBuilderId() {
+		return this.builderId;
+	}
+
+	public InfoPageAttribute setBuilderId(final String builderId) {
+		this.builderId = builderId;
+		return this;
+	}
+
+	public String getType() {
+		return this.type;
+	}
+
+	public InfoPageAttribute setType(final String type) {
+		this.type = type;
+		return this;
+	}
+
+	public InfoPageTitle getTitle() {
+		return this.title;
+	}
+
+	public InfoPageAttribute setTitle(final InfoPageTitle title) {
+		this.title = title;
+		return this;
+	}
 
 	/**
 	 * <p>Getter for the field <code>path</code>.</p>
@@ -68,78 +92,24 @@ public class InfoPageAttribute
 		return this;
 	}
 
-	/**
-	 * <p>Getter for the field <code>converter</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getConverter() {
-		return this.converter;
+	public int getPosition() {
+		return position;
 	}
 
-	/**
-	 * <p>Setter for the field <code>converter</code>.</p>
-	 *
-	 * @param converter a {@link java.lang.String} object.
-	 *
-	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPageAttribute} object.
-	 */
-	public InfoPageAttribute setConverter(final String converter) {
-		this.converter = converter;
+	public InfoPageAttribute setPosition(final int position) {
+		this.position = position;
 		return this;
 	}
 
-	/**
-	 * <p>getFixedConverterClass.</p>
-	 *
-	 * @return a {@link java.lang.Class} object.
-	 */
-	public Class<?> getFixedConverterClass() {
-		if (this.hasFixedConverter()) {
-			return ClassUtils.resolveClassName(this.converter, this.getClass().getClassLoader());
-		}
-		return null;
-	}
-
-	/**
-	 * <p>hasFixedConverter.</p>
-	 *
-	 * @return a boolean.
-	 */
-	public boolean hasFixedConverter() {
-		if (StringUtils.hasText(this.converter)) {
-			try {
-				ClassUtils.resolveClassName(this.converter, this.getClass().getClassLoader());
-				return true;
-			} catch (IllegalArgumentException exp) {
-				return false;
-			}
-		}
-		return false;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getMessageKey() {
-		return this.messageKey;
-	}
-
-	/**
-	 * <p>Setter for the field <code>messageKey</code>.</p>
-	 *
-	 * @param messageKey a {@link java.lang.String} object.
-	 *
-	 * @return a {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPageAttribute} object.
-	 */
-	public InfoPageAttribute setMessageKey(final String messageKey) {
-		this.messageKey = messageKey;
-		return this;
+	public boolean isGridAttribute() {
+		return StringUtils.hasText(this.type) && this.type.equalsIgnoreCase("grid") && StringUtils.hasText(this.builderId);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public int compareTo(@Nonnull final InfoPageAttribute o) {
 		return ComparisonChain.start()
+				.compare(this.position, o.position)
 				.compare(this.path, o.path)
 				.result();
 	}
@@ -147,7 +117,7 @@ public class InfoPageAttribute
 	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(path, converter);
+		return Objects.hashCode(path, position);
 	}
 
 	/** {@inheritDoc} */
@@ -159,6 +129,6 @@ public class InfoPageAttribute
 		InfoPageAttribute that = (InfoPageAttribute) o;
 
 		return Objects.equal(this.path, that.path) &&
-				Objects.equal(this.converter, that.converter);
+				Objects.equal(this.position, that.position);
 	}
 }
