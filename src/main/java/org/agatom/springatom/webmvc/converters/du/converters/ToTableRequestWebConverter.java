@@ -17,12 +17,19 @@
 
 package org.agatom.springatom.webmvc.converters.du.converters;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.server.model.types.PersistentVersionedBean;
+import org.agatom.springatom.web.component.core.EmbeddableComponent;
 import org.agatom.springatom.web.component.core.builders.ComponentProduces;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.core.elements.ContentComponent;
 import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
+import org.agatom.springatom.web.component.infopages.elements.InfoPageAttributeComponent;
+import org.agatom.springatom.web.component.infopages.elements.InfoPagePanelComponent;
 import org.agatom.springatom.webmvc.controllers.components.SVComponentsDataController;
 import org.agatom.springatom.webmvc.controllers.components.SVComponentsDefinitionController;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
@@ -32,7 +39,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 
+import javax.annotation.Nullable;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.PluralAttribute;
 import java.io.Serializable;
@@ -64,31 +73,65 @@ public class ToTableRequestWebConverter
 	@Override
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) throws Exception {
 		LOGGER.trace(String.format("doConverter(key=%s,value=%s)", key, value));
-		final EntityDescriptor<? extends Persistable> descriptor = this.entityDescriptors.getDescriptor(persistable.getClass());
 
-		final Attribute<?, ?> attribute = descriptor.getEntityType().getAttribute(key);
-		if (!attribute.isAssociation() || !attribute.isCollection()) {
-			throw new WebConverterException(String.format("Requested to convert %s as table request, but %s was not recognized as association for %s", key, key, ClassUtils.getUserClass(persistable.getClass())));
+		String builderId = null;
+
+		// first check if the builder was not defined explicitly
+		final ContentComponent<?> component = (ContentComponent<?>) webRequest.getComponent();
+		final Optional<? extends EmbeddableComponent> match = FluentIterable.from(component).firstMatch(new Predicate<EmbeddableComponent>() {
+			@Override
+			public boolean apply(@Nullable final EmbeddableComponent input) {
+				if (input == null) {
+					return false;
+				}
+				if (ClassUtils.isAssignableValue(InfoPagePanelComponent.class, input)) {
+					final InfoPagePanelComponent panelComponent = (InfoPagePanelComponent) input;
+					return panelComponent.containsAttributeForPath(key);
+				}
+				return false;
+			}
+		});
+		if (match.isPresent()) {
+			final InfoPagePanelComponent tmp = (InfoPagePanelComponent) match.get();
+			final InfoPageAttributeComponent forPath = tmp.getAttributeForPath(key);
+			final Map<String, Object> dynamicProperties = forPath.getDynamicProperties();
+			builderId = (String) dynamicProperties.get("builderId");
+		}
+		// first check if the builder was not defined explicitly
+
+		// if not, locate one
+		if (!StringUtils.hasText(builderId)) {
+			final EntityDescriptor<? extends Persistable> descriptor = this.entityDescriptors.getDescriptor(persistable.getClass());
+
+			final Attribute<?, ?> attribute = descriptor.getEntityType().getAttribute(key);
+			if (!attribute.isAssociation() || !attribute.isCollection()) {
+				throw new WebConverterException(String.format("Requested to convert %s as table request, but %s was not recognized as association for %s", key, key, ClassUtils.getUserClass(persistable.getClass())));
+			}
+
+			final PluralAttribute<?, ?, ?> pluralAttribute = (PluralAttribute<?, ?, ?>) attribute;
+			final Class<?> associatedType = ClassUtils.getUserClass(pluralAttribute.getElementType().getJavaType());
+
+			LOGGER.trace(String.format("%s corresponds to %s", key, ClassUtils.getUserClass(associatedType)));
+
+			final boolean hasBuilder = this.builderRepository.hasBuilder(associatedType, ComponentProduces.TABLE_COMPONENT);
+			if (hasBuilder) {
+				builderId = this.builderRepository.getBuilderId(associatedType, ComponentProduces.TABLE_COMPONENT);
+			}
+
+			LOGGER.trace(String.format("%s %s to existing %s builder", associatedType, (hasBuilder ? "corresponds" : "does not corresponds"), ComponentProduces.TABLE_COMPONENT));
 		}
 
-		final PluralAttribute<?, ?, ?> pluralAttribute = (PluralAttribute<?, ?, ?>) attribute;
-		final Class<?> associatedType = ClassUtils.getUserClass(pluralAttribute.getElementType().getJavaType());
 
-		LOGGER.trace(String.format("%s corresponds to %s", key, ClassUtils.getUserClass(associatedType)));
+		// it is it is still empty, return null
+		// otherwise populate TableRequest
 
-		final boolean hasBuilder = this.builderRepository.hasBuilder(associatedType, ComponentProduces.TABLE_COMPONENT);
-
-		LOGGER.trace(String.format("%s %s to existing %s builder", associatedType, (hasBuilder ? "corresponds" : "does not corresponds"), ComponentProduces.TABLE_COMPONENT));
-
-		if (hasBuilder) {
-			final String builderId = this.builderRepository.getBuilderId(associatedType, ComponentProduces.TABLE_COMPONENT);
+		if (StringUtils.hasText(builderId)) {
 			final TableRequest request = new TableRequest();
 
 			request.setTitle(this.getLabel(key, persistable));
 			request.addDynamicProperty("builderId", builderId);
 			request.addDynamicProperty("configurationUrl", linkTo(methodOn(SVComponentsDefinitionController.class).onTableConfigRequest(null, null)).withSelfRel().getHref());
 			request.addDynamicProperty("dataUrl", linkTo(methodOn(SVComponentsDataController.class).onTableDataRequest(null, null)).withSelfRel().getHref());
-			request.addDynamicProperty("domain", associatedType.getName());
 
 			final Map<String, Object> context = Maps.newHashMap();
 			context.put("domain", ClassUtils.getUserClass(persistable));
