@@ -128,7 +128,7 @@ public class ToTableRequestWebConverter
 		if (StringUtils.hasText(builderId)) {
 			final TableRequest request = new TableRequest();
 
-			request.setTitle(this.getLabel(key, persistable));
+			request.setLabel(this.getLabel(key, persistable));
 			request.addDynamicProperty("builderId", builderId);
 			request.addDynamicProperty("configurationUrl", linkTo(methodOn(SVComponentsDefinitionController.class).onTableConfigRequest(null, null)).withSelfRel().getHref());
 			request.addDynamicProperty("dataUrl", linkTo(methodOn(SVComponentsDataController.class).onTableDataRequest(null, null)).withSelfRel().getHref());
@@ -137,7 +137,7 @@ public class ToTableRequestWebConverter
 			context.put("domain", ClassUtils.getUserClass(persistable));
 			context.put("id", persistable.getId());
 			context.put("version", ClassUtils.isAssignableValue(PersistentVersionedBean.class, persistable) ? ((PersistentVersionedBean) persistable).getVersion() : -1);
-			request.setValue(context);
+			request.setData(context);
 
 			return request;
 		}

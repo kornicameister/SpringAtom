@@ -18,11 +18,11 @@
 package org.agatom.springatom.web.component.infopages.provider;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.agatom.springatom.AbstractSpringTestCase;
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.web.component.infopages.provider.structure.InfoPage;
 import org.agatom.springatom.web.component.infopages.provider.structure.InfoPageAttribute;
-import org.agatom.springatom.web.component.infopages.provider.structure.InfoPageDefaults;
 import org.agatom.springatom.web.component.infopages.provider.structure.InfoPagePanel;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,6 +34,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 17.05.14</small>
@@ -69,25 +70,9 @@ public class JSONInfoPageProviderServiceTest
 	public void test_1_GetInfoPage() throws Exception {
 		for (final Class<? extends Persistable<?>> clazz : this.filePathTest.keySet()) {
 			final InfoPage page = this.service.getInfoPage(clazz);
-
 			Assert.assertNotNull("page is null", page);
-
-			Assert.assertNotNull("page should have defaults set", page.getDefaults());
 			Assert.assertNotNull("page should have content set", page.getContent());
-
 			Assert.assertEquals("page should have tree panels defined", page.getSize(), 3);
-		}
-	}
-
-	@Test
-	public void test_2_GetInfoPageDefaults() throws Exception {
-		for (final Class<? extends Persistable<?>> clazz : this.filePathTest.keySet()) {
-			final InfoPage page = this.service.getInfoPage(clazz);
-			final InfoPageDefaults defaults = page.getDefaults();
-
-			Assert.assertNotNull(defaults.getLayout());
-			Assert.assertNotNull(defaults.isCollapsible());
-
 		}
 	}
 
@@ -97,10 +82,15 @@ public class JSONInfoPageProviderServiceTest
 			final InfoPage page = this.service.getInfoPage(clazz);
 			for (final InfoPagePanel panel : page) {
 				Assert.assertTrue(StringUtils.hasText(panel.getId()));
-				Assert.assertTrue(StringUtils.hasText(panel.getMessageKey()));
+				Assert.assertNotNull(panel.getTitle());
 				Assert.assertNotNull(panel.getLayout());
-				for (final InfoPageAttribute attribute : panel) {
+				int lastPos = -1;
+				Set<InfoPageAttribute> attributes = panel.getAttributes();
+				Assert.assertNotNull("Panel must have attributes", attributes != null && !attributes.isEmpty());
+				attributes = Sets.newTreeSet(attributes);
+				for (final InfoPageAttribute attribute : attributes) {
 					Assert.assertTrue(StringUtils.hasText(attribute.getPath()));
+					Assert.assertTrue(attribute.getPosition() > (lastPos++));
 				}
 			}
 

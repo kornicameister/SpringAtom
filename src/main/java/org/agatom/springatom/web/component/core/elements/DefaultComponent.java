@@ -33,19 +33,20 @@ import java.util.Map;
 abstract public class DefaultComponent
 		implements Component {
 	private static final long                serialVersionUID  = -2772317139576112812L;
-	protected            String              title             = null;
+	protected            String              label             = null;
 	protected            Map<String, Object> dynamicProperties = null;
 
 	/** {@inheritDoc} */
 	@Override
-	public String getTitle() {
-		return this.title;
+	public String getLabel() {
+		return this.label;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setTitle(final String title) {
-		this.title = title;
+	public Component setLabel(final String label) {
+		this.label = label;
+		return this;
 	}
 
 	/**

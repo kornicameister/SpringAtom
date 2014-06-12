@@ -62,15 +62,15 @@ public class DateTimeWebConverter
 			} else {
 				data = ((LocalDateTime) value).toString(format);
 			}
-			dataComponent.setValue(data);
+			dataComponent.setData(data);
 		} else if (ClassUtils.isAssignableValue(Date.class, value)) {
 			final Date date = (Date) value;
-			dataComponent.setValue(DateTimeFormat.forPattern(format).print(date.getTime()));
+			dataComponent.setData(DateTimeFormat.forPattern(format).print(date.getTime()));
 		}
 
-		dataComponent.setKey(key);
-		dataComponent.setRawValueType(ClassUtils.getUserClass(value.getClass()));
-		dataComponent.setTitle(this.getLabel(key, persistable));
+		dataComponent.setId(key);
+		dataComponent.setDataType(ClassUtils.getUserClass(value.getClass()));
+		dataComponent.setLabel(this.getLabel(key, persistable));
 
 		return dataComponent;
 	}

@@ -99,7 +99,7 @@ public class ThumbnailComponent
 	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(href, alt, tooltip, title);
+		return Objects.hashCode(href, alt, tooltip, label);
 	}
 
 	/** {@inheritDoc} */
@@ -117,7 +117,7 @@ public class ThumbnailComponent
 		return Objects.equal(this.href, that.href) &&
 				Objects.equal(this.alt, that.alt) &&
 				Objects.equal(this.tooltip, that.tooltip) &&
-				Objects.equal(this.title, that.title);
+				Objects.equal(this.label, that.label);
 	}
 
 	/** {@inheritDoc} */
@@ -127,7 +127,7 @@ public class ThumbnailComponent
 				.addValue(href)
 				.addValue(alt)
 				.addValue(tooltip)
-				.addValue(title)
+				.addValue(label)
 				.toString();
 	}
 }

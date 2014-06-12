@@ -17,9 +17,10 @@
 
 package org.agatom.springatom.webmvc.converters.du.component.core;
 
-import org.agatom.springatom.web.component.core.EmbeddableComponent;
 import org.agatom.springatom.web.component.core.elements.ContentComponent;
-import org.agatom.springatom.webmvc.converters.du.component.WebDataMultiComponents;
+import org.agatom.springatom.webmvc.converters.du.component.WebDataComponent;
+import org.agatom.springatom.webmvc.converters.du.component.WebDataComponentSet;
+import org.springframework.util.ClassUtils;
 
 import java.util.Map;
 
@@ -31,9 +32,16 @@ import java.util.Map;
  * @since 0.0.1
  */
 public class WebDataComponentsArray
-		extends ContentComponent<EmbeddableComponent>
-		implements WebDataMultiComponents<EmbeddableComponent> {
+		extends ContentComponent<WebDataComponent<?>>
+		implements WebDataComponentSet<WebDataComponent<?>> {
 	private static final long serialVersionUID = -145702440703847256L;
+
+	public boolean addWDC(final Object data) {
+		if (ClassUtils.isAssignableValue(WebDataComponent.class, data)) {
+			return super.addContent((WebDataComponent<?>) data);
+		}
+		return false;
+	}
 
 	/** {@inheritDoc} */
 	@Override

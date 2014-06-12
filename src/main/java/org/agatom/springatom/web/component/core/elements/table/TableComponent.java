@@ -84,7 +84,7 @@ abstract public class TableComponent<T extends TableColumnComponent>
 				.addValue(rowsOnPage)
 				.addValue(filterable)
 				.addValue(content)
-				.addValue(title)
+				.addValue(label)
 				.toString();
 	}
 }

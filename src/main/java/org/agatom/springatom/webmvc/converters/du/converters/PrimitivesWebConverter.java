@@ -20,10 +20,12 @@ package org.agatom.springatom.webmvc.converters.du.converters;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
 import org.agatom.springatom.webmvc.converters.du.component.core.TextComponent;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.ClassUtils;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * {@code PrimitivesWebConverter} supports retrieving the value for primitives values like for example {@link java.lang.Number} or {@link java.lang.Boolean}
@@ -46,24 +48,25 @@ public class PrimitivesWebConverter
 	@Override
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
 		final TextComponent component = new TextComponent();
+		final Locale locale = LocaleContextHolder.getLocale();
 
 		if (ClassUtils.isAssignableValue(Boolean.class, value)) {
 			final Boolean aBoolean = (Boolean) value;
 			if (aBoolean.equals(true)) {
-				component.setValue(this.messageSource.getMessage("boolean.true", (java.util.Locale) webRequest.getValues().get("locale")));
+				component.setData(this.messageSource.getMessage("boolean.true", locale));
 			} else {
-				component.setValue(this.messageSource.getMessage("boolean.false", (java.util.Locale) webRequest.getValues().get("locale")));
+				component.setData(this.messageSource.getMessage("boolean.false", locale));
 			}
 		} else if (ClassUtils.isAssignableValue(Enum.class, value)) {
-			component.setValue(((Enum<?>) value).name());
+			component.setData(this.messageSource.getMessage(((Enum<?>) value).name(), locale));
 			component.addDynamicProperty("rawEnumValue", value);
 		} else {
-			component.setValue(String.valueOf(value));
+			component.setData(String.valueOf(value));
 		}
 
-		component.setRawValueType(value.getClass());
-		component.setKey(key);
-		component.setTitle(this.getLabel(key, persistable));
+		component.setDataType(value.getClass());
+		component.setId(key);
+		component.setLabel(this.getLabel(key, persistable));
 
 		return component;
 	}

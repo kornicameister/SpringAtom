@@ -100,7 +100,7 @@ class DefaultTableComponentHelper
 	private void initColumn(final TableComponent cmp, final String path, final String rbKey, final DandelionTableColumnComponent column) {
 		column.setProperty(path);
 		column.setTitleKey(rbKey);
-		column.setTitle(this.entitleFromMessageKey(column));
+		column.setLabel(this.entitleFromMessageKey(column));
 		cmp.addContent(column);
 	}
 

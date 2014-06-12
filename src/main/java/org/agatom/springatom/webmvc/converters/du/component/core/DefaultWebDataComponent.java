@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.webmvc.converters.du.component.core;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 import org.agatom.springatom.web.component.core.EmbeddableComponent;
 import org.agatom.springatom.web.component.core.elements.DefaultComponent;
@@ -35,74 +36,62 @@ abstract public class DefaultWebDataComponent<T>
 		extends DefaultComponent
 		implements WebDataComponent<T> {
 	private static final long     serialVersionUID = -9193939519358944467L;
-	private              T        value            = null;
-	private              Class<?> rawValueType     = null;
-	private              String   key              = null;
+	private String   id       = null;
+	private T        data     = null;
+	private Class<?> dataType = null;
 	private              int      position         = -1;
 
+	/** {@inheritDoc} */
+	@Override
+	public T getData() {
+		return this.data;
+	}
+
 	/**
-	 * <p>setLabel.</p>
+	 * <p>Setter for the field <code>data</code>.</p>
 	 *
-	 * @param label a {@link java.lang.String} object.
+	 * @param data a T object.
 	 *
 	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent} object.
 	 */
-	public DefaultWebDataComponent<T> setLabel(final String label) {
-		this.setTitle(label);
+	public DefaultWebDataComponent setData(final T data) {
+		this.data = data;
 		return this;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public T getValue() {
-		return this.value;
+	public Class<?> getDataType() {
+		return this.dataType;
+	}
+
+	/**
+	 * <p>Setter for the field <code>dataType</code>.</p>
+	 *
+	 * @param dataType a {@link java.lang.Class} object.
+	 *
+	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent} object.
+	 */
+	public DefaultWebDataComponent setDataType(final Class<?> dataType) {
+		this.dataType = dataType;
+		return this;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Class<?> getRawValueType() {
-		return this.rawValueType;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getKey() {
-		return this.key;
+	public String getId() {
+		return this.id;
 	}
 
 	/**
-	 * <p>Setter for the field <code>key</code>.</p>
+	 * <p>Setter for the field <code>id</code>.</p>
 	 *
-	 * @param key a {@link java.lang.String} object.
-	 *
-	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent} object.
-	 */
-	public DefaultWebDataComponent setKey(final String key) {
-		this.key = key;
-		return this;
-	}
-
-	/**
-	 * <p>Setter for the field <code>rawValueType</code>.</p>
-	 *
-	 * @param rawValueType a {@link java.lang.Class} object.
+	 * @param id a {@link java.lang.String} object.
 	 *
 	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent} object.
 	 */
-	public DefaultWebDataComponent setRawValueType(final Class<?> rawValueType) {
-		this.rawValueType = rawValueType;
-		return this;
-	}
-
-	/**
-	 * <p>Setter for the field <code>value</code>.</p>
-	 *
-	 * @param value a T object.
-	 *
-	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent} object.
-	 */
-	public DefaultWebDataComponent setValue(final T value) {
-		this.value = value;
+	public DefaultWebDataComponent setId(final String id) {
+		this.id = id;
 		return this;
 	}
 
@@ -124,5 +113,23 @@ abstract public class DefaultWebDataComponent<T>
 		return ComparisonChain.start()
 				.compare(this.position, o.getPosition())
 				.result();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id, position);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		DefaultWebDataComponent that = (DefaultWebDataComponent) o;
+
+		return Objects.equal(this.id, that.id) &&
+				Objects.equal(this.position, that.position);
 	}
 }

@@ -79,7 +79,7 @@ abstract public class ContentComponent<T extends EmbeddableComponent>
 	 * @return a boolean.
 	 */
 	public boolean addContent(final T t) {
-		if (t.getPosition() < -1) {
+		if (t.getPosition() == -1) {
 			t.setPosition(this.getContent().size());
 		}
 		return this.getContent().add(t);

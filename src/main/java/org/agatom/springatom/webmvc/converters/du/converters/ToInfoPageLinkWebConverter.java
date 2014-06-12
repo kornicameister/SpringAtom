@@ -72,9 +72,9 @@ public class ToInfoPageLinkWebConverter
 
 			final WebDataComponentsArray array = new WebDataComponentsArray();
 
-			array.setTitle(this.getLabel(key, persistable));
+			array.setLabel(this.getLabel(key, persistable));
 			array.addContent(new IconComponent().setIconClass("fa fa-info-circle fa-color"));
-			array.addContent(new LinkComponent().setLinkLabel(link.getRel()).setKey(key).setValue(link.getHref()).setRawValueType(ClassUtils.getUserClass(value.getClass())));
+			array.addContent(new LinkComponent().setLinkLabel(link.getRel()).setId(key).setData(link.getHref()).setDataType(ClassUtils.getUserClass(value.getClass())));
 
 			return array;
 		} catch (InfoPageNotFoundException e) {

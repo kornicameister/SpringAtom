@@ -29,16 +29,16 @@ import java.io.Serializable;
 public interface Component
 		extends Serializable {
 	/**
-	 * <p>getTitle.</p>
+	 * <p>getLabel.</p>
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
-	String getTitle();
+	String getLabel();
 
 	/**
-	 * <p>setTitle.</p>
+	 * <p>setLabel.</p>
 	 *
-	 * @param title a {@link java.lang.String} object.
+	 * @param title a {@link String} object.
 	 */
-	void setTitle(final String title);
+	Component setLabel(final String title);
 }

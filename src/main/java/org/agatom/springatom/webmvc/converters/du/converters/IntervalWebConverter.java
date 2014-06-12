@@ -51,8 +51,8 @@ public class IntervalWebConverter
 			final long intervalValue = this.getIntervalValue(ClassUtils.isAssignableValue(Interval.class, value) ? ((Interval) value).toDuration() : (Duration) value);
 			final String intervalFormat = this.getIntervalLocalizedValue(intervalValue, LocaleContextHolder.getLocale());
 
-			textComponent.setValue(intervalFormat);
-			textComponent.setRawValueType(value.getClass());
+			textComponent.setData(intervalFormat);
+			textComponent.setDataType(value.getClass());
 
 			return textComponent;
 		}

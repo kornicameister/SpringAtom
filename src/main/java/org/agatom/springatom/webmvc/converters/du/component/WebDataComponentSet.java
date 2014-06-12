@@ -18,7 +18,6 @@
 package org.agatom.springatom.webmvc.converters.du.component;
 
 import org.agatom.springatom.web.component.core.Component;
-import org.agatom.springatom.web.component.core.EmbeddableComponent;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 01.06.14</small>
@@ -27,6 +26,6 @@ import org.agatom.springatom.web.component.core.EmbeddableComponent;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface WebDataMultiComponents<T extends EmbeddableComponent>
+public interface WebDataComponentSet<T extends WebDataComponent<?>>
 		extends Component, Iterable<T>, WebDataUITyped {
 }

@@ -71,7 +71,7 @@ abstract public class AbstractWebConverter
 			}
 			if (convertedValue == null) {
 				final DefaultWebDataComponent<?> asString = (DefaultWebDataComponent<?>) this.getAsString(key, "[undefined]", persistable);
-				asString.setRawValueType(ClassUtils.getUserClass(persistable));
+				asString.setDataType(ClassUtils.getUserClass(persistable));
 				convertedValue = asString;
 			}
 
@@ -103,18 +103,18 @@ abstract public class AbstractWebConverter
 	@SuppressWarnings("unchecked")
 	private Serializable getAsString(final String key, final Object value, final Persistable<?> persistable) {
 		final TextComponent component = (TextComponent) new TextComponent()
-				.setKey(key)
-				.setRawValueType(value.getClass())
-				.setValue(String.valueOf(value));
-		component.setTitle(this.getLabel(key, persistable));
+				.setId(key)
+				.setDataType(value.getClass())
+				.setData(String.valueOf(value));
+		component.setLabel(this.getLabel(key, persistable));
 		return component;
 	}
 
 	/**
 	 * Post processes {@code convertedValue}. Puts information about used converted, conversion time and if:
 	 * <ol>
-	 * <li>{@link org.agatom.springatom.webmvc.converters.du.component.WebDataComponent#getKey()} is not set, sets it</li>
-	 * <li>{@link org.agatom.springatom.webmvc.converters.du.component.WebDataComponent#getTitle()} is not set, sets it</li>
+	 * <li>{@link org.agatom.springatom.webmvc.converters.du.component.WebDataComponent#getId()} is not set, sets it</li>
+	 * <li>{@link org.agatom.springatom.webmvc.converters.du.component.WebDataComponent#getLabel()} is not set, sets it</li>
 	 * </ol>
 	 *
 	 * @param key            requested conversion key
@@ -131,11 +131,11 @@ abstract public class AbstractWebConverter
 			component.addDynamicProperty("converter", ClassUtils.getShortName(this.getClass()));
 			component.addDynamicProperty("time", conversionTime);
 
-			if (!StringUtils.hasText(component.getKey())) {
-				component.setKey(key);
+			if (!StringUtils.hasText(component.getId())) {
+				component.setId(key);
 			}
-			if (!StringUtils.hasText(component.getTitle())) {
-				component.setTitle(this.getLabel(key, persistable));
+			if (!StringUtils.hasText(component.getLabel())) {
+				component.setLabel(this.getLabel(key, persistable));
 			}
 		} else if (ClassUtils.isAssignableValue(WebDataComponentsArray.class, convertedValue)) {
 			final WebDataComponentsArray component = (WebDataComponentsArray) convertedValue;
@@ -143,8 +143,8 @@ abstract public class AbstractWebConverter
 			component.addDynamicProperty("converter", ClassUtils.getShortName(this.getClass()));
 			component.addDynamicProperty("time", conversionTime);
 
-			if (!StringUtils.hasText(component.getTitle())) {
-				component.setTitle(this.getLabel(key, persistable));
+			if (!StringUtils.hasText(component.getLabel())) {
+				component.setLabel(this.getLabel(key, persistable));
 			}
 		}
 		return convertedValue;

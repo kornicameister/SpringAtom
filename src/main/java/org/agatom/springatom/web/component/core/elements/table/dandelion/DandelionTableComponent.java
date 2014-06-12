@@ -246,7 +246,7 @@ public class DandelionTableComponent
 				.addValue(rowsOnPage)
 				.addValue(filterable)
 				.addValue(content)
-				.addValue(title)
+				.addValue(label)
 				.toString();
 	}
 }

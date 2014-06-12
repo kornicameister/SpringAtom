@@ -120,7 +120,7 @@ class InfoPageComponentBuilderServiceImpl
 			LOGGER.trace(String.format("Processing InfoPagePanel=%s", panel.getId()));
 
 			final InfoPagePanelComponent panelComponent = new InfoPagePanelComponent();
-			panelComponent.setTitle(panel.getTitle().getTitle(locale));
+			panelComponent.setLabel(panel.getTitle().getTitle(locale));
 			panelComponent.setLayoutCfg(panel.getLayout().asMap());
 			panelComponent.setPosition(panel.getPosition());
 			panelComponent.setIconCfg(panel.getIcon());
@@ -142,7 +142,7 @@ class InfoPageComponentBuilderServiceImpl
 
 		// setting properties
 		cmp.setId(page.getId());
-		cmp.setTitle(rbModel.getName());
+		cmp.setLabel(rbModel.getName());
 		cmp.setDomain(page.getDomain());
 
 		cmp.addDynamicProperty("entityTypeName", entityType.getName());
@@ -162,7 +162,7 @@ class InfoPageComponentBuilderServiceImpl
 		LOGGER.debug(String.format("buildAttributeComponent(path=%s)", attribute.getPath()));
 		final InfoPageAttributeComponent cmp = new InfoPageAttributeComponent();
 
-		cmp.setTitle(this.getAttributeTitle(attribute, locale, rbModel));
+		cmp.setLabel(this.getAttributeTitle(attribute, locale, rbModel));
 		cmp.setPath(attribute.getPath());
 		cmp.setPosition(attribute.getPosition());
 

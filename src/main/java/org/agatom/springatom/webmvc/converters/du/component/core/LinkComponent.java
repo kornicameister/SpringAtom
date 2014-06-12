@@ -23,7 +23,7 @@ import com.google.common.base.Objects;
  * {@code LinkComponent} is customized {@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent}.
  * For this component consider:
  * <ol>
- * <li>{@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent#getValue()} as the link href</li>
+ * <li>{@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent#getData()} as the link href</li>
  * </ol>
  * Has additional {@link #getLinkLabel()} that should return the label to be put as the content of {@code <a></a>}
  * HTML node.
@@ -68,12 +68,6 @@ public class LinkComponent
 
 	/** {@inheritDoc} */
 	@Override
-	public int hashCode() {
-		return Objects.hashCode(linkLabel, super.hashCode());
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
@@ -81,5 +75,11 @@ public class LinkComponent
 		LinkComponent that = (LinkComponent) o;
 
 		return Objects.equal(this.linkLabel, that.linkLabel) && super.equals(o);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(linkLabel, super.hashCode());
 	}
 }

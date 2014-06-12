@@ -51,8 +51,8 @@ public class PrimaryKeyWebConverter
 		final WebDataComponentsArray array = new WebDataComponentsArray();
 		final String keyValue = this.getPrimaryKeyValue(value, persistable);
 
-		array.setTitle(this.getLabel(key, persistable));
-		array.addContent(new TextComponent().setKey(key).setValue(keyValue).setRawValueType(ClassUtils.getUserClass(value == null ? keyValue : value)));
+		array.setLabel(this.getLabel(key, persistable));
+		array.addContent(new TextComponent().setId(key).setData(keyValue).setDataType(ClassUtils.getUserClass(value == null ? keyValue : value)));
 		array.addContent(new IconComponent().setIconClass("fa fa-key"));
 
 		return array;

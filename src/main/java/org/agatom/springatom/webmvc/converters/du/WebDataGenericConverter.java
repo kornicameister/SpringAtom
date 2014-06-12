@@ -55,7 +55,6 @@ import org.springframework.util.ClassUtils;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
-import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -140,32 +139,32 @@ public class WebDataGenericConverter
 		LOGGER.trace(String.format("For %s using key %s to pick converter", displayAs, localKey));
 
 		final Map<WebDataConverterKey, WebDataConverter<?>> capable = this.pickUpCapable(localKey, valueType);
-		Serializable serializable = null;
+		Object data = null;
 
 		if (capable.size() > 1) {
 			final String message = String.format("Unambiguous web convert choice, for key=%s, type=%s found %d converters", key, value, capable.size());
 			LOGGER.warn(message);
-			serializable = new TextComponent().setValue(message).setKey(localKey).setRawValueType(valueType);
+			data = new TextComponent().setData(message).setId(localKey).setDataType(valueType);
 		} else if (capable.size() == 0) {
 			final String message = String.format("No web convert choice, for key=%s, type=%s found %d converters", key, value, capable.size());
 			LOGGER.warn(message);
-			serializable = new TextComponent().setValue(message).setKey(localKey).setRawValueType(valueType);
+			data = new TextComponent().setData(message).setId(localKey).setDataType(valueType);
 		}
 
-		if (serializable != null) {
-			DefaultWebDataComponent<?> dataComponent = (DefaultWebDataComponent<?>) serializable;
+		if (data != null) {
+			DefaultWebDataComponent<?> dataComponent = (DefaultWebDataComponent<?>) data;
 
-			dataComponent = dataComponent.setKey(key).setRawValueType(String.class);
-			dataComponent.setTitle(key);
+			dataComponent = dataComponent.setId(key).setDataType(String.class);
+			dataComponent.setLabel(key);
 
 			return dataComponent;
 		}
 
 		final WebDataConverter<?> next = capable.values().iterator().next();
 		try {
-			serializable = next.convert(key, value, persistable, request);
-			LOGGER.debug(String.format("Converted for key=%s to value=%s", key, serializable));
-			return serializable;
+			data = next.convert(key, value, persistable, request);
+			LOGGER.debug(String.format("Converted for key=%s to data=%s", key, data));
+			return data;
 		} catch (Exception exp) {
 			LOGGER.fatal(String.format("Failure in conversion for key >> %s", key));
 			throw new WebConverterException(String.format("Failure in conversion for key >> %s", key), exp).setConversionKey(key).setConversionValue(value);

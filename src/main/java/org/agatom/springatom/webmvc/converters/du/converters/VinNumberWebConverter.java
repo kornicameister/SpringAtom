@@ -61,10 +61,26 @@ public class VinNumberWebConverter
 		final Locale locale = LocaleContextHolder.getLocale();
 		final WebDataComponentsArray array = new WebDataComponentsArray();
 
-		array.addContent(new TextComponent().setValue(vinNumberData.getBrand()).setLabel(this.messageSource.getMessage("scarmaster.manufacturingdata.brand", locale)).setRawValueType(String.class).setKey("brand"));
-		array.addContent(new TextComponent().setValue(vinNumberData.getModel()).setLabel(this.messageSource.getMessage("scarmaster.manufacturingdata.model", locale)).setRawValueType(String.class).setKey("model"));
-		array.addContent(new TextComponent().setValue(vinNumberData.getManufacturedBy()).setLabel(this.messageSource.getMessage("scarmaster.manufacturedBy", locale)).setRawValueType(String.class).setKey("manufacturedBy"));
-		array.addContent(new TextComponent().setValue(vinNumberData.getManufacturedIn().getAlpha3()).setLabel(this.messageSource.getMessage("scarmaster.manufacturedIn", locale)).setRawValueType(String.class).setKey("manufacturedIn"));
+		array.addWDC(new TextComponent()
+				.setData(vinNumberData.getBrand())
+				.setDataType(String.class)
+				.setId("brand")
+				.setLabel(this.messageSource.getMessage("scarmaster.manufacturingdata.brand", locale)));
+		array.addWDC(new TextComponent()
+				.setData(vinNumberData.getModel())
+				.setDataType(String.class)
+				.setId("model")
+				.setLabel(this.messageSource.getMessage("scarmaster.manufacturingdata.model", locale)));
+		array.addWDC(new TextComponent()
+				.setData(vinNumberData.getManufacturedBy())
+				.setDataType(String.class)
+				.setId("manufacturedBy")
+				.setLabel(this.messageSource.getMessage("scarmaster.manufacturedBy", locale)));
+		array.addWDC(new TextComponent()
+				.setData(vinNumberData.getManufacturedIn().getAlpha3())
+				.setDataType(String.class)
+				.setId("manufacturedIn")
+				.setLabel(this.messageSource.getMessage("scarmaster.manufacturedIn", locale)));
 
 		return array;
 	}

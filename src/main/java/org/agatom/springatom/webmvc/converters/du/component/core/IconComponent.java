@@ -45,7 +45,7 @@ public class IconComponent
 	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.IconComponent} object.
 	 */
 	public IconComponent setIconPath(final String iconPath) {
-		return (IconComponent) this.setValue(iconPath);
+		return (IconComponent) this.setData(iconPath);
 	}
 
 	/**
@@ -56,6 +56,6 @@ public class IconComponent
 	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.IconComponent} object.
 	 */
 	public IconComponent setIconClass(final String iconClass) {
-		return (IconComponent) this.setValue(iconClass);
+		return (IconComponent) this.setData(iconClass);
 	}
 }

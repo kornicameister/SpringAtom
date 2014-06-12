@@ -155,7 +155,7 @@ public class InfoPageAttributeComponent
 	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(position, path, displayAs, messageKey, title);
+		return Objects.hashCode(position, path, displayAs, messageKey, label);
 	}
 
 	/** {@inheritDoc} */
@@ -174,7 +174,7 @@ public class InfoPageAttributeComponent
 				Objects.equal(this.path, that.path) &&
 				Objects.equal(this.displayAs, that.displayAs) &&
 				Objects.equal(this.messageKey, that.messageKey) &&
-				Objects.equal(this.title, that.title);
+				Objects.equal(this.label, that.label);
 	}
 
 	/** {@inheritDoc} */
@@ -185,7 +185,7 @@ public class InfoPageAttributeComponent
 				.addValue(path)
 				.addValue(displayAs)
 				.addValue(messageKey)
-				.addValue(title)
+				.addValue(label)
 				.toString();
 	}
 }

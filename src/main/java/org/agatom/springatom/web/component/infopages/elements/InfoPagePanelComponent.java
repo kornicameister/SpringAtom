@@ -92,7 +92,7 @@ public class InfoPagePanelComponent
 	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(position, layout, content, title, dynamicProperties);
+		return Objects.hashCode(position, layout, content, label, dynamicProperties);
 	}
 
 	/** {@inheritDoc} */
@@ -106,7 +106,7 @@ public class InfoPagePanelComponent
 		return Objects.equal(this.position, that.position) &&
 				Objects.equal(this.layout, that.layout) &&
 				Objects.equal(this.content, that.content) &&
-				Objects.equal(this.title, that.title) &&
+				Objects.equal(this.label, that.label) &&
 				Objects.equal(this.dynamicProperties, that.dynamicProperties);
 	}
 }

@@ -45,7 +45,7 @@ public class FuelTypeWebConverter
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
 		final TextComponent tc = (TextComponent) super.doConvert(key, value, persistable, webRequest);
 		final FuelType fuelType = (FuelType) value;
-		tc.setValue(this.messageSource.getMessage(fuelType.name(), LocaleContextHolder.getLocale()));
+		tc.setData(this.messageSource.getMessage(fuelType.name(), LocaleContextHolder.getLocale()));
 		return tc;
 	}
 }
