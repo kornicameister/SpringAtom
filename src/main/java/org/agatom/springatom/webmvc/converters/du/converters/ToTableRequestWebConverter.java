@@ -182,6 +182,12 @@ public class ToTableRequestWebConverter
 			this.urls.add(url);
 			return this;
 		}
+
+		@Override
+		public String getUiType() {
+			return "tableRequest";
+		}
+
 	}
 
 }
