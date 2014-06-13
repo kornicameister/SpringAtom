@@ -110,7 +110,7 @@ abstract public class DefaultWebDataComponent<T>
 	}
 
 	@Override
-	public final String getUiType() {
+	public String getUiType() {
 		return StringUtils.uncapitalize(ClassUtils.getShortName(this.getClass()));
 	}
 
