@@ -62,8 +62,8 @@ public class LinkComponent
 
 	/** {@inheritDoc} */
 	@Override
-	public String getUiType() {
-		return "link";
+	public int hashCode() {
+		return Objects.hashCode(linkLabel, super.hashCode());
 	}
 
 	/** {@inheritDoc} */
@@ -75,11 +75,5 @@ public class LinkComponent
 		LinkComponent that = (LinkComponent) o;
 
 		return Objects.equal(this.linkLabel, that.linkLabel) && super.equals(o);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(linkLabel, super.hashCode());
 	}
 }

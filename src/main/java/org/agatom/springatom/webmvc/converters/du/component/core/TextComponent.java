@@ -28,9 +28,4 @@ public class TextComponent
 		extends DefaultWebDataComponent<String> {
 	private static final long serialVersionUID = -1035402964649329298L;
 
-	/** {@inheritDoc} */
-	@Override
-	public String getUiType() {
-		return "text";
-	}
 }

@@ -37,10 +37,7 @@ public class WebDataComponentsArray
 	private static final long serialVersionUID = -145702440703847256L;
 
 	public boolean addWDC(final Object data) {
-		if (ClassUtils.isAssignableValue(WebDataComponent.class, data)) {
-			return super.addContent((WebDataComponent<?>) data);
-		}
-		return false;
+		return ClassUtils.isAssignableValue(WebDataComponent.class, data) && super.addContent((WebDataComponent<?>) data);
 	}
 
 	/** {@inheritDoc} */

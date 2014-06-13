@@ -22,6 +22,8 @@ import com.google.common.collect.ComparisonChain;
 import org.agatom.springatom.web.component.core.EmbeddableComponent;
 import org.agatom.springatom.web.component.core.elements.DefaultComponent;
 import org.agatom.springatom.webmvc.converters.du.component.WebDataComponent;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Nonnull;
 
@@ -105,6 +107,11 @@ abstract public class DefaultWebDataComponent<T>
 	@Override
 	public void setPosition(final int position) {
 		this.position = position;
+	}
+
+	@Override
+	public final String getUiType() {
+		return StringUtils.uncapitalize(ClassUtils.getShortName(this.getClass()));
 	}
 
 	/** {@inheritDoc} */

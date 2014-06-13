@@ -29,13 +29,8 @@ import org.agatom.springatom.webmvc.converters.du.component.WebDataUITyped;
 public class IconComponent
 		extends DefaultWebDataComponent<String>
 		implements WebDataUITyped {
-	private static final long serialVersionUID = -1035402964649329298L;
-
-	/** {@inheritDoc} */
-	@Override
-	public String getUiType() {
-		return "icon";
-	}
+	private static final long    serialVersionUID = -1035402964649329298L;
+	private              boolean isPathSet        = false;
 
 	/**
 	 * <p>setIconPath.</p>
@@ -45,6 +40,7 @@ public class IconComponent
 	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.IconComponent} object.
 	 */
 	public IconComponent setIconPath(final String iconPath) {
+		this.isPathSet = true;
 		return (IconComponent) this.setData(iconPath);
 	}
 
@@ -57,5 +53,9 @@ public class IconComponent
 	 */
 	public IconComponent setIconClass(final String iconClass) {
 		return (IconComponent) this.setData(iconClass);
+	}
+
+	public boolean isPathSet() {
+		return this.isPathSet;
 	}
 }
