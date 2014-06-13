@@ -20,11 +20,12 @@ package org.agatom.springatom.webmvc.converters.du.converters;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
-import org.agatom.springatom.server.model.types.PersistentVersionedBean;
 import org.agatom.springatom.web.component.core.EmbeddableComponent;
 import org.agatom.springatom.web.component.core.builders.ComponentProduces;
+import org.agatom.springatom.web.component.core.context.ComponentContext;
+import org.agatom.springatom.web.component.core.context.ComponentContextFactory;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.elements.ContentComponent;
 import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
@@ -38,6 +39,7 @@ import org.agatom.springatom.webmvc.converters.du.exception.WebConverterExceptio
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
+import org.springframework.hateoas.Link;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -46,6 +48,7 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.PluralAttribute;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -64,10 +67,12 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class ToTableRequestWebConverter
 		extends AbstractWebConverter {
 	/** Constant <code>SELECTOR="tableRequestInitMaker"</code> */
-	public static final  String                     SELECTOR          = "tableRequestInitMaker";
-	private static final Logger                     LOGGER            = Logger.getLogger(ToTableRequestWebConverter.class);
+	public static final  String                     SELECTOR                = "tableRequestInitMaker";
+	private static final Logger                     LOGGER                  = Logger.getLogger(ToTableRequestWebConverter.class);
 	@Autowired
-	private              ComponentBuilderRepository builderRepository = null;
+	private              ComponentBuilderRepository builderRepository       = null;
+	@Autowired
+	private              ComponentContextFactory    componentContextFactory = null;
 
 	/** {@inheritDoc} */
 	@Override
@@ -129,15 +134,11 @@ public class ToTableRequestWebConverter
 			final TableRequest request = new TableRequest();
 
 			request.setLabel(this.getLabel(key, persistable));
-			request.addDynamicProperty("builderId", builderId);
-			request.addDynamicProperty("configurationUrl", linkTo(methodOn(SVComponentsDefinitionController.class).onTableConfigRequest(null, null)).withSelfRel().getHref());
-			request.addDynamicProperty("dataUrl", linkTo(methodOn(SVComponentsDataController.class).onTableDataRequest(null, null)).withSelfRel().getHref());
-
-			final Map<String, Object> context = Maps.newHashMap();
-			context.put("domain", ClassUtils.getUserClass(persistable));
-			context.put("id", persistable.getId());
-			context.put("version", ClassUtils.isAssignableValue(PersistentVersionedBean.class, persistable) ? ((PersistentVersionedBean) persistable).getVersion() : -1);
-			request.setData(context);
+			request.setBuilderId(builderId)
+					.setConfigurationUrl(linkTo(methodOn(SVComponentsDefinitionController.class).onTableConfigRequest(null, null)).withRel("configuration"))
+					.setDataUrl(linkTo(methodOn(SVComponentsDataController.class).onTableDataRequest(null, null)).withSelfRel().withRel("data"))
+					.setData(this.componentContextFactory.buildContext(persistable))
+					.setId(key);
 
 			return request;
 		}
@@ -145,13 +146,41 @@ public class ToTableRequestWebConverter
 		return null;
 	}
 
+	/**
+	 * Internal class. Carries information required to request for config and data for {@link org.agatom.springatom.web.component.core.elements.table.TableComponent}
+	 */
 	protected static class TableRequest
-			extends DefaultWebDataComponent<Map<String, Object>> {
-		private static final long serialVersionUID = 4160071560623816868L;
+			extends DefaultWebDataComponent<ComponentContext> {
+		private static final long      serialVersionUID = 4160071560623816868L;
+		private              String    builderId        = null;
+		private              Set<Link> urls             = Sets.newHashSet();
 
-		@Override
-		public String getUiType() {
-			return "tableRequest";
+		public String getBuilderId() {
+			return builderId;
+		}
+
+		public TableRequest setBuilderId(final String builderId) {
+			this.builderId = builderId;
+			return this;
+		}
+
+		public Set<Link> getUrls() {
+			return urls;
+		}
+
+		public TableRequest setUrls(final Set<Link> urls) {
+			this.urls = urls;
+			return this;
+		}
+
+		public TableRequest setDataUrl(final Link url) {
+			this.urls.add(url);
+			return this;
+		}
+
+		public TableRequest setConfigurationUrl(final Link url) {
+			this.urls.add(url);
+			return this;
 		}
 	}
 
