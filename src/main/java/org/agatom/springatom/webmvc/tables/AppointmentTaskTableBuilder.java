@@ -23,33 +23,58 @@ import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
+import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTable;
+import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTableColumn;
+import org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSSummaryFeature;
+import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.util.StringUtils;
 
 /**
  * <p>AppointmentTaskTableBuilder class.</p>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @EntityBased(entity = SAppointmentTask.class)
 @ComponentBuilder(AppointmentTaskTableBuilder.BUILDER_ID)
 public class AppointmentTaskTableBuilder
-		extends TableComponentBuilder<DandelionTableComponent, SAppointmentTask> {
+		extends TableComponentBuilder<ExtJSTable, SAppointmentTask> {
 	/** Constant <code>BUILDER_ID="appointmentTaskTableBuilder"</code> */
 	protected static final String BUILDER_ID = "appointmentTaskTableBuilder";
 	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointmentTask.ENTITY_NAME));
 
 	/** {@inheritDoc} */
 	@Override
-	protected DandelionTableComponent buildDefinition(final ComponentDataRequest dataRequest) {
-		final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
-		this.helper.newTableColumn(component, "id", "persistentobject.id");
-		this.helper.newTableColumn(component, "type", "sappointment.task.type");
-		this.helper.newTableColumn(component, "task", "sappointment.task.task").setSortable(false);
-		return component;
+	protected ExtJSTable buildDefinition(final ComponentDataRequest dataRequest) {
+		final QSAppointmentTask task = QSAppointmentTask.sAppointmentTask;
+		final ExtJSTable table = new ExtJSTable(TABLE_ID, BUILDER_ID);
+		final LocalizedClassModel<SAppointmentTask> lModel = this.getLocalizedClassModel();
+
+		table.setBorder(false)
+				.addFeature(new ExtJSSummaryFeature().setRemoteRoot(this.getAttributeName(task.type)))
+				.setSortableColumns(true)
+				.setCollapsible(false)
+				.setForceFit(true);
+
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(task.id))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(task.id)))
+		);
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(task.type))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(task.id)))
+		);
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(task.task))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(task.id)))
+		);
+
+		return table;
 	}
 
 	/** {@inheritDoc} */

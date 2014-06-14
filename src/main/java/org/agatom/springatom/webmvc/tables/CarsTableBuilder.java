@@ -23,35 +23,26 @@ import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
+import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTable;
+import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTableColumn;
+import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.util.StringUtils;
 
 /**
  * <p>CarsTableBuilder class.</p>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @EntityBased(entity = SCar.class)
 @ComponentBuilder(CarsTableBuilder.BUILDER_ID)
 public class CarsTableBuilder
-		extends TableComponentBuilder<DandelionTableComponent, SCar> {
+		extends TableComponentBuilder<ExtJSTable, SCar> {
 	/** Constant <code>BUILDER_ID="carsTableBuilder"</code> */
 	protected static final String BUILDER_ID = "carsTableBuilder";
 	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SCar.ENTITY_NAME));
-
-	/** {@inheritDoc} */
-	@Override
-	protected Object handleColumnConversion(final SCar object, final Object value, final String path) {
-		switch (path) {
-			case "owner": {
-				return object.getOwner().getPerson().getIdentity();
-			}
-		}
-		return super.handleColumnConversion(object, value, path);
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -61,12 +52,38 @@ public class CarsTableBuilder
 
 	/** {@inheritDoc} */
 	@Override
-	protected DandelionTableComponent buildDefinition(final ComponentDataRequest dataRequest) {
-		final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
-		this.helper.newTableColumn(component, "id", "persistentobject.id");
-		this.helper.newTableColumn(component, "owner", "scar.owner");
-		this.helper.newTableColumn(component, "licencePlate", "scar.licenceplate");
-		this.helper.newTableColumn(component, "vinNumber", "scar.vinnumber");
-		return component;
+	protected ExtJSTable buildDefinition(final ComponentDataRequest dataRequest) {
+
+		final QSCar car = QSCar.sCar;
+		final ExtJSTable table = new ExtJSTable(TABLE_ID, BUILDER_ID);
+		final LocalizedClassModel<SCar> lModel = this.getLocalizedClassModel();
+
+		table.setBorder(false)
+				.setSortableColumns(true)
+				.setCollapsible(false)
+				.setForceFit(true);
+
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(car.id))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(car.id)))
+		);
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(car.owner))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(car.owner)))
+		);
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(car.licencePlate))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(car.licencePlate)))
+		);
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(car.vinNumber))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(car.vinNumber)))
+		);
+
+		return null;
 	}
 }

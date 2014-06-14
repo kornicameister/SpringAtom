@@ -18,56 +18,87 @@
 package org.agatom.springatom.webmvc.tables;
 
 import com.mysema.query.types.Predicate;
+import org.agatom.springatom.server.model.beans.appointment.QSAppointment;
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
+import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTable;
+import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTableColumn;
+import org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSSummaryFeature;
+import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.util.StringUtils;
 
 /**
  * <p>AppointmentsTableBuilder class.</p>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @EntityBased(entity = SAppointment.class)
 @ComponentBuilder(AppointmentsTableBuilder.BUILDER_ID)
 public class AppointmentsTableBuilder
-		extends TableComponentBuilder<DandelionTableComponent, SAppointment> {
+		extends TableComponentBuilder<ExtJSTable, SAppointment> {
 	/** Constant <code>BUILDER_ID="appointmentsTableBuilder"</code> */
 	protected static final String BUILDER_ID = "appointmentsTableBuilder";
 	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointment.ENTITY_NAME));
 
 	/** {@inheritDoc} */
 	@Override
-	protected DandelionTableComponent buildDefinition(final ComponentDataRequest dataRequest) {
-		final DandelionTableComponent component = this.helper.newDandelionTable(TABLE_ID, BUILDER_ID);
-		this.helper.newTableColumn(component, "id", "persistentobject.id");
-		this.helper.newTableColumn(component, "begin", "sappointment.begin").setRenderFunctionName("renderDate");
-		this.helper.newTableColumn(component, "end", "sappointment.end").setRenderFunctionName("renderDate");
-		this.helper.newTableColumn(component, "allDay", "sappointment.allDay").setRenderFunctionName("renderBoolean");
-		this.helper.newTableColumn(component, "car", "sappointment.car");
-		this.helper.newTableColumn(component, "assignee", "sappointment.assignee");
-		this.helper.newTableColumn(component, "assigned", "sappointment.assigned").setRenderFunctionName("renderDate");
-		this.helper.newTableColumn(component, "reporter", "sappointment.reporter");
-		return component;
-	}
+	protected ExtJSTable buildDefinition(final ComponentDataRequest dataRequest) {
+		final QSAppointment appointment = QSAppointment.sAppointment;
+		final ExtJSTable table = new ExtJSTable(TABLE_ID, BUILDER_ID);
+		final LocalizedClassModel<SAppointment> lModel = this.getLocalizedClassModel();
 
-	/** {@inheritDoc} */
-	@Override
-	protected Object handleColumnConversion(final SAppointment object, final Object value, final String path) {
-		switch (path) {
-			case "car":
-				return object.getCar().getLicencePlate();
-			case "assignee":
-				return object.getAssignee().getPerson().getIdentity();
-			case "reporter":
-				return object.getReporter().getPerson().getIdentity();
-		}
-		return super.handleColumnConversion(object, value, path);
+		table.setBorder(false)
+				.addFeature(new ExtJSSummaryFeature().setRemoteRoot(this.getAttributeName(appointment.car)))
+				.setSortableColumns(true)
+				.setForceFit(true);
+
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(appointment.id))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.id)))
+		);
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(appointment.begin))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.begin)))
+		);
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(appointment.begin))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.begin)))
+		);
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(appointment.assigned))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.assigned)))
+		);
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(appointment.allDay))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.allDay)))
+		);
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(appointment.car))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.car)))
+		);
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(appointment.assignee))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.assignee)))
+		);
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(appointment.reporter))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.reporter)))
+		);
+
+		return table;
 	}
 
 	/** {@inheritDoc} */
