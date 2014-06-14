@@ -15,9 +15,9 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core.elements.table.extjs.feature;
+package org.agatom.springatom.web.component.table.elements.extjs;
 
-import com.google.common.base.Objects;
+import org.agatom.springatom.web.component.table.elements.TableColumnComponent;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
@@ -26,53 +26,47 @@ import com.google.common.base.Objects;
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract class AbstractExtJSTableFeature
-		implements ExtJSTableFeature {
-	private static final long   serialVersionUID = 8485389573075863861L;
-	private              String ftype            = null;
+public class ExtJSTableColumn
+		extends TableColumnComponent {
+	private static final long   serialVersionUID = 7324208543889807894L;
+	private              String xtype            = "gridcolumn";
+	private              String dataIndex        = null;
+
+	public String getText() {
+		return this.getLabel();
+	}
+
+	public ExtJSTableColumn setText(final String text) {
+		return (ExtJSTableColumn) this.setLabel(text);
+	}
+
+	public String getDataIndex() {
+		return dataIndex;
+	}
+
+	public ExtJSTableColumn setDataIndex(final String dataIndex) {
+		this.dataIndex = dataIndex;
+		return this;
+	}
 
 	/**
-	 * <p>Constructor for AbstractExtJSTableFeature.</p>
+	 * <p>Getter for the field <code>xtype</code>.</p>
 	 *
-	 * @param feature a {@link org.agatom.springatom.web.component.core.elements.table.extjs.feature.AbstractExtJSTableFeature.Feature} object.
+	 * @return a {@link java.lang.String} object.
 	 */
-	protected AbstractExtJSTableFeature(final Feature feature) {
-		this.ftype = feature.name().toLowerCase().replaceAll("_", "");
+	public String getXtype() {
+		return xtype;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public final String getFtype() {
-		return ftype;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public final int hashCode() {
-		return Objects.hashCode(ftype);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public final boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		AbstractExtJSTableFeature that = (AbstractExtJSTableFeature) o;
-
-		return Objects.equal(this.ftype, that.ftype);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this)
-				.add("ftype", ftype)
-				.toString();
-	}
-
-	protected static enum Feature {
-		GROUPING,
-		SUMMARY
+	/**
+	 * <p>Setter for the field <code>xtype</code>.</p>
+	 *
+	 * @param xtype a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.ExtJSTableColumn} object.
+	 */
+	public ExtJSTableColumn setXtype(final String xtype) {
+		this.xtype = xtype;
+		return this;
 	}
 }

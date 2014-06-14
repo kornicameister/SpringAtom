@@ -31,8 +31,18 @@ abstract public class TableComponent<T extends TableColumnComponent>
 		extends ContentComponent<T> {
 	private static final long    serialVersionUID = 3527305242535311855L;
 	protected            String  tableId          = null;
+	protected            String  builderId        = null;
 	protected            int     rowsOnPage       = 10;
 	protected            boolean filterable       = true;
+
+	public TableComponent() {
+		// default constructor
+	}
+
+	public TableComponent(final String tableId, final String builderId) {
+		this.tableId = tableId;
+		this.builderId = builderId;
+	}
 
 	/**
 	 * <p>Getter for the field <code>tableId</code>.</p>
@@ -52,6 +62,15 @@ abstract public class TableComponent<T extends TableColumnComponent>
 	 */
 	public TableComponent setTableId(final String tableId) {
 		this.tableId = tableId;
+		return this;
+	}
+
+	public String getBuilderId() {
+		return builderId;
+	}
+
+	public TableComponent setBuilderId(final String builderId) {
+		this.builderId = builderId;
 		return this;
 	}
 

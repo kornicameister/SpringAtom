@@ -15,36 +15,38 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core;
+package org.agatom.springatom.web.component.table.elements.extjs.store;
+
+import java.io.Serializable;
 
 /**
- * {@code ExtJsComponentMixin} marks class as capable of being rendered in context of <a href="http://docs.sencha.com/extjs/4.2.2/">ExtJS</a>
- *
- * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 14.06.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ExtJsComponentMixin {
-	/**
-	 * <p>isAnimCollapse.</p>
-	 *
-	 * @return a boolean.
-	 */
-	boolean isAnimCollapse();
+public class ExtJSStoreField
+		implements Serializable {
+	private static final long   serialVersionUID = -4040880531246748955L;
+	private              String name             = null;
+	private              String type             = "string";
 
-	/**
-	 * <p>isCollapsible.</p>
-	 *
-	 * @return a boolean.
-	 */
-	boolean isCollapsible();
+	public String getName() {
+		return name;
+	}
 
-	/**
-	 * <p>isBorder.</p>
-	 *
-	 * @return a boolean.
-	 */
-	boolean isBorder();
+	public ExtJSStoreField setName(final String name) {
+		this.name = name;
+		return this;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public ExtJSStoreField setType(final String type) {
+		this.type = type;
+		return this;
+	}
 }

@@ -23,25 +23,21 @@ import com.mysema.query.types.path.EntityPathBase;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
 import org.agatom.springatom.server.repository.SBasicRepository;
-import org.agatom.springatom.web.action.model.actions.LinkAction;
 import org.agatom.springatom.web.component.core.builders.AbstractComponentDefinitionBuilder;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentPathEvaluationException;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.helper.TableComponentHelper;
-import org.agatom.springatom.web.component.infopages.InfoPageNotFoundException;
-import org.agatom.springatom.web.component.infopages.mapping.InfoPageMappingService;
 import org.agatom.springatom.web.component.table.elements.TableComponent;
-import org.agatom.springatom.web.component.table.exception.DynamicColumnResolutionException;
 import org.agatom.springatom.web.component.table.request.TableComponentRequest;
+import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.domain.Sort;
-import org.springframework.hateoas.Link;
 import org.springframework.util.ClassUtils;
 
 import javax.annotation.PostConstruct;
@@ -60,23 +56,23 @@ import java.util.List;
  * <li>entity is read via GenericTypeResolver</li>
  * </ul>
  * </li>
+ * <li>0.0.2 to 0.0.3</li>
+ * <ul>
+ * <li>removed method used previously in data transforming operation, now handled through {@link org.agatom.springatom.webmvc.converters.du.WebDataGenericConverter}</li>
+ * </ul>
  * </ol>
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.3
  * @since 0.0.1
  */
 abstract public class TableComponentBuilder<COMP extends TableComponent, Y extends Persistable<?>>
 		extends AbstractComponentDefinitionBuilder<COMP> {
 	@Autowired
-	protected TableComponentHelper      helper            = null;
-	@Autowired
 	protected ApplicationContext        context           = null;
 	@Autowired
 	protected SBasicRepository<Y, Long> repository        = null;
 	protected Class<Y>                  entity            = null;
-	@Autowired
-	private   InfoPageMappingService    pageMappings      = null;
 	@Autowired
 	private   EntityDescriptors         entityDescriptors = null;
 
@@ -84,21 +80,6 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
 	@SuppressWarnings("unchecked")
 	private void postConstruct() {
 		this.entity = (Class<Y>) GenericTypeResolver.resolveTypeArguments(getClass(), TableComponentBuilder.class)[1];
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected COMP postProcessDefinition(final COMP definition, final ComponentDataRequest dataRequest) {
-		super.postProcessDefinition(definition, dataRequest);
-		if (this.pageMappings.hasInfoPage(this.entity)) {
-			this.helper.newTableColumn(
-					definition,
-					"infopage",
-					"persistentobject.infopage")
-					.setRenderFunctionName("renderTableAction")
-					.setSortable(false);
-		}
-		return definition;
 	}
 
 	/** {@inheritDoc} */
@@ -244,48 +225,12 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
 	}
 
 	/**
-	 * If value for current {@code path} was not found (therefore was null) this method will be called to retrieve value
-	 * for given {@code path} as for <b>dynamic column</b>.
-	 * In other words such pair <b>@{code path}</b> and <b>column</b> can be considered as <b>calculable attribute</b>
+	 * Returns {@link org.agatom.springatom.web.locale.beans.LocalizedClassModel} for {@link #entity}
 	 *
-	 * @param object current object being processed
-	 * @param path   current path
-	 *
-	 * @return value for path or null
-	 *
-	 * @throws org.agatom.springatom.web.component.table.exception.DynamicColumnResolutionException if failed to resolve dynamic column
-	 * @see org.agatom.springatom.web.component.table.TableComponentBuilder#handleColumnConversion(org.springframework.data.domain.Persistable,
-	 * Object, String)
+	 * @return localized class model
 	 */
-	protected Object handleDynamicColumn(final Y object, final String path) throws DynamicColumnResolutionException {
-		switch (path) {
-			case "infopage": {
-				Link link;
-				try {
-					link = helper.getInfoPageLink(this.pageMappings.getMappedRel(object.getClass()), (Long) object.getId());
-					return new LinkAction()
-							.setLabel(ClassUtils.getShortName(this.entity.getName()))
-							.setUrl(link);
-				} catch (InfoPageNotFoundException exp) {
-					throw new DynamicColumnResolutionException(exp);
-				}
-			}
-		}
-		return null;
+	protected LocalizedClassModel<Y> getLocalizedClassModel() {
+		return this.messageSource.getLocalizedClassModel(this.entity, LocaleContextHolder.getLocale());
 	}
 
-	/**
-	 * Method handles converting found {@code value} for {@code path} if necessary.
-	 * If value was found using path but there is a requirement to retrieve another value for it,
-	 * this method can be easily overridden hence give the possibility to override old value
-	 *
-	 * @param object current object being processed
-	 * @param value  current value found for {@code path}
-	 * @param path   current path
-	 *
-	 * @return new/old value for {@code path}
-	 */
-	protected Object handleColumnConversion(final Y object, final Object value, final String path) {
-		return value;
-	}
 }

@@ -15,74 +15,70 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.table.elements;
-
-import com.google.common.base.Objects;
-import org.agatom.springatom.web.component.core.EmbeddableComponent;
-import org.agatom.springatom.web.component.core.elements.DefaultComponent;
-
-import javax.annotation.Nonnull;
+package org.agatom.springatom.web.component.table.elements.extjs.feature;
 
 /**
- * {@code TableColumnComponent} in an abstract representation of the single <b>column</b>.
- * Each <b>column</b> is part of the {@link TableComponent} through {@link org.agatom.springatom.web.component.core.elements.ContentComponent}
- * generic constraint.
+ * {@code ExtJSSummaryFeature} corresponds to the <a href="http://docs.sencha.com/extjs/4.2.2/#!/api/Ext.grid.feature.Summary">Ext.grid.feature.Summary</a>
  *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class TableColumnComponent
-		extends DefaultComponent
-		implements EmbeddableComponent {
-	private static final long    serialVersionUID = 7798481976595660140L;
-	private              int     position         = -1;
-	private              boolean sortable         = false;
+public class ExtJSSummaryFeature
+		extends AbstractExtJSTableFeature {
+	private static final long    serialVersionUID = 4363888471601789083L;
+	protected            String  remoteRoot       = "";
+	protected            boolean showSummaryRow   = true;
 
-	/** {@inheritDoc} */
-	@Override
-	public int getPosition() {
-		return this.position;
+	/**
+	 * <p>Constructor for ExtJSSummaryFeature.</p>
+	 */
+	public ExtJSSummaryFeature() {
+		super(Feature.SUMMARY);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void setPosition(final int position) {
-		this.position = position;
+	/**
+	 * <p>Getter for the field <code>remoteRoot</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getRemoteRoot() {
+		return remoteRoot;
 	}
 
-	public boolean isSortable() {
-		return sortable;
-	}
-
-	public TableColumnComponent setSortable(final boolean sortable) {
-		this.sortable = sortable;
+	/**
+	 * <p>Setter for the field <code>remoteRoot</code>.</p>
+	 *
+	 * @param remoteRoot a {@link java.lang.String} object.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSSummaryFeature} object.
+	 */
+	public ExtJSSummaryFeature setRemoteRoot(final String remoteRoot) {
+		this.remoteRoot = remoteRoot;
 		return this;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public int compareTo(@Nonnull final EmbeddableComponent ec) {
-		return Integer.compare(this.position, ec.getPosition());
+	/**
+	 * <p>isShowSummaryRow.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isShowSummaryRow() {
+		return showSummaryRow;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(position);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		TableColumnComponent that = (TableColumnComponent) o;
-
-		return Objects.equal(this.position, that.position);
+	/**
+	 * <p>Setter for the field <code>showSummaryRow</code>.</p>
+	 *
+	 * @param showSummaryRow a boolean.
+	 *
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSSummaryFeature} object.
+	 */
+	public ExtJSSummaryFeature setShowSummaryRow(final boolean showSummaryRow) {
+		this.showSummaryRow = showSummaryRow;
+		return this;
 	}
 
 }
