@@ -17,9 +17,9 @@
 
 package org.agatom.springatom.web.component.core.helper;
 
-import org.agatom.springatom.web.component.core.elements.table.TableComponent;
-import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent;
-import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent;
+import org.agatom.springatom.web.component.table.elements.TableComponent;
+import org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableColumnComponent;
+import org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableComponent;
 import org.springframework.hateoas.Link;
 
 /**
@@ -47,7 +47,7 @@ public interface TableComponentHelper
 	 * @param tableId   a {@link java.lang.String} object.
 	 * @param builderId a {@link java.lang.String} object.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableComponent} object.
 	 */
 	DandelionTableComponent newDandelionTable(final String tableId, final String builderId);
 
@@ -64,11 +64,11 @@ public interface TableComponentHelper
 	/**
 	 * <p>newTableColumn.</p>
 	 *
-	 * @param cmp   a {@link org.agatom.springatom.web.component.core.elements.table.TableComponent} object.
+	 * @param cmp   a {@link org.agatom.springatom.web.component.table.elements.TableComponent} object.
 	 * @param path  a {@link java.lang.String} object.
 	 * @param rbKey a {@link java.lang.String} object.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableColumnComponent} object.
 	 */
 	DandelionTableColumnComponent newTableColumn(final TableComponent cmp, final String path, final String rbKey);
 }

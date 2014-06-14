@@ -147,7 +147,7 @@ public class ToTableRequestWebConverter
 	}
 
 	/**
-	 * Internal class. Carries information required to request for config and data for {@link org.agatom.springatom.web.component.core.elements.table.TableComponent}
+	 * Internal class. Carries information required to request for config and data for {@link org.agatom.springatom.web.component.table.elements.TableComponent}
 	 */
 	protected static class TableRequest
 			extends DefaultWebDataComponent<ComponentContext> {

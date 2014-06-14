@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core.elements.table;
+package org.agatom.springatom.web.component.table.elements;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.web.component.core.EmbeddableComponent;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 
 /**
  * {@code TableColumnComponent} in an abstract representation of the single <b>column</b>.
- * Each <b>column</b> is part of the {@link org.agatom.springatom.web.component.core.elements.table.TableComponent}
+ * Each <b>column</b> is part of the {@link TableComponent}
  * <p/>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
  *

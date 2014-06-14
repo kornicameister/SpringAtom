@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * {@code SVComponentsDataController} receives calls for data for either {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
- * and {@link org.agatom.springatom.web.component.core.elements.table.TableComponent}. Request is routed to appropriate {@link org.agatom.springatom.web.component.core.builders.Builder}
+ * and {@link org.agatom.springatom.web.component.table.elements.TableComponent}. Request is routed to appropriate {@link org.agatom.springatom.web.component.core.builders.Builder}
  *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 18.05.14</small>
  *

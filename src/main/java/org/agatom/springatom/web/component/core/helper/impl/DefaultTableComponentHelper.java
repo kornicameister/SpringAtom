@@ -17,11 +17,11 @@
 
 package org.agatom.springatom.web.component.core.helper.impl;
 
-import org.agatom.springatom.web.component.core.elements.table.TableComponent;
-import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent;
-import org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent;
 import org.agatom.springatom.web.component.core.helper.TableComponentHelper;
 import org.agatom.springatom.web.component.infopages.link.InfoPageLinkHelper;
+import org.agatom.springatom.web.component.table.elements.TableComponent;
+import org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableColumnComponent;
+import org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableComponent;
 import org.agatom.springatom.webmvc.controllers.components.SVComponentsDataController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

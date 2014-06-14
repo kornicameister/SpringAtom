@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core.elements.table;
+package org.agatom.springatom.web.component.table.elements;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.web.component.core.elements.ContentComponent;
@@ -48,7 +48,7 @@ abstract public class TableComponent<T extends TableColumnComponent>
 	 *
 	 * @param tableId a {@link java.lang.String} object.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.TableComponent} object.
+	 * @return a {@link TableComponent} object.
 	 */
 	public TableComponent setTableId(final String tableId) {
 		this.tableId = tableId;

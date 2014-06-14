@@ -28,10 +28,10 @@ import org.agatom.springatom.web.component.core.builders.AbstractComponentDefini
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentPathEvaluationException;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.elements.table.TableComponent;
 import org.agatom.springatom.web.component.core.helper.TableComponentHelper;
 import org.agatom.springatom.web.component.infopages.InfoPageNotFoundException;
 import org.agatom.springatom.web.component.infopages.mapping.InfoPageMappingService;
+import org.agatom.springatom.web.component.table.elements.TableComponent;
 import org.agatom.springatom.web.component.table.exception.DynamicColumnResolutionException;
 import org.agatom.springatom.web.component.table.request.TableComponentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ import java.util.List;
 
 /**
  * {@code TableComponentBuilder} provides generic functionality for all the implementing classes
- * that eases and helps to build a table component {@link org.agatom.springatom.web.component.core.elements.table.TableComponent}.
+ * that eases and helps to build a table component {@link org.agatom.springatom.web.component.table.elements.TableComponent}.
  *
  * Changelog:
  * <ol>

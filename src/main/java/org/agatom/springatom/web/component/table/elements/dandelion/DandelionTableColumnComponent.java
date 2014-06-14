@@ -15,12 +15,12 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core.elements.table.dandelion;
+package org.agatom.springatom.web.component.table.elements.dandelion;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.core.util.Localized;
 import org.agatom.springatom.web.component.core.EmbeddableComponent;
-import org.agatom.springatom.web.component.core.elements.table.TableColumnComponent;
+import org.agatom.springatom.web.component.table.elements.TableColumnComponent;
 import org.springframework.data.domain.Sort;
 
 /**
@@ -58,7 +58,7 @@ public class DandelionTableColumnComponent
 	 *
 	 * @param renderFunctionName a {@link java.lang.String} object.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableColumnComponent} object.
 	 */
 	public DandelionTableColumnComponent setRenderFunctionName(final String renderFunctionName) {
 		this.renderFunctionName = renderFunctionName;
@@ -79,7 +79,7 @@ public class DandelionTableColumnComponent
 	 *
 	 * @param property a {@link java.lang.String} object.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableColumnComponent} object.
 	 */
 	public DandelionTableColumnComponent setProperty(final String property) {
 		this.property = property;
@@ -100,7 +100,7 @@ public class DandelionTableColumnComponent
 	 *
 	 * @param sortDirection a {@link org.springframework.data.domain.Sort.Direction} object.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableColumnComponent} object.
 	 */
 	public DandelionTableColumnComponent setSortDirection(final Sort.Direction sortDirection) {
 		this.sortDirection = sortDirection;
@@ -121,7 +121,7 @@ public class DandelionTableColumnComponent
 	 *
 	 * @param sortable a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableColumnComponent} object.
 	 */
 	public DandelionTableColumnComponent setSortable(final boolean sortable) {
 		this.sortable = sortable;
@@ -142,7 +142,7 @@ public class DandelionTableColumnComponent
 	 *
 	 * @param filterable a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableColumnComponent} object.
 	 */
 	public DandelionTableColumnComponent setFilterable(final boolean filterable) {
 		this.filterable = filterable;
@@ -163,7 +163,7 @@ public class DandelionTableColumnComponent
 	 *
 	 * @param visible a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableColumnComponent} object.
 	 */
 	public DandelionTableColumnComponent setVisible(final boolean visible) {
 		this.visible = visible;
@@ -190,7 +190,7 @@ public class DandelionTableColumnComponent
 	 *
 	 * @param titleKey a {@link java.lang.String} object.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableColumnComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableColumnComponent} object.
 	 */
 	public DandelionTableColumnComponent setTitleKey(final String titleKey) {
 		this.titleKey = titleKey;

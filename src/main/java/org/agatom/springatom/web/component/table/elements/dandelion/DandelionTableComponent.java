@@ -15,10 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core.elements.table.dandelion;
+package org.agatom.springatom.web.component.table.elements.dandelion;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.web.component.core.elements.table.TableComponent;
+import org.agatom.springatom.web.component.table.elements.TableComponent;
 import org.springframework.hateoas.Link;
 
 /**
@@ -54,7 +54,7 @@ public class DandelionTableComponent
 	 *
 	 * @param url a {@link org.springframework.hateoas.Link} object.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableComponent} object.
 	 */
 	public DandelionTableComponent setUrl(final Link url) {
 		this.url = url;
@@ -75,7 +75,7 @@ public class DandelionTableComponent
 	 *
 	 * @param deferRender a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableComponent} object.
 	 */
 	public DandelionTableComponent setDeferRender(final boolean deferRender) {
 		this.deferRender = deferRender;
@@ -96,7 +96,7 @@ public class DandelionTableComponent
 	 *
 	 * @param infoVisible a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableComponent} object.
 	 */
 	public DandelionTableComponent setInfoVisible(final boolean infoVisible) {
 		this.infoVisible = infoVisible;
@@ -117,7 +117,7 @@ public class DandelionTableComponent
 	 *
 	 * @param processingIndicator a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableComponent} object.
 	 */
 	public DandelionTableComponent setProcessingIndicator(final boolean processingIndicator) {
 		this.processingIndicator = processingIndicator;
@@ -138,7 +138,7 @@ public class DandelionTableComponent
 	 *
 	 * @param scrollCollapse a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableComponent} object.
 	 */
 	public DandelionTableComponent setScrollCollapse(final boolean scrollCollapse) {
 		this.scrollCollapse = scrollCollapse;
@@ -159,7 +159,7 @@ public class DandelionTableComponent
 	 *
 	 * @param scroll a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableComponent} object.
 	 */
 	public DandelionTableComponent setScroll(final boolean scroll) {
 		this.scroll = scroll;
@@ -180,7 +180,7 @@ public class DandelionTableComponent
 	 *
 	 * @param sortable a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableComponent} object.
 	 */
 	public DandelionTableComponent setSortable(final boolean sortable) {
 		this.sortable = sortable;
@@ -201,7 +201,7 @@ public class DandelionTableComponent
 	 *
 	 * @param stateful a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.elements.table.dandelion.DandelionTableComponent} object.
+	 * @return a {@link org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableComponent} object.
 	 */
 	public DandelionTableComponent setStateful(final boolean stateful) {
 		this.stateful = stateful;
