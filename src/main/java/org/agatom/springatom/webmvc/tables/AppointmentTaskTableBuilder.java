@@ -66,12 +66,12 @@ public class AppointmentTaskTableBuilder
 		table.addContent(
 				new ExtJSTableColumn()
 						.setDataIndex(this.getAttributeName(task.type))
-						.setText(lModel.getLocalizedAttribute(this.getAttributeName(task.id)))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(task.type)))
 		);
 		table.addContent(
 				new ExtJSTableColumn()
 						.setDataIndex(this.getAttributeName(task.task))
-						.setText(lModel.getLocalizedAttribute(this.getAttributeName(task.id)))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(task.task)))
 		);
 
 		return table;
