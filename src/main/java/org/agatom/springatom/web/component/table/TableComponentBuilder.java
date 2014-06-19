@@ -19,6 +19,7 @@ package org.agatom.springatom.web.component.table;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mysema.query.types.Path;
 import com.mysema.query.types.Predicate;
 import com.mysema.query.types.path.EntityPathBase;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
@@ -30,7 +31,9 @@ import org.agatom.springatom.web.component.core.builders.exception.ComponentExce
 import org.agatom.springatom.web.component.core.builders.exception.ComponentPathEvaluationException;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.request.ComponentRequestAttribute;
+import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.web.component.table.elements.TableComponent;
+import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTableColumn;
 import org.agatom.springatom.web.component.table.request.TableComponentRequest;
 import org.agatom.springatom.web.component.table.request.TableRequestColumnDef;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
@@ -269,6 +272,14 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
 	 */
 	protected LocalizedClassModel<Y> getLocalizedClassModel() {
 		return this.messageSource.getLocalizedClassModel(this.entity, LocaleContextHolder.getLocale());
+	}
+
+	protected ExtJSTableColumn newColumn(final Path<?> path, final AttributeDisplayAs displayAs, final LocalizedClassModel<Y> lModel) {
+		return (ExtJSTableColumn) new ExtJSTableColumn()
+				.setTooltip(lModel.getLocalizedAttribute(this.getAttributeName(path)))
+				.setDataIndex(this.getAttributeName(path))
+				.setText(lModel.getLocalizedAttribute(this.getAttributeName(path)))
+				.setDisplayAs(displayAs);
 	}
 
 }
