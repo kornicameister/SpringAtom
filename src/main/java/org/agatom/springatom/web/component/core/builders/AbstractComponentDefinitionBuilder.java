@@ -19,8 +19,9 @@ package org.agatom.springatom.web.component.core.builders;
 
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.elements.table.TableComponent;
+import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 import org.agatom.springatom.web.component.infopages.elements.InfoPageComponent;
+import org.agatom.springatom.web.component.table.elements.TableComponent;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -30,9 +31,13 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * <p>Abstract AbstractComponentDefinitionBuilder class.</p>
+ * Contains information about:
+ * <ol>
+ * <li>{@link org.agatom.springatom.web.component.core.builders.ComponentProduces}, which depends on {@link #getBuilds()}</li>
+ * </ol>
  *
  * @author kornicameister
- * @version 0.0.3
+ * @version 0.0.4
  * @since 0.0.1
  */
 abstract public class AbstractComponentDefinitionBuilder<COMP extends Serializable>
@@ -67,14 +72,13 @@ abstract public class AbstractComponentDefinitionBuilder<COMP extends Serializab
 
 	/** {@inheritDoc} */
 	@Override
-	public final COMP getDefinition(final ComponentDataRequest dataRequest) throws ComponentException {
+	public final ComponentDataResponse getDefinition(final ComponentDataRequest dataRequest) throws ComponentException {
 		this.logger.debug(String.format("getDefinition(dataRequest=%s)", dataRequest));
+		final long startTime = System.nanoTime();
 		try {
 			Assert.notNull(dataRequest, "DataRequest can not be null");
-			final long startTime = System.nanoTime();
 
-			COMP definition = this.buildDefinition(dataRequest);
-			definition = this.postProcessDefinition(definition, dataRequest);
+			final COMP definition = this.buildDefinition(dataRequest);
 
 			if (definition == null) {
 				this.logger.warn(String.format("For request=%s, builder returned null definition", dataRequest));
@@ -82,15 +86,13 @@ abstract public class AbstractComponentDefinitionBuilder<COMP extends Serializab
 				this.logger.trace(String.format("For request=%s, builder returned definition=%s", dataRequest, definition));
 			}
 
-			this.logger.info(String.format("getDefinition(dataRequest=%s) executed in %dms", dataRequest, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)));
+			final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+			this.logger.info(String.format("getDefinition(dataRequest=%s) executed in %dms", dataRequest, endTime));
 
-			return definition;
+			return ComponentDataResponse.success(this.getId(), definition, endTime);
 		} catch (Exception exp) {
 			this.logger.fatal(String.format("getDefinition(dataRequest=%s) failed...", dataRequest), exp);
-			if (ClassUtils.isAssignableValue(ComponentException.class, exp)) {
-				throw exp;
-			}
-			throw new ComponentException(exp);
+			return ComponentDataResponse.error(this.getId(), exp, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime));
 		}
 	}
 
@@ -104,17 +106,5 @@ abstract public class AbstractComponentDefinitionBuilder<COMP extends Serializab
 	 * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException if any
 	 */
 	protected abstract COMP buildDefinition(final ComponentDataRequest dataRequest) throws ComponentException;
-
-	/**
-	 * If required, subclasses may override this method to set some mandatory things regardless of actual definition
-	 *
-	 * @param definition  the definition to post process
-	 * @param dataRequest request to work with
-	 *
-	 * @return updated definition
-	 */
-	protected COMP postProcessDefinition(final COMP definition, final ComponentDataRequest dataRequest) {
-		return definition;
-	}
 
 }

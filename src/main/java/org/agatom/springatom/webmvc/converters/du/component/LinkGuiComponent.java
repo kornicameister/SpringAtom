@@ -15,29 +15,23 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.converters.du.component.core;
+package org.agatom.springatom.webmvc.converters.du.component;
 
 import com.google.common.base.Objects;
 
 /**
- * {@code LinkComponent} is customized {@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent}.
- * For this component consider:
- * <ol>
- * <li>{@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent#getData()} as the link href</li>
- * </ol>
- * Has additional {@link #getLinkLabel()} that should return the label to be put as the content of {@code <a></a>}
- * HTML node.
- * <p/>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 01.06.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class LinkComponent
-		extends TextComponent {
+public class LinkGuiComponent
+		extends TextGuiComponent {
 	private static final long   serialVersionUID = -1536553355416884697L;
 	private              String linkLabel        = null;
+	private              String target           = "_self";
+	private              String download         = null;
 
 	/**
 	 * <p>Getter for the field <code>linkLabel</code>.</p>
@@ -53,10 +47,28 @@ public class LinkComponent
 	 *
 	 * @param linkLabel a {@link java.lang.String} object.
 	 *
-	 * @return a {@link org.agatom.springatom.webmvc.converters.du.component.core.LinkComponent} object.
+	 * @return a {@link LinkGuiComponent} object.
 	 */
-	public LinkComponent setLinkLabel(final String linkLabel) {
+	public LinkGuiComponent setLinkLabel(final String linkLabel) {
 		this.linkLabel = linkLabel;
+		return this;
+	}
+
+	public String getTarget() {
+		return target;
+	}
+
+	public LinkGuiComponent setTarget(final String target) {
+		this.target = target;
+		return this;
+	}
+
+	public String getDownload() {
+		return download;
+	}
+
+	public LinkGuiComponent setDownload(final String download) {
+		this.download = download;
 		return this;
 	}
 
@@ -72,7 +84,7 @@ public class LinkComponent
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		LinkComponent that = (LinkComponent) o;
+		LinkGuiComponent that = (LinkGuiComponent) o;
 
 		return Objects.equal(this.linkLabel, that.linkLabel) && super.equals(o);
 	}

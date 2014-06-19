@@ -15,17 +15,19 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.converters.du.component.core;
+package org.agatom.springatom.web.component.core.data;
 
 /**
- * <small>Class is a part of <b>SpringAtom</b> and was created at 31.05.14</small>
+ * {@code RequestedBy} is part of {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest} and allows
+ * to identify who request for definition / data
+ *
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 17.06.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class TextComponent
-		extends DefaultWebDataComponent<String> {
-	private static final long serialVersionUID = -1035402964649329298L;
-
+public enum RequestedBy {
+	INFOPAGE,
+	TABLE
 }

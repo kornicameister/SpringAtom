@@ -25,31 +25,41 @@
 
 <jsp:useBean id="lang" scope="request" type="java.util.Locale"/>
 
+<!-- extjs 4.2.2. -->
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/extjs/4.2.1/bootstrap.js"></script>
+<script type="text/javascript"
+        src="//cdnjs.cloudflare.com/ajax/libs/extjs/4.2.1/locale/ext-lang-${lang.language}.min.js"></script>
+<script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/4.2.1/ext-theme-neptune.js"></script>
+<script type="text/javascript">
+    var doc = document;
+    Ext.Loader.setConfig({
+        enabled            : true,
+        disableCaching     : false,
+        disableCachingParam: '_dc',
+        preserveScripts    : false,
+        paths              : {
+            'SA': '/static/js/app'
+        }
+    });
+</script>
+<!-- extjs 4.2.2. -->
+
+<!-- TODO removed stuff not required -->
 <script type="text/javascript" src="<s:url value="${staticResources}/jquery/2.1.0/jquery.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/momentjs/2.5.1/min/moment.min.js"/>"></script>
 <script type="text/javascript"
         src="<s:url value="${staticResources}/momentjs/2.5.1/lang/${lang.language}.js"/>"></script>
-<script type="text/javascript" src="<s:url value='${staticResources}/fullcalendar/1.6.4/fullcalendar.js'/>"></script>
+<script type="text/javascript" src="<s:url value='${staticResources}/fullcalendar/2.0.0/fullcalendar.js'/>"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/spin-js/1.3.3/spin.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/spin-js/1.3.3/jquery.spin.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/dojo/dojo.js" />"></script>
-<script type="text/javascript" src="<s:url value="${staticResources}/spring/Spring.js.uncompressed.js" />"></script>
-<script type="text/javascript"
-        src="<s:url value="${staticResources}/spring/Spring-Dojo.js.uncompressed.js" />"></script>
 <script type="text/javascript" src="<s:url value="${staticResources}/sources/js/jquery.dataTables.min.js" />"></script>
+
+<script type="text/javascript" src="<s:url value="wro/springatom_resources.js"/>"></script>
+<script type="text/javascript" src="<s:url value="wro/spring_webflow_js.js"/>"></script>
 
 <script type="text/javascript" src="<s:url value="${staticLib}/mmenu/4.0.0/jquery.mmenu.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/tinycon.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/midway.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/alertify/alertify.min.js"/>"></script>
 <script type="text/javascript" src="<s:url value="${staticLib}/simpleModal.min.js"/>"></script>
-
-<script type="text/javascript" src="<s:url value="${staticSa}/sa-mmenu.js"/>"></script>
-<script type="text/javascript" src="<s:url value="${staticSa}/sa-auth.js"/>"></script>
-<script type="text/javascript" src="<s:url value="${staticSa}/sa-core.js"/>"></script>
-<script type="text/javascript" src="<s:url value="${staticSa}/sa-breadcrumb.js"/>"></script>
-<script type="text/javascript" src="<s:url value="${staticSa}/sa-wizards.js"/>"></script>
-<script type="text/javascript" src="<s:url value="${staticSa}/sa-components.js"/>"></script>
-<script type="text/javascript" src="<s:url value="${staticSa}/sa-calendar.js"/>"></script>
-
-<script type="text/javascript" src="<s:url value="${staticResources}/requirejs/2.1.11/require.js"/>"></script>

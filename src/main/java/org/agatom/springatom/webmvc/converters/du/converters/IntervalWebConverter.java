@@ -19,18 +19,17 @@ package org.agatom.springatom.webmvc.converters.du.converters;
 
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
-import org.agatom.springatom.webmvc.converters.du.component.core.TextComponent;
+import org.agatom.springatom.webmvc.converters.du.component.TextGuiComponent;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.ClassUtils;
 
-import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * {@code IntervalWebConverter} supports creating {@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent}
+ * {@code IntervalWebConverter} supports creating {@link org.agatom.springatom.webmvc.converters.du.component.TextGuiComponent}
  * out of {@link org.joda.time.Interval} or {@link org.joda.time.Duration}
  * <small>Class is a part of <b>SpringAtom</b> and was created at 01.06.14</small>
  *
@@ -44,17 +43,18 @@ public class IntervalWebConverter
 
 	/** {@inheritDoc} */
 	@Override
-	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+	protected TextGuiComponent doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
 		if (value != null) {
-			final TextComponent textComponent = new TextComponent();
-
 			final long intervalValue = this.getIntervalValue(ClassUtils.isAssignableValue(Interval.class, value) ? ((Interval) value).toDuration() : (Duration) value);
 			final String intervalFormat = this.getIntervalLocalizedValue(intervalValue, LocaleContextHolder.getLocale());
 
-			textComponent.setData(intervalFormat);
-			textComponent.setDataType(value.getClass());
+			final TextGuiComponent component = new TextGuiComponent();
 
-			return textComponent;
+			component.setName(key);
+			component.setRawValue(intervalValue);
+			component.setValue(intervalFormat);
+
+			return component;
 		}
 		return null;
 	}

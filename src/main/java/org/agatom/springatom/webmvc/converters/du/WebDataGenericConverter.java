@@ -28,10 +28,7 @@ import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.request.AbstractComponentRequest;
 import org.agatom.springatom.web.component.core.request.ComponentRequestAttribute;
 import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
-import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
-import org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent;
-import org.agatom.springatom.webmvc.converters.du.component.core.TextComponent;
 import org.agatom.springatom.webmvc.converters.du.converters.ToInfoPageLinkWebConverter;
 import org.agatom.springatom.webmvc.converters.du.converters.ToTableRequestWebConverter;
 import org.agatom.springatom.webmvc.converters.du.exception.WebConverterException;
@@ -90,8 +87,6 @@ public class WebDataGenericConverter
 	@Autowired
 	private              ListableBeanFactory                           beanFactory       = null;
 	private              Map<WebDataConverterKey, WebDataConverter<?>> converterMap      = Maps.newHashMap();
-	@Autowired
-	private              SMessageSource                                messageSource     = null;
 
 	/** {@inheritDoc} */
 	@Override
@@ -121,9 +116,12 @@ public class WebDataGenericConverter
 		final Persistable<?> persistable = webData.getSource();
 		final String key = webData.getKey();
 		final Class<?> valueType = ClassUtils.getUserClass(value != null ? value.getClass() : Void.class);
-		final AttributeDisplayAs displayAs = this.getValueRenderType(((AbstractComponentRequest) webData.getRequest().getComponentRequest()).getAttributes(), key);
+		AttributeDisplayAs displayAs = this.getValueRenderType(((AbstractComponentRequest) webData.getRequest().getComponentRequest()).getAttributes(), key);
 
 		String localKey = null;
+		if (displayAs == null) {
+			displayAs = AttributeDisplayAs.VALUE_ATTRIBUTE;
+		}
 		switch (displayAs) {
 			case LINK_ATTRIBUTE:
 				localKey = ToInfoPageLinkWebConverter.SELECTOR;
@@ -139,30 +137,20 @@ public class WebDataGenericConverter
 		LOGGER.trace(String.format("For %s using key %s to pick converter", displayAs, localKey));
 
 		final Map<WebDataConverterKey, WebDataConverter<?>> capable = this.pickUpCapable(localKey, valueType);
-		Object data = null;
 
 		if (capable.size() > 1) {
 			final String message = String.format("Unambiguous web convert choice, for key=%s, type=%s found %d converters", key, value, capable.size());
 			LOGGER.warn(message);
-			data = new TextComponent().setData(message).setId(localKey).setDataType(valueType);
+			return null;
 		} else if (capable.size() == 0) {
 			final String message = String.format("No web convert choice, for key=%s, type=%s found %d converters", key, value, capable.size());
 			LOGGER.warn(message);
-			data = new TextComponent().setData(message).setId(localKey).setDataType(valueType);
-		}
-
-		if (data != null) {
-			DefaultWebDataComponent<?> dataComponent = (DefaultWebDataComponent<?>) data;
-
-			dataComponent = dataComponent.setId(key).setDataType(String.class);
-			dataComponent.setLabel(key);
-
-			return dataComponent;
+			return null;
 		}
 
 		final WebDataConverter<?> next = capable.values().iterator().next();
 		try {
-			data = next.convert(key, value, persistable, request);
+			final Object data = next.convert(key, value, persistable, request);
 			LOGGER.debug(String.format("Converted for key=%s to data=%s", key, data));
 			return data;
 		} catch (Exception exp) {
@@ -180,7 +168,11 @@ public class WebDataGenericConverter
 			}
 		});
 		final ComponentRequestAttribute attribute = match.get();
-		return AttributeDisplayAs.valueOf(attribute.getType());
+		try {
+			return AttributeDisplayAs.valueOf(attribute.getType());
+		} catch (Exception exp) {
+			return null;
+		}
 	}
 
 	private Map<WebDataConverterKey, WebDataConverter<?>> pickUpCapable(final String key, final Class<?> valueType) {

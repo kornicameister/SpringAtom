@@ -19,15 +19,18 @@ package org.agatom.springatom.webmvc.tables;
 
 import com.mysema.query.types.Predicate;
 import org.agatom.springatom.server.model.beans.appointment.QSAppointmentTask;
+import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
 import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTable;
 import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTableColumn;
 import org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSSummaryFeature;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -54,24 +57,31 @@ public class AppointmentTaskTableBuilder
 
 		table.setBorder(false)
 				.addFeature(new ExtJSSummaryFeature().setRemoteRoot(this.getAttributeName(task.type)))
+
 				.setSortableColumns(true)
 				.setCollapsible(false)
 				.setForceFit(true);
 
 		table.addContent(
-				new ExtJSTableColumn()
+				(ExtJSTableColumn) new ExtJSTableColumn()
+						.setTooltip(lModel.getLocalizedAttribute(this.getAttributeName(task.id)))
 						.setDataIndex(this.getAttributeName(task.id))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(task.id)))
+						.setDisplayAs(AttributeDisplayAs.VALUE_ATTRIBUTE)
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				(ExtJSTableColumn) new ExtJSTableColumn()
+						.setTooltip(lModel.getLocalizedAttribute(this.getAttributeName(task.type)))
 						.setDataIndex(this.getAttributeName(task.type))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(task.type)))
+						.setDisplayAs(AttributeDisplayAs.VALUE_ATTRIBUTE)
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				(ExtJSTableColumn) new ExtJSTableColumn()
+						.setTooltip(lModel.getLocalizedAttribute(this.getAttributeName(task.task)))
 						.setDataIndex(this.getAttributeName(task.task))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(task.task)))
+						.setDisplayAs(AttributeDisplayAs.VALUE_ATTRIBUTE)
 		);
 
 		return table;
@@ -80,6 +90,9 @@ public class AppointmentTaskTableBuilder
 	/** {@inheritDoc} */
 	@Override
 	protected Predicate getPredicate(final Long appointmentId, final Class<?> contextClass) {
-		return QSAppointmentTask.sAppointmentTask.appointment.id.eq(appointmentId);
+		if (ClassUtils.isAssignable(SAppointment.class, contextClass)) {
+			return QSAppointmentTask.sAppointmentTask.appointment.id.eq(appointmentId);
+		}
+		return null;
 	}
 }

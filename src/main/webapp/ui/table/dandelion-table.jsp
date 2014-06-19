@@ -1,4 +1,4 @@
-<%@ page import="org.agatom.springatom.web.infopages.InfoPageConstants" %>
+<%@ page import="org.agatom.springatom.web.component.infopages.InfoPageConstants" %>
 <%@ page import="java.util.Map" %>
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
@@ -18,17 +18,20 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" trimDirectiveWhitespaces="true" pageEncoding="UTF-8" isThreadSafe="false" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" trimDirectiveWhitespaces="true" pageEncoding="UTF-8"
+         isThreadSafe="false" %>
 <%@ taglib prefix="ip" tagdir="/WEB-INF/tags/ip" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="dt" uri="http://github.com/dandelion/datatables" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<jsp:useBean id="ipTableBuilder" scope="request" type="org.agatom.springatom.web.component.builders.table.TableComponentBuilder"/>
+<jsp:useBean id="ipTableBuilder" scope="request"
+             type="org.agatom.springatom.web.component.table.TableComponentBuilder"/>
 
 <s:eval expression="ipTableBuilder.definition" var="def" scope="page"/>
-<jsp:useBean id="def" class="org.agatom.springatom.web.component.elements.table.DandelionTableComponent" scope="page"/>
+<jsp:useBean id="def" class="org.agatom.springatom.web.component.table.elements.dandelion.DandelionTableComponent"
+             scope="page"/>
 
 <c:set var="extraParamsMethodName" value="_js_${fn:toLowerCase(def.tableId)}" scope="page"/>
 

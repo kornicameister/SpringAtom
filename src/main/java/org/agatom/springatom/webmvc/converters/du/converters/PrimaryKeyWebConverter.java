@@ -19,21 +19,12 @@ package org.agatom.springatom.webmvc.converters.du.converters;
 
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
-import org.agatom.springatom.webmvc.converters.du.component.core.IconComponent;
-import org.agatom.springatom.webmvc.converters.du.component.core.TextComponent;
-import org.agatom.springatom.webmvc.converters.du.component.core.WebDataComponentsArray;
+import org.agatom.springatom.webmvc.converters.du.component.IconGuiComponent;
+import org.agatom.springatom.webmvc.converters.du.component.TextGuiComponent;
 import org.springframework.data.domain.Persistable;
-import org.springframework.util.ClassUtils;
-
-import java.io.Serializable;
 
 /**
- * {@code PrimaryKeyWebConverter} creates {@link org.agatom.springatom.webmvc.converters.du.component.core.WebDataComponentsArray}
- * containing two other components:
- * <ol>
- * <li>{@link org.agatom.springatom.webmvc.converters.du.component.core.TextComponent} with the {@link org.springframework.data.domain.Persistable#getId()}</li>
- * <li>{@link org.agatom.springatom.webmvc.converters.du.component.core.IconComponent} with the icon</li>
- * </ol>
+ * {@code PrimaryKeyWebConverter}
  * <small>Class is a part of <b>SpringAtom</b> and was created at 31.05.14</small>
  *
  * @author kornicameister
@@ -47,15 +38,12 @@ public class PrimaryKeyWebConverter
 	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
-	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
-		final WebDataComponentsArray array = new WebDataComponentsArray();
-		final String keyValue = this.getPrimaryKeyValue(value, persistable);
-
-		array.setLabel(this.getLabel(key, persistable));
-		array.addContent(new TextComponent().setId(key).setData(keyValue).setDataType(ClassUtils.getUserClass(value == null ? keyValue : value)));
-		array.addContent(new IconComponent().setIconClass("fa fa-key"));
-
-		return array;
+	protected TextGuiComponent doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+		final TextGuiComponent component = new TextGuiComponent();
+		component.setValue(this.getPrimaryKeyValue(value, persistable));
+		component.setRawValue(value);
+		component.setIcon(new IconGuiComponent().setCls("fa fa-key fa-fw"));
+		return component;
 	}
 
 	/**

@@ -30,9 +30,10 @@ import org.springframework.ui.ModelMap;
  * @since 0.0.1
  */
 public class ComponentDataRequest {
-	protected final ModelMap         values;
-	protected final ComponentRequest request;
-	private         Component        component;
+	private final ModelMap         values;
+	private final ComponentRequest request;
+	private       Component        component;
+	private RequestedBy requestedBy = null;
 
 	/**
 	 * <p>Constructor for ComponentDataRequest.</p>
@@ -79,5 +80,14 @@ public class ComponentDataRequest {
 	 */
 	public ComponentRequest getComponentRequest() {
 		return request;
+	}
+
+	public RequestedBy getRequestedBy() {
+		return requestedBy;
+	}
+
+	public ComponentDataRequest setRequestedBy(final RequestedBy requestedBy) {
+		this.requestedBy = requestedBy;
+		return this;
 	}
 }

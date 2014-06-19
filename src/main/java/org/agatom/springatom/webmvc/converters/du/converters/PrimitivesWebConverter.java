@@ -19,7 +19,8 @@ package org.agatom.springatom.webmvc.converters.du.converters;
 
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
-import org.agatom.springatom.webmvc.converters.du.component.core.TextComponent;
+import org.agatom.springatom.webmvc.converters.du.component.GuiComponent;
+import org.agatom.springatom.webmvc.converters.du.component.TextGuiComponent;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.ClassUtils;
@@ -47,28 +48,66 @@ public class PrimitivesWebConverter
 	/** {@inheritDoc} */
 	@Override
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
-		final TextComponent component = new TextComponent();
-		final Locale locale = LocaleContextHolder.getLocale();
-
-		if (ClassUtils.isAssignableValue(Boolean.class, value)) {
-			final Boolean aBoolean = (Boolean) value;
-			if (aBoolean.equals(true)) {
-				component.setData(this.messageSource.getMessage("boolean.true", locale));
-			} else {
-				component.setData(this.messageSource.getMessage("boolean.false", locale));
-			}
-		} else if (ClassUtils.isAssignableValue(Enum.class, value)) {
-			component.setData(this.messageSource.getMessage(((Enum<?>) value).name(), locale));
-			component.addDynamicProperty("rawEnumValue", value);
-		} else {
-			component.setData(String.valueOf(value));
+		if (value == null) {
+			return null;
 		}
 
-		component.setDataType(value.getClass());
-		component.setId(key);
-		component.setLabel(this.getLabel(key, persistable));
+		GuiComponent component;
+
+		if (ClassUtils.isAssignableValue(Boolean.class, value)) {
+			component = this.doConvertFromBoolean(key, value, persistable, webRequest);
+		} else if (ClassUtils.isAssignableValue(Enum.class, value)) {
+			component = this.doConvertFromEnum(key, value, persistable, webRequest);
+		} else if (ClassUtils.isAssignableValue(Number.class, value)) {
+			component = this.doConvertFromNumber(key, value, persistable, webRequest);
+		} else {
+			component = this.doConvertFromString(key, value, persistable, webRequest);
+		}
 
 		return component;
+	}
+
+	protected GuiComponent doConvertFromString(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+		final TextGuiComponent cmp = new TextGuiComponent();
+		cmp.setName(key);
+		cmp.setRawValue(value);
+		cmp.setValue(String.valueOf(value));
+		return cmp;
+	}
+
+	protected GuiComponent doConvertFromNumber(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+		final TextGuiComponent cmp = new TextGuiComponent();
+		cmp.setName(key);
+		cmp.setRawValue(value);
+		cmp.setValue(String.valueOf(value));
+		return cmp;
+	}
+
+	protected GuiComponent doConvertFromBoolean(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+		final Locale locale = LocaleContextHolder.getLocale();
+		final Boolean aBoolean = (Boolean) value;
+		String retValue;
+		if (aBoolean.equals(true)) {
+			retValue = this.messageSource.getMessage("boolean.true", locale);
+		} else {
+			retValue = this.messageSource.getMessage("boolean.false", locale);
+		}
+		final TextGuiComponent cmp = new TextGuiComponent();
+		cmp.setTooltip(retValue);
+		cmp.setValue(retValue);
+		cmp.setRawValue(value);
+		cmp.setName(key);
+		return cmp;
+	}
+
+	protected GuiComponent doConvertFromEnum(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+		final Locale locale = LocaleContextHolder.getLocale();
+		final String retValue = this.messageSource.getMessage(((Enum<?>) value).name(), locale);
+		final TextGuiComponent cmp = new TextGuiComponent();
+		cmp.setValue(retValue);
+		cmp.setRawValue(value);
+		cmp.setName(key);
+		return cmp;
 	}
 
 }

@@ -35,9 +35,9 @@
             <s:message code="reports.savedReports"/>
         </header>
         <div id="reportsBuilder-savedReport"></div>
-        <s:eval expression="@ComponentBuildersModuleConfiguration.componentBuilders.getBuilderId(
+        <s:eval expression="@defaultComponentBuilderRepository.getBuilderId(
                     T(org.agatom.springatom.server.model.beans.report.SReport),
-                    T(org.agatom.springatom.web.component.builders.annotation.ComponentBuilds$Produces).TABLE_COMPONENT
+                    T(org.agatom.springatom.web.component.core.builders.ComponentProduces).TABLE_COMPONENT
                 )"
                 var="builderId"
                 scope="page"/>

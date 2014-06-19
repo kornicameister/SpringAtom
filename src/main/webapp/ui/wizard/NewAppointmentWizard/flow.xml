@@ -48,7 +48,7 @@
         <!--init requires steps-->
 
         <evaluate
-                expression="sMessageSource.getMessage(T(org.agatom.springatom.server.model.beans.appointment.SAppointment),T(org.springframework.context.i18n.LocaleContextHolder).locale)"
+                expression="sMessageSource.getLocalizedClassModel(T(org.agatom.springatom.server.model.beans.appointment.SAppointment),T(org.springframework.context.i18n.LocaleContextHolder).locale)"
                 result="flowScope.localizedModel"/>
     </on-start>
 

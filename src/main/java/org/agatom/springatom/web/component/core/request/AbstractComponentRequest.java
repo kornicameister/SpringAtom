@@ -35,6 +35,7 @@ abstract public class AbstractComponentRequest
 	protected            Class<?>                       domain           = null;
 	protected            Long                           id               = null;
 	protected            Long                           version          = null;
+	protected            Long                           revision         = null;
 
 	/**
 	 * <p>Getter for the field <code>attributes</code>.</p>
@@ -120,10 +121,19 @@ abstract public class AbstractComponentRequest
 		return this;
 	}
 
+	public Long getRevision() {
+		return revision;
+	}
+
+	public AbstractComponentRequest setRevision(final Long revision) {
+		this.revision = revision;
+		return this;
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(attributes, domain, id, version);
+		return Objects.hashCode(attributes, domain, id, version, revision);
 	}
 
 	/** {@inheritDoc} */
@@ -137,6 +147,7 @@ abstract public class AbstractComponentRequest
 		return Objects.equal(this.attributes, that.attributes) &&
 				Objects.equal(this.domain, that.domain) &&
 				Objects.equal(this.id, that.id) &&
+				Objects.equal(this.revision, that.revision) &&
 				Objects.equal(this.version, that.version);
 	}
 

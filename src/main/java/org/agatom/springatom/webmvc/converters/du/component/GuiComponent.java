@@ -15,42 +15,21 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.converters.du.component.core;
+package org.agatom.springatom.webmvc.converters.du.component;
 
-import org.agatom.springatom.web.component.core.elements.ContentComponent;
-import org.agatom.springatom.webmvc.converters.du.component.WebDataComponent;
-import org.agatom.springatom.webmvc.converters.du.component.WebDataComponentSet;
-import org.springframework.util.ClassUtils;
-
-import java.util.Map;
+import java.io.Serializable;
 
 /**
- * <small>Class is a part of <b>SpringAtom</b> and was created at 01.06.14</small>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 17.06.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class WebDataComponentsArray
-		extends ContentComponent<WebDataComponent<?>>
-		implements WebDataComponentSet<WebDataComponent<?>> {
-	private static final long serialVersionUID = -145702440703847256L;
+public interface GuiComponent
+		extends Serializable {
+	static final String WHITE_SPACE = "&nbsp;";
+	static final String NEW_LINE    = "</br>";
 
-	public boolean addWDC(final Object data) {
-		return ClassUtils.isAssignableValue(WebDataComponent.class, data) && super.addContent((WebDataComponent<?>) data);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public Map<String, Object> getDynamicProperties() {
-		final Map<String, Object> properties = super.getDynamicProperties();
-		properties.put("size", this.getContent().size());
-		return properties;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getUiType() {
-		return "multiObjects";
-	}
+	public Object getRawValue();
 }

@@ -18,16 +18,18 @@
 package org.agatom.springatom.webmvc.converters.du.converters;
 
 import org.agatom.springatom.server.service.vinNumber.decoder.VinDecoder;
+import org.agatom.springatom.server.service.vinNumber.exception.VinDecodingException;
 import org.agatom.springatom.server.service.vinNumber.model.VinNumber;
 import org.agatom.springatom.server.service.vinNumber.model.VinNumberData;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
-import org.agatom.springatom.webmvc.converters.du.component.core.TextComponent;
-import org.agatom.springatom.webmvc.converters.du.component.core.WebDataComponentsArray;
+import org.agatom.springatom.webmvc.converters.du.component.GuiComponent;
+import org.agatom.springatom.webmvc.converters.du.component.TextGuiComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Locale;
@@ -49,40 +51,53 @@ public class VinNumberWebConverter
 	@Override
 	@SuppressWarnings("unchecked")
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) throws Exception {
-		final VinNumberData vinNumberData;
-		if (ClassUtils.isAssignableValue(String.class, value)) {
-			vinNumberData = this.vinDecoder.decode(VinNumber.newVinNumber((String) value));
-		} else if (ClassUtils.isAssignableValue(VinNumber.class, value)) {
-			vinNumberData = this.vinDecoder.decode((VinNumber) value);
-		} else {
-			vinNumberData = (VinNumberData) value;
+		VinNumberData vinNumberData;
+		String vinNumber = null;
+		try {
+			if (ClassUtils.isAssignableValue(String.class, value)) {
+				vinNumber = (String) value;
+				vinNumberData = this.vinDecoder.decode(VinNumber.newVinNumber(vinNumber));
+			} else if (ClassUtils.isAssignableValue(VinNumber.class, value)) {
+				final VinNumber number = (VinNumber) value;
+				vinNumberData = this.vinDecoder.decode(number);
+				vinNumber = number.getVinNumber();
+			} else {
+				vinNumberData = (VinNumberData) value;
+			}
+		} catch (VinDecodingException exp) {
+			vinNumberData = null;
 		}
 
 		final Locale locale = LocaleContextHolder.getLocale();
-		final WebDataComponentsArray array = new WebDataComponentsArray();
 
-		array.addWDC(new TextComponent()
-				.setData(vinNumberData.getBrand())
-				.setDataType(String.class)
-				.setId("brand")
-				.setLabel(this.messageSource.getMessage("scarmaster.manufacturingdata.brand", locale)));
-		array.addWDC(new TextComponent()
-				.setData(vinNumberData.getModel())
-				.setDataType(String.class)
-				.setId("model")
-				.setLabel(this.messageSource.getMessage("scarmaster.manufacturingdata.model", locale)));
-		array.addWDC(new TextComponent()
-				.setData(vinNumberData.getManufacturedBy())
-				.setDataType(String.class)
-				.setId("manufacturedBy")
-				.setLabel(this.messageSource.getMessage("scarmaster.manufacturedBy", locale)));
-		array.addWDC(new TextComponent()
-				.setData(vinNumberData.getManufacturedIn().getAlpha3())
-				.setDataType(String.class)
-				.setId("manufacturedIn")
-				.setLabel(this.messageSource.getMessage("scarmaster.manufacturedIn", locale)));
+		final StringBuilder builder = new StringBuilder();
+		if (StringUtils.hasText(vinNumber)) {
+			builder.append(this.messageSource.getMessage("scar.vinnumber", locale)).append("=").append(vinNumber);
+		}
+		if (vinNumberData != null) {
+			builder.append(GuiComponent.NEW_LINE);
+			if (StringUtils.hasText(vinNumberData.getBrand())) {
+				builder.append(this.messageSource.getMessage("scarmaster.manufacturingdata.brand", locale)).append("=").append(vinNumberData.getBrand());
+			}
+			builder.append(GuiComponent.NEW_LINE);
+			if (StringUtils.hasText(vinNumberData.getModel())) {
+				builder.append(this.messageSource.getMessage("scarmaster.manufacturingdata.model", locale)).append("=").append(vinNumberData.getModel());
+			}
+			builder.append(GuiComponent.NEW_LINE);
+			if (StringUtils.hasText(vinNumberData.getManufacturedBy())) {
+				builder.append(this.messageSource.getMessage("scarmaster.manufacturedBy", locale)).append("=").append(vinNumberData.getManufacturedBy());
+			}
+			builder.append(GuiComponent.NEW_LINE);
+			if (vinNumberData.getManufacturedIn() != null) {
+				builder.append(this.messageSource.getMessage("scarmaster.manufacturedIn", locale)).append("=").append(vinNumberData.getManufacturedIn().getAlpha3());
+			}
+		}
 
-		return array;
+		final TextGuiComponent component = new TextGuiComponent();
+		component.setValue(builder.toString());
+		component.setMultiValued(true);
+		component.setName(key);
+		component.setRawValue(value);
+		return component;
 	}
-
 }

@@ -28,10 +28,10 @@
     <tiles:insertAttribute name="css" flush="true"/>
     <tiles:insertAttribute name="js" flush="true"/>
 </head>
-<body class="tundra">
+<body>
 <div id="page">
     <div class="content-wrapper">
-    <header id="header" class="main">
+        <header id="header" class="main">
             <s:message code="label.dashboard.header" htmlEscape="true" var="headerLabel"/>
             <p>${headerLabel}</p>
 
@@ -51,9 +51,6 @@
         <div class="content">
             <tiles:insertAttribute name="content"/>
         </div>
-        <footer id="footer" class="main">
-            <p>Footer goes here</p>
-        </footer>
     </div>
     <tiles:insertAttribute name="navigator"/>
 </div>

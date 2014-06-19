@@ -17,9 +17,7 @@
 
 package org.agatom.springatom.web.component.table.request;
 
-import com.github.dandelion.datatables.core.ajax.ColumnDef;
-import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
-import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 import org.agatom.springatom.web.component.core.request.AbstractComponentRequest;
 
 import java.util.List;
@@ -33,120 +31,50 @@ import java.util.List;
  */
 public class TableComponentRequest
 		extends AbstractComponentRequest {
-	private static final long                serialVersionUID = 8662629050407736443L;
-	private              DatatablesCriterias criterias        = null;
+	private static final long                        serialVersionUID  = 8662629050407736443L;
+	private              String                      builderId         = null;
+	private              int                         page              = 0;
+	private              int                         start             = 0;
+	private              int                         limit             = 0;
+	private              List<TableRequestColumnDef> sortingColumnDefs = Lists.newArrayList();
 
-	/**
-	 * <p>Getter for the field <code>criterias</code>.</p>
-	 *
-	 * @return a {@link com.github.dandelion.datatables.core.ajax.DatatablesCriterias} object.
-	 */
-	public DatatablesCriterias getCriterias() {
-		return criterias;
+	public String getBuilderId() {
+		return builderId;
 	}
 
-	/**
-	 * <p>Setter for the field <code>criterias</code>.</p>
-	 *
-	 * @param criterias a {@link com.github.dandelion.datatables.core.ajax.DatatablesCriterias} object.
-	 *
-	 * @return a {@link org.agatom.springatom.web.component.table.request.TableComponentRequest} object.
-	 */
-	public TableComponentRequest setCriterias(final DatatablesCriterias criterias) {
-		this.criterias = criterias;
+	public TableComponentRequest setBuilderId(final String builderId) {
+		this.builderId = builderId;
 		return this;
 	}
 
-	/**
-	 * <p>getPageStart.</p>
-	 *
-	 * @return a {@link java.lang.Integer} object.
-	 */
-	public Integer getPageStart() {
-		return criterias.getDisplayStart();
+	public int getPage() {
+		return page;
 	}
 
-	/**
-	 * <p>getPageSize.</p>
-	 *
-	 * @return a {@link java.lang.Integer} object.
-	 */
-	public Integer getPageSize() {
-		return criterias.getDisplaySize();
+	public TableComponentRequest setPage(final int page) {
+		this.page = page;
+		return this;
 	}
 
-	/**
-	 * <p>getSearchQuery.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getSearchQuery() {
-		return criterias.getSearch();
+	public int getStart() {
+		return start;
 	}
 
-	/**
-	 * <p>getColumnDefs.</p>
-	 *
-	 * @return a {@link java.util.List} object.
-	 */
-	public List<ColumnDef> getColumnDefs() {
-		return criterias.getColumnDefs();
+	public TableComponentRequest setStart(final int start) {
+		this.start = start;
+		return this;
 	}
 
-	/**
-	 * <p>getSortingColumnDefs.</p>
-	 *
-	 * @return a {@link java.util.List} object.
-	 */
-	public List<ColumnDef> getSortingColumnDefs() {
-		return criterias.getSortingColumnDefs();
+	public int getLimit() {
+		return limit;
 	}
 
-	/**
-	 * <p>hasOneFilterableColumn.</p>
-	 *
-	 * @return a {@link java.lang.Boolean} object.
-	 */
-	public Boolean hasOneFilterableColumn() {
-		return criterias.hasOneFilterableColumn();
+	public TableComponentRequest setLimit(final int limit) {
+		this.limit = limit;
+		return this;
 	}
 
-	/**
-	 * <p>hasOneFilteredColumn.</p>
-	 *
-	 * @return a {@link java.lang.Boolean} object.
-	 */
-	public Boolean hasOneFilteredColumn() {
-		return criterias.hasOneFilteredColumn();
-	}
-
-	/**
-	 * <p>hasOneSortedColumn.</p>
-	 *
-	 * @return a {@link java.lang.Boolean} object.
-	 */
-	public Boolean hasOneSortedColumn() {
-		return criterias.hasOneSortedColumn();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(criterias, attributes, domain, id, version);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		TableComponentRequest that = (TableComponentRequest) o;
-
-		return Objects.equal(this.criterias, that.criterias) &&
-				Objects.equal(this.attributes, that.attributes) &&
-				Objects.equal(this.domain, that.domain) &&
-				Objects.equal(this.id, that.id) &&
-				Objects.equal(this.version, that.version);
+	public List<TableRequestColumnDef> getSortingColumnDefs() {
+		return sortingColumnDefs;
 	}
 }

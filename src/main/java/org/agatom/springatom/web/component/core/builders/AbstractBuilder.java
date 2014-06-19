@@ -19,7 +19,9 @@ package org.agatom.springatom.web.component.core.builders;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
+import org.agatom.springatom.web.locale.SMessageSource;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 
 /**
@@ -35,7 +37,9 @@ import org.springframework.core.annotation.AnnotationUtils;
  */
 abstract class AbstractBuilder
 		implements Builder {
-	protected final Logger logger = Logger.getLogger(getClass());
+	protected final Logger         logger        = Logger.getLogger(getClass());
+	@Autowired
+	protected       SMessageSource messageSource = null;
 
 	/** {@inheritDoc} */
 	@Override

@@ -20,6 +20,7 @@ package org.agatom.springatom.web.component.table.elements;
 import com.google.common.base.Objects;
 import org.agatom.springatom.web.component.core.EmbeddableComponent;
 import org.agatom.springatom.web.component.core.elements.DefaultComponent;
+import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 
 import javax.annotation.Nonnull;
 
@@ -37,9 +38,10 @@ import javax.annotation.Nonnull;
 abstract public class TableColumnComponent
 		extends DefaultComponent
 		implements EmbeddableComponent {
-	private static final long    serialVersionUID = 7798481976595660140L;
-	private              int     position         = -1;
-	private              boolean sortable         = false;
+	private static final long               serialVersionUID = 7798481976595660140L;
+	private              int                position         = -1;
+	private              boolean            sortable         = false;
+	private              AttributeDisplayAs displayAs        = null;
 
 	/** {@inheritDoc} */
 	@Override
@@ -59,6 +61,15 @@ abstract public class TableColumnComponent
 
 	public TableColumnComponent setSortable(final boolean sortable) {
 		this.sortable = sortable;
+		return this;
+	}
+
+	public AttributeDisplayAs getDisplayAs() {
+		return displayAs;
+	}
+
+	public TableColumnComponent setDisplayAs(final AttributeDisplayAs displayAs) {
+		this.displayAs = displayAs;
 		return this;
 	}
 

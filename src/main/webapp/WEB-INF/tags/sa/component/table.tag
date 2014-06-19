@@ -20,7 +20,7 @@
 
 <s:eval expression="@ComponentBuildersModuleConfiguration.componentBuilders.getBuilderId(
                     T(java.lang.Class).forName(type),
-                    T(org.agatom.springatom.web.component.builders.annotation.ComponentBuilds$Produces).TABLE_COMPONENT
+                    T(org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder$Produces).TABLE_COMPONENT
                 )"
         var="builderId"
         scope="page"/>

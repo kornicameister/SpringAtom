@@ -17,15 +17,36 @@
 
 package org.agatom.springatom.webmvc.converters.du.component;
 
-import org.agatom.springatom.web.component.core.Component;
+import java.util.Locale;
 
 /**
- * <small>Class is a part of <b>SpringAtom</b> and was created at 01.06.14</small>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 18.06.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface WebDataComponentSet<T extends WebDataComponent<?>>
-		extends Component, Iterable<T>, WebDataUITyped {
+public class DateTimeGuiComponent
+		extends TextGuiComponent {
+	private static final long   serialVersionUID = 3950106797686043041L;
+	private              String format           = null;
+	private              Locale locale           = null;
+
+	public String getFormat() {
+		return format;
+	}
+
+	public DateTimeGuiComponent setFormat(final String format) {
+		this.format = format;
+		return this;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public DateTimeGuiComponent setLocale(final Locale locale) {
+		this.locale = locale;
+		return this;
+	}
 }

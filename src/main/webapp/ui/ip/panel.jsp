@@ -22,25 +22,26 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<s:eval expression="requestScope[T(org.agatom.springatom.web.infopages.InfoPageConstants).INFOPAGE_AVAILABLE]"
-        var="ipAvailable"/>
+<s:eval expression="requestScope[T(org.agatom.springatom.web.component.infopages.InfoPageConstants).INFOPAGE_REQUEST]"
+        var="ipRequest"/>
+<s:eval expression="requestScope[T(org.agatom.springatom.web.component.infopages.InfoPageConstants).INFOPAGE_PAGE]"
+        var="ipInfoPage"/>
+<s:eval expression="requestScope[T(org.agatom.springatom.web.component.infopages.InfoPageConstants).INFOPAGE_DS]"
+        var="ipDsLink"
+        htmlEscape="false"
+        javaScriptEscape="false"/>
 
-<c:choose>
-    <c:when test="${ipAvailable == false}">
-        <s:message code="springatom.infopages.noInfoPage"/>
-    </c:when>
-    <c:otherwise>
-        <s:eval expression="requestScope[T(org.agatom.springatom.web.infopages.InfoPageConstants).INFOPAGE_PAGE]"
-                var="ipInfoPage"/>
-        <c:set var="dos" value="ip-${fn:toLowerCase(ipInfoPage.objectClass.simpleName})"/>
-        <section id="${dos}" class="x-info-page">
-            <script type="text/javascript" id="ip-descriptor-script">
-                $(function () {
-                    $('#' + '${dos}').loadDomainPage({
-                        view: '<s:eval expression="requestScope[T(org.agatom.springatom.web.infopages.InfoPageConstants).INFOPAGE_VIEW_DATA_TEMPLATE_LINK]"/>'
-                    });
-                });
-            </script>
-        </section>
-    </c:otherwise>
-</c:choose>
+<section id="infopage" class="x-info-page">
+    <script type="text/javascript" id="ip-descriptor-script">
+        Ext.onReady(function () {
+            SA.infopage.loadInfoPage({
+                el    : Ext.fly('infopage'),
+                config: {
+                    url    : <s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(ipDsLink.href)" htmlEscape="false" javaScriptEscape="false"/>,
+                    request: <s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(ipRequest.asMap())" htmlEscape="false" javaScriptEscape="false"/>,
+                    page   : <s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(ipInfoPage)" htmlEscape="false" javaScriptEscape="false"/>
+                }
+            })
+        });
+    </script>
+</section>

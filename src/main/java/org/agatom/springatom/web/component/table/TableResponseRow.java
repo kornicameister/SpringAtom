@@ -15,39 +15,39 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.converters.du.component;
+package org.agatom.springatom.web.component.table;
 
-import org.agatom.springatom.web.component.core.Component;
-import org.agatom.springatom.web.component.core.EmbeddableComponent;
-import org.springframework.hateoas.Identifiable;
+import com.google.common.collect.Maps;
+import org.springframework.data.domain.Persistable;
+
+import java.util.Map;
 
 /**
- * {@code WebDataComponent} interface marks implementing classes as <b>web components</b>
- * {@code WebDataComponent} is therefore an object returned to the client containing information like:
- * <ol>
- * <li>label ({@link org.agatom.springatom.web.component.core.Component#getLabel()}</li>
- * <li>representable/comparable {@link java.lang.Object} value</li>
- * <li>raw value type</li>
- * </ol>
- * <small>Class is a part of <b>SpringAtom</b> and was created at 31.05.14</small>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 15.06.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface WebDataComponent<T>
-		extends Component, EmbeddableComponent, WebDataUITyped, Identifiable<String> {
-	/**
-	 * Returns {@link java.io.Serializable} and {@link java.lang.Comparable} value to be rendered in the client
-	 *
-	 * @return the value
-	 */
-	T getData();
+public class TableResponseRow {
+	private Persistable         source  = null;
+	private Map<String, Object> rowData = Maps.newHashMap();
 
-	/**
-	 * Raw value type used to create this {@link org.agatom.springatom.webmvc.converters.du.component.WebDataComponent}
-	 *
-	 * @return raw value {@link java.lang.Class}
-	 */
-	Class<?> getDataType();
+	public Persistable getSource() {
+		return source;
+	}
+
+	public TableResponseRow setSource(final Persistable source) {
+		this.source = source;
+		return this;
+	}
+
+	public Map<String, Object> getRowData() {
+		return rowData;
+	}
+
+	public TableResponseRow setRowData(final Map<String, Object> rowData) {
+		this.rowData = rowData;
+		return this;
+	}
 }

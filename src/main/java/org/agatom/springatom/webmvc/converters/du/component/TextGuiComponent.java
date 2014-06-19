@@ -17,21 +17,24 @@
 
 package org.agatom.springatom.webmvc.converters.du.component;
 
-import java.io.Serializable;
-
 /**
- * <small>Class is a part of <b>SpringAtom</b> and was created at 01.06.14</small>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 17.06.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface WebDataUITyped
-		extends Serializable {
-	/**
-	 * <p>getUiType.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	String getUiType();
+public class TextGuiComponent
+		extends AbstractGuiComponent<String> {
+	private static final long             serialVersionUID = 1733628750470095953L;
+	private              IconGuiComponent icon             = null;
+
+	public IconGuiComponent getIcon() {
+		return icon;
+	}
+
+	public void setIcon(final IconGuiComponent icon) {
+		this.icon = icon;
+	}
+
 }

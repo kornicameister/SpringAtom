@@ -26,10 +26,6 @@
         <put-attribute name="content" value="/ui/ip/panel.jsp"/>
     </definition>
 
-    <definition name="springatom.tiles.ip.DomainInfoPage" extends="ui.core.Page">
-        <put-attribute name="content" value="/ui/ip/panel-domain.jsp"/>
-    </definition>
-
-    <definition name="springatom.tiles.ip.DataRenderer" template="/ui/ip/_render.jsp"/>
+    <definition name="springatom.tiles.ip.InfoPage.renderPanel" template="/ui/ip/render_panel.jsp"/>
 
 </tiles-definitions>

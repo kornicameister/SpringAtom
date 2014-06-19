@@ -34,7 +34,8 @@ import org.agatom.springatom.web.component.infopages.elements.InfoPagePanelCompo
 import org.agatom.springatom.webmvc.controllers.components.SVComponentsDataController;
 import org.agatom.springatom.webmvc.controllers.components.SVComponentsDefinitionController;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
-import org.agatom.springatom.webmvc.converters.du.component.core.DefaultWebDataComponent;
+import org.agatom.springatom.webmvc.converters.du.component.AbstractGuiComponent;
+import org.agatom.springatom.webmvc.converters.du.component.TextGuiComponent;
 import org.agatom.springatom.webmvc.converters.du.exception.WebConverterException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,11 +79,11 @@ public class ToTableRequestWebConverter
 	@Override
 	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) throws Exception {
 		LOGGER.trace(String.format("doConverter(key=%s,value=%s)", key, value));
-
-		String builderId = this.getExplicitlyDefinedBuilderId(key, webRequest);
-		if (!StringUtils.hasText(builderId)) {
-			builderId = this.getBuilderIdFromTableDataType(key, persistable);
+		if (value == null) {
+			return null;
 		}
+
+		final String builderId = this.getBuilderId(key, persistable, webRequest);
 
 		if (StringUtils.hasText(builderId)) {
 			final TableRequest request = new TableRequest();
@@ -91,13 +92,38 @@ public class ToTableRequestWebConverter
 			request.setBuilderId(builderId)
 					.setConfigurationUrl(linkTo(methodOn(SVComponentsDefinitionController.class).onTableConfigRequest(builderId, null)).withRel("configuration"))
 					.setDataUrl(linkTo(methodOn(SVComponentsDataController.class).onTableDataRequest(builderId, null, null)).withSelfRel().withRel("data"))
-					.setData(this.componentContextFactory.buildContext(persistable))
-					.setId(key);
+					.setValue(this.componentContextFactory.buildContext(persistable));
+
+			request.setName(key);
 
 			return request;
 		}
 
+		final TextGuiComponent component = new TextGuiComponent();
+		component.setName(key);
+		component.setValue("[missing-builder]");
+
 		return null;
+	}
+
+	/**
+	 * Retrieves {@code builderId}. Tries to find explicitly set value or implicitly defined from value type
+	 *
+	 * @param key         property path
+	 * @param persistable persistable to get {@link javax.persistence.metamodel.Attribute} definition for {@code path}
+	 * @param webRequest  web request to get {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent} from
+	 *
+	 * @return builderId
+	 *
+	 * @see #getBuilderIdFromTableDataType(String, org.springframework.data.domain.Persistable)
+	 * @see #getExplicitlyDefinedBuilderId(String, org.agatom.springatom.web.component.core.data.ComponentDataRequest)
+	 */
+	private String getBuilderId(final String key, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+		String builderId = this.getExplicitlyDefinedBuilderId(key, webRequest);
+		if (!StringUtils.hasText(builderId)) {
+			builderId = this.getBuilderIdFromTableDataType(key, persistable);
+		}
+		return builderId;
 	}
 
 	/**
@@ -186,7 +212,7 @@ public class ToTableRequestWebConverter
 	 * Internal class. Carries information required to request for config and data for {@link org.agatom.springatom.web.component.table.elements.TableComponent}
 	 */
 	protected static class TableRequest
-			extends DefaultWebDataComponent<ComponentContext> {
+			extends AbstractGuiComponent<ComponentContext> {
 		private static final long      serialVersionUID = 4160071560623816868L;
 		private              String    builderId        = null;
 		private              Set<Link> urls             = Sets.newHashSet();
@@ -220,10 +246,14 @@ public class ToTableRequestWebConverter
 		}
 
 		@Override
-		public String getUiType() {
-			return "tableRequest";
+		public Object getRawValue() {
+			return null;
 		}
 
+		@Override
+		public String getType() {
+			return "tableRequest";
+		}
 	}
 
 }

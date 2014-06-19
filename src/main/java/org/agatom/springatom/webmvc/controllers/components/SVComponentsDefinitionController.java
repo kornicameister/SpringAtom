@@ -19,6 +19,8 @@ package org.agatom.springatom.webmvc.controllers.components;
 
 import org.agatom.springatom.web.component.core.builders.Builder;
 import org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder;
+import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.core.data.RequestedBy;
 import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
 import org.agatom.springatom.web.component.table.request.TableDefinitionRequest;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
@@ -28,7 +30,7 @@ import org.springframework.context.annotation.Description;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,7 +43,7 @@ import org.springframework.web.context.request.WebRequest;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 18.05.14</small>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @Controller
@@ -52,12 +54,14 @@ public class SVComponentsDefinitionController
 	private static final Logger                     LOGGER            = Logger.getLogger(SVComponentsDefinitionController.class);
 	@Autowired
 	private              ComponentBuilderRepository builderRepository = null;
+	@Autowired
+	private              CDRReturnValueConverter    converter         = null;
 
 	/**
 	 * Returns {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder#getDefinition(org.agatom.springatom.web.component.core.data.ComponentDataRequest)}.
 	 * Request must contain information about {@code builderId} to be used to retrieve the definition.
 	 *
-	 * @param request    {@link org.agatom.springatom.web.component.table.request.TableDefinitionRequest} instance
+	 * @param builderId  builderId
 	 * @param webRequest {@link org.springframework.web.context.request.WebRequest} instance
 	 *
 	 * @return the definition
@@ -66,14 +70,12 @@ public class SVComponentsDefinitionController
 	 */
 	@ResponseBody
 	@RequestMapping(
-			value = "/table",
-			method = RequestMethod.POST,
-			produces = {MediaType.APPLICATION_JSON_VALUE},
-			consumes = {MediaType.APPLICATION_JSON_VALUE}
+			value = "/table/{builderId}",
+			method = RequestMethod.GET,
+			produces = {MediaType.APPLICATION_JSON_VALUE}
 	)
-	public Object onTableConfigRequest(@RequestBody final TableDefinitionRequest request, final WebRequest webRequest) throws ControllerTierException {
-		LOGGER.trace(String.format("onTableConfigRequest(request=%s,webRequest=%s)", request, webRequest));
-		final String builderId = request.getBuilderId();
+	public Object onTableConfigRequest(@PathVariable("builderId") final String builderId, final WebRequest webRequest) throws ControllerTierException {
+		LOGGER.trace(String.format("onTableConfigRequest(builderId=%s,webRequest=%s)", builderId, webRequest));
 		try {
 			final Builder builder = this.builderRepository.getBuilder(builderId);
 
@@ -84,13 +86,14 @@ public class SVComponentsDefinitionController
 
 			LOGGER.trace(String.format("For builderId=%s using object=%s", builderId, definitionBuilder));
 
-			return definitionBuilder.getDefinition(this.combineRequest(request, webRequest));
+			final ComponentDataRequest request = this.combineRequest(new TableDefinitionRequest().setBuilderId(builderId), webRequest);
+			request.setRequestedBy(RequestedBy.TABLE);
+			return this.converter.convert(definitionBuilder.getDefinition(request), request);
 
 		} catch (Exception exp) {
 			LOGGER.error(String.format("onTableConfigRequest(builderId=%s,webRequest=%s) failed...", builderId, webRequest), exp);
 			throw new ControllerTierException(String.format("Failed to get table config for builderId=%s", builderId), exp);
 		}
 	}
-
 
 }

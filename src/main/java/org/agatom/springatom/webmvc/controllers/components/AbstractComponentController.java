@@ -22,6 +22,7 @@ import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.request.ComponentRequest;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
+import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.data.rest.webmvc.support.ExceptionMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,7 @@ import java.util.Map;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 02.06.14</small>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 abstract class AbstractComponentController {
@@ -153,5 +154,11 @@ abstract class AbstractComponentController {
 			httpHeaders.putAll(headers);
 		}
 		return new ResponseEntity<>(body, httpHeaders, status);
+	}
+
+	@ResponseBody
+	@ExceptionHandler({ConversionExecutionException.class})
+	public ResponseEntity<?> handleConversionExecutionException(final ConversionExecutionException npe) {
+		return errorResponse(npe, HttpStatus.UNPROCESSABLE_ENTITY);
 	}
 }

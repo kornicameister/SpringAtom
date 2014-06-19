@@ -76,22 +76,20 @@ div.content-wrapper {
 }
 
 #page .content-wrapper {
-    background-color : rgba(0, 17, 255, 0.20);
+    background-color : rgba(255, 255, 255, 0.10);
 }
 
 div.content {
-    position           : relative;
-    margin             : 10px;
-    clear              : both;
-    height             : 77%;
-    overflow-y         : hidden;
-    padding            : 15px 15px 30px; /* Height of the footer */
-    background         : rgba(255, 255, 255, 0.9);
-    border             : 0;
-    border-radius      : 24px;
-    cursor             : pointer;
-    -webkit-box-shadow : inset 2px 2px 2px 2px #00a2d3, 0 10px rgba(255, 255, 255, 0.1);
-    box-shadow         : inset 2px 2px 2px 2px #00a2d3, 0 10px rgba(255, 255, 255, 0.1);
+    position       : relative;
+    margin         : 10px;
+    clear          : both;
+    height         : 82%;
+    overflow-y     : hidden;
+    background     : rgba(255, 255, 255, 0.9);
+    border         : 0;
+    border-radius  : 24px;
+    display        : inline-block;
+    vertical-align : middle;
 }
 
 header.main, footer.main {
@@ -140,10 +138,6 @@ header.main p, footer.main p {
     float       : left;
     margin-left : 5%;
     margin-top  : .5%;
-}
-
-div.content section p:last-child {
-    margin-bottom : 0
 }
 
 /*icon blue*/

@@ -17,7 +17,9 @@
 
 package org.agatom.springatom.web.component.core.builders;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.mysema.query.types.Path;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
@@ -133,4 +135,16 @@ abstract public class AbstractComponentDataBuilder
 	 * @return descriptor for {@code forClass}
 	 */
 	protected abstract EntityDescriptor getEntityDescriptor(final Class<?> forClass);
+
+	/**
+	 * Computes the attribute name out of {@link com.mysema.query.types.Path} through {@link com.mysema.query.types.PathMetadata}
+	 *
+	 * @param path to get the name of attribute from
+	 *
+	 * @return the name
+	 */
+	protected String getAttributeName(final Path<?> path) {
+		Preconditions.checkNotNull(path, "Path can not be null");
+		return path.getMetadata().getName();
+	}
 }

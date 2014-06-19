@@ -31,6 +31,12 @@ public class ExtJSTableColumn
 	private static final long   serialVersionUID = 7324208543889807894L;
 	private              String xtype            = "gridcolumn";
 	private              String dataIndex        = null;
+	private String tooltip   = null;
+	/**
+	 * Corresponds to the {@code type} property of <a href="http://docs.sencha.com/extjs/4.2.2/#!/api/Ext.data.Field'>Ext.data.Field</a>.
+	 * It is required to set this attribute in order to get proper rendering method
+	 */
+	private String fieldType = null;
 
 	public String getText() {
 		return this.getLabel();
@@ -46,6 +52,18 @@ public class ExtJSTableColumn
 
 	public ExtJSTableColumn setDataIndex(final String dataIndex) {
 		this.dataIndex = dataIndex;
+		return this;
+	}
+
+	public String getFieldType() {
+		if (fieldType == null) {
+			this.fieldType = this.getDisplayAs() != null ? this.getDisplayAs().name() : null;
+		}
+		return fieldType;
+	}
+
+	public ExtJSTableColumn setFieldType(final String fieldType) {
+		this.fieldType = fieldType;
 		return this;
 	}
 
@@ -67,6 +85,15 @@ public class ExtJSTableColumn
 	 */
 	public ExtJSTableColumn setXtype(final String xtype) {
 		this.xtype = xtype;
+		return this;
+	}
+
+	public String getTooltip() {
+		return tooltip;
+	}
+
+	public ExtJSTableColumn setTooltip(final String tooltip) {
+		this.tooltip = tooltip;
 		return this;
 	}
 }

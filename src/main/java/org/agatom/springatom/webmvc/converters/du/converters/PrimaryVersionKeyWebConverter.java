@@ -33,19 +33,11 @@ public class PrimaryVersionKeyWebConverter
 		extends PrimaryKeyWebConverter {
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Returns combined {@link org.springframework.data.domain.Persistable#getId()} and {@link org.agatom.springatom.server.model.types.PersistentVersionedBean#getVersion()}
 	 */
 	@Override
 	protected String getPrimaryKeyValue(final Object value, final Persistable<?> persistable) {
 		return String.format("%s [%s]", persistable.getId(), ((PersistentVersionedBean) persistable).getVersion());
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected String getLabel(final String key, final Persistable<?> persistable) {
-		return super.getLabel("persistentobject.id", persistable);
 	}
 
 }

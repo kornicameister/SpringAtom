@@ -28,7 +28,7 @@ import java.util.Set;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 public class ExtJSTable
@@ -55,9 +55,7 @@ public class ExtJSTable
 	}
 
 	private void initDefaults() {
-		this.plugins = Sets.newHashSet();
-		this.plugins.add("bufferedrenderer");
-		this.content.add(new ExtJSTableColumn().setXtype("rownumberer"));
+		super.addContent(new ExtJSTableColumn().setXtype("rownumberer"));
 		this.fields = Sets.newHashSet();
 	}
 
@@ -200,12 +198,22 @@ public class ExtJSTable
 		return this;
 	}
 
+	public Set<ExtJSStoreField> getFields() {
+		return fields;
+	}
+
 	@Override
 	public boolean addContent(final ExtJSTableColumn column) {
 
 		column.setSortable(this.sortableColumns);
-		this.fields.add(new ExtJSStoreField().setName(column.getDataIndex()));
+		this.fields.add(new ExtJSStoreField().setName(column.getDataIndex()).setType(column.getFieldType()));
 
+		return super.addContent(column);
+	}
+
+	public boolean addColumn(final ExtJSTableColumn column, final ExtJSStoreField field) {
+		column.setSortable(this.sortableColumns);
+		this.fields.add(field.setName(column.getDataIndex()));
 		return super.addContent(column);
 	}
 
