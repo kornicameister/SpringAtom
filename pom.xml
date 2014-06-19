@@ -149,8 +149,6 @@
         <castor.version>1.2</castor.version>
         <xercesImpl.version>2.11.0</xercesImpl.version>
         <joor.version>0.9.3</joor.version>
-        <dandelion-datatables.version>0.9.3</dandelion-datatables.version>
-        <dandelion-datatables-spring3.version>0.10.0</dandelion-datatables-spring3.version>
         <aopalliance.version>1.0</aopalliance.version>
         <tiles.version>3.0.4</tiles.version>
         <javax.validation-api.version>1.1.0.Final</javax.validation-api.version>
@@ -312,46 +310,6 @@
             <scope>compile</scope>
         </dependency>
         <!-- jasper reports -->
-
-        <!-- since async is turned on an filter/servlets - figure out how to configure dandelion with that -->
-        <!--dandelion-->
-        <dependency>
-            <groupId>com.github.dandelion</groupId>
-            <artifactId>datatables-jsp</artifactId>
-            <version>${dandelion-datatables.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.github.dandelion</groupId>
-            <artifactId>datatables-spring3</artifactId>
-            <version>${dandelion-datatables-spring3.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.dandelion</groupId>
-            <artifactId>datatables-export-itext</artifactId>
-            <version>${dandelion-datatables.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.dandelion</groupId>
-            <artifactId>datatables-export-poi</artifactId>
-            <version>${dandelion-datatables.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.dandelion</groupId>
-            <artifactId>datatables-export-poi-ooxml</artifactId>
-            <version>${dandelion-datatables.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.dandelion</groupId>
-            <artifactId>datatables-compression-yui</artifactId>
-            <version>${dandelion-datatables.version}</version>
-        </dependency>
-        <!--dandelion-->
 
         <!-- tiles -->
         <dependency>

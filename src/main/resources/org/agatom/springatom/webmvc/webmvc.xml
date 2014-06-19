@@ -40,7 +40,6 @@
             <ref bean="jackson2HttpMessageConverter"/>
         </mvc:message-converters>
         <mvc:argument-resolvers>
-            <bean class="com.github.dandelion.datatables.extras.spring3.ajax.DatatablesCriteriasMethodArgumentResolver"/>
             <bean class="org.agatom.springatom.web.component.table.request.TableComponentRequestArgumentResolver"/>
         </mvc:argument-resolvers>
     </mvc:annotation-driven>
