@@ -1,5 +1,5 @@
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                  ~
   ~                                                                                               ~
   ~ [SpringAtom] is free software: you can redistribute it and/or modify                          ~
   ~ it under the terms of the GNU General Public License as published by                          ~
@@ -15,21 +15,22 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd">
+<groups xmlns="http://www.isdc.ro/wro">
 
-    <import resource="org/agatom/springatom/web/web.xml"/>
-    <import resource="org/agatom/springatom/webmvc/webmvc.xml"/>
+    <group name="springatom_resources">
+        <js>/app/static/js/sa-core.js</js>
+        <js>/app/static/js/sa-auth.js</js>
+        <js>/app/static/js/sa-breadcrumb.js</js>
+        <js>/app/static/js/sa-calendar.js</js>
+        <js>/app/static/js/sa-mmenu.js</js>
+        <js>/app/static/js/sa-wizards.js</js>
+        <js>/app/static/js/sa-extjs.js</js>
+        <js>/app/static/js/sa-components.js</js>
+    </group>
 
-    <bean id="wroFilter" class="ro.isdc.wro.http.ConfigurableWroFilter">
-        <property name="properties">
-            <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-                <property name="location" value="classpath:wro.properties"/>
-            </bean>
-        </property>
-    </bean>
+    <group name="spring_webflow_js">
+        <js>/app/static/spring/Spring.js.uncompressed.js</js>
+        <js>/app/static/spring/Spring-Dojo.js.uncompressed.js</js>
+    </group>
 
-
-</beans>
+</groups>
