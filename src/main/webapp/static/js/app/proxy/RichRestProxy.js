@@ -27,8 +27,7 @@ Ext.define('SA.proxy.RichRestProxy', {
 		messageProperty : 'message',
 		/**
 		 * Narrows the returned guiComponent values to simple objects containing
-		 * internal values and display values. Display values will be used
-		 * in converters, whereas internal values as actual records' values
+		 * single value.
 		 * @param data un-parsed data
 		 * @returns {Array} parsed data
 		 */
@@ -51,7 +50,7 @@ Ext.define('SA.proxy.RichRestProxy', {
 			});
 		},
 		getNarrowedValue: function (value) {
-			return value['rawValue'];
+			return value['value'];
 		}
 	}
 });

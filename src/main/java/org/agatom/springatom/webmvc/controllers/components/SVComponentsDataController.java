@@ -23,7 +23,6 @@ import org.agatom.springatom.web.component.core.builders.ComponentDataBuilder;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 import org.agatom.springatom.web.component.core.data.RequestedBy;
-import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
 import org.agatom.springatom.web.component.infopages.builder.InfoPageComponentBuilder;
 import org.agatom.springatom.web.component.infopages.builder.InfoPageComponentBuilderDispatcher;
 import org.agatom.springatom.web.component.infopages.elements.InfoPageComponent;
@@ -64,10 +63,6 @@ public class SVComponentsDataController
 	private              InfoPageComponentBuilderService    infoPageBuilderService             = null;
 	@Autowired
 	private              InfoPageComponentBuilderDispatcher infoPageComponentBuilderDispatcher = null;
-	@Autowired
-	private              CDRReturnValueConverter            returnValueConverter               = null;
-	@Autowired
-	private              ComponentBuilderRepository         builderRepository                  = null;
 
 	/**
 	 * <p>onInfoPageDataRequest.</p>
@@ -144,7 +139,7 @@ public class SVComponentsDataController
 
 	private Map<String, Object> getConvertedData(final ComponentDataRequest request, final ComponentDataResponse data) throws ControllerTierException {
 		try {
-			return this.returnValueConverter.convert(data, request);
+			return this.converter.convert(data, request);
 		} catch (Exception exp) {
 			throw new ControllerTierException("Failed to convert data using CDRReturnValueConverter", exp);
 		}

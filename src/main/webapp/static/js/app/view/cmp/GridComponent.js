@@ -16,21 +16,20 @@
  */
 
 Ext.define('SA.view.cmp.GridComponent', function () {
-	var findLink = function (urls, rel) {
-		return Ext.Array.filter(urls, function (item) {
-			return item['rel'] === rel;
-		})[0];
-	};
 	return {
 		extend             : 'Ext.panel.Panel',
 		alias              : 'widget.infoPageGrid',
 		bodyPadding        : 10,
 		config             : {
 			builderId: undefined,
-			context  : undefined,
 			attribute: undefined,
-			urls     : undefined
+			urls   : undefined,
+			context: undefined
 		},
+		requires           : [
+			'SA.component.ComponentUrls',
+			'SA.component.ComponentContext'
+		],
 		constructor        : function (config) {
 			var me = this,
 				tableData = config['data'];
@@ -40,17 +39,20 @@ Ext.define('SA.view.cmp.GridComponent', function () {
 			config = Ext.apply(config, {
 				builderId: tableData['builderId'],
 				title    : tableData['label'],
-				context  : tableData['value'],
-				urls     : tableData['urls']
+				context: Ext.create('SA.component.ComponentContext', tableData['value']),
+				urls   : Ext.create('SA.component.ComponentUrls', tableData['urls'])
 			}, config);
 
-			me.callParent(arguments);
+			me.callParent([config]);
+		},
+		getContext         : function () {
+			return this.context.asObject();
 		},
 		getConfigurationUrl: function () {
-			return findLink(this.getUrls(), 'configuration');
+			return this.urls.getConfigurationUrl();
 		},
 		getDataUrl         : function () {
-			return findLink(this.getUrls(), 'data');
+			return this.urls.getDataUrl();
 		},
 		add                : function (grid) {
 			grid = Ext.apply(grid, {

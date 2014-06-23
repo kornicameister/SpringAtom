@@ -19,9 +19,11 @@ package org.agatom.springatom.webmvc.controllers.components;
 
 import com.google.common.collect.Maps;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
 import org.agatom.springatom.web.component.core.request.ComponentRequest;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.data.rest.webmvc.support.ExceptionMessage;
 import org.springframework.http.HttpHeaders;
@@ -48,7 +50,11 @@ import java.util.Map;
  * @since 0.0.1
  */
 abstract class AbstractComponentController {
-	private static final Logger LOGGER = Logger.getLogger(AbstractComponentController.class);
+	private static final Logger                     LOGGER            = Logger.getLogger(AbstractComponentController.class);
+	@Autowired
+	protected            ComponentBuilderRepository builderRepository = null;
+	@Autowired
+	protected            CDRReturnValueConverter    converter         = null;
 
 	/**
 	 * Combines {@link org.agatom.springatom.web.component.core.request.ComponentRequest} and {@link org.springframework.web.context.request.WebRequest}

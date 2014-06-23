@@ -58,9 +58,6 @@ Ext.define('SA.controller.GridController', function () {
 		refs                : [
 			{ ref: 'ipGrid', selector: 'infoPageGrid', autoCreate: false}
 		],
-		configs             : {
-			metaStore: undefined
-		},
 		init                : function () {
 			Ext.log('GridController initializing...');
 			var me = this;
@@ -78,7 +75,7 @@ Ext.define('SA.controller.GridController', function () {
 			Ext.log({level: 'debug', msg: 'Loading configuration from href :: ' + cfgUrl['href']});
 
 			Ext.Ajax.request({
-				url    : cfgUrl['href'],
+				url    : cfgUrl,
 				method : 'GET',
 				success: function (response) {
 					var bean = Ext.JSON.decode(response.responseText),
@@ -87,7 +84,7 @@ Ext.define('SA.controller.GridController', function () {
 							fields: metaData['fields'],
 							proxy : {
 								type       : 'richproxy',
-								url        : dataUrl['href'],
+								url: dataUrl,
 								extraParams: buildExtraParamsObject(context, builderId, metaData['fields'])
 							}
 						});

@@ -21,11 +21,9 @@ import org.agatom.springatom.web.component.core.builders.Builder;
 import org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.data.RequestedBy;
-import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
 import org.agatom.springatom.web.component.table.request.TableDefinitionRequest;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -51,11 +49,7 @@ import org.springframework.web.context.request.WebRequest;
 @Description(value = "Configuration controller for components")
 public class SVComponentsDefinitionController
 		extends AbstractComponentController {
-	private static final Logger                     LOGGER            = Logger.getLogger(SVComponentsDefinitionController.class);
-	@Autowired
-	private              ComponentBuilderRepository builderRepository = null;
-	@Autowired
-	private              CDRReturnValueConverter    converter         = null;
+	private static final Logger LOGGER = Logger.getLogger(SVComponentsDefinitionController.class);
 
 	/**
 	 * Returns {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder#getDefinition(org.agatom.springatom.web.component.core.data.ComponentDataRequest)}.
