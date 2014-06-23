@@ -26,6 +26,4 @@
         <put-attribute name="content" value="/ui/ip/panel.jsp"/>
     </definition>
 
-    <definition name="springatom.tiles.ip.InfoPage.renderPanel" template="/ui/ip/render_panel.jsp"/>
-
 </tiles-definitions>
