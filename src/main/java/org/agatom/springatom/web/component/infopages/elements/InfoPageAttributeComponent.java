@@ -98,7 +98,7 @@ public class InfoPageAttributeComponent
 	 * @return a boolean.
 	 */
 	public boolean isInfoPageAttribute() {
-		return this.displayAs.equals(AttributeDisplayAs.LINK_ATTRIBUTE);
+		return this.displayAs.equals(AttributeDisplayAs.INFOPAGE_ATTRIBUTE);
 	}
 
 	/**
@@ -117,6 +117,15 @@ public class InfoPageAttributeComponent
 	 */
 	public boolean isTableAttribute() {
 		return this.displayAs.equals(AttributeDisplayAs.TABLE_ATTRIBUTE);
+	}
+
+	/**
+	 * <p>isLinkAttribute.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isLinkAttribute() {
+		return this.displayAs.equals(AttributeDisplayAs.LINK_ATTRIBUTE);
 	}
 
 	/** {@inheritDoc} */

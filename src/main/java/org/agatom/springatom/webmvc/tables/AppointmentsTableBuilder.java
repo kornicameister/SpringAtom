@@ -23,6 +23,7 @@ import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
 import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTable;
 import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTableColumn;
@@ -69,13 +70,8 @@ public class AppointmentsTableBuilder
 		);
 		table.addContent(
 				new ExtJSTableColumn()
-						.setDataIndex(this.getAttributeName(appointment.begin))
-						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.begin)))
-		);
-		table.addContent(
-				new ExtJSTableColumn()
-						.setDataIndex(this.getAttributeName(appointment.assigned))
-						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.assigned)))
+						.setDataIndex(this.getAttributeName(appointment.end))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.end)))
 		);
 		table.addContent(
 				new ExtJSTableColumn()
@@ -83,19 +79,27 @@ public class AppointmentsTableBuilder
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.allDay)))
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				(ExtJSTableColumn) new ExtJSTableColumn()
 						.setDataIndex(this.getAttributeName(appointment.car))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.car)))
+						.setDisplayAs(AttributeDisplayAs.INFOPAGE_ATTRIBUTE)
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				(ExtJSTableColumn) new ExtJSTableColumn()
 						.setDataIndex(this.getAttributeName(appointment.assignee))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.assignee)))
+						.setDisplayAs(AttributeDisplayAs.INFOPAGE_ATTRIBUTE)
 		);
 		table.addContent(
 				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(appointment.assigned))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.assigned)))
+		);
+		table.addContent(
+				(ExtJSTableColumn) new ExtJSTableColumn()
 						.setDataIndex(this.getAttributeName(appointment.reporter))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.reporter)))
+						.setDisplayAs(AttributeDisplayAs.INFOPAGE_ATTRIBUTE)
 		);
 
 		return table;

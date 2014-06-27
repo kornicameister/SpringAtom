@@ -208,7 +208,7 @@ class InfoPageComponentBuilderServiceImpl
 				return AttributeDisplayAs.VALUE_ATTRIBUTE;
 			case MANY_TO_ONE:
 			case ONE_TO_ONE:
-				return AttributeDisplayAs.LINK_ATTRIBUTE;
+				return AttributeDisplayAs.INFOPAGE_ATTRIBUTE;
 			case ONE_TO_MANY:
 				return AttributeDisplayAs.TABLE_ATTRIBUTE;
 			case EMBEDDED:

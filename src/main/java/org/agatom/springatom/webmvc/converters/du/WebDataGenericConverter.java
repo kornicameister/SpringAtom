@@ -24,6 +24,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.request.AbstractComponentRequest;
 import org.agatom.springatom.web.component.core.request.ComponentRequestAttribute;
@@ -86,6 +88,8 @@ public class WebDataGenericConverter
 	private              FormattingConversionService                   conversionService = null;
 	@Autowired
 	private              ListableBeanFactory                           beanFactory       = null;
+	@Autowired
+	private EntityDescriptors entityDescriptors = null;
 	private              Map<WebDataConverterKey, WebDataConverter<?>> converterMap      = Maps.newHashMap();
 
 	/** {@inheritDoc} */
@@ -119,11 +123,9 @@ public class WebDataGenericConverter
 		AttributeDisplayAs displayAs = this.getValueRenderType(((AbstractComponentRequest) webData.getRequest().getComponentRequest()).getAttributes(), key);
 
 		String localKey = null;
-		if (displayAs == null) {
-			displayAs = AttributeDisplayAs.VALUE_ATTRIBUTE;
-		}
-		switch (displayAs) {
+		switch ((displayAs = this.getDisplayAs(displayAs, value, persistable))) {
 			case LINK_ATTRIBUTE:
+			case INFOPAGE_ATTRIBUTE:
 				localKey = ToInfoPageLinkWebConverter.SELECTOR;
 				break;
 			case TABLE_ATTRIBUTE:
@@ -158,6 +160,24 @@ public class WebDataGenericConverter
 			throw new WebConverterException(String.format("Failure in conversion for key >> %s", key), exp).setConversionKey(key).setConversionValue(value);
 		}
 
+	}
+
+	private AttributeDisplayAs getDisplayAs(AttributeDisplayAs displayAs, final Object value, final Persistable<?> source) {
+		Assert.notNull(source, "Source persistable can not be null");
+		if (value == null) {
+			displayAs = AttributeDisplayAs.VALUE_ATTRIBUTE;
+		}
+		if (displayAs == null) {
+			if (ClassUtils.isAssignableValue(SUser.class, value)) {
+				return AttributeDisplayAs.INFOPAGE_ATTRIBUTE;
+			}
+		}
+		// if still not found, use default VALUE_ATTRIBUTE
+		if (displayAs == null) {
+			LOGGER.warn(String.format("For value=[ %s ] could not determine AttributeDisplayAs", value));
+			displayAs = AttributeDisplayAs.VALUE_ATTRIBUTE;
+		}
+		return displayAs;
 	}
 
 	private AttributeDisplayAs getValueRenderType(final Set<ComponentRequestAttribute> attributes, final String key) {
