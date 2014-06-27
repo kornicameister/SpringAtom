@@ -70,6 +70,11 @@ public class AppointmentsTableBuilder
 		);
 		table.addContent(
 				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName("interval"))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName("interval")))
+		);
+		table.addContent(
+				new ExtJSTableColumn()
 						.setDataIndex(this.getAttributeName(appointment.end))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.end)))
 		);
@@ -91,15 +96,15 @@ public class AppointmentsTableBuilder
 						.setDisplayAs(AttributeDisplayAs.INFOPAGE_ATTRIBUTE)
 		);
 		table.addContent(
-				new ExtJSTableColumn()
-						.setDataIndex(this.getAttributeName(appointment.assigned))
-						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.assigned)))
-		);
-		table.addContent(
 				(ExtJSTableColumn) new ExtJSTableColumn()
 						.setDataIndex(this.getAttributeName(appointment.reporter))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.reporter)))
 						.setDisplayAs(AttributeDisplayAs.INFOPAGE_ATTRIBUTE)
+		);
+		table.addContent(
+				new ExtJSTableColumn()
+						.setDataIndex(this.getAttributeName(appointment.assigned))
+						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.assigned)))
 		);
 
 		return table;

@@ -25,6 +25,8 @@ import org.agatom.springatom.web.component.core.builders.exception.ComponentExce
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.metamodel.Attribute;
@@ -143,8 +145,11 @@ abstract public class AbstractComponentDataBuilder
 	 *
 	 * @return the name
 	 */
-	protected String getAttributeName(final Path<?> path) {
+	protected String getAttributeName(final Object path) {
 		Preconditions.checkNotNull(path, "Path can not be null");
-		return path.getMetadata().getName();
+		if (ClassUtils.isAssignableValue(Path.class, path)) {
+			return ((Path<?>) path).getMetadata().getName();
+		}
+		return ObjectUtils.getDisplayString(path);
 	}
 }

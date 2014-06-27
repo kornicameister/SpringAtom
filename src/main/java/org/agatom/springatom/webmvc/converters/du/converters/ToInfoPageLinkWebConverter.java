@@ -75,7 +75,7 @@ public class ToInfoPageLinkWebConverter
 			LOGGER.error(String.format("Failed to create InfoPage link component for key=%s,value=%s", key, value), exp);
 			final TextGuiComponent component = new TextGuiComponent();
 			component.setRawValue(((Persistable<Serializable>) value).getId());
-			component.setValue(((PersistentIdentity) persistable).getIdentity());
+			component.setValue(((PersistentIdentity) value).getIdentity());
 			component.addDynamicProperty("exception", exp.getMessage());
 			return component;
 		}
