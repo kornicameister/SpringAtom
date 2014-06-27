@@ -21,64 +21,50 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sc" uri="/WEB-INF/tags/sa/calendar.tld" %>
 <%@ taglib prefix="cmp" tagdir="/WEB-INF/tags/sa/component" %>
-
-<a id="dupa" href="<s:url value="/app/wizard/NewCarWizard"/>">AAAA</a>
-<script type="text/javascript">
-    $(function () {
-        Spring.addDecoration(new Spring.AjaxEventDecoration({
-            elementId: 'dupa',
-            event    : 'onclick',
-            popup    : true,
-            params   : {
-                mode: "embedded"
-            }
-        }));
-    });
-</script>
+<%@ taglib prefix="scmp" uri="http://www.example.org/sa/scmp" %>
 
 <div id="calendarWrapper">
-    <div id="calendar" class="x-calendar">
-        <script type="text/javascript" id="calendarLoader">
-            $(function () {
-                SA.calendar.createCalendar($('#calendar'), <sc:calendarConfiguration/>);
-            })
-        </script>
-    </div>
-    <div id="calendarTable">
-        <cmp:table type="org.agatom.springatom.server.model.beans.appointment.SAppointment"/>
-    </div>
+    <s:eval expression="@defaultComponentBuilderRepository.getBuilderId(
+    T(org.agatom.springatom.server.model.beans.appointment.SAppointment),
+    T(org.agatom.springatom.web.component.core.builders.ComponentProduces).TABLE_COMPONENT)" var="builderId"
+            scope="page"/>
     <script type="text/javascript">
-        var a = new Spring.ElementDecoration({
-                    elementId  : 'calendarWrapper',
-                    widgetType : "dijit.layout.TabContainer",
-                    widgetAttrs: {
-                        style   : 'width:100%; height:100%',
-                        doLayout: false
+        Ext.require(['Ext.tab.Panel', 'SA.view.cmp.GridComponent']);
+        Ext.onReady(function () {
+            Ext.create('Ext.tab.Panel', {
+                activeTab: 1,
+                renderTo : Ext.get('calendarWrapper'),
+                items    : [
+                    {
+                        title    : 'Organizer',
+                        tabConfig: {
+                            title  : 'Organizer',
+                            tooltip: 'Organizer'
+                        },
+                        autoEl   : {
+                            tag: 'div',
+                            id : 'calendar'
+                        },
+                        listeners: {
+                            'render': function () {
+                                <%--SA.calendar.createCalendar($('#calendar'), <sc:calendarConfiguration/>);--%>
+                            }
+                        }
+                    },
+                    {
+                        title    : 'Appointments',
+                        tabConfig: {
+                            title  : 'Appointments',
+                            tooltip: 'Appointments'
+                        },
+                        items    : {
+                            xtype: 'infoPageGrid',
+                            data :<scmp:getComponentConfiguration componentId="${builderId}"/>
+                        }
                     }
-                }),
-                b = new Spring.ElementDecoration({
-                    elementId  : 'calendar',
-                    widgetType : "dijit.layout.ContentPane",
-                    widgetAttrs: {
-                        title     : 'Organizer',
-                        style     : 'width:95%; height:95%',
-                        scrollable: true,
-                        selected  : true,
-                        closable  : false
-                    }
-                }),
-                c = new Spring.ElementDecoration({
-                    elementId  : 'calendarTable',
-                    widgetType : "dijit.layout.ContentPane",
-                    widgetAttrs: {
-                        title   : 'Table',
-                        selected: false,
-                        closable: false
-                    }
-                });
-        Spring.addDecoration(c);
-        Spring.addDecoration(b);
-        Spring.addDecoration(a);
+                ]
+            });
+        })
     </script>
 </div>
 

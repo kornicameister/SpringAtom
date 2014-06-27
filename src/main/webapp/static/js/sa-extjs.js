@@ -20,7 +20,6 @@ Ext.Ajax.request((function () {
 	function collectControllers() {
 		var local = [];
 		local.push('InfoPageController');
-		local.push('GridController');
 		return local;
 	}
 

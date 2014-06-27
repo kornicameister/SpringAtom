@@ -36,4 +36,23 @@ Ext.onReady(function () {
 		setTimeout(doLoad, 1000);
 	};
 
+	Ext.namespace('SA.component').loadTable = function (config) {
+		function doLoad() {
+			if (SA.getApplication) {
+				var renderTo = config['renderTo'],
+					localConfig = config['config'];
+				config = {
+					renderTo: renderTo,
+					layout  : 'fit',
+					data    : localConfig
+				};
+				SA.getApplication().getController('GridController').loadGrid(config);
+			} else {
+				setTimeout(doLoad, 1000);
+			}
+		}
+
+		setTimeout(doLoad, 1000);
+	};
+
 });

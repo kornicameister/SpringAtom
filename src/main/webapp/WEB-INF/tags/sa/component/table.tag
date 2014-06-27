@@ -1,4 +1,3 @@
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~
@@ -18,17 +17,24 @@
 
 <%@ attribute name="type" rtexprvalue="true" required="true" type="java.lang.String" %>
 
-<s:eval expression="@ComponentBuildersModuleConfiguration.componentBuilders.getBuilderId(
-                    T(java.lang.Class).forName(type),
-                    T(org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder$Produces).TABLE_COMPONENT
-                )"
-        var="builderId"
-        scope="page"/>
-<div id="${builderId}">
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="scmp" uri="http://www.example.org/sa/scmp" %>
 
-</div>
-<script type="text/javascript" defer="defer" async="async">
-    $(function () {
-        $('#' + '${builderId}').loadBuilderView({url: '/app/tableBuilder/${builderId}'});
-    });
-</script>
+<s:eval expression="@defaultComponentBuilderRepository.getBuilderId(T(java.lang.Class).forName(type),T(org.agatom.springatom.web.component.core.builders.ComponentProduces).TABLE_COMPONENT)"
+        var="builderId" scope="page"/>
+<c:if test="${builderId != null}">
+    <div id="${builderId}">
+        <script type="text/javascript" defer="defer" async="async">
+            Ext.onReady(function () {
+                SA.component.loadTable({
+                    renderTo: '${builderId}',
+                    config  :<scmp:getComponentConfiguration componentId="${builderId}"/>
+                });
+            })
+        </script>
+    </div>
+</c:if>
+<c:if test="${builderId == null}">
+    Internal error: builder missing
+</c:if>

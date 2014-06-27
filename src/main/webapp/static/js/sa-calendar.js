@@ -179,6 +179,7 @@
 			}
 			return jQuery.extend(defConfig, config);
 		};
+
 	SA.calendar.createCalendar = function (target, config) {
 		var $calendar = $(target),
 			pHeight = $calendar.height(),
@@ -216,5 +217,6 @@
 		config = postProcessConfig(config, defConfig);
 		$calendar.fullCalendar(config);
 	}
+
 
 }(window.SA = window.SA || {}, jQuery));

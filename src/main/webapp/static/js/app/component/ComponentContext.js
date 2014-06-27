@@ -16,6 +16,14 @@
  */
 
 Ext.define('SA.component.ComponentContext', function () {
+	var props = ['domain', 'id', 'version', 'revision'],
+		contextAsObject = function () {
+			var local = {};
+			Ext.each(props, function (val) {
+				local[val] = this.config[val];
+			}, this);
+			return local;
+		};
 	return {
 		config     : {
 			domain  : undefined,
@@ -27,7 +35,7 @@ Ext.define('SA.component.ComponentContext', function () {
 			return this.initConfig(config);
 		},
 		asObject   : function () {
-			return this.config;
+			return contextAsObject.call(this);
 		}
 	}
 });
