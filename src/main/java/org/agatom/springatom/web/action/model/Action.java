@@ -28,5 +28,21 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface Action extends Identifiable<String>, Serializable {
+public interface Action
+		extends Identifiable<String>, Serializable, Comparable<Action> {
+	short getOrder();
+
+	/**
+	 * <p>getMode.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	String getMode();
+
+	/**
+	 * Returns the  {@code security} instructions as defined in {@link org.agatom.springatom.web.action.model.ActionSecurityCheck}
+	 *
+	 * @return security information
+	 */
+	ActionSecurityCheck getSecurity();
 }

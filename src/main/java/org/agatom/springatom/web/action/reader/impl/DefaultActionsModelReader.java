@@ -28,6 +28,7 @@ import com.google.common.collect.Sets;
 import javassist.NotFoundException;
 import org.agatom.springatom.web.action.model.Action;
 import org.agatom.springatom.web.action.model.ActionModel;
+import org.agatom.springatom.web.action.model.ActionSecurityCheck;
 import org.agatom.springatom.web.action.model.actions.LinkAction;
 import org.agatom.springatom.web.action.model.actions.WizardAction;
 import org.agatom.springatom.web.action.reader.ActionsModelReader;
@@ -77,7 +78,7 @@ public class DefaultActionsModelReader
 		return new ActionModel()
 				.setName(map.node.findValue("name").textValue())
 				.setDescription(map.node.findValue("description").textValue())
-				.setContent(this.resolveContent(map, Sets.<Action>newLinkedHashSet()));
+				.setContent(this.resolveContent(map, Sets.<Action>newTreeSet()));
 	}
 
 	private Set<Action> resolveContent(final ActionModelReferenceMap map, final Set<Action> actions) {
@@ -127,6 +128,24 @@ public class DefaultActionsModelReader
 		if (action != null) {
 			action.setUrl(command.get("url").textValue());
 			action.setLabel(this.getLabel(node.get(RESOURCE_BUNDLE_KEY).textValue()));
+			if (node.has("iconClass")) {
+				action.setIconClass(node.get("iconClass").textValue());
+			}
+			if (node.has("security")) {
+				final JsonNode security = node.get("security");
+				final boolean enabled = security.get("enabled").asBoolean(false);
+				if (enabled && !(security.has("checkUrl") || security.has("roles"))) {
+					LOGGER.warn("Invalid state, security enabled but neither roles no checkUrl defined");
+				}
+				action.setSecurity(new ActionSecurityCheck().setEnabled(enabled));
+				if (security.has("checkUrl")) {
+					action.getSecurity().setPattern(security.get("checkUrl").textValue());
+				}
+				if (security.has("roles")) {
+					action.getSecurity().setRoles(StringUtils.commaDelimitedListToSet(security.get("roles").textValue()));
+				}
+			}
+			action.setOrder(node.has("index") ? node.get("index").shortValue() : -1);
 		}
 		return action;
 	}

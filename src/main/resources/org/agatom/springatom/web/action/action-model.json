@@ -5,6 +5,7 @@
 			"description": "Main navigation",
 			"actions"    : [
 				{
+					"index": 0,
 					"name"          : "home",
 					"resourceBundle": "label.nav.index",
 					"iconClass"     : "glyphicon glyphicon-home",
@@ -14,6 +15,7 @@
 					}
 				},
 				{
+					"index": 1,
 					"name"          : "dashboards",
 					"resourceBundle": "label.nav.dashboard",
 					"iconClass"     : "fa fa-color fa-dashboard",
@@ -27,6 +29,7 @@
 					}
 				},
 				{
+					"index": 2,
 					"name"          : "garage",
 					"resourceBundle": "label.nav.management",
 					"iconClass"     : "glyphicon glyphicon-briefcase",
@@ -40,6 +43,7 @@
 					}
 				},
 				{
+					"index": 3,
 					"name"          : "admin",
 					"resourceBundle": "label.nav.admin",
 					"iconClass"     : "glyphicon glyphicon-tower",
@@ -53,6 +57,7 @@
 					}
 				},
 				{
+					"index": 4,
 					"name"          : "home",
 					"resourceBundle": "label.nav.about",
 					"iconClass"     : "glyphicon-question-sign",

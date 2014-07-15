@@ -22,20 +22,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-<html>
+<html ng-app="springatom">
 <head>
     <tiles:insertAttribute name="head"/>
     <tiles:insertAttribute name="css" flush="true"/>
 </head>
 <body>
 <tiles:insertAttribute name="top-nav-header"/>
-<tiles:insertAttribute name="navigator"/>
+<navigator class="navbar navbar-left col-sm-2 navbar-nav ui-spinner" role="navigation"></navigator>
 <div class="content-wrapper container">
     <div class="col-lg-12">
         <tiles:insertAttribute name="header"/>
-            <tiles:insertAttribute name="content"/>
-        </div>
+        <tiles:insertAttribute name="content"/>
     </div>
+</div>
 </body>
 <tiles:insertAttribute name="js" flush="true"/>
 </html>

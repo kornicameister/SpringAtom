@@ -56,4 +56,16 @@
         </attribute>
     </tag>
 
+    <tag>
+        <name>evaluateActionModelSecurity</name>
+        <tag-class>org.agatom.springatom.web.action.SecurityEvaluationActionModelTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>actionModel</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>org.agatom.springatom.web.action.model.ActionModel</type>
+        </attribute>
+    </tag>
+
 </taglib>

@@ -29,33 +29,11 @@ import java.util.Set;
  * @since 0.0.1
  */
 public class ActionModel
-		implements Action {
+		extends AbstractAction {
 	private static final long        serialVersionUID = -4880614509556359333L;
 	private              String      name             = null;
 	private              String      description      = null;
 	private              Set<Action> content          = null;
-	private              String      label            = null;
-
-	/**
-	 * <p>Getter for the field <code>label</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getLabel() {
-		return label;
-	}
-
-	/**
-	 * <p>Setter for the field <code>label</code>.</p>
-	 *
-	 * @param label a {@link java.lang.String} object.
-	 *
-	 * @return a {@link org.agatom.springatom.web.action.model.ActionModel} object.
-	 */
-	public ActionModel setLabel(final String label) {
-		this.label = label;
-		return this;
-	}
 
 	/**
 	 * <p>Getter for the field <code>name</code>.</p>

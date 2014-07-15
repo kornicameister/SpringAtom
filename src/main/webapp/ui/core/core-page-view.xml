@@ -26,7 +26,6 @@
         <put-attribute name="head" value="ui.meta.Head"/>
         <put-attribute name="css" value="ui.meta.head.CSS"/>
         <put-attribute name="js" value="ui.meta.head.JS"/>
-        <put-attribute name="navigator" value="ui.nav.Navigator"/>
         <put-attribute name="header" value="/ui/core/c-header.jsp"/>
         <put-attribute name="top-nav-header" value="/ui/core/top-nav-header.jsp"/>
         <!-- to override by concrete page -->

@@ -15,53 +15,70 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.action.model.actions;
+package org.agatom.springatom.web.action.model;
 
-import org.agatom.springatom.web.action.model.AbstractAction;
-import org.springframework.hateoas.Link;
+import com.google.common.base.Objects;
+
+import java.io.Serializable;
+import java.util.Set;
 
 /**
- * <p>LinkAction class.</p>
+ * {@code ActionSecurityCheck} contains information required to validate action accessibility
+ *
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 15.07.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class LinkAction
-		extends AbstractAction {
-	private static final long   serialVersionUID = 4352983525547169705L;
-	protected            String url              = null;
+public class ActionSecurityCheck
+		implements Serializable {
+	private static final long        serialVersionUID = -3698508519155193203L;
+	private              boolean     enabled          = false;
+	private              String      pattern          = null;
+	private              Set<String> roles            = null;
 
-	/**
-	 * <p>Getter for the field <code>url</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getUrl() {
-		return url;
+	public Set<String> getRoles() {
+		return roles;
 	}
 
-	/**
-	 * <p>Setter for the field <code>url</code>.</p>
-	 *
-	 * @param link a {@link org.springframework.hateoas.Link} object.
-	 *
-	 * @return a {@link org.agatom.springatom.web.action.model.actions.LinkAction} object.
-	 */
-	public LinkAction setUrl(final Link link) {
-		return this.setUrl(link.getHref());
-	}
-
-	/**
-	 * <p>Setter for the field <code>url</code>.</p>
-	 *
-	 * @param url a {@link java.lang.String} object.
-	 *
-	 * @return a {@link org.agatom.springatom.web.action.model.actions.LinkAction} object.
-	 */
-	public LinkAction setUrl(final String url) {
-		this.url = url;
+	public ActionSecurityCheck setRoles(final Set<String> roles) {
+		this.roles = roles;
 		return this;
 	}
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public ActionSecurityCheck setEnabled(final boolean enabled) {
+		this.enabled = enabled;
+		return this;
+	}
+
+	public String getPattern() {
+		return pattern;
+	}
+
+	public ActionSecurityCheck setPattern(final String pattern) {
+		this.pattern = pattern;
+		return this;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(enabled, pattern, roles);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		ActionSecurityCheck that = (ActionSecurityCheck) o;
+
+		return Objects.equal(this.enabled, that.enabled) &&
+				Objects.equal(this.pattern, that.pattern) &&
+				Objects.equal(this.roles, that.roles);
+	}
 }
