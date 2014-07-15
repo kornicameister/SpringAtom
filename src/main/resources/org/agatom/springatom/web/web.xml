@@ -26,7 +26,6 @@
 
     <import resource="caching.xml"/>
     <import resource="locale/locale.xml"/>
-    <import resource="theme/theme.xml"/>
     <import resource="flows/flows.xml"/>
 
     <context:annotation-config/>

@@ -14,7 +14,6 @@
   ~ You should have received a copy of the GNU General Public License                             ~
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
 <groups xmlns="http://www.isdc.ro/wro">
 
     <group name="springatom_resources">
@@ -24,13 +23,51 @@
         <js>/app/static/js/sa-calendar.js</js>
         <js>/app/static/js/sa-mmenu.js</js>
         <js>/app/static/js/sa-wizards.js</js>
-        <js>/app/static/js/sa-extjs.js</js>
-        <js>/app/static/js/sa-components.js</js>
+        <!--<js>/app/static/js/sa-components.js</js>-->
     </group>
 
-    <group name="spring_webflow_js">
+    <group name="springatom-libs">
+        <group-ref>jquery-libs</group-ref>
+        <group-ref>bootstrap-js</group-ref>
+        <group-ref>full-calendar</group-ref>
+        <group-ref>moment-js</group-ref>
+        <group-ref>spring_webflow_js</group-ref>
+        <group-ref>angular</group-ref>
+    </group>
+
+    <group name="bootstrap-js" abstract="true">
+        <js>/app/static/sa/libs/bootstrap/dist/js/bootstrap.min.js</js>
+    </group>
+    <group name="moment-js" abstract="true">
+        <js>/app/static/sa/libs/moment/moment.js</js>
+        <js>/app/static/sa/libs/moment/lang/pl.js</js>
+    </group>
+    <group name="full-calendar" abstract="true">
+        <js>/app/static/sa/libs/fullcalendar/fullcalendar.min.js</js>
+    </group>
+    <group name="angular" abstract="true">
+        <js>/app/static/sa/libs/angular/angular.min.js</js>
+        <js>/app/static/sa/libs/angular-bootstrap/ui-bootstrap.min.js</js>
+        <js>/app/static/sa/libs/angular-ui-calendar/src/calendar.json</js>
+        <js>/app/static/sa/libs/angular-ui-router/release/angular-ui-router.min.js</js>
+        <js>/app/static/sa/libs/ng-grid/ng-grid-2.0.11.min.js</js>
+    </group>
+    <group name="spring_webflow_js" abstract="true">
         <js>/app/static/spring/Spring.js.uncompressed.js</js>
         <js>/app/static/spring/Spring-Dojo.js.uncompressed.js</js>
+    </group>
+    <group name="jquery-libs" abstract="true">
+        <js>/app/static/sa/libs/jquery/dist/jquery.min.js</js>
+        <js>/app/static/sa/libs/jquery-ui/ui/minified/jquery-ui.min.js</js>
+    </group>
+
+    <group name="css-libs">
+        <css>/app/static/sa/libs/angular/angular-csp.css</css>
+        <css>/app/static/sa/libs/fullcalendar/fullcalendar.css</css>
+        <css>/app/static/sa/libs/ng-grid/ng-grid.css</css>
+    </group>
+    <group name="css-files">
+        <css>/app/static/css/core.css</css>
     </group>
 
 </groups>
