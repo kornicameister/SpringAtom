@@ -20,16 +20,13 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 
-<nav id="menu" data-role="navigation">
-    <ul>
-        <li>
-            <a href="#menu"><i class="fa fa-list fa-color"></i>Menu</a>
-        </li>
+<nav id="menu" class="navbar navbar-left col-sm-2 navbar-nav" role="navigation">
+    <ul class="nav nav-pills nav-stacked">
         <li class="active">
             <s:message code="label.nav.index" var="indexLabel" htmlEscape="true"/>
             <s:message code="tooltip.nav" arguments="${indexLabel}" var="indexTooltip" htmlEscape="true"/>
             <a href="<s:url value="/app/" htmlEscape="true"/>" title="${indexTooltip}">
-                <i class="fa fa-desktop fa-color"></i>${indexLabel}
+                <i class="glyphicon glyphicon-home"></i>${indexLabel}
             </a>
         </li>
         <security:authorize access="isFullyAuthenticated()">
@@ -48,14 +45,14 @@
             <s:message code="label.nav.free.reports" var="freeReportsLabel"/>
             <s:message code="tooltip.nav" arguments="${freeReportsLabel}" var="freeReportsTooltip"/>
             <a href="<s:url value="/app/reports" htmlEscape="true"/>" title="${freeReportsTooltip}">
-                <i class="fa fa-book fa-color"></i>${freeReportsLabel}
+                <i class="glyphicon glyphicon-book"></i>${freeReportsLabel}
             </a>
         </li>
         <li>
             <s:message code="label.nav.about" var="aboutLabel" htmlEscape="true"/>
             <s:message code="tooltip.nav" arguments="${aboutLabel}" var="aboutTooltip" htmlEscape="true"/>
             <a href="<s:url value="/app/about" htmlEscape="true"/>" title="${aboutTooltip}">
-                <i class="fa fa-question fa-color"></i>${aboutLabel}
+                <i class="glyphicon glyphicon-question-sign"></i>${aboutLabel}
             </a>
         </li>
     </ul>

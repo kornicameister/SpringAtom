@@ -26,33 +26,16 @@
 <head>
     <tiles:insertAttribute name="head"/>
     <tiles:insertAttribute name="css" flush="true"/>
-    <tiles:insertAttribute name="js" flush="true"/>
 </head>
 <body>
-<div id="page">
-    <div class="content-wrapper">
-        <header id="header" class="main">
-            <s:message code="label.dashboard.header" htmlEscape="true" var="headerLabel"/>
-            <p>${headerLabel}</p>
-
-            <div id="authentication-control">
-                <security:authorize access="isFullyAuthenticated()" var="userAuthenticated"/>
-                <c:choose>
-                    <c:when test="${!userAuthenticated}">
-                        <tiles:insertDefinition name="springatom.tiles.auth.action.login" flush="true"/>
-                    </c:when>
-                    <c:otherwise>
-                        <tiles:insertDefinition name="springatom.tiles.auth.action.logout" flush="true"/>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </header>
+<tiles:insertAttribute name="top-nav-header"/>
+<tiles:insertAttribute name="navigator"/>
+<div class="content-wrapper container">
+    <div class="col-lg-12">
         <tiles:insertAttribute name="header"/>
-        <div class="content">
             <tiles:insertAttribute name="content"/>
         </div>
     </div>
-    <tiles:insertAttribute name="navigator"/>
-</div>
 </body>
+<tiles:insertAttribute name="js" flush="true"/>
 </html>

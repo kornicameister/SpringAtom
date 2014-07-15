@@ -22,33 +22,40 @@
            autocomplete="true"
            method="post"
            acceptCharset="UTF-8"
-           cssClass="x-login-form">
-    <div id="inputs">
-        <p><s:message code="label.auth.login"/>
+           cssClass="form-horizontal"
+           role="form">
+    <div class="form-group">
+        <label for="username" class="col-sm-2 control-label"><s:message code="label.auth.login"/></label>
+
+        <div class="col-sm-10">
             <input type="text"
                    name="ares"
                    id="username"
                    placeholder="<s:message code="sa.msg.login.prompt"/>"
                    autofocus
-                   class="x-input"
+                   class="form-control"
                    required>
-        </p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="username" class="col-sm-2 control-label"><s:message code="label.auth.password"/></label>
 
-        <p>
-            <s:message code="label.auth.password"/>
+        <div class="col-sm-10">
             <input type="password"
                    name="athena"
                    id="password"
                    placeholder="<s:message code="sa.msg.password.prompt"/>"
-                   class="x-input"
+                   class="form-control"
                    required>
-        </p>
+        </div>
     </div>
-    <div class="actions">
-        <p><input type="submit" class="login-button" value="<s:message code="button.login"/>"></p>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <p><input type="submit" class="login-button" value="<s:message code="button.login"/>"></p>
 
-        <p><a href="<s:url value="/app/auth/forgotten/password"/>"><s:message code="sa.msg.forgotPassword"/></a></p>
+            <p><a href="<s:url value="/app/auth/forgotten/password"/>"><s:message code="sa.msg.forgotPassword"/></a></p>
 
-        <p><a href="<s:url value="/app/auth/register"/>"><s:message code="sa.msg.register"/></a></p>
+            <p><a href="<s:url value="/app/auth/register"/>"><s:message code="sa.msg.register"/></a></p>
+        </div>
     </div>
 </form:form>

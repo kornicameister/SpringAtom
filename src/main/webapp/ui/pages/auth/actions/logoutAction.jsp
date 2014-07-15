@@ -18,24 +18,33 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
-<div id="logout-action" class="auth-action logout-action">
+<li id="logout-action" class="dropdown">
+
     <security:authentication property="principal.username" var="userName"/>
     <security:authentication property="principal.person" var="person"/>
     <s:url value="/app/auth/logout" var="logoutUrl"/>
 
-    <span class="label"><s:message code="label.authentication.loggedAs"/></span>
     <c:choose>
         <c:when test="person != null">
             <security:authentication property="principal.person.information.firstName" var="firstName"/>
             <security:authentication property="principal.person.information.lastName" var="lastName"/>
-            <span><c:out value="${firstName} ${lastName}"/></span>
+            <c:set var="loggedUserInnerLabel" value="${firstName} ${lastName}"/>
         </c:when>
         <c:otherwise>
-            <span><c:out value="${userName}"/></span>
+            <c:set var="loggedUserInnerLabel" value="${userName}"/>
         </c:otherwise>
     </c:choose>
-    <i class="fa fa-color fa-user"></i>
-    <a href="<s:url value="${logoutUrl}"/>" title="<s:message code="button.logout"/>">
-        <i class="fa fa-unlock fa-color"></i>
+
+    <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+        <i class="glyphicon glyphicon-user"></i>&nbsp;<c:out value="${loggedUserInnerLabel}"/>&nbsp;<span
+            class="caret"></span>
     </a>
-</div>
+    <ul id="g-account-menu" class="dropdown-menu" role="menu">
+        <li>
+            <a href="<s:url value="${logoutUrl}"/>" title="<s:message code="button.logout"/>">
+                <i class="glyphicon glyphicon-log-out"></i>
+            </a>
+        </li>
+    </ul>
+
+</li>

@@ -16,11 +16,9 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
-<div id="login-action" class="auth-action login-action">
-    <span class="label"><s:message code="label.authentication.loggedAs"/></span>
-    <s:message code="label.authentication.anonymousUser"/>
+
+<li id="login-action">
     <a href="<s:url value="/app/auth/login"/>" title="<s:message code="button.login"/>">
-        <i class="fa fa-lock fa-color"></i>
+        <i class="glyphicon glyphicon-log-in"></i>&nbsp;<s:message code="label.authentication.loginAction"/>
     </a>
-</div>
+</li>

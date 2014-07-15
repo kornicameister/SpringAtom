@@ -21,14 +21,15 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 
-<section id="login-section" class="auth login">
-    <div id="login-form" class="x-auth-widget">
-        <h1 class="x-auth-widget-header">
-            <s:message code="label.authentication.loginAction"/>
-        </h1>
-        <%@ include file="authentioncation/login-widget.jspf" %>
-    </div>
-    <div id="forgot-password-form" class="x-auth-widget x-hidden">
-        <%@ include file="authentioncation/password-widget.jspf" %>
+<section id="login-section">
+    <div class="container">
+        <div id="login-form" class="panel panel-primary">
+            <div class="panel-heading"><s:message code="label.authentication.loginAction"/></div>
+            <%@ include file="authentioncation/login-widget.jspf" %>
+        </div>
+        <div id="forgot-password-form" class="panel panel-default">
+            <div class="panel-heading"><s:message code="label.authentication.lostPassword"/></div>
+            <%@ include file="authentioncation/password-widget.jspf" %>
+        </div>
     </div>
 </section>

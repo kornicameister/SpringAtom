@@ -19,27 +19,7 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:set var="staticResources" value="/app/static"/>
-
-<link rel="stylesheet" media="all" href="<s:theme code="application"/>">
-<link rel="stylesheet" media="all" href="<s:theme code="application.auth"/>">
-<link rel="stylesheet" media="all" href="<s:theme code="application.content.header"/>">
-<link rel="stylesheet" media="all" href="<s:theme code="application.navigator.mmenu"/>">
-<link rel="stylesheet" media="all" href="<s:theme code="application.navigator.mmenu.extra"/>">
-<link rel="stylesheet" media="all" href="<s:theme code="application.fonts.fontsAwesome"/>">
-<link rel="stylesheet" media="all" href="<s:theme code="application.forms"/>">
-<link rel="stylesheet" media="all" href="<s:theme code="application.modals"/>">
-<link rel="stylesheet" media="all" href="<s:theme code="application.buttons"/>">
-<link rel="stylesheet" media="all" href="<s:theme code="application.wizards"/>">
-
-<link rel="stylesheet" type="text/css" href="http://cdn.sencha.com/ext/gpl/4.2.1/resources/css/ext-all-neptune.css"/>
-
-<link rel="stylesheet" media="all" href="<s:url value="${staticResources}/lib/alertify/themes/alertify.core.css"/>"/>
-<link rel="stylesheet" media="all" href="<s:url value="${staticResources}/lib/alertify/themes/alertify.default.css"/>"/>
-<link rel="stylesheet" media="all" href="<s:url value="${staticResources}/dijit/themes/tundra/tundra.css" />"/>
-<link rel="stylesheet" media="all" href="<s:url value="${staticResources}/fullcalendar/2.0.0/fullcalendar.css"/>"/>
-<link rel="stylesheet" media="print"
-      href="<s:url value="${staticResources}/fullcalendar/2.0.0/fullcalendar.print.css"/>"/>
-<link rel="stylesheet" media="all" href="<s:url value="/app/static/css/fullcalendar-extra.css"/>"/>
-<link rel="stylesheet" media="all" href="<s:url value="/app/static/css/infopages.css"/>"/>
-<link rel="stylesheet" media="all" href="<s:url value="${staticResources}/sources/css/jquery.dataTables.css" />"/>
+<link rel="stylesheet" media="all" href="<s:url value="/app/static/sa/libs/bootstrap/dist/css/bootstrap.css"/>">
+<link rel="stylesheet" media="all" href="<s:url value="/app/static/sa/libs/bootstrap/dist/css/bootstrap-theme.css"/>">
+<link rel="stylesheet" media="all" href="<s:url value="/app/wro/css-libs.css"/>">
+<link rel="stylesheet" media="all" href="<s:url value="/app/wro/css-files.css"/>">
