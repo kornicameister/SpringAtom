@@ -22,24 +22,6 @@
 
 	// private methods
 	var priv = {
-		initNotificiationSystem: function () {
-			SA.core.ajax.loadLocalizedPreferences({
-				keys    : {
-					'ok'    : 'button.ok',
-					'cancel': 'button.cancel'
-				},
-				pattern : false,
-				reversed: true,
-				callback: function (data) {
-					alertify.set({
-						labels: {
-							ok    : data['ok'][0],
-							cancel: data['cancel'][0]
-						}
-					});
-				}
-			});
-		},
 		initStrings            : function () {
 			String.prototype.startsWith = function (str) {
 				var length = str.length;
@@ -98,11 +80,6 @@
 		} else {
 			SA.core.showError("Could not locate target=" + target);
 		}
-	};
-	SA.core.showSuccess = function (text) {
-		alertify.success(
-				'<span style="font-weight: bold">' + text + '</span>'
-		);
 	};
 	SA.core.isEmpty = function (obj) {
 		return true;
@@ -214,7 +191,6 @@
 
 	(function () {
 		console.log('Initializing SA.core');
-		priv.initNotificiationSystem();
 		priv.initJQueryExtension();
 		priv.initStrings();
 		console.log('Initialized SA.core');

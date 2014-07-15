@@ -21,7 +21,6 @@
         <js>/app/static/js/sa-auth.js</js>
         <js>/app/static/js/sa-breadcrumb.js</js>
         <js>/app/static/js/sa-calendar.js</js>
-        <js>/app/static/js/sa-mmenu.js</js>
         <js>/app/static/js/sa-wizards.js</js>
         <!--<js>/app/static/js/sa-components.js</js>-->
     </group>
