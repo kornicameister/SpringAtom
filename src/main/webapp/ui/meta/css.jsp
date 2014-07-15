@@ -21,5 +21,6 @@
 
 <link rel="stylesheet" media="all" href="<s:url value="/app/static/sa/libs/bootstrap/dist/css/bootstrap.css"/>">
 <link rel="stylesheet" media="all" href="<s:url value="/app/static/sa/libs/bootstrap/dist/css/bootstrap-theme.css"/>">
+<link rel="stylesheet" media="all" href="<s:url value="/app/static/font-awesome/4.1.0/css/font-awesome.min.css"/>">
 <link rel="stylesheet" media="all" href="<s:url value="/app/wro/css-libs.css"/>">
 <link rel="stylesheet" media="all" href="<s:url value="/app/wro/css-files.css"/>">

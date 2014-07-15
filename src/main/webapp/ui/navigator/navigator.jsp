@@ -29,17 +29,26 @@
                 <i class="glyphicon glyphicon-home"></i>${indexLabel}
             </a>
         </li>
-        <security:authorize access="isFullyAuthenticated()">
-            <%@ include file="context/contextMenu.jsp" %>
-        </security:authorize>
         <security:authorize url="/app/dashboard/*">
-            <%@ include file="secured/dashboard_navigation.jsp" %>
+            <li>
+                <a href="<s:url value="/app/dashboard/"/>">
+                    <i class="fa fa-color fa-dashboard"></i><s:message code="label.nav.dashboard"/>
+                </a>
+            </li>
         </security:authorize>
         <security:authorize url="/app/garage/*">
-            <%@ include file="secured/garage_navigation.jsp" %>
+            <li>
+                <a href="<s:url value="/app/garage/"/>">
+                    <i class="glyphicon glyphicon-briefcase"></i><s:message code="label.nav.management"/>
+                </a>
+            </li>
         </security:authorize>
         <security:authorize url="/app/admin/*">
-            <%@ include file="secured/admin_navigation.jsp" %>
+            <li>
+                <a href="<s:url value="/app/admin/"/>">
+                    <i class="glyphicon glyphicon-tower"></i><s:message code="label.nav.admin"/>
+                </a>
+            </li>
         </security:authorize>
         <li>
             <s:message code="label.nav.free.reports" var="freeReportsLabel"/>
