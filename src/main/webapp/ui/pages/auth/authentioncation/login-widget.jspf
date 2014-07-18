@@ -52,9 +52,7 @@
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             <p><input type="submit" class="login-button" value="<s:message code="button.login"/>"></p>
-
             <p><a href="<s:url value="/app/auth/forgotten/password"/>"><s:message code="sa.msg.forgotPassword"/></a></p>
-
             <p><a href="<s:url value="/app/auth/register"/>"><s:message code="sa.msg.register"/></a></p>
         </div>
     </div>

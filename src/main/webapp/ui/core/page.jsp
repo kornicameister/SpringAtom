@@ -33,7 +33,7 @@
 <div class="content-wrapper container">
     <div class="col-lg-12">
         <tiles:insertAttribute name="header"/>
-        <tiles:insertAttribute name="content"/>
+        <section ui-view></section>
     </div>
 </div>
 </body>

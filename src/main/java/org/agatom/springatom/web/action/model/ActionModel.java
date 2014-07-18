@@ -31,30 +31,8 @@ import java.util.Set;
 public class ActionModel
 		extends AbstractAction {
 	private static final long        serialVersionUID = -4880614509556359333L;
-	private              String      name             = null;
 	private              String      description      = null;
 	private              Set<Action> content          = null;
-
-	/**
-	 * <p>Getter for the field <code>name</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * <p>Setter for the field <code>name</code>.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 *
-	 * @return a {@link org.agatom.springatom.web.action.model.ActionModel} object.
-	 */
-	public ActionModel setName(final String name) {
-		this.name = name;
-		return this;
-	}
 
 	/**
 	 * <p>Getter for the field <code>description</code>.</p>
@@ -100,14 +78,24 @@ public class ActionModel
 
 	/** {@inheritDoc} */
 	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.addValue(this.getId())
+				.addValue(description)
+				.addValue(content)
+				.toString();
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public String getId() {
-		return this.name;
+		return this.getName();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(name, description, content);
+		return Objects.hashCode(this.getId(), description, content);
 	}
 
 	/** {@inheritDoc} */
@@ -118,18 +106,10 @@ public class ActionModel
 
 		ActionModel that = (ActionModel) o;
 
-		return Objects.equal(this.name, that.name) &&
+		return Objects.equal(this.getId(), that.getId()) &&
 				Objects.equal(this.description, that.description) &&
 				Objects.equal(this.content, that.content);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this)
-				.addValue(name)
-				.addValue(description)
-				.addValue(content)
-				.toString();
-	}
+
 }

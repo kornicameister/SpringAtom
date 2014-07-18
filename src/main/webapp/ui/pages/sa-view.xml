@@ -22,22 +22,38 @@
 
 <tiles-definitions>
 
+    <definition name="springatom.tiles.index" extends="ui.core.Page"/>
+    <definition name="springatom.tiles.home" template="/ui/pages/home.jsp"/>
+    <definition name="springatom.tiles.about" template="/ui/pages/about.jsp"/>
 
+    <definition name="springatom.tiles.garage" template="/ui/pages/garage/panel.jsp"/>
+    <definition name="springatom.tiles.garage.lifts" template="/ui/pages/garage/lifts/panel.jsp"/>
+    <definition name="springatom.tiles.garage.mechanics" template="/ui/pages/garage/mechanics/panel.jsp"/>
+
+    <definition name="springatom.tiles.dashboard" template="/ui/pages/dashboard/panel.jsp"/>
+    <definition name="springatom.tiles.dashboard.cars" template="/ui/pages/dashboard/cars/panel.jsp"/>
+    <definition name="springatom.tiles.dashboard.calendar" template="/ui/pages/dashboard/calendar/panel.jsp"/>
+    <definition name="springatom.tiles.dashboard.clients" template="/ui/pages/dashboard/clients/panel.jsp"/>
+    <definition name="springatom.tiles.dashboard.reports" template="/ui/pages/dashboard/reports/panel.jsp"/>
+    <definition name="springatom.tiles.dashboard.reports.Download"
+                template="/ui/pages/dashboard/reports/download_report.jsp"/>
+
+    <!-- springatom.tiles.auth.* -->
+    <definition name="springatom.tiles.auth.register" template="/ui/pages/auth/register.jsp"/>
     <definition name="springatom.tiles.auth.action.login" template="/ui/pages/auth/actions/loginAction.jsp"/>
     <definition name="springatom.tiles.auth.action.logout" template="/ui/pages/auth/actions/logoutAction.jsp"/>
-
-    <definition name="springatom.tiles.auth.login" extends="ui.core.Page">
-        <put-attribute name="content" value="/ui/pages/auth/login.jsp"/>
-    </definition>
-
+    <definition name="springatom.tiles.auth.login" template="/ui/pages/auth/login.jsp"/>
     <definition name="springatom.tiles.auth.login.failed" extends="springatom.tiles.auth.login">
         <put-attribute name="error" value="/ui/pages/auth/error_login_failed.jsp"/>
     </definition>
     <definition name="springatom.tiles.auth.access.denied" extends="springatom.tiles.auth.login">
         <put-attribute name="error" value="/ui/pages/auth/error_access_is_denied.jsp"/>
     </definition>
-    <definition name="springatom.tiles.auth.register" extends="ui.core.Page">
-        <put-attribute name="content" value="/ui/pages/auth/register.jsp"/>
-    </definition>
+    <!-- springatom.tiles.auth.* -->
+
+    <definition name="springatom.tiles.admin" template="/ui/pages/admin/panel.jsp"/>
+    <definition name="springatom.tiles.admin.db" template="/ui/pages/admin/db/panel.jsp"/>
+    <definition name="springatom.tiles.admin.language" template="/ui/pages/admin/language/panel.jsp"/>
+    <definition name="springatom.tiles.admin.settings" template="/ui/pages/admin/language/panel.jsp"/>
 
 </tiles-definitions>

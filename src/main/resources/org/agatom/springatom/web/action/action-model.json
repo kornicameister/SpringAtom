@@ -5,7 +5,7 @@
 			"description": "Main navigation",
 			"actions"    : [
 				{
-					"index": 0,
+					"index"         : 0,
 					"name"          : "home",
 					"resourceBundle": "label.nav.index",
 					"iconClass"     : "glyphicon glyphicon-home",
@@ -58,7 +58,7 @@
 				},
 				{
 					"index": 4,
-					"name"          : "home",
+					"name" : "about",
 					"resourceBundle": "label.nav.about",
 					"iconClass"     : "glyphicon-question-sign",
 					"command"       : {

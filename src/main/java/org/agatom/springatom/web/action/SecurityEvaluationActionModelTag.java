@@ -58,20 +58,21 @@ public class SecurityEvaluationActionModelTag
 	@Override
 	public int doStartTag() throws JspException {
 		try {
-			final Set<Action> filtered = FluentIterable.from(this.actionModel.getContent()).filter(new Predicate<Action>() {
-				@Override
-				public boolean apply(final Action input) {
-					final LinkAction linkAction = (LinkAction) input;
-					return authorize(linkAction);
-				}
-			}).toSet();
+			final Set<Action> filtered = FluentIterable
+					.from(this.actionModel.getContent())
+					.filter(new Predicate<Action>() {
+						@Override
+						public boolean apply(final Action input) {
+							final LinkAction linkAction = (LinkAction) input;
+							return authorize(linkAction);
+						}
+					}).toSet();
 
 			if (filtered.isEmpty() && TagLibConfig.isUiSecurityDisabled()) {
 				this.pageContext.getOut().write(TagLibConfig.getSecuredUiPrefix());
 			} else {
 				final String toString = new JSONArray(filtered).toString();
 				this.pageContext.getResponse().setContentType(MediaType.APPLICATION_JSON_VALUE);
-				this.pageContext.getResponse().setContentLength(toString.length());
 				this.pageContext.getOut().write(toString);
 				this.pageContext.getOut().flush();
 			}

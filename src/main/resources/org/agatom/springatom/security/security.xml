@@ -33,7 +33,7 @@
     <http name="security-filter" pattern="/**" auto-config="true" use-expressions="true" access-denied-page="/app/auth/access/denied">
         <!-- free navigation -->
         <intercept-url pattern="/app/" access="permitAll()"/>
-        <intercept-url pattern="/app/reports" access="permitAll()"/>
+        <intercept-url pattern="/app/home" access="permitAll()"/>
         <intercept-url pattern="/app/about" access="permitAll()"/>
         <!-- secured for every pattern like /app/*-->
         <intercept-url pattern="/app/*" access="hasAnyRole('ROLE_CLIENT','ROLE_MECHANIC','ROLE_BOSS')"/>
@@ -56,14 +56,14 @@
         <form-login login-page="/app/auth/login"
                     authentication-failure-url="/app/auth/failed"
                     login-processing-url="/app/auth/login.do"
-                    default-target-url="/app/?action=login&amp;status=true"
+                    default-target-url="/app/#/sa"
                     username-parameter="ares"
                     password-parameter="athena"
                     always-use-default-target="false"/>
         <logout logout-url="/app/auth/logout"
                 invalidate-session="true"
                 delete-cookies="JSESSIONID"
-                logout-success-url="/app/?action=logout&amp;status=true"/>
+                logout-success-url="/app/"/>
         <anonymous enabled="true" granted-authority="ROLE_DATA_ACCESS" key="anonymous"/>
         <remember-me use-secure-cookie="true"
                      user-service-ref="SUserService"
@@ -72,7 +72,6 @@
                      data-source-ref="dataSource"/>
         <!-- login related configuration -->
     </http>
-
 
     <beans:bean id="securedPasswordEncoder"
                 class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>

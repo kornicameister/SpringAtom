@@ -1,5 +1,5 @@
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                 ~
   ~                                                                                              ~
   ~ [SpringAtom] is free software: you can redistribute it and/or modify                         ~
   ~ it under the terms of the GNU General Public License as published by                         ~
@@ -15,10 +15,8 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
-
-<li id="login-action">
-    <a ui-sref="login" title="<s:message code="button.login"/>">
-        <i class="glyphicon glyphicon-log-in"></i>&nbsp;<s:message code="label.authentication.loginAction"/>
-    </a>
-</li>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<section>
+    <img src="<s:url value="/static/images/agatom_logo.png"/>">
+</section>

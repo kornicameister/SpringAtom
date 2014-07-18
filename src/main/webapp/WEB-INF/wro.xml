@@ -17,12 +17,7 @@
 <groups xmlns="http://www.isdc.ro/wro">
 
     <group name="springatom_resources">
-        <js>/app/static/js/sa-core.js</js>
-        <js>/app/static/js/sa-auth.js</js>
-        <js>/app/static/js/sa-breadcrumb.js</js>
-        <js>/app/static/js/sa-calendar.js</js>
-        <js>/app/static/js/sa-wizards.js</js>
-        <!--<js>/app/static/js/sa-components.js</js>-->
+        <js>/app/static/sa/app/sa-core.js</js>
     </group>
 
     <group name="springatom-libs">

@@ -43,9 +43,6 @@
     <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
         <property name="paramName" value="#{webProperties['sa.locale.requestParam']}"/>
     </bean>
-    <bean id="themeChangeInterceptor" class="org.springframework.web.servlet.theme.ThemeChangeInterceptor">
-        <property name="paramName" value="#{webProperties['sa.theme.requestParam']}"/>
-    </bean>
     <bean id="infoPageInterceptor"
           class="org.agatom.springatom.web.component.infopages.interceptor.InfoPageInterceptor"/>
 
@@ -57,7 +54,6 @@
         </mvc:interceptor>
         <ref bean="scdrViewInterceptor"/>
         <ref bean="localeChangeInterceptor"/>
-        <ref bean="themeChangeInterceptor"/>
     </mvc:interceptors>
 
 </beans>

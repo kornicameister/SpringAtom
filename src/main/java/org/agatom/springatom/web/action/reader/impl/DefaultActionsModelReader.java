@@ -75,10 +75,10 @@ public class DefaultActionsModelReader
 		if (map == null) {
 			throw new NotFoundException(String.format("No action model found for key=%s", name));
 		}
-		return new ActionModel()
-				.setName(map.node.findValue("name").textValue())
+		return (ActionModel) new ActionModel()
+				.setContent(this.resolveContent(map, Sets.<Action>newTreeSet()))
 				.setDescription(map.node.findValue("description").textValue())
-				.setContent(this.resolveContent(map, Sets.<Action>newTreeSet()));
+				.setName(map.node.findValue("name").textValue());
 	}
 
 	private Set<Action> resolveContent(final ActionModelReferenceMap map, final Set<Action> actions) {
@@ -126,6 +126,7 @@ public class DefaultActionsModelReader
 			}
 		}
 		if (action != null) {
+			action.setName(node.get("name").textValue());
 			action.setUrl(command.get("url").textValue());
 			action.setLabel(this.getLabel(node.get(RESOURCE_BUNDLE_KEY).textValue()));
 			if (node.has("iconClass")) {

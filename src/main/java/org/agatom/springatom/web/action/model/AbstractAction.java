@@ -40,6 +40,16 @@ public class AbstractAction
 	private              short               order            = -1;
 	private              ActionSecurityCheck security         = NO_SECURITY;
 	private              String              iconClass        = null;
+	private String name = null;
+
+	public String getName() {
+		return name;
+	}
+
+	public AbstractAction setName(final String name) {
+		this.name = name;
+		return this;
+	}
 
 	@Override
 	public short getOrder() {
