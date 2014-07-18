@@ -153,8 +153,8 @@
 		sp.registerViewState({
 			name   : 'dashboards',
 			mapping: {
-				url        : '/sa/dashboards',
-				templateUrl: '/app/dashboards'
+				url        : '/sa/dashboard',
+				templateUrl: '/app/dashboard'
 			}
 		});
 		sp.registerViewState({
