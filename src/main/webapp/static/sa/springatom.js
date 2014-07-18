@@ -18,6 +18,55 @@
 (function SpringAtom() {
 	"use strict";
 
-	angular.module('springatom', ['springatom.nav']);
+	var app = angular.module('springatom', ['springatom.nav']),
+		urlHelperProvider = function URLHelperProvider() {
+			var _urlParams = function (url) {
+					if (!url || (url.indexOf("?") < 0 && url.indexOf("&") < 0)) {
+						return {};
+					}
+					var params = url.substr(url.indexOf("?") + 1);
+					return _urlDecode(params);
+				},
+				_urlDecode = function (string, overwrite) {
+					var obj = {},
+						pairs = string.split('&'),
+						name,
+						value;
+					angular.each(pairs, function (pair) {
+						pair = pair.split('=');
+						name = decodeURIComponent(pair[0]);
+						value = decodeURIComponent(pair[1]);
+						obj[name] = overwrite || !obj[name] ? value : [].concat(obj[name]).concat(value);
+					});
+					return obj;
+				};
+
+			this.$get = function () {
+				return {
+					urlParams: _urlParams,
+					urlDecode: _urlDecode
+				}
+			}
+		};
+
+	app.provider('urlHelper', urlHelperProvider);
+
+	(function initStringExtension() {
+		String.prototype.startsWith = function (str) {
+			var length = str.length;
+			return this.substring(0, length) === str;
+		};
+		String.prototype.endsWith = function (str) {
+			var length = this.length;
+			return this.substring(length - 1, length) === str;
+		};
+		String.prototype.removeFromBeginning = function (count) {
+			return this.substring(count);
+		};
+		String.prototype.removeFromEnd = function (count) {
+			var length = this.length;
+			return this.substring(0, length - count);
+		};
+	}());
 
 }());
