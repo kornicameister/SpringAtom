@@ -28,7 +28,10 @@
 		"ng-grid"            : "latest",
 		"angular-bootstrap"  : "latest",
 		"angular-ui-router"  : "latest",
-		"angular-ui-calendar": "latest"
+		"angular-ui-calendar": "latest",
+		"angular-animate"    : "latest",
+		"jasny-bootstrap"    : "latest",
+		"jsface"             : "latest"
 	},
 	"resolutions" : {
 		"jquery": "~2.x"

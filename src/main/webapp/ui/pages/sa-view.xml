@@ -56,4 +56,15 @@
     <definition name="springatom.tiles.admin.language" template="/ui/pages/admin/language/panel.jsp"/>
     <definition name="springatom.tiles.admin.settings" template="/ui/pages/admin/language/panel.jsp"/>
 
+    <!-- components -->
+    <definition name="ui.nav.Navigator" template="/ui/navigator/navigator.jsp"/>
+    <definition name="springatom.tiles.ip.AInfoPage" template="/ui/ip/angular_template.jsp"/>
+    <!-- components -->
+
+    <!-- meta chunks -->
+    <definition name="ui.meta.Head" template="/ui/meta/head.jsp"/>
+    <definition name="ui.meta.head.JS" template="/ui/meta/js.jsp"/>
+    <definition name="ui.meta.head.CSS" template="/ui/meta/css.jsp"/>
+    <!-- meta chunks -->
+
 </tiles-definitions>

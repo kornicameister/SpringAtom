@@ -15,37 +15,11 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-.x-info-page {
-    width   : 100%;
-    height  : 100%;
-    display : block;
-}
-
-.x-ip-panel {
-    display       : block;
-    width         : 90%;
-    padding-top   : 10px;
-    margin        : 0 auto;
-    align-content : center;
-}
-
-.x-ip-attr {
-    width         : 750px;
-    align-content : center;
-    display       : flex;
-}
-
-.x-ip-attr-value {
-    font-weight : lighter;
-    font : monospace !important;
-}
-
-.x-ip-attr-value i {
-    float : right;
-}
-
 .x-ip-attr-label {
     font-weight : bolder;
-    min-width : 150px;
-    color     : #000cc6;
+    color : #000cc6;
+}
+
+.x-ip-header > i {
+    margin-right : 15px;
 }
