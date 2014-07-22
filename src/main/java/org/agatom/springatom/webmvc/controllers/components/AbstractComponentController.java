@@ -191,11 +191,4 @@ abstract class AbstractComponentController {
 		return this.errorResponse(npe, HttpStatus.UNPROCESSABLE_ENTITY);
 	}
 
-	/**
-	 * Describes what sort of conversion is being applied. Used when constructing {@link org.agatom.springatom.webmvc.controllers.components.data.CmpResource}
-	 */
-	private static enum ConvertMode {
-		DEFINITION,
-		DATA
-	}
 }
