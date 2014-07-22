@@ -23,11 +23,11 @@ import com.google.common.collect.Maps;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 import org.agatom.springatom.web.component.infopages.builder.InfoPageResponseWrapper;
-import org.agatom.springatom.web.component.infopages.elements.InfoPageComponent;
 import org.agatom.springatom.web.component.table.TableResponseRow;
 import org.agatom.springatom.web.component.table.TableResponseWrapper;
-import org.agatom.springatom.web.component.table.elements.TableComponent;
-import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTable;
+import org.agatom.springatom.webmvc.controllers.components.data.CmpDataResource;
+import org.agatom.springatom.webmvc.controllers.components.data.CmpDefinitionResource;
+import org.agatom.springatom.webmvc.controllers.components.data.CmpResource;
 import org.agatom.springatom.webmvc.converters.du.ConvertibleValueWrapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +42,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -52,23 +54,15 @@ import java.util.Map;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 29.05.14</small>
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.3
  * @since 0.0.1
  */
 @Component
 @Role(BeanDefinition.ROLE_APPLICATION)
 @Scope(BeanDefinition.SCOPE_SINGLETON)
-public class CDRReturnValueConverter {
+class CDRReturnValueConverter {
 	private static final Logger                      LOGGER            = Logger.getLogger(CDRReturnValueConverter.class);
-	private static final String                      BUILT_BY          = "builtBy";
-	private static final String                      SUCCESS           = "success";
-	private static final String                      TIME              = "time";
-	private static final String                      ERROR             = "error";
-	private static final String                      SIZE              = "size";
-	private static final String                      DATA              = "data";
-	private static final String                      META_DATA         = "metaData";
-	private static final String                      NO_DATA           = "[no_data_found]";
-	private static final String                      MESSAGE           = "message";
+	private static final String NO_DATA = "NO_DATA";
 	@Autowired
 	@Qualifier("springAtomConversionService")
 	private              FormattingConversionService conversionService = null;
@@ -81,30 +75,43 @@ public class CDRReturnValueConverter {
 	 *
 	 * @return a {@link java.util.Map} object.
 	 */
-	public Map<String, Object> convert(final ComponentDataResponse response, final ComponentDataRequest request) {
+	public CmpResource<?> convert(final ComponentDataResponse response, final ComponentDataRequest request) {
 		LOGGER.trace(String.format("convert(returnValue=%s)", response));
 
-		final Map<String, Object> value = Maps.newHashMap();
+		final CmpResource<?> resource;
+
 		final Object data = response.getData();
+		final Object convertedData = this.getConvertedValue(data, request);
+
+		if (convertedData == null) {
+			resource = new CmpResource<Object>(new Wrapper(NO_DATA)) {
+				private static final long serialVersionUID = 2507309187326175301L;
+			};
+		} else if (ClassUtils.isAssignableValue(org.agatom.springatom.web.component.core.Component.class, convertedData)) {
+			LOGGER.trace("Data recognized as definition of Component");
+			resource = new CmpDefinitionResource(new Wrapper(convertedData));
+		} else {
+			LOGGER.trace("Data recognized as data");
+			resource = new CmpDataResource(new Wrapper(convertedData));
+		}
 
 		try {
-			value.put(BUILT_BY, response.getBuiltBy());
-			value.put(SUCCESS, response.isSuccess());
-			value.put(TIME, response.getTime());
+			resource.setBuiltBy(response.getBuiltBy());
+			resource.setTime(response.getTime());
+			resource.setSuccess(response.isSuccess());
+			resource.setMessage(this.getConversionMessage(data, response, request));
+			resource.setSize(this.getSize(convertedData));
+
 			if (!response.isSuccess() && data == null) {
-				value.put(ERROR, response.getError());
-				value.put(SIZE, 0);
-			} else {
-				this.getConvertedValue(data, request, value);
-				value.put(SIZE, this.getSizeOfData(data, request.getComponent()));
+				resource.setError(response.getError());
 			}
-			value.put(MESSAGE, this.getConversionMessage(data, response, request));
+
 		} catch (Exception exp) {
 			LOGGER.fatal(String.format("Failed to convert(data=%s)...", data), exp);
 			throw new ConversionExecutionException(data, response.getClass(), Map.class, exp);
 		}
 
-		return value;
+		return resource;
 	}
 
 	private String getConversionMessage(final Object data, final ComponentDataResponse response, final ComponentDataRequest request) {
@@ -116,17 +123,19 @@ public class CDRReturnValueConverter {
 		);
 	}
 
-	private Object getConvertedValue(final Object value, final ComponentDataRequest request, final Map<String, Object> ret) {
+	private Object getConvertedValue(final Object value, final ComponentDataRequest request) {
 		if (value == null) {
-			return NO_DATA;
+			return null;
 		}
+
 		if (ClassUtils.isAssignableValue(InfoPageResponseWrapper.class, value)) {
-			return ret.put(DATA, this.convertFromInfoPageDataResponse((InfoPageResponseWrapper) value, request));
-		} else if (ClassUtils.isAssignableValue(ExtJSTable.class, value)) {
-			return ret.put(META_DATA, value);
+			return this.convertFromInfoPageDataResponse((InfoPageResponseWrapper) value, request);
+		} else if (ClassUtils.isAssignableValue(org.agatom.springatom.web.component.core.Component.class, value)) {
+			return value;
 		} else if (ClassUtils.isAssignableValue(TableResponseWrapper.class, value)) {
-			return ret.put(DATA, this.convertFromTableResponse((TableResponseWrapper) value, request));
+			return this.convertFromTableResponse((TableResponseWrapper) value, request);
 		}
+
 		throw new IllegalArgumentException(String.format("%s not supported", ClassUtils.getShortName(value.getClass())));
 	}
 
@@ -177,13 +186,32 @@ public class CDRReturnValueConverter {
 		return retData;
 	}
 
-	private Object getSizeOfData(final Object data, final org.agatom.springatom.web.component.core.Component component) {
-		if (ClassUtils.isAssignableValue(TableResponseWrapper.class, data)) {
-			return ((TableResponseWrapper) data).getRows().size();
+	private int getSize(final Object content) {
+		final Class<?> aClass = content.getClass();
+		if (ClassUtils.isPrimitiveWrapperArray(aClass) || ClassUtils.isPrimitiveArray(aClass)) {
+			return Array.getLength(content);
+		} else if (ClassUtils.isAssignableValue(Collection.class, content)) {
+			return ((Collection<?>) content).size();
+		} else if (ClassUtils.isAssignableValue(Map.class, content)) {
+			return ((Map<?, ?>) content).size();
 		}
-		if (ClassUtils.isAssignableValue(InfoPageComponent.class, component) || ClassUtils.isAssignableValue(TableComponent.class, data)) {
-			return 1;
+		return 1;
+	}
+
+	private class Wrapper {
+		private Object data = null;
+
+		public Wrapper(final Object data) {
+			this.data = data;
 		}
-		return ((Map<?, ?>) data).size();
+
+		public Object getData() {
+			return data;
+		}
+
+		public Wrapper setData(final Object data) {
+			this.data = data;
+			return this;
+		}
 	}
 }

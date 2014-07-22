@@ -19,8 +19,10 @@ package org.agatom.springatom.webmvc.controllers.components;
 
 import com.google.common.collect.Maps;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
 import org.agatom.springatom.web.component.core.request.ComponentRequest;
+import org.agatom.springatom.webmvc.controllers.components.data.CmpResource;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,15 +48,36 @@ import java.util.Map;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 02.06.14</small>
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.3
  * @since 0.0.1
  */
 abstract class AbstractComponentController {
-	private static final Logger                     LOGGER            = Logger.getLogger(AbstractComponentController.class);
+	private static final Logger                     LOGGER                  = Logger.getLogger(AbstractComponentController.class);
 	@Autowired
-	protected            ComponentBuilderRepository builderRepository = null;
+	protected            ComponentBuilderRepository builderRepository       = null;
 	@Autowired
-	protected            CDRReturnValueConverter    converter         = null;
+	protected            InfoPageControllerUtils    infoPageControllerUtils = null;
+	@Autowired
+	private              CDRReturnValueConverter    converter               = null;
+
+	/**
+	 * Pushes data through {@link org.agatom.springatom.webmvc.controllers.components.CDRReturnValueConverter}
+	 * which applies web converters logic to the data
+	 *
+	 * @param request component request
+	 * @param data    component raw data
+	 *
+	 * @return adjusted data
+	 *
+	 * @throws ControllerTierException if any
+	 */
+	protected CmpResource<?> toComponentResource(final ComponentDataRequest request, final ComponentDataResponse data) throws ControllerTierException {
+		try {
+			return this.converter.convert(data, request);
+		} catch (Exception exp) {
+			throw new ControllerTierException("Failed to convert data using CDRReturnValueConverter", exp);
+		}
+	}
 
 	/**
 	 * Combines {@link org.agatom.springatom.web.component.core.request.ComponentRequest} and {@link org.springframework.web.context.request.WebRequest}
@@ -109,7 +132,7 @@ abstract class AbstractComponentController {
 	@ResponseBody
 	@ExceptionHandler({ControllerTierException.class})
 	public ResponseEntity<?> handleNPE(final ControllerTierException npe) {
-		return errorResponse(npe, HttpStatus.INTERNAL_SERVER_ERROR);
+		return this.errorResponse(npe, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/**
@@ -165,6 +188,14 @@ abstract class AbstractComponentController {
 	@ResponseBody
 	@ExceptionHandler({ConversionExecutionException.class})
 	public ResponseEntity<?> handleConversionExecutionException(final ConversionExecutionException npe) {
-		return errorResponse(npe, HttpStatus.UNPROCESSABLE_ENTITY);
+		return this.errorResponse(npe, HttpStatus.UNPROCESSABLE_ENTITY);
+	}
+
+	/**
+	 * Describes what sort of conversion is being applied. Used when constructing {@link org.agatom.springatom.webmvc.controllers.components.data.CmpResource}
+	 */
+	private static enum ConvertMode {
+		DEFINITION,
+		DATA
 	}
 }

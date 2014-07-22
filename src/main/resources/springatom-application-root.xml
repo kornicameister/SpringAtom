@@ -60,6 +60,7 @@
         <property name="autoDetectFields" value="true"/>
         <property name="indentOutput" value="false"/>
         <property name="simpleDateFormat" value="YYYY-MM-dd"/>
+        <property name="serializationInclusion" value="NON_EMPTY"/>
         <property name="featuresToDisable">
             <array value-type="java.lang.Enum">
                 <value>com.fasterxml.jackson.databind.SerializationFeature.WRITE_NULL_MAP_VALUES</value>
