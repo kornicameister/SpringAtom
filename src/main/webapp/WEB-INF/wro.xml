@@ -66,6 +66,7 @@
         <css>/app/static/sa/libs/fullcalendar/fullcalendar.css</css>
         <css>/app/static/sa/libs/ng-grid/ng-grid.css</css>
         <css>/app/static/sa/libs/jasny-bootstrap/dist/css/jasny-bootstrap.min.css</css>
+        <css>/app/static/sa/libs/animate.css/animate.min.css</css>
     </group>
     <group name="css-files">
         <css>/app/static/css/core.css</css>

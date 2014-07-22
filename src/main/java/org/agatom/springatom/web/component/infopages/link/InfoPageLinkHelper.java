@@ -17,7 +17,9 @@
 
 package org.agatom.springatom.web.component.infopages.link;
 
+import com.google.common.base.Function;
 import org.agatom.springatom.web.component.infopages.InfoPageNotFoundException;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Persistable;
 import org.springframework.hateoas.Link;
 
@@ -32,6 +34,10 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 public interface InfoPageLinkHelper {
+	/**
+	 * {@code CACHE_KEY} is key of the cache of this {@link org.agatom.springatom.web.component.infopages.link.InfoPageLinkHelper} service
+	 */
+	String CACHE_KEY = "infoPageLinkHelper";
 
 	/**
 	 * Retrieves {@link org.springframework.hateoas.Link} to {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
@@ -74,5 +80,20 @@ public interface InfoPageLinkHelper {
 	 *
 	 * @throws org.agatom.springatom.web.component.infopages.InfoPageNotFoundException if any.
 	 */
+	@Cacheable(value = CACHE_KEY, key = "#request.getRequestURI()", condition = "#request != null")
 	InfoPageRequest toInfoPageRequest(final HttpServletRequest request) throws InfoPageNotFoundException;
+
+	/**
+	 * Retrieves map of parameters from {@link javax.servlet.http.HttpServletRequest} request.
+	 * 2nd param can be used to adjust the path is for instance request for infopage was called from dynamic view.
+	 *
+	 * @param request to extract params
+	 * @param getPath function to extract adjusted path
+	 *
+	 * @return map of params
+	 *
+	 * @throws org.agatom.springatom.web.component.infopages.InfoPageNotFoundException if any.
+	 */
+	@Cacheable(value = CACHE_KEY, key = "#request.getRequestURI()", condition = "#request != null")
+	InfoPageRequest toInfoPageRequest(final HttpServletRequest request, final Function<HttpServletRequest, String> getPath) throws InfoPageNotFoundException;
 }

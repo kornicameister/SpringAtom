@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.web.component.infopages.link;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import org.agatom.springatom.server.model.types.PersistentVersionedBean;
 import org.agatom.springatom.web.component.infopages.InfoPageNotFoundException;
@@ -28,12 +29,13 @@ import org.springframework.context.annotation.Role;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Persistable;
 import org.springframework.hateoas.Link;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriTemplate;
 
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
@@ -46,15 +48,25 @@ import java.util.Map;
  * @version 0.0.3
  * @since 0.0.1
  */
-@Component
+@Service
 @Role(BeanDefinition.ROLE_SUPPORT)
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 class InfoPageLinkHelperImpl
 		implements InfoPageLinkHelper {
-	private static final Logger                 LOGGER              = Logger.getLogger(InfoPageLinkHelperImpl.class);
-	private              UriTemplate            infoPageUriTemplate = null;
+	private static final Logger                               LOGGER              = Logger.getLogger(InfoPageLinkHelperImpl.class);
+	/**
+	 * Returns {@link javax.servlet.http.HttpServletRequest#getRequestURI()} without any modification
+	 */
+	private static final Function<HttpServletRequest, String> GET_PATH            = new Function<HttpServletRequest, String>() {
+		@Nullable
+		@Override
+		public String apply(final HttpServletRequest input) {
+			return input != null ? input.getRequestURI() : "";
+		}
+	};
+	private              UriTemplate                          infoPageUriTemplate = null;
 	@Autowired
-	private              InfoPageMappingService mappingService      = null;
+	private              InfoPageMappingService               mappingService      = null;
 
 	@PostConstruct
 	private UriTemplate getInfoPageUriTemplate() {
@@ -106,11 +118,14 @@ class InfoPageLinkHelperImpl
 	/** {@inheritDoc} */
 	@Override
 	public InfoPageRequest toInfoPageRequest(final HttpServletRequest request) throws InfoPageNotFoundException {
-		final String path = request.getRequestURI();
+		return this.toInfoPageRequest(request, GET_PATH);
+	}
 
-		if (!StringUtils.hasText(path)) {
-			return null;
-		}
+	@Override
+	public InfoPageRequest toInfoPageRequest(final HttpServletRequest request, final Function<HttpServletRequest, String> getPath) throws InfoPageNotFoundException {
+		final String path = getPath.apply(request);
+
+		Assert.hasText(path, "No text in request's path");
 
 		final InfoPageRequest link = new InfoPageRequest(request);
 		final Map<String, String> match = this.infoPageUriTemplate.match(path);

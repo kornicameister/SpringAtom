@@ -29,6 +29,7 @@ import org.agatom.springatom.web.component.infopages.elements.InfoPageComponent;
 import org.agatom.springatom.web.component.infopages.provider.builder.InfoPageComponentBuilderService;
 import org.agatom.springatom.web.component.infopages.request.InfoPageComponentRequest;
 import org.agatom.springatom.web.component.table.request.TableComponentRequest;
+import org.agatom.springatom.webmvc.controllers.components.data.CmpResource;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,10 @@ import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * {@code SVComponentsDataController} receives calls for data for either {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
@@ -50,7 +53,7 @@ import java.util.concurrent.TimeUnit;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 18.05.14</small>
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.3
  * @since 0.0.1
  */
 @Controller
@@ -113,7 +116,9 @@ public class SVComponentsDataController
 			throw new ControllerTierException(String.format("onInfoPageDataRequest(cmpRequest=%s,webRequest=%s) failed...", cmpRequest, webRequest), exp);
 		}
 
-		return this.getConvertedData(request, data);
+		final CmpResource<?> convertedData = this.toComponentResource(request, data);
+		convertedData.add(linkTo(methodOn(SVComponentsDataController.class).onInfoPageDataRequest(cmpRequest, webRequest)).withSelfRel());
+		return convertedData;
 	}
 
 	/**
@@ -134,14 +139,6 @@ public class SVComponentsDataController
 			request.setComponent(infoPage);
 		} else {
 			throw new ControllerTierException(String.format("%s domain is not Persistable class", domain));
-		}
-	}
-
-	private Map<String, Object> getConvertedData(final ComponentDataRequest request, final ComponentDataResponse data) throws ControllerTierException {
-		try {
-			return this.converter.convert(data, request);
-		} catch (Exception exp) {
-			throw new ControllerTierException("Failed to convert data using CDRReturnValueConverter", exp);
 		}
 	}
 
@@ -176,7 +173,9 @@ public class SVComponentsDataController
 			throw new ControllerTierException(String.format("onTableDataRequest(cmpRequest=%s,webRequest=%s) failed...", cmpRequest, webRequest), exp);
 		}
 
-		return this.getConvertedData(request, data);
+		final CmpResource<?> convertedData = this.toComponentResource(request, data);
+		convertedData.add(linkTo(methodOn(SVComponentsDataController.class).onTableDataRequest(builderId, cmpRequest, webRequest)).withSelfRel());
+		return convertedData;
 	}
 
 }

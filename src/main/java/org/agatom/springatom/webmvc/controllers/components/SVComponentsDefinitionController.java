@@ -17,22 +17,35 @@
 
 package org.agatom.springatom.webmvc.controllers.components;
 
+import org.agatom.springatom.core.exception.SException;
 import org.agatom.springatom.web.component.core.builders.Builder;
 import org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 import org.agatom.springatom.web.component.core.data.RequestedBy;
+import org.agatom.springatom.web.component.infopages.elements.InfoPageComponent;
+import org.agatom.springatom.web.component.infopages.link.InfoPageRequest;
+import org.agatom.springatom.web.component.infopages.request.InfoPageComponentRequest;
 import org.agatom.springatom.web.component.table.request.TableDefinitionRequest;
+import org.agatom.springatom.webmvc.controllers.components.data.CmpResource;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+
+import java.util.concurrent.TimeUnit;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * {@code SVComponentsDefinitionController} receives calls for data for either {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
@@ -41,7 +54,7 @@ import org.springframework.web.context.request.WebRequest;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 18.05.14</small>
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.3
  * @since 0.0.1
  */
 @Controller
@@ -50,6 +63,44 @@ import org.springframework.web.context.request.WebRequest;
 public class SVComponentsDefinitionController
 		extends AbstractComponentController {
 	private static final Logger LOGGER = Logger.getLogger(SVComponentsDefinitionController.class);
+
+	@ResponseBody
+	@RequestMapping(
+			value = "/ip/{domain}/{id}",
+			method = RequestMethod.GET,
+			produces = {MediaType.APPLICATION_JSON_VALUE}
+	)
+	public Object onInfoPageConfigRequest(@PathVariable("domain") final String domain, @PathVariable("id") final Long id, final WebRequest webRequest) throws ControllerTierException {
+		LOGGER.debug(String.format("onInfoPageConfigRequest(domain=%s,id=%s)", domain, id));
+		try {
+			final long startTime = System.nanoTime();
+
+			final ServletWebRequest servletWebRequest = (ServletWebRequest) webRequest;
+			final InfoPageRequest pageRequest = this.infoPageControllerUtils.getInfoPageRequest(servletWebRequest.getRequest());
+
+			if (!pageRequest.isValid()) {
+				LOGGER.trace(String.format("InfoPage not located for domain=%s", domain));
+				throw new SException("Computed InfoPageRequest is not valid");
+			}
+
+			final InfoPageComponent ipCmp = this.infoPageControllerUtils.getInfoPageComponent(pageRequest.getObjectClass());
+			final InfoPageComponentRequest ipCmpRequest = this.infoPageControllerUtils.getInfoPageComponentRequest(ipCmp, pageRequest);
+
+			final ComponentDataRequest dataRequest = this.combineRequest(ipCmpRequest, webRequest);
+			dataRequest.setRequestedBy(RequestedBy.INFOPAGE);
+			final ComponentDataResponse dataResponse = ComponentDataResponse.success(ClassUtils.getShortName(this.getClass()), ipCmp, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime));
+
+			final CmpResource<?> convertedData = this.toComponentResource(dataRequest, dataResponse);
+			convertedData.add(linkTo(methodOn(SVComponentsDefinitionController.class).onInfoPageConfigRequest(domain, id, null)).withSelfRel());
+
+			LOGGER.info(String.format("For %s returning data %s in %dms", ipCmpRequest, convertedData, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)));
+
+			return convertedData;
+		} catch (Exception exp) {
+			LOGGER.error(String.format("onInfoPageDataRequest(domain=%s) threw %s", domain, ClassUtils.getShortName(exp.getClass())), exp);
+			throw new ControllerTierException(exp);
+		}
+	}
 
 	/**
 	 * Returns {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder#getDefinition(org.agatom.springatom.web.component.core.data.ComponentDataRequest)}.
@@ -82,7 +133,10 @@ public class SVComponentsDefinitionController
 
 			final ComponentDataRequest request = this.combineRequest(new TableDefinitionRequest().setBuilderId(builderId), webRequest);
 			request.setRequestedBy(RequestedBy.TABLE);
-			return this.converter.convert(definitionBuilder.getDefinition(request), request);
+
+			final CmpResource<?> resource = this.toComponentResource(request, definitionBuilder.getDefinition(request));
+			resource.add(linkTo(methodOn(SVComponentsDefinitionController.class).onTableConfigRequest(builderId, webRequest)).withSelfRel());
+			return resource;
 
 		} catch (Exception exp) {
 			LOGGER.error(String.format("onTableConfigRequest(builderId=%s,webRequest=%s) failed...", builderId, webRequest), exp);
