@@ -23,9 +23,9 @@ import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
+import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
 import org.agatom.springatom.web.component.table.elements.ng.NgTable;
-import org.agatom.springatom.web.component.table.elements.ng.NgTableColumn;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.util.StringUtils;
 
@@ -33,7 +33,7 @@ import org.springframework.util.StringUtils;
  * <p>CarsTableBuilder class.</p>
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.3
  * @since 0.0.1
  */
 @EntityBased(entity = SCar.class)
@@ -55,33 +55,16 @@ public class CarsTableBuilder
 	protected NgTable buildDefinition(final ComponentDataRequest dataRequest) {
 
 		final QSCar car = QSCar.sCar;
-		final NgTable table = new NgTable(TABLE_ID, BUILDER_ID);
 		final LocalizedClassModel<SCar> lModel = this.getLocalizedClassModel();
-
-		table.setBorder(false)
-				.setSortableColumns(true)
+		final NgTable table = new NgTable(TABLE_ID, BUILDER_ID)
+				.setBorder(false)
+				.setSortable(true)
 				.setCollapsible(false);
 
-		table.addContent(
-				new NgTableColumn()
-						.setDataIndex(this.getAttributeName(car.id))
-						.setText(lModel.getLocalizedAttribute(this.getAttributeName(car.id)))
-		);
-		table.addContent(
-				new NgTableColumn()
-						.setDataIndex(this.getAttributeName(car.owner))
-						.setText(lModel.getLocalizedAttribute(this.getAttributeName(car.owner)))
-		);
-		table.addContent(
-				new NgTableColumn()
-						.setDataIndex(this.getAttributeName(car.licencePlate))
-						.setText(lModel.getLocalizedAttribute(this.getAttributeName(car.licencePlate)))
-		);
-		table.addContent(
-				new NgTableColumn()
-						.setDataIndex(this.getAttributeName(car.vinNumber))
-						.setText(lModel.getLocalizedAttribute(this.getAttributeName(car.vinNumber)))
-		);
+		table.addContent(this.newColumn(car.id, AttributeDisplayAs.VALUE_ATTRIBUTE, lModel));
+		table.addContent(this.newColumn(car.owner, AttributeDisplayAs.VALUE_ATTRIBUTE, lModel));
+		table.addContent(this.newColumn(car.licencePlate, AttributeDisplayAs.VALUE_ATTRIBUTE, lModel));
+		table.addContent(this.newColumn(car.vinNumber, AttributeDisplayAs.VALUE_ATTRIBUTE, lModel));
 
 		return null;
 	}

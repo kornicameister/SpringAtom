@@ -24,7 +24,7 @@ import org.agatom.springatom.web.component.core.elements.ContentComponent;
  * <p>Abstract TableComponent class.</p>
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.3
  * @since 0.0.1
  */
 abstract public class TableComponent<T extends TableColumnComponent>
@@ -32,8 +32,6 @@ abstract public class TableComponent<T extends TableColumnComponent>
 	private static final long    serialVersionUID = 3527305242535311855L;
 	protected            String  tableId          = null;
 	protected            String  builderId        = null;
-	protected            int     rowsOnPage       = 10;
-	protected            boolean filterable       = true;
 
 	public TableComponent() {
 		// default constructor
@@ -100,8 +98,6 @@ abstract public class TableComponent<T extends TableColumnComponent>
 	public String toString() {
 		return Objects.toStringHelper(this)
 				.addValue(tableId)
-				.addValue(rowsOnPage)
-				.addValue(filterable)
 				.addValue(content)
 				.addValue(label)
 				.toString();

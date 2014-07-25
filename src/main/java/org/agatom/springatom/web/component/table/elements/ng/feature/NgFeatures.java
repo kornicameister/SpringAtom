@@ -18,67 +18,78 @@
 package org.agatom.springatom.web.component.table.elements.ng.feature;
 
 /**
- * {@code NgSummaryFeature} corresponds to the <a href="http://docs.sencha.com/ng/4.2.2/#!/api/Ext.grid.feature.Summary">Ext.grid.feature.Summary</a>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-07-25</small>
  *
- * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
- *
- * @author kornicameister
+ * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-public class NgSummaryFeature
-		extends AbstractNgTableFeature {
-	private static final long    serialVersionUID = 4363888471601789083L;
-	protected            String  remoteRoot       = "";
-	protected            boolean showSummaryRow   = true;
-
-	/**
-	 * <p>Constructor for NgSummaryFeature.</p>
-	 */
-	public NgSummaryFeature() {
-		super(NgFeatures.SUMMARY);
+public enum NgFeatures
+		implements NgFeaturePropertyBased {
+	GROUPING {
+		@Override
+		public boolean isPropertyBased() {
+			return true;
+		}
+	},
+	PAGING {
+		@Override
+		public boolean isPropertyBased() {
+			return true;
+		}
+	},
+	SUMMARY {
+		@Override
+		public boolean isPropertyBased() {
+			return true;
+		}
+	},
+	EDITABLE {
+		@Override
+		public boolean isPropertyBased() {
+			return false;
+		}
+	},
+	PINNING {
+		@Override
+		public boolean isPropertyBased() {
+			return false;
+		}
+	},
+	ROW_REORDER {
+		@Override
+		public boolean isPropertyBased() {
+			return false;
+		}
+	},
+	FOOTER {
+		@Override
+		public boolean isPropertyBased() {
+			return false;
+		}
+	},
+	FILTER {
+		@Override
+		public boolean isPropertyBased() {
+			return false;
+		}
+	},
+	COLUMN_MENU {
+		@Override
+		public boolean isPropertyBased() {
+			return false;
+		}
+	},
+	SORTABLE {
+		@Override
+		public boolean isPropertyBased() {
+			return false;
+		}
+	},
+	ROW_NUMBERER {
+		@Override
+		public boolean isPropertyBased() {
+			return false;
+		}
 	}
-
-	/**
-	 * <p>Getter for the field <code>remoteRoot</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getRemoteRoot() {
-		return remoteRoot;
-	}
-
-	/**
-	 * <p>Setter for the field <code>remoteRoot</code>.</p>
-	 *
-	 * @param remoteRoot a {@link java.lang.String} object.
-	 *
-	 * @return a {@link NgSummaryFeature} object.
-	 */
-	public NgSummaryFeature setRemoteRoot(final String remoteRoot) {
-		this.remoteRoot = remoteRoot;
-		return this;
-	}
-
-	/**
-	 * <p>isShowSummaryRow.</p>
-	 *
-	 * @return a boolean.
-	 */
-	public boolean isShowSummaryRow() {
-		return showSummaryRow;
-	}
-
-	/**
-	 * <p>Setter for the field <code>showSummaryRow</code>.</p>
-	 *
-	 * @param showSummaryRow a boolean.
-	 *
-	 * @return a {@link NgSummaryFeature} object.
-	 */
-	public NgSummaryFeature setShowSummaryRow(final boolean showSummaryRow) {
-		this.showSummaryRow = showSummaryRow;
-		return this;
-	}
-
 }

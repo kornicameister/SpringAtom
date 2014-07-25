@@ -27,6 +27,7 @@ import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisp
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
 import org.agatom.springatom.web.component.table.elements.ng.NgTable;
 import org.agatom.springatom.web.component.table.elements.ng.NgTableColumn;
+import org.agatom.springatom.web.component.table.elements.ng.feature.NgPagingFeature;
 import org.agatom.springatom.web.component.table.elements.ng.feature.NgSummaryFeature;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.util.StringUtils;
@@ -35,7 +36,7 @@ import org.springframework.util.StringUtils;
  * <p>AppointmentsTableBuilder class.</p>
  *
  * @author kornicameister
- * @version 0.0.2
+ * @version 0.0.3
  * @since 0.0.1
  */
 @EntityBased(entity = SAppointment.class)
@@ -55,7 +56,8 @@ public class AppointmentsTableBuilder
 
 		table.setBorder(false)
 				.addFeature(new NgSummaryFeature().setRemoteRoot(this.getAttributeName(appointment.car)))
-				.setSortableColumns(true);
+				.addFeature(new NgPagingFeature().setPageSize((short) 100))
+				.setSortable(true);
 
 		table.addContent(
 				new NgTableColumn()

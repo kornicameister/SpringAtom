@@ -17,68 +17,41 @@
 
 package org.agatom.springatom.web.component.table.elements.ng.feature;
 
+import com.google.common.base.Objects;
+
 /**
- * {@code NgSummaryFeature} corresponds to the <a href="http://docs.sencha.com/ng/4.2.2/#!/api/Ext.grid.feature.Summary">Ext.grid.feature.Summary</a>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-07-25</small>
  *
- * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
- *
- * @author kornicameister
+ * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-public class NgSummaryFeature
+public class NgPagingFeature
 		extends AbstractNgTableFeature {
-	private static final long    serialVersionUID = 4363888471601789083L;
-	protected            String  remoteRoot       = "";
-	protected            boolean showSummaryRow   = true;
+	private static final long  serialVersionUID = 3782728265240676167L;
+	private              short pageSize         = 0;
 
 	/**
-	 * <p>Constructor for NgSummaryFeature.</p>
+	 * <p>Constructor for AbstractNgTableFeature.</p>
 	 */
-	public NgSummaryFeature() {
-		super(NgFeatures.SUMMARY);
+	public NgPagingFeature() {
+		super(NgFeatures.PAGING);
 	}
 
-	/**
-	 * <p>Getter for the field <code>remoteRoot</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getRemoteRoot() {
-		return remoteRoot;
+	public short getPageSize() {
+		return pageSize;
 	}
 
-	/**
-	 * <p>Setter for the field <code>remoteRoot</code>.</p>
-	 *
-	 * @param remoteRoot a {@link java.lang.String} object.
-	 *
-	 * @return a {@link NgSummaryFeature} object.
-	 */
-	public NgSummaryFeature setRemoteRoot(final String remoteRoot) {
-		this.remoteRoot = remoteRoot;
+	public NgPagingFeature setPageSize(final short pageSize) {
+		this.pageSize = pageSize;
 		return this;
 	}
 
-	/**
-	 * <p>isShowSummaryRow.</p>
-	 *
-	 * @return a boolean.
-	 */
-	public boolean isShowSummaryRow() {
-		return showSummaryRow;
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.add("pageSize", pageSize)
+				.add("ftype", ftype)
+				.toString();
 	}
-
-	/**
-	 * <p>Setter for the field <code>showSummaryRow</code>.</p>
-	 *
-	 * @param showSummaryRow a boolean.
-	 *
-	 * @return a {@link NgSummaryFeature} object.
-	 */
-	public NgSummaryFeature setShowSummaryRow(final boolean showSummaryRow) {
-		this.showSummaryRow = showSummaryRow;
-		return this;
-	}
-
 }

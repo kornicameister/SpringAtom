@@ -54,7 +54,7 @@ public class ContactsForPersonTableBuilder
 		final LocalizedClassModel<SPersonContact> lModel = this.getLocalizedClassModel();
 
 		table.setBorder(false)
-				.setSortableColumns(true)
+				.setSortable(true)
 				.setCollapsible(false);
 
 		table.addContent(

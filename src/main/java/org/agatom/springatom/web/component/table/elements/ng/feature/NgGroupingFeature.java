@@ -43,7 +43,7 @@ public class NgGroupingFeature
 	 * <p>Constructor for NgGroupingFeature.</p>
 	 */
 	public NgGroupingFeature() {
-		super(Feature.GROUPING);
+		super(NgFeatures.GROUPING);
 	}
 
 	/**

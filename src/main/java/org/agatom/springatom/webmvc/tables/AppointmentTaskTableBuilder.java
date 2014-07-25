@@ -57,7 +57,7 @@ public class AppointmentTaskTableBuilder
 
 		table.setBorder(false)
 				.addFeature(new NgSummaryFeature().setRemoteRoot(this.getAttributeName(task.type)))
-				.setSortableColumns(true)
+				.setSortable(true)
 				.setCollapsible(false);
 
 		table.addContent(

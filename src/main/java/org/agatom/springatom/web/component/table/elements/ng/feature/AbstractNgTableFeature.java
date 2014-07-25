@@ -18,6 +18,7 @@
 package org.agatom.springatom.web.component.table.elements.ng.feature;
 
 import com.google.common.base.Objects;
+import org.springframework.util.Assert;
 
 /**
  * {@code AbstractNgTableFeature} is a foundation for features of {@link org.agatom.springatom.web.component.table.elements.ng.NgTable}
@@ -30,19 +31,27 @@ import com.google.common.base.Objects;
  */
 abstract class AbstractNgTableFeature
 		implements NgTableFeature {
-	private static final long   serialVersionUID = 8485389573075863861L;
+	private static final long serialVersionUID = 8485389573075863861L;
 	/**
 	 * {@code ftype} is a property of the <b>feature</b>, uniquely identifying it to the ExtJS
 	 */
-	private              String ftype            = null;
+	protected final String     ftype;
+	protected final NgFeatures id;
 
 	/**
 	 * <p>Constructor for AbstractNgTableFeature.</p>
 	 *
-	 * @param feature a {@link AbstractNgTableFeature.Feature} object.
+	 * @param feature a {@link NgFeatures} object.
 	 */
-	protected AbstractNgTableFeature(final Feature feature) {
+	protected AbstractNgTableFeature(final NgFeatures feature) {
+		Assert.notNull(feature, "Feature must not be null");
 		this.ftype = feature.name().toLowerCase().replaceAll("_", "");
+		this.id = feature;
+	}
+
+	@Override
+	public NgFeatures getId() {
+		return this.id;
 	}
 
 	/** {@inheritDoc} */
@@ -74,10 +83,5 @@ abstract class AbstractNgTableFeature
 		return Objects.toStringHelper(this)
 				.add("ftype", ftype)
 				.toString();
-	}
-
-	protected static enum Feature {
-		GROUPING,
-		SUMMARY
 	}
 }

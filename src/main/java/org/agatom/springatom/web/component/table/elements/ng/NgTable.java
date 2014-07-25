@@ -18,10 +18,14 @@
 package org.agatom.springatom.web.component.table.elements.ng;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Maps;
 import org.agatom.springatom.web.component.table.elements.TableComponent;
+import org.agatom.springatom.web.component.table.elements.ng.feature.NgFeatures;
 import org.agatom.springatom.web.component.table.elements.ng.feature.NgTableFeature;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -35,30 +39,17 @@ import java.util.Set;
  */
 public class NgTable
 		extends TableComponent<NgTableColumn> {
-	private static final long                serialVersionUID = 614019837253089296L;
-	private              Set<NgTableFeature> features         = null;
-	private              Set<String>         plugins          = null;
-	private              String              store            = null;
-	private              int                 minHeight        = -1;
-	private              int                 maxHeight        = -1;
-	private              boolean             collapsible      = false;
-	private              boolean             sortableColumns  = false;
-	private              boolean             border           = true;
-
-	/**
-	 * <p>Constructor for NgTable.</p>
-	 */
-	public NgTable() {
-		this.initDefaults();
-	}
-
-	private void initDefaults() {
-		super.addContent(new NgTableColumn().setXtype("rownumberer"));
-	}
+	private static final long                    serialVersionUID = 614019837253089296L;
+	private              Map<NgFeatures, Object> features         = null;
+	private              Set<String>             plugins          = null;
+	private              String                  store            = null;
+	private              int                     minHeight        = -1;
+	private              int                     maxHeight        = -1;
+	private              boolean                 collapsible      = false;
+	private              boolean                 border           = true;
 
 	public NgTable(final String tableId, final String builderId) {
 		super(tableId, builderId);
-		this.initDefaults();
 	}
 
 	/**
@@ -83,13 +74,13 @@ public class NgTable
 	 *
 	 * @param feature a {@link org.agatom.springatom.web.component.table.elements.ng.feature.NgTableFeature} object.
 	 *
-	 * @return a {@link NgTable} object.
+	 * @return this {@link org.agatom.springatom.web.component.table.elements.ng.NgTable} object
 	 */
-	public NgTable addFeature(final NgTableFeature feature) {
+	public final NgTable addFeature(final NgTableFeature feature) {
 		if (this.features == null) {
-			this.features = Sets.newHashSet();
+			this.features = Maps.newHashMap();
 		}
-		this.features.add(feature);
+		this.features.put(feature.getId(), feature);
 		return this;
 	}
 
@@ -98,7 +89,7 @@ public class NgTable
 	 *
 	 * @return a {@link java.util.Set} object.
 	 */
-	public Set<NgTableFeature> getFeatures() {
+	public Map<NgFeatures, Object> getFeatures() {
 		return features;
 	}
 
@@ -109,7 +100,7 @@ public class NgTable
 	 *
 	 * @return a {@link NgTable} object.
 	 */
-	public NgTable setFeatures(final Set<NgTableFeature> features) {
+	public NgTable setFeatures(final Map<NgFeatures, Object> features) {
 		this.features = features;
 		return this;
 	}
@@ -159,12 +150,52 @@ public class NgTable
 		return this;
 	}
 
-	public boolean isSortableColumns() {
-		return sortableColumns;
+	public boolean isSortable() {
+		return this.features.containsKey(NgFeatures.SORTABLE);
 	}
 
-	public NgTable setSortableColumns(final boolean sortableColumns) {
-		this.sortableColumns = sortableColumns;
+	public NgTable setSortable(final boolean sortable) {
+		if (sortable && !this.features.containsKey(NgFeatures.SORTABLE)) {
+			this.addFeature(NgFeatures.SORTABLE);
+		} else if (!sortable) {
+			this.removeFeature(NgFeatures.SORTABLE);
+		}
+		return this;
+	}
+
+	/**
+	 * <p>addFeature.</p>
+	 * Adds feature that is not {@link org.agatom.springatom.web.component.table.elements.ng.feature.NgFeaturePropertyBased}
+	 * This method can throw an exception if it is called with a property based feature
+	 *
+	 * @param feature a feature
+	 *
+	 * @return this {@link org.agatom.springatom.web.component.table.elements.ng.NgTable} object
+	 *
+	 * @see org.agatom.springatom.web.component.table.elements.ng.feature.NgFeaturePropertyBased#isPropertyBased()
+	 */
+	public NgTable addFeature(final NgFeatures feature) {
+		Assert.isTrue(!feature.isPropertyBased(), "Cannot add NgFeatures that is propertyBased, use #addFeature(NgTableFeature)");
+		if (this.features == null) {
+			this.features = Maps.newHashMap();
+		}
+		this.features.put(feature, true);
+		return this;
+	}
+
+	/**
+	 * <p>removeFeature.</p>
+	 * Removes the feature
+	 *
+	 * @param features a feature
+	 *
+	 * @return this {@link org.agatom.springatom.web.component.table.elements.ng.NgTable} object
+	 */
+	public NgTable removeFeature(final NgFeatures features) {
+		if (CollectionUtils.isEmpty(this.features)) {
+			return this;
+		}
+		this.features.remove(features);
 		return this;
 	}
 

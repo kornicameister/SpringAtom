@@ -17,6 +17,8 @@
 
 package org.agatom.springatom.web.component.table.elements.ng.feature;
 
+import org.springframework.hateoas.Identifiable;
+
 import java.io.Serializable;
 
 /**
@@ -27,7 +29,7 @@ import java.io.Serializable;
  * @since 0.0.1
  */
 public interface NgTableFeature
-		extends Serializable {
+		extends Identifiable<NgFeatures>, Serializable {
 	/**
 	 * <p>getFtype.</p>
 	 *

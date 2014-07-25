@@ -26,6 +26,7 @@ import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
 import org.agatom.springatom.web.component.table.elements.ng.NgTable;
+import org.agatom.springatom.web.component.table.elements.ng.feature.NgPagingFeature;
 import org.agatom.springatom.web.component.table.elements.ng.feature.NgSummaryFeature;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.util.ClassUtils;
@@ -55,7 +56,8 @@ public class ReportTableBuilder
 
 		table.setBorder(false)
 				.addFeature(new NgSummaryFeature().setRemoteRoot(this.getAttributeName(report.createdBy)))
-				.setSortableColumns(true)
+				.addFeature(new NgPagingFeature().setPageSize((short) 100))
+				.setSortable(true)
 				.setCollapsible(false);
 
 		table.addContent(this.newColumn(report.id, AttributeDisplayAs.VALUE_ATTRIBUTE, lModel));
