@@ -21,6 +21,7 @@
         <js>/app/static/sa/app/sa-navigation.js</js>
         <js>/app/static/sa/app/sa-component.js</js>
         <js>/app/static/sa/app/sa-infopage.js</js>
+        <js>/app/static/sa/app/sa-grid.js</js>
     </group>
 
     <group name="springatom-libs">

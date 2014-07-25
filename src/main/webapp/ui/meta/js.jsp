@@ -22,7 +22,3 @@
 <script type="text/javascript" src="<s:url value="/app/static/dojo/dojo.js"/>"></script>
 <script type="text/javascript" src="<s:url value="/app/wro/springatom-libs.js"/>"></script>
 <script type="text/javascript" src="<s:url value="/app/wro/springatom_resources.js"/>"></script>
-
-<!-- to be moved to WRO -->
-<script type="text/javascript" src="<s:url value="/app/static/sa/app/sa-grid.js"/>"></script>
-<!-- to be moved to WRO -->
