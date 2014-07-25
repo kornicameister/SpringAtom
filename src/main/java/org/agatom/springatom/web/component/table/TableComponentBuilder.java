@@ -33,7 +33,7 @@ import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.request.ComponentRequestAttribute;
 import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.web.component.table.elements.TableComponent;
-import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTableColumn;
+import org.agatom.springatom.web.component.table.elements.extjs.NgTableColumn;
 import org.agatom.springatom.web.component.table.request.TableComponentRequest;
 import org.agatom.springatom.web.component.table.request.TableRequestColumnDef;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
@@ -274,8 +274,8 @@ abstract public class TableComponentBuilder<COMP extends TableComponent, Y exten
 		return this.messageSource.getLocalizedClassModel(this.entity, LocaleContextHolder.getLocale());
 	}
 
-	protected ExtJSTableColumn newColumn(final Path<?> path, final AttributeDisplayAs displayAs, final LocalizedClassModel<Y> lModel) {
-		return (ExtJSTableColumn) new ExtJSTableColumn()
+	protected NgTableColumn newColumn(final Path<?> path, final AttributeDisplayAs displayAs, final LocalizedClassModel<Y> lModel) {
+		return (NgTableColumn) new NgTableColumn()
 				.setTooltip(lModel.getLocalizedAttribute(this.getAttributeName(path)))
 				.setDataIndex(this.getAttributeName(path))
 				.setText(lModel.getLocalizedAttribute(this.getAttributeName(path)))

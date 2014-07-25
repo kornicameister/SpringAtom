@@ -25,8 +25,8 @@ import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
-import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTable;
-import org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSSummaryFeature;
+import org.agatom.springatom.web.component.table.elements.extjs.NgTable;
+import org.agatom.springatom.web.component.table.elements.extjs.feature.NgSummaryFeature;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -41,20 +41,20 @@ import org.springframework.util.StringUtils;
 @EntityBased(entity = SReport.class)
 @ComponentBuilder(ReportTableBuilder.BUILDER_ID)
 public class ReportTableBuilder
-		extends TableComponentBuilder<ExtJSTable, SReport> {
+		extends TableComponentBuilder<NgTable, SReport> {
 	/** Constant <code>BUILDER_ID="reportTableBuilder"</code> */
 	protected static final String BUILDER_ID = "reportTableBuilder";
 	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SReport.ENTITY_NAME));
 
 	/** {@inheritDoc} */
 	@Override
-	protected ExtJSTable buildDefinition(final ComponentDataRequest dataRequest) {
+	protected NgTable buildDefinition(final ComponentDataRequest dataRequest) {
 		final QSReport report = QSReport.sReport;
-		final ExtJSTable table = new ExtJSTable(TABLE_ID, BUILDER_ID);
+		final NgTable table = new NgTable(TABLE_ID, BUILDER_ID);
 		final LocalizedClassModel<SReport> lModel = this.getLocalizedClassModel();
 
 		table.setBorder(false)
-				.addFeature(new ExtJSSummaryFeature().setRemoteRoot(this.getAttributeName(report.createdBy)))
+				.addFeature(new NgSummaryFeature().setRemoteRoot(this.getAttributeName(report.createdBy)))
 				.setSortableColumns(true)
 				.setCollapsible(false)
 				.setForceFit(true);

@@ -20,13 +20,16 @@ package org.agatom.springatom.web.component.table.elements.extjs;
 import org.agatom.springatom.web.component.table.elements.TableColumnComponent;
 
 /**
+ * {@code NgTableColumn} is a {@link org.agatom.springatom.web.component.table.elements.TableColumnComponent}
+ * and defines information required to properly display the column as a part of the grid
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
-public class ExtJSTableColumn
+public class NgTableColumn
 		extends TableColumnComponent {
 	private static final long   serialVersionUID = 7324208543889807894L;
 	private              String xtype            = "gridcolumn";
@@ -42,15 +45,15 @@ public class ExtJSTableColumn
 		return this.getLabel();
 	}
 
-	public ExtJSTableColumn setText(final String text) {
-		return (ExtJSTableColumn) this.setLabel(text);
+	public NgTableColumn setText(final String text) {
+		return (NgTableColumn) this.setLabel(text);
 	}
 
 	public String getDataIndex() {
 		return dataIndex;
 	}
 
-	public ExtJSTableColumn setDataIndex(final String dataIndex) {
+	public NgTableColumn setDataIndex(final String dataIndex) {
 		this.dataIndex = dataIndex;
 		return this;
 	}
@@ -62,7 +65,7 @@ public class ExtJSTableColumn
 		return fieldType;
 	}
 
-	public ExtJSTableColumn setFieldType(final String fieldType) {
+	public NgTableColumn setFieldType(final String fieldType) {
 		this.fieldType = fieldType;
 		return this;
 	}
@@ -81,9 +84,9 @@ public class ExtJSTableColumn
 	 *
 	 * @param xtype a {@link java.lang.String} object.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.ExtJSTableColumn} object.
+	 * @return a {@link NgTableColumn} object.
 	 */
-	public ExtJSTableColumn setXtype(final String xtype) {
+	public NgTableColumn setXtype(final String xtype) {
 		this.xtype = xtype;
 		return this;
 	}
@@ -92,7 +95,7 @@ public class ExtJSTableColumn
 		return tooltip;
 	}
 
-	public ExtJSTableColumn setTooltip(final String tooltip) {
+	public NgTableColumn setTooltip(final String tooltip) {
 		this.tooltip = tooltip;
 		return this;
 	}

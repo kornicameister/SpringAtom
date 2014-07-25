@@ -24,8 +24,8 @@ import org.agatom.springatom.web.component.core.builders.annotation.ComponentBui
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
-import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTable;
-import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTableColumn;
+import org.agatom.springatom.web.component.table.elements.extjs.NgTable;
+import org.agatom.springatom.web.component.table.elements.extjs.NgTableColumn;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.util.StringUtils;
 
@@ -39,7 +39,7 @@ import org.springframework.util.StringUtils;
 @EntityBased(entity = SCar.class)
 @ComponentBuilder(CarsTableBuilder.BUILDER_ID)
 public class CarsTableBuilder
-		extends TableComponentBuilder<ExtJSTable, SCar> {
+		extends TableComponentBuilder<NgTable, SCar> {
 	/** Constant <code>BUILDER_ID="carsTableBuilder"</code> */
 	protected static final String BUILDER_ID = "carsTableBuilder";
 	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SCar.ENTITY_NAME));
@@ -52,10 +52,10 @@ public class CarsTableBuilder
 
 	/** {@inheritDoc} */
 	@Override
-	protected ExtJSTable buildDefinition(final ComponentDataRequest dataRequest) {
+	protected NgTable buildDefinition(final ComponentDataRequest dataRequest) {
 
 		final QSCar car = QSCar.sCar;
-		final ExtJSTable table = new ExtJSTable(TABLE_ID, BUILDER_ID);
+		final NgTable table = new NgTable(TABLE_ID, BUILDER_ID);
 		final LocalizedClassModel<SCar> lModel = this.getLocalizedClassModel();
 
 		table.setBorder(false)
@@ -64,22 +64,22 @@ public class CarsTableBuilder
 				.setForceFit(true);
 
 		table.addContent(
-				new ExtJSTableColumn()
+				new NgTableColumn()
 						.setDataIndex(this.getAttributeName(car.id))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(car.id)))
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				new NgTableColumn()
 						.setDataIndex(this.getAttributeName(car.owner))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(car.owner)))
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				new NgTableColumn()
 						.setDataIndex(this.getAttributeName(car.licencePlate))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(car.licencePlate)))
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				new NgTableColumn()
 						.setDataIndex(this.getAttributeName(car.vinNumber))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(car.vinNumber)))
 		);

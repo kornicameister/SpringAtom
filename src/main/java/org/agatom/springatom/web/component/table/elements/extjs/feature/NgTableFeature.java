@@ -17,68 +17,21 @@
 
 package org.agatom.springatom.web.component.table.elements.extjs.feature;
 
+import java.io.Serializable;
+
 /**
- * {@code ExtJSSummaryFeature} corresponds to the <a href="http://docs.sencha.com/extjs/4.2.2/#!/api/Ext.grid.feature.Summary">Ext.grid.feature.Summary</a>
- *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class ExtJSSummaryFeature
-		extends AbstractExtJSTableFeature {
-	private static final long    serialVersionUID = 4363888471601789083L;
-	protected            String  remoteRoot       = "";
-	protected            boolean showSummaryRow   = true;
-
+public interface NgTableFeature
+		extends Serializable {
 	/**
-	 * <p>Constructor for ExtJSSummaryFeature.</p>
-	 */
-	public ExtJSSummaryFeature() {
-		super(Feature.SUMMARY);
-	}
-
-	/**
-	 * <p>Getter for the field <code>remoteRoot</code>.</p>
+	 * <p>getFtype.</p>
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
-	public String getRemoteRoot() {
-		return remoteRoot;
-	}
-
-	/**
-	 * <p>Setter for the field <code>remoteRoot</code>.</p>
-	 *
-	 * @param remoteRoot a {@link java.lang.String} object.
-	 *
-	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSSummaryFeature} object.
-	 */
-	public ExtJSSummaryFeature setRemoteRoot(final String remoteRoot) {
-		this.remoteRoot = remoteRoot;
-		return this;
-	}
-
-	/**
-	 * <p>isShowSummaryRow.</p>
-	 *
-	 * @return a boolean.
-	 */
-	public boolean isShowSummaryRow() {
-		return showSummaryRow;
-	}
-
-	/**
-	 * <p>Setter for the field <code>showSummaryRow</code>.</p>
-	 *
-	 * @param showSummaryRow a boolean.
-	 *
-	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSSummaryFeature} object.
-	 */
-	public ExtJSSummaryFeature setShowSummaryRow(final boolean showSummaryRow) {
-		this.showSummaryRow = showSummaryRow;
-		return this;
-	}
-
+	String getFtype();
 }

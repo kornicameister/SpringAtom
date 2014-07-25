@@ -26,9 +26,9 @@ import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
-import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTable;
-import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTableColumn;
-import org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSSummaryFeature;
+import org.agatom.springatom.web.component.table.elements.extjs.NgTable;
+import org.agatom.springatom.web.component.table.elements.extjs.NgTableColumn;
+import org.agatom.springatom.web.component.table.elements.extjs.feature.NgSummaryFeature;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -43,41 +43,41 @@ import org.springframework.util.StringUtils;
 @EntityBased(entity = SAppointmentTask.class)
 @ComponentBuilder(AppointmentTaskTableBuilder.BUILDER_ID)
 public class AppointmentTaskTableBuilder
-		extends TableComponentBuilder<ExtJSTable, SAppointmentTask> {
+		extends TableComponentBuilder<NgTable, SAppointmentTask> {
 	/** Constant <code>BUILDER_ID="appointmentTaskTableBuilder"</code> */
 	protected static final String BUILDER_ID = "appointmentTaskTableBuilder";
 	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointmentTask.ENTITY_NAME));
 
 	/** {@inheritDoc} */
 	@Override
-	protected ExtJSTable buildDefinition(final ComponentDataRequest dataRequest) {
+	protected NgTable buildDefinition(final ComponentDataRequest dataRequest) {
 		final QSAppointmentTask task = QSAppointmentTask.sAppointmentTask;
-		final ExtJSTable table = new ExtJSTable(TABLE_ID, BUILDER_ID);
+		final NgTable table = new NgTable(TABLE_ID, BUILDER_ID);
 		final LocalizedClassModel<SAppointmentTask> lModel = this.getLocalizedClassModel();
 
 		table.setBorder(false)
-				.addFeature(new ExtJSSummaryFeature().setRemoteRoot(this.getAttributeName(task.type)))
+				.addFeature(new NgSummaryFeature().setRemoteRoot(this.getAttributeName(task.type)))
 
 				.setSortableColumns(true)
 				.setCollapsible(false)
 				.setForceFit(true);
 
 		table.addContent(
-				(ExtJSTableColumn) new ExtJSTableColumn()
+				(NgTableColumn) new NgTableColumn()
 						.setTooltip(lModel.getLocalizedAttribute(this.getAttributeName(task.id)))
 						.setDataIndex(this.getAttributeName(task.id))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(task.id)))
 						.setDisplayAs(AttributeDisplayAs.VALUE_ATTRIBUTE)
 		);
 		table.addContent(
-				(ExtJSTableColumn) new ExtJSTableColumn()
+				(NgTableColumn) new NgTableColumn()
 						.setTooltip(lModel.getLocalizedAttribute(this.getAttributeName(task.type)))
 						.setDataIndex(this.getAttributeName(task.type))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(task.type)))
 						.setDisplayAs(AttributeDisplayAs.VALUE_ATTRIBUTE)
 		);
 		table.addContent(
-				(ExtJSTableColumn) new ExtJSTableColumn()
+				(NgTableColumn) new NgTableColumn()
 						.setTooltip(lModel.getLocalizedAttribute(this.getAttributeName(task.task)))
 						.setDataIndex(this.getAttributeName(task.task))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(task.task)))

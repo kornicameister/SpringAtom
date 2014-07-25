@@ -25,9 +25,9 @@ import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
-import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTable;
-import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTableColumn;
-import org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSSummaryFeature;
+import org.agatom.springatom.web.component.table.elements.extjs.NgTable;
+import org.agatom.springatom.web.component.table.elements.extjs.NgTableColumn;
+import org.agatom.springatom.web.component.table.elements.extjs.feature.NgSummaryFeature;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.util.StringUtils;
 
@@ -41,68 +41,68 @@ import org.springframework.util.StringUtils;
 @EntityBased(entity = SAppointment.class)
 @ComponentBuilder(AppointmentsTableBuilder.BUILDER_ID)
 public class AppointmentsTableBuilder
-		extends TableComponentBuilder<ExtJSTable, SAppointment> {
+		extends TableComponentBuilder<NgTable, SAppointment> {
 	/** Constant <code>BUILDER_ID="appointmentsTableBuilder"</code> */
 	protected static final String BUILDER_ID = "appointmentsTableBuilder";
 	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SAppointment.ENTITY_NAME));
 
 	/** {@inheritDoc} */
 	@Override
-	protected ExtJSTable buildDefinition(final ComponentDataRequest dataRequest) {
+	protected NgTable buildDefinition(final ComponentDataRequest dataRequest) {
 		final QSAppointment appointment = QSAppointment.sAppointment;
-		final ExtJSTable table = new ExtJSTable(TABLE_ID, BUILDER_ID);
+		final NgTable table = new NgTable(TABLE_ID, BUILDER_ID);
 		final LocalizedClassModel<SAppointment> lModel = this.getLocalizedClassModel();
 
 		table.setBorder(false)
-				.addFeature(new ExtJSSummaryFeature().setRemoteRoot(this.getAttributeName(appointment.car)))
+				.addFeature(new NgSummaryFeature().setRemoteRoot(this.getAttributeName(appointment.car)))
 				.setSortableColumns(true)
 				.setForceFit(true);
 
 		table.addContent(
-				new ExtJSTableColumn()
+				new NgTableColumn()
 						.setDataIndex(this.getAttributeName(appointment.id))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.id)))
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				new NgTableColumn()
 						.setDataIndex(this.getAttributeName(appointment.begin))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.begin)))
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				new NgTableColumn()
 						.setDataIndex(this.getAttributeName("interval"))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName("interval")))
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				new NgTableColumn()
 						.setDataIndex(this.getAttributeName(appointment.end))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.end)))
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				new NgTableColumn()
 						.setDataIndex(this.getAttributeName(appointment.allDay))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.allDay)))
 		);
 		table.addContent(
-				(ExtJSTableColumn) new ExtJSTableColumn()
+				(NgTableColumn) new NgTableColumn()
 						.setDataIndex(this.getAttributeName(appointment.car))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.car)))
 						.setDisplayAs(AttributeDisplayAs.INFOPAGE_ATTRIBUTE)
 		);
 		table.addContent(
-				(ExtJSTableColumn) new ExtJSTableColumn()
+				(NgTableColumn) new NgTableColumn()
 						.setDataIndex(this.getAttributeName(appointment.assignee))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.assignee)))
 						.setDisplayAs(AttributeDisplayAs.INFOPAGE_ATTRIBUTE)
 		);
 		table.addContent(
-				(ExtJSTableColumn) new ExtJSTableColumn()
+				(NgTableColumn) new NgTableColumn()
 						.setDataIndex(this.getAttributeName(appointment.reporter))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.reporter)))
 						.setDisplayAs(AttributeDisplayAs.INFOPAGE_ATTRIBUTE)
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				new NgTableColumn()
 						.setDataIndex(this.getAttributeName(appointment.assigned))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(appointment.assigned)))
 		);

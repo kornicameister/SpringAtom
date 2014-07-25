@@ -18,7 +18,7 @@
 package org.agatom.springatom.web.component.table.elements.extjs.feature;
 
 /**
- * {@code ExtJSGroupingFeature} corresponds to the <a href="http://docs.sencha.com/extjs/4.2.2/#!/api/Ext.grid.feature.Grouping">Ext.grid.feature.Grouping</a>
+ * {@code NgGroupingFeature} corresponds to the <a href="http://docs.sencha.com/extjs/4.2.2/#!/api/Ext.grid.feature.Grouping">Ext.grid.feature.Grouping</a>
  *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
  *
@@ -26,8 +26,8 @@ package org.agatom.springatom.web.component.table.elements.extjs.feature;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class ExtJSGroupingFeature
-		extends AbstractExtJSTableFeature {
+public class NgGroupingFeature
+		extends AbstractNgTableFeature {
 	private static final long    serialVersionUID   = -616786001642472095L;
 	protected            boolean collapsible        = true;
 	protected            short   depthToIndent      = 17;
@@ -40,9 +40,9 @@ public class ExtJSGroupingFeature
 	protected            String  groupByText        = null;
 
 	/**
-	 * <p>Constructor for ExtJSGroupingFeature.</p>
+	 * <p>Constructor for NgGroupingFeature.</p>
 	 */
-	public ExtJSGroupingFeature() {
+	public NgGroupingFeature() {
 		super(Feature.GROUPING);
 	}
 
@@ -60,9 +60,9 @@ public class ExtJSGroupingFeature
 	 *
 	 * @param collapsible a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSGroupingFeature} object.
+	 * @return a {@link NgGroupingFeature} object.
 	 */
-	public ExtJSGroupingFeature setCollapsible(final boolean collapsible) {
+	public NgGroupingFeature setCollapsible(final boolean collapsible) {
 		this.collapsible = collapsible;
 		return this;
 	}
@@ -81,9 +81,9 @@ public class ExtJSGroupingFeature
 	 *
 	 * @param depthToIndent a short.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSGroupingFeature} object.
+	 * @return a {@link NgGroupingFeature} object.
 	 */
-	public ExtJSGroupingFeature setDepthToIndent(final short depthToIndent) {
+	public NgGroupingFeature setDepthToIndent(final short depthToIndent) {
 		this.depthToIndent = depthToIndent;
 		return this;
 	}
@@ -102,9 +102,9 @@ public class ExtJSGroupingFeature
 	 *
 	 * @param enableGroupingMenu a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSGroupingFeature} object.
+	 * @return a {@link NgGroupingFeature} object.
 	 */
-	public ExtJSGroupingFeature setEnableGroupingMenu(final boolean enableGroupingMenu) {
+	public NgGroupingFeature setEnableGroupingMenu(final boolean enableGroupingMenu) {
 		this.enableGroupingMenu = enableGroupingMenu;
 		return this;
 	}
@@ -123,9 +123,9 @@ public class ExtJSGroupingFeature
 	 *
 	 * @param enableNoGroups a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSGroupingFeature} object.
+	 * @return a {@link NgGroupingFeature} object.
 	 */
-	public ExtJSGroupingFeature setEnableNoGroups(final boolean enableNoGroups) {
+	public NgGroupingFeature setEnableNoGroups(final boolean enableNoGroups) {
 		this.enableNoGroups = enableNoGroups;
 		return this;
 	}
@@ -144,9 +144,9 @@ public class ExtJSGroupingFeature
 	 *
 	 * @param startCollapsed a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSGroupingFeature} object.
+	 * @return a {@link NgGroupingFeature} object.
 	 */
-	public ExtJSGroupingFeature setStartCollapsed(final boolean startCollapsed) {
+	public NgGroupingFeature setStartCollapsed(final boolean startCollapsed) {
 		this.startCollapsed = startCollapsed;
 		return this;
 	}
@@ -165,9 +165,9 @@ public class ExtJSGroupingFeature
 	 *
 	 * @param showSummaryRow a boolean.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSGroupingFeature} object.
+	 * @return a {@link NgGroupingFeature} object.
 	 */
-	public ExtJSGroupingFeature setShowSummaryRow(final boolean showSummaryRow) {
+	public NgGroupingFeature setShowSummaryRow(final boolean showSummaryRow) {
 		this.showSummaryRow = showSummaryRow;
 		return this;
 	}
@@ -186,9 +186,9 @@ public class ExtJSGroupingFeature
 	 *
 	 * @param remoteRoot a {@link java.lang.String} object.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSGroupingFeature} object.
+	 * @return a {@link NgGroupingFeature} object.
 	 */
-	public ExtJSGroupingFeature setRemoteRoot(final String remoteRoot) {
+	public NgGroupingFeature setRemoteRoot(final String remoteRoot) {
 		this.remoteRoot = remoteRoot;
 		return this;
 	}
@@ -207,9 +207,9 @@ public class ExtJSGroupingFeature
 	 *
 	 * @param showsGroupsText a {@link java.lang.String} object.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSGroupingFeature} object.
+	 * @return a {@link NgGroupingFeature} object.
 	 */
-	public ExtJSGroupingFeature setShowsGroupsText(final String showsGroupsText) {
+	public NgGroupingFeature setShowsGroupsText(final String showsGroupsText) {
 		this.showsGroupsText = showsGroupsText;
 		return this;
 	}
@@ -228,9 +228,9 @@ public class ExtJSGroupingFeature
 	 *
 	 * @param groupByText a {@link java.lang.String} object.
 	 *
-	 * @return a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.ExtJSGroupingFeature} object.
+	 * @return a {@link NgGroupingFeature} object.
 	 */
-	public ExtJSGroupingFeature setGroupByText(final String groupByText) {
+	public NgGroupingFeature setGroupByText(final String groupByText) {
 		this.groupByText = groupByText;
 		return this;
 	}

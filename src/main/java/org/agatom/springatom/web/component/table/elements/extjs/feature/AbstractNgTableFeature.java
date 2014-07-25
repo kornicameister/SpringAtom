@@ -17,21 +17,67 @@
 
 package org.agatom.springatom.web.component.table.elements.extjs.feature;
 
-import java.io.Serializable;
+import com.google.common.base.Objects;
 
 /**
+ * {@code AbstractNgTableFeature} is a foundation for features of {@link org.agatom.springatom.web.component.table.elements.extjs.NgTable}
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ExtJSTableFeature
-		extends Serializable {
+abstract class AbstractNgTableFeature
+		implements NgTableFeature {
+	private static final long   serialVersionUID = 8485389573075863861L;
 	/**
-	 * <p>getFtype.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
+	 * {@code ftype} is a property of the <b>feature</b>, uniquely identifying it to the ExtJS
 	 */
-	String getFtype();
+	private              String ftype            = null;
+
+	/**
+	 * <p>Constructor for AbstractNgTableFeature.</p>
+	 *
+	 * @param feature a {@link AbstractNgTableFeature.Feature} object.
+	 */
+	protected AbstractNgTableFeature(final Feature feature) {
+		this.ftype = feature.name().toLowerCase().replaceAll("_", "");
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public final String getFtype() {
+		return ftype;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public final int hashCode() {
+		return Objects.hashCode(ftype);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public final boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		AbstractNgTableFeature that = (AbstractNgTableFeature) o;
+
+		return Objects.equal(this.ftype, that.ftype);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.add("ftype", ftype)
+				.toString();
+	}
+
+	protected static enum Feature {
+		GROUPING,
+		SUMMARY
+	}
 }

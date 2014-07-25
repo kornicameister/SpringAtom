@@ -17,10 +17,8 @@
 
 package org.agatom.springatom.web.component.table.elements.extjs.feature;
 
-import com.google.common.base.Objects;
-
 /**
- * {@code AbstractExtJSTableFeature} is a foundation for features of {@link org.agatom.springatom.web.component.table.elements.extjs.ExtJSTable}
+ * {@code NgSummaryFeature} corresponds to the <a href="http://docs.sencha.com/extjs/4.2.2/#!/api/Ext.grid.feature.Summary">Ext.grid.feature.Summary</a>
  *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
  *
@@ -28,56 +26,59 @@ import com.google.common.base.Objects;
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract class AbstractExtJSTableFeature
-		implements ExtJSTableFeature {
-	private static final long   serialVersionUID = 8485389573075863861L;
-	/**
-	 * {@code ftype} is a property of the <b>feature</b>, uniquely identifying it to the ExtJS
-	 */
-	private              String ftype            = null;
+public class NgSummaryFeature
+		extends AbstractNgTableFeature {
+	private static final long    serialVersionUID = 4363888471601789083L;
+	protected            String  remoteRoot       = "";
+	protected            boolean showSummaryRow   = true;
 
 	/**
-	 * <p>Constructor for AbstractExtJSTableFeature.</p>
+	 * <p>Constructor for NgSummaryFeature.</p>
+	 */
+	public NgSummaryFeature() {
+		super(Feature.SUMMARY);
+	}
+
+	/**
+	 * <p>Getter for the field <code>remoteRoot</code>.</p>
 	 *
-	 * @param feature a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.AbstractExtJSTableFeature.Feature} object.
+	 * @return a {@link java.lang.String} object.
 	 */
-	protected AbstractExtJSTableFeature(final Feature feature) {
-		this.ftype = feature.name().toLowerCase().replaceAll("_", "");
+	public String getRemoteRoot() {
+		return remoteRoot;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public final String getFtype() {
-		return ftype;
+	/**
+	 * <p>Setter for the field <code>remoteRoot</code>.</p>
+	 *
+	 * @param remoteRoot a {@link java.lang.String} object.
+	 *
+	 * @return a {@link NgSummaryFeature} object.
+	 */
+	public NgSummaryFeature setRemoteRoot(final String remoteRoot) {
+		this.remoteRoot = remoteRoot;
+		return this;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public final int hashCode() {
-		return Objects.hashCode(ftype);
+	/**
+	 * <p>isShowSummaryRow.</p>
+	 *
+	 * @return a boolean.
+	 */
+	public boolean isShowSummaryRow() {
+		return showSummaryRow;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public final boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		AbstractExtJSTableFeature that = (AbstractExtJSTableFeature) o;
-
-		return Objects.equal(this.ftype, that.ftype);
+	/**
+	 * <p>Setter for the field <code>showSummaryRow</code>.</p>
+	 *
+	 * @param showSummaryRow a boolean.
+	 *
+	 * @return a {@link NgSummaryFeature} object.
+	 */
+	public NgSummaryFeature setShowSummaryRow(final boolean showSummaryRow) {
+		this.showSummaryRow = showSummaryRow;
+		return this;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this)
-				.add("ftype", ftype)
-				.toString();
-	}
-
-	protected static enum Feature {
-		GROUPING,
-		SUMMARY
-	}
 }

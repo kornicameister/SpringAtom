@@ -25,8 +25,8 @@ import org.agatom.springatom.web.component.core.builders.annotation.ComponentBui
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
-import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTable;
-import org.agatom.springatom.web.component.table.elements.extjs.ExtJSTableColumn;
+import org.agatom.springatom.web.component.table.elements.extjs.NgTable;
+import org.agatom.springatom.web.component.table.elements.extjs.NgTableColumn;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -41,16 +41,16 @@ import org.springframework.util.StringUtils;
 @EntityBased(entity = SPersonContact.class)
 @ComponentBuilder(ContactsForPersonTableBuilder.BUILDER_ID)
 public class ContactsForPersonTableBuilder
-		extends TableComponentBuilder<ExtJSTable, SPersonContact> {
+		extends TableComponentBuilder<NgTable, SPersonContact> {
 	/** Constant <code>BUILDER_ID="contactsForPersonTableBuilder"</code> */
 	protected static final String BUILDER_ID = "contactsForPersonTableBuilder";
 	private static final   String TABLE_ID   = String.format("%s%s", "table", StringUtils.uncapitalize(SPersonContact.ENTITY_NAME));
 
 	/** {@inheritDoc} */
 	@Override
-	protected ExtJSTable buildDefinition(final ComponentDataRequest dataRequest) {
+	protected NgTable buildDefinition(final ComponentDataRequest dataRequest) {
 		final QSPersonContact contact = QSPersonContact.sPersonContact;
-		final ExtJSTable table = new ExtJSTable(TABLE_ID, BUILDER_ID);
+		final NgTable table = new NgTable(TABLE_ID, BUILDER_ID);
 		final LocalizedClassModel<SPersonContact> lModel = this.getLocalizedClassModel();
 
 		table.setBorder(false)
@@ -59,17 +59,17 @@ public class ContactsForPersonTableBuilder
 				.setForceFit(true);
 
 		table.addContent(
-				new ExtJSTableColumn()
+				new NgTableColumn()
 						.setDataIndex(this.getAttributeName(contact.id))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(contact.id)))
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				new NgTableColumn()
 						.setDataIndex(this.getAttributeName(contact.type))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(contact.id)))
 		);
 		table.addContent(
-				new ExtJSTableColumn()
+				new NgTableColumn()
 						.setDataIndex(this.getAttributeName(contact.contact))
 						.setText(lModel.getLocalizedAttribute(this.getAttributeName(contact.contact)))
 		);
