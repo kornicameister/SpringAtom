@@ -50,14 +50,24 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  * {@code SVComponentsDataController} receives calls for data for either {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
  * and {@link org.agatom.springatom.web.component.table.elements.TableComponent}. Request is routed to appropriate {@link org.agatom.springatom.web.component.core.builders.Builder}
  *
+ * <div>
+ * <h2>Changelog</h2>
+ * <ol>
+ * <li>0.0.4 - simplified method annotations, since both works in POST and returns JSON</li>
+ * </ol>
+ * </div>
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 18.05.14</small>
  *
  * @author kornicameister
- * @version 0.0.3
+ * @version 0.0.4
  * @since 0.0.1
  */
 @Controller
-@RequestMapping(value = "/cmp/data")
+@RequestMapping(value = "/cmp/data",
+		method = RequestMethod.POST,
+		produces = {MediaType.APPLICATION_JSON_VALUE}
+)
 @Description(value = "Data controller for components")
 public class SVComponentsDataController
 		extends AbstractComponentController {
@@ -81,12 +91,7 @@ public class SVComponentsDataController
 	 * @throws org.agatom.springatom.webmvc.exceptions.ControllerTierException if any.
 	 */
 	@ResponseBody
-	@RequestMapping(
-			value = "/ip",
-			method = RequestMethod.POST,
-			produces = {MediaType.APPLICATION_JSON_VALUE},
-			consumes = {MediaType.APPLICATION_JSON_VALUE}
-	)
+	@RequestMapping(value = "/ip", consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public Object onInfoPageDataRequest(@RequestBody final InfoPageComponentRequest cmpRequest, final WebRequest webRequest) throws ControllerTierException {
 
 		LOGGER.trace(String.format("onInfoPageDataRequest(cmpRequest=%s,webRequest=%s)", cmpRequest, webRequest));
@@ -143,10 +148,7 @@ public class SVComponentsDataController
 	}
 
 	@ResponseBody
-	@RequestMapping(
-			value = "/table/{builderId}",
-			produces = {MediaType.APPLICATION_JSON_VALUE}
-	)
+	@RequestMapping("/table/{builderId}")
 	public Object onTableDataRequest(@PathVariable("builderId") final String builderId, final TableComponentRequest cmpRequest, final WebRequest webRequest) throws ControllerTierException {
 		LOGGER.trace(String.format("onInfoPageDataRequest(cmpRequest=%s,webRequest=%s)", cmpRequest, webRequest));
 		final ComponentDataRequest request = this.combineRequest(cmpRequest, webRequest);

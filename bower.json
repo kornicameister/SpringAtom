@@ -31,8 +31,8 @@
 		"angular-ui-calendar": "latest",
 		"angular-animate"    : "latest",
 		"jasny-bootstrap"    : "latest",
-		"jsface"     : "latest",
-		"animate.css": "latest"
+		"jsface"             : "latest",
+		"animate.css"        : "latest"
 	},
 	"resolutions" : {
 		"jquery": "~2.x"

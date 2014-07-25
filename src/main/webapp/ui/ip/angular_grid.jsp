@@ -1,5 +1,5 @@
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                 ~
   ~                                                                                              ~
   ~ [SpringAtom] is free software: you can redistribute it and/or modify                         ~
   ~ it under the terms of the GNU General Public License as published by                         ~
@@ -15,15 +15,21 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<!-- required to load like this, otherwise not working -->
-<link rel="stylesheet" media="all" href="<s:url value="/app/static/sa/libs/bootstrap/dist/css/bootstrap.css"/>">
-<link rel="stylesheet" media="all" href="<s:url value="/app/static/sa/libs/bootstrap/dist/css/bootstrap-theme.css"/>">
-<link rel="stylesheet" media="all" href="<s:url value="/app/static/sa/libs/ng-grid/ng-grid.css"/>">
-<link rel="stylesheet" media="all" href="<s:url value="/app/static/font-awesome/4.1.0/css/font-awesome.min.css"/>">
-<!-- required to load like this, otherwise not working -->
-<link rel="stylesheet" media="all" href="<s:url value="/app/wro/css-libs.css"/>">
-<link rel="stylesheet" media="all" href="<s:url value="/app/wro/css-files.css"/>">
+<style type="text/css">
+    .x-dynamic-grid {
+        min-height : 200px;
+    }
+</style>
+<div id="{{grid.id}}" class="container-fluid">
+    <div ng-show="grid.isLoading()">
+        <progressbar max="1" value="grid.getLoadingProgress()" class="progress-striped active" animate="true">
+            <span style="color:black; white-space:nowrap;">{{grid.getLoadingProgress(true)}} %</span>
+        </progressbar>
+    </div>
+    <div ng-if="!grid.isLoading()" class="panel">
+        <div class="panel-heading x-ip-attr-label">{{grid.title}}</div>
+        <div class="x-dynamic-grid"
+             ng-class="{table:true,'table-responsive':true,'table-bordered': grid.gridOptions.border}"
+             ng-grid="grid.gridOptions"></div>
+    </div>
+</div>

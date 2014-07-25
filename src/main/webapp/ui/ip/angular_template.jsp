@@ -34,8 +34,9 @@
             <div class="panel-body">
                 <div class="row" ng-repeat="attribute in panel.getAttributes()">
                     <div ng-switch="attribute.getType()">
-                        <div ng-switch-when="tableRequest" class="col-lg-9">
-                            <dynamic-grid config="attribute.value"></dynamic-grid>
+                        <div ng-switch-when="tableRequest">
+                            <dynamic-grid class="panel" config="attribute.value" origin="'infopage'"
+                                          unpack="ipCtrl.unpackGrid(attribute)"></dynamic-grid>
                         </div>
                         <div ng-switch-default>
                             <infopage-attribute attribute="attribute"></infopage-attribute>
@@ -43,6 +44,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 

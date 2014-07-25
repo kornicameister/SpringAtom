@@ -22,7 +22,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-<html ng-app="springatom">
+<html ng-app="springatom" ng-csp>
 <head>
     <tiles:insertAttribute name="head"/>
     <tiles:insertAttribute name="css" flush="true"/>
@@ -33,7 +33,7 @@
 <div class="content-wrapper container">
     <div class="col-lg-12">
         <tiles:insertAttribute name="header"/>
-        <section ui-view></section>
+        <section class="slide" ui-view></section>
     </div>
 </div>
 </body>

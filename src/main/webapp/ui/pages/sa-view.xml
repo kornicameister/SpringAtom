@@ -59,6 +59,7 @@
     <!-- components -->
     <definition name="ui.nav.Navigator" template="/ui/navigator/navigator.jsp"/>
     <definition name="springatom.tiles.ip.AInfoPage" template="/ui/ip/angular_template.jsp"/>
+    <definition name="springatom.tiles.ip.AGrid" template="/ui/ip/angular_grid.jsp"/>
     <!-- components -->
 
     <!-- meta chunks -->

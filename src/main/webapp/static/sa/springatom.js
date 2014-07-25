@@ -18,7 +18,18 @@
 (function SpringAtom() {
 	"use strict";
 
-	var app = angular.module('springatom', ['springatom.nav']),
+	var app = angular.module('springatom', [
+			"ui.bootstrap",
+			'ngAnimate',
+			'ngGrid',
+			'springatom.nav',
+			'springatom.component',
+			'springatom.grids',
+			'springatom.infopage'
+		]),
+		generalConf = function configureApp($httpProvider) {
+			$httpProvider.defaults.headers.common['SA-APP'] = 'SpringAtom';
+		},
 		urlHelperProvider = function URLHelperProvider() {
 			var _urlParams = function (url) {
 					if (!url || (url.indexOf("?") < 0 && url.indexOf("&") < 0)) {
@@ -39,17 +50,24 @@
 						obj[name] = overwrite || !obj[name] ? value : [].concat(obj[name]).concat(value);
 					});
 					return obj;
+				},
+				_isDebug = function (url) {
+					url = url || window.location.href;
+					var params = _urlParams(url);
+					return params['debug']
 				};
 
 			this.$get = function () {
 				return {
 					urlParams: _urlParams,
-					urlDecode: _urlDecode
+					urlDecode: _urlDecode,
+					isDebug  : _isDebug
 				}
 			}
 		};
 
-	app.provider('urlHelper', urlHelperProvider);
+	app.config(['$httpProvider', generalConf])
+		.provider('urlHelper', urlHelperProvider);
 
 	(function initStringExtension() {
 		String.prototype.startsWith = function (str) {
@@ -67,6 +85,14 @@
 			var length = this.length;
 			return this.substring(0, length - count);
 		};
+		String.prototype.format = function (args) {
+			var newStr = this;
+			for (var key in args) {
+				//noinspection JSUnfilteredForInLoop
+				newStr = newStr.replace('{' + key + '}', args[key]);
+			}
+			return newStr;
+		}
 	}());
 
 }());
