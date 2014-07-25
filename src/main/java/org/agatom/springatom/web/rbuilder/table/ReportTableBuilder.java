@@ -56,8 +56,7 @@ public class ReportTableBuilder
 		table.setBorder(false)
 				.addFeature(new NgSummaryFeature().setRemoteRoot(this.getAttributeName(report.createdBy)))
 				.setSortableColumns(true)
-				.setCollapsible(false)
-				.setForceFit(true);
+				.setCollapsible(false);
 
 		table.addContent(this.newColumn(report.id, AttributeDisplayAs.VALUE_ATTRIBUTE, lModel));
 		table.addContent(this.newColumn(report.title, AttributeDisplayAs.VALUE_ATTRIBUTE, lModel));

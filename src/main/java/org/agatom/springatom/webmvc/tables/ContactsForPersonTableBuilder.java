@@ -55,8 +55,7 @@ public class ContactsForPersonTableBuilder
 
 		table.setBorder(false)
 				.setSortableColumns(true)
-				.setCollapsible(false)
-				.setForceFit(true);
+				.setCollapsible(false);
 
 		table.addContent(
 				new NgTableColumn()

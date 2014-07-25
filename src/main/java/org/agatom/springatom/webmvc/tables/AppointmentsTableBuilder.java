@@ -55,8 +55,7 @@ public class AppointmentsTableBuilder
 
 		table.setBorder(false)
 				.addFeature(new NgSummaryFeature().setRemoteRoot(this.getAttributeName(appointment.car)))
-				.setSortableColumns(true)
-				.setForceFit(true);
+				.setSortableColumns(true);
 
 		table.addContent(
 				new NgTableColumn()

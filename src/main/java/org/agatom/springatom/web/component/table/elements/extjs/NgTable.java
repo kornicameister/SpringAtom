@@ -17,10 +17,10 @@
 
 package org.agatom.springatom.web.component.table.elements.extjs;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.web.component.table.elements.TableComponent;
 import org.agatom.springatom.web.component.table.elements.extjs.feature.NgTableFeature;
-import org.agatom.springatom.web.component.table.elements.extjs.store.ExtJSStoreField;
 
 import java.util.Set;
 
@@ -35,19 +35,15 @@ import java.util.Set;
  */
 public class NgTable
 		extends TableComponent<NgTableColumn> {
-	private static final long                 serialVersionUID = 614019837253089296L;
-	private              Set<NgTableFeature>  features         = null;
-	private              Set<String>          plugins          = null;
-	private              Set<ExtJSStoreField> fields           = null;
-	private              String               store            = null;
-	private              int                  minHeight        = -1;
-	private              int                  maxHeight        = -1;
-	private              boolean              animCollapse     = false;
-	private              boolean              collapsible      = false;
-	private              boolean              sortableColumns  = false;
-	private              boolean              rowLines         = true;
-	private              boolean              border           = true;
-	private              boolean              forceFit         = true;
+	private static final long                serialVersionUID = 614019837253089296L;
+	private              Set<NgTableFeature> features         = null;
+	private              Set<String>         plugins          = null;
+	private              String              store            = null;
+	private              int                 minHeight        = -1;
+	private              int                 maxHeight        = -1;
+	private              boolean             collapsible      = false;
+	private              boolean             sortableColumns  = false;
+	private              boolean             border           = true;
 
 	/**
 	 * <p>Constructor for NgTable.</p>
@@ -58,7 +54,6 @@ public class NgTable
 
 	private void initDefaults() {
 		super.addContent(new NgTableColumn().setXtype("rownumberer"));
-		this.fields = Sets.newHashSet();
 	}
 
 	public NgTable(final String tableId, final String builderId) {
@@ -128,15 +123,6 @@ public class NgTable
 		return this;
 	}
 
-	public boolean isAnimCollapse() {
-		return animCollapse;
-	}
-
-	public NgTable setAnimCollapse(final boolean animCollapse) {
-		this.animCollapse = animCollapse;
-		return this;
-	}
-
 	public int getMinHeight() {
 		return minHeight;
 	}
@@ -152,15 +138,6 @@ public class NgTable
 
 	public NgTable setMaxHeight(final int maxHeight) {
 		this.maxHeight = maxHeight;
-		return this;
-	}
-
-	public boolean isRowLines() {
-		return rowLines;
-	}
-
-	public NgTable setRowLines(final boolean rowLines) {
-		this.rowLines = rowLines;
 		return this;
 	}
 
@@ -182,15 +159,6 @@ public class NgTable
 		return this;
 	}
 
-	public boolean isForceFit() {
-		return forceFit;
-	}
-
-	public NgTable setForceFit(final boolean forceFit) {
-		this.forceFit = forceFit;
-		return this;
-	}
-
 	public boolean isSortableColumns() {
 		return sortableColumns;
 	}
@@ -200,23 +168,12 @@ public class NgTable
 		return this;
 	}
 
-	public Set<ExtJSStoreField> getFields() {
-		return fields;
-	}
-
 	@Override
-	public boolean addContent(final NgTableColumn column) {
-
-		column.setSortable(this.sortableColumns);
-		this.fields.add(new ExtJSStoreField().setName(column.getDataIndex()).setType(column.getFieldType()));
-
-		return super.addContent(column);
+	public String toString() {
+		return Objects.toStringHelper(this)
+				.add("tableId", tableId)
+				.add("builderId", builderId)
+				.add("label", label)
+				.toString();
 	}
-
-	public boolean addColumn(final NgTableColumn column, final ExtJSStoreField field) {
-		column.setSortable(this.sortableColumns);
-		this.fields.add(field.setName(column.getDataIndex()));
-		return super.addContent(column);
-	}
-
 }
