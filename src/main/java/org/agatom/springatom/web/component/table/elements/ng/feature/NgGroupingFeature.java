@@ -15,10 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.table.elements.extjs.feature;
+package org.agatom.springatom.web.component.table.elements.ng.feature;
 
 /**
- * {@code NgGroupingFeature} corresponds to the <a href="http://docs.sencha.com/extjs/4.2.2/#!/api/Ext.grid.feature.Grouping">Ext.grid.feature.Grouping</a>
+ * {@code NgGroupingFeature} corresponds to the <a href="http://docs.sencha.com/ng/4.2.2/#!/api/Ext.grid.feature.Grouping">Ext.grid.feature.Grouping</a>
  *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
  *

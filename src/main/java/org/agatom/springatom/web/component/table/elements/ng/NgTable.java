@@ -15,18 +15,18 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.table.elements.extjs;
+package org.agatom.springatom.web.component.table.elements.ng;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.web.component.table.elements.TableComponent;
-import org.agatom.springatom.web.component.table.elements.extjs.feature.NgTableFeature;
+import org.agatom.springatom.web.component.table.elements.ng.feature.NgTableFeature;
 
 import java.util.Set;
 
 /**
  * {@code NgTable} is a {@link org.agatom.springatom.web.component.table.elements.TableComponent}
- * which holds information about {@link org.agatom.springatom.web.component.table.elements.extjs.NgTableColumn}
+ * which holds information about {@link org.agatom.springatom.web.component.table.elements.ng.NgTableColumn}
  * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
  *
  * @author kornicameister
@@ -81,7 +81,7 @@ public class NgTable
 	/**
 	 * <p>addFeature.</p>
 	 *
-	 * @param feature a {@link org.agatom.springatom.web.component.table.elements.extjs.feature.NgTableFeature} object.
+	 * @param feature a {@link org.agatom.springatom.web.component.table.elements.ng.feature.NgTableFeature} object.
 	 *
 	 * @return a {@link NgTable} object.
 	 */

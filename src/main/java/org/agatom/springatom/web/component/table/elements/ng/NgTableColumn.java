@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.table.elements.extjs;
+package org.agatom.springatom.web.component.table.elements.ng;
 
 import org.agatom.springatom.web.component.table.elements.TableColumnComponent;
 
@@ -36,7 +36,7 @@ public class NgTableColumn
 	private              String dataIndex        = null;
 	private              String tooltip          = null;
 	/**
-	 * Corresponds to the {@code type} property of <a href="http://docs.sencha.com/extjs/4.2.2/#!/api/Ext.data.Field'>Ext.data.Field</a>.
+	 * Corresponds to the {@code type} property of <a href="http://docs.sencha.com/ng/4.2.2/#!/api/Ext.data.Field'>Ext.data.Field</a>.
 	 * It is required to set this attribute in order to get proper rendering method
 	 */
 	private              String fieldType        = null;

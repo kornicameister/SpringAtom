@@ -33,7 +33,7 @@ import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.request.ComponentRequestAttribute;
 import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.web.component.table.elements.TableComponent;
-import org.agatom.springatom.web.component.table.elements.extjs.NgTableColumn;
+import org.agatom.springatom.web.component.table.elements.ng.NgTableColumn;
 import org.agatom.springatom.web.component.table.request.TableComponentRequest;
 import org.agatom.springatom.web.component.table.request.TableRequestColumnDef;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;

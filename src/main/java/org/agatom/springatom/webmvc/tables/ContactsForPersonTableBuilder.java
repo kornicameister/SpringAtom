@@ -25,8 +25,8 @@ import org.agatom.springatom.web.component.core.builders.annotation.ComponentBui
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.table.TableComponentBuilder;
-import org.agatom.springatom.web.component.table.elements.extjs.NgTable;
-import org.agatom.springatom.web.component.table.elements.extjs.NgTableColumn;
+import org.agatom.springatom.web.component.table.elements.ng.NgTable;
+import org.agatom.springatom.web.component.table.elements.ng.NgTableColumn;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;

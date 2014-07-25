@@ -15,12 +15,12 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.table.elements.extjs.feature;
+package org.agatom.springatom.web.component.table.elements.ng.feature;
 
 import com.google.common.base.Objects;
 
 /**
- * {@code AbstractNgTableFeature} is a foundation for features of {@link org.agatom.springatom.web.component.table.elements.extjs.NgTable}
+ * {@code AbstractNgTableFeature} is a foundation for features of {@link org.agatom.springatom.web.component.table.elements.ng.NgTable}
  *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 03.06.14</small>
  *
