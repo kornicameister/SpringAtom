@@ -19,7 +19,10 @@ package org.agatom.springatom.server.service.vinNumber.decoder.resolver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import com.neovisionaries.i18n.CountryCode;
 import javassist.NotFoundException;
@@ -36,6 +39,7 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.Serializable;
@@ -80,12 +84,12 @@ class DefaultWMIManufacturedInResolver
 
 	private void postProcessWMIBeans(final WMIBeanList wmiBeans) throws NotFoundException {
 		for (final WMIBean wmiBean : wmiBeans) {
-			final List<String> codes = wmiBean.getCodes();
+			final List<String> codes = wmiBean.codes;
 			Assert.notEmpty(codes);
 
-			final List<CountryCode> byName = CountryCode.findByName(wmiBean.getCountry());
+			final List<CountryCode> byName = CountryCode.findByName(wmiBean.country);
 			if (CollectionUtils.isEmpty(byName)) {
-				final String format = String.format("%s has no country code corresponding", wmiBean.getCountry());
+				final String format = String.format("%s has no country code corresponding", wmiBean.country);
 				LOGGER.warn(format);
 				continue;
 			}
@@ -108,11 +112,16 @@ class DefaultWMIManufacturedInResolver
 	public CountryCode getCountryCode(final String wmi) {
 		final String cc = wmi.substring(0, 2);
 		final Set<CodeRangeWrapper> codeRangeWrappers = this.countryCodeMap.keySet();
-		for (CodeRangeWrapper codeRangeWrapper : codeRangeWrappers) {
-			LOGGER.trace(String.format("Examining CRW=%s", codeRangeWrapper));
-			if (codeRangeWrapper.isInRange(cc)) {
-				return this.countryCodeMap.get(codeRangeWrapper);
+		final Optional<CodeRangeWrapper> fm = FluentIterable.from(codeRangeWrappers).firstMatch(new Predicate<CodeRangeWrapper>() {
+			@Override
+			public boolean apply(@Nullable final CodeRangeWrapper input) {
+				LOGGER.trace(String.format("Examining CRW=%s", input));
+				assert input != null;
+				return input.isInRange(cc);
 			}
+		});
+		if (fm.isPresent()) {
+			return this.countryCodeMap.get(fm.get());
 		}
 		return null;
 	}
@@ -226,32 +235,11 @@ class DefaultWMIManufacturedInResolver
 		}
 	}
 
-	public static class WMIBean
+	private static class WMIBean
 			implements Serializable {
 		private static final long         serialVersionUID = -8996607327207872771L;
 		private              String       country          = null;
 		private              List<String> codes            = null;
-
-		public WMIBean() {
-		}
-
-		public String getCountry() {
-			return country;
-		}
-
-		public WMIBean setCountry(final String country) {
-			this.country = country;
-			return this;
-		}
-
-		public List<String> getCodes() {
-			return codes;
-		}
-
-		public WMIBean setCodes(final List<String> codes) {
-			this.codes = codes;
-			return this;
-		}
 
 		@Override
 		public String toString() {
