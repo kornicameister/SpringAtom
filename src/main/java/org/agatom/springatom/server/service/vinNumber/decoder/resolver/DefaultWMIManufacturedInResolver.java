@@ -241,6 +241,27 @@ class DefaultWMIManufacturedInResolver
 		private              String       country          = null;
 		private              List<String> codes            = null;
 
+		public WMIBean() {
+		}
+
+		public String getCountry() {
+			return country;
+		}
+
+		public WMIBean setCountry(final String country) {
+			this.country = country;
+			return this;
+		}
+
+		public List<String> getCodes() {
+			return codes;
+		}
+
+		public WMIBean setCodes(final List<String> codes) {
+			this.codes = codes;
+			return this;
+		}
+
 		@Override
 		public String toString() {
 			return Objects.toStringHelper(this)
