@@ -24,8 +24,10 @@
 			'ngGrid',
 			'springatom.nav',
 			'springatom.component',
+			'springatom.component.menu',
 			'springatom.grids',
-			'springatom.infopage'
+			'springatom.infopage',
+			'springatom.wiz'
 		]),
 		generalConf = function configureApp($httpProvider) {
 			$httpProvider.defaults.headers.common['SA-APP'] = 'SpringAtom';

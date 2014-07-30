@@ -28,35 +28,38 @@
 <jsp:useBean id="cancelAction" scope="request" type="java.lang.String"/>
 
 <div id="${wizardID}" class="x-wizard">
-    <div class="x-clear"></div>
-    <ul id="${wizardID}-header" class="x-wizard-header">
-        <%@ include file="header.jsp" %>
-    </ul>
-    <div id="${wizardID}-content" class="x-wizard-steps">
-        <tiles:insertAttribute name="wiz.content" flush="true"/>
-    </div>
-    <div id="${wizardID}-actions" class="x-wizard-actions">
-        <button id="${finishAction}" type="submit" name="${finishAction}" class="x-wizard-action buttonFinish">
-            <s:message code="button.ok"/>
-        </button>
-        <button id="${cancelAction}" type="submit" name="${cancelAction}" class="x-wizard-action buttonCancel">
-            <s:message code="button.cancel"/>
-        </button>
-        <button id="${nextAction}" type="submit" name="${nextAction}" class="x-wizard-action buttonNext">
-            <s:message code="button.next.short"/>
-        </button>
-        <button id="${previousAction}" type="submit" name="${previousAction}" class="x-wizard-action buttonPrevious">
-            <s:message code="button.previous.short"/>
-        </button>
-    </div>
-    <div class="x-clear"></div>
+	<div class="x-clear"></div>
+	<ul id="${wizardID}-header" class="x-wizard-header">
+		<%@ include file="header.jsp" %>
+	</ul>
+	<div id="${wizardID}-content" class="x-wizard-steps">
+		<tiles:insertAttribute name="wiz.content" flush="true"/>
+	</div>
+	<s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(wizActions)" htmlEscape="false"
+	        javaScriptEscape="false" var="initialActions"/>
+	<wizard-actions id="${wizardID}-actions" class="x-wizard-actions" actions="${initialActions}"></wizard-actions>
+	<div>
+		<button id="${finishAction}" type="submit" name="${finishAction}" class="x-wizard-action buttonFinish">
+			<s:message code="button.ok"/>
+		</button>
+		<button id="${cancelAction}" type="submit" name="${cancelAction}" class="x-wizard-action buttonCancel">
+			<s:message code="button.cancel"/>
+		</button>
+		<button id="${nextAction}" type="submit" name="${nextAction}" class="x-wizard-action buttonNext">
+			<s:message code="button.next.short"/>
+		</button>
+		<button id="${previousAction}" type="submit" name="${previousAction}" class="x-wizard-action buttonPrevious">
+			<s:message code="button.previous.short"/>
+		</button>
+	</div>
+	<div class="x-clear"></div>
 </div>
 <script type="text/javascript">
-    SA.wizard.decorateWizard({
-        wizardId       : '${wizardID}',
-        wizardHeaderId : '${wizardID}-header',
-        wizardContentId: '${wizardID}-content',
-        wizardActionsId: '${wizardID}-actions'
-    });
-    SA.wizard.applyWebFlowDecorators(['${cancelAction}', '${finishAction}'], '${requestScope.formID}');
+	SA.wizard.decorateWizard({
+		wizardId       : '${wizardID}',
+		wizardHeaderId : '${wizardID}-header',
+		wizardContentId: '${wizardID}-content',
+		wizardActionsId: '${wizardID}-actions'
+	});
+	SA.wizard.applyWebFlowDecorators(['${cancelAction}', '${finishAction}'], '${requestScope.formID}');
 </script>

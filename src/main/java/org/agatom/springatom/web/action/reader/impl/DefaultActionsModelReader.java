@@ -217,7 +217,8 @@ public class DefaultActionsModelReader
 			for (final JsonNode node : submodels) {
 				map.submodel.put(node.textValue(), node);
 			}
-		} else if (this.hasActions(object)) {
+		}
+		if (this.hasActions(object)) {
 			final ArrayNode actions = (ArrayNode) object.get("actions");
 			for (final JsonNode action : actions) {
 				map.actions.add(action);

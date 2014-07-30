@@ -15,7 +15,7 @@
 					}
 				},
 				{
-					"index": 1,
+					"index"         : 1,
 					"name"          : "dashboards",
 					"resourceBundle": "label.nav.dashboard",
 					"iconClass"     : "fa fa-color fa-dashboard",
@@ -29,7 +29,7 @@
 					}
 				},
 				{
-					"index": 2,
+					"index"         : 2,
 					"name"          : "garage",
 					"resourceBundle": "label.nav.management",
 					"iconClass"     : "glyphicon glyphicon-briefcase",
@@ -43,7 +43,7 @@
 					}
 				},
 				{
-					"index": 3,
+					"index"         : 3,
 					"name"          : "admin",
 					"resourceBundle": "label.nav.admin",
 					"iconClass"     : "glyphicon glyphicon-tower",
@@ -57,8 +57,8 @@
 					}
 				},
 				{
-					"index": 4,
-					"name" : "about",
+					"index"         : 4,
+					"name"          : "about",
 					"resourceBundle": "label.nav.about",
 					"iconClass"     : "glyphicon-question-sign",
 					"command"       : {
@@ -176,14 +176,39 @@
 			]
 		},
 		{
+			"name"       : "top.header.nav",
+			"description": "Menu entries available after logging in, allows to access such methods like CREATE for instance",
+			"submodels"  : [
+				"newObjects",
+				"userNavigation"
+			],
+			"actions"    : [
+				{
+					"index"         : 0,
+					"name"          : "logout",
+					"resourceBundle": "button.logout",
+					"iconClass"     : "glyphicon glyphicon-log-out",
+					"command"       : {
+						"type": "link",
+						"url" : "/app/auth/logout"
+					}
+				}
+			]
+		},
+		{
 			"name"          : "userNavigation",
 			"description"   : "Menu for the user directly",
 			"resourceBundle": "springatom.actions.action.userMenu",
 			"actions"       : [
 				{
+					"index"         : "0",
 					"name"          : "notificationBox",
 					"type"          : "org.agatom.springatom.server.model.beans.user.SUser",
 					"resourceBundle": "springatom.actions.action.userMenu.notificationBox",
+					"security"      : {
+						"enabled" : true,
+						"checkUrl": "/app/user/notifications"
+					},
 					"command"       : {
 						"type": "link",
 						"url" : "/app/user/notifications"
@@ -197,6 +222,7 @@
 			"resourceBundle": "springatom.actions.action.newObjects",
 			"actions"       : [
 				{
+					"index"         : 0,
 					"name"          : "newUser",
 					"type"          : "org.agatom.springatom.server.model.beans.user.SUser",
 					"resourceBundle": "springatom.actions.action.newUser",
@@ -207,6 +233,7 @@
 					}
 				},
 				{
+					"index"         : 1,
 					"name"          : "newAppointment",
 					"type"          : "org.agatom.springatom.server.model.beans.appointment.SAppointment",
 					"resourceBundle": "springatom.actions.action.newAppointment",
@@ -217,6 +244,7 @@
 					}
 				},
 				{
+					"index"         : 2,
 					"name"          : "newReport",
 					"type"          : "org.agatom.springatom.server.model.beans.report.SReport",
 					"resourceBundle": "springatom.actions.action.newReport",
@@ -227,6 +255,7 @@
 					}
 				},
 				{
+					"index"         : 3,
 					"name"          : "newCar",
 					"type"          : "org.agatom.springatom.server.model.beans.car.SCar",
 					"resourceBundle": "springatom.actions.action.newCar",

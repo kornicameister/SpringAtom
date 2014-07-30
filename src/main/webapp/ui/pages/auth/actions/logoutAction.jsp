@@ -18,33 +18,20 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
-<li id="logout-action" class="dropdown">
 
-    <security:authentication property="principal.username" var="userName"/>
-    <security:authentication property="principal.person" var="person"/>
-    <s:url value="/app/auth/logout" var="logoutUrl"/>
+<security:authentication property="principal.username" var="userName"/>
+<security:authentication property="principal.person" var="person"/>
 
-    <c:choose>
-        <c:when test="person != null">
-            <security:authentication property="principal.person.information.firstName" var="firstName"/>
-            <security:authentication property="principal.person.information.lastName" var="lastName"/>
-            <c:set var="loggedUserInnerLabel" value="${firstName} ${lastName}"/>
-        </c:when>
-        <c:otherwise>
-            <c:set var="loggedUserInnerLabel" value="${userName}"/>
-        </c:otherwise>
-    </c:choose>
+<c:choose>
+	<c:when test="person != null">
+		<security:authentication property="principal.person.information.firstName" var="firstName"/>
+		<security:authentication property="principal.person.information.lastName" var="lastName"/>
+		<c:set var="loggedUserInnerLabel" value="${firstName} ${lastName}"/>
+	</c:when>
+	<c:otherwise>
+		<c:set var="loggedUserInnerLabel" value="${userName}"/>
+	</c:otherwise>
+</c:choose>
 
-    <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-        <i class="glyphicon glyphicon-user"></i>&nbsp;<c:out value="${loggedUserInnerLabel}"/>&nbsp;<span
-            class="caret"></span>
-    </a>
-    <ul id="g-account-menu" class="dropdown-menu" role="menu">
-        <li>
-            <a href="<s:url value="${logoutUrl}"/>" title="<s:message code="button.logout"/>">
-                <i class="glyphicon glyphicon-log-out"></i>
-            </a>
-        </li>
-    </ul>
-
-</li>
+<dropdown-menu actionmodel="top.header.nav" btnLabel="${loggedUserInnerLabel}"
+               btnClass="glyphicon glyphicon-user"></dropdown-menu>

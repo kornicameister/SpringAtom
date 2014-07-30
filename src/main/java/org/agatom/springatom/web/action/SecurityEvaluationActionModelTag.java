@@ -19,13 +19,16 @@ package org.agatom.springatom.web.action;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Sets;
 import org.agatom.springatom.web.action.model.Action;
 import org.agatom.springatom.web.action.model.ActionModel;
 import org.agatom.springatom.web.action.model.actions.LinkAction;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.springframework.http.MediaType;
 import org.springframework.security.taglibs.TagLibConfig;
 import org.springframework.security.taglibs.authz.JspAuthorizeTag;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -45,7 +48,9 @@ import java.util.Set;
  */
 public class SecurityEvaluationActionModelTag
 		extends JspAuthorizeTag {
-	private ActionModel actionModel = null;
+	private static final Logger      LOGGER      = Logger.getLogger(SecurityEvaluationActionModelTag.class);
+	private              ActionModel actionModel = null;
+	private              String      var         = null;
 
 	public ActionModel getActionModel() {
 		return actionModel;
@@ -63,18 +68,22 @@ public class SecurityEvaluationActionModelTag
 					.filter(new Predicate<Action>() {
 						@Override
 						public boolean apply(final Action input) {
-							final LinkAction linkAction = (LinkAction) input;
-							return authorize(linkAction);
+							return authorize(input);
 						}
 					}).toSet();
 
 			if (filtered.isEmpty() && TagLibConfig.isUiSecurityDisabled()) {
 				this.pageContext.getOut().write(TagLibConfig.getSecuredUiPrefix());
 			} else {
-				final String toString = new JSONArray(filtered).toString();
-				this.pageContext.getResponse().setContentType(MediaType.APPLICATION_JSON_VALUE);
-				this.pageContext.getOut().write(toString);
-				this.pageContext.getOut().flush();
+				if (this.getVar() != null) {
+					LOGGER.trace(String.format("var(var=%s) is set, therefore putting back to pageContext", this.getVar()));
+					this.pageContext.setAttribute(this.getVar(), filtered);
+				} else {
+					final String toString = new JSONArray(filtered).toString();
+					this.pageContext.getResponse().setContentType(MediaType.APPLICATION_JSON_VALUE);
+					this.pageContext.getOut().write(toString);
+					this.pageContext.getOut().flush();
+				}
 			}
 
 			return TagLibConfig.evalOrSkip(!filtered.isEmpty());
@@ -84,23 +93,44 @@ public class SecurityEvaluationActionModelTag
 		}
 	}
 
-	public boolean authorize(final LinkAction linkAction) {
+	public boolean authorize(final Action action) {
+		LOGGER.debug(String.format("authorize(action=%s)", action));
 		boolean enabled = true;
 
-		if (linkAction.getSecurity().isEnabled()) {
-			final String url = StringUtils.hasText(linkAction.getSecurity().getPattern()) ? linkAction.getSecurity().getPattern() : linkAction.getUrl();
-			final Set<String> roles = linkAction.getSecurity().getRoles();
-			try {
-				if (CollectionUtils.isEmpty(roles)) {
-					this.setUrl(url);
-				} else {
-					this.setIfAnyGranted(StringUtils.collectionToDelimitedString(roles, ","));
+		if (ClassUtils.isAssignableValue(LinkAction.class, action)) {
+			final LinkAction linkAction = (LinkAction) action;
+			if (linkAction.getSecurity().isEnabled()) {
+				final String url = StringUtils.hasText(linkAction.getSecurity().getPattern()) ? linkAction.getSecurity().getPattern() : linkAction.getUrl();
+				final Set<String> roles = linkAction.getSecurity().getRoles();
+				try {
+					if (CollectionUtils.isEmpty(roles)) {
+						this.setUrl(url);
+					} else {
+						this.setIfAnyGranted(StringUtils.collectionToDelimitedString(roles, ","));
+					}
+					enabled = this.authorize();
+				} catch (Exception exp) {
+					enabled = false;
+					this.setUrl(null);
+					this.setIfAnyGranted(null);
 				}
-				enabled = this.authorize();
-			} catch (Exception exp) {
+			}
+		} else if (ClassUtils.isAssignableValue(ActionModel.class, action)) {
+			final ActionModel actionModel = (ActionModel) action;
+			final Set<Action> content = actionModel.getContent();
+			final Set<Action> contentFiltered = Sets.newTreeSet();
+			for (final Action localAction : content) {
+				if (this.authorize(localAction)) {
+					contentFiltered.add(localAction);
+				} else {
+					LOGGER.trace(String.format("ActionModel(id=%s)/Action(id=%s) is not authorized", actionModel.getId(), action.getId()));
+				}
+			}
+			if (contentFiltered.isEmpty()) {
+				LOGGER.trace(String.format("For ActionModel(id=%s) all actions are not authorized, excluding the model", actionModel.getId()));
 				enabled = false;
-				this.setUrl(null);
-				this.setIfAnyGranted(null);
+			} else {
+				actionModel.setContent(contentFiltered);
 			}
 		}
 
