@@ -218,6 +218,14 @@
                     evalScripts   : _evalScripts
                 }
             },
+            /**
+             * Rendering service. Contains method which allows to render response inside of the existing modal dialog or HTML node.
+             * In each case, content is inserted inside of the div specified by fixViewId.
+             * @param $log log provider
+             * @param $compile compile provider
+             * @param $rootScope the root scope
+             * @returns {*} service API
+             */
             renderService = function renderService($log, $compile, $rootScope) {
                 /**
                  * Tries to locate the {@code scope} in the passed object. If it is not there,
@@ -273,6 +281,11 @@
                     _showErrModal = function _showErrorModal(message, cfg) {
                         _renderToModal(message);
                     },
+                    /**
+                     * Replaces the content of existing view instead of creating a new one
+                     * @param response response text to be inserted
+                     * @param args arguments of the response
+                     */
                     _replaceContent = function replaceContent(response, args) {
                         $log.debug('_replaceContent to modal in progress');
                         var localModal = $('#{id}'.format({
@@ -280,8 +293,7 @@
                             })),
                             toReplace = localModal.find('#{id}'.format({
                                 id: fixViewId
-                            })),
-                            nodeList = localModal.find('*');
+                            }));
 
                         args = args || {};
                         args.scope = _getScope(args);
@@ -329,6 +341,14 @@
                                     $log.debug('error');
                                 })
                         },
+                        /**
+                         *
+                         * @param linkId
+                         * @param params
+                         * @param modal
+                         * @returns {*}
+                         * @private
+                         */
                         getLinkedResource: function _getLinkedResource(linkId, params, modal) {
                             $log.debug('getLinkedResource(linkId={a})'.format({
                                 a: linkId
@@ -348,22 +368,23 @@
                                 params: params || {},
                                 modal : modal || false
                             };
-                            requestUtils
-                                .doRequest(cfg)
-                                .then(function onSuccess(data) {
-                                    $log.debug(data);
-                                }, function onError() {
-                                    $log.debug('error');
-                                })
+                            return requestUtils.doRequest(cfg);
                         }
                     },
                     requestUtils = {
                         dataPromise         : {},
                         directiveData       : {},
+                        /**
+                         * Trims the response content and verifies if it has length. If not error modal is being shown
+                         * @param response received content
+                         * @returns {string} trimmed response
+                         * @private
+                         */
                         responseTransformer : function _responseTransformer(response) {
                             var st = window['performance']['now']();
                             {
-                                if ((string.trim(response).length == 0)) {
+                                var trim = string.trim(response);
+                                if ((trim.length == 0)) {
                                     swfRender.showErrorModal('Received empty response with no Spring redirect headers. If this is intentional set the response status code to 204 or 205.');
                                 }
                             }
@@ -371,8 +392,16 @@
                             $log.debug('responseTransformer completed in {d} ms'.format({
                                 d: ((et - st) / 1000)
                             }));
-                            return response;
+                            return trim;
                         },
+                        /**
+                         * Creates configuration of new request. If necessary updates the method (by default: GET), creates empty
+                         * params object (if it is not defined), By default caching is disabled, if not specified otherwise.
+                         * Sets up custom headers and transformRequest property ({@link requestUtils.responseTransformer})
+                         * @param cfg initial configuration object
+                         * @returns {*} request configuration according to Angular specification
+                         * @private
+                         */
                         getHttpConfiguration: function _getHttpConfiguration(cfg) {
                             return {
                                 url              : cfg.url,
@@ -436,6 +465,13 @@
                                 args  : args
                             });
                         },
+                        /**
+                         * Actual method which executes request for the new view. <b>cfg</b> contains the url property
+                         * pointing out to the server resource.
+                         * @param cfg configuration object
+                         * @returns {*} promise
+                         * @see requestUtils.getHttpConfiguration
+                         */
                         doRequest           : function ru_doRequest(cfg) {
                             $log.log('loading doRequest(uri={url})'.format({
                                 url: cfg.url
@@ -481,6 +517,12 @@
                     submitForm       : loaders.submitForm
                 }
             },
+            /**
+             * <b>swfViewDirective</b> creates node with fixed id. This eases with finding the template node
+             * in HTML where new view content is to be inserted.
+             * @returns {{restrict: string, transclude: boolean, replace: boolean, template, link: link}}
+             * @private
+             */
             swfViewDirective = function _swfViewDirective() {
                 return {
                     restrict  : 'A',
