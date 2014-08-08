@@ -22,6 +22,7 @@
         <js>/app/static/sa/app/sa-component.js</js>
         <js>/app/static/sa/app/sa-infopage.js</js>
         <js>/app/static/sa/app/sa-grid.js</js>
+        <js>/app/static/sa/mods/sfw-angular.js</js>
     </group>
 
     <group name="springatom-libs">
@@ -63,6 +64,7 @@
     </group>
 
     <group name="css-libs">
+        <css>/app/static/sa/libs/normalize-css/normalize.css</css>
         <css>/app/static/sa/libs/angular/angular-csp.css</css>
         <css>/app/static/sa/libs/fullcalendar/fullcalendar.css</css>
         <css>/app/static/sa/libs/jasny-bootstrap/dist/css/jasny-bootstrap.min.css</css>
