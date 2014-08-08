@@ -982,8 +982,9 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>${tomcat.maven.version}</version>
                 <configuration>
-                    <url>http://localhost:8080/</url>
+                    <url>http://localhost:8888/</url>
                     <server>TomcatServer</server>
+                    <port>8888</port>
                     <path>/</path>
                     <fork>false</fork>
                     <failOnError>true</failOnError>

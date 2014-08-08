@@ -31,4 +31,6 @@
         <put-attribute name="wiz.content" value="/ui/wizard/{1}/content_{2}.jsp"/>
     </definition>
 
+    <definition name="ui.layout.wizard.NBOX" template="/ui/wizard/notificationsBox.jsp"/>
+
 </tiles-definitions>

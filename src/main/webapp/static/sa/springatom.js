@@ -16,85 +16,97 @@
  */
 
 (function SpringAtom() {
-	"use strict";
+    "use strict";
 
-	var app = angular.module('springatom', [
-			"ui.bootstrap",
-			'ngAnimate',
-			'ngGrid',
-			'springatom.nav',
-			'springatom.component',
-			'springatom.component.menu',
-			'springatom.grids',
-			'springatom.infopage',
-			'springatom.wiz'
-		]),
-		generalConf = function configureApp($httpProvider) {
-			$httpProvider.defaults.headers.common['SA-APP'] = 'SpringAtom';
-		},
-		urlHelperProvider = function URLHelperProvider() {
-			var _urlParams = function (url) {
-					if (!url || (url.indexOf("?") < 0 && url.indexOf("&") < 0)) {
-						return {};
-					}
-					var params = url.substr(url.indexOf("?") + 1);
-					return _urlDecode(params);
-				},
-				_urlDecode = function (string, overwrite) {
-					var obj = {},
-						pairs = string.split('&'),
-						name,
-						value;
-					angular.each(pairs, function (pair) {
-						pair = pair.split('=');
-						name = decodeURIComponent(pair[0]);
-						value = decodeURIComponent(pair[1]);
-						obj[name] = overwrite || !obj[name] ? value : [].concat(obj[name]).concat(value);
-					});
-					return obj;
-				},
-				_isDebug = function (url) {
-					url = url || window.location.href;
-					var params = _urlParams(url);
-					return params['debug']
-				};
+    var app = angular.module('springatom', [
+            "ui.bootstrap",
+            'ngAnimate',
+            'ngGrid',
+            'springatom.nav',
+            'springatom.component',
+            'springatom.component.menu',
+            'springatom.grids',
+            'springatom.infopage',
+            'springatom.wiz'
+        ]),
+        generalConf = function configureApp($httpProvider) {
+            $httpProvider.defaults.headers.common['SA-APP'] = 'SpringAtom';
+        },
+        urlHelperProvider = function URLHelperProvider() {
+            var _urlParams = function (url) {
+                    if (!url || (url.indexOf("?") < 0 && url.indexOf("&") < 0)) {
+                        return {};
+                    }
+                    var params = url.substr(url.indexOf("?") + 1);
+                    return _urlDecode(params);
+                },
+                _urlDecode = function (string, overwrite) {
+                    var obj = {},
+                        pairs = string.split('&'),
+                        name,
+                        value;
+                    angular.each(pairs, function (pair) {
+                        pair = pair.split('=');
+                        name = decodeURIComponent(pair[0]);
+                        value = decodeURIComponent(pair[1]);
+                        obj[name] = overwrite || !obj[name] ? value : [].concat(obj[name]).concat(value);
+                    });
+                    return obj;
+                },
+                _isDebug = function (url) {
+                    url = url || window.location.href;
+                    var params = _urlParams(url);
+                    return params['debug']
+                };
 
-			this.$get = function () {
-				return {
-					urlParams: _urlParams,
-					urlDecode: _urlDecode,
-					isDebug  : _isDebug
-				}
-			}
-		};
+            this.$get = function () {
+                return {
+                    urlParams: _urlParams,
+                    urlDecode: _urlDecode,
+                    isDebug  : _isDebug
+                }
+            }
+        },
+        getByPropertyFilter = function _getByPropertyFilter() {
+            return function (propertyName, propertyValue, collection) {
+                var i = 0, len = collection.length;
+                for (; i < len; i++) {
+                    if (collection[i][propertyName] === propertyValue) {
+                        return collection[i];
+                    }
+                }
+                return undefined;
+            }
+        };
 
-	app.config(['$httpProvider', generalConf])
-		.provider('urlHelper', urlHelperProvider);
+    app.config(['$httpProvider', generalConf])
+        .provider('urlHelper', urlHelperProvider)
+        .filter('getByProperty', getByPropertyFilter);
 
-	(function initStringExtension() {
-		String.prototype.startsWith = function (str) {
-			var length = str.length;
-			return this.substring(0, length) === str;
-		};
-		String.prototype.endsWith = function (str) {
-			var length = this.length;
-			return this.substring(length - 1, length) === str;
-		};
-		String.prototype.removeFromBeginning = function (count) {
-			return this.substring(count);
-		};
-		String.prototype.removeFromEnd = function (count) {
-			var length = this.length;
-			return this.substring(0, length - count);
-		};
-		String.prototype.format = function (args) {
-			var newStr = this;
-			for (var key in args) {
-				//noinspection JSUnfilteredForInLoop
-				newStr = newStr.replace('{' + key + '}', args[key]);
-			}
-			return newStr;
-		}
-	}());
+    (function initStringExtension() {
+        String.prototype.startsWith = function (str) {
+            var length = str.length;
+            return this.substring(0, length) === str;
+        };
+        String.prototype.endsWith = function (str) {
+            var length = this.length;
+            return this.substring(length - 1, length) === str;
+        };
+        String.prototype.removeFromBeginning = function (count) {
+            return this.substring(count);
+        };
+        String.prototype.removeFromEnd = function (count) {
+            var length = this.length;
+            return this.substring(0, length - count);
+        };
+        String.prototype.format = function (args) {
+            var newStr = this;
+            for (var key in args) {
+                //noinspection JSUnfilteredForInLoop
+                newStr = newStr.replace('{' + key + '}', args[key]);
+            }
+            return newStr;
+        }
+    }());
 
 }());

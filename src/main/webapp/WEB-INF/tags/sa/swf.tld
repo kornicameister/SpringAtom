@@ -129,6 +129,32 @@
     </tag>
 
     <tag>
+        <description>Creates NgModel representation of all states. For direct usage with Angular</description>
+        <name>statesNg</name>
+        <tag-class>org.agatom.springatom.web.flows.tags.AllStatesOfWebflowNg</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <description>The FlowDefinition to get states from</description>
+            <name>flow</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>org.springframework.webflow.definition.FlowDefinition</type>
+        </attribute>
+        <attribute>
+            <name>wizardId</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
+    <tag>
         <description>
             Resolved the state ID {StateDefinition#getId()} from either FlowDefinition
             or StateDefinition.

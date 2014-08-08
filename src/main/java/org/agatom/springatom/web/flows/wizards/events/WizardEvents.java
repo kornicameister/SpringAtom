@@ -21,7 +21,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -40,78 +39,34 @@ import java.util.List;
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public final class WizardEvents {
 
-	private static final String       NEXT_EVENT     = "next";
-	private static final String       PREVIOUS_EVENT = "previous";
-	private static final String       CANCEL_EVENT   = "cancel";
-	private static final String       FINISH_EVENT   = "finish";
-	private static final List<String> EVENTS         = Lists.newArrayList(NEXT_EVENT, PREVIOUS_EVENT, CANCEL_EVENT, FINISH_EVENT);
+    private static final String       NEXT_EVENT     = "next";
+    private static final String       PREVIOUS_EVENT = "previous";
+    private static final String       CANCEL_EVENT   = "cancel";
+    private static final String       FINISH_EVENT   = "finish";
+    private static final List<String> EVENTS         = Lists.newArrayList(NEXT_EVENT, PREVIOUS_EVENT, CANCEL_EVENT, FINISH_EVENT);
 
-	/**
-	 * <p>isWizardEvent.</p>
-	 *
-	 * @param eventId a {@link java.lang.String} object.
-	 *
-	 * @return a boolean.
-	 */
-	public boolean isWizardEvent(final String eventId) {
-		if (!StringUtils.hasText(eventId)) {
-			return false;
-		}
-		final String anotherString = StringUtils.trimAllWhitespace(eventId);
-		return FluentIterable
-				.from(EVENTS)
-				.filter(new Predicate<String>() {
-					@Override
-					public boolean apply(@Nullable final String input) {
-						assert input != null;
-						return input.equalsIgnoreCase(anotherString);
-					}
-				})
-				.first()
-				.isPresent();
-	}
-
-	/**
-	 * <p>getNext.</p>
-	 *
-	 * @return a {@link org.agatom.springatom.web.flows.wizards.events.WizardEvent} object.
-	 */
-	@Bean(name = "WizardNextEvent")
-	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public WizardEvent getNext() {
-		return new WizardEvent().init(NEXT_EVENT);
-	}
-
-	/**
-	 * <p>getPrevious.</p>
-	 *
-	 * @return a {@link org.agatom.springatom.web.flows.wizards.events.WizardEvent} object.
-	 */
-	@Bean(name = "WizardPreviousEvent")
-	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public WizardEvent getPrevious() {
-		return new WizardEvent().init(PREVIOUS_EVENT);
-	}
-
-	/**
-	 * <p>getCancel.</p>
-	 *
-	 * @return a {@link org.agatom.springatom.web.flows.wizards.events.WizardEvent} object.
-	 */
-	@Bean(name = "WizardCancelEvent")
-	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public WizardEvent getCancel() {
-		return new WizardEvent().init(CANCEL_EVENT);
-	}
-
-	/**
-	 * <p>getFinish.</p>
-	 *
-	 * @return a {@link org.agatom.springatom.web.flows.wizards.events.WizardEvent} object.
-	 */
-	@Bean(name = "WizardFinishEvent")
-	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public WizardEvent getFinish() {
-		return new WizardEvent().init(FINISH_EVENT);
-	}
+    /**
+     * <p>isWizardEvent.</p>
+     *
+     * @param eventId a {@link java.lang.String} object.
+     *
+     * @return a boolean.
+     */
+    public boolean isWizardEvent(final String eventId) {
+        if (!StringUtils.hasText(eventId)) {
+            return false;
+        }
+        final String anotherString = StringUtils.trimAllWhitespace(eventId);
+        return FluentIterable
+                .from(EVENTS)
+                .filter(new Predicate<String>() {
+                    @Override
+                    public boolean apply(@Nullable final String input) {
+                        assert input != null;
+                        return input.equalsIgnoreCase(anotherString);
+                    }
+                })
+                .first()
+                .isPresent();
+    }
 }

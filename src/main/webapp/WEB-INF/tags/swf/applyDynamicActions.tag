@@ -28,5 +28,13 @@
 
 <swf:dynamicTransitions state="${forState}" flow="${flowRequestContext.activeFlow}" var="transitions"/>
 <script type="text/javascript" id="${flowRequestContext.currentState.id}-dynamicAction-applier-script">
-    SA.wizard.applyDynamicActions({formId: '${requestScope.formID}', container: 'div.x-wizard-actions', actions: JSON.parse('${transitions}')});
+	var scope = angular.element('wizard-actions').scope(),
+			checkAndExecuteIfDefined = function () {
+				if (!angular.isDefined(scope.addDynamicActions)) {
+					setTimeout(checkAndExecuteIfDefined, 100);
+				} else {
+					scope.addDynamicActions(JSON.parse('${transitions}'));
+				}
+			};
+	checkAndExecuteIfDefined();
 </script>

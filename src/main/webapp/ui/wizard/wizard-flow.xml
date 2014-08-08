@@ -19,14 +19,10 @@
 <flow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       abstract="true"
       xmlns="http://www.springframework.org/schema/webflow"
-      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd" >
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-	<on-start >
-		<evaluate expression="WizardFinishEvent.eventName" result="flowScope.finishAction" />
-		<evaluate expression="WizardCancelEvent.eventName" result="flowScope.cancelAction" />
-		<evaluate expression="WizardNextEvent.eventName" result="flowScope.nextAction" />
-		<evaluate expression="WizardPreviousEvent.eventName" result="flowScope.previousAction" />
-		<evaluate expression="wizardEvents.initialEvents" result="flowScope.wizActions" />
-	</on-start >
+    <on-start>
+        <evaluate expression="actionsModelReader.getActionModel('wiz.navBar')" result="flowScope.wizardActions"/>
+    </on-start>
 
-</flow >
+</flow>

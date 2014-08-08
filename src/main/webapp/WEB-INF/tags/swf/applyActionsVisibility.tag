@@ -27,5 +27,13 @@
 <%@ taglib prefix="swf" uri="http://www.example.org/sa/swf" %>
 <swf:transitions state="${forState}" var="transitions"/>
 <script type="text/javascript" id="${flowRequestContext.currentState.id}-visibility-applier-script">
-    SA.wizard.applyActionVisibility({container: 'div.x-wizard-actions', selector: 'button', actions: JSON.parse('${transitions}'), first: true});
+	var scope = angular.element('wizard-actions').scope(),
+			checkAndExecuteIfDefined = function () {
+				if (!angular.isDefined(scope.applyActionVisibility)) {
+					setTimeout(checkAndExecuteIfDefined, 100);
+				} else {
+					scope.applyActionVisibility(JSON.parse('${transitions}'));
+				}
+			};
+	checkAndExecuteIfDefined();
 </script>

@@ -33,85 +33,85 @@ import javax.annotation.Nonnull;
  * @since 0.0.1
  */
 public class AbstractAction
-		extends DefaultComponent
-		implements Action {
-	private static final long                serialVersionUID = -1186129891931343039L;
-	private static final ActionSecurityCheck NO_SECURITY      = new ActionSecurityCheck().setEnabled(false).setPattern(null);
-	private              short               order            = -1;
-	private              ActionSecurityCheck security         = NO_SECURITY;
-	private              String              iconClass        = null;
-	private String name = null;
+        extends DefaultComponent
+        implements Action {
+    private static final long                serialVersionUID = -1186129891931343039L;
+    private static final ActionSecurityCheck NO_SECURITY      = new ActionSecurityCheck().setEnabled(false).setPattern(null);
+    private              ActionSecurityCheck security         = NO_SECURITY;
+    protected            String              name             = null;
+    private              short               order            = -1;
+    private              String              iconClass        = null;
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public AbstractAction setName(final String name) {
-		this.name = name;
-		return this;
-	}
+    public AbstractAction setName(final String name) {
+        this.name = name;
+        return this;
+    }
 
-	@Override
-	public short getOrder() {
-		return order;
-	}
+    @Override
+    public short getOrder() {
+        return order;
+    }
 
-	public AbstractAction setOrder(final short order) {
-		this.order = order;
-		return this;
-	}
+    public AbstractAction setOrder(final short order) {
+        this.order = order;
+        return this;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public String getMode() {
-		return StringUtils.uncapitalize(ClassUtils.getShortName(this.getClass()));
-	}
+    /** {@inheritDoc} */
+    @Override
+    public String getMode() {
+        return StringUtils.uncapitalize(ClassUtils.getShortName(this.getClass()));
+    }
 
-	@Override
-	public ActionSecurityCheck getSecurity() {
-		return security;
-	}
+    @Override
+    public ActionSecurityCheck getSecurity() {
+        return security;
+    }
 
-	public AbstractAction setSecurity(final ActionSecurityCheck security) {
-		this.security = security;
-		return this;
-	}
+    public AbstractAction setSecurity(final ActionSecurityCheck security) {
+        this.security = security;
+        return this;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public String getId() {
-		return String.format("%s-%d", ClassUtils.getShortName(this.getClass()), Math.abs(this.hashCode()));
-	}
+    /** {@inheritDoc} */
+    @Override
+    public String getId() {
+        return String.format("%s-%d", ClassUtils.getShortName(this.getClass()), Math.abs(this.hashCode()));
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(security, iconClass, label, dynamicProperties);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(security, iconClass, label, dynamicProperties);
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-		AbstractAction that = (AbstractAction) o;
+        AbstractAction that = (AbstractAction) o;
 
-		return Objects.equal(this.security, that.security) &&
-				Objects.equal(this.iconClass, that.iconClass) &&
-				Objects.equal(this.label, that.label) &&
-				Objects.equal(this.dynamicProperties, that.dynamicProperties);
-	}
+        return Objects.equal(this.security, that.security) &&
+                Objects.equal(this.iconClass, that.iconClass) &&
+                Objects.equal(this.label, that.label) &&
+                Objects.equal(this.dynamicProperties, that.dynamicProperties);
+    }
 
-	public String getIconClass() {
-		return iconClass;
-	}
+    public String getIconClass() {
+        return iconClass;
+    }
 
-	public AbstractAction setIconClass(final String iconClass) {
-		this.iconClass = iconClass;
-		return this;
-	}
+    public AbstractAction setIconClass(final String iconClass) {
+        this.iconClass = iconClass;
+        return this;
+    }
 
-	@Override
-	public int compareTo(@Nonnull final Action o) {
-		return ComparisonChain.start().compare(this.order, o.getOrder()).result();
-	}
+    @Override
+    public int compareTo(@Nonnull final Action o) {
+        return ComparisonChain.start().compare(this.order, o.getOrder()).result();
+    }
 }

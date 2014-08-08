@@ -28,11 +28,13 @@
 
     <bean id="flowHandlerAdapter" class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
         <property name="flowExecutor" ref="flowExecutor"/>
-        <property name="useCacheControlHeader" value="#{flowProperties['sa.flows.handler.cache.useCacheControlHeader']}"/>
+        <property name="useCacheControlHeader"
+                  value="#{flowProperties['sa.flows.handler.cache.useCacheControlHeader']}"/>
         <property name="cacheSeconds" value="#{flowProperties['sa.flows.handler.cache.expiresAfterSeconds']}"/>
         <property name="alwaysMustRevalidate" value="#{flowProperties['sa.flows.handler.alwaysMustRevalidate']}"/>
         <property name="requireSession" value="#{flowProperties['sa.flows.handler.sessionRequired']}"/>
-        <property name="saveOutputToFlashScopeOnRedirect" value="#{flowProperties['sa.flows.handler.saveOutputToFlashScopeOnRedirect']}"/>
+        <property name="saveOutputToFlashScopeOnRedirect"
+                  value="#{flowProperties['sa.flows.handler.saveOutputToFlashScopeOnRedirect']}"/>
         <property name="flowUrlHandler" ref="flowUrlHandler"/>
         <property name="servletContext" ref="servletContext"/>
     </bean>

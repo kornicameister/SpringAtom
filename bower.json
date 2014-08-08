@@ -1,40 +1,41 @@
 {
-	"name"        : "SpringAtom",
-	"version"     : "0.0.1",
-	"homepage"    : "https://github.com/kornicameister/SpringAtom",
-	"description" : "SpringAtom - Client Side Package",
-	"main"        : "src/main/webapp/static/sa/springatom.js",
-	"keywords"    : [
-		"spring",
-		"car",
-		"service",
-		"management"
-	],
-	"authors"     : [
-		"kornicameister@gmail.com"
-	],
-	"license"     : "MIT",
-	"private"     : true,
-	"ignore"      : [
-		"**/.*",
-		"node_modules",
-		"bower_components",
-		"test",
-		"tests"
-	],
-	"dependencies": {
-		"jQuery.mmenu"       : "latest",
-		"bootstrap"          : "latest",
-		"ng-grid"            : "latest",
-		"angular-bootstrap"  : "latest",
-		"angular-ui-router"  : "latest",
-		"angular-ui-calendar": "latest",
-		"angular-animate"    : "latest",
-		"jasny-bootstrap"    : "latest",
-		"jsface"             : "latest",
-		"animate.css"        : "latest"
-	},
-	"resolutions" : {
-		"jquery": "~2.x"
-	}
+    "name"        : "SpringAtom",
+    "version"     : "0.0.1",
+    "homepage"    : "https://github.com/kornicameister/SpringAtom",
+    "description" : "SpringAtom - Client Side Package",
+    "main"        : "src/main/webapp/static/sa/springatom.js",
+    "keywords"    : [
+        "spring",
+        "car",
+        "service",
+        "management"
+    ],
+    "authors"     : [
+        "kornicameister@gmail.com"
+    ],
+    "license"     : "MIT",
+    "private"     : true,
+    "ignore"      : [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "jQuery.mmenu"       : "latest",
+        "bootstrap"          : "latest",
+        "ng-grid"            : "latest",
+        "angular-bootstrap"  : "latest",
+        "angular-ui-router"  : "latest",
+        "angular-ui-calendar": "latest",
+        "angular-animate"    : "latest",
+        "jasny-bootstrap"    : "latest",
+        "jsface"             : "latest",
+        "animate.css"        : "latest",
+        "normalize-css"      : "latest"
+    },
+    "resolutions" : {
+        "jquery": "~2.x"
+    }
 }

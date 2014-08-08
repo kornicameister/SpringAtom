@@ -24,6 +24,17 @@ is the most appropriate for the header" %>
               type="org.springframework.webflow.definition.StateDefinition"
               description="Current state" %>
 <swf:stateNeighbours state="${forState}" type="all" var="states"/>
-<script type="text/javascript" id="${forState}-applyStepsState" defer="defer">
-    SA.wizard.applyStepsState({stateId: '${forState.id}', descriptor: JSON.parse('${states}'), headerSelector: '.x-wizard-header'});
+<script type="text/javascript" id="${forState}-applyStepsState">
+	var scope = angular.element('wizard-header').scope(),
+			checkAndExecuteIfDefined = function () {
+				if (!angular.isDefined(scope.applyStepsState)) {
+					setTimeout(checkAndExecuteIfDefined, 100);
+				} else {
+					scope.applyStepsState({
+						stateId   : '${forState.id}',
+						descriptor: JSON.parse('${states}')
+					});
+				}
+			};
+	checkAndExecuteIfDefined();
 </script>

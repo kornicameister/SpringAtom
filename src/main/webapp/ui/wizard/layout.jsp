@@ -18,48 +18,44 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="swf2" uri="/WEB-INF/tags/sa/swf.tld" %>
 
 <jsp:useBean id="wizardID" scope="request" type="java.lang.String"/>
 <jsp:useBean id="formID" scope="request" type="java.lang.String"/>
 
-<jsp:useBean id="finishAction" scope="request" type="java.lang.String"/>
-<jsp:useBean id="nextAction" scope="request" type="java.lang.String"/>
-<jsp:useBean id="previousAction" scope="request" type="java.lang.String"/>
-<jsp:useBean id="cancelAction" scope="request" type="java.lang.String"/>
+<div id="${wizardID}" class="modal-dialog modal-lg" ng-controller="WizController as wiz">
+	<div class="modal-content">
 
-<div id="${wizardID}" class="x-wizard">
-	<div class="x-clear"></div>
-	<ul id="${wizardID}-header" class="x-wizard-header">
-		<%@ include file="header.jsp" %>
-	</ul>
-	<div id="${wizardID}-content" class="x-wizard-steps">
-		<tiles:insertAttribute name="wiz.content" flush="true"/>
+		<!-- closing button -->
+		<button type="button" class="close" data-dismiss="modal">
+			<span aria-hidden="true"><i class="glyphicon glyphicon-remove"></i></span>
+			<span class="sr-only"><s:message code="button.cancel"/></span>
+		</button>
+		<!-- closing button -->
+
+		<!-- the header -->
+		<swf2:statesNg flow="${flowRequestContext.activeFlow}" wizardId="${wizardID}" var="ngModel"/>
+		<div class="modal-header">
+			<wizard-header title="<s:message code="wizard.${requestScope.wizardID}.title"/>"
+			               wizard="${wizardID}"
+			               steps="<s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(ngModel)" htmlEscape="true" javaScriptEscape="true"/>"></wizard-header>
+		</div>
+		<!-- the header -->
+
+		<!-- reloadable view -->
+		<div id="${wizardID}-content" class="modal-body">
+			<div swf-view>
+				<tiles:insertAttribute name="wiz.content" flush="true"/>
+			</div>
+		</div>
+		<!-- reloadable view -->
+
+		<!-- footer -->
+		<div class="modal-footer">
+			<wizard-actions wizard="${wizardID}"
+			                actions="<s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(requestScope.wizardActions)" htmlEscape="true" javaScriptEscape="true"/>"></wizard-actions>
+		</div>
+		<!-- footer -->
+
 	</div>
-	<s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(wizActions)" htmlEscape="false"
-	        javaScriptEscape="false" var="initialActions"/>
-	<wizard-actions id="${wizardID}-actions" class="x-wizard-actions" actions="${initialActions}"></wizard-actions>
-	<div>
-		<button id="${finishAction}" type="submit" name="${finishAction}" class="x-wizard-action buttonFinish">
-			<s:message code="button.ok"/>
-		</button>
-		<button id="${cancelAction}" type="submit" name="${cancelAction}" class="x-wizard-action buttonCancel">
-			<s:message code="button.cancel"/>
-		</button>
-		<button id="${nextAction}" type="submit" name="${nextAction}" class="x-wizard-action buttonNext">
-			<s:message code="button.next.short"/>
-		</button>
-		<button id="${previousAction}" type="submit" name="${previousAction}" class="x-wizard-action buttonPrevious">
-			<s:message code="button.previous.short"/>
-		</button>
-	</div>
-	<div class="x-clear"></div>
 </div>
-<script type="text/javascript">
-	SA.wizard.decorateWizard({
-		wizardId       : '${wizardID}',
-		wizardHeaderId : '${wizardID}-header',
-		wizardContentId: '${wizardID}-content',
-		wizardActionsId: '${wizardID}-actions'
-	});
-	SA.wizard.applyWebFlowDecorators(['${cancelAction}', '${finishAction}'], '${requestScope.formID}');
-</script>

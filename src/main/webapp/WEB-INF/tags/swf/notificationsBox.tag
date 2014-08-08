@@ -26,47 +26,25 @@
 <%@ attribute name="command" rtexprvalue="true" required="false" type="java.lang.String" %>
 
 <c:if test="${command == null}">
-    <c:set var="command" value="currentFormObject"/>
+	<c:set var="command" value="currentFormObject"/>
 </c:if>
 
 <c:set var="forState" value="${context.currentState}" scope="page"/>
-<div id="notification-box" style="visibility: hidden">
-    <form:errors path="*" element="span" htmlEscape="true" cssClass="x-notification x-notificiation-${forState.id}"/>
-    <s:hasBindErrors name="${command}" htmlEscape="false">
-        <s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(errors.allErrors)"
-                var="bindErrors"
-                htmlEscape="false"
-                scope="page"
-                javaScriptEscape="false"/>
-        tak
-    </s:hasBindErrors>
-    <c:if test="${bindErrors == null}">
-        nie
-        <s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(new String[]{})"
-                var="bindErrors"
-                htmlEscape="false"
-                javaScriptEscape="false"/>
-    </c:if>
-    <script type="text/javascript">
-        $(function () {
-            SA.wizard.renderNotification({
-                stepHeader         : $('#' + SA.wizard.genStepHeaderId('${forState.id}')),
-                messages           : <s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(context.messageContext.allMessages)" htmlEscape="false" javaScriptEscape="false"/>,
-                errors             : ${bindErrors},
-                severityIconMapping: {
-                    'INFO'   : 'fa fa-fw fa-info',
-                    'WARNING': 'fa fa-fw fa-warning',
-                    'ERROR'  : 'fa fa-fw fa-bug',
-                    'FATAL'  : 'fa fa-fw fa-ambulance'
-                },
-                severityWeight     : {
-                    'INFO'   : 1,
-                    'WARNING': 2,
-                    'ERROR'  : 3,
-                    'FATAL'  : 4
-                },
-                promptMessage      : '<s:message code="wizard.notificationPromptMessage" htmlEscape="false" javaScriptEscape="false"/>'
-            });
-        })
-    </script>
-</div>
+
+<s:hasBindErrors name="${command}" htmlEscape="false">
+	<s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(errors.allErrors)"
+	        var="bindErrors"
+	        javaScriptEscape="false"
+	        htmlEscape="false"
+	        scope="page"/>
+</s:hasBindErrors>
+<c:if test="${bindErrors == null}">
+	<s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(new String[]{})"
+	        javaScriptEscape="false"
+	        htmlEscape="false"
+	        var="bindErrors"/>
+</c:if>
+<form:errors id="formSpringErrors" element="div" cssClass="hidden" path="*"/>
+<wizard-nbox
+		errors="<c:out value="${bindErrors}"/>"
+		messages="<s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(context.messageContext.allMessages)" htmlEscape="true" javaScriptEscape="true"/>"></wizard-nbox>

@@ -19,28 +19,6 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%----%>
-<%@ tag description="Tags renders HTML element containing current step title" %>
-<%@ attribute name="forState"
-              required="true"
-              rtexprvalue="true"
-              type="org.springframework.webflow.definition.StateDefinition"
-              description="Current state" %>
-<%@ attribute name="cssClass"
-              required="false"
-              rtexprvalue="true"
-              type="java.lang.String"
-              description="CSS class to apply over title element" %>
-<%----%>
+<h4 class="modal-title">
 
-<c:choose>
-    <c:when test="${cssClass != null}">
-        <h2 class="${cssClass}">
-    </c:when>
-    <c:otherwise>
-        <h2>
-    </c:otherwise>
-</c:choose>
-<swf:stateId var="stateId" state="${forState}"/>
-<s:message code="wizard.${requestScope.wizardID}.title"/>
-</h2>
+</h4>
