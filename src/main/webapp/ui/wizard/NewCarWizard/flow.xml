@@ -38,15 +38,15 @@
         <evaluate expression="newCarWizard1.getNewCar(flowRequestContext)"
                   result="flowScope.car"
                   result-type="org.agatom.springatom.server.model.beans.car.SCar"/>
-        <set name="flashScope.newBrandModelMsg" value="resourceBundle.newCarNewCarMaster"/>
+        <set name="flowScope.newBrandModelMsg" value="resourceBundle.newCarNewCarMaster"/>
     </on-start>
 
     <view-state id="setupVin" view="ui.wizard.NewCarWizard.1" popup="true" model="car">
         <on-render>
             <evaluate expression="newCarWizard1.setupForm"/>
         </on-render>
-        <transition on="next" to="setupCar" validate="false">
-            <!--
+        <transition on="next" to="setupCar" validate="false" bind="true">
+        <!--
                     validation can be done here, due to exception in classmate,
                     instead custom validator is checking the inputs to verify
                     if everything is fine

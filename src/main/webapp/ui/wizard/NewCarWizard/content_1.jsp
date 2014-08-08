@@ -23,46 +23,31 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
 
-<div id="sa-wizard-step-body" class="x-wizard-content">
-    <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
-    <s:eval expression="newCarWizard1.formObjectName" var="modelAttribute" scope="page"/>
+<s:eval expression="newCarWizard1.formObjectName" var="modelAttribute" scope="page"/>
 
-    <form:form id="${requestScope.formID}"
-               action="${flowExecutionUrl}"
-               commandName="${modelAttribute}"
-               method="<%=RequestMethod.POST.toString().toLowerCase()%>"
-               cssClass="x-form">
-        <fieldset>
-            <legend><s:message code="scar.vinnumber"/>/<s:message code="scar.licenceplate"/></legend>
-            <p>
-                <form:label path="vinNumber" cssClass="x-form-label">
-                    <span><s:message code="scar.vinnumber"/></span>
-                    <form:input id="${requestScope.formID}-vinNumber"
-                                htmlEscape="true"
-                                cssClass="x-input"
-                                path="vinNumber"/>
-                </form:label>
-            </p>
-        </fieldset>
-        <swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
-    </form:form>
-
-    <script type="text/javascript" id="${requestScope.formID}-entity-decorator">
-        $(function () {
-            var vinNumber = $('#' + '${requestScope.formID}-vinNumber');
-            Spring.addDecoration(new Spring.ElementDecoration({
-                elementId  : vinNumber.attr('id'),
-                widgetType : 'dijit.form.TextBox',
-                widgetAttrs: {
-                    class    : vinNumber.attr('class'),
-                    required : true,
-                    uppercase: true,
-                    trim     : true
-                }
-            }));
-        });
-    </script>
-</div>
-<swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
-<swf:getActions forState="${flowRequestContext.currentState}"/>
+<form:form id="${requestScope.formID}"
+           action="${flowExecutionUrl}"
+           commandName="${modelAttribute}"
+           method="<%=RequestMethod.POST.toString().toLowerCase()%>"
+           cssClass="form-horizontal"
+           role="form">
+	<swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
+	<div class="form-group">
+		<s:message code="scar.vinnumber" var="scarVinNumber"/>
+		<form:label path="vinNumber" cssClass="col-sm-2 control-label">
+			<span class="">${scarVinNumber}</span>
+		</form:label>
+		<div class="col-sm-10">
+			<form:input id="${requestScope.formID}-vinNumber"
+			            htmlEscape="true"
+			            cssClass="form-control"
+			            path="vinNumber"
+			            cssErrorClass="form-control-feedback"
+			            placeholder="${scarVinNumber}"
+			            required="true"/>
+		</div>
+	</div>
+</form:form>
+<swf:applyDynamicActions forState="${flowRequestContext.currentState}"/>
+<swf:applyActionsVisibility forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>
