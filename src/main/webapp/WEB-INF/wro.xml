@@ -23,6 +23,7 @@
         <js>/app/static/sa/app/sa-infopage.js</js>
         <js>/app/static/sa/app/sa-grid.js</js>
         <js>/app/static/sa/app/sa-menus.js</js>
+        <js>/app/static/sa/app/sa-wiz.js</js>
         <js>/app/static/sa/mods/sfw-angular.js</js>
     </group>
 
