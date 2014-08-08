@@ -21,23 +21,9 @@
 
 (function SpringAtom_Components_Menus() {
 
-	var app = angular.module('springatom.component.menu', ['springatom.component']),
-		dropdownMenu = function dynamicDropdownMenu($log, navigationService) {
+    var app = angular.module('springatom.component.menu', ['springatom.component', 'swf.angular']),
+        dropdownMenu = function dynamicDropdownMenu($log, navigationService, swfLoader) {
 			$log.log('dynamicDropdownMenu-directive in progress...');
-
-			// TODO extract to template in JSP file
-			// recognize logout as none route action
-			// check wizard actions
-			function getTemplate() {
-				var array = [];
-				array.push('<ul class="dropdown-menu" ng-show="data" role="menu">');
-				array.push('<li ng-repeat="action in data">');
-				array.push('<a id="{{action.id}}" ui-sref="{{action.name}}" role="{{action.mode}}">');
-				array.push('<i ng-show="action.iconClass" ng-class="action.iconClass"></i>');
-				array.push('{{action.label}}');
-				array.push('</a></li></ul>');
-				return array.join(' ');
-			}
 
 			function link(scope, element, attrs) {
 				var actionModel = attrs['actionmodel'],
@@ -56,7 +42,7 @@
 					event.preventDefault();
 					var id = am.id;
 					$log.debug('hook.launchWizard(id={i},wiz={w})'.format({i: id, w: am['wizardName']}));
-					Spring.remoting.getLinkedResource(id, {
+                    swfLoader.getLinkedResource(id, {
 						popup: true,
 						mode : 'embedded'
 					}, true);
@@ -88,7 +74,7 @@
 			}
 		};
 
-	app.directive('dropdownMenu', ['$log', 'navigationService', dropdownMenu])
+    app.directive('dropdownMenu', ['$log', 'navigationService', 'swfLoader', dropdownMenu])
 		.directive('dropdownMenuItem', ['$log', menuItemDirective])
 
 }());
