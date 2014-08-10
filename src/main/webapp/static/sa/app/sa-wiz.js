@@ -19,7 +19,6 @@
  * Created by trebskit on 2014-07-29.
  */
 (function SpringAtom_Wizards() {
-    console.log('SpringAtom_Wizards module loading');
 
     var moduleName = 'springatom.wiz',
         app = angular.module(moduleName, ['swf.angular']),
@@ -136,7 +135,7 @@
                     return array.join('');
                 };
 
-            return  {
+            return {
                 restrict    : 'E',
                 scope       : true,
                 template    : getTemplate(),
@@ -239,13 +238,9 @@
                 templateUrl: '/ui/wizard/notificationsBox.jsp',
                 link       : link
             }
-        },
-        wizController = function WizController($scope, $log, swfSubmit) {
-
         };
 
-    app.controller('WizController', ['$scope', '$log', 'swfSubmit', wizController])
-        .directive('wizardActions', ['$log', '$filter', wizardActions])
+    app.directive('wizardActions', ['$log', '$filter', wizardActions])
         .directive('wizardHeader', ['$log', '$filter', wizardHeader])
         .directive('wizardNbox', ['$filter', wizNBox]);
 

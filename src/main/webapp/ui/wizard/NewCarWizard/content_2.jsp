@@ -49,7 +49,7 @@
 				<form:label path="brand" cssClass="col-sm-2 control-label">
 					<span><s:message code="scarmastermanufacturingdata.brand"/></span>
 				</form:label>
-				<div class="col-sm-10">
+				<div class="col-sm-9">
 					<form:select id="${requestScope.formID}-brand"
 					             htmlEscape="true"
 					             cssClass="form-control"
@@ -62,7 +62,7 @@
 				<form:label path="model" cssClass="col-sm-2 control-label">
 					<span><s:message code="scarmastermanufacturingdata.model"/></span>
 				</form:label>
-				<div class="col-sm-10">
+				<div class="col-sm-9">
 					<form:select id="${requestScope.formID}-model"
 					             htmlEscape="true"
 					             cssClass="form-control"
@@ -97,7 +97,7 @@
 			<form:label path="carMaster" cssClass="col-sm-2 control-label">
 				<span><s:message code="scarmaster.manufacturingdata"/></span>
 			</form:label>
-			<div class="col-sm-10">
+			<div class="col-sm-9">
 				<form:select id="${requestScope.formID}-carMaster"
 				             htmlEscape="true"
 				             cssClass="form-control"
@@ -111,7 +111,7 @@
 			<form:label path="licencePlate" cssClass="col-sm-2 control-label">
 				<span><s:message code="scar.licenceplate"/></span>
 			</form:label>
-			<div class="col-sm-10">
+			<div class="col-sm-9">
 				<form:input id="${requestScope.formID}-licencePlate"
 				            htmlEscape="true"
 				            cssClass="form-control"
@@ -122,7 +122,7 @@
 			<form:label path="fuelType" cssClass="col-sm-2 control-label">
 				<span><s:message code="scar.fueltype"/></span>
 			</form:label>
-			<div class="col-sm-10">
+			<div class="col-sm-9">
 				<form:select id="${requestScope.formID}-carMaster-fuelType"
 				             htmlEscape="true"
 				             cssClass="form-control"
@@ -136,7 +136,7 @@
 			<form:label path="yearOfProduction" cssClass="col-sm-2 control-label">
 				<span><s:message code="scar.yearofproduction"/></span>
 			</form:label>
-			<div class="col-sm-10">
+			<div class="col-sm-9">
 				<form:select id="${requestScope.formID}-yearProduction"
 				             htmlEscape="true"
 				             cssClass="form-control"
@@ -151,7 +151,7 @@
 			<form:label path="owner" cssClass="col-sm-2 control-label">
 				<span><s:message code="scar.owner"/></span>
 			</form:label>
-			<div class="col-sm-10">
+			<div class="col-sm-9">
 				<form:select id="${requestScope.formID}-owner"
 				             htmlEscape="true"
 				             cssClass="form-control"

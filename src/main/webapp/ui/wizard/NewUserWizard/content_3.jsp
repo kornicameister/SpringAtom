@@ -23,55 +23,52 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
 
-<div id="sa-wizard-step-body" class="x-wizard-content">
-    <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
-    <s:eval expression="newUserWizardStep3.formObjectName" var="modelAttribute" scope="page"/>
+<s:eval expression="newUserWizardStep3.formObjectName" var="modelAttribute" scope="page"/>
 
-    <form:form id="${requestScope.formID}"
-               action="${flowExecutionUrl}"
-               modelAttribute="${modelAttribute}"
-               method="<%=RequestMethod.POST.toString().toLowerCase()%>"
-               cssClass="x-form">
-        <fieldset>
-            <legend><s:message code="sperson.contacts"/></legend>
-            <div class="x-multiple-input">
-                <div class="x-inputs">
-                    <ul id="contacts-container">
-                        <s:message code="wizard.NewAppointmentWizard.tl.taskType.placeholder" var="placeholder"/>
-                        <c:forEach items="contacts" var="contact" varStatus="it">
-                            <li id="${it.index}">
-                                    <%-- fixed list of available values to be localized --%>
-                                <form:select id="${requestScope.formID}-contacts-type"
-                                             items="${requestScope.localizedContactsTypes}"
-                                             placeholder="${placeholder}"
-                                             cssClass="x-input x-input-select"
-                                             itemLabel="label"
-                                             itemValue="contactType"
-                                             path="contacts[${it.index}].type"/>
-                                <form:input id="${requestScope.formID}-contacts-contact"
-                                            htmlEscape="true"
-                                            cssClass="x-input"
-                                            path="contacts[${it.index}].contact"/>
-                                <a id="mv-add" name="${it.index}" class="x-button x-button-add" href="#">
-                                    <i class="fa fa-plus fa-color-black"></i>
-                                </a>
-                                <a id="mv-remove" name="${it.index}" class="x-button x-button-remove" href="#">
-                                    <i class="fa fa-minus fa-color-black"></i>
-                                </a>
-                            </li>
-                        </c:forEach>
-                    </ul>
-                    <script type="text/javascript" id="mv-multiple-tasks">
-                        $(function () {
-                            SA.wizard.Helpers.NewAppointmentWizard.handleAddRemoveTask($('ul#contacts-container'));
-                        })
-                    </script>
-                </div>
-            </div>
-        </fieldset>
-        <swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
-    </form:form>
-</div>
-<swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
-<swf:getActions forState="${flowRequestContext.currentState}"/>
+<form:form id="${requestScope.formID}"
+           action="${flowExecutionUrl}"
+           modelAttribute="${modelAttribute}"
+           method="<%=RequestMethod.POST.toString().toLowerCase()%>"
+           cssClass="x-form">
+	<swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
+	<fieldset>
+		<legend><s:message code="sperson.contacts"/></legend>
+		<div class="x-multiple-input">
+			<div class="x-inputs">
+				<ul id="contacts-container">
+					<s:message code="wizard.NewAppointmentWizard.tl.taskType.placeholder" var="placeholder"/>
+					<c:forEach items="contacts" var="contact" varStatus="it">
+						<li id="${it.index}">
+								<%-- fixed list of available values to be localized --%>
+							<form:select id="${requestScope.formID}-contacts-type"
+							             items="${requestScope.localizedContactsTypes}"
+							             placeholder="${placeholder}"
+							             cssClass="x-input x-input-select"
+							             itemLabel="label"
+							             itemValue="contactType"
+							             path="contacts[${it.index}].type"/>
+							<form:input id="${requestScope.formID}-contacts-contact"
+							            htmlEscape="true"
+							            cssClass="x-input"
+							            path="contacts[${it.index}].contact"/>
+							<a id="mv-add" name="${it.index}" class="x-button x-button-add" href="#">
+								<i class="fa fa-plus fa-color-black"></i>
+							</a>
+							<a id="mv-remove" name="${it.index}" class="x-button x-button-remove" href="#">
+								<i class="fa fa-minus fa-color-black"></i>
+							</a>
+						</li>
+					</c:forEach>
+				</ul>
+				<script type="text/javascript" id="mv-multiple-tasks">
+					$(function () {
+						SA.wizard.Helpers.NewAppointmentWizard.handleAddRemoveTask($('ul#contacts-container'));
+					})
+				</script>
+			</div>
+		</div>
+	</fieldset>
+</form:form>
+<swf:applyDynamicActions forState="${flowRequestContext.currentState}"/>
+<swf:applyActionsVisibility forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>

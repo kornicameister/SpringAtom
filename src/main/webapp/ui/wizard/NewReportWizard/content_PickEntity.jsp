@@ -31,47 +31,43 @@
     which can not be linked with the one just selected
 --%>
 
-<div id="sa-wizard-step-body" class="x-wizard-content">
-    <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
+<form:form id="${requestScope.formID}"
+           action="${flowExecutionUrl}"
+           commandName="commandBean"
+           method="<%=RequestMethod.POST.toString().toLowerCase()%>"
+           cssClass="x-form">
+	<swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
+	<fieldset>
+		<legend><s:message code="wizard.NewReportWizard.entity.pickTables"/></legend>
+		<p>
+			<label class="x-form-label" title="<s:message code="wizard.NewReportWizard.entity.pickTables"/>">
+				<span><s:message code="wizard.NewReportWizard.entity.pickTables"/></span>
+				<form:select id="${requestScope.formID}-entity"
+				             items="${requestScope.entities}"
+				             cssClass="x-input x-input-select"
+				             itemLabel="label"
+				             itemValue="id"
+				             path="entities"/>
+			</label>
+		</p>
+	</fieldset>
+</form:form>
+<script type="text/javascript" id="${requestScope.formID}-entity-decorator">
+	$(function () {
+		SA.wizard.Helpers.NewReportWizard.setEntities('<s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(requestScope.associationInformation)" htmlEscape="false" javaScriptEscape="false"/>');
+		var el = $('#' + '${requestScope.formID}-entity');
+		Spring.addDecoration(new Spring.ElementDecoration({
+			elementId  : el.attr('id'),
+			widgetType : 'dijit.form.MultiSelect',
+			widgetAttrs: {
+				class     : el.attr('class'),
+				onChange  : SA.wizard.Helpers.NewReportWizard.onEntityPickRecalculateAssociation,
+				onDblClick: SA.wizard.Helpers.NewReportWizard.onEntityPickResetAll
+			}
+		}));
 
-    <form:form id="${requestScope.formID}"
-               action="${flowExecutionUrl}"
-               commandName="commandBean"
-               method="<%=RequestMethod.POST.toString().toLowerCase()%>"
-               cssClass="x-form">
-        <fieldset>
-            <legend><s:message code="wizard.NewReportWizard.entity.pickTables"/></legend>
-            <p>
-                <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.entity.pickTables"/>">
-                    <span><s:message code="wizard.NewReportWizard.entity.pickTables"/></span>
-                    <form:select id="${requestScope.formID}-entity"
-                                 items="${requestScope.entities}"
-                                 cssClass="x-input x-input-select"
-                                 itemLabel="label"
-                                 itemValue="id"
-                                 path="entities"/>
-                </label>
-            </p>
-        </fieldset>
-        <swf:notificationsBox context="${flowRequestContext}"/>
-    </form:form>
-    <script type="text/javascript" id="${requestScope.formID}-entity-decorator">
-        $(function () {
-            SA.wizard.Helpers.NewReportWizard.setEntities('<s:eval expression="@jackson2ObjectFactoryBean.writeValueAsString(requestScope.associationInformation)" htmlEscape="false" javaScriptEscape="false"/>');
-            var el = $('#' + '${requestScope.formID}-entity');
-            Spring.addDecoration(new Spring.ElementDecoration({
-                elementId  : el.attr('id'),
-                widgetType : 'dijit.form.MultiSelect',
-                widgetAttrs: {
-                    class     : el.attr('class'),
-                    onChange  : SA.wizard.Helpers.NewReportWizard.onEntityPickRecalculateAssociation,
-                    onDblClick: SA.wizard.Helpers.NewReportWizard.onEntityPickResetAll
-                }
-            }));
-
-        });
-    </script>
-</div>
-<swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
-<swf:getActions forState="${flowRequestContext.currentState}"/>
+	});
+</script>
+<swf:applyDynamicActions forState="${flowRequestContext.currentState}"/>
+<swf:applyActionsVisibility forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>

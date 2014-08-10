@@ -986,8 +986,9 @@
                     <server>TomcatServer</server>
                     <port>8888</port>
                     <path>/</path>
-                    <fork>false</fork>
+                    <mode>dev</mode>
                     <failOnError>true</failOnError>
+                    <contextReloadable>true</contextReloadable>
                     <systemProperties>
                         <JAVA_OPTS>-Xms256m -Xmx512m -XX:MaxPermSize=256m</JAVA_OPTS>
                     </systemProperties>

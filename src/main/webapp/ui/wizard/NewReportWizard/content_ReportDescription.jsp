@@ -25,70 +25,66 @@
 
 <%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
-<div id="sa-wizard-step-body" class="x-wizard-content">
-    <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
-
-    <form:form id="${requestScope.formID}"
-               action="${flowExecutionUrl}"
-               commandName="commandBean"
-               method="<%=RequestMethod.POST.toString().toLowerCase()%>"
-               cssClass="x-form">
-        <fieldset>
-            <legend><s:message code="wizard.NewReportWizard.entity.describeReport"/></legend>
-            <p>
-                <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.title"/>">
-                    <span><s:message code="wizard.NewReportWizard.report.title"/></span>
-                    <form:input id="${requestScope.formID}-title" htmlEscape="true" cssClass="x-input" path="title"/>
-                </label>
-                <script type="text/javascript">
-                    var el = $('#' + '${requestScope.formID}-title');
-                    Spring.addDecoration(new Spring.ElementDecoration({
-                        elementId  : el.attr('id'),
-                        widgetType : 'dijit.form.TextBox',
-                        widgetAttrs: {
-                            class: el.attr('class')
-                        }
-                    }))
-                </script>
-            </p>
-            <p>
-            <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.subtitle"/>">
-                    <span><s:message code="wizard.NewReportWizard.report.subtitle"/></span>
-                    <form:input id="${requestScope.formID}-subtitle" htmlEscape="true" cssClass="x-input"
-                                path="subtitle"/>
-                </label>
-                <script type="text/javascript">
-                    var el = $('#' + '${requestScope.formID}-subtitle');
-                    Spring.addDecoration(new Spring.ElementDecoration({
-                        elementId  : el.attr('id'),
-                        widgetType : 'dijit.form.TextBox',
-                        widgetAttrs: {
-                            class: el.attr('class')
-                        }
-                    }))
-                </script>
-            </p>
-            <p>
-            <label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.description"/>">
-                    <span><s:message code="wizard.NewReportWizard.report.description"/></span>
-                    <form:textarea id="${requestScope.formID}-description" htmlEscape="true" cssClass="x-input"
-                                   path="description"/>
-                </label>
-                <script type="text/javascript">
-                    var el = $('#' + '${requestScope.formID}-description');
-                    Spring.addDecoration(new Spring.ElementDecoration({
-                        elementId  : el.attr('id'),
-                        widgetType : 'dijit.form.Textarea',
-                        widgetAttrs: {
-                            class: el.attr('class')
-                        }
-                    }))
-                </script>
-            </p>
-        </fieldset>
-        <swf:notificationsBox context="${flowRequestContext}"/>
-    </form:form>
-</div>
-<swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
-<swf:getActions forState="${flowRequestContext.currentState}"/>
+<form:form id="${requestScope.formID}"
+           action="${flowExecutionUrl}"
+           commandName="commandBean"
+           method="<%=RequestMethod.POST.toString().toLowerCase()%>"
+           cssClass="x-form">
+	<swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
+	<fieldset>
+		<legend><s:message code="wizard.NewReportWizard.entity.describeReport"/></legend>
+		<p>
+			<label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.title"/>">
+				<span><s:message code="wizard.NewReportWizard.report.title"/></span>
+				<form:input id="${requestScope.formID}-title" htmlEscape="true" cssClass="x-input" path="title"/>
+			</label>
+			<script type="text/javascript">
+				var el = $('#' + '${requestScope.formID}-title');
+				Spring.addDecoration(new Spring.ElementDecoration({
+					elementId  : el.attr('id'),
+					widgetType : 'dijit.form.TextBox',
+					widgetAttrs: {
+						class: el.attr('class')
+					}
+				}))
+			</script>
+		</p>
+		<p>
+			<label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.subtitle"/>">
+				<span><s:message code="wizard.NewReportWizard.report.subtitle"/></span>
+				<form:input id="${requestScope.formID}-subtitle" htmlEscape="true" cssClass="x-input"
+				            path="subtitle"/>
+			</label>
+			<script type="text/javascript">
+				var el = $('#' + '${requestScope.formID}-subtitle');
+				Spring.addDecoration(new Spring.ElementDecoration({
+					elementId  : el.attr('id'),
+					widgetType : 'dijit.form.TextBox',
+					widgetAttrs: {
+						class: el.attr('class')
+					}
+				}))
+			</script>
+		</p>
+		<p>
+			<label class="x-form-label" title="<s:message code="wizard.NewReportWizard.report.description"/>">
+				<span><s:message code="wizard.NewReportWizard.report.description"/></span>
+				<form:textarea id="${requestScope.formID}-description" htmlEscape="true" cssClass="x-input"
+				               path="description"/>
+			</label>
+			<script type="text/javascript">
+				var el = $('#' + '${requestScope.formID}-description');
+				Spring.addDecoration(new Spring.ElementDecoration({
+					elementId  : el.attr('id'),
+					widgetType : 'dijit.form.Textarea',
+					widgetAttrs: {
+						class: el.attr('class')
+					}
+				}))
+			</script>
+		</p>
+	</fieldset>
+</form:form>
+<swf:applyDynamicActions forState="${flowRequestContext.currentState}"/>
+<swf:applyActionsVisibility forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>

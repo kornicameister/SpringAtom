@@ -23,7 +23,7 @@
 <jsp:useBean id="wizardID" scope="request" type="java.lang.String"/>
 <jsp:useBean id="formID" scope="request" type="java.lang.String"/>
 
-<div id="${wizardID}" class="modal-dialog modal-lg" ng-controller="WizController as wiz">
+<div id="${wizardID}" class="modal-dialog modal-lg">
 	<div class="modal-content">
 
 		<!-- closing button -->

@@ -26,19 +26,16 @@
 <%@ page import="org.agatom.springatom.server.model.beans.report.SReport" %>
 <%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
-<div id="sa-wizard-step-body" class="x-wizard-content">
-    <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
+<form:form id="${requestScope.formID}"
+           action="${flowExecutionUrl}"
+           commandName="<%=SReport.ENTITY_NAME%>"
+           method="<%=RequestMethod.POST.toString().toLowerCase()%>"
+           cssClass="x-form">
+	<swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
+	<fieldset>
+	</fieldset>
+</form:form>
 
-    <form:form id="${requestScope.formID}"
-               action="${flowExecutionUrl}"
-               commandName="<%=SReport.ENTITY_NAME%>"
-               method="<%=RequestMethod.POST.toString().toLowerCase()%>"
-               cssClass="x-form">
-        <fieldset>
-        </fieldset>
-        <swf:notificationsBox context="${flowRequestContext}"/>
-    </form:form>
-</div>
-<swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
-<swf:getActions forState="${flowRequestContext.currentState}"/>
+<swf:applyDynamicActions forState="${flowRequestContext.currentState}"/>
+<swf:applyActionsVisibility forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>

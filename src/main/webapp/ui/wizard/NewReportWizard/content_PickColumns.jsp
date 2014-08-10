@@ -26,145 +26,141 @@
 
 <%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
-<div id="sa-wizard-step-body" class="content">
-    <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
-
-    <form:form id="${requestScope.formID}"
-               action="${flowExecutionUrl}"
-               commandName="commandBean"
-               method="<%=RequestMethod.POST.toString().toLowerCase()%>"
-               cssClass="x-form">
-        <fieldset>
-            <legend><s:message code="wizard.NewReportWizard.pickColumns.desc"/></legend>
-            <jsp:useBean id="entityToColumn" scope="request" type="java.util.Map"/>
-            <jsp:useBean id="colToRenderProp" scope="request" type="java.util.Map"/>
-            <c:forEach items="${entityToColumn}" varStatus="loop" var="entry">
-                <p class="dataTables_wrapper">
-                    <label class="x-form-label"
-                           title="<s:message code="wizard.NewReportWizard.entity.pickColumnsForEntity"/>">
-                        <c:set var="reportableEntity" scope="page" value="${entry.key}"/>
-                        <jsp:useBean id="reportableEntity" scope="page"
-                                     class="org.agatom.springatom.web.rbuilder.bean.RBuilderEntity"/>
+<form:form id="${requestScope.formID}"
+           action="${flowExecutionUrl}"
+           commandName="commandBean"
+           method="<%=RequestMethod.POST.toString().toLowerCase()%>"
+           cssClass="x-form">
+	<swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
+	<fieldset>
+		<legend><s:message code="wizard.NewReportWizard.pickColumns.desc"/></legend>
+		<jsp:useBean id="entityToColumn" scope="request" type="java.util.Map"/>
+		<jsp:useBean id="colToRenderProp" scope="request" type="java.util.Map"/>
+		<c:forEach items="${entityToColumn}" varStatus="loop" var="entry">
+			<p class="dataTables_wrapper">
+				<label class="x-form-label"
+				       title="<s:message code="wizard.NewReportWizard.entity.pickColumnsForEntity"/>">
+					<c:set var="reportableEntity" scope="page" value="${entry.key}"/>
+					<jsp:useBean id="reportableEntity" scope="page"
+					             class="org.agatom.springatom.web.rbuilder.bean.RBuilderEntity"/>
                         <span><s:message code="wizard.NewReportWizard.pickColumns.forEntity"
                                          arguments="${reportableEntity.label}"/></span>
-                        <table class="dataTable">
-                            <thead>
-                            <tr>
-                                <th>
-                                    Order <%-- localize --%>
-                                </th>
-                                <th>
-                                    <s:message code="wizard.NewReportWizard.pickColumns.table.column.label"/>
-                                </th>
-                                <th>
-                                    <s:message code="wizard.NewReportWizard.pickColumns.table.column.renderAs"/>
-                                </th>
-                                <th>
-                                    Options <%-- localize --%>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <c:forEach items="${entry.value}" var="column" varStatus="loopColumns">
-                                <c:set var="reportableColumn" scope="page" value="${column}"/>
-                                <jsp:useBean id="reportableColumn" scope="page"
-                                             class="org.agatom.springatom.web.rbuilder.bean.RBuilderColumn"/>
-                                <form:hidden id="col-${loop.index}-${loopColumns.index}-name"
-                                             path="entities[${loop.index}].columns[${loopColumns.index}].columnName"/>
-                                <tr id="row-${reportableColumn.id}">
+					<table class="dataTable">
+						<thead>
+						<tr>
+							<th>
+								Order <%-- localize --%>
+							</th>
+							<th>
+								<s:message code="wizard.NewReportWizard.pickColumns.table.column.label"/>
+							</th>
+							<th>
+								<s:message code="wizard.NewReportWizard.pickColumns.table.column.renderAs"/>
+							</th>
+							<th>
+								Options <%-- localize --%>
+							</th>
+						</tr>
+						</thead>
+						<tbody>
+						<c:forEach items="${entry.value}" var="column" varStatus="loopColumns">
+							<c:set var="reportableColumn" scope="page" value="${column}"/>
+							<jsp:useBean id="reportableColumn" scope="page"
+							             class="org.agatom.springatom.web.rbuilder.bean.RBuilderColumn"/>
+							<form:hidden id="col-${loop.index}-${loopColumns.index}-name"
+							             path="entities[${loop.index}].columns[${loopColumns.index}].columnName"/>
+							<tr id="row-${reportableColumn.id}">
 
-                                    <td class="center"> <!-- order -->
-                                        <form:hidden id="col-${loop.index}-${loopColumns.index}-order"
-                                                     path="entities[${loop.index}].columns[${loopColumns.index}].order"/>
+								<td class="center"> <!-- order -->
+									<form:hidden id="col-${loop.index}-${loopColumns.index}-order"
+									             path="entities[${loop.index}].columns[${loopColumns.index}].order"/>
                                         <span id="col-${loop.index}-${loopColumns.index}-order-up"><i
-                                                class="fa fa-color-black fa-arrow-circle-o-up"></i></span>
+		                                        class="fa fa-color-black fa-arrow-circle-o-up"></i></span>
                                         <span id="col-${loop.index}-${loopColumns.index}-order-down"><i
-                                                class="fa fa-color-black fa-arrow-circle-o-down"></i></span>
-                                    </td>
+		                                        class="fa fa-color-black fa-arrow-circle-o-down"></i></span>
+								</td>
 
-                                    <td class="center"> <!-- label -->
-                                        <form:input id="col-${loop.index}-${loopColumns.index}-label"
-                                                    readonly="true"
-                                                    path="entities[${loop.index}].columns[${loopColumns.index}].label"/>
-                                    </td>
+								<td class="center"> <!-- label -->
+									<form:input id="col-${loop.index}-${loopColumns.index}-label"
+									            readonly="true"
+									            path="entities[${loop.index}].columns[${loopColumns.index}].label"/>
+								</td>
 
-                                    <td class="center">  <!-- render as -->
-                                        <s:eval expression="colToRenderProp[reportableColumn.id]" scope="page"
-                                                var="itemsRenderClass"/>
-                                        <form:select id="col-${loop.index}-${loopColumns.index}-renderClass"
-                                                     items="${itemsRenderClass}"
-                                                     itemValue="targetClassName"
-                                                     itemLabel="label"
-                                                     cssClass="x-input x-input-select"
-                                                     path="entities[${loop.index}].columns[${loopColumns.index}].renderClass"/>
-                                    </td>
+								<td class="center">  <!-- render as -->
+									<s:eval expression="colToRenderProp[reportableColumn.id]" scope="page"
+									        var="itemsRenderClass"/>
+									<form:select id="col-${loop.index}-${loopColumns.index}-renderClass"
+									             items="${itemsRenderClass}"
+									             itemValue="targetClassName"
+									             itemLabel="label"
+									             cssClass="x-input x-input-select"
+									             path="entities[${loop.index}].columns[${loopColumns.index}].renderClass"/>
+								</td>
 
-                                    <td class="center"> <!-- render excluded -->
-                                        <p>
-                                            <form:label
-                                                    path="entities[${loop.index}].columns[${loopColumns.index}].options.excluded">
-                                                <s:message
-                                                        code="wizard.NewReportWizard.pickColumns.table.column.excluded"/>
-                                            </form:label>
-                                            <form:checkbox id="col-${loop.index}-${loopColumns.index}-excluded"
-                                                           path="entities[${loop.index}].columns[${loopColumns.index}].options.excluded"/>
-                                        </p>
+								<td class="center"> <!-- render excluded -->
+									<p>
+										<form:label
+												path="entities[${loop.index}].columns[${loopColumns.index}].options.excluded">
+											<s:message
+													code="wizard.NewReportWizard.pickColumns.table.column.excluded"/>
+										</form:label>
+										<form:checkbox id="col-${loop.index}-${loopColumns.index}-excluded"
+										               path="entities[${loop.index}].columns[${loopColumns.index}].options.excluded"/>
+									</p>
 
-                                        <p>
-                                            <form:label
-                                                    path="entities[${loop.index}].columns[${loopColumns.index}].options.groupBy">
-                                                <s:message
-                                                        code="wizard.NewReportWizard.pickColumns.table.column.groupBy"/>
-                                            </form:label>
-                                            <form:checkbox id="col-${loop.index}-${loopColumns.index}-groupBy"
-                                                           path="entities[${loop.index}].columns[${loopColumns.index}].options.groupBy"/>
-                                        </p>
-                                    </td>
-                                </tr>
-                                <script type="text/javascript" id="editors-${column.id}">
-                                    $(function () {
-                                        Spring.addDecoration(new Spring.ElementDecoration({
-                                            elementId : 'col-${loop.index}-${loopColumns.index}-excluded',
-                                            widgetType: 'dijit.form.CheckBox'
-                                        }));
-                                        Spring.addDecoration(new Spring.ElementDecoration({
-                                            elementId : 'col-${loop.index}-${loopColumns.index}-groupBy',
-                                            widgetType: 'dijit.form.CheckBox'
-                                        }));
-                                        Spring.addDecoration(new Spring.ElementDecoration({
-                                            elementId  : 'col-${loop.index}-${loopColumns.index}-order-up',
-                                            widgetType : 'dijit.form.Button',
-                                            widgetAttrs: {
-                                                onClick: function () {
-                                                    var row = $('#' + 'row-${reportableColumn.id}');
-                                                    var input = $('#' + 'col-${loop.index}-${loopColumns.index}-order');
-                                                    SA.wizard.Helpers.NewReportWizard.onColumnOrderChange(row, input, 'up');
-                                                }
-                                            }
-                                        }));
-                                        Spring.addDecoration(new Spring.ElementDecoration({
-                                            elementId  : 'col-${loop.index}-${loopColumns.index}-order-down',
-                                            widgetType : 'dijit.form.Button',
-                                            widgetAttrs: {
-                                                onClick: function () {
-                                                    var row = $('#' + 'row-${reportableColumn.id}');
-                                                    var input = $('#' + 'col-${loop.index}-${loopColumns.index}-order');
-                                                    SA.wizard.Helpers.NewReportWizard.onColumnOrderChange(row, input, 'down');
-                                                }
-                                            }
-                                        }));
-                                    })
-                                </script>
-                            </c:forEach>
-                            </tbody>
-                        </table>
-                    </label>
-                </p>
-            </c:forEach>
-        </fieldset>
-        <swf:notificationsBox context="${flowRequestContext}"/>
-    </form:form>
-</div>
-<swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
-<swf:getActions forState="${flowRequestContext.currentState}"/>
+									<p>
+										<form:label
+												path="entities[${loop.index}].columns[${loopColumns.index}].options.groupBy">
+											<s:message
+													code="wizard.NewReportWizard.pickColumns.table.column.groupBy"/>
+										</form:label>
+										<form:checkbox id="col-${loop.index}-${loopColumns.index}-groupBy"
+										               path="entities[${loop.index}].columns[${loopColumns.index}].options.groupBy"/>
+									</p>
+								</td>
+							</tr>
+							<script type="text/javascript" id="editors-${column.id}">
+								$(function () {
+									Spring.addDecoration(new Spring.ElementDecoration({
+										elementId : 'col-${loop.index}-${loopColumns.index}-excluded',
+										widgetType: 'dijit.form.CheckBox'
+									}));
+									Spring.addDecoration(new Spring.ElementDecoration({
+										elementId : 'col-${loop.index}-${loopColumns.index}-groupBy',
+										widgetType: 'dijit.form.CheckBox'
+									}));
+									Spring.addDecoration(new Spring.ElementDecoration({
+										elementId  : 'col-${loop.index}-${loopColumns.index}-order-up',
+										widgetType : 'dijit.form.Button',
+										widgetAttrs: {
+											onClick: function () {
+												var row = $('#' + 'row-${reportableColumn.id}');
+												var input = $('#' + 'col-${loop.index}-${loopColumns.index}-order');
+												SA.wizard.Helpers.NewReportWizard.onColumnOrderChange(row, input, 'up');
+											}
+										}
+									}));
+									Spring.addDecoration(new Spring.ElementDecoration({
+										elementId  : 'col-${loop.index}-${loopColumns.index}-order-down',
+										widgetType : 'dijit.form.Button',
+										widgetAttrs: {
+											onClick: function () {
+												var row = $('#' + 'row-${reportableColumn.id}');
+												var input = $('#' + 'col-${loop.index}-${loopColumns.index}-order');
+												SA.wizard.Helpers.NewReportWizard.onColumnOrderChange(row, input, 'down');
+											}
+										}
+									}));
+								})
+							</script>
+						</c:forEach>
+						</tbody>
+					</table>
+				</label>
+			</p>
+		</c:forEach>
+	</fieldset>
+</form:form>
+<swf:applyDynamicActions forState="${flowRequestContext.currentState}"/>
+<swf:applyActionsVisibility forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>

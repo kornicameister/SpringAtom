@@ -25,36 +25,35 @@
 
 <%@ page import="org.springframework.web.bind.annotation.RequestMethod" %>
 
-<div id="sa-wizard-step-body" class="x-wizard-content">
-    <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
+<form:form id="${requestScope.formID}"
+           action="${flowExecutionUrl}"
+           method="<%=RequestMethod.POST.toString().toLowerCase()%>"
+           cssClass="form-horizontal"
+           role="form">
+	<swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
+	<fieldset class="container-fluid" role="contentinfo">
+		<legend><s:message code="wizard.NewReportWizard.addMoreEntitiesAndColumns"/></legend>
+		<jsp:useBean id="reportConfiguration" scope="request"
+		             type="org.agatom.springatom.web.rbuilder.ReportConfiguration"/>
 
-    <form:form id="${requestScope.formID}"
-               action="${flowExecutionUrl}"
-               method="<%=RequestMethod.POST.toString().toLowerCase()%>"
-               cssClass="x-form">
-        <fieldset>
-            <legend><s:message code="wizard.NewReportWizard.addMoreEntitiesAndColumns"/></legend>
-            <jsp:useBean id="reportConfiguration" scope="request"
-                         type="org.agatom.springatom.web.rbuilder.ReportConfiguration"/>
-                <%--TODO -> does not evaluate to valid html fragment--%>
-            <c:forEach items="${reportConfiguration.entities}" var="entity" varStatus="loop">
-                <p id="${loop.index}">
-                    <s:message code="wizard.NewReportWizard.info.entitySelected" arguments="${entity.name}"/>
-                    with <s:eval expression="${entity.columns.size()}"/> columns
-                </p>
-            </c:forEach>
-            <p>
-                Click <s:message code="button.next"/>[<s:message code="button.next.short"/>] to go on
-            </p>
+		<c:forEach items="${reportConfiguration.entities}" var="entity" varStatus="loop">
+			<p id="${loop.index}">
+				<s:message code="wizard.NewReportWizard.info.entitySelected" arguments="${entity.name}"/>
+				with <s:eval expression="${entity.columns.size()}"/> columns
+			</p>
+		</c:forEach>
 
-            <p>
-                Click <s:message code="button.previous"/>[<s:message code="button.previous.short"/>] to go back and
-                select more columns
-            </p>
-        </fieldset>
-        <swf:notificationsBox context="${flowRequestContext}"/>
-    </form:form>
-</div>
-<swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
-<swf:getActions forState="${flowRequestContext.currentState}"/>
+		<p>
+			Click <s:message code="button.next"/>[<s:message code="button.next.short"/>] to go on
+		</p>
+
+		<p>
+			Click <s:message code="button.previous"/>[<s:message code="button.previous.short"/>] to go back and
+			select more columns
+		</p>
+	</fieldset>
+</form:form>
+
+<swf:applyDynamicActions forState="${flowRequestContext.currentState}"/>
+<swf:applyActionsVisibility forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>

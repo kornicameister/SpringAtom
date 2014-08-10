@@ -53,7 +53,7 @@
         <js>/app/static/sa/libs/angular-bootstrap/ui-bootstrap-tpls.min.js</js>
         <js>/app/static/sa/libs/angular-ui-calendar/src/calendar.json</js>
         <js>/app/static/sa/libs/angular-ui-router/release/angular-ui-router.min.js</js>
-        <js>/app/static/sa/libs/ng-grid/ng-grid-2.0.11.min.js</js>
+        <js>/app/static/sa/libs/ng-grid/build/ng-grid.js</js>
         <js>/app/static/sa/libs/angular-animate/angular-animate.min.js</js>
     </group>
     <group name="spring_webflow_js" abstract="true">

@@ -23,42 +23,39 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
 
-<div id="sa-wizard-step-body" class="x-wizard-content">
-    <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
-    <form:form id="${requestScope.formID}"
-               action="${flowExecutionUrl}"
-               commandName="user"
-               method="<%=RequestMethod.POST.toString().toLowerCase()%>"
-               cssClass="x-form">
-        <fieldset>
-            <legend><s:message code="suser"/></legend>
-            <p>
-                <form:label path="authorities" cssClass="x-form-label">
-                    <span><s:message code="suser.roles"/></span>
-                    <form:select id="${requestScope.formID}-authorities"
-                                 items="${requestScope.localizedRoles}"
-                                 cssClass="x-input x-input-select"
-                                 itemLabel="label"
-                                 itemValue="role"
-                                 path="authorities"/>
-                </form:label>
-            </p>
-        </fieldset>
-        <swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
-    </form:form>
-    <script type="text/javascript" id="${requestScope.formID}-entity-decorator">
-        $(function () {
-            var el = $('#' + '${requestScope.formID}-authorities');
-            Spring.addDecoration(new Spring.ElementDecoration({
-                elementId  : el.attr('id'),
-                widgetType : 'dijit.form.MultiSelect',
-                widgetAttrs: {
-                    class: el.attr('class')
-                }
-            }));
-        });
-    </script>
-</div>
-<swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
-<swf:getActions forState="${flowRequestContext.currentState}"/>
+<form:form id="${requestScope.formID}"
+           action="${flowExecutionUrl}"
+           commandName="user"
+           method="<%=RequestMethod.POST.toString().toLowerCase()%>"
+           cssClass="x-form">
+	<swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
+	<fieldset>
+		<legend><s:message code="suser"/></legend>
+		<p>
+			<form:label path="authorities" cssClass="x-form-label">
+				<span><s:message code="suser.roles"/></span>
+				<form:select id="${requestScope.formID}-authorities"
+				             items="${requestScope.localizedRoles}"
+				             cssClass="x-input x-input-select"
+				             itemLabel="label"
+				             itemValue="role"
+				             path="authorities"/>
+			</form:label>
+		</p>
+	</fieldset>
+</form:form>
+<script type="text/javascript" id="${requestScope.formID}-entity-decorator">
+	$(function () {
+		var el = $('#' + '${requestScope.formID}-authorities');
+		Spring.addDecoration(new Spring.ElementDecoration({
+			elementId  : el.attr('id'),
+			widgetType : 'dijit.form.MultiSelect',
+			widgetAttrs: {
+				class: el.attr('class')
+			}
+		}));
+	});
+</script>
+<swf:applyDynamicActions forState="${flowRequestContext.currentState}"/>
+<swf:applyActionsVisibility forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>

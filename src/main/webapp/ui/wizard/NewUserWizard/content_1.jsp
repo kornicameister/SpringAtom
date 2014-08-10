@@ -23,71 +23,68 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
 
-<div id="sa-wizard-step-body" class="x-wizard-content">
-    <swf:renderStepTitle forState="${flowRequestContext.currentState}" cssClass="stepTitle"/>
-    <form:form id="${requestScope.formID}"
-               action="${flowExecutionUrl}"
-               commandName="user"
-               method="<%=RequestMethod.POST.toString().toLowerCase()%>"
-               cssClass="x-form">
-        <fieldset>
-            <legend><s:message code="suser"/></legend>
-            <p>
-                <form:label path="username" cssClass="x-form-label">
-                    <span><s:message code="susercredentials.username"/></span>
-                    <form:input id="${requestScope.formID}-user-login"
-                                htmlEscape="true"
-                                cssClass="x-input"
-                                path="username"/>
-                </form:label>
-            </p>
+<form:form id="${requestScope.formID}"
+           action="${flowExecutionUrl}"
+           commandName="user"
+           method="<%=RequestMethod.POST.toString().toLowerCase()%>"
+           cssClass="x-form">
+	<swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
+	<fieldset>
+		<legend><s:message code="suser"/></legend>
+		<p>
+			<form:label path="username" cssClass="x-form-label">
+				<span><s:message code="susercredentials.username"/></span>
+				<form:input id="${requestScope.formID}-user-login"
+				            htmlEscape="true"
+				            cssClass="x-input"
+				            path="username"/>
+			</form:label>
+		</p>
 
-            <p>
-                <form:label path="password" cssClass="x-form-label">
-                    <span><s:message code="susercredentials.password"/></span>
-                    <form:password id="${requestScope.formID}-user-password"
-                                   htmlEscape="true"
-                                   cssClass="x-input"
-                                   path="password"/>
-                </form:label>
-            </p>
-        </fieldset>
-        <fieldset>
-            <legend><s:message code="sperson"/></legend>
-            <p>
-                <form:label path="person.firstName" cssClass="x-form-label">
-                    <span><s:message code="sperson.firstname"/></span>
-                    <form:input id="${requestScope.formID}-user-person-firstName"
-                                htmlEscape="true"
-                                cssClass="x-input"
-                                path="person.firstName"/>
-                </form:label>
-            </p>
+		<p>
+			<form:label path="password" cssClass="x-form-label">
+				<span><s:message code="susercredentials.password"/></span>
+				<form:password id="${requestScope.formID}-user-password"
+				               htmlEscape="true"
+				               cssClass="x-input"
+				               path="password"/>
+			</form:label>
+		</p>
+	</fieldset>
+	<fieldset>
+		<legend><s:message code="sperson"/></legend>
+		<p>
+			<form:label path="person.firstName" cssClass="x-form-label">
+				<span><s:message code="sperson.firstname"/></span>
+				<form:input id="${requestScope.formID}-user-person-firstName"
+				            htmlEscape="true"
+				            cssClass="x-input"
+				            path="person.firstName"/>
+			</form:label>
+		</p>
 
-            <p>
-                <form:label path="person.lastName" cssClass="x-form-label">
-                    <span><s:message code="sperson.lastname"/></span>
-                    <form:input id="${requestScope.formID}-user-person-firstName"
-                                htmlEscape="true"
-                                cssClass="x-input"
-                                path="person.lastName"/>
-                </form:label>
-            </p>
+		<p>
+			<form:label path="person.lastName" cssClass="x-form-label">
+				<span><s:message code="sperson.lastname"/></span>
+				<form:input id="${requestScope.formID}-user-person-firstName"
+				            htmlEscape="true"
+				            cssClass="x-input"
+				            path="person.lastName"/>
+			</form:label>
+		</p>
 
-            <p>
-                <form:label path="person.primaryMail" cssClass="x-form-label">
-                    <span><s:message code="sperson.primarymail"/></span>
-                    <form:input id="${requestScope.formID}-user-person-primaryMail"
-                                htmlEscape="true"
-                                cssClass="x-input"
-                                type="email"
-                                path="person.primaryMail"/>
-                </form:label>
-            </p>
-        </fieldset>
-        <swf:notificationsBox context="${flowRequestContext}" command="currentFormObject"/>
-    </form:form>
-</div>
-<swf:getDynamicActions forState="${flowRequestContext.currentState}"/>
-<swf:getActions forState="${flowRequestContext.currentState}"/>
+		<p>
+			<form:label path="person.primaryMail" cssClass="x-form-label">
+				<span><s:message code="sperson.primarymail"/></span>
+				<form:input id="${requestScope.formID}-user-person-primaryMail"
+				            htmlEscape="true"
+				            cssClass="x-input"
+				            type="email"
+				            path="person.primaryMail"/>
+			</form:label>
+		</p>
+	</fieldset>
+</form:form>
+<swf:applyDynamicActions forState="${flowRequestContext.currentState}"/>
+<swf:applyActionsVisibility forState="${flowRequestContext.currentState}"/>
 <swf:applyStepsState forState="${flowRequestContext.currentState}"/>

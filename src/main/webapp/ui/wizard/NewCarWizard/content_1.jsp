@@ -37,13 +37,14 @@
 		<form:label path="vinNumber" cssClass="col-sm-2 control-label">
 			<span class="">${scarVinNumber}</span>
 		</form:label>
-		<div class="col-sm-10">
+		<div class="col-sm-9">
 			<form:input id="${requestScope.formID}-vinNumber"
 			            htmlEscape="true"
 			            cssClass="form-control"
 			            path="vinNumber"
 			            cssErrorClass="form-control-feedback"
 			            placeholder="${scarVinNumber}"
+			            ng-model="vinNumber"
 			            required="true"/>
 		</div>
 	</div>
