@@ -23,13 +23,13 @@
         "tests"
     ],
     "dependencies": {
-        "jQuery.mmenu"       : "latest",
         "bootstrap"          : "latest",
         "ng-grid"            : "latest",
         "angular-bootstrap"  : "latest",
         "angular-ui-router"  : "latest",
         "angular-ui-calendar": "latest",
         "angular-animate"    : "latest",
+        "angular-moment"     : "latest",
         "jasny-bootstrap"    : "latest",
         "jsface"             : "latest",
         "animate.css"        : "latest",

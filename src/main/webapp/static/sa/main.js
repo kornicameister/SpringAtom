@@ -1,0 +1,97 @@
+/*
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]
+ *
+ * [SpringAtom] is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * [SpringAtom] is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.
+ */
+
+(function mainJs() {
+    var prefix = 'static/sa',
+        adjustPath = function adjustPath(val) {
+            val = val.substr(0, val.length - 3);
+            return val;
+        },
+        config = {
+            baseUrl : '/app/' + prefix,
+            urlArgs : 'v=1.0&minimize=true',
+            paths   : {
+                'angular'       : adjustPath('../libs/angular/angular.min.js'),
+                'ngAnimate'     : adjustPath('../libs/angular-animate/angular-animate.min.js'),
+                'ngBootstrap'   : adjustPath('../libs/angular-bootstrap/ui-bootstrap-tpls.min.js'),
+                'ngCalendar'    : adjustPath('../libs/angular-ui-calendar/src/calendar.js'),
+                'ngRouter'      : adjustPath('../libs/angular-ui-router/release/angular-ui-router.js'),
+                'angular-moment': adjustPath('../libs/angular-moment/angular-moment.min.js'),
+                'bootstrap'     : adjustPath('../libs/bootstrap/dist/js/bootstrap.min.js'),
+                'bProgressBar'  : adjustPath('../libs/bootstrap-progressbar/bootstrap-progressbar.min.js'),
+                'bJasny'        : adjustPath('../libs/jasny-bootstrap/dist/js/jasny-bootstrap.min.js'),
+                'fullcalendar'  : adjustPath('../libs/fullcalendar/fullcalendar.min.js'),
+                'jquery'        : adjustPath('../libs/jquery/dist/jquery.min.js'),
+                'jquery-ui'     : adjustPath('../libs/jquery-ui/ui/minified/jquery-ui.min.js'),
+                'jsface'        : adjustPath('../libs/jsface/dist/jsface.all.min.js'),
+                'momentjs'      : adjustPath('../libs/moment/min/moment-with-langs.min.js'),
+                'ngGrid'        : adjustPath('../libs/ng-grid/build/ng-grid.min.js')
+            },
+            priority: [
+                'angular'
+            ],
+            shim    : {
+                'angular'       : {
+                    exports: 'angular',
+                    deps   : [
+                        'jquery',
+                        'jquery-ui'
+                    ]
+                },
+                'ngRouter'      : {
+                    deps: ['angular']
+                },
+                'ngCalendar'    : {
+                    exports: 'ngCalendar',
+                    deps   : [
+                        'angular',
+                        'jquery',
+                        'jquery-ui',
+                        'fullcalendar'
+                    ]
+                },
+                'angular-moment': {
+                    deps: [
+                        'angular',
+                        'momentjs'
+                    ]
+                },
+                'fullcalendar'  : {
+                    deps: [
+                        'jquery'
+                    ]
+                },
+                'ngBootstrap'   : ['angular'],
+                'ngAnimate'     : ['angular'],
+                'ngGrid'        : ['angular'],
+                'bootstrap'     : {
+                    deps: [
+                        'jquery'
+                    ]
+                },
+                'bProgressBar'  : ['bootstrap'],
+                'bJasny'        : ['bootstrap']
+            }
+        };
+
+    require.config(config);
+
+    require(['app'], function bootstrap(app) {
+        app.init();
+    });
+
+}());

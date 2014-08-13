@@ -31,4 +31,4 @@ lib/*
 docs/**
 
 #bower installed packages
-src/main/webapp/static/sa/libs/**
+src/main/webapp/static/libs/**

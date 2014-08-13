@@ -1,0 +1,70 @@
+/*
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]
+ *
+ * [SpringAtom] is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * [SpringAtom] is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.
+ */
+
+define(
+    [
+        'config/module',
+        'config/directives',
+        'config/states',
+        'config/lang',
+        // modules
+        // modules
+        'jsface'
+    ],
+    function app(module, directives, states, lang) {
+
+        // load parts of the application
+        states.configure();
+        directives.configure();
+        // load parts of the application
+
+        (function extensions() {
+            String.prototype.startsWith = function (str) {
+                var length = str.length;
+                return this.substring(0, length) === str;
+            };
+            String.prototype.endsWith = function (str) {
+                var length = this.length;
+                return this.substring(length - 1, length) === str;
+            };
+            String.prototype.removeFromBeginning = function (count) {
+                return this.substring(count);
+            };
+            String.prototype.removeFromEnd = function (count) {
+                var length = this.length;
+                return this.substring(0, length - count);
+            };
+            String.prototype.format = function (args) {
+                var newStr = this;
+                for (var key in args) {
+                    //noinspection JSUnfilteredForInLoop
+                    newStr = newStr.replace('{' + key + '}', args[key]);
+                }
+                return newStr;
+            }
+        }());
+
+        return {
+            init: function () {
+                setTimeout(function () {
+                    window.name = 'NG_DEFER_BOOTSTRAP';
+                    angular.bootstrap(document, [ module.name ])
+                }, 100);
+            }
+        }
+    }
+);

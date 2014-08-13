@@ -22,20 +22,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-<html ng-app="springatom" ng-csp>
+<html>
 <head>
-    <tiles:insertAttribute name="head"/>
-    <tiles:insertAttribute name="css" flush="true"/>
+	<tiles:insertAttribute name="head"/>
+	<tiles:insertAttribute name="css" flush="true"/>
 </head>
 <body>
 <tiles:insertAttribute name="top-nav-header"/>
 <navigator class="navbar navbar-left col-sm-2 navbar-nav ui-spinner" role="navigation"></navigator>
 <div class="content-wrapper container">
-    <div class="col-lg-12">
-        <tiles:insertAttribute name="header"/>
-        <section class="slide" ui-view></section>
-    </div>
+	<div class="col-lg-12">
+		<tiles:insertAttribute name="header"/>
+		<section class="slide" ui-view></section>
+	</div>
 </div>
 </body>
-<tiles:insertAttribute name="js" flush="true"/>
+<%--<tiles:insertAttribute name="js" flush="true"/>--%>
+<script type="text/javascript" data-main="/app/static/sa/main.js"
+        src="<s:url value="/app/static/libs/requirejs/require.js"/>"></script>
 </html>
