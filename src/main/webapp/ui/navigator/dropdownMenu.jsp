@@ -44,11 +44,10 @@
 						<i ng-show="am.iconClass" ng-class="am.iconClass"></i>{{am.label}}
 					</a>
 					<a id="{{am.id}}"
-					   href="{{am.url}}"
 					   tabindex="-1"
 					   role="menuitem"
 					   ng-switch-when="wizardAction"
-					   ng-click="hook.launchWizard($event,am)">
+					   ui-sref="{{am.name}}">
 						<i ng-show="am.iconClass" ng-class="am.iconClass"></i>
 						<i ng-show="!am.iconClass" class="glyphicon glyphicon-tint"></i>
 						{{am.label}}

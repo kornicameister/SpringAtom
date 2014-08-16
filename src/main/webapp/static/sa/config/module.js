@@ -22,11 +22,14 @@ define(
     [
         'angular',
         'utils',
+        // angular injections
         'ngRouter',
         'ngAnimate',
         'ngBootstrap',
         'ngCalendar',
         'ngGrid',
+        'ngCookies',
+        'ngDialogs',
         'angular-moment',
         'bProgressBar',
         'bJasny'
@@ -38,7 +41,11 @@ define(
                 'ui.calendar',
                 'ui.router',
                 'ngAnimate',
+                'ngCookies',
                 'ngGrid',
+                'dialogs.main',
+                'dialogs.default-translations',
+                'pascalprecht.translate',
                 'angularMoment'
             ],
             module = angular.module(appName, dependencies),
@@ -67,10 +74,12 @@ define(
                 }
             };
 
-        module.config(['$httpProvider', generalConf])
+        module
+            .config(['$httpProvider', generalConf])
             .provider('urlHelper', urlHelperProvider)
             .filter('getByProperty', getByPropertyFilter)
-            .constant('appName', 'SpringAtom');
+            .constant('appName', 'SpringAtom')
+            .constant('timeoutDelay', 666);
 
         return  module;
     }

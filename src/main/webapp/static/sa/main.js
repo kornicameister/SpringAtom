@@ -25,37 +25,64 @@
             baseUrl : '/app/' + prefix,
             urlArgs : 'v=1.0&minimize=true',
             paths   : {
-                'angular'       : adjustPath('../libs/angular/angular.min.js'),
-                'ngAnimate'     : adjustPath('../libs/angular-animate/angular-animate.min.js'),
-                'ngBootstrap'   : adjustPath('../libs/angular-bootstrap/ui-bootstrap-tpls.min.js'),
-                'ngCalendar'    : adjustPath('../libs/angular-ui-calendar/src/calendar.js'),
-                'ngRouter'      : adjustPath('../libs/angular-ui-router/release/angular-ui-router.js'),
-                'angular-moment': adjustPath('../libs/angular-moment/angular-moment.min.js'),
-                'bootstrap'     : adjustPath('../libs/bootstrap/dist/js/bootstrap.min.js'),
-                'bProgressBar'  : adjustPath('../libs/bootstrap-progressbar/bootstrap-progressbar.min.js'),
-                'bJasny'        : adjustPath('../libs/jasny-bootstrap/dist/js/jasny-bootstrap.min.js'),
-                'fullcalendar'  : adjustPath('../libs/fullcalendar/fullcalendar.min.js'),
-                'jquery'        : adjustPath('../libs/jquery/dist/jquery.min.js'),
-                'jquery-ui'     : adjustPath('../libs/jquery-ui/ui/minified/jquery-ui.min.js'),
-                'jsface'        : adjustPath('../libs/jsface/dist/jsface.all.min.js'),
-                'momentjs'      : adjustPath('../libs/moment/min/moment-with-langs.min.js'),
-                'ngGrid'        : adjustPath('../libs/ng-grid/build/ng-grid.min.js')
+                'angular'              : adjustPath('../libs/angular/angular.min.js'),
+                'ngAnimate'            : adjustPath('../libs/angular-animate/angular-animate.min.js'),
+                'ngBootstrap'          : adjustPath('../libs/angular-bootstrap/ui-bootstrap-tpls.min.js'),
+                'ngCalendar'           : adjustPath('../libs/angular-ui-calendar/src/calendar.js'),
+                'ngRouter'             : adjustPath('../libs/angular-ui-router/release/angular-ui-router.js'),
+                'ngCookies'            : adjustPath('../libs/angular-cookies/angular-cookies.min.js'),
+                'ngDialogs'            : adjustPath('../libs/angular-dialog-service/dialogs.min.js'),
+                'ngDialogsTranslations': adjustPath('../libs/angular-dialog-service/dialogs-default-translations.min.js'),
+                'ngSanitize'           : adjustPath('../libs/angular-sanitize/angular-sanitize.min.js'),
+                'ngTranslate'          : adjustPath('../libs/angular-translate/angular-translate.min.js'),
+                'angular-moment'       : adjustPath('../libs/angular-moment/angular-moment.min.js'),
+                'bootstrap'            : adjustPath('../libs/bootstrap/dist/js/bootstrap.min.js'),
+                'bProgressBar'         : adjustPath('../libs/bootstrap-progressbar/bootstrap-progressbar.min.js'),
+                'bJasny'               : adjustPath('../libs/jasny-bootstrap/dist/js/jasny-bootstrap.min.js'),
+                'fullcalendar'         : adjustPath('../libs/fullcalendar/fullcalendar.min.js'),
+                'jquery'               : adjustPath('../libs/jquery/dist/jquery.min.js'),
+                'jquery-ui'            : adjustPath('../libs/jquery-ui/ui/minified/jquery-ui.min.js'),
+                'jsface'               : adjustPath('../libs/jsface/dist/jsface.all.min.js'),
+                'momentjs'             : adjustPath('../libs/moment/min/moment-with-langs.min.js'),
+                'ngGrid'               : adjustPath('../libs/ng-grid/build/ng-grid.min.js')
             },
             priority: [
                 'angular'
             ],
             shim    : {
-                'angular'       : {
+                'angular'              : {
                     exports: 'angular',
                     deps   : [
                         'jquery',
                         'jquery-ui'
                     ]
                 },
-                'ngRouter'      : {
+                'ngDialogs'            : {
+                    deps: [
+                        'ngTranslate',
+                        'ngSanitize',
+                        'ngDialogsTranslations'
+                    ]
+                },
+                'ngTranslate'          : {
+                    deps: [
+                        'angular'
+                    ]
+                },
+                'ngDialogsTranslations': {
+                    deps: [
+                        'angular'
+                    ]
+                },
+                'ngSanitize'           : {
+                    deps: [
+                        'angular'
+                    ]
+                },
+                'ngRouter'             : {
                     deps: ['angular']
                 },
-                'ngCalendar'    : {
+                'ngCalendar'           : {
                     exports: 'ngCalendar',
                     deps   : [
                         'angular',
@@ -64,27 +91,32 @@
                         'fullcalendar'
                     ]
                 },
-                'angular-moment': {
+                'ngCookies'            : {
+                    deps: [
+                        'angular'
+                    ]
+                },
+                'angular-moment'       : {
                     deps: [
                         'angular',
                         'momentjs'
                     ]
                 },
-                'fullcalendar'  : {
+                'fullcalendar'         : {
                     deps: [
                         'jquery'
                     ]
                 },
-                'ngBootstrap'   : ['angular'],
-                'ngAnimate'     : ['angular'],
-                'ngGrid'        : ['angular'],
-                'bootstrap'     : {
+                'ngBootstrap'          : ['angular'],
+                'ngAnimate'            : ['angular'],
+                'ngGrid'               : ['angular'],
+                'bootstrap'            : {
                     deps: [
                         'jquery'
                     ]
                 },
-                'bProgressBar'  : ['bootstrap'],
-                'bJasny'        : ['bootstrap']
+                'bProgressBar'         : ['bootstrap'],
+                'bJasny'               : ['bootstrap']
             }
         };
 

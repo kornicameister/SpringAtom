@@ -21,6 +21,7 @@ define(
         'config/directives',
         'config/states',
         'config/lang',
+        'config/ext',
         // modules
         // modules
         'jsface'
@@ -31,32 +32,6 @@ define(
         states.configure();
         directives.configure();
         // load parts of the application
-
-        (function extensions() {
-            String.prototype.startsWith = function (str) {
-                var length = str.length;
-                return this.substring(0, length) === str;
-            };
-            String.prototype.endsWith = function (str) {
-                var length = this.length;
-                return this.substring(length - 1, length) === str;
-            };
-            String.prototype.removeFromBeginning = function (count) {
-                return this.substring(count);
-            };
-            String.prototype.removeFromEnd = function (count) {
-                var length = this.length;
-                return this.substring(0, length - count);
-            };
-            String.prototype.format = function (args) {
-                var newStr = this;
-                for (var key in args) {
-                    //noinspection JSUnfilteredForInLoop
-                    newStr = newStr.replace('{' + key + '}', args[key]);
-                }
-                return newStr;
-            }
-        }());
 
         return {
             init: function () {

@@ -30,11 +30,9 @@
 <body>
 <tiles:insertAttribute name="top-nav-header"/>
 <navigator class="navbar navbar-left col-sm-2 navbar-nav ui-spinner" role="navigation"></navigator>
-<div class="content-wrapper container">
-	<div class="col-lg-12">
-		<tiles:insertAttribute name="header"/>
-		<section class="slide" ui-view></section>
-	</div>
+<div class="col-sm-10 content-wrapper container-fluid">
+	<tiles:insertAttribute name="header"/>
+	<section class="slide" ui-view></section>
 </div>
 </body>
 <%--<tiles:insertAttribute name="js" flush="true"/>--%>
