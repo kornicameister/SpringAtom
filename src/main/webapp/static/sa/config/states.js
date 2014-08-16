@@ -24,7 +24,8 @@ define(
         'utils',
         // states
         'states/navigator',
-        'states/ip'
+        'states/ip',
+        'states/wizards'
         // states
     ],
     function configStates(app, utils) {
@@ -40,7 +41,7 @@ define(
                 }
                 return local;
             }(arguments)),
-            _register = function localRegister(states) {
+            _register = function localRegister($urlRouterProvider, states) {
                 var me = this;
                 if (!angular.isDefined(states)) {
                     var msg = 'States are not defined, can not initialize';
@@ -53,18 +54,34 @@ define(
                 if (states instanceof Array && states.length > 0) {
                     var i;
                     for (i = 0; i < states.length; i++) {
-                        _register.call(me, states[i]);
+                        _register.call(me, $urlRouterProvider, states[i]);
                     }
                 } else if (states.name && states.definition) {
                     me.state(states.name, states.definition);
+                } else if (states.rule) {
+                    $urlRouterProvider.when(states.rule.when, states.rule.then);
                 }
+            },
+            configureStateListeners = function ($rootScope, $cookies) {
+                var onStateChangeStart = function onStateChangeStart(event, toState, toParams, fromState) {
+                    var lastState = fromState.name === '' ? 'home' : fromState.name,
+                        currentState = toState.name;
+                    if (lastState === currentState) {
+                        // do not save to cookie if last state is the same as current state
+                        return;
+                    }
+                    $cookies.lastState = lastState;
+                    $cookies.currentState = currentState;
+                };
+                $rootScope.$on('$stateChangeStart', onStateChangeStart)
             };
         return {
             configure: function () {
                 app.config(function localConfigure($stateProvider, $urlRouterProvider) {
-                    _register.call($stateProvider, states);
+                    _register.call($stateProvider, $urlRouterProvider, states);
                     $urlRouterProvider.otherwise(otherwiseRoute);
                 });
+                app.run(['$rootScope', '$cookies', configureStateListeners]);
             }
         };
     }

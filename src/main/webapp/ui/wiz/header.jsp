@@ -21,30 +21,19 @@
 <%@ taglib prefix="swf2" uri="/WEB-INF/tags/sa/swf.tld" %>
 
 <nav class="navbar navbar-inverse" role="navigation">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="{{'#'+wizardId}}-collapse">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="#"><i class="glyphicon glyphicon-list"></i></a>
-		</div>
-		<div class="collapse navbar-collapse" id="{{wizardId}}-collapse">
-			<ul class="nav navbar-nav navbar-left">
-				<li ng-repeat="step in steps" class="small"
-				    ng-class="{active:step.active, disabled:(!step.enabled)}">
-					<a href="#">
-						<i ng-show="step.required" class="glyphicon glyphicon-asterisk"></i>
-						{{step.index + 1}} - {{step.label}}
-					</a>
-				</li>
-			</ul>
-		</div>
+	<div class="collapse navbar-collapse" id="{{wizardId}}-collapse">
+		<ul class="nav navbar-nav navbar-left">
+			<li ng-repeat="step in steps" class="small">
+				<a ng-class="{active:step.active}"
+				   title="{{step.label}}">
+					<i ng-show="step.required" class="glyphicon glyphicon-asterisk"></i>
+					<span class="stepIndex">{{step.index + 1}}</span>&nbsp;{{step.label}}
+				</a>
+			</li>
+		</ul>
 	</div>
 </nav>
-<h4>
+<h4 class="center-block">
 	{{wizardTitle}}
 </h4>
 

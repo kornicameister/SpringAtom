@@ -28,7 +28,9 @@ define(
         'directives/cmp/icon',
         'directives/cmp/grid/grid',
         'directives/cmp/ip/header',
-        'directives/cmp/ip/attribute'
+        'directives/cmp/ip/attribute',
+        'directives/cmp/wiz/header',
+        'directives/cmp/wiz/actions'
         // directives
     ],
     function configDirectives(app, utils) {
