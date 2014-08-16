@@ -36,8 +36,31 @@ define(
                     }
                 }
                 amMoment.changeLanguage(lang);
+            },
+            dialogsTranslations = function ($translateProvider) {
+                // TODO add reading those values from a server
+                var translations = {
+                    DIALOGS_ERROR            : "Błąd",
+                    DIALOGS_ERROR_MSG        : "Wystąpił nieznany błąd",
+                    DIALOGS_CLOSE            : "Zamknij",
+                    DIALOGS_PLEASE_WAIT      : "Proszę czekać",
+                    DIALOGS_PLEASE_WAIT_ELIPS: "Proszę czekać...",
+                    DIALOGS_PLEASE_WAIT_MSG  : "Operacja w trakcie, proszę czekać...",
+                    DIALOGS_PERCENT_COMPLETE : "% zakończono",
+                    DIALOGS_NOTIFICATION     : "Powiadomienie",
+                    DIALOGS_NOTIFICATION_MSG : "Nieznane powiadomienie...",
+                    DIALOGS_CONFIRMATION     : "Potwierdzenie",
+                    DIALOGS_CONFIRMATION_MSG : "Wymagane potwierdzenie",
+                    DIALOGS_OK               : "Ok",
+                    DIALOGS_YES              : "Tak",
+                    DIALOGS_NO               : "Nie"
+                };
+                $translateProvider.translations('pl-PL', translations);
+                $translateProvider.translations('pl', translations);
+                $translateProvider.preferredLanguage('pl');
             };
 
-        module.run(configureLang);
+        module.run(configureLang)
+            .config(['$translateProvider', dialogsTranslations])
     }
 );
