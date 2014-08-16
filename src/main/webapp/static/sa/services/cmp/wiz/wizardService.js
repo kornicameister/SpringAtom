@@ -19,9 +19,6 @@
  * Created by trebskit on 2014-08-14.
  */
 define(
-    [
-        'config/module'
-    ],
     function wizardService(app) {
         var directions = {
                 NEXT: 1,
@@ -36,6 +33,21 @@ define(
             canGo = function canGo(from, to) {
                 return (from.next || false) === to.state;
             },
+            getUrl = function getUrl(url, localPrefix) {
+                if (!angular.isDefined(localPrefix)) {
+                    localPrefix = prefix;
+                }
+                return localPrefix.format({ url: url });
+            },
+            getSubStateUrl = function getSubStateUrl(nextUrl, url) {
+                return '{a}{b}'.format({
+                    a: url,
+                    b: nextUrl
+                })
+            },
+            getState = function getState(parent, state) {
+                return '{p}.{s}'.format({ p: parent, s: state });
+            },
             prefix = '/sa/wizard{url}';
 
         return {
@@ -43,21 +55,9 @@ define(
             getPrev       : getPrev,
             canGo         : canGo,
             directions    : directions,
-            getUrl        : function getUrl(url, localPrefix) {
-                if (!angular.isDefined(localPrefix)) {
-                    localPrefix = prefix;
-                }
-                return localPrefix.format({ url: url });
-            },
-            getSubStateUrl: function getSubStateUrl(nextUrl, url) {
-                return '{a}{b}'.format({
-                    a: url,
-                    b: nextUrl
-                })
-            },
-            getState      : function getState(parent, state) {
-                return '{p}.{s}'.format({ p: parent, s: state });
-            }
+            getUrl        : getUrl,
+            getSubStateUrl: getSubStateUrl,
+            getState      : getState
         };
     }
 );

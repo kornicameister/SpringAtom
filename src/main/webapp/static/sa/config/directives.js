@@ -30,7 +30,8 @@ define(
         'directives/cmp/ip/header',
         'directives/cmp/ip/attribute',
         'directives/cmp/wiz/header',
-        'directives/cmp/wiz/actions'
+        'directives/cmp/wiz/actions',
+        'directives/cmp/wiz/nbox'
         // directives
     ],
     function configDirectives(app, utils) {

@@ -19,42 +19,15 @@
  * Created by trebskit on 2014-08-15.
  */
 define(
-    [
-        'angular',
-        'config/ext'
-    ],
-    function header(angular) {
+    function actions() {
         var directive = function wizardActions($log) {
             $log.debug('wizardActions directive loading');
-
-            var linkFunc = function wizardActionsLinkFunction(scope) {
-                    if (!angular.isDefined(scope.actions)) {
-                        throw new Error('wizardActions :: actions are not defined');
-                    }
-                },
-                /**
-                 * Computes template for actions
-                 * @returns {string}
-                 */
-                getTemplate = function wizardActionsGetTemplate() {
-                    var array = [];
-
-                    array.push('<div class="btn-group-lg" ng-show="actions">');
-                    array.push('<button ng-repeat="act in actions" id="{{act.id}}" ng-click="act.handler($event)" type="submit" role="link" name="{{act.eventName}}" class="{{act.iconClass}}" title="{{act.label}}" ng-show="act.enabled">');
-                    array.push('<i ng-show="act.eventIconClass" class="{{act.eventIconClass}}" role="presentation"></i>');
-                    array.push('</button>');
-                    array.push('</div>');
-
-                    return array.join('');
-                };
-
             return {
-                restrict: 'E',
-                scope   : {
+                restrict   : 'E',
+                scope      : {
                     actions: '=actions'
                 },
-                template: getTemplate(),
-                link    : linkFunc
+                templateUrl: '/ui/wiz/actions.jsp'
             }
         };
         return {

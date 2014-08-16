@@ -1,5 +1,5 @@
 <%--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                 ~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                 ~
   ~                                                                                              ~
   ~ [SpringAtom] is free software: you can redistribute it and/or modify                         ~
   ~ it under the terms of the GNU General Public License as published by                         ~
@@ -15,20 +15,18 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<div class="container-fluid">
-	<div class="col-lg-9 col-lg-offset-1">
-		<div id="form-container">
-			<wizard-header title="{{title}}" steps="header"></wizard-header>
-			<form name="wizardForm" ng-submit="hooks.submitForm()" class="form-horizontal" role="form">
-				<wizard-nbox errors="errors" messages="messages"></wizard-nbox>
-				<section id="form-view" class="well slide" ui-view></section>
-			</form>
-			<wizard-actions class="btn-toolbar" actions="actions" style="float:right"></wizard-actions>
-		</div>
-	</div>
-	<pre class="col-lg-2" ng-if="debug">
-		<code>
-			{{formData}}
-		</code>
-	</pre>
+<div class="btn-group-lg" ng-show="actions">
+	<button ng-repeat="act in actions"
+	        id="{{act.id}}"
+	        ng-click="act.handler($event)"
+	        type="submit"
+	        role="link"
+	        name="{{act.eventName}}"
+	        class="{{act.iconClass}}"
+	        title="{{act.label}}"
+	        ng-show="act.enabled">
+		<i ng-show="act.eventIconClass" class="{{act.eventIconClass}}" role="presentation"></i>
+	</button>
 </div>
+
+
