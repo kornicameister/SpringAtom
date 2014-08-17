@@ -55,15 +55,15 @@ define(
                 },
                 init = {
                     getInitialState: function () {
-                        var init = definition.data.steps[0];
+                        var init = definition.steps[0];
                         return init.state;
                     },
                     getTitle       : function getTitle() {
-                        return definition.data.label;
+                        return definition.label;
                     },
                     getLabels      : function getLabels() {
                         var labels = {};
-                        angular.forEach(definition.data.steps, function (chunk) {
+                        angular.forEach(definition.steps, function (chunk) {
                             var localLabels = chunk.labels;
                             labels = angular.extend(labels, localLabels || {});
                         });
@@ -71,7 +71,7 @@ define(
                     },
                     getSteps       : function getSteps() {
                         var steps = [];
-                        angular.forEach(definition.data.steps, function (chunk) {
+                        angular.forEach(definition.steps, function (chunk) {
                             steps.push(angular.extend(chunk, {
                                 state: wizardKey + '.' + chunk.step
                             }));

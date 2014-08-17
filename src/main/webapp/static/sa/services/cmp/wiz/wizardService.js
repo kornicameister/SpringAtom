@@ -33,8 +33,6 @@ define(
              * @type {{}}
              */
             providerMap = [
-                'getLabels' ,
-                'getTitle',
                 'getFormData',
                 'isActionEnabled'
             ],

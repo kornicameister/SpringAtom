@@ -25,8 +25,10 @@ define(
     ],
     function wizardResource(app, utils) {
         var urls = {
-                init    : '/app/cmp/wiz/init/{key}',
-                stepInit: '/app/cmp/wiz/init/step/{key}',
+                init      : '/app/cmp/wiz/init/{key}',
+                stepInit  : '/app/cmp/wiz/init/step/{key}',
+                stepSubmit: '/app/cmp/wiz/submit/step/{key}',
+                submit    : '/app/cmp/wiz/submit/{key}',
                 /**
                  * Adds some magic number to the end of the url to stop caches.
                  * It is vital due to localization. If server picks up locale
@@ -35,7 +37,7 @@ define(
                  * @param url the url to adjust
                  * @returns {string}
                  */
-                adjust  : function (url) {
+                adjust    : function (url) {
                     return url + '?_d=' + utils.now();
                 }
             },
@@ -47,42 +49,93 @@ define(
                 }
             },
             httpConf = {
-                init    : function (key) {
+                init      : function (key) {
                     return angular.extend(commonHttpConf, {
                         method: 'GET',
                         url   : urls.adjust(urls.init.format({key: key}))
                     })
                 },
-                stepInit: function (key) {
+                stepInit  : function (key) {
                     return angular.extend(commonHttpConf, {
                         method: 'GET',
                         url   : urls.adjust(urls.stepInit.format({key: key}))
                     })
+                },
+                stepSubmit: function (key, data) {
+                    return angular.extend(commonHttpConf, {
+                        method: 'POST',
+                        params: data,
+                        url   : urls.adjust(urls.stepSubmit.format({key: key}))
+                    })
+                },
+                submit    : function (key, data) {
+                    return angular.extend(commonHttpConf, {
+                        method: 'POST',
+                        params: data,
+                        url   : urls.adjust(urls.submit.format({key: key}))
+                    })
                 }
             },
-            resource = function ($log, $http) {
+            resource = function ($log, $http, $q) {
                 var priv = {
-                        init    : function init(key) {
+                        init      : function init(key) {
                             if (!angular.isDefined(key)) {
                                 throw new Error('Wizard key is not defined, failed to initialize');
                             }
                             return doRequest(httpConf.init(key));
                         },
-                        stepInit: function stepInit(key) {
+                        stepInit  : function stepInit(key) {
                             if (!angular.isDefined(key)) {
-                                throw new Error('Steo key is not defined, failed to initialize');
+                                throw new Error('Step key is not defined, failed to initialize');
                             }
                             return doRequest(httpConf.stepInit(key));
+                        },
+                        stepSubmit: function stepSubmit(key, data) {
+                            if (!angular.isDefined(key)) {
+                                throw new Error('Step key is not defined, failed to initialize');
+                            }
+                            return doRequest(httpConf.stepSubmit(key, data));
+                        },
+                        submit    : function submit(key, data) {
+                            if (!angular.isDefined(key)) {
+                                throw new Error('Step key is not defined, failed to initialize');
+                            }
+                            return doRequest(httpConf.submit(key, data));
                         }
                     },
                     doRequest = function doRequest(conf) {
-                        return $http(conf);
+                        var directiveData = undefined,
+                            dataPromise = undefined;
+
+                        if (dataPromise) {
+                            return dataPromise;
+                        }
+
+                        var deferred = $q.defer();
+                        dataPromise = deferred.promise;
+
+                        if (directiveData) {
+                            deferred.resolve(directiveData);
+                        } else {
+                            $http(conf)
+                                .success(function (data) {
+                                    directiveData = data;
+                                    deferred.resolve(directiveData);
+                                })
+                                .error(function () {
+                                    deferred.reject('Failed to load data');
+                                });
+                        }
+
+                        return dataPromise;
                     };
                 return {
-                    init    : priv.init,
-                    stepInit: priv.stepInit
+                    init      : priv.init,
+                    stepInit  : priv.stepInit,
+                    stepSubmit: priv.stepSubmit,
+                    submit    : priv.submit
                 }
             };
-        app.factory('wizardResource', ['$log', '$http', resource]);
+        app.factory('wizardResource', ['$log', '$http', '$q', resource]);
     }
 );
