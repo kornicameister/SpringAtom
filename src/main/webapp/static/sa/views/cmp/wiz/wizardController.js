@@ -39,9 +39,9 @@ define(
                                          $cookies,
                                          timeoutDelay,
                                          dialogs,
-                                         title,
                                          definition,
                                          actions,
+                                         wizardKey,
                                          wizardHandler) {
             $log.debug('Entering wizardController');
 
@@ -54,22 +54,33 @@ define(
                     PREV: -1
                 },
                 init = {
-                    getSteps  : function getSteps() {
-                        var steps = [],
-                            index = 0;
-                        angular.forEach(definition, function (chunk) {
-                            steps.push({
-                                index   : index,
-                                label   : chunk.label,
-                                required: chunk.required,
-                                state   : chunk.state
-                            });
-                            stepsMap[chunk.state] = index;
-                            stepsMap[index++] = chunk.state;
+                    getInitialState: function () {
+                        var init = definition.data.steps[0];
+                        return init.state;
+                    },
+                    getTitle       : function getTitle() {
+                        return definition.data.label;
+                    },
+                    getLabels      : function getLabels() {
+                        var labels = {};
+                        angular.forEach(definition.data.steps, function (chunk) {
+                            var localLabels = chunk.labels;
+                            labels = angular.extend(labels, localLabels || {});
+                        });
+                        return labels;
+                    },
+                    getSteps       : function getSteps() {
+                        var steps = [];
+                        angular.forEach(definition.data.steps, function (chunk) {
+                            steps.push(angular.extend(chunk, {
+                                state: wizardKey + '.' + chunk.step
+                            }));
+                            stepsMap[chunk.state] = chunk.index;
+                            stepsMap[chunk.index] = steps[steps.length - 1].state;
                         });
                         return steps;
                     },
-                    getActions: function getActions() {
+                    getActions     : function getActions() {
                         var localActions = [];
                         angular.forEach(actions.getModel(), function (act) {
                             localActions.push(angular.extend(act, {
@@ -217,9 +228,10 @@ define(
                 };
 
             angular.extend($scope, {
-                title       : title,
+                title       : init.getTitle(),
                 actions     : init.getActions(),
                 header      : init.getSteps(),
+                labels      : init.getLabels(),
                 formData    : wizardHandler.getFormData(),
                 hooks       : hooks,
                 debug       : utils.isDebug(),
@@ -231,12 +243,8 @@ define(
 
             // enter first state in definition
             $timeout(function enterFirstStep() {
-                var state = definition[0].state;
+                var state = init.getInitialState();
                 if (state) {
-                    $log.debug('Initializing initial state({s}) of wizard({t})'.format({
-                        s: state,
-                        t: title
-                    }));
                     helpers.setActiveStep(state);
                 }
             }, timeoutDelay);

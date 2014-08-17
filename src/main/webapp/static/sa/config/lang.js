@@ -26,7 +26,7 @@ define(
     ],
     function langModule(module, utils) {
         var defaultLang = 'pl',
-            configureLang = function (amMoment) {
+            configureLang = function (amMoment, $cookies) {
                 var params = utils.getUrlParams(),
                     lang = defaultLang;
                 if (angular.isDefined(params['lang'])) {
@@ -34,6 +34,16 @@ define(
                     if (lang.indexOf('_') > 0) {
                         lang = lang.substring(0, lang.indexOf('_'));
                     }
+                }
+                var cookiesLangDefined = angular.isDefined($cookies.lang);
+                if (cookiesLangDefined) {
+                    if ($cookies.lang !== lang) {
+                        $cookies.lang = lang;
+                    } else {
+                        lang = $cookies.lang;
+                    }
+                } else {
+                    $cookies.lang = lang;
                 }
                 amMoment.changeLanguage(lang);
             },

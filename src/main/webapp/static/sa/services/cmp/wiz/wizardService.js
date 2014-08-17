@@ -20,7 +20,8 @@
  */
 define(
     [
-        'services/navigation'
+        'services/navigation',
+        'resources/wizardResource'
     ],
     function wizardService() {
         var directions = {
@@ -32,7 +33,6 @@ define(
              * @type {{}}
              */
             providerMap = [
-                'getDefinition',
                 'getLabels' ,
                 'getTitle',
                 'getFormData',
@@ -79,9 +79,12 @@ define(
                 });
                 return provider;
             },
-            getHandlerResolve = function getHandlerResolve(serviceName) {
+            getHandlerResolve = function getHandlerResolve(key) {
                 return {
-                    wizardHandler: serviceName
+                    wizardHandler: key,
+                    wizardKey    : function getWizardKey() {
+                        return key;
+                    }
                 };
             },
             getResolve = function getResolve(serviceName) {
@@ -89,15 +92,9 @@ define(
                     actions   : ['navigationService', function (navigationService) {
                         return navigationService.loadNavigation('wiz.navBar');
                     }],
-                    title     : function getTitle(wizardHandler) {
-                        return wizardHandler.getTitle();
-                    },
-                    definition: function getDefinition(wizardHandler) {
-                        return wizardHandler.getDefinition();
-                    },
-                    labels    : function getLabels(wizardHandler) {
-                        return wizardHandler.getLabels();
-                    }
+                    definition: ['wizardResource', function (wizardResource) {
+                        return wizardResource.init(serviceName);
+                    }]
                 });
             },
             prefix = '/sa/wizard{url}';
