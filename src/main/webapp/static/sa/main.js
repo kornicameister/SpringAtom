@@ -23,7 +23,6 @@
         },
         config = {
             baseUrl : '/app/' + prefix,
-            urlArgs : 'v=1.0&minimize=true',
             paths   : {
                 'angular'              : adjustPath('../libs/angular/angular.min.js'),
                 'ngAnimate'            : adjustPath('../libs/angular-animate/angular-animate.min.js'),
@@ -43,7 +42,7 @@
                 'jquery'               : adjustPath('../libs/jquery/dist/jquery.min.js'),
                 'jquery-ui'            : adjustPath('../libs/jquery-ui/ui/minified/jquery-ui.min.js'),
                 'jsface'               : adjustPath('../libs/jsface/dist/jsface.all.min.js'),
-                'momentjs'             : adjustPath('../libs/moment/min/moment-with-langs.min.js'),
+                'moment'               : adjustPath('../libs/moment/min/moment-with-langs.min.js'),
                 'ngGrid'               : adjustPath('../libs/ng-grid/build/ng-grid.min.js')
             },
             priority: [
@@ -99,7 +98,7 @@
                 'angular-moment'       : {
                     deps: [
                         'angular',
-                        'momentjs'
+                        'moment'
                     ]
                 },
                 'fullcalendar'         : {

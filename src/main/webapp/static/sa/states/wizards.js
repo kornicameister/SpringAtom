@@ -25,70 +25,19 @@
  */
 define(
     [
-        'config/module',
-        'services/cmp/wiz/wizardService',
-        'views/cmp/wiz/wizardController',
-        // steps services
-        'services/cmp/wiz/newCarWizardService',
-        // angular
-        'services/navigation'
+        'config/ext',
+        'states/wizards/newCar'
     ],
-    function ipStates(app, wizService, wizCtrl) {
-        var getResolve = function getResolve(mainName) {
-                return {
-                    service   : mainName,
-                    actions   : ['navigationService', function (navigationService) {
-                        return navigationService.loadNavigation('wiz.navBar');
-                    }],
-                    title     : function getTitle(service) {
-                        return service.getTitle();
-                    },
-                    definition: function getDefinition(service) {
-                        return service.getDefinition(mainName);
-                    },
-                    labels    : function getLabels(service) {
-                        return service.getLabels();
-                    }
-                }
-            },
-            newCarWizard = (function newCarWizard() {
-                var mainUrl = wizService.getUrl('/new/car'),
-                    mainName = 'newCar';
-                return [
-                    {
-                        name      : mainName,
-                        definition: {
-                            url        : mainUrl,
-                            templateUrl: '/ui/wiz/wizard.jsp',
-                            controller : wizCtrl,
-                            resolve    : getResolve(mainName)
-                        }
-                    },
-                    {
-                        name      : wizService.getState(mainName, 'vin'),
-                        definition: {
-                            url        : '/vin',
-                            templateUrl: '/ui/wiz/newCar/vin.jsp'
-                        }
-                    },
-                    {
-                        name      : wizService.getState(mainName, 'car'),
-                        definition: {
-                            url        : '/car',
-                            templateUrl: '/ui/wiz/newCar/car.jsp'
-                        }
-                    },
-                    {
-                        name      : wizService.getState(mainName, 'owner'),
-                        definition: {
-                            url        : '/owner',
-                            templateUrl: '/ui/wiz/newCar/owner.jsp'
-                        }
-                    }
-                ]
-            }());
-        return [
-            newCarWizard
-        ]
+    function ipStates() {
+        var offset = 1;
+        return (function getWizards(wizards) {
+            var local = [],
+                it = offset;
+            for (it; it < wizards.length; it++) {
+                local.push(wizards[it]);
+            }
+            console.log('Read {d} wizards'.format({d: local.length}));
+            return local;
+        }(arguments));
     }
 );

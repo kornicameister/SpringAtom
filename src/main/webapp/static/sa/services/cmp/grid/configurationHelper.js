@@ -22,7 +22,7 @@ define(
     [
         'config/module',
         'utils',
-        'momentjs'
+        'moment'
     ],
     function configurationHelper(app, utils) {
         var skipRowNumberer = true,

@@ -23,12 +23,15 @@
 				<wizard-nbox errors="errors" messages="messages"></wizard-nbox>
 				<section id="form-view" class="well slide" ui-view></section>
 			</form>
-			<wizard-actions class="btn-toolbar" actions="actions" style="float:right"></wizard-actions>
+			<wizard-actions class="btn-toolbar"
+			                actions="actions"
+			                helper="actionHelper"
+			                style="float:right"></wizard-actions>
 		</div>
 	</div>
 	<pre class="col-lg-2" ng-if="debug">
 		<code>
-			{{formData}}
+			{{formData | json}}
 		</code>
 	</pre>
 </div>

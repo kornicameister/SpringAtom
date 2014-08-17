@@ -19,11 +19,25 @@
  * Created by trebskit on 2014-08-14.
  */
 define(
-    function wizardService(app) {
+    [
+        'services/navigation'
+    ],
+    function wizardService() {
         var directions = {
                 NEXT: 1,
                 PREV: -1
             },
+            /**
+             * List of all methods that single provider needs to have defined
+             * @type {{}}
+             */
+            providerMap = [
+                'getDefinition',
+                'getLabels' ,
+                'getTitle',
+                'getFormData',
+                'isActionEnabled'
+            ],
             getNext = function getNext(step) {
                 return step.next || false;
             },
@@ -48,16 +62,57 @@ define(
             getState = function getState(parent, state) {
                 return '{p}.{s}'.format({ p: parent, s: state });
             },
+            /**
+             * Evaluates {@code provider} against having all required methods
+             * used further by wizardController.
+             * @param provider
+             */
+            getProvider = function getProvider(provider) {
+                angular.forEach(providerMap, function (prop) {
+                    var providerProperty = provider[prop];
+                    if (angular.isUndefined(providerProperty)) {
+                        throw new Error('{prop} is not defined in the provider'.format({prop: prop}));
+                    }
+                    if (!angular.isFunction(providerProperty)) {
+                        throw new Error('{prop} is defined but is not a function in the provider'.format({prop: prop}));
+                    }
+                });
+                return provider;
+            },
+            getHandlerResolve = function getHandlerResolve(serviceName) {
+                return {
+                    wizardHandler: serviceName
+                };
+            },
+            getResolve = function getResolve(serviceName) {
+                return angular.extend(getHandlerResolve(serviceName), {
+                    actions   : ['navigationService', function (navigationService) {
+                        return navigationService.loadNavigation('wiz.navBar');
+                    }],
+                    title     : function getTitle(wizardHandler) {
+                        return wizardHandler.getTitle();
+                    },
+                    definition: function getDefinition(wizardHandler) {
+                        return wizardHandler.getDefinition();
+                    },
+                    labels    : function getLabels(wizardHandler) {
+                        return wizardHandler.getLabels();
+                    }
+                });
+            },
             prefix = '/sa/wizard{url}';
 
         return {
-            getNext       : getNext,
-            getPrev       : getPrev,
-            canGo         : canGo,
-            directions    : directions,
-            getUrl        : getUrl,
-            getSubStateUrl: getSubStateUrl,
-            getState      : getState
+            getNext           : getNext,
+            getPrev           : getPrev,
+            canGo             : canGo,
+            directions        : directions,
+            getUrl            : getUrl,
+            getSubStateUrl    : getSubStateUrl,
+            getState          : getState,
+            getProvider       : getProvider,
+            getResolve        : getResolve,
+            getProviderResolve: getHandlerResolve
         };
     }
 );

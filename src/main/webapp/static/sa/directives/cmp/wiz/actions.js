@@ -25,7 +25,8 @@ define(
             return {
                 restrict   : 'E',
                 scope      : {
-                    actions: '=actions'
+                    actions: '=actions',
+                    helper : '=helper'
                 },
                 templateUrl: '/ui/wiz/actions.jsp'
             }

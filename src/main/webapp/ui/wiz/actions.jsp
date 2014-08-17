@@ -24,7 +24,8 @@
 	        name="{{act.eventName}}"
 	        class="{{act.iconClass}}"
 	        title="{{act.label}}"
-	        ng-show="act.enabled">
+	        ng-class="{disabled:!helper.isEnabled(act)}"
+	        ng-show="act.visible">
 		<i ng-show="act.eventIconClass" class="{{act.eventIconClass}}" role="presentation"></i>
 	</button>
 </div>

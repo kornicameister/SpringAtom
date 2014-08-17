@@ -29,10 +29,20 @@ define(
          * - title,
          * - definition,
          * - actions
-         * - service
+         * - wizardHandler
          * The rest in injected from angular
          */
-        return function newCarController($scope, $timeout, $log, $state, $cookies, timeoutDelay, dialogs, title, definition, actions, service) {
+        return function wizardController($scope,
+                                         $timeout,
+                                         $log,
+                                         $state,
+                                         $cookies,
+                                         timeoutDelay,
+                                         dialogs,
+                                         title,
+                                         definition,
+                                         actions,
+                                         wizardHandler) {
             $log.debug('Entering wizardController');
 
             var exitState = $cookies.lastState,// retrieve state from which application entered wizard, for cancel action
@@ -65,7 +75,7 @@ define(
                             localActions.push(angular.extend(act, {
                                 handler: hooks[act.name],
                                 // by default acton is disabled, only cancel is enabled
-                                enabled: act.name === 'cancel'
+                                visible: act.name === 'cancel'
                             }));
                             actionMap[act.name] = act.order;
                         });
@@ -73,7 +83,7 @@ define(
                     }
                 },
                 helpers = {
-                    setActiveStep  : function setActiveStep(step) {
+                    setActiveStep   : function setActiveStep(step) {
                         $log.debug('setActiveStep(step={s})'.format({s: step}));
                         if (!angular.isDefined(step)) {
                             var message = 'Can not set active step in scope, because step variable in not defined';
@@ -86,16 +96,52 @@ define(
                         $scope.activeStep = step;
                         $state.go(step);
                     },
-                    setSiblingState: function setSiblingState(dir) {
+                    /**
+                     * Returns actions property of the current {@code $scope}
+                     * @returns {*}
+                     */
+                    getActions      : function () {
+                        return $scope.actions;
+                    },
+                    /**
+                     * Sets {@code visible} for the action identified as {@code actionName}
+                     * @param actionName action identifier
+                     * @param visible true/false, true if enable the action
+                     */
+                    setActionVisible: function setActionVisible(actionName, visible) {
+                        visible = angular.isUndefined(visible) ? true : visible;
+                        var actions = helpers.getActions();
+                        actions[actionMap[actionName]].visible = visible;
+                    },
+                    /**
+                     * Returns if action is enabled
+                     * @param actionName action identifier
+                     * @returns {boolean} true if enabled
+                     * @see helpers.setActionVisible(actionName,enabled)
+                     */
+                    isActionVisible : function isActionVisible(actionName) {
+                        var actions = helpers.getActions();
+                        return actions[actionMap[actionName]].visible === true;
+                    },
+                    setSiblingState : function setSiblingState(dir) {
                         var currentStep = $scope.activeStep,
                             index = stepsMap[currentStep],
                             nextStep = stepsMap[index + dir];
                         helpers.setActiveStep(nextStep);
+                    },
+                    iPristine       : function iPristine() {
+                        var wizard = $scope['wizardFrom'];
+                        if (angular.isUndefined(wizard)) {
+                            return true;
+                        }
+                        return wizard.$pristine;
                     }
                 },
                 hooks = {
                     finish  : function finishForm($event) {
                         $event.preventDefault();
+                        // exit form upon successful submit
+                        $state.go(exitState);
                     },
                     cancel  : function cancelForm($event) {
                         $event.preventDefault();
@@ -116,6 +162,7 @@ define(
                     },
                     next    : function nextStep($event) {
                         $event.preventDefault();
+//                        var canGo = provider.canGo($scope.activeStep, $scope['wizardFrom']);
                         helpers.setSiblingState(dirs.NEXT);
                     },
                     previous: function previousStep($event) {
@@ -139,9 +186,9 @@ define(
                             actions = $scope.actions,
                             header = $scope.header;
 
-                        actions[actionMap['finish']].enabled = (stepIndex === stepsCounts - 1);
-                        actions[actionMap['next']].enabled = (stepIndex >= 0 && !actions[actionMap['finish']].enabled);
-                        actions[actionMap['previous']].enabled = (stepIndex !== 0 && stepIndex < stepsCounts);
+                        helpers.setActionVisible('finish', (stepIndex === stepsCounts - 1));
+                        helpers.setActionVisible('next', (stepIndex >= 0 && !helpers.isActionVisible('finish')));
+                        helpers.setActionVisible('previous', (stepIndex !== 0 && stepIndex < stepsCounts));
 
                         // set active header
                         angular.forEach(header, function headerIt(head) {
@@ -150,15 +197,33 @@ define(
 
                         return true;
                     }
+                },
+                actionHelper = {
+                    isEnabled: function isEnabled(act) {
+                        // only checking next and finish
+                        var name = act.name,
+                            enabled = true;
+                        if (angular.isUndefined(name)) {
+                            throw new Error('action name not found')
+                        }
+                        // check only if something has been entered to the wizard
+                        if (name === 'next' || name === 'finish') {
+                            enabled = wizardHandler.isActionEnabled(name, $scope.activeStep, $scope['wizardForm']);
+                        } else {
+                            enabled = true;
+                        }
+                        return enabled;
+                    }
                 };
 
             angular.extend($scope, {
-                title   : title,
-                actions : init.getActions(),
-                header  : init.getSteps(),
-                formData: service.getFormData(),
-                hooks   : hooks,
-                debug   : utils.isDebug()
+                title       : title,
+                actions     : init.getActions(),
+                header      : init.getSteps(),
+                formData    : wizardHandler.getFormData(),
+                hooks       : hooks,
+                debug       : utils.isDebug(),
+                actionHelper: actionHelper
             });
 
             // set up watchers

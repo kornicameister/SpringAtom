@@ -22,7 +22,7 @@ define(
     [
         'config/module',
         'utils',
-        'momentjs',
+        'moment',
         // angular injections
         'services/cmp/grid/pageHelper'
     ],
