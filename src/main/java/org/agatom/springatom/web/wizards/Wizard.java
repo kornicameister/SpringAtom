@@ -19,7 +19,14 @@ package org.agatom.springatom.web.wizards;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Role;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
@@ -30,6 +37,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+@Scope(WebApplicationContext.SCOPE_SESSION)
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Wizard {
     String value() default "";
 }

@@ -15,37 +15,19 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.wizards.data;
-
-import java.util.Set;
+package org.agatom.springatom.web.wizards.core;
 
 /**
- * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-18</small>
  *
  * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-public class SubmitStepData
-        extends StepData {
-    private static final long        serialVersionUID = 6457923902445152404L;
-    protected            boolean     valid            = false;
-    protected            Set<String> messages         = null;
-
-    public static SubmitStepData valid() {
-        return new SubmitStepData().setValid(true);
-    }
-
-    public static SubmitStepData invalid() {
-        return new SubmitStepData().setValid(false);
-    }
-
-    public boolean isValid() {
-        return valid;
-    }
-
-    public SubmitStepData setValid(final boolean valid) {
-        this.valid = valid;
-        return this;
-    }
+public enum Submission {
+    STEP,
+    WIZARD,
+    SUBMIT,
+    INIT,
+    INIT_STEP
 }

@@ -17,11 +17,11 @@
 
 package org.agatom.springatom.web.wizards;
 
-import org.agatom.springatom.web.wizards.data.InitStepData;
-import org.agatom.springatom.web.wizards.data.SubmitStepData;
 import org.agatom.springatom.web.wizards.data.WizardDescriptor;
+import org.springframework.ui.ModelMap;
 
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
@@ -30,7 +30,7 @@ import java.util.Locale;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface WizardHandler<T> {
+public interface WizardProcessor<T> {
     /**
      * Initializes wizard bean. {@link org.agatom.springatom.web.wizards.data.WizardDescriptor} contains
      * information about wizard title as well description of steps. Steps are vital for client side processing
@@ -43,37 +43,14 @@ public interface WizardHandler<T> {
      */
     WizardDescriptor initialize(final Locale locale);
 
-    /**
-     * Initializes {@code step}. This method is designed to retrieve all data required by the step. For instance
-     * it can be a set of values for select boxes
-     *
-     * @param step step to initialize
-     *
-     * @return init data
-     */
-    InitStepData initStep(final String step);
-
-    /**
-     * Submits the step, sets all values in the context object and runs validation.
-     *
-     * @param step step to submit
-     *
-     * @return feedback data of submission
-     */
-    SubmitStepData submitStep(final String step);
+    ModelMap initializeStep(final String step, final Locale locale);
 
     /**
      * Submits the form. May call a service or execute any other persisting job. Nevertheless it will always
-     * return a populated object for which {@link org.agatom.springatom.web.wizards.WizardHandler} was created for
+     * return a populated object for which {@link WizardProcessor} was created for
      *
      * @return submitted object
      */
-    T submit();
+    T submit(final Map<String, Object> stepData) throws Exception;
 
-    /**
-     * Returns context object of current step
-     *
-     * @return context object
-     */
-    T getContextObject();
 }

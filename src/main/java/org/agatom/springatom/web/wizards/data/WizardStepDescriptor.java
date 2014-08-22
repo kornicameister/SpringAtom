@@ -32,9 +32,9 @@ import java.util.Map;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class WizardStep
+public class WizardStepDescriptor
         extends DefaultComponent
-        implements Comparable<WizardStep> {
+        implements Comparable<WizardStepDescriptor> {
     private static final long                serialVersionUID = 3388862863826004584L;
     protected            String              step             = null;
     protected            short               index            = 0;
@@ -45,7 +45,7 @@ public class WizardStep
         return required;
     }
 
-    public WizardStep setRequired(final boolean required) {
+    public WizardStepDescriptor setRequired(final boolean required) {
         this.required = required;
         return this;
     }
@@ -54,7 +54,7 @@ public class WizardStep
         return step;
     }
 
-    public WizardStep setStep(final String step) {
+    public WizardStepDescriptor setStep(final String step) {
         this.step = step;
         return this;
     }
@@ -63,7 +63,7 @@ public class WizardStep
         return index;
     }
 
-    public WizardStep setIndex(final short index) {
+    public WizardStepDescriptor setIndex(final short index) {
         this.index = index;
         return this;
     }
@@ -72,18 +72,18 @@ public class WizardStep
         return labels;
     }
 
-    public WizardStep setLabels(final Map<String, String> labels) {
+    public WizardStepDescriptor setLabels(final Map<String, String> labels) {
         this.labels = labels;
         return this;
     }
 
-    public WizardStep addLabel(final String key, final String value) {
+    public WizardStepDescriptor addLabel(final String key, final String value) {
         this.labels.put(key, value);
         return this;
     }
 
     @Override
-    public int compareTo(@Nonnull final WizardStep ws) {
+    public int compareTo(@Nonnull final WizardStepDescriptor ws) {
         return ComparisonChain.start().compare(this.index, ws.index).result();
     }
 
@@ -97,7 +97,7 @@ public class WizardStep
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        WizardStep that = (WizardStep) o;
+        WizardStepDescriptor that = (WizardStepDescriptor) o;
 
         return Objects.equal(this.index, that.index) &&
                 Objects.equal(this.required, that.required) &&

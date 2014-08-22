@@ -34,41 +34,42 @@ import java.util.Set;
  */
 public class WizardDescriptor
         extends DefaultComponent {
-    private static final long            serialVersionUID = 8779554824213960312L;
-    private              Set<WizardStep> steps            = null;
+    private static final long                      serialVersionUID = 8779554824213960312L;
+    private              Set<WizardStepDescriptor> steps            = null;
 
-    public boolean addStep(final WizardStep wizardStep) {
+    public boolean addStep(final WizardStepDescriptor wizardStepDescriptor) {
         if (this.steps == null) {
             this.steps = Sets.newTreeSet();
         }
-        return this.steps.add(wizardStep);
+        wizardStepDescriptor.setIndex((short) this.steps.size());
+        return this.steps.add(wizardStepDescriptor);
     }
 
-    public WizardStep getStep(final String key) {
+    public WizardStepDescriptor getStep(final String key) {
         if (this.steps == null) {
             return null;
         }
-        return FluentIterable.from(this.steps).firstMatch(new Predicate<WizardStep>() {
+        return FluentIterable.from(this.steps).firstMatch(new Predicate<WizardStepDescriptor>() {
             @Override
-            public boolean apply(@Nullable final WizardStep input) {
+            public boolean apply(@Nullable final WizardStepDescriptor input) {
                 return input != null && input.getStep().equals(key);
             }
         }).get();
     }
 
-    public boolean removeStep(final WizardStep wizardStep) {
-        return this.steps != null && this.steps.remove(wizardStep);
+    public boolean removeStep(final WizardStepDescriptor wizardStepDescriptor) {
+        return this.steps != null && this.steps.remove(wizardStepDescriptor);
     }
 
-    public boolean containsStep(final WizardStep wizardStep) {
-        return this.steps != null && this.steps.contains(wizardStep);
+    public boolean containsStep(final WizardStepDescriptor wizardStepDescriptor) {
+        return this.steps != null && this.steps.contains(wizardStepDescriptor);
     }
 
-    public Set<WizardStep> getSteps() {
+    public Set<WizardStepDescriptor> getSteps() {
         return steps;
     }
 
-    public WizardDescriptor setSteps(final Set<WizardStep> steps) {
+    public WizardDescriptor setSteps(final Set<WizardStepDescriptor> steps) {
         this.steps = steps;
         return this;
     }

@@ -17,28 +17,25 @@
 
 package org.agatom.springatom.webmvc.controllers.wiz;
 
-import org.agatom.springatom.web.wizards.WizardHandler;
+import org.agatom.springatom.web.wizards.WizardProcessor;
+import org.agatom.springatom.web.wizards.core.Submission;
 import org.agatom.springatom.web.wizards.data.WizardDescriptor;
+import org.agatom.springatom.web.wizards.data.WizardSubmission;
 import org.agatom.springatom.webmvc.core.SVDefaultController;
-import org.agatom.springatom.webmvc.data.DataResource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpSession;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * {@code SVWizardController} allows to communicate and executes {@link org.agatom.springatom.web.wizards.WizardProcessor} from the client.
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
  *
  * @author trebskit
@@ -52,63 +49,129 @@ import java.util.concurrent.TimeUnit;
 @Description(value = "Controller to initialize wizards and submits them")
 public class SVWizardController
         extends SVDefaultController {
-    protected static final String                        CTRL_NAME        = "wizardController";
-    private static final   String                        ACTIVE_WIZARD    = "activeWizard";
-    private static final   Logger                        LOGGER           = Logger.getLogger(SVWizardController.class);
+    protected static final String                          CTRL_NAME    = "wizardController";
+    private static final   Logger                          LOGGER       = Logger.getLogger(SVWizardController.class);
     @Autowired
-    private                Map<String, WizardHandler<?>> wizardHandlerSet = null;
+    private                Map<String, WizardProcessor<?>> processorMap = null;
 
     public SVWizardController() {
         super(CTRL_NAME);
     }
 
-    @PostConstruct
-    protected void init() {
-        Assert.notEmpty(this.wizardHandlerSet);
-    }
-
+    /**
+     * <b>onWizardInit</b> is called as the first method when new wizard is launched. Selects {@link org.agatom.springatom.web.wizards.WizardProcessor}
+     * out of {@link #processorMap} and calls {@link org.agatom.springatom.web.wizards.WizardProcessor#initialize(java.util.Locale)} in order to
+     * retrieve {@link org.agatom.springatom.web.wizards.data.WizardDescriptor} for the {@code key} wizard.
+     *
+     * <b>URI: /cmp/wiz/init/{key}</b>
+     *
+     * @param key    unique id of the {@link org.agatom.springatom.web.wizards.WizardProcessor}
+     * @param locale current locale (vital to return descriptor with valid labels etc.)
+     *
+     * @return {@link org.agatom.springatom.web.wizards.data.WizardSubmission} the submission
+     */
     @ResponseBody
     @RequestMapping(value = "/init/{key}", method = RequestMethod.GET)
-    protected Object onWizardInit(@PathVariable("key") final String key, final HttpSession session, final Locale locale) {
+    protected WizardSubmission onWizardInit(@PathVariable("key") final String key, final Locale locale) {
+        LOGGER.debug(String.format("onWizardInit(key=%s,locale=%s)", key, locale));
         final long startTime = System.nanoTime();
-        final WizardHandler<?> wizardHandler = this.wizardHandlerSet.get(key);
-        DataResource<?> resource = null;
+
+        WizardSubmission submission = null;
         WizardDescriptor descriptor = null;
+
         try {
-            Assert.notNull(wizardHandler, String.format("Failed to find wizardHandler for key=%s", key));
-            if (session.isNew() || session.getAttribute(ACTIVE_WIZARD) != null) {
-                session.removeAttribute(ACTIVE_WIZARD);
-            }
-            descriptor = wizardHandler.initialize(locale);
-            session.setAttribute(ACTIVE_WIZARD, key);
+
+            final WizardProcessor<?> wizardProcessor = this.processorMap.get(key);
+            descriptor = wizardProcessor.initialize(locale);
+
         } catch (Exception exp) {
-            resource = WizardResource.newErrorResource(exp);
+            submission = (WizardSubmission) new WizardSubmission(null, Submission.INIT).setError(exp).setSuccess(false).setSize(1);
         }
         final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
-        LOGGER.trace(String.format("onWizardInit(key=%s) completed in %d ms", key, endTime));
+
         if (descriptor != null) {
-            resource = WizardResource.newWizardDescriptorResource(descriptor).setTime(endTime);
+            submission = (WizardSubmission) new WizardSubmission(descriptor, Submission.INIT).setSize(1).setSuccess(true).setTime(endTime);
         }
-        return resource;
+
+        LOGGER.trace(String.format("onWizardInit(key=%s) completed in %d ms", key, endTime));
+
+        return submission;
     }
 
+    /**
+     * <b>onStepInit</b> picks up {@link org.agatom.springatom.web.wizards.WizardProcessor} according to the {@code wizard} (corresponds to value in {@link #processorMap}) and calls
+     * {@link org.agatom.springatom.web.wizards.WizardProcessor#initializeStep(String, java.util.Locale)}.
+     * Returned value contains all <b>data</b> to properly sets up active step in client.
+     *
+     * @param wizard unique id of the {@link org.agatom.springatom.web.wizards.WizardProcessor}
+     * @param step   step id (unique within wizard)
+     * @param locale current locale (vital to return descriptor with valid labels etc.)
+     *
+     * @return {@link org.agatom.springatom.web.wizards.data.WizardSubmission} the submission
+     */
     @ResponseBody
-    @RequestMapping(value = "/init/step/{step}", method = RequestMethod.GET)
-    protected Object onStepInit(@PathVariable("step") final String step, final HttpSession session, final Locale locale) {
-        final String activeWizard = (String) session.getAttribute(ACTIVE_WIZARD);
-        return null;
+    @RequestMapping(value = "/init/{wizard}/step/{step}", method = RequestMethod.GET)
+    protected WizardSubmission onStepInit(@PathVariable("wizard") final String wizard, @PathVariable("step") final String step, final Locale locale) {
+        LOGGER.debug(String.format("onStepInit(wizard=%s,step=%s,locale=%s)", wizard, step, locale));
+        final long startTime = System.nanoTime();
+
+        WizardSubmission submission = null;
+        ModelMap stepInitData = null;
+
+        try {
+
+            final WizardProcessor<?> wizardProcessor = this.processorMap.get(wizard);
+            stepInitData = wizardProcessor.initializeStep(step, locale);
+
+        } catch (Exception exp) {
+            submission = (WizardSubmission) new WizardSubmission(null, Submission.INIT_STEP).setError(exp).setSuccess(false).setSize(1);
+        }
+        final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+
+        if (stepInitData != null) {
+            submission = (WizardSubmission) new WizardSubmission(stepInitData, Submission.INIT_STEP).setSize(1).setSuccess(true).setTime(endTime);
+        }
+
+        LOGGER.trace(String.format("onStepInit(wizard=%s,step=%s,locale=%s) completed in %d ms", wizard, step, locale, endTime));
+
+        return submission;
     }
 
+    /**
+     * <b>onWizardSubmit</b> is the last method called for a single {@link org.agatom.springatom.web.wizards.WizardProcessor}. Its job is to pick
+     * up {@link org.agatom.springatom.web.wizards.WizardProcessor} out of {@link #processorMap} and call {@link org.agatom.springatom.web.wizards.WizardProcessor#submit(java.util.Map)}
+     * in order to finalize the processing job
+     *
+     * @param key      unique id of the {@link org.agatom.springatom.web.wizards.WizardProcessor}
+     * @param formData form data
+     *
+     * @return {@link org.agatom.springatom.web.wizards.data.WizardSubmission} the submission
+     */
     @RequestMapping(value = "/submit/{key}")
-    protected Object onWizardSubmit(@PathVariable("key") final String key, final HttpSession session, final Locale locale) {
-        session.removeAttribute(ACTIVE_WIZARD);
-        session.invalidate();
-        return null;
+    protected WizardSubmission onWizardSubmit(@PathVariable("key") final String key, @RequestBody final Map<String, Object> formData) {
+        LOGGER.debug(String.format("onWizardSubmit(key=%s,formData=%s)", key, formData));
+        final long startTime = System.nanoTime();
+
+        WizardSubmission submission = null;
+        Object context = null;
+
+        try {
+
+            final WizardProcessor<?> wizardProcessor = this.processorMap.get(key);
+            context = wizardProcessor.submit(formData);
+
+        } catch (Exception exp) {
+            submission = (WizardSubmission) new WizardSubmission(null, Submission.SUBMIT).setError(exp).setSuccess(false).setSize(1);
+        }
+        final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+
+        if (context != null) {
+            submission = (WizardSubmission) new WizardSubmission(context, Submission.SUBMIT).setSize(1).setSuccess(true).setTime(endTime);
+        }
+
+        LOGGER.trace(String.format("onWizardInit(key=%s) completed in %d ms", key, endTime));
+
+        return submission;
     }
 
-    @RequestMapping(value = "/submit/step/{step}")
-    protected Object onStepSubmit(@PathVariable("step") final String step, final HttpSession session, final Locale locale) {
-        final String activeWizard = (String) session.getAttribute(ACTIVE_WIZARD);
-        return null;
-    }
 }

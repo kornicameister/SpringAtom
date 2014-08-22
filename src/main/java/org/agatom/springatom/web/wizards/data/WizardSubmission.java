@@ -15,18 +15,56 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.wizards.core;
+package org.agatom.springatom.web.wizards.data;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.agatom.springatom.web.wizards.core.Submission;
+import org.agatom.springatom.webmvc.data.DataResource;
 
 /**
- * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-18</small>
  *
  * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-public enum MessageSeverity {
-    INFO,
-    ERROR,
-    WARNING,
-    FATAL
+public class WizardSubmission
+        extends DataResource<Object> {
+    private static final long serialVersionUID = -8894514112808006590L;
+    private final        long timestamp        = System.currentTimeMillis();
+
+    public WizardSubmission(final Object content, final Submission submission) {
+        super(new SubmissionWrapper(content, submission));
+    }
+
+    public Submission getSubmission() {
+        return ((SubmissionWrapper) super.getContent()).getSubmission();
+    }
+
+    public long getTimestamp() {
+        return this.timestamp;
+    }
+
+    @JsonIgnore
+    public Object getData() {
+        return ((SubmissionWrapper) super.getContent()).getContent();
+    }
+
+    private static class SubmissionWrapper {
+        private Object     content    = null;
+        private Submission submission = null;
+
+        private SubmissionWrapper(final Object data, final Submission submission) {
+            this.content = data;
+            this.submission = submission;
+        }
+
+        public Object getContent() {
+            return content;
+        }
+
+        public Submission getSubmission() {
+            return submission;
+        }
+    }
 }

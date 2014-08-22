@@ -17,53 +17,77 @@
 
 package org.agatom.springatom.web.wizards.core;
 
-import org.agatom.springatom.web.wizards.WizardHandler;
-import org.agatom.springatom.web.wizards.data.InitStepData;
-import org.agatom.springatom.web.wizards.data.SubmitStepData;
-import org.agatom.springatom.web.wizards.data.WizardDescriptor;
-import org.agatom.springatom.web.wizards.data.WizardStep;
-import org.joor.Reflect;
-import org.springframework.core.GenericTypeResolver;
+import org.agatom.springatom.web.locale.SMessageSource;
+import org.apache.log4j.Logger;
+import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.style.StylerUtils;
+import org.springframework.format.support.FormattingConversionService;
+import org.springframework.util.Assert;
+import org.springframework.validation.DataBinder;
+import org.springframework.validation.DefaultMessageCodesResolver;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.bind.WebDataBinder;
 
-import java.util.Locale;
+import java.util.Map;
 
 /**
- * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-18</small>
  *
  * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class AbstractWizardHandler<T>
-        implements WizardHandler<T> {
-    protected T                contextObject = null;
-    private   Class<?>         contextClazz  = GenericTypeResolver.resolveTypeArgument(getClass(), WizardHandler.class);
-    private   WizardDescriptor descriptor    = null;
+abstract class AbstractWizardHandler {
+    private static final Logger                      LOGGER             = Logger.getLogger(AbstractWizardHandler.class);
+    @Autowired
+    @Qualifier(value = "springAtomConversionService")
+    protected            FormattingConversionService conversionService  = null;
+    @Autowired
+    protected            LocalValidatorFactoryBean   delegatedValidator = null;
+    @Autowired
+    protected            SMessageSource              messageSource      = null;
 
-    @Override
-    public final WizardDescriptor initialize(final Locale locale) {
-        this.contextObject = Reflect.on(this.contextClazz).get();
-        return (this.descriptor = this.getDescriptor(locale));
+    protected DataBinder bind(final DataBinder dataBinder, final Map<String, Object> params) throws Exception {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Executing bind");
+        }
+        this.doBind(dataBinder, params);
+        return dataBinder;
     }
 
-    @Override
-    public final InitStepData initStep(final String step) {
-        return (this.getStepInit(this.descriptor.getStep(step)));
+    private void doBind(final DataBinder binder, Map<String, Object> params) throws Exception {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("Binding allowed request parameters in %s to form object with name '%s', pre-bind formObject toString = %s", params, binder.getObjectName(), binder.getTarget()));
+            if (binder.getAllowedFields() != null && binder.getAllowedFields().length > 0) {
+                LOGGER.debug(String.format("(Allowed fields are %s)", StylerUtils.style(binder.getAllowedFields())));
+            } else {
+                LOGGER.debug("(Any field is allowed)");
+            }
+        }
+        binder.bind(new MutablePropertyValues(params));
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("Binding completed for form object with name '%s', post-bind formObject toString = %s", binder.getObjectName(), binder.getTarget()));
+            LOGGER.debug(String.format("There are [%d] errors, details: %s", binder.getBindingResult().getErrorCount(), binder.getBindingResult().getAllErrors()));
+        }
     }
 
-    @Override
-    public SubmitStepData submitStep(final String step) {
-        return (this.getStepSubmit(this.descriptor.getStep(step)));
+    protected DataBinder createBinder(final Object contextObject, final String contextObjectName) {
+        LOGGER.debug(String.format("createBinder(contextObject=%s,contextObjectName=%s)", contextObject, contextObjectName));
+
+        Assert.notNull(contextObject, "contextObject must not be null");
+        Assert.notNull(contextObjectName, "contextObjectName must not be null");
+
+        final DataBinder binder = new WebDataBinder(contextObject, contextObjectName);
+
+        binder.setIgnoreUnknownFields(true);
+        binder.setAutoGrowNestedPaths(true);
+        binder.setConversionService(this.conversionService);
+        binder.setValidator(this.delegatedValidator);
+        binder.setMessageCodesResolver(new DefaultMessageCodesResolver());
+
+        return binder;
     }
 
-    @Override
-    public T getContextObject() {
-        return this.contextObject;
-    }
-
-    protected abstract SubmitStepData getStepSubmit(final WizardStep step);
-
-    protected abstract InitStepData getStepInit(final WizardStep step);
-
-    protected abstract WizardDescriptor getDescriptor(final Locale locale);
 }
