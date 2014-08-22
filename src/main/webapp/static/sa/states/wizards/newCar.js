@@ -17,12 +17,15 @@
 
 define(
     [
+        'utils',
         'services/cmp/wiz/wizardService',
         'views/cmp/wiz/wizardController',
+        'views/cmp/wiz/newCar/carStepController',
+        'views/cmp/wiz/newCar/ownersStepController',
         // provider of the state
         'services/cmp/wiz/handler/newCar'
     ],
-    function newCar(wizService, wizCtrl) {
+    function newCar(utils, wizService, wizCtrl, carStepCtrl, ownersStepCtrl) {
         var url = '/new/car',
             mainUrl = wizService.getUrl(url),
             mainName = 'newCar';
@@ -47,14 +50,26 @@ define(
                 name      : wizService.getState(mainName, 'car'),
                 definition: {
                     url        : '/car',
-                    templateUrl: '/ui/wiz/newCar/car.jsp'
+                    templateUrl: '/ui/wiz/newCar/car.jsp',
+                    controller : carStepCtrl,
+                    resolve    : {
+                        carStepData: ['wizardResource', function (wizardResource) {
+                            return wizardResource.stepInit(mainName, 'car');
+                        }]
+                    }
                 }
             },
             {
                 name      : wizService.getState(mainName, 'owner'),
                 definition: {
                     url        : '/owner',
-                    templateUrl: '/ui/wiz/newCar/owner.jsp'
+                    templateUrl: '/ui/wiz/newCar/owner.jsp',
+                    controller : ownersStepCtrl,
+                    resolve    : {
+                        ownersStepData: ['wizardResource', function (wizardResource) {
+                            return wizardResource.stepInit(mainName, 'owner');
+                        }]
+                    }
                 }
             }
         ]

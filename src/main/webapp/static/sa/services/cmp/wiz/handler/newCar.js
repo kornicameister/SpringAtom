@@ -23,28 +23,25 @@ define(
         'config/module',
         'utils',
         'services/cmp/wiz/wizardService',
-        'moment'
+        'moment',
+        // angular injections
+        'resources/wizardResource',
+        'resources/vinNumberResource'
     ],
     function newCar(app, utils, wizService, moment) {
         var mainName = 'newCar',
-            newCarService = function newCarService($log, $http, $q) {
+            newCarService = function newCarService($log, wizardResource, vinNumberResource) {
                 var vinState = wizService.getState(mainName, 'vin'),
                     carState = wizService.getState(mainName, 'car'),
                     ownerState = wizService.getState(mainName, 'owner'),
-                    getTitle = function getTitle() {
-                        return 'Nowy samochód';
-                    },
                     getFormData = function getFormData() {
                         return {
-                            vinNumber    : '',
-                            newBrandModel: false,
-                            brand        : '',
-                            model        : '',
-                            carMaster    : '',
-                            licencePlate : '',
-                            fuelType     : '',
-                            year         : moment().year(),
-                            owner        : ''
+                            vinNumber       : '',
+                            carMaster       : '',
+                            licencePlate    : '',
+                            fuelType        : '',
+                            yearOfProduction: moment().year(),
+                            owner           : ''
                         }
                     },
                     isActionEnabled = function isActionEnabled(action, currentStep, wizardForm) {
@@ -62,15 +59,10 @@ define(
                                 enabled = false;
                             } else if (currentStep === carState && action === 'next') {
 
-                                if (wizardForm.newBrandModel.$modelValue === true) {
-                                    enabled = wizardForm.brand.$valid && wizardForm.model.$valid;
-                                } else {
-                                    enabled = wizardForm.carMaster.$valid;
-                                }
-
-                                enabled = enabled && (wizardForm.licencePlate.$valid
+                                enabled = wizardForm.carMaster.$valid
+                                    && wizardForm.licencePlate.$valid
                                     && wizardForm.fuelType.$valid
-                                    && wizardForm.year.$valid);
+                                    && wizardForm.yearOfProduction.$valid;
 
                             } else if (currentStep === ownerState) {
                                 if (action === 'next') {
@@ -83,15 +75,81 @@ define(
                             enabled = true;
                         }
                         return enabled;
+                    },
+                    next = function next(conf) {
+
+                        var state = conf.$scope.activeState,
+                            form = conf.$scope['wizardForm'],
+                            successCallback = conf.success,
+                            failureCallback = conf.failure;
+
+                        if (state === vinState) {
+                            vinNumberResource.decode(form.vinNumber.$modelValue).then(
+                                function onDecodeSuccess(data) {
+                                    angular.extend(conf.$scope, {
+                                        years: (function toNgOption(years) {
+                                            var obj = [];
+                                            angular.forEach(years, function (year) {
+                                                obj.push({
+                                                    label: year,
+                                                    value: year
+                                                });
+                                            });
+                                            return obj;
+                                        }(data.years))
+                                    });
+                                    angular.extend(conf.$scope.formData, {
+                                        manufacturedIn: data.manufacturedIn
+                                    });
+                                    successCallback.call(this);
+                                },
+                                function onDecodeError(data) {
+                                    failureCallback.call(this, data);
+                                }
+                            );
+                        } else {
+                            successCallback.call(this);
+                        }
+
+                    },
+                    submit = function submit(conf) {
+                        var successCallback = conf.success,
+                            failureCallback = conf.failure,
+                            /**
+                             * Cleans up the data package. It is required to do, due to
+                             * data binding requirements defined on server side which automatically
+                             * binds properties to context object of a single form's context object
+                             * @param data raw data
+                             * @returns {*} cleaned up data
+                             */
+                            clearData = function clearData(data) {
+                                var localData = {};
+                                angular.forEach(data, function (chunk, key) {
+                                    if (key === 'carMaster' && chunk.value === -1) {
+                                        var split = chunk.label.split(' ');
+                                        localData['brand'] = split[0];
+                                        localData['model'] = split[1];
+                                    } else if (key === 'yearOfProduction' || key === 'fuelType' || key === 'owner' || key === 'carMaster') {
+                                        localData[key] = chunk.value;
+                                    } else {
+                                        localData[key] = chunk;
+                                    }
+                                });
+                                return localData;
+                            };
+                        wizardResource
+                            .submit(mainName, clearData(conf.$scope.formData))
+                            .then(successCallback, failureCallback);
                     };
 
                 return wizService.getProvider({
                     getFormData    : getFormData,
-                    getTitle       : getTitle,
-                    isActionEnabled: isActionEnabled
+                    isActionEnabled: isActionEnabled,
+                    next           : next,
+                    submit         : submit
                 });
             };
 
-        app.factory(mainName, ['$log', '$http', '$q', newCarService]);
+        app.factory(mainName, ['$log', 'wizardResource', 'vinNumberResource', newCarService]);
     }
 );

@@ -29,6 +29,7 @@ define(
          * - title,
          * - definition,
          * - actions
+         * - wizardKey
          * - wizardHandler
          * The rest in injected from angular
          */
@@ -104,7 +105,7 @@ define(
                                 alert(message);
                             }
                         }
-                        $scope.activeStep = step;
+                        $scope.activeState = step;
                         $state.go(step);
                     },
                     /**
@@ -135,25 +136,34 @@ define(
                         return actions[actionMap[actionName]].visible === true;
                     },
                     setSiblingState : function setSiblingState(dir) {
-                        var currentStep = $scope.activeStep,
+                        var currentStep = $scope.activeState,
                             index = stepsMap[currentStep],
                             nextStep = stepsMap[index + dir];
                         helpers.setActiveStep(nextStep);
-                    },
-                    iPristine       : function iPristine() {
-                        var wizard = $scope['wizardFrom'];
-                        if (angular.isUndefined(wizard)) {
-                            return true;
-                        }
-                        return wizard.$pristine;
                     }
                 },
                 hooks = {
                     finish  : function finishForm($event) {
                         $event.preventDefault();
-                        // exit form upon successful submit
-                        $state.go(exitState);
+                        wizardHandler.submit({
+                            $scope : $scope,
+                            success: function () {
+                                $state.go(exitState);
+                            },
+                            failure: function (data) {
+                                dlg = dialogs.error(
+                                    'Failed to submit form',
+                                    data
+                                );
+                            }
+                        });
                     },
+                    /**
+                     * On <b>cancel</b> hook. Displays simple prompt box and cancels the state
+                     * upon yes answer. Cancelling results in reverting to the state from
+                     * which wizard was entered. Identified by {@link cookie.lastState}
+                     * @param $event current event
+                     */
                     cancel  : function cancelForm($event) {
                         $event.preventDefault();
                         dlg = dialogs.confirm(
@@ -162,7 +172,7 @@ define(
                         );
                         dlg.result.then(
                             function onConfirm() {
-                                $log.debug('Exiting wizard {w}'.format({w: title}));
+                                $log.debug('Exiting wizard {w}'.format({w: $scope.title}));
                                 $state.go(exitState);
                                 dlg = undefined;
                             },
@@ -171,10 +181,27 @@ define(
                             }
                         );
                     },
+                    /**
+                     * Call active <b>wizardHandler#next</b> method.
+                     * This method is free to do whatever it needs to do.
+                     * In order to proceed with the wizard method identified as <b>success</b> must be called.
+                     * In case of failure method identified as <b>failure</b> will be called
+                     * @param $event current event
+                     */
                     next    : function nextStep($event) {
                         $event.preventDefault();
-//                        var canGo = provider.canGo($scope.activeStep, $scope['wizardFrom']);
-                        helpers.setSiblingState(dirs.NEXT);
+                        wizardHandler.next({
+                            $scope : $scope,
+                            success: function onSuccess() {
+                                helpers.setSiblingState(dirs.NEXT);
+                            },
+                            failure: function (data) {
+                                dlg = dialogs.error(
+                                    'Failed to enter next step',
+                                    data
+                                );
+                            }
+                        });
                     },
                     previous: function previousStep($event) {
                         $event.preventDefault();
@@ -194,7 +221,6 @@ define(
                         // rebuild action model according to the state
                         var stepIndex = stepsMap[step],
                             stepsCounts = $scope.header.length,
-                            actions = $scope.actions,
                             header = $scope.header;
 
                         helpers.setActionVisible('finish', (stepIndex === stepsCounts - 1));
@@ -219,7 +245,7 @@ define(
                         }
                         // check only if something has been entered to the wizard
                         if (name === 'next' || name === 'finish') {
-                            enabled = wizardHandler.isActionEnabled(name, $scope.activeStep, $scope['wizardForm']);
+                            enabled = wizardHandler.isActionEnabled(name, $scope.activeState, $scope['wizardForm']);
                         } else {
                             enabled = true;
                         }
@@ -239,7 +265,7 @@ define(
             });
 
             // set up watchers
-            $scope.$watch('activeStep', watchers.onActiveStepChange);
+            $scope.$watch('activeState', watchers.onActiveStepChange);
 
             // enter first state in definition
             $timeout(function enterFirstStep() {
