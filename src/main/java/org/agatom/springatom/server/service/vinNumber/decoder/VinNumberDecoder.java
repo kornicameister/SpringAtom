@@ -42,67 +42,68 @@ import org.springframework.util.ClassUtils;
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @Description("vinNumberDecoder resolves all possible to retrieve information from passed vin number")
 class VinNumberDecoder
-		implements VinDecoder {
-	private static final Logger                    LOGGER                    = Logger.getLogger(VinNumberDecoder.class);
-	@Autowired
-	private              VISYearResolver           yearDecoder               = null;
-	@Autowired
-	private              WMIManufacturedInResolver wmiManufacturedInResolver = null;
+        implements VinDecoder {
+    private static final Logger                    LOGGER                    = Logger.getLogger(VinNumberDecoder.class);
+    @Autowired
+    private              VISYearResolver           yearDecoder               = null;
+    @Autowired
+    private              WMIManufacturedInResolver wmiManufacturedInResolver = null;
 
-	/** {@inheritDoc} */
-	@Override
-	public VinNumberData decode(final String vinNumber) throws VinDecodingException {
-		try {
-			return this.decode(VinNumber.newVinNumber(vinNumber));
-		} catch (Exception exp) {
-			LOGGER.fatal(exp);
-			if (ClassUtils.isAssignableValue(VinDecodingException.class, exp)) {
-				//noinspection ConstantConditions
-				throw (VinDecodingException) exp;
-			}
-			throw new VinDecodingException(exp);
-		}
-	}
+    /** {@inheritDoc} */
+    @Override
+    public VinNumberData decode(final String vinNumber) throws VinDecodingException {
+        try {
+            return this.decode(VinNumber.newVinNumber(vinNumber));
+        } catch (Exception exp) {
+            LOGGER.fatal(exp);
+            if (ClassUtils.isAssignableValue(VinDecodingException.class, exp)) {
+                //noinspection ConstantConditions
+                throw (VinDecodingException) exp;
+            }
+            throw new VinDecodingException(exp);
+        }
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public VinNumberData decode(final VinNumber vinNumber) throws VinDecodingException {
-		final VinNumberData vinNumberData = new VinNumberData();
-		try {
-			this.decodeWmi(vinNumber.getWmi(), vinNumberData);
-			this.decodeVis(vinNumber.getVis(), vinNumberData);
-			this.decodeVds(vinNumber.getVds(), vinNumberData);
-		} catch (VinDecodingException exp) {
-			LOGGER.error("decode(vinNumber=%s) failed", exp);
-			throw exp;
-		}
-		return vinNumberData;
-	}
+    /** {@inheritDoc} */
+    @Override
+    public VinNumberData decode(final VinNumber vinNumber) throws VinDecodingException {
+        final VinNumberData vinNumberData = new VinNumberData();
+        try {
+            this.decodeWmi(vinNumber.getWmi(), vinNumberData);
+            this.decodeVis(vinNumber.getVis(), vinNumberData);
+            this.decodeVds(vinNumber.getVds(), vinNumberData);
+        } catch (VinDecodingException exp) {
+            LOGGER.error("decode(vinNumber=%s) failed", exp);
+            throw exp;
+        }
+        vinNumberData.setVinNumber(vinNumber);
+        return vinNumberData;
+    }
 
-	private void decodeWmi(final String wmi, final VinNumberData vinNumberData) throws VinDecodingException {
-		try {
-			vinNumberData.setManufacturedIn(this.wmiManufacturedInResolver.getCountryCode(wmi));
-		} catch (Exception exp) {
-			throw new VinDecodingException("decodeVis(vis=%s) failed", exp);
-		}
-	}
+    private void decodeWmi(final String wmi, final VinNumberData vinNumberData) throws VinDecodingException {
+        try {
+            vinNumberData.setManufacturedIn(this.wmiManufacturedInResolver.getCountryCode(wmi));
+        } catch (Exception exp) {
+            throw new VinDecodingException("decodeVis(vis=%s) failed", exp);
+        }
+    }
 
-	/**
-	 * Decodes {@code VIS} part of the {@link org.agatom.springatom.server.service.vinNumber.model.VinNumber}
-	 *
-	 * @param vis           {@code VIS} to decode from
-	 * @param vinNumberData data holder for the result
-	 */
-	private void decodeVis(final String vis, final VinNumberData vinNumberData) throws VinDecodingException {
-		try {
-			vinNumberData.setYears(this.yearDecoder.getYear(vis));
-		} catch (Exception exp) {
-			throw new VinDecodingException("decodeVis(vis=%s) failed", exp);
-		}
-	}
+    /**
+     * Decodes {@code VIS} part of the {@link org.agatom.springatom.server.service.vinNumber.model.VinNumber}
+     *
+     * @param vis           {@code VIS} to decode from
+     * @param vinNumberData data holder for the result
+     */
+    private void decodeVis(final String vis, final VinNumberData vinNumberData) throws VinDecodingException {
+        try {
+            vinNumberData.setYears(this.yearDecoder.getYear(vis));
+        } catch (Exception exp) {
+            throw new VinDecodingException("decodeVis(vis=%s) failed", exp);
+        }
+    }
 
-	private void decodeVds(final String vds, final VinNumberData vinNumberData) {
+    private void decodeVds(final String vds, final VinNumberData vinNumberData) {
 
-	}
+    }
 
 }

@@ -65,119 +65,123 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  */
 @Controller
 @RequestMapping(value = "/cmp/data",
-		method = RequestMethod.POST,
-		produces = {MediaType.APPLICATION_JSON_VALUE}
+        method = RequestMethod.POST,
+        produces = {MediaType.APPLICATION_JSON_VALUE}
 )
 @Description(value = "Data controller for components")
 public class SVComponentsDataController
-		extends AbstractComponentController {
-	private static final Logger                             LOGGER                             = Logger.getLogger(SVComponentsDataController.class);
-	@Autowired
-	private              InfoPageComponentBuilderService    infoPageBuilderService             = null;
-	@Autowired
-	private              InfoPageComponentBuilderDispatcher infoPageComponentBuilderDispatcher = null;
+        extends AbstractComponentController {
+    private static final Logger                             LOGGER                             = Logger.getLogger(SVComponentsDataController.class);
+    @Autowired
+    private              InfoPageComponentBuilderService    infoPageBuilderService             = null;
+    @Autowired
+    private              InfoPageComponentBuilderDispatcher infoPageComponentBuilderDispatcher = null;
 
-	/**
-	 * <p>onInfoPageDataRequest.</p>
-	 * Mapped to address <b>/cmp/data/ip</b> resolved the data for the {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent}.
-	 * Data is returned, as raw value, from {@link org.agatom.springatom.web.component.infopages.builder.InfoPageComponentBuilder#getData(org.agatom.springatom.web.component.core.data.ComponentDataRequest)}
-	 * and then adjusted to proper representation with {@link org.agatom.springatom.webmvc.controllers.components.CDRReturnValueConverter}
-	 *
-	 * @param cmpRequest a {@link org.agatom.springatom.web.component.infopages.request.InfoPageComponentRequest} object.
-	 * @param webRequest a {@link org.springframework.web.context.request.WebRequest} object.
-	 *
-	 * @return a {@link java.lang.Object} object.
-	 *
-	 * @throws org.agatom.springatom.webmvc.exceptions.ControllerTierException if any.
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/ip", consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public Object onInfoPageDataRequest(@RequestBody final InfoPageComponentRequest cmpRequest, final WebRequest webRequest) throws ControllerTierException {
+    public SVComponentsDataController() {
+        super("cmpDataCtrl");
+    }
 
-		LOGGER.trace(String.format("onInfoPageDataRequest(cmpRequest=%s,webRequest=%s)", cmpRequest, webRequest));
-		final ComponentDataRequest request = this.combineRequest(cmpRequest, webRequest);
-		request.setRequestedBy(RequestedBy.INFOPAGE);
-		LOGGER.trace(String.format("%s is %s", ClassUtils.getShortName(request.getClass()), request));
+    /**
+     * <p>onInfoPageDataRequest.</p>
+     * Mapped to address <b>/cmp/data/ip</b> resolved the data for the {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent}.
+     * Data is returned, as raw value, from {@link org.agatom.springatom.web.component.infopages.builder.InfoPageComponentBuilder#getData(org.agatom.springatom.web.component.core.data.ComponentDataRequest)}
+     * and then adjusted to proper representation with {@link org.agatom.springatom.webmvc.controllers.components.CDRReturnValueConverter}
+     *
+     * @param cmpRequest a {@link org.agatom.springatom.web.component.infopages.request.InfoPageComponentRequest} object.
+     * @param webRequest a {@link org.springframework.web.context.request.WebRequest} object.
+     *
+     * @return a {@link java.lang.Object} object.
+     *
+     * @throws org.agatom.springatom.webmvc.exceptions.ControllerTierException if any.
+     */
+    @ResponseBody
+    @RequestMapping(value = "/ip", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public Object onInfoPageDataRequest(@RequestBody final InfoPageComponentRequest cmpRequest, final WebRequest webRequest) throws ControllerTierException {
 
-		ComponentDataResponse data;
+        LOGGER.trace(String.format("onInfoPageDataRequest(cmpRequest=%s,webRequest=%s)", cmpRequest, webRequest));
+        final ComponentDataRequest request = this.combineRequest(cmpRequest, webRequest);
+        request.setRequestedBy(RequestedBy.INFOPAGE);
+        LOGGER.trace(String.format("%s is %s", ClassUtils.getShortName(request.getClass()), request));
 
-		try {
-			final long startTime = System.nanoTime();
-			{
-				final Class<? extends Persistable<?>> domain = getDomain(cmpRequest.getDomain());
-				LOGGER.trace(String.format("Requesting for %s for domain %s", ClassUtils.getShortName(InfoPageComponent.class), domain));
+        ComponentDataResponse data;
 
-				this.setInfoPageComponentInDataRequest(request, domain);
+        try {
+            final long startTime = System.nanoTime();
+            {
+                final Class<? extends Persistable<?>> domain = getDomain(cmpRequest.getDomain());
+                LOGGER.trace(String.format("Requesting for %s for domain %s", ClassUtils.getShortName(InfoPageComponent.class), domain));
 
-				final InfoPageComponentBuilder<? extends Persistable<?>> ipBuilder =
-						this.infoPageComponentBuilderDispatcher.getInfoPageComponentBuilder(domain);
+                this.setInfoPageComponentInDataRequest(request, domain);
 
-				data = ipBuilder.getData(request);
-			}
-			final long endTime = System.nanoTime();
+                final InfoPageComponentBuilder<? extends Persistable<?>> ipBuilder =
+                        this.infoPageComponentBuilderDispatcher.getInfoPageComponentBuilder(domain);
 
-			LOGGER.info(String.format("For %s returning data %s in %dms", cmpRequest, data, TimeUnit.NANOSECONDS.toMillis(endTime - startTime)));
-		} catch (Exception exp) {
-			throw new ControllerTierException(String.format("onInfoPageDataRequest(cmpRequest=%s,webRequest=%s) failed...", cmpRequest, webRequest), exp);
-		}
+                data = ipBuilder.getData(request);
+            }
+            final long endTime = System.nanoTime();
 
-		final CmpResource<?> convertedData = this.toComponentResource(request, data);
-		convertedData.add(linkTo(methodOn(SVComponentsDataController.class).onInfoPageDataRequest(cmpRequest, webRequest)).withSelfRel());
-		return convertedData;
-	}
+            LOGGER.info(String.format("For %s returning data %s in %dms", cmpRequest, data, TimeUnit.NANOSECONDS.toMillis(endTime - startTime)));
+        } catch (Exception exp) {
+            throw new ControllerTierException(String.format("onInfoPageDataRequest(cmpRequest=%s,webRequest=%s) failed...", cmpRequest, webRequest), exp);
+        }
 
-	/**
-	 * Retrieves casted domain {@link java.lang.Class}
-	 *
-	 * @param domain raw domain
-	 *
-	 * @return the domain class
-	 */
-	@SuppressWarnings("unchecked")
-	private Class<? extends Persistable<?>> getDomain(final Class<?> domain) {
-		return (Class<? extends Persistable<?>>) domain;
-	}
+        final CmpResource<?> convertedData = this.toComponentResource(request, data);
+        convertedData.add(linkTo(methodOn(SVComponentsDataController.class).onInfoPageDataRequest(cmpRequest, webRequest)).withSelfRel());
+        return convertedData;
+    }
 
-	private void setInfoPageComponentInDataRequest(final ComponentDataRequest request, final Class<? extends Persistable<?>> domain) throws org.agatom.springatom.core.exception.SException, ControllerTierException {
-		if (ClassUtils.isAssignable(Persistable.class, domain)) {
-			final InfoPageComponent infoPage = this.infoPageBuilderService.buildInfoPage(domain);
-			request.setComponent(infoPage);
-		} else {
-			throw new ControllerTierException(String.format("%s domain is not Persistable class", domain));
-		}
-	}
+    /**
+     * Retrieves casted domain {@link java.lang.Class}
+     *
+     * @param domain raw domain
+     *
+     * @return the domain class
+     */
+    @SuppressWarnings("unchecked")
+    private Class<? extends Persistable<?>> getDomain(final Class<?> domain) {
+        return (Class<? extends Persistable<?>>) domain;
+    }
 
-	@ResponseBody
-	@RequestMapping("/table/{builderId}")
-	public Object onTableDataRequest(@PathVariable("builderId") final String builderId, final TableComponentRequest cmpRequest, final WebRequest webRequest) throws ControllerTierException {
-		LOGGER.trace(String.format("onInfoPageDataRequest(cmpRequest=%s,webRequest=%s)", cmpRequest, webRequest));
-		final ComponentDataRequest request = this.combineRequest(cmpRequest, webRequest);
-		request.setRequestedBy(RequestedBy.TABLE);
-		LOGGER.trace(String.format("%s is %s", ClassUtils.getShortName(request.getClass()), request));
-		ComponentDataResponse data;
+    private void setInfoPageComponentInDataRequest(final ComponentDataRequest request, final Class<? extends Persistable<?>> domain) throws org.agatom.springatom.core.exception.SException, ControllerTierException {
+        if (ClassUtils.isAssignable(Persistable.class, domain)) {
+            final InfoPageComponent infoPage = this.infoPageBuilderService.buildInfoPage(domain);
+            request.setComponent(infoPage);
+        } else {
+            throw new ControllerTierException(String.format("%s domain is not Persistable class", domain));
+        }
+    }
 
-		try {
-			final long startTime = System.nanoTime();
-			{
-				final Builder dataBuilder = this.builderRepository.getBuilder(builderId);
-				Preconditions.checkNotNull(dataBuilder, String.format("Builder(id=%s) not found...", dataBuilder));
-				Preconditions.checkArgument(
-						ClassUtils.isAssignableValue(ComponentDataBuilder.class, dataBuilder),
-						String.format("Builder(id=%s) found, but it is not %s", builderId, ClassUtils.getShortName(ComponentDataBuilder.class))
-				);
+    @ResponseBody
+    @RequestMapping("/table/{builderId}")
+    public Object onTableDataRequest(@PathVariable("builderId") final String builderId, final TableComponentRequest cmpRequest, final WebRequest webRequest) throws ControllerTierException {
+        LOGGER.trace(String.format("onInfoPageDataRequest(cmpRequest=%s,webRequest=%s)", cmpRequest, webRequest));
+        final ComponentDataRequest request = this.combineRequest(cmpRequest, webRequest);
+        request.setRequestedBy(RequestedBy.TABLE);
+        LOGGER.trace(String.format("%s is %s", ClassUtils.getShortName(request.getClass()), request));
+        ComponentDataResponse data;
 
-				data = ((ComponentDataBuilder) dataBuilder).getData(request);
-			}
-			final long endTime = System.nanoTime();
+        try {
+            final long startTime = System.nanoTime();
+            {
+                final Builder dataBuilder = this.builderRepository.getBuilder(builderId);
+                Preconditions.checkNotNull(dataBuilder, String.format("Builder(id=%s) not found...", dataBuilder));
+                Preconditions.checkArgument(
+                        ClassUtils.isAssignableValue(ComponentDataBuilder.class, dataBuilder),
+                        String.format("Builder(id=%s) found, but it is not %s", builderId, ClassUtils.getShortName(ComponentDataBuilder.class))
+                );
 
-			LOGGER.info(String.format("For %s returning data %s in %dms", cmpRequest, data, TimeUnit.NANOSECONDS.toMillis(endTime - startTime)));
-		} catch (Exception exp) {
-			throw new ControllerTierException(String.format("onTableDataRequest(cmpRequest=%s,webRequest=%s) failed...", cmpRequest, webRequest), exp);
-		}
+                data = ((ComponentDataBuilder) dataBuilder).getData(request);
+            }
+            final long endTime = System.nanoTime();
 
-		final CmpResource<?> convertedData = this.toComponentResource(request, data);
-		convertedData.add(linkTo(methodOn(SVComponentsDataController.class).onTableDataRequest(builderId, cmpRequest, webRequest)).withSelfRel());
-		return convertedData;
-	}
+            LOGGER.info(String.format("For %s returning data %s in %dms", cmpRequest, data, TimeUnit.NANOSECONDS.toMillis(endTime - startTime)));
+        } catch (Exception exp) {
+            throw new ControllerTierException(String.format("onTableDataRequest(cmpRequest=%s,webRequest=%s) failed...", cmpRequest, webRequest), exp);
+        }
+
+        final CmpResource<?> convertedData = this.toComponentResource(request, data);
+        convertedData.add(linkTo(methodOn(SVComponentsDataController.class).onTableDataRequest(builderId, cmpRequest, webRequest)).withSelfRel());
+        return convertedData;
+    }
 
 }

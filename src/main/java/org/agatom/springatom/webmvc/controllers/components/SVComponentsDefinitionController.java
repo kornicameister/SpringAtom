@@ -61,87 +61,91 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RequestMapping(value = "/cmp/config")
 @Description(value = "Configuration controller for components")
 public class SVComponentsDefinitionController
-		extends AbstractComponentController {
-	private static final Logger LOGGER = Logger.getLogger(SVComponentsDefinitionController.class);
+        extends AbstractComponentController {
+    private static final Logger LOGGER = Logger.getLogger(SVComponentsDefinitionController.class);
 
-	@ResponseBody
-	@RequestMapping(
-			value = "/ip/{domain}/{id}",
-			method = RequestMethod.GET,
-			produces = {MediaType.APPLICATION_JSON_VALUE}
-	)
-	public Object onInfoPageConfigRequest(@PathVariable("domain") final String domain, @PathVariable("id") final Long id, final WebRequest webRequest) throws ControllerTierException {
-		LOGGER.debug(String.format("onInfoPageConfigRequest(domain=%s,id=%s)", domain, id));
-		try {
-			final long startTime = System.nanoTime();
+    public SVComponentsDefinitionController() {
+        super("cmpDefCtrl");
+    }
 
-			final ServletWebRequest servletWebRequest = (ServletWebRequest) webRequest;
-			final InfoPageRequest pageRequest = this.infoPageControllerUtils.getInfoPageRequest(servletWebRequest.getRequest());
+    @ResponseBody
+    @RequestMapping(
+            value = "/ip/{domain}/{id}",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public Object onInfoPageConfigRequest(@PathVariable("domain") final String domain, @PathVariable("id") final Long id, final WebRequest webRequest) throws ControllerTierException {
+        LOGGER.debug(String.format("onInfoPageConfigRequest(domain=%s,id=%s)", domain, id));
+        try {
+            final long startTime = System.nanoTime();
 
-			if (!pageRequest.isValid()) {
-				LOGGER.trace(String.format("InfoPage not located for domain=%s", domain));
-				throw new SException("Computed InfoPageRequest is not valid");
-			}
+            final ServletWebRequest servletWebRequest = (ServletWebRequest) webRequest;
+            final InfoPageRequest pageRequest = this.infoPageControllerUtils.getInfoPageRequest(servletWebRequest.getRequest());
 
-			final InfoPageComponent ipCmp = this.infoPageControllerUtils.getInfoPageComponent(pageRequest.getObjectClass());
-			final InfoPageComponentRequest ipCmpRequest = this.infoPageControllerUtils.getInfoPageComponentRequest(ipCmp, pageRequest);
+            if (!pageRequest.isValid()) {
+                LOGGER.trace(String.format("InfoPage not located for domain=%s", domain));
+                throw new SException("Computed InfoPageRequest is not valid");
+            }
 
-			final ComponentDataRequest dataRequest = this.combineRequest(ipCmpRequest, webRequest);
-			dataRequest.setRequestedBy(RequestedBy.INFOPAGE);
-			final ComponentDataResponse dataResponse = ComponentDataResponse.success(ClassUtils.getShortName(this.getClass()), ipCmp, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime));
+            final InfoPageComponent ipCmp = this.infoPageControllerUtils.getInfoPageComponent(pageRequest.getObjectClass());
+            final InfoPageComponentRequest ipCmpRequest = this.infoPageControllerUtils.getInfoPageComponentRequest(ipCmp, pageRequest);
 
-			final CmpResource<?> convertedData = this.toComponentResource(dataRequest, dataResponse);
-			convertedData.add(linkTo(methodOn(SVComponentsDefinitionController.class).onInfoPageConfigRequest(domain, id, null)).withSelfRel());
+            final ComponentDataRequest dataRequest = this.combineRequest(ipCmpRequest, webRequest);
+            dataRequest.setRequestedBy(RequestedBy.INFOPAGE);
+            final ComponentDataResponse dataResponse = ComponentDataResponse.success(ClassUtils.getShortName(this.getClass()), ipCmp, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime));
 
-			LOGGER.info(String.format("For %s returning data %s in %dms", ipCmpRequest, convertedData, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)));
+            final CmpResource<?> convertedData = this.toComponentResource(dataRequest, dataResponse);
+            convertedData.add(linkTo(methodOn(SVComponentsDefinitionController.class).onInfoPageConfigRequest(domain, id, null)).withSelfRel());
 
-			return convertedData;
-		} catch (Exception exp) {
-			LOGGER.error(String.format("onInfoPageDataRequest(domain=%s) threw %s", domain, ClassUtils.getShortName(exp.getClass())), exp);
-			throw new ControllerTierException(exp);
-		}
-	}
+            LOGGER.info(String.format("For %s returning data %s in %dms", ipCmpRequest, convertedData, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)));
 
-	/**
-	 * Returns {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder#getDefinition(org.agatom.springatom.web.component.core.data.ComponentDataRequest)}.
-	 * Request must contain information about {@code builderId} to be used to retrieve the definition.
-	 *
-	 * @param builderId  builderId
-	 * @param webRequest {@link org.springframework.web.context.request.WebRequest} instance
-	 *
-	 * @return the definition
-	 *
-	 * @throws org.agatom.springatom.webmvc.exceptions.ControllerTierException if failed
-	 */
-	@ResponseBody
-	@RequestMapping(
-			value = "/table/{builderId}",
-			method = RequestMethod.GET,
-			produces = {MediaType.APPLICATION_JSON_VALUE}
-	)
-	public Object onTableConfigRequest(@PathVariable("builderId") final String builderId, final WebRequest webRequest) throws ControllerTierException {
-		LOGGER.trace(String.format("onTableConfigRequest(builderId=%s,webRequest=%s)", builderId, webRequest));
-		try {
-			final Builder builder = this.builderRepository.getBuilder(builderId);
+            return convertedData;
+        } catch (Exception exp) {
+            LOGGER.error(String.format("onInfoPageDataRequest(domain=%s) threw %s", domain, ClassUtils.getShortName(exp.getClass())), exp);
+            throw new ControllerTierException(exp);
+        }
+    }
 
-			Assert.notNull(builder, String.format("Builder for builderId=%s not found", builderId));
-			Assert.isInstanceOf(ComponentDefinitionBuilder.class, builder, String.format("Builder for builderId=%s not capable of producing definition", builderId));
+    /**
+     * Returns {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder#getDefinition(org.agatom.springatom.web.component.core.data.ComponentDataRequest)}.
+     * Request must contain information about {@code builderId} to be used to retrieve the definition.
+     *
+     * @param builderId  builderId
+     * @param webRequest {@link org.springframework.web.context.request.WebRequest} instance
+     *
+     * @return the definition
+     *
+     * @throws org.agatom.springatom.webmvc.exceptions.ControllerTierException if failed
+     */
+    @ResponseBody
+    @RequestMapping(
+            value = "/table/{builderId}",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public Object onTableConfigRequest(@PathVariable("builderId") final String builderId, final WebRequest webRequest) throws ControllerTierException {
+        LOGGER.trace(String.format("onTableConfigRequest(builderId=%s,webRequest=%s)", builderId, webRequest));
+        try {
+            final Builder builder = this.builderRepository.getBuilder(builderId);
 
-			final ComponentDefinitionBuilder<?> definitionBuilder = (ComponentDefinitionBuilder<?>) builder;
+            Assert.notNull(builder, String.format("Builder for builderId=%s not found", builderId));
+            Assert.isInstanceOf(ComponentDefinitionBuilder.class, builder, String.format("Builder for builderId=%s not capable of producing definition", builderId));
 
-			LOGGER.trace(String.format("For builderId=%s using object=%s", builderId, definitionBuilder));
+            final ComponentDefinitionBuilder<?> definitionBuilder = (ComponentDefinitionBuilder<?>) builder;
 
-			final ComponentDataRequest request = this.combineRequest(new TableDefinitionRequest().setBuilderId(builderId), webRequest);
-			request.setRequestedBy(RequestedBy.TABLE);
+            LOGGER.trace(String.format("For builderId=%s using object=%s", builderId, definitionBuilder));
 
-			final CmpResource<?> resource = this.toComponentResource(request, definitionBuilder.getDefinition(request));
-			resource.add(linkTo(methodOn(SVComponentsDefinitionController.class).onTableConfigRequest(builderId, webRequest)).withSelfRel());
-			return resource;
+            final ComponentDataRequest request = this.combineRequest(new TableDefinitionRequest().setBuilderId(builderId), webRequest);
+            request.setRequestedBy(RequestedBy.TABLE);
 
-		} catch (Exception exp) {
-			LOGGER.error(String.format("onTableConfigRequest(builderId=%s,webRequest=%s) failed...", builderId, webRequest), exp);
-			throw new ControllerTierException(String.format("Failed to get table config for builderId=%s", builderId), exp);
-		}
-	}
+            final CmpResource<?> resource = this.toComponentResource(request, definitionBuilder.getDefinition(request));
+            resource.add(linkTo(methodOn(SVComponentsDefinitionController.class).onTableConfigRequest(builderId, webRequest)).withSelfRel());
+            return resource;
+
+        } catch (Exception exp) {
+            LOGGER.error(String.format("onTableConfigRequest(builderId=%s,webRequest=%s) failed...", builderId, webRequest), exp);
+            throw new ControllerTierException(String.format("Failed to get table config for builderId=%s", builderId), exp);
+        }
+    }
 
 }

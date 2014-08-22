@@ -41,6 +41,7 @@ define(
                 }
                 return local;
             }(arguments)),
+            debugMode = utils.isDebug(),
             _register = function localRegister($urlRouterProvider, states) {
                 var me = this;
                 if (!angular.isDefined(states)) {
@@ -57,10 +58,19 @@ define(
                         _register.call(me, $urlRouterProvider, states[i]);
                     }
                 } else if (states.name && states.definition) {
-                    me.state(states.name, states.definition);
+                    me.state(states.name, _adjustStateDefinition(states.definition));
                 } else if (states.rule) {
                     $urlRouterProvider.when(states.rule.when, states.rule.then);
                 }
+            },
+            _adjustStateDefinition = function adjustStateDefinition(definition) {
+                if (definition.templateUrl && debugMode) {
+                    definition.templateUrl = '{url}?_d={magic}'.format({
+                        url  : definition.templateUrl,
+                        magic: utils.now()
+                    })
+                }
+                return definition;
             },
             configureStateListeners = function ($rootScope, $cookies) {
                 var onStateChangeStart = function onStateChangeStart(event, toState, toParams, fromState) {

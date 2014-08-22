@@ -72,10 +72,16 @@ define(
                     }
                     return undefined;
                 }
+            },
+            configureDialogs = function (dialogsProvider) {
+                dialogsProvider['useBackdrop'](true);
+                dialogsProvider['useEscClose'](true);
+                dialogsProvider['useCopy'](true);
             };
 
         module
             .config(['$httpProvider', generalConf])
+            .config(configureDialogs)
             .provider('urlHelper', urlHelperProvider)
             .filter('getByProperty', getByPropertyFilter)
             .constant('appName', 'SpringAtom')

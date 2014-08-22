@@ -23,12 +23,11 @@ import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
 import org.agatom.springatom.web.component.core.request.ComponentRequest;
 import org.agatom.springatom.webmvc.controllers.components.data.CmpResource;
+import org.agatom.springatom.webmvc.core.SVDefaultController;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.convert.ConversionExecutionException;
-import org.springframework.data.rest.webmvc.support.ExceptionMessage;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
@@ -45,150 +44,113 @@ import java.util.Map;
  * Contains logic required to create {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest}
  * and for exception handling
  *
+ * Changelog:
+ * 0.0.3 - 0.0.4: extends SVDefaultController due to capabilities of producing common responses for exceptions
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 02.06.14</small>
  *
  * @author kornicameister
- * @version 0.0.3
+ * @version 0.0.4
  * @since 0.0.1
  */
-abstract class AbstractComponentController {
-	private static final Logger                     LOGGER                  = Logger.getLogger(AbstractComponentController.class);
-	@Autowired
-	protected            ComponentBuilderRepository builderRepository       = null;
-	@Autowired
-	protected            InfoPageControllerUtils    infoPageControllerUtils = null;
-	@Autowired
-	private              CDRReturnValueConverter    converter               = null;
+abstract class AbstractComponentController
+        extends SVDefaultController {
+    private static final Logger                     LOGGER                  = Logger.getLogger(AbstractComponentController.class);
+    @Autowired
+    protected            ComponentBuilderRepository builderRepository       = null;
+    @Autowired
+    protected            InfoPageControllerUtils    infoPageControllerUtils = null;
+    @Autowired
+    private              CDRReturnValueConverter    converter               = null;
 
-	/**
-	 * Pushes data through {@link org.agatom.springatom.webmvc.controllers.components.CDRReturnValueConverter}
-	 * which applies web converters logic to the data
-	 *
-	 * @param request component request
-	 * @param data    component raw data
-	 *
-	 * @return adjusted data
-	 *
-	 * @throws ControllerTierException if any
-	 */
-	protected CmpResource<?> toComponentResource(final ComponentDataRequest request, final ComponentDataResponse data) throws ControllerTierException {
-		try {
-			return this.converter.convert(data, request);
-		} catch (Exception exp) {
-			throw new ControllerTierException("Failed to convert data using CDRReturnValueConverter", exp);
-		}
-	}
+    /**
+     * <p>Constructor for SVDefaultController.</p>
+     *
+     * @param controllerName a {@link String} object.
+     */
+    protected AbstractComponentController(final String controllerName) {
+        super(controllerName);
+    }
 
-	/**
-	 * Combines {@link org.agatom.springatom.web.component.core.request.ComponentRequest} and {@link org.springframework.web.context.request.WebRequest}
-	 * into valid {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest}.
-	 *
-	 * @param cmpRequest component request
-	 * @param webRequest web request
-	 *
-	 * @return {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest} instance
-	 */
-	protected ComponentDataRequest combineRequest(final ComponentRequest cmpRequest, final WebRequest webRequest) {
-		LOGGER.trace(String.format("Combining request for cmpRequest=%s,webRequest=%s", cmpRequest, webRequest.getClass()));
+    /**
+     * Pushes data through {@link org.agatom.springatom.webmvc.controllers.components.CDRReturnValueConverter}
+     * which applies web converters logic to the data
+     *
+     * @param request component request
+     * @param data    component raw data
+     *
+     * @return adjusted data
+     *
+     * @throws ControllerTierException if any
+     */
+    protected CmpResource<?> toComponentResource(final ComponentDataRequest request, final ComponentDataResponse data) throws ControllerTierException {
+        try {
+            return this.converter.convert(data, request);
+        } catch (Exception exp) {
+            throw new ControllerTierException("Failed to convert data using CDRReturnValueConverter", exp);
+        }
+    }
 
-		final ModelMap modelMap = new ModelMap(webRequest.getParameterMap());
-		modelMap.addAttribute(webRequest.getLocale());
-		modelMap.put("user", webRequest.getUserPrincipal());
+    /**
+     * Combines {@link org.agatom.springatom.web.component.core.request.ComponentRequest} and {@link org.springframework.web.context.request.WebRequest}
+     * into valid {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest}.
+     *
+     * @param cmpRequest component request
+     * @param webRequest web request
+     *
+     * @return {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest} instance
+     */
+    protected ComponentDataRequest combineRequest(final ComponentRequest cmpRequest, final WebRequest webRequest) {
+        LOGGER.trace(String.format("Combining request for cmpRequest=%s,webRequest=%s", cmpRequest, webRequest.getClass()));
 
-		Map<String, Object> localMap = Maps.newHashMap();
+        final ModelMap modelMap = new ModelMap(webRequest.getParameterMap());
+        modelMap.addAttribute(webRequest.getLocale());
+        modelMap.put("user", webRequest.getUserPrincipal());
 
-		final Iterator<String> headerNames = webRequest.getHeaderNames();
+        Map<String, Object> localMap = Maps.newHashMap();
 
-		while (headerNames.hasNext()) {
-			final String key = headerNames.next();
-			localMap.put(key, webRequest.getHeaderValues(key));
-		}
-		modelMap.put("headers", localMap);
+        final Iterator<String> headerNames = webRequest.getHeaderNames();
 
-		final int scopes[] = {
-				RequestAttributes.SCOPE_REQUEST,
-				RequestAttributes.SCOPE_SESSION,
-				RequestAttributes.SCOPE_GLOBAL_SESSION
-		};
-		for (int scope : scopes) {
-			localMap = Maps.newHashMap();
-			final String[] attributeNames = webRequest.getAttributeNames(scope);
-			for (String attributeName : attributeNames) {
-				localMap.put(attributeName, webRequest.getAttribute(attributeName, scope));
-			}
-			modelMap.put(scope == 0 ? "requestAttributes" : (scope == 1 ? "sessionAttributes" : "globalSessionAttributes"), localMap);
-		}
+        while (headerNames.hasNext()) {
+            final String key = headerNames.next();
+            localMap.put(key, webRequest.getHeaderValues(key));
+        }
+        modelMap.put("headers", localMap);
 
-		return new ComponentDataRequest(modelMap, cmpRequest);
-	}
+        final int scopes[] = {
+                RequestAttributes.SCOPE_REQUEST,
+                RequestAttributes.SCOPE_SESSION,
+                RequestAttributes.SCOPE_GLOBAL_SESSION
+        };
+        for (int scope : scopes) {
+            localMap = Maps.newHashMap();
+            final String[] attributeNames = webRequest.getAttributeNames(scope);
+            for (String attributeName : attributeNames) {
+                localMap.put(attributeName, webRequest.getAttribute(attributeName, scope));
+            }
+            modelMap.put(scope == 0 ? "requestAttributes" : (scope == 1 ? "sessionAttributes" : "globalSessionAttributes"), localMap);
+        }
 
-	/**
-	 * <p>handleNPE.</p>
-	 *
-	 * @param npe a {@link org.agatom.springatom.webmvc.exceptions.ControllerTierException} object.
-	 *
-	 * @return a {@link org.springframework.http.ResponseEntity} object.
-	 */
-	@ResponseBody
-	@ExceptionHandler({ControllerTierException.class})
-	public ResponseEntity<?> handleNPE(final ControllerTierException npe) {
-		return this.errorResponse(npe, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+        return new ComponentDataRequest(modelMap, cmpRequest);
+    }
 
-	/**
-	 * <p>errorResponse.</p>
-	 *
-	 * @param throwable a T object.
-	 * @param status    a {@link org.springframework.http.HttpStatus} object.
-	 * @param <T>       a T object.
-	 *
-	 * @return a {@link org.springframework.http.ResponseEntity} object.
-	 */
-	public <T extends Throwable> ResponseEntity<ExceptionMessage> errorResponse(final T throwable, final HttpStatus status) {
-		return errorResponse(null, throwable, status);
-	}
+    /**
+     * <p>handleVinDecodingException.</p>
+     *
+     * @param npe a {@link org.agatom.springatom.webmvc.exceptions.ControllerTierException} object.
+     *
+     * @return a {@link org.springframework.http.ResponseEntity} object.
+     */
+    @ResponseBody
+    @ExceptionHandler({ControllerTierException.class})
+    public ResponseEntity<?> handleNPE(final ControllerTierException npe) {
+        return this.errorResponse(npe, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
-	/**
-	 * <p>errorResponse.</p>
-	 *
-	 * @param headers   a {@link org.springframework.http.HttpHeaders} object.
-	 * @param throwable a T object.
-	 * @param status    a {@link org.springframework.http.HttpStatus} object.
-	 * @param <T>       a T object.
-	 *
-	 * @return a {@link org.springframework.http.ResponseEntity} object.
-	 */
-	public <T extends Throwable> ResponseEntity<ExceptionMessage> errorResponse(final HttpHeaders headers, final T throwable, final HttpStatus status) {
-		if (null != throwable && null != throwable.getMessage()) {
-			LOGGER.error(throwable.getMessage(), throwable);
-			return response(headers, new ExceptionMessage(throwable), status);
-		} else {
-			return response(headers, null, status);
-		}
-	}
-
-	/**
-	 * <p>response.</p>
-	 *
-	 * @param headers a {@link org.springframework.http.HttpHeaders} object.
-	 * @param body    a T object.
-	 * @param status  a {@link org.springframework.http.HttpStatus} object.
-	 * @param <T>     a T object.
-	 *
-	 * @return a {@link org.springframework.http.ResponseEntity} object.
-	 */
-	public <T> ResponseEntity<T> response(final HttpHeaders headers, final T body, final HttpStatus status) {
-		final HttpHeaders httpHeaders = new HttpHeaders();
-		if (null != headers) {
-			httpHeaders.putAll(headers);
-		}
-		return new ResponseEntity<>(body, httpHeaders, status);
-	}
-
-	@ResponseBody
-	@ExceptionHandler({ConversionExecutionException.class})
-	public ResponseEntity<?> handleConversionExecutionException(final ConversionExecutionException npe) {
-		return this.errorResponse(npe, HttpStatus.UNPROCESSABLE_ENTITY);
-	}
+    @ResponseBody
+    @ExceptionHandler({ConversionExecutionException.class})
+    public ResponseEntity<?> handleConversionExecutionException(final ConversionExecutionException npe) {
+        return this.errorResponse(npe, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 
 }
