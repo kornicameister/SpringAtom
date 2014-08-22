@@ -24,6 +24,13 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
+ * {@code WizardProcessor} is an interface defining a contract of a single <b>wizard processor.</b>
+ * Such processor is able to:
+ * <ol>
+ * <li>initialize wizard by creating its {@link org.agatom.springatom.web.wizards.data.WizardDescriptor}</li>
+ * <li>initialize particular steps</li>
+ * <li>submit the wizard's form data to the persistent storage</li>
+ * </ol>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
  *
  * @author trebskit
@@ -43,6 +50,15 @@ public interface WizardProcessor<T> {
      */
     WizardDescriptor initialize(final Locale locale);
 
+    /**
+     * Performs {@code step} initialization. This method must be defined in order to put specific data when wizard's step
+     * is being about to enter.
+     *
+     * @param step   step to init
+     * @param locale active locale
+     *
+     * @return {@code step} init data
+     */
     ModelMap initializeStep(final String step, final Locale locale);
 
     /**

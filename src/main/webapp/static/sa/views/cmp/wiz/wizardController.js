@@ -56,7 +56,7 @@ define(
                 },
                 init = {
                     getInitialState: function () {
-                        var init = definition.steps[0];
+                        var init = definition.content[0];
                         return init.state;
                     },
                     getTitle       : function getTitle() {
@@ -64,7 +64,7 @@ define(
                     },
                     getLabels      : function getLabels() {
                         var labels = {};
-                        angular.forEach(definition.steps, function (chunk) {
+                        angular.forEach(definition.content, function (chunk) {
                             var localLabels = chunk.labels;
                             labels = angular.extend(labels, localLabels || {});
                         });
@@ -72,12 +72,12 @@ define(
                     },
                     getSteps       : function getSteps() {
                         var steps = [];
-                        angular.forEach(definition.steps, function (chunk) {
+                        angular.forEach(definition.content, function (chunk) {
                             steps.push(angular.extend(chunk, {
                                 state: wizardKey + '.' + chunk.step
                             }));
-                            stepsMap[chunk.state] = chunk.index;
-                            stepsMap[chunk.index] = steps[steps.length - 1].state;
+                            stepsMap[chunk.state] = chunk.position;
+                            stepsMap[chunk.position] = steps[steps.length - 1].state;
                         });
                         return steps;
                     },
@@ -229,7 +229,7 @@ define(
 
                         // set active header
                         angular.forEach(header, function headerIt(head) {
-                            head.active = (head.index === stepIndex);
+                            head.active = (head.position === stepIndex);
                         });
 
                         return true;

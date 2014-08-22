@@ -19,37 +19,30 @@ package org.agatom.springatom.web.wizards.data;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Sets;
-import org.agatom.springatom.web.component.core.elements.DefaultComponent;
+import org.agatom.springatom.web.component.core.elements.ContentComponent;
 
 import javax.annotation.Nullable;
-import java.util.Set;
 
 /**
+ * {@code WizardDescriptor} describes entire wizard. Contains meta information (title, labels, list of steps) that are used
+ * to render a wizard properly in the client side.
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
  *
  * @author trebskit
- * @version 0.0.1
+ * @version 0.0.2
+ * @see org.agatom.springatom.web.component.core.elements.ContentComponent
  * @since 0.0.1
  */
 public class WizardDescriptor
-        extends DefaultComponent {
-    private static final long                      serialVersionUID = 8779554824213960312L;
-    private              Set<WizardStepDescriptor> steps            = null;
+        extends ContentComponent<WizardStepDescriptor> {
+    private static final long serialVersionUID = 8779554824213960312L;
 
     public boolean addStep(final WizardStepDescriptor wizardStepDescriptor) {
-        if (this.steps == null) {
-            this.steps = Sets.newTreeSet();
-        }
-        wizardStepDescriptor.setIndex((short) this.steps.size());
-        return this.steps.add(wizardStepDescriptor);
+        return this.addContent(wizardStepDescriptor);
     }
 
     public WizardStepDescriptor getStep(final String key) {
-        if (this.steps == null) {
-            return null;
-        }
-        return FluentIterable.from(this.steps).firstMatch(new Predicate<WizardStepDescriptor>() {
+        return FluentIterable.from(this.getContent()).firstMatch(new Predicate<WizardStepDescriptor>() {
             @Override
             public boolean apply(@Nullable final WizardStepDescriptor input) {
                 return input != null && input.getStep().equals(key);
@@ -58,19 +51,10 @@ public class WizardDescriptor
     }
 
     public boolean removeStep(final WizardStepDescriptor wizardStepDescriptor) {
-        return this.steps != null && this.steps.remove(wizardStepDescriptor);
+        return this.removeContent(wizardStepDescriptor);
     }
 
     public boolean containsStep(final WizardStepDescriptor wizardStepDescriptor) {
-        return this.steps != null && this.steps.contains(wizardStepDescriptor);
-    }
-
-    public Set<WizardStepDescriptor> getSteps() {
-        return steps;
-    }
-
-    public WizardDescriptor setSteps(final Set<WizardStepDescriptor> steps) {
-        this.steps = steps;
-        return this;
+        return this.getContent() != null && this.getContent().contains(wizardStepDescriptor);
     }
 }

@@ -29,6 +29,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * {@code Wizard} is {@link org.springframework.stereotype.Component} extensions marking particular
+ * classes as {@link org.agatom.springatom.web.wizards.WizardProcessor}
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
  *
  * @author trebskit

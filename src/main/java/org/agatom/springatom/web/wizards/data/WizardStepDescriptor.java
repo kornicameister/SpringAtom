@@ -20,24 +20,28 @@ package org.agatom.springatom.web.wizards.data;
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Maps;
+import org.agatom.springatom.web.component.core.EmbeddableComponent;
 import org.agatom.springatom.web.component.core.elements.DefaultComponent;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
+ * {@code WizardStepDescriptor} describes single step of a wizard. It is a part of {@link org.agatom.springatom.web.wizards.data.WizardDescriptor}
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
  *
  * @author trebskit
- * @version 0.0.1
+ * @version 0.0.2
+ * @see org.agatom.springatom.web.component.core.elements.DefaultComponent
+ * @see org.agatom.springatom.web.component.core.EmbeddableComponent
  * @since 0.0.1
  */
 public class WizardStepDescriptor
         extends DefaultComponent
-        implements Comparable<WizardStepDescriptor> {
+        implements EmbeddableComponent {
     private static final long                serialVersionUID = 3388862863826004584L;
     protected            String              step             = null;
-    protected            short               index            = 0;
+    protected short index = -1;
     protected            boolean             required         = false;
     protected            Map<String, String> labels           = Maps.newHashMap();
 
@@ -59,15 +63,6 @@ public class WizardStepDescriptor
         return this;
     }
 
-    public short getIndex() {
-        return index;
-    }
-
-    public WizardStepDescriptor setIndex(final short index) {
-        this.index = index;
-        return this;
-    }
-
     public Map<String, String> getLabels() {
         return labels;
     }
@@ -83,8 +78,8 @@ public class WizardStepDescriptor
     }
 
     @Override
-    public int compareTo(@Nonnull final WizardStepDescriptor ws) {
-        return ComparisonChain.start().compare(this.index, ws.index).result();
+    public int compareTo(@Nonnull final EmbeddableComponent ws) {
+        return ComparisonChain.start().compare(this.index, ((WizardStepDescriptor) ws).index).result();
     }
 
     @Override
@@ -113,5 +108,15 @@ public class WizardStepDescriptor
                 .add("label", label)
                 .add("required", required)
                 .toString();
+    }
+
+    @Override
+    public int getPosition() {
+        return this.index;
+    }
+
+    @Override
+    public void setPosition(final int position) {
+        this.index = (short) position;
     }
 }
