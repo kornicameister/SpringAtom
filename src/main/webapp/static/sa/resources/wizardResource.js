@@ -26,8 +26,8 @@ define(
     function wizardResource(app, utils) {
         var urls = {
                 init      : '/app/cmp/wiz/init/{key}',
-                stepInit  : '/app/cmp/wiz/init/step/{key}',
-                stepSubmit: '/app/cmp/wiz/submit/step/{key}',
+                stepInit  : '/app/cmp/wiz/init/{wizard}/step/{step}',
+                stepSubmit: '/app/cmp/wiz/submit/{wizard}/step/{key}',
                 submit    : '/app/cmp/wiz/submit/{key}',
                 /**
                  * Adds some magic number to the end of the url to stop caches.
@@ -55,23 +55,26 @@ define(
                         url   : urls.adjust(urls.init.format({key: key}))
                     })
                 },
-                stepInit  : function (key) {
+                stepInit  : function (wizard, step) {
                     return angular.extend(commonHttpConf, {
                         method: 'GET',
-                        url   : urls.adjust(urls.stepInit.format({key: key}))
+                        url: urls.adjust(urls.stepInit.format({
+                            step  : step,
+                            wizard: wizard
+                        }))
                     })
                 },
                 stepSubmit: function (key, data) {
                     return angular.extend(commonHttpConf, {
                         method: 'POST',
-                        params: data,
+                        data: data,
                         url   : urls.adjust(urls.stepSubmit.format({key: key}))
                     })
                 },
                 submit    : function (key, data) {
                     return angular.extend(commonHttpConf, {
                         method: 'POST',
-                        params: data,
+                        data: data,
                         url   : urls.adjust(urls.submit.format({key: key}))
                     })
                 }
@@ -84,11 +87,14 @@ define(
                             }
                             return doRequest(httpConf.init(key));
                         },
-                        stepInit  : function stepInit(key) {
-                            if (!angular.isDefined(key)) {
+                        stepInit: function stepInit(wizard, step) {
+                            if (!angular.isDefined(step)) {
                                 throw new Error('Step key is not defined, failed to initialize');
                             }
-                            return doRequest(httpConf.stepInit(key));
+                            if (!angular.isDefined(wizard)) {
+                                throw new Error('Wizard key is not defined, failed to initialize');
+                            }
+                            return doRequest(httpConf.stepInit(wizard, step));
                         },
                         stepSubmit: function stepSubmit(key, data) {
                             if (!angular.isDefined(key)) {

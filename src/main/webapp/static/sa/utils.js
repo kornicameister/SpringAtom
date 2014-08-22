@@ -61,7 +61,34 @@ define(
                 return $$window['performance']['now']();
             } : (Date.now || (Date.now = function () {
                 return +new Date();
-            }));
+            })),
+            _toNgOptions = function toNgOptions(cfg) {
+                if (angular.isArray(cfg)) {
+                    cfg = {
+                        data: cfg
+                    };
+                }
+                var data = cfg.data,
+                    localData = [],
+                    labelMethod = cfg.getLabel,
+                    valueMethod = cfg.getValue;
+                if (!angular.isDefined(labelMethod)) {
+                    labelMethod = _identityFn
+                }
+                if (!angular.isDefined(valueMethod)) {
+                    valueMethod = _identityFn
+                }
+                angular.forEach(data, function dataIt(chunk) {
+                    localData.push({
+                        label: labelMethod.call(this, chunk),
+                        value: valueMethod.call(this, chunk)
+                    })
+                });
+                return localData;
+            },
+            _identityFn = function (arg) {
+                return arg
+            };
 
         return Class({
             $singleton  : true,
@@ -75,6 +102,7 @@ define(
             urlDecode   : _urlDecode,
             isDebug     : _isDebug,
             now         : _now,
+            toNgOptions : _toNgOptions,
             abstractFn  : function () {
                 var msg = 'abstractFn must be redefined';
                 if (_isDebug()) {
@@ -85,9 +113,7 @@ define(
             },
             emptyFn     : function () {
             },
-            identityFn  : function (arg) {
-                return arg
-            }
+            identityFn  : _identityFn
         })
     }
 );

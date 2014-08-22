@@ -47,6 +47,9 @@ define(
                     var bindErrors = [];
                     angular.forEach(msg, function (value) {
                         var severity = value['severity'];
+                        if (!angular.isDefined(severity)) {
+                            severity = 'INFO';
+                        }
                         bindErrors.push({
                             errClass     : severityIconMapping[severity],
                             text         : value['text'],

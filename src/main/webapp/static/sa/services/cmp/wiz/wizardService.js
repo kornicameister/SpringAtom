@@ -34,7 +34,9 @@ define(
              */
             providerMap = [
                 'getFormData',
-                'isActionEnabled'
+                'isActionEnabled',
+                'next',
+                'submit'
             ],
             getNext = function getNext(step) {
                 return step.next || false;

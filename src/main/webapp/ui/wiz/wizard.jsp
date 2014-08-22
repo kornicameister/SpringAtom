@@ -19,7 +19,11 @@
 	<div class="col-lg-9 col-lg-offset-1">
 		<div id="form-container">
 			<wizard-header title="{{title}}" steps="header"></wizard-header>
-			<form name="wizardForm" ng-submit="hooks.submitForm()" class="form-horizontal" role="form">
+			<form name="wizardForm"
+			      ng-submit="hooks.submitForm()"
+			      class="form-horizontal springatom-form"
+			      role="form"
+			      novalidate>
 				<wizard-nbox errors="errors" messages="messages"></wizard-nbox>
 				<section id="form-view" class="well slide" ui-view></section>
 			</form>
