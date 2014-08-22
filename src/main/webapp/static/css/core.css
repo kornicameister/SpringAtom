@@ -47,3 +47,11 @@
     transform         : scaleX(1);
     opacity           : 1;
 }
+
+.dialog-header-prompt {
+    background-color : #00a607;
+}
+
+.dialog-header-confirm span, .dialog-header-confirm h4 {
+    color : #ffffff;
+}
