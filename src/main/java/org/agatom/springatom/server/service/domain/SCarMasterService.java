@@ -20,8 +20,10 @@ package org.agatom.springatom.server.service.domain;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.car.SCarMaster;
 import org.agatom.springatom.server.service.support.constraints.BrandOrModel;
+import org.springframework.cache.annotation.Cacheable;
 
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -32,52 +34,68 @@ import java.util.List;
  * @since 0.0.1
  */
 public interface SCarMasterService
-		extends SBasicService<SCarMaster, Long> {
+        extends SBasicService<SCarMaster, Long> {
 
-	/**
-	 * <p>findByBrand.</p>
-	 *
-	 * @param brand a {@link java.lang.String} object.
-	 *
-	 * @return a {@link java.util.List} object.
-	 */
-	List<SCarMaster> findByBrand(
-			@BrandOrModel
-			final String... brand);
+    /**
+     * <p>findByBrand.</p>
+     *
+     * @param brand a {@link java.lang.String} object.
+     *
+     * @return a {@link java.util.List} object.
+     */
+    List<SCarMaster> findByBrand(
+            @BrandOrModel
+            final String... brand);
 
-	/**
-	 * <p>findByModel.</p>
-	 *
-	 * @param model a {@link java.lang.String} object.
-	 *
-	 * @return a {@link java.util.List} object.
-	 */
-	List<SCarMaster> findByModel(
-			@BrandOrModel
-			final String... model);
+    /**
+     * <p>findByModel.</p>
+     *
+     * @param model a {@link java.lang.String} object.
+     *
+     * @return a {@link java.util.List} object.
+     */
+    List<SCarMaster> findByModel(
+            @BrandOrModel
+            final String... model);
 
-	/**
-	 * <p>findOne.</p>
-	 *
-	 * @param brand a {@link java.lang.String} object.
-	 * @param model a {@link java.lang.String} object.
-	 *
-	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCarMaster} object.
-	 */
-	SCarMaster findOne(
-			@BrandOrModel
-			final String brand,
-			@BrandOrModel
-			final String model);
+    /**
+     * <p>findOne.</p>
+     *
+     * @param brand a {@link java.lang.String} object.
+     * @param model a {@link java.lang.String} object.
+     *
+     * @return a {@link org.agatom.springatom.server.model.beans.car.SCarMaster} object.
+     */
+    SCarMaster findOne(
+            @BrandOrModel
+            final String brand,
+            @BrandOrModel
+            final String model);
 
-	/**
-	 * <p>findChildren.</p>
-	 *
-	 * @param masterIds a {@link java.lang.Long} object.
-	 *
-	 * @return a {@link java.util.List} object.
-	 */
-	List<SCar> findChildren(
-			@NotNull
-			final Long... masterIds);
+    /**
+     * <p>findChildren.</p>
+     *
+     * @param masterIds a {@link java.lang.Long} object.
+     *
+     * @return a {@link java.util.List} object.
+     */
+    List<SCar> findChildren(
+            @NotNull
+            final Long... masterIds);
+
+    /**
+     * Returns collection of all available brands
+     *
+     * @return all brands
+     */
+    @Cacheable("scarmaster.brands")
+    Collection<String> getAllBrands();
+
+    /**
+     * Returns collection of all available models
+     *
+     * @return all models
+     */
+    @Cacheable("scarmaster.models")
+    Collection<String> getAllModels();
 }

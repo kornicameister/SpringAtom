@@ -28,6 +28,7 @@ import org.agatom.springatom.server.model.beans.car.QSCar;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.car.SCarMaster;
 import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.types.car.FuelType;
 import org.agatom.springatom.server.service.support.constraints.BrandOrModel;
 import org.agatom.springatom.server.service.support.constraints.LicencePlatePL;
 import org.agatom.springatom.server.service.support.constraints.VinNumber;
@@ -51,192 +52,195 @@ import java.util.Set;
  * @since 0.0.1
  */
 public interface SCarService
-		extends SService<SCar, Long, Integer> {
+        extends SService<SCar, Long, Integer> {
 
-	/** {@inheritDoc} */
-	@Override
-	SCar save(final SCar persistable);
+    /** {@inheritDoc} */
+    @Override
+    SCar save(final SCar persistable);
 
-	/**
-	 * <p>findByMaster.</p>
-	 *
-	 * @param brand a {@link java.lang.String} object.
-	 * @param model a {@link java.lang.String} object.
-	 *
-	 * @return a {@link java.util.List} object.
-	 */
-	@NotNull
-	List<SCar> findByMaster(
-			@BrandOrModel
-			final String brand,
-			@BrandOrModel
-			final String model);
+    /**
+     * <p>findByMaster.</p>
+     *
+     * @param brand a {@link java.lang.String} object.
+     * @param model a {@link java.lang.String} object.
+     *
+     * @return a {@link java.util.List} object.
+     */
+    @NotNull
+    List<SCar> findByMaster(
+            @BrandOrModel
+            final String brand,
+            @BrandOrModel
+            final String model);
 
-	/**
-	 * <p>findByMaster.</p>
-	 *
-	 * @param masterId a {@link java.lang.Long} object.
-	 *
-	 * @return a {@link java.util.List} object.
-	 */
-	@NotNull
-	List<SCar> findByMaster(
-			@NotNull
-			@NotEmpty
-			final Long... masterId);
+    /**
+     * <p>findByMaster.</p>
+     *
+     * @param masterId a {@link java.lang.Long} object.
+     *
+     * @return a {@link java.util.List} object.
+     */
+    @NotNull
+    List<SCar> findByMaster(
+            @NotNull
+            @NotEmpty
+            final Long... masterId);
 
-	/**
-	 * <p>findMaster.</p>
-	 *
-	 * @param carId a long.
-	 *
-	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCarMaster} object.
-	 */
-	@NotNull
-	SCarMaster findMaster(final long carId);
+    /**
+     * <p>findMaster.</p>
+     *
+     * @param carId a long.
+     *
+     * @return a {@link org.agatom.springatom.server.model.beans.car.SCarMaster} object.
+     */
+    @NotNull
+    SCarMaster findMaster(final long carId);
 
-	/**
-	 * <p>findBy.</p>
-	 *
-	 * @param attribute a {@link org.agatom.springatom.server.service.domain.SCarService.SCarAttribute} object.
-	 * @param value     a {@link java.lang.Object} object.
-	 *
-	 * @return a {@link java.util.List} object.
-	 *
-	 * @throws org.agatom.springatom.server.service.support.exceptions.UnambiguousResultServiceException if any.
-	 */
-	@NotNull
-	List<SCar> findBy(
-			@NotNull
-			final SCarAttribute attribute,
-			@NotNull
-			final Object value) throws
-			UnambiguousResultServiceException;
+    /**
+     * <p>findBy.</p>
+     *
+     * @param attribute a {@link org.agatom.springatom.server.service.domain.SCarService.SCarAttribute} object.
+     * @param value     a {@link java.lang.Object} object.
+     *
+     * @return a {@link java.util.List} object.
+     *
+     * @throws org.agatom.springatom.server.service.support.exceptions.UnambiguousResultServiceException if any.
+     */
+    @NotNull
+    List<SCar> findBy(
+            @NotNull
+            final SCarAttribute attribute,
+            @NotNull
+            final Object value) throws
+            UnambiguousResultServiceException;
 
-	/**
-	 * <p>newCar.</p>
-	 *
-	 * @param brand        a {@link java.lang.String} object.
-	 * @param model        a {@link java.lang.String} object.
-	 * @param licencePlate a {@link java.lang.String} object.
-	 * @param vinNumber    a {@link java.lang.String} object.
-	 * @param ownerId      a long.
-	 *
-	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCar} object.
-	 *
-	 * @throws org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException if any.
-	 */
-	@NotNull
-	SCar newCar(
-			@Pattern(regexp = RegexpPatterns.BIG_FIRST_LETTER_PATTERN, message = "Brand or service must starts with the capitalized letter")
-			final String brand,
-			@Pattern(regexp = RegexpPatterns.BIG_FIRST_LETTER_PATTERN, message = "Brand or service must starts with the capitalized letter")
-			final String model,
-			@LicencePlatePL
-			final String licencePlate,
-			@VinNumber
-			final String vinNumber,
-			final long ownerId) throws EntityDoesNotExistsServiceException;
+    /**
+     * <p>newCar.</p>
+     *
+     * @param brand        a {@link java.lang.String} object.
+     * @param model        a {@link java.lang.String} object.
+     * @param licencePlate a {@link java.lang.String} object.
+     * @param vinNumber    a {@link java.lang.String} object.
+     * @param ownerId      a long.
+     *
+     * @return a {@link org.agatom.springatom.server.model.beans.car.SCar} object.
+     *
+     * @throws org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException if any.
+     */
+    @NotNull
+    SCar newCar(
+            @Pattern(regexp = RegexpPatterns.BIG_FIRST_LETTER_PATTERN, message = "Brand or service must starts with the capitalized letter")
+            final String brand,
+            @Pattern(regexp = RegexpPatterns.BIG_FIRST_LETTER_PATTERN, message = "Brand or service must starts with the capitalized letter")
+            final String model,
+            @LicencePlatePL
+            final String licencePlate,
+            @VinNumber
+            final String vinNumber,
+            final long ownerId) throws EntityDoesNotExistsServiceException;
 
-	/**
-	 * <p>newOwner.</p>
-	 *
-	 * @param idCar    a long.
-	 * @param idClient a long.
-	 *
-	 * @return a {@link org.agatom.springatom.server.model.beans.car.SCar} object.
-	 *
-	 * @throws org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException if any.
-	 * @throws org.agatom.springatom.server.service.domain.SCarService$InvalidOwnerException               if any.
-	 */
-	@NotNull
-	SCar newOwner(final long idCar, final long idClient) throws EntityDoesNotExistsServiceException, InvalidOwnerException;
+    /**
+     * <p>newOwner.</p>
+     *
+     * @param idCar    a long.
+     * @param idClient a long.
+     *
+     * @return a {@link org.agatom.springatom.server.model.beans.car.SCar} object.
+     *
+     * @throws org.agatom.springatom.server.service.support.exceptions.EntityDoesNotExistsServiceException if any.
+     * @throws org.agatom.springatom.server.service.domain.SCarService$InvalidOwnerException               if any.
+     */
+    @NotNull
+    SCar newOwner(final long idCar, final long idClient) throws EntityDoesNotExistsServiceException, InvalidOwnerException;
 
-	/**
-	 * Retrieves collection of {@link org.agatom.springatom.server.service.domain.SCarService.Owner}
-	 *
-	 * @return collection of {@link org.agatom.springatom.server.service.domain.SCarService.Owner}
-	 */
-	@NotNull
-	Collection<Owner> getOwners();
+    /**
+     * Retrieves collection of {@link org.agatom.springatom.server.service.domain.SCarService.Owner}
+     *
+     * @return collection of {@link org.agatom.springatom.server.service.domain.SCarService.Owner}
+     */
+    @NotNull
+    Collection<Owner> getOwners();
 
-	public static enum SCarAttribute {
-		LICENCE_PLATE(QSCar.sCar.licencePlate),
-		OWNER(QSCar.sCar.owner.id),
-		VIN_NUMBER(QSCar.sCar.vinNumber);
-		private final Path<?> expression;
+    @NotNull
+    Collection<FuelType> getFuelTypes();
 
-		SCarAttribute(final Path<?> expression) {
-			this.expression = expression;
-		}
+    public static enum SCarAttribute {
+        LICENCE_PLATE(QSCar.sCar.licencePlate),
+        OWNER(QSCar.sCar.owner.id),
+        VIN_NUMBER(QSCar.sCar.vinNumber);
+        private final Path<?> expression;
 
-		@SuppressWarnings("unchecked")
-		public BooleanExpression eq(final Object value) {
-			if (value instanceof String) {
-				final StringPath path = (StringPath) this.expression;
-				return path.eq((String) value);
-			} else if (value instanceof Long) {
-				final NumberPath<Long> path = (NumberPath<Long>) this.expression;
-				return path.eq((Long) value);
-			}
-			return null;
-		}
-	}
+        SCarAttribute(final Path<?> expression) {
+            this.expression = expression;
+        }
 
-	/**
-	 * {@link org.agatom.springatom.server.service.domain.SCarService.Owner}
-	 * wraps {@link org.agatom.springatom.server.model.beans.user.SUser} that are possible
-	 * to be associated with {@link org.agatom.springatom.server.model.beans.car.SCar} or
-	 * are already associated with it
-	 */
-	public static class Owner
-			implements Serializable {
-		private static final long      serialVersionUID = 4675008331100577522L;
-		private              SUser     owner            = null;
-		private              Set<SCar> cars             = Sets.newHashSet();
+        @SuppressWarnings("unchecked")
+        public BooleanExpression eq(final Object value) {
+            if (value instanceof String) {
+                final StringPath path = (StringPath) this.expression;
+                return path.eq((String) value);
+            } else if (value instanceof Long) {
+                final NumberPath<Long> path = (NumberPath<Long>) this.expression;
+                return path.eq((Long) value);
+            }
+            return null;
+        }
+    }
 
-		public SUser getOwner() {
-			return owner;
-		}
+    /**
+     * {@link org.agatom.springatom.server.service.domain.SCarService.Owner}
+     * wraps {@link org.agatom.springatom.server.model.beans.user.SUser} that are possible
+     * to be associated with {@link org.agatom.springatom.server.model.beans.car.SCar} or
+     * are already associated with it
+     */
+    public static class Owner
+            implements Serializable {
+        private static final long      serialVersionUID = 4675008331100577522L;
+        private              SUser     owner            = null;
+        private              Set<SCar> cars             = Sets.newHashSet();
 
-		public Owner setOwner(final SUser owner) {
-			this.owner = owner;
-			return this;
-		}
+        public SUser getOwner() {
+            return owner;
+        }
 
-		public Set<SCar> getCars() {
-			return cars;
-		}
+        public Owner setOwner(final SUser owner) {
+            this.owner = owner;
+            return this;
+        }
 
-		public Owner setCars(final Set<SCar> cars) {
-			this.cars = cars;
-			return this;
-		}
+        public Set<SCar> getCars() {
+            return cars;
+        }
 
-		@Override
-		public int hashCode() {
-			return Objects.hashCode(serialVersionUID, owner, cars);
-		}
+        public Owner setCars(final Set<SCar> cars) {
+            this.cars = cars;
+            return this;
+        }
 
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(serialVersionUID, owner, cars);
+        }
 
-			Owner that = (Owner) o;
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
 
-			return Objects.equal(this.owner, that.owner) &&
-					Objects.equal(this.cars, that.cars);
-		}
+            Owner that = (Owner) o;
 
-	}
+            return Objects.equal(this.owner, that.owner) &&
+                    Objects.equal(this.cars, that.cars);
+        }
 
-	public static class InvalidOwnerException
-			extends ServiceException {
-		private static final long serialVersionUID = 9104651445939425769L;
+    }
 
-		public InvalidOwnerException(final SCar car, final SUser owner) {
-			super(SCar.class, String.format("Owner for %s does not differ from current one %s", car, owner));
-		}
-	}
+    public static class InvalidOwnerException
+            extends ServiceException {
+        private static final long serialVersionUID = 9104651445939425769L;
+
+        public InvalidOwnerException(final SCar car, final SUser owner) {
+            super(SCar.class, String.format("Owner for %s does not differ from current one %s", car, owner));
+        }
+    }
 }
