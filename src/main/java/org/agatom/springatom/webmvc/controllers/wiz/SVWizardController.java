@@ -19,15 +19,14 @@ package org.agatom.springatom.webmvc.controllers.wiz;
 
 import org.agatom.springatom.web.wizards.WizardProcessor;
 import org.agatom.springatom.web.wizards.core.Submission;
-import org.agatom.springatom.web.wizards.data.WizardDescriptor;
 import org.agatom.springatom.web.wizards.data.WizardSubmission;
+import org.agatom.springatom.web.wizards.data.result.WizardResult;
 import org.agatom.springatom.webmvc.core.SVDefaultController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
@@ -38,8 +37,11 @@ import java.util.concurrent.TimeUnit;
  * {@code SVWizardController} allows to communicate and executes {@link org.agatom.springatom.web.wizards.WizardProcessor} from the client.
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
  *
+ * Changelog:
+ * - adjusted to use feedback messaging system in wizard
+ *
  * @author trebskit
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @Controller(value = SVWizardController.CTRL_NAME)
@@ -77,20 +79,20 @@ public class SVWizardController
         final long startTime = System.nanoTime();
 
         WizardSubmission submission = null;
-        WizardDescriptor descriptor = null;
+        WizardResult result = null;
 
         try {
 
             final WizardProcessor<?> wizardProcessor = this.processorMap.get(key);
-            descriptor = wizardProcessor.initialize(locale);
+            result = wizardProcessor.initialize(locale);
 
         } catch (Exception exp) {
             submission = (WizardSubmission) new WizardSubmission(null, Submission.INIT).setError(exp).setSuccess(false).setSize(1);
         }
         final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
 
-        if (descriptor != null) {
-            submission = (WizardSubmission) new WizardSubmission(descriptor, Submission.INIT).setSize(1).setSuccess(true).setTime(endTime);
+        if (result != null) {
+            submission = (WizardSubmission) new WizardSubmission(result, Submission.INIT).setSize(1).setSuccess(true).setTime(endTime);
         }
 
         LOGGER.trace(String.format("onWizardInit(key=%s) completed in %d ms", key, endTime));
@@ -116,20 +118,20 @@ public class SVWizardController
         final long startTime = System.nanoTime();
 
         WizardSubmission submission = null;
-        ModelMap stepInitData = null;
+        WizardResult result = null;
 
         try {
 
             final WizardProcessor<?> wizardProcessor = this.processorMap.get(wizard);
-            stepInitData = wizardProcessor.initializeStep(step, locale);
+            result = wizardProcessor.initializeStep(step, locale);
 
         } catch (Exception exp) {
             submission = (WizardSubmission) new WizardSubmission(null, Submission.INIT_STEP).setError(exp).setSuccess(false).setSize(1);
         }
         final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
 
-        if (stepInitData != null) {
-            submission = (WizardSubmission) new WizardSubmission(stepInitData, Submission.INIT_STEP).setSize(1).setSuccess(true).setTime(endTime);
+        if (result != null) {
+            submission = (WizardSubmission) new WizardSubmission(result, Submission.INIT_STEP).setSize(1).setSuccess(true).setTime(endTime);
         }
 
         LOGGER.trace(String.format("onStepInit(wizard=%s,step=%s,locale=%s) completed in %d ms", wizard, step, locale, endTime));
@@ -139,7 +141,7 @@ public class SVWizardController
 
     /**
      * <b>onWizardSubmit</b> is the last method called for a single {@link org.agatom.springatom.web.wizards.WizardProcessor}. Its job is to pick
-     * up {@link org.agatom.springatom.web.wizards.WizardProcessor} out of {@link #processorMap} and call {@link org.agatom.springatom.web.wizards.WizardProcessor#submit(java.util.Map)}
+     * up {@link org.agatom.springatom.web.wizards.WizardProcessor} out of {@link #processorMap} and call {@link org.agatom.springatom.web.wizards.WizardProcessor#submit(java.util.Map, java.util.Locale)}
      * in order to finalize the processing job
      *
      * @param key      unique id of the {@link org.agatom.springatom.web.wizards.WizardProcessor}
@@ -148,25 +150,25 @@ public class SVWizardController
      * @return {@link org.agatom.springatom.web.wizards.data.WizardSubmission} the submission
      */
     @RequestMapping(value = "/submit/{key}")
-    protected WizardSubmission onWizardSubmit(@PathVariable("key") final String key, @RequestBody final Map<String, Object> formData) {
+    protected WizardSubmission onWizardSubmit(@PathVariable("key") final String key, @RequestBody final Map<String, Object> formData, final Locale locale) {
         LOGGER.debug(String.format("onWizardSubmit(key=%s,formData=%s)", key, formData));
         final long startTime = System.nanoTime();
 
         WizardSubmission submission = null;
-        Object context = null;
+        WizardResult result = null;
 
         try {
 
             final WizardProcessor<?> wizardProcessor = this.processorMap.get(key);
-            context = wizardProcessor.submit(formData);
+            result = wizardProcessor.submit(formData, locale);
 
         } catch (Exception exp) {
             submission = (WizardSubmission) new WizardSubmission(null, Submission.SUBMIT).setError(exp).setSuccess(false).setSize(1);
         }
         final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
 
-        if (context != null) {
-            submission = (WizardSubmission) new WizardSubmission(context, Submission.SUBMIT).setSize(1).setSuccess(true).setTime(endTime);
+        if (result != null) {
+            submission = (WizardSubmission) new WizardSubmission(result, Submission.SUBMIT).setSize(1).setSuccess(true).setTime(endTime);
         }
 
         LOGGER.trace(String.format("onWizardInit(key=%s) completed in %d ms", key, endTime));

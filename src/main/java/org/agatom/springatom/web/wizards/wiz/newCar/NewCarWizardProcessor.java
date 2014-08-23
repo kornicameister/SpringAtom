@@ -25,6 +25,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mysema.query.types.Path;
 import com.neovisionaries.i18n.CountryCode;
+import org.agatom.springatom.server.model.OID;
 import org.agatom.springatom.server.model.beans.car.QSCar;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.car.SCarMaster;
@@ -37,12 +38,14 @@ import org.agatom.springatom.web.wizards.Wizard;
 import org.agatom.springatom.web.wizards.core.AbstractWizardProcessor;
 import org.agatom.springatom.web.wizards.data.WizardDescriptor;
 import org.agatom.springatom.web.wizards.data.WizardStepDescriptor;
+import org.agatom.springatom.web.wizards.data.result.FeedbackMessage;
+import org.agatom.springatom.web.wizards.data.result.WizardResult;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Persistable;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ClassUtils;
 import org.springframework.validation.DataBinder;
-import org.springframework.validation.Errors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -118,11 +121,6 @@ class NewCarWizardProcessor
     }
 
     @Override
-    public String getContextObjectName() {
-        return FORM_OBJECT_NAME;
-    }
-
-    @Override
     protected SCar getContextObject() throws Exception {
         final SCar car = super.getContextObject();
         car.setCarMaster(new SCarMaster());
@@ -130,14 +128,33 @@ class NewCarWizardProcessor
     }
 
     @Override
-    protected SCar submitWizard(final SCar contextObject, final Map<String, Object> stepData, final Errors errors) throws Exception {
-        if (errors.hasErrors()) {
-            // TODO must create some custom and good looking exception with summary of errors
-            throw new Exception("");
-        }
+    protected WizardResult submitWizard(SCar contextObject, final Map<String, Object> stepData, final Locale locale) throws Exception {
         final SCarMaster carMaster = contextObject.getCarMaster();
         carMaster.setManufacturedIn(CountryCode.valueOf((String) stepData.get("manufacturedIn")));
-        return this.carService.save(contextObject);
+        contextObject = this.carService.save(contextObject);
+
+        final WizardResult result = new WizardResult()
+                .setWizardId("newCar");
+
+        result.setOid(this.getOID(contextObject));
+        result.addFeedbackMessage(
+                FeedbackMessage
+                        .newInfo()
+                        .setMessage(
+                                this.messageSource.getMessage(
+                                        "sa.msg.objectCreated",
+                                        new Object[]{this.messageSource.getMessage("scar", locale)},
+                                        locale
+                                )
+                        )
+        );
+
+        return result;
+    }
+
+    @Override
+    public String getContextObjectName() {
+        return FORM_OBJECT_NAME;
     }
 
     @Override
@@ -173,6 +190,18 @@ class NewCarWizardProcessor
         return descriptor;
     }
 
+    private OID getOID(final SCar contextObject) {
+        final OID oid = new OID();
+        oid.setObjectClass(ClassUtils.getUserClass(contextObject.getClass()).getSimpleName());
+        oid.setPrefix("M");
+        if (ClassUtils.isAssignableValue(Persistable.class, contextObject)) {
+            oid.setId((Long) ((Persistable<?>) contextObject).getId());
+        } else {
+            oid.setId(System.nanoTime());
+        }
+        return oid;
+    }
+
     @Override
     protected DataBinder createBinder(final Object contextObject, final String contextObjectName) {
         final DataBinder binder = super.createBinder(contextObject, contextObjectName);
@@ -186,8 +215,13 @@ class NewCarWizardProcessor
     }
 
     @Override
-    public ModelMap initializeStep(final String step, final Locale locale) {
+    public WizardResult initializeStep(final String step, final Locale locale) {
         final ModelMap modelMap = new ModelMap();
+
+        final WizardResult result = new WizardResult()
+                .setStepId(step)
+                .setWizardId("newCar");
+
         switch (step) {
             case "car":
                 modelMap.addAllAttributes(this.initializeCarStep(locale));
@@ -195,38 +229,8 @@ class NewCarWizardProcessor
             case "owner":
                 modelMap.addAllAttributes(this.initializeOwnerStep());
         }
-        return modelMap;
-    }
 
-    private Map<String, Object> initializeOwnerStep() {
-        final Map<String, Object> viewScope = Maps.newHashMap();
-        viewScope.put(OWNERS_PARAM_KEY, this.convertToView(this.carService.getOwners()));
-        return viewScope;
-    }
-
-    private Collection<OwnerBean> convertToView(final Collection<SCarService.Owner> owners) {
-        return FluentIterable
-                .from(owners)
-                .transform(new Function<SCarService.Owner, OwnerBean>() {
-                    @Nullable
-                    @Override
-                    public OwnerBean apply(@Nullable final SCarService.Owner input) {
-                        if (input == null) {
-                            return null;
-                        }
-                        final OwnerBean ownerBean = new OwnerBean().setOwnerId(input.getOwner().getId()).setOwnerIdentity(input.getOwner().getPerson().getIdentity());
-                        final List<Map<String, Object>> maps = Lists.newArrayListWithExpectedSize(input.getCars().size());
-                        for (SCar car : input.getCars()) {
-                            final Map<String, Object> map = Maps.newHashMapWithExpectedSize(2);
-                            map.put("licencePlate", car.getLicencePlate());
-                            map.put("brandModel", car.getCarMaster().getManufacturingData().getIdentity());
-                            map.put("id", car.getId());
-                            maps.add(map);
-                        }
-                        return ownerBean.setCarsMap(maps);
-                    }
-                })
-                .toSet();
+        return result.addWizardData(modelMap);
     }
 
     private Map<String, Object> initializeCarStep(final Locale locale) {
@@ -240,6 +244,34 @@ class NewCarWizardProcessor
         viewScope.put(FUEL_TYPES, this.getFuelTypes(locale));
 
         return viewScope;
+    }
+
+    private Map<String, Object> initializeOwnerStep() {
+        final Map<String, Object> viewScope = Maps.newHashMap();
+        viewScope.put(OWNERS_PARAM_KEY, this.convertToView(this.carService.getOwners()));
+        return viewScope;
+    }
+
+    private Set<String> extractBrands(final List<SCarMaster> all) {
+        return FluentIterable.from(all).transform(new Function<SCarMaster, String>() {
+            @Nullable
+            @Override
+            public String apply(@Nullable final SCarMaster input) {
+                assert input != null;
+                return input.getBrand();
+            }
+        }).toSortedSet(COMPARATOR);
+    }
+
+    private Set<String> extractModels(final List<SCarMaster> all) {
+        return FluentIterable.from(all).transform(new Function<SCarMaster, String>() {
+            @Nullable
+            @Override
+            public String apply(@Nullable final SCarMaster input) {
+                assert input != null;
+                return input.getModel();
+            }
+        }).toSortedSet(COMPARATOR);
     }
 
     private Collection<CarMasterBean> convertToView(final List<SCarMaster> all) {
@@ -270,28 +302,6 @@ class NewCarWizardProcessor
                 });
     }
 
-    private Set<String> extractBrands(final List<SCarMaster> all) {
-        return FluentIterable.from(all).transform(new Function<SCarMaster, String>() {
-            @Nullable
-            @Override
-            public String apply(@Nullable final SCarMaster input) {
-                assert input != null;
-                return input.getBrand();
-            }
-        }).toSortedSet(COMPARATOR);
-    }
-
-    private Set<String> extractModels(final List<SCarMaster> all) {
-        return FluentIterable.from(all).transform(new Function<SCarMaster, String>() {
-            @Nullable
-            @Override
-            public String apply(@Nullable final SCarMaster input) {
-                assert input != null;
-                return input.getModel();
-            }
-        }).toSortedSet(COMPARATOR);
-    }
-
     private List<LocalizedEnumHolder<FuelType>> getFuelTypes(final Locale locale) {
         LOGGER.debug(String.format("getFuelTypes(locale=%s)", locale));
         final ArrayList<FuelType> types = Lists.newArrayList(FuelType.values());
@@ -305,6 +315,31 @@ class NewCarWizardProcessor
                         return new LocalizedEnumHolder<FuelType>().setValue(input).setLabel(messageSource.getMessage(input.name(), locale));
                     }
                 }).toList();
+    }
+
+    private Collection<OwnerBean> convertToView(final Collection<SCarService.Owner> owners) {
+        return FluentIterable
+                .from(owners)
+                .transform(new Function<SCarService.Owner, OwnerBean>() {
+                    @Nullable
+                    @Override
+                    public OwnerBean apply(@Nullable final SCarService.Owner input) {
+                        if (input == null) {
+                            return null;
+                        }
+                        final OwnerBean ownerBean = new OwnerBean().setOwnerId(input.getOwner().getId()).setOwnerIdentity(input.getOwner().getPerson().getIdentity());
+                        final List<Map<String, Object>> maps = Lists.newArrayListWithExpectedSize(input.getCars().size());
+                        for (SCar car : input.getCars()) {
+                            final Map<String, Object> map = Maps.newHashMapWithExpectedSize(2);
+                            map.put("licencePlate", car.getLicencePlate());
+                            map.put("brandModel", car.getCarMaster().getManufacturingData().getIdentity());
+                            map.put("id", car.getId());
+                            maps.add(map);
+                        }
+                        return ownerBean.setCarsMap(maps);
+                    }
+                })
+                .toSet();
     }
 
     private class CarMasterBean

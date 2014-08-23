@@ -17,8 +17,7 @@
 
 package org.agatom.springatom.web.wizards;
 
-import org.agatom.springatom.web.wizards.data.WizardDescriptor;
-import org.springframework.ui.ModelMap;
+import org.agatom.springatom.web.wizards.data.result.WizardResult;
 
 import java.util.Locale;
 import java.util.Map;
@@ -48,7 +47,7 @@ public interface WizardProcessor<T> {
      *
      * @return initialized {@link org.agatom.springatom.web.wizards.data.WizardDescriptor}
      */
-    WizardDescriptor initialize(final Locale locale);
+    WizardResult initialize(final Locale locale);
 
     /**
      * Performs {@code step} initialization. This method must be defined in order to put specific data when wizard's step
@@ -59,7 +58,7 @@ public interface WizardProcessor<T> {
      *
      * @return {@code step} init data
      */
-    ModelMap initializeStep(final String step, final Locale locale);
+    WizardResult initializeStep(final String step, final Locale locale);
 
     /**
      * Submits the form. May call a service or execute any other persisting job. Nevertheless it will always
@@ -67,6 +66,6 @@ public interface WizardProcessor<T> {
      *
      * @return submitted object
      */
-    T submit(final Map<String, Object> stepData) throws Exception;
+    WizardResult submit(final Map<String, Object> stepData, final Locale locale) throws Exception;
 
 }
