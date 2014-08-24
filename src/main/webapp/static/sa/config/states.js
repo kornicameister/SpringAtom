@@ -22,17 +22,19 @@ define(
     [
         'config/module',
         'utils',
+        'services/stateLoadingService',
         // states
         'states/navigator',
         'states/ip',
-        'states/wizards'
+        'states/wizards',
+        'states/error/errorState'
         // states
     ],
     function configStates(app, utils) {
         'use strict';
 
         var otherwiseRoute = '/sa',
-            offset = 2,
+            offset = 3,
             states = (function getStates(states) {
                 var local = [],
                     it = offset;
@@ -72,18 +74,8 @@ define(
                 }
                 return definition;
             },
-            configureStateListeners = function ($rootScope, $cookies) {
-                var onStateChangeStart = function onStateChangeStart(event, toState, toParams, fromState) {
-                    var lastState = fromState.name === '' ? 'home' : fromState.name,
-                        currentState = toState.name;
-                    if (lastState === currentState) {
-                        // do not save to cookie if last state is the same as current state
-                        return;
-                    }
-                    $cookies.lastState = lastState;
-                    $cookies.currentState = currentState;
-                };
-                $rootScope.$on('$stateChangeStart', onStateChangeStart)
+            configureStateListeners = function (stateLoadingService) {
+                stateLoadingService.init();
             };
         return {
             configure: function () {
@@ -91,7 +83,7 @@ define(
                     _register.call($stateProvider, $urlRouterProvider, states);
                     $urlRouterProvider.otherwise(otherwiseRoute);
                 });
-                app.run(['$rootScope', '$cookies', configureStateListeners]);
+                app.run(['stateLoadingService', configureStateListeners]);
             }
         };
     }

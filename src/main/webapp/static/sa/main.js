@@ -43,7 +43,8 @@
                 'jquery-ui'            : adjustPath('../libs/jquery-ui/ui/minified/jquery-ui.min.js'),
                 'jsface'               : adjustPath('../libs/jsface/dist/jsface.all.min.js'),
                 'moment'               : adjustPath('../libs/moment/min/moment-with-langs.min.js'),
-                'ngGrid'               : adjustPath('../libs/ng-grid/build/ng-grid.min.js')
+                'ngGrid'               : adjustPath('../libs/ng-grid/build/ng-grid.min.js'),
+                'ngProgress'           : adjustPath('../libs/ngprogress/build/ngProgress.min.js')
             },
             priority: [
                 'angular'
@@ -54,6 +55,11 @@
                     deps   : [
                         'jquery',
                         'jquery-ui'
+                    ]
+                },
+                'ngProgress'           : {
+                    deps: [
+                        'angular'
                     ]
                 },
                 'ngDialogs'            : {

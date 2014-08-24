@@ -35,7 +35,8 @@
         "jasny-bootstrap"       : "latest",
         "jsface"                : "latest",
         "animate.css"           : "latest",
-        "normalize-css"         : "latest"
+        "normalize-css"         : "latest",
+        "ngprogress"            : "latest"
     },
     "resolutions" : {
         "jquery": "~2.x"

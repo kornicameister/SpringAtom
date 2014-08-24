@@ -32,7 +32,8 @@ define(
         'ngDialogs',
         'angular-moment',
         'bProgressBar',
-        'bJasny'
+        'bJasny',
+        'ngProgress'
     ],
     function (angular, utils) {
         var appName = 'springatom',
@@ -46,7 +47,8 @@ define(
                 'dialogs.main',
                 'dialogs.default-translations',
                 'pascalprecht.translate',
-                'angularMoment'
+                'angularMoment',
+                'ngProgress'
             ],
             module = angular.module(appName, dependencies),
             generalConf = function configureApp($httpProvider) {
