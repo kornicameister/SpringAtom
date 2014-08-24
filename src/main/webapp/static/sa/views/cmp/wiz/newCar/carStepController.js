@@ -21,23 +21,17 @@
 define(
     [
         'angular',
-        'utils',
         // angular injections
         'dialogs/newBrandModel'
     ],
-    function carStepController(angular, utils) {
+    function carStepController(angular) {
         var carStepController = function carStepController($scope, $log, $filter, brandModelDialog, carStepData) {
-            if (utils.isDebug()) {
-                $log.debug('carStepControllers loading up with data={data}'.format({
-                    data: $filter('json')(carStepData)
-                }));
-            }
             var initData = carStepData,
                 getFuelTypes = function getFuelTypes() {
-                    return initData.fuelTypes;
+                    return initData.getData('fuelTypes');
                 },
                 getCarMasters = function getCarMasters() {
-                    return initData.carMasters;
+                    return initData.getData('carMasters');
                 },
                 hooks = {
                     /**

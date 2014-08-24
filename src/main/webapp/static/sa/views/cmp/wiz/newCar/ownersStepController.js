@@ -25,15 +25,10 @@ define(
     ],
     function ownersStepController(angular, utils) {
         return function ownersStepController($scope, $log, $filter, ownersStepData) {
-            if (utils.isDebug()) {
-                $log.debug('ownersStepController loading up with data={data}'.format({
-                    data: $filter('json')(ownersStepData)
-                }));
-            }
             var initData = ownersStepData,
                 getOwners = function getOwners() {
                     return utils.toNgOptions({
-                        data    : initData.owners,
+                        data: initData.getData('owners'),
                         getValue: function (data) {
                             return data['ownerId'];
                         },
