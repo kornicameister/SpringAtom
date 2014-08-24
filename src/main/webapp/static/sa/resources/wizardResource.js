@@ -75,6 +75,7 @@ define(
                                 return result;
                             }
                         }
+                        return [];
                     }
                 },
                 httpConf = {
