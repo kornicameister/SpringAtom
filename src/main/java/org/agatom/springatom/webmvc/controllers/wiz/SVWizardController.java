@@ -149,6 +149,7 @@ public class SVWizardController
      *
      * @return {@link org.agatom.springatom.web.wizards.data.WizardSubmission} the submission
      */
+    @ResponseBody
     @RequestMapping(value = "/submit/{key}")
     protected WizardSubmission onWizardSubmit(@PathVariable("key") final String key, @RequestBody final Map<String, Object> formData, final Locale locale) {
         LOGGER.debug(String.format("onWizardSubmit(key=%s,formData=%s)", key, formData));
