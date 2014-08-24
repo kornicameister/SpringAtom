@@ -130,7 +130,7 @@ public final class WizardDataScopeHolder
                     @Override
                     public String apply(@Nullable final DataScope input) {
                         assert input != null;
-                        return input.name().toLowerCase();
+                        return input.name().toLowerCase().replaceAll("_", "");
                     }
                 })
                 .toMap(new Function<String, Object>() {

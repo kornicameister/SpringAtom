@@ -26,7 +26,7 @@ define(
         // modules
         'jsface'
     ],
-    function app(module, directives, states, lang) {
+    function app(module, directives, states) {
 
         // load parts of the application
         states.configure();

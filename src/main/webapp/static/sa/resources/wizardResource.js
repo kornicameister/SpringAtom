@@ -21,127 +21,156 @@
 define(
     [
         'config/module',
-        'utils'
+        'utils',
+        'classes/cmp/wiz/wizardResult',
+        // jsface
+        'jsface'
     ],
-    function wizardResource(app, utils) {
-        var urls = {
-                init      : '/app/cmp/wiz/init/{key}',
-                stepInit  : '/app/cmp/wiz/init/{wizard}/step/{step}',
-                stepSubmit: '/app/cmp/wiz/submit/{wizard}/step/{key}',
-                submit    : '/app/cmp/wiz/submit/{key}',
-                /**
-                 * Adds some magic number to the end of the url to stop caches.
-                 * It is vital due to localization. If server picks up locale
-                 * change and wizard resource would be called after it wouldn't have
-                 * any effect
-                 * @param url the url to adjust
-                 * @returns {string}
-                 */
-                adjust    : function (url) {
-                    return url + '?_d=' + utils.now();
-                }
-            },
-            commonHttpConf = {
-                cache            : !utils.isDebug(),
-                responseType     : 'json',
-                transformResponse: function (data) {
-                    return data.content;
-                }
-            },
-            httpConf = {
-                init      : function (key) {
-                    return angular.extend(commonHttpConf, {
-                        method: 'GET',
-                        url   : urls.adjust(urls.init.format({key: key}))
-                    })
+    function wizardResource(app, utils, WizardResult) {
+        var resource = function ($log, $http, $q, $state, $rootScope) {
+            var errorStateName = 'error',
+                urls = {
+                    init      : '/app/cmp/wiz/init/{key}',
+                    stepInit  : '/app/cmp/wiz/init/{wizard}/step/{step}',
+                    stepSubmit: '/app/cmp/wiz/submit/{wizard}/step/{key}',
+                    submit    : '/app/cmp/wiz/submit/{key}',
+                    /**
+                     * Adds some magic number to the end of the url to stop caches.
+                     * It is vital due to localization. If server picks up locale
+                     * change and wizard resource would be called after it wouldn't have
+                     * any effect
+                     * @param url the url to adjust
+                     * @returns {string}
+                     */
+                    adjust    : function (url) {
+                        return url + '?_d=' + utils.now();
+                    }
                 },
-                stepInit  : function (wizard, step) {
-                    return angular.extend(commonHttpConf, {
-                        method: 'GET',
-                        url: urls.adjust(urls.stepInit.format({
-                            step  : step,
-                            wizard: wizard
-                        }))
-                    })
-                },
-                stepSubmit: function (key, data) {
-                    return angular.extend(commonHttpConf, {
-                        method: 'POST',
-                        data: data,
-                        url   : urls.adjust(urls.stepSubmit.format({key: key}))
-                    })
-                },
-                submit    : function (key, data) {
-                    return angular.extend(commonHttpConf, {
-                        method: 'POST',
-                        data: data,
-                        url   : urls.adjust(urls.submit.format({key: key}))
-                    })
-                }
-            },
-            resource = function ($log, $http, $q) {
-                var priv = {
-                        init      : function init(key) {
-                            if (!angular.isDefined(key)) {
-                                throw new Error('Wizard key is not defined, failed to initialize');
-                            }
-                            return doRequest(httpConf.init(key));
-                        },
-                        stepInit: function stepInit(wizard, step) {
-                            if (!angular.isDefined(step)) {
-                                throw new Error('Step key is not defined, failed to initialize');
-                            }
-                            if (!angular.isDefined(wizard)) {
-                                throw new Error('Wizard key is not defined, failed to initialize');
-                            }
-                            return doRequest(httpConf.stepInit(wizard, step));
-                        },
-                        stepSubmit: function stepSubmit(key, data) {
-                            if (!angular.isDefined(key)) {
-                                throw new Error('Step key is not defined, failed to initialize');
-                            }
-                            return doRequest(httpConf.stepSubmit(key, data));
-                        },
-                        submit    : function submit(key, data) {
-                            if (!angular.isDefined(key)) {
-                                throw new Error('Step key is not defined, failed to initialize');
-                            }
-                            return doRequest(httpConf.submit(key, data));
-                        }
-                    },
-                    doRequest = function doRequest(conf) {
-                        var directiveData = undefined,
-                            dataPromise = undefined;
-
-                        if (dataPromise) {
-                            return dataPromise;
-                        }
-
-                        var deferred = $q.defer();
-                        dataPromise = deferred.promise;
-
-                        if (directiveData) {
-                            deferred.resolve(directiveData);
+                commonHttpConf = {
+                    cache            : !utils.isDebug(),
+                    responseType     : 'json',
+                    transformResponse: function (data) {
+                        if (!data.success) {
+                            angular.extend($rootScope, {
+                                lastError: {
+                                    error  : data.error,
+                                    message: data.message
+                                }
+                            });
+                            $state.go(errorStateName, {
+                                component: 'wizard'
+                            });
                         } else {
-                            $http(conf)
-                                .success(function (data) {
-                                    directiveData = data;
-                                    deferred.resolve(directiveData);
-                                })
-                                .error(function () {
-                                    deferred.reject('Failed to load data');
+                            var result = new WizardResult(data.content);
+                            if (result.hasErrors()) {
+                                angular.extend($rootScope, {
+                                    lastError: {
+                                        error: result.getErrors()
+                                    }
                                 });
+                                $state.go(errorStateName, {
+                                    component: 'wizard'
+                                });
+                            } else {
+                                return result;
+                            }
                         }
+                    }
+                },
+                httpConf = {
+                    init      : function (key) {
+                        return angular.extend(commonHttpConf, {
+                            method: 'GET',
+                            url   : urls.adjust(urls.init.format({key: key}))
+                        })
+                    },
+                    stepInit  : function (wizard, step) {
+                        return angular.extend(commonHttpConf, {
+                            method: 'GET',
+                            url   : urls.adjust(urls.stepInit.format({
+                                step  : step,
+                                wizard: wizard
+                            }))
+                        })
+                    },
+                    stepSubmit: function (key, data) {
+                        return angular.extend(commonHttpConf, {
+                            method: 'POST',
+                            data  : data,
+                            url   : urls.adjust(urls.stepSubmit.format({key: key}))
+                        })
+                    },
+                    submit    : function (key, data) {
+                        return angular.extend(commonHttpConf, {
+                            method: 'POST',
+                            data  : data,
+                            url   : urls.adjust(urls.submit.format({key: key}))
+                        })
+                    }
+                },
+                priv = {
+                    init      : function init(key) {
+                        if (!angular.isDefined(key)) {
+                            throw new Error('Wizard key is not defined, failed to initialize');
+                        }
+                        return doRequest(httpConf.init(key));
+                    },
+                    stepInit  : function stepInit(wizard, step) {
+                        if (!angular.isDefined(step)) {
+                            throw new Error('Step key is not defined, failed to initialize');
+                        }
+                        if (!angular.isDefined(wizard)) {
+                            throw new Error('Wizard key is not defined, failed to initialize');
+                        }
+                        return doRequest(httpConf.stepInit(wizard, step));
+                    },
+                    stepSubmit: function stepSubmit(key, data) {
+                        if (!angular.isDefined(key)) {
+                            throw new Error('Step key is not defined, failed to initialize');
+                        }
+                        return doRequest(httpConf.stepSubmit(key, data));
+                    },
+                    submit    : function submit(key, data) {
+                        if (!angular.isDefined(key)) {
+                            throw new Error('Step key is not defined, failed to initialize');
+                        }
+                        return doRequest(httpConf.submit(key, data));
+                    }
+                },
+                doRequest = function doRequest(conf) {
+                    var directiveData = undefined,
+                        dataPromise = undefined;
 
+                    if (dataPromise) {
                         return dataPromise;
-                    };
-                return {
-                    init      : priv.init,
-                    stepInit  : priv.stepInit,
-                    stepSubmit: priv.stepSubmit,
-                    submit    : priv.submit
-                }
-            };
-        app.factory('wizardResource', ['$log', '$http', '$q', resource]);
+                    }
+
+                    var deferred = $q.defer();
+                    dataPromise = deferred.promise;
+
+                    if (directiveData) {
+                        deferred.resolve(directiveData);
+                    } else {
+                        $http(conf)
+                            .success(function (data) {
+                                directiveData = data;
+                                deferred.resolve(directiveData);
+                            })
+                            .error(function () {
+                                deferred.reject('Failed to load data');
+                            });
+                    }
+
+                    return dataPromise;
+                };
+            return {
+                init      : priv.init,
+                stepInit  : priv.stepInit,
+                stepSubmit: priv.stepSubmit,
+                submit    : priv.submit
+            }
+        };
+
+        app.factory('wizardResource', ['$log', '$http', '$q', '$state', '$rootScope', resource]);
     }
 );

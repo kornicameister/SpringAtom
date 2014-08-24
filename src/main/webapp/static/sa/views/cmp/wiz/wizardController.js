@@ -40,7 +40,7 @@ define(
                                          $cookies,
                                          timeoutDelay,
                                          dialogs,
-                                         definition,
+                                         wizardResult,
                                          actions,
                                          wizardKey,
                                          wizardHandler) {
@@ -54,6 +54,9 @@ define(
                     NEXT: 1,
                     PREV: -1
                 },
+                definition = (function getDefinition() {
+                    return wizardResult.getData('descriptor');
+                }()),
                 init = {
                     getInitialState: function () {
                         var init = definition.content[0];

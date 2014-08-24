@@ -89,10 +89,10 @@ define(
             },
             getResolve = function getResolve(serviceName) {
                 return angular.extend(getHandlerResolve(serviceName), {
-                    actions   : ['navigationService', function (navigationService) {
+                    actions     : ['navigationService', function (navigationService) {
                         return navigationService.loadNavigation('wiz.navBar');
                     }],
-                    definition: ['wizardResource', function (wizardResource) {
+                    wizardResult: ['wizardResource', function (wizardResource) {
                         return wizardResource.init(serviceName);
                     }]
                 });

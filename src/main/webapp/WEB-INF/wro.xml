@@ -23,6 +23,7 @@
         <css>/app/static/libs/jasny-bootstrap/dist/css/jasny-bootstrap.min.css</css>
         <css>/app/static/libs/animate.css/animate.min.css</css>
         <css>/app/static/libs/angular-dialog-service/dialogs.min.css</css>
+        <css>/app/static/libs/ngprogress/ngProgress.css</css>
     </group>
     <group name="css-files">
         <css>/app/static/css/core.css</css>
