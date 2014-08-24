@@ -27,7 +27,7 @@
 				<a ng-class="{active:step.active}"
 				   title="{{step.label}}">
 					<i ng-show="step.required" class="glyphicon glyphicon-asterisk"></i>
-					<span class="stepIndex">{{step.index + 1}}</span>&nbsp;{{step.label}}
+					<span class="stepIndex">{{step.position + 1}}</span>&nbsp;{{step.label}}
 				</a>
 			</li>
 		</ul>
