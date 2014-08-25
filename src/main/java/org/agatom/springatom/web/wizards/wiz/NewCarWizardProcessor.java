@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.wizards.wiz.newCar;
+package org.agatom.springatom.web.wizards.wiz;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Function;
@@ -25,7 +25,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mysema.query.types.Path;
 import com.neovisionaries.i18n.CountryCode;
-import org.agatom.springatom.server.model.OID;
 import org.agatom.springatom.server.model.beans.car.QSCar;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.car.SCarMaster;
@@ -42,7 +41,6 @@ import org.agatom.springatom.web.wizards.data.result.FeedbackMessage;
 import org.agatom.springatom.web.wizards.data.result.WizardResult;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Persistable;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ClassUtils;
 import org.springframework.validation.DataBinder;
@@ -188,18 +186,6 @@ class NewCarWizardProcessor
         descriptor.addDynamicProperty("handler", ClassUtils.getShortName(this.getClass()));
 
         return descriptor;
-    }
-
-    private OID getOID(final SCar contextObject) {
-        final OID oid = new OID();
-        oid.setObjectClass(ClassUtils.getUserClass(contextObject.getClass()).getSimpleName());
-        oid.setPrefix("M");
-        if (ClassUtils.isAssignableValue(Persistable.class, contextObject)) {
-            oid.setId((Long) ((Persistable<?>) contextObject).getId());
-        } else {
-            oid.setId(System.nanoTime());
-        }
-        return oid;
     }
 
     @Override
