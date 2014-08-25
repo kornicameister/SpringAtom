@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.web.wizards;
 
+import org.agatom.springatom.core.exception.SException;
 import org.agatom.springatom.web.wizards.data.result.WizardResult;
 
 import java.util.Locale;
@@ -47,7 +48,7 @@ public interface WizardProcessor<T> {
      *
      * @return initialized {@link org.agatom.springatom.web.wizards.data.WizardDescriptor}
      */
-    WizardResult initialize(final Locale locale);
+    WizardResult initialize(final Locale locale) throws SException;
 
     /**
      * Performs {@code step} initialization. This method must be defined in order to put specific data when wizard's step

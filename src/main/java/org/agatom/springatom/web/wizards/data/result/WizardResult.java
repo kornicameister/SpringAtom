@@ -22,6 +22,7 @@ import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.OID;
 import org.agatom.springatom.web.wizards.data.context.WizardDataScopeHolder;
 import org.springframework.beans.BeanUtils;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 
@@ -30,10 +31,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * {@code WizardResult} is a wrapper to transport result of a method called from {@link org.agatom.springatom.web.wizards.WizardProcessor}
+ *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-22</small>
  *
  * @author trebskit
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 public class WizardResult
@@ -47,6 +50,7 @@ public class WizardResult
     private              Set<Errors>           validationErrors = null;
     private              OID                   oid              = null;
     private              WizardDataScopeHolder data             = null;
+    private              ModelMap              debugData        = null;
 
     public OID getOid() {
         return oid;
@@ -242,6 +246,24 @@ public class WizardResult
 
     public WizardResult merge(final WizardResult localResult) {
         BeanUtils.copyProperties(localResult, this);
+        return this;
+    }
+
+    public WizardResult addDebugData(final String attr, final Object value) {
+        if (this.debugData == null) {
+            this.debugData = new ModelMap(attr, value);
+        } else {
+            this.debugData.addAttribute(attr, value);
+        }
+        return this;
+    }
+
+    public ModelMap getDebugData() {
+        return this.debugData;
+    }
+
+    public WizardResult setDebugData(final ModelMap debugData) {
+        this.debugData = debugData;
         return this;
     }
 }

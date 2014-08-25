@@ -17,19 +17,26 @@
 
 package org.agatom.springatom.web.wizards.core;
 
+import org.agatom.springatom.core.exception.SException;
+import org.agatom.springatom.server.model.OID;
 import org.agatom.springatom.web.wizards.WizardProcessor;
 import org.agatom.springatom.web.wizards.data.WizardDescriptor;
+import org.agatom.springatom.web.wizards.data.WizardStepDescriptor;
 import org.agatom.springatom.web.wizards.data.result.FeedbackMessage;
 import org.agatom.springatom.web.wizards.data.result.WizardResult;
 import org.apache.log4j.Logger;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.core.GenericTypeResolver;
+import org.springframework.data.domain.Persistable;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.ClassUtils;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * {@code AbstractWizardProcessor} contains basic set of logic to process single wizard.
@@ -38,14 +45,19 @@ import java.util.Map;
  * from actual logic required to execute particular job.
  *
  * <b>Changelog</b>
- * - adjusted to feedback messaging system
+ * <ol>
+ * <li>adjusted to feedback messaging system</li>
+ * <li>{@link #initialize(java.util.Locale)} updated to check for {@link java.lang.Exception} and if any would be thrown returned appropriate {@link org.agatom.springatom.web.wizards.data.result.WizardResult}</li>
+ * </ol>
  *
+ * <p>
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
+ * </p>
  *
  * @param <T> params object {@link org.agatom.springatom.web.wizards.WizardProcessor} submits upon finish
  *
  * @author trebskit
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 abstract public class AbstractWizardProcessor<T>
@@ -54,19 +66,36 @@ abstract public class AbstractWizardProcessor<T>
     private static final Logger LOGGER              = Logger.getLogger(AbstractWizardProcessor.class);
     private static final String WIZ_INITIALIZED_MSG = "sa.msg.wizard.initialized";
     private static final String DESCRIPTOR_KEY      = "descriptor";
+    private static final String DEBUG_COMPILE_TIME = "compilationTime";
+    private static final String DEBUG_HANDLER      = "handler";
+    private static final String DEBUG_LOCALE       = "locale";
 
     @Override
-    public final WizardResult initialize(final Locale locale) {
+    public final WizardResult initialize(final Locale locale) throws SException {
         LOGGER.debug(String.format("initialize(locale=%s)", locale));
-        final WizardDescriptor descriptor = this.getDescriptor(locale);
 
+        final long startTime = System.nanoTime();
         final WizardResult result = new WizardResult();
-        result.addWizardData(DESCRIPTOR_KEY, descriptor);
-        result.addFeedbackMessage(
-                FeedbackMessage
-                        .newInfo()
-                        .setMessage(this.messageSource.getMessage(WIZ_INITIALIZED_MSG, locale))
-        );
+
+        try {
+            final WizardDescriptor descriptor = this.getDescriptor(locale);
+            final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+
+            result.addWizardData(DESCRIPTOR_KEY, descriptor);
+            result.addFeedbackMessage(
+                    FeedbackMessage
+                            .newInfo()
+                            .setMessage(this.messageSource.getMessage(WIZ_INITIALIZED_MSG, locale))
+            );
+
+            result.addDebugData(DEBUG_COMPILE_TIME, endTime)
+                    .addDebugData(DEBUG_HANDLER, ClassUtils.getShortName(this.getClass()))
+                    .addDebugData(DEBUG_LOCALE, locale);
+
+        } catch (Exception exp) {
+            LOGGER.error("Failed to build descriptor for wizard", exp);
+            throw new SException(exp.getMessage(), exp);
+        }
 
         return result;
     }
@@ -165,5 +194,23 @@ abstract public class AbstractWizardProcessor<T>
      * @return the descriptor
      */
     protected abstract WizardDescriptor getDescriptor(final Locale locale);
+
+    protected OID getOID(final T contextObject) {
+        final OID oid = new OID();
+        oid.setObjectClass(ClassUtils.getUserClass(contextObject.getClass()).getSimpleName());
+        oid.setPrefix("M");
+        if (ClassUtils.isAssignableValue(Persistable.class, contextObject)) {
+            oid.setId((Long) ((Persistable<?>) contextObject).getId());
+        } else {
+            oid.setId(System.nanoTime());
+        }
+        return oid;
+    }
+
+    protected static interface StepHelper {
+        WizardStepDescriptor getDescriptor(final Locale locale);
+
+        ModelMap init(final Locale locale) throws Exception;
+    }
 
 }
