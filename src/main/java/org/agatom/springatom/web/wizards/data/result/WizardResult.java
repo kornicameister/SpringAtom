@@ -24,7 +24,7 @@ import org.agatom.springatom.web.wizards.data.context.WizardDataScopeHolder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
-import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -47,7 +47,7 @@ public class WizardResult
     private              String                stepId           = null;
     private              Set<FeedbackMessage>  messages         = null;
     private              Set<Throwable>        errors           = null;
-    private              Set<Errors>           validationErrors = null;
+    private              Set<ObjectError>      validationErrors = null;
     private              OID                   oid              = null;
     private              WizardDataScopeHolder data             = null;
     private              ModelMap              debugData        = null;
@@ -169,7 +169,7 @@ public class WizardResult
         return this;
     }
 
-    public WizardResult addValidationError(final Errors error) {
+    public WizardResult addValidationError(final ObjectError error) {
         if (error == null) {
             return this;
         }
@@ -180,11 +180,11 @@ public class WizardResult
         return this;
     }
 
-    public Set<Errors> getValidationErrors() {
+    public Set<ObjectError> getValidationErrors() {
         return validationErrors;
     }
 
-    public WizardResult setValidationErrors(final Set<Errors> validationErrors) {
+    public WizardResult setValidationErrors(final Set<ObjectError> validationErrors) {
         if (this.validationErrors == null) {
             this.validationErrors = validationErrors;
         } else {

@@ -48,6 +48,7 @@ import java.util.concurrent.TimeUnit;
  * <ol>
  * <li>adjusted to feedback messaging system</li>
  * <li>{@link #initialize(java.util.Locale)} updated to check for {@link java.lang.Exception} and if any would be thrown returned appropriate {@link org.agatom.springatom.web.wizards.data.result.WizardResult}</li>
+ * <li>added expection checking for submitWizard method</li>
  * </ol>
  *
  * <p>
@@ -101,29 +102,41 @@ abstract public class AbstractWizardProcessor<T>
     }
 
     @Override
+    @SuppressWarnings("UnusedAssignment")
     public WizardResult submit(final Map<String, Object> stepData, final Locale locale) throws Exception {
         LOGGER.debug(String.format("submit(stepData=%s)", stepData));
 
-        final T contextObject = this.getContextObject();
-        final DataBinder binder = this.createBinder(contextObject);
-        final WizardResult result = new WizardResult();
+        T contextObject = this.getContextObject();
+        WizardResult result = new WizardResult();
+        DataBinder binder = this.createBinder(contextObject);
 
         binder.bind(new MutablePropertyValues(stepData));
         final Errors errors = binder.getBindingResult();
 
         if (!errors.hasErrors()) {
             LOGGER.debug(String.format("Bound to context object=%s without errors", contextObject));
-            final WizardResult localResult = this.submitWizard(contextObject, stepData, locale);
-            result.merge(localResult);
+            try {
+                final WizardResult localResult = this.submitWizard(contextObject, stepData, locale);
+                result.merge(localResult);
+            } catch (Exception submitExp) {
+                LOGGER.error(String.format("submitWizard failed for contextObject=%s", contextObject), submitExp);
+                result.addError(submitExp);
+                result.addFeedbackMessage(FeedbackMessage.newError().setMessage(submitExp.getLocalizedMessage()));
+            } finally {
+                binder.close();
+            }
         } else {
             LOGGER.warn(String.format("Found %d binding errors for context object=%s", errors.getErrorCount(), contextObject));
-            result.addValidationError(errors);
             for (final ObjectError objectError : errors.getAllErrors()) {
                 result.addFeedbackMessage(this.getBindErrorFM(objectError, locale));
+                result.addValidationError(objectError);
             }
         }
 
-        binder.close();
+        // collect garbage
+        binder = null;
+        contextObject = null;
+        System.gc();
 
         return result;
     }
@@ -156,14 +169,11 @@ abstract public class AbstractWizardProcessor<T>
         boolean found = false;
         String msg = this.messageSource.getMessage(objectError.getCode(), locale);
 
-        if (!msg.equals(objectError.getCode())) {
+        if (msg.equals(objectError.getCode())) {
             for (final String code : codes) {
                 msg = this.messageSource.getMessage(code, locale);
-                if (msg.equals(code)) {
-                    msg = this.messageSource.getMessage(code, objectError.getArguments(), locale);
-                    found = true;
-                }
                 if (!msg.equals(code)) {
+                    msg = this.messageSource.getMessage(code, objectError.getArguments(), locale);
                     found = true;
                 }
                 if (found) {

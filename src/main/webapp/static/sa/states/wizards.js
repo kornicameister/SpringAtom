@@ -26,7 +26,8 @@
 define(
     [
         'config/ext',
-        'states/wizards/newCar'
+        'states/wizards/newCar',
+        'states/wizards/newAppointment'
     ],
     function ipStates() {
         var offset = 1;
