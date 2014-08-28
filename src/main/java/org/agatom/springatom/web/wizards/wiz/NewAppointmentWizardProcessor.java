@@ -57,7 +57,7 @@ import java.util.*;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Wizard(NewAppointmentWizardProcessor.WIZARD_ID)
+@Wizard(value = NewAppointmentWizardProcessor.WIZARD_ID, validate = true)
 class NewAppointmentWizardProcessor
         extends AbstractWizardProcessor<SAppointment> {
     protected static final String                 WIZARD_ID              = "newAppointment";
@@ -113,6 +113,24 @@ class NewAppointmentWizardProcessor
 
     private static String getPropertyName(final Path<?> path) {
         return path.getMetadata().getName();
+    }
+
+    @Override
+    protected boolean isValidationEnabledForStep(final String step) {
+        return "definition".equals(step);
+    }
+
+    @Override
+    public String getContextObjectName() {
+        return FORM_OBJECT_NAME;
+    }
+
+    @Override
+    protected DataBinder createBinder(final Object contextObject, final String contextObjectName) {
+        final DataBinder binder = super.createBinder(contextObject, contextObjectName);
+        binder.setRequiredFields(REQUIRED_FIELDS);
+        binder.setAllowedFields(ALLOWED_FIELDS);
+        return binder;
     }
 
     @Override
@@ -178,11 +196,6 @@ class NewAppointmentWizardProcessor
     }
 
     @Override
-    public String getContextObjectName() {
-        return FORM_OBJECT_NAME;
-    }
-
-    @Override
     protected WizardDescriptor getDescriptor(final Locale locale) {
         LOGGER.debug(String.format("getDescriptor(locale=%s)", locale));
 
@@ -194,14 +207,6 @@ class NewAppointmentWizardProcessor
         descriptor.addStep(this.steps.COMMENT.getDescriptor(locale));
 
         return descriptor;
-    }
-
-    @Override
-    protected DataBinder createBinder(final Object contextObject, final String contextObjectName) {
-        final DataBinder binder = super.createBinder(contextObject, contextObjectName);
-        binder.setRequiredFields(REQUIRED_FIELDS);
-        binder.setAllowedFields(ALLOWED_FIELDS);
-        return binder;
     }
 
     @Override

@@ -119,6 +119,28 @@ class NewCarWizardProcessor
     }
 
     @Override
+    protected boolean isValidationEnabledForStep(final String step) {
+        return false;
+    }
+
+    @Override
+    public String getContextObjectName() {
+        return FORM_OBJECT_NAME;
+    }
+
+    @Override
+    protected DataBinder createBinder(final Object contextObject, final String contextObjectName) {
+        final DataBinder binder = super.createBinder(contextObject, contextObjectName);
+
+        final List<String> list = Lists.newArrayList(REQUIRED_FIELDS);
+        Collections.addAll(list, ALLOWED_FIELDS);
+
+        binder.setAllowedFields(list.toArray(new String[list.size()]));
+        binder.setRequiredFields(REQUIRED_FIELDS);
+        return binder;
+    }
+
+    @Override
     protected SCar getContextObject() throws Exception {
         final SCar car = super.getContextObject();
         car.setCarMaster(new SCarMaster());
@@ -148,11 +170,6 @@ class NewCarWizardProcessor
         );
 
         return result;
-    }
-
-    @Override
-    public String getContextObjectName() {
-        return FORM_OBJECT_NAME;
     }
 
     @Override
@@ -186,18 +203,6 @@ class NewCarWizardProcessor
         descriptor.addDynamicProperty("handler", ClassUtils.getShortName(this.getClass()));
 
         return descriptor;
-    }
-
-    @Override
-    protected DataBinder createBinder(final Object contextObject, final String contextObjectName) {
-        final DataBinder binder = super.createBinder(contextObject, contextObjectName);
-
-        final List<String> list = Lists.newArrayList(REQUIRED_FIELDS);
-        Collections.addAll(list, ALLOWED_FIELDS);
-
-        binder.setAllowedFields(list.toArray(new String[list.size()]));
-        binder.setRequiredFields(REQUIRED_FIELDS);
-        return binder;
     }
 
     @Override

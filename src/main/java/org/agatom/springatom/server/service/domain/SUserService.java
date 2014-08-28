@@ -26,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.security.Principal;
 
 /**
  * <p>SUserService interface.</p>
@@ -35,58 +36,61 @@ import javax.validation.constraints.NotNull;
  * @since 0.0.1
  */
 public interface SUserService
-		extends SService<SUser, Long, Integer>,
-		UserDetailsService {
+        extends SService<SUser, Long, Integer>,
+        UserDetailsService {
 
-	/**
-	 * {@code org.agatom.springatom.server.service.domain.SUserService#registerNewUser(String, String, long)} registers new
-	 * user
-	 * in the system.
-	 * <p>
-	 * <b>
-	 * It is crucial that an object of {@link org.agatom.springatom.server.model.beans.person.SPerson} already exists
-	 * because
-	 * each instance of the {@link org.agatom.springatom.server.model.beans.user.SUser} with it
-	 * </b>
-	 *
-	 * @param userName username (length=[5,20]
-	 * @param password password (can not be empty,null, its length must be between 6,20 and must be in special format)
-	 * @param personId personId
-	 *
-	 * @return an instance of the {@link org.agatom.springatom.server.model.beans.user.SUser}
-	 *
-	 * @throws org.agatom.springatom.server.service.exceptions.UserRegistrationException if any
-	 */
-	@NotNull
-	SUser registerNewUser(@UserName final String userName, @Password final String password,
-	                      @Min(value = 2, message = "Minimal SPerson#id is 2, 1 is reserved for internal application usage")
-	                      final long personId) throws UserRegistrationException;
+    /**
+     * {@code org.agatom.springatom.server.service.domain.SUserService#registerNewUser(String, String, long)} registers new
+     * user
+     * in the system.
+     * <p>
+     * <b>
+     * It is crucial that an object of {@link org.agatom.springatom.server.model.beans.person.SPerson} already exists
+     * because
+     * each instance of the {@link org.agatom.springatom.server.model.beans.user.SUser} with it
+     * </b>
+     *
+     * @param userName username (length=[5,20]
+     * @param password password (can not be empty,null, its length must be between 6,20 and must be in special format)
+     * @param personId personId
+     *
+     * @return an instance of the {@link org.agatom.springatom.server.model.beans.user.SUser}
+     *
+     * @throws org.agatom.springatom.server.service.exceptions.UserRegistrationException if any
+     */
+    @NotNull
+    SUser registerNewUser(@UserName final String userName, @Password final String password,
+                          @Min(value = 2, message = "Minimal SPerson#id is 2, 1 is reserved for internal application usage")
+                          final long personId) throws UserRegistrationException;
 
-	/**
-	 * Performs direct registration from instance of {@link org.agatom.springatom.server.model.beans.user.SUser}.
-	 * New {@code user} must have existing and not yet persisted instance of {@link org.agatom.springatom.server.model.beans.person.SPerson}
-	 * associated with it.
-	 * {@code user} will be validated againts {@link org.agatom.springatom.server.service.support.constraints.Password}
-	 * and {@link org.agatom.springatom.server.service.support.constraints.UserName}
-	 *
-	 * @param user user to be registered
-	 *
-	 * @return registered user
-	 *
-	 * @throws org.agatom.springatom.server.service.exceptions.UserRegistrationException if any
-	 */
-	@NotNull
-	SUser registerNewUser(@ValidUser final SUser user) throws UserRegistrationException;
+    /**
+     * Performs direct registration from instance of {@link org.agatom.springatom.server.model.beans.user.SUser}.
+     * New {@code user} must have existing and not yet persisted instance of {@link org.agatom.springatom.server.model.beans.person.SPerson}
+     * associated with it.
+     * {@code user} will be validated againts {@link org.agatom.springatom.server.service.support.constraints.Password}
+     * and {@link org.agatom.springatom.server.service.support.constraints.UserName}
+     *
+     * @param user user to be registered
+     *
+     * @return registered user
+     *
+     * @throws org.agatom.springatom.server.service.exceptions.UserRegistrationException if any
+     */
+    @NotNull
+    SUser registerNewUser(@ValidUser final SUser user) throws UserRegistrationException;
 
-	/**
-	 * Combines retrieving {@code authenticated} {@link org.agatom.springatom.server.model.beans.user.SUser} instance from
-	 * {@link org.springframework.security.core.context.SecurityContext#getAuthentication()} and {@link
-	 * org.agatom.springatom.server.repository.SRepository#findLastChangeRevision(java.io.Serializable)}
-	 *
-	 * @return authenticated user in the latest revision
-	 *
-	 * @see org.agatom.springatom.server.repository.SRepository#findLastChangeRevision(java.io.Serializable)
-	 */
-	@NotNull
-	SUser getAuthenticatedUser();
+    /**
+     * Combines retrieving {@code authenticated} {@link org.agatom.springatom.server.model.beans.user.SUser} instance from
+     * {@link org.springframework.security.core.context.SecurityContext#getAuthentication()} and {@link
+     * org.agatom.springatom.server.repository.SRepository#findLastChangeRevision(java.io.Serializable)}
+     *
+     * @return authenticated user in the latest revision
+     *
+     * @see org.agatom.springatom.server.repository.SRepository#findLastChangeRevision(java.io.Serializable)
+     */
+    @NotNull
+    SUser getAuthenticatedUser();
+
+    @NotNull
+    Principal getAuthenticatedPrincipal();
 }

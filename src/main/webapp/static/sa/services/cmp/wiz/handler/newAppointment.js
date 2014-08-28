@@ -30,9 +30,9 @@ define(
     function newCar(app, utils, wizService, moment) {
         var mainName = 'newAppointment',
             newAppointmentService = function newAppointmentService($log, wizardResource) {
-                var vinState = wizService.getState(mainName, 'define'),
-                    carState = wizService.getState(mainName, 'tasks'),
-                    ownerState = wizService.getState(mainName, 'comment'),
+                var defineState = wizService.getState(mainName, 'definition'),
+                    tasksState = wizService.getState(mainName, 'tasks'),
+                    onwerState = wizService.getState(mainName, 'comment'),
                     getFormData = function getFormData() {
                         var date = new Date().dt;
                         return {
@@ -61,7 +61,22 @@ define(
                             successCallback = conf.success,
                             failureCallback = conf.failure;
 
-                        successCallback.call(this);
+                        if (state === defineState) {
+                            wizardResource
+                                .stepSubmit(mainName, 'definition', {
+                                    beginDate: form.beginDate.$modelValue,
+                                    beginTime: form.beginTime.$modelValue,
+                                    endDate  : form.endDate.$modelValue,
+                                    endTime  : form.endTime.$modelValue,
+                                    reporter : form.reporter.$modelValue.value,
+                                    assignee : form.assignee.$modelValue.value,
+                                    car      : form.car.$modelValue.value
+                                })
+                                .then(successCallback, failureCallback);
+                        } else {
+                            successCallback.call(this);
+                        }
+
                     },
                     submit = function submit(conf) {
                         var successCallback = conf.success,

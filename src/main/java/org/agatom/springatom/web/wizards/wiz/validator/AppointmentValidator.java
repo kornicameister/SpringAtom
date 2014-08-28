@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizards.wizard.newAppointment.validator;
+package org.agatom.springatom.web.wizards.wiz.validator;
 
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
 import org.agatom.springatom.server.model.beans.appointment.SAppointmentIssue;
@@ -25,16 +25,14 @@ import org.agatom.springatom.server.model.beans.issue.SIssue;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.repository.repositories.issue.SIssueRepository;
 import org.agatom.springatom.web.locale.SMessageSource;
+import org.agatom.springatom.web.wizards.validation.annotation.WizardValidator;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Role;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.util.ClassUtils;
 
@@ -49,8 +47,8 @@ import java.util.concurrent.TimeUnit;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Lazy(value = false)
-@Role(BeanDefinition.ROLE_SUPPORT)
+@WizardValidator
+@SuppressWarnings("UnusedDeclaration")
 public class AppointmentValidator {
     @Value(value = "#{sAppointmentProperties['sappointment.minDiffBetweenDatesMs']}")
     private long             minDiffBetweenDates = 0;
@@ -71,7 +69,7 @@ public class AppointmentValidator {
      * @param appointment a {@link org.agatom.springatom.server.model.beans.appointment.SAppointment} object.
      * @param context     a {@link org.springframework.binding.validation.ValidationContext} object.
      */
-    public void validateStep1(final SAppointment appointment, final ValidationContext context) {
+    public void validateDefinition(final SAppointment appointment, final ValidationContext context) {
         this.validateDates(appointment, context);
         this.validateCar(appointment, context);
     }

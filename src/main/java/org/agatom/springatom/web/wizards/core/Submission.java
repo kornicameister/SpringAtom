@@ -25,9 +25,8 @@ package org.agatom.springatom.web.wizards.core;
  * @since 0.0.1
  */
 public enum Submission {
-    STEP,
-    WIZARD,
     SUBMIT,
     INIT,
+    SUBMIT_STEP,
     INIT_STEP
 }

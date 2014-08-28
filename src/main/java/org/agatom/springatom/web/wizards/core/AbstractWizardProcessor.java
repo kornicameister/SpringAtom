@@ -25,11 +25,11 @@ import org.agatom.springatom.web.wizards.data.WizardStepDescriptor;
 import org.agatom.springatom.web.wizards.data.result.FeedbackMessage;
 import org.agatom.springatom.web.wizards.data.result.WizardResult;
 import org.apache.log4j.Logger;
-import org.springframework.beans.MutablePropertyValues;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.data.domain.Persistable;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
@@ -67,9 +67,9 @@ abstract public class AbstractWizardProcessor<T>
     private static final Logger LOGGER              = Logger.getLogger(AbstractWizardProcessor.class);
     private static final String WIZ_INITIALIZED_MSG = "sa.msg.wizard.initialized";
     private static final String DESCRIPTOR_KEY      = "descriptor";
-    private static final String DEBUG_COMPILE_TIME = "compilationTime";
-    private static final String DEBUG_HANDLER      = "handler";
-    private static final String DEBUG_LOCALE       = "locale";
+    private static final String DEBUG_COMPILE_TIME  = "compilationTime";
+    private static final String DEBUG_HANDLER       = "handler";
+    private static final String DEBUG_LOCALE        = "locale";
 
     @Override
     public final WizardResult initialize(final Locale locale) throws SException {
@@ -102,22 +102,33 @@ abstract public class AbstractWizardProcessor<T>
     }
 
     @Override
-    @SuppressWarnings("UnusedAssignment")
     public WizardResult submit(final Map<String, Object> stepData, final Locale locale) throws Exception {
         LOGGER.debug(String.format("submit(stepData=%s)", stepData));
+        return this.submitStep(null, stepData, locale);
+    }
+
+    @Override
+    @SuppressWarnings("UnusedAssignment")
+    public WizardResult submitStep(final String step, final Map<String, Object> stepData, final Locale locale) throws Exception {
+        LOGGER.debug(String.format("submitStep(step=%s, stepData=%s)", step, stepData));
 
         T contextObject = this.getContextObject();
-        WizardResult result = new WizardResult();
         DataBinder binder = this.createBinder(contextObject);
 
-        binder.bind(new MutablePropertyValues(stepData));
+        if (StringUtils.hasText(step)) {
+            // temporary solution
+            binder.setAllowedFields();
+            binder.setRequiredFields();
+        }
+
+        final WizardResult result = this.bind(binder, step, stepData);
         final Errors errors = binder.getBindingResult();
 
-        if (!errors.hasErrors()) {
-            LOGGER.debug(String.format("Bound to context object=%s without errors", contextObject));
+        // If there are no errors and this is not step submit --> finish up wizard
+        if (!result.hasErrors() && !StringUtils.hasText(step)) {
+            LOGGER.debug(String.format("Bound to context object=%s without bindingResult", contextObject));
             try {
-                final WizardResult localResult = this.submitWizard(contextObject, stepData, locale);
-                result.merge(localResult);
+                result.merge(this.submitWizard(contextObject, stepData, locale));
             } catch (Exception submitExp) {
                 LOGGER.error(String.format("submitWizard failed for contextObject=%s", contextObject), submitExp);
                 result.addError(submitExp);
@@ -125,11 +136,11 @@ abstract public class AbstractWizardProcessor<T>
             } finally {
                 binder.close();
             }
-        } else {
-            LOGGER.warn(String.format("Found %d binding errors for context object=%s", errors.getErrorCount(), contextObject));
+        } else if (errors.hasErrors()) {
+            LOGGER.warn(String.format("Found %d binding bindingResult for context object=%s", errors.getErrorCount(), contextObject));
             for (final ObjectError objectError : errors.getAllErrors()) {
                 result.addFeedbackMessage(this.getBindErrorFM(objectError, locale));
-                result.addValidationError(objectError);
+                result.addBindingError(objectError);
             }
         }
 
@@ -189,10 +200,6 @@ abstract public class AbstractWizardProcessor<T>
         }
         message.setMessage(msg);
         return message;
-    }
-
-    protected String getContextObjectName() {
-        return DataBinder.DEFAULT_OBJECT_NAME;
     }
 
     /**

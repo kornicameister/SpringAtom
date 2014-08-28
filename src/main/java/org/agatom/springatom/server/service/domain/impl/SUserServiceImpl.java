@@ -42,6 +42,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.security.Principal;
+
 /**
  * <p>SUserServiceImpl class.</p>
  *
@@ -52,129 +54,134 @@ import org.springframework.util.CollectionUtils;
 @Service(value = SUserServiceImpl.SERVICE_NAME)
 @Transactional(readOnly = true, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
 public class SUserServiceImpl
-		extends SServiceImpl<SUser, Long, Integer>
-		implements SUserService {
-	/** Constant <code>SERVICE_NAME="SUserService"</code> */
-	protected static final String          SERVICE_NAME    = "SUserService";
-	private static final   Logger          LOGGER          = Logger.getLogger(SUserServiceImpl.class);
-	@Lazy
-	@Autowired
-	@Qualifier(value = "securedPasswordEncoder")
-	private                PasswordEncoder passwordEncoder = null;
-	@Lazy
-	@Autowired(required = false)
-	private                SPersonService  personService   = null;
+        extends SServiceImpl<SUser, Long, Integer>
+        implements SUserService {
+    /** Constant <code>SERVICE_NAME="SUserService"</code> */
+    protected static final String          SERVICE_NAME    = "SUserService";
+    private static final   Logger          LOGGER          = Logger.getLogger(SUserServiceImpl.class);
+    @Lazy
+    @Autowired
+    @Qualifier(value = "securedPasswordEncoder")
+    private                PasswordEncoder passwordEncoder = null;
+    @Lazy
+    @Autowired(required = false)
+    private                SPersonService  personService   = null;
 
-	/** {@inheritDoc} */
-	@Override
-	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-		final SUser user = this.repository.findOne(QSUser.sUser.credentials.username.eq(username));
-		if (user == null) {
-			throw new UsernameNotFoundException(String
-					.format("SUser with userName=%s not found", username), new EntityDoesNotExistsServiceException(SUser.class, username));
-		}
-		return user;
-	}
+    /** {@inheritDoc} */
+    @Override
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+        final SUser user = this.repository.findOne(QSUser.sUser.credentials.username.eq(username));
+        if (user == null) {
+            throw new UsernameNotFoundException(String
+                    .format("SUser with userName=%s not found", username), new EntityDoesNotExistsServiceException(SUser.class, username));
+        }
+        return user;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	@Transactional(readOnly = false, rollbackFor = UserRegistrationException.class)
-	public SUser registerNewUser(final String userName,
-	                             final String password,
-	                             final long personId) throws UserRegistrationException {
-		try {
-			final SPerson person = this.retrievePerson(personId);
-			this.checkIfPersonAlreadyAssignedToUser(person);
+    /** {@inheritDoc} */
+    @Override
+    @Transactional(readOnly = false, rollbackFor = UserRegistrationException.class)
+    public SUser registerNewUser(final String userName,
+                                 final String password,
+                                 final long personId) throws UserRegistrationException {
+        try {
+            final SPerson person = this.retrievePerson(personId);
+            this.checkIfPersonAlreadyAssignedToUser(person);
 
-			final SUser user = new SUser();
-			user.setPerson(person);
-			user.setPassword(password);
-			user.setUsername(userName);
+            final SUser user = new SUser();
+            user.setPerson(person);
+            user.setPassword(password);
+            user.setUsername(userName);
 
-			return this.registerNewUser(user);
-		} catch (EntityDoesNotExistsServiceException exp) {
-			LOGGER.fatal(String.format("Failed to save user with login %s, message is %s", userName, exp.getMessage()));
-			throw new UserRegistrationException(userName, String.format("Failed to save new user, because no person exists with id %d", personId), exp);
-		} catch (Exception exp) {
-			LOGGER.fatal(String.format("Failed to save user with login %s, message is %s", userName, exp.getMessage()));
-			throw new UserRegistrationException(userName, "Failed to save new user", exp);
-		}
-	}
+            return this.registerNewUser(user);
+        } catch (EntityDoesNotExistsServiceException exp) {
+            LOGGER.fatal(String.format("Failed to save user with login %s, message is %s", userName, exp.getMessage()));
+            throw new UserRegistrationException(userName, String.format("Failed to save new user, because no person exists with id %d", personId), exp);
+        } catch (Exception exp) {
+            LOGGER.fatal(String.format("Failed to save user with login %s, message is %s", userName, exp.getMessage()));
+            throw new UserRegistrationException(userName, "Failed to save new user", exp);
+        }
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	@Transactional(readOnly = false, rollbackFor = UserRegistrationException.class)
-	public SUser registerNewUser(final SUser user) throws UserRegistrationException {
-		try {
-			SPerson person = user.getPerson();
-			if (person != null) {
-				if (person.isNew()) {
-					person = this.personService.save(person);
-				}
-				user.setPerson(person);
-				user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+    /** {@inheritDoc} */
+    @Override
+    @Transactional(readOnly = false, rollbackFor = UserRegistrationException.class)
+    public SUser registerNewUser(final SUser user) throws UserRegistrationException {
+        try {
+            SPerson person = user.getPerson();
+            if (person != null) {
+                if (person.isNew()) {
+                    person = this.personService.save(person);
+                }
+                user.setPerson(person);
+                user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
-				if (CollectionUtils.isEmpty(user.getAuthorities())) {
-					LOGGER.trace(String.format("%s has no authorities, his account will be disabled", user));
-					user.setEnabled(false);
-				}
+                if (CollectionUtils.isEmpty(user.getAuthorities())) {
+                    LOGGER.trace(String.format("%s has no authorities, his account will be disabled", user));
+                    user.setEnabled(false);
+                }
 
-				return super.save(user);
-			} else {
-				throw new IllegalArgumentException("Person can not be null");
-			}
-		} catch (Exception exp) {
-			LOGGER.fatal(String.format("Failed to save user with login %s, message is %s", user.getUsername(), exp.getMessage()));
-			throw new UserRegistrationException(user, "Failed to save new user", exp);
-		}
-	}
+                return super.save(user);
+            } else {
+                throw new IllegalArgumentException("Person can not be null");
+            }
+        } catch (Exception exp) {
+            LOGGER.fatal(String.format("Failed to save user with login %s, message is %s", user.getUsername(), exp.getMessage()));
+            throw new UserRegistrationException(user, "Failed to save new user", exp);
+        }
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public SUser getAuthenticatedUser() {
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		final Object principal = authentication.getPrincipal();
-		if (principal instanceof SUser) {
-			final Revision<Integer, SUser> latestRevision = this.findLatestRevision(((SUser) principal).getId());
-			return latestRevision.getEntity();
-		}
-		throw new SessionAuthenticationException(String.format("Principal\n\t[%s]\nis not authenticated", principal));
-	}
+    /** {@inheritDoc} */
+    @Override
+    public SUser getAuthenticatedUser() {
+        final Authentication authentication = (Authentication) this.getAuthenticatedPrincipal();
+        final Object principal = authentication.getPrincipal();
+        if (principal instanceof SUser) {
+            final Revision<Integer, SUser> latestRevision = this.findLatestRevision(((SUser) principal).getId());
+            return latestRevision.getEntity();
+        }
+        throw new SessionAuthenticationException(String.format("Principal\n\t[%s]\nis not authenticated", principal));
+    }
 
-	private SPerson retrievePerson(final long personId) throws EntityDoesNotExistsServiceException {
-		final SPerson person = this.personService.findOne(personId);
-		if (person == null) {
-			throw new EntityDoesNotExistsServiceException(SPerson.class, personId);
-		}
-		return person;
-	}
+    @Override
+    public Principal getAuthenticatedPrincipal() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
 
-	/**
-	 * Message runs call to {@link org.agatom.springatom.server.repository.repositories.user.SUserRepository}
-	 * to verify if passed {@code person} is already associated with any {@link org.agatom.springatom.server.model.beans.user.SUser}.
-	 * If so exception is thrown that will result in {@link org.agatom.springatom.server.service.exceptions.UserRegistrationException}
-	 *
-	 * @param person to check if it is associated with {@link org.agatom.springatom.server.model.beans.user.SUser}
-	 *
-	 * @throws Exception if person has corresponding {@link org.agatom.springatom.server.model.beans.user.SUser}
-	 */
-	private void checkIfPersonAlreadyAssignedToUser(final SPerson person) throws Exception {
-		final QSUser sUser = QSUser.sUser;
-		final BooleanExpression eq = sUser.person.eq(person);
-		final SUser one = this.repository.findOne(eq);
-		if (one != null) {
-			throw new Exception(String.format("%s already has user associated with it", person));
-		}
-	}
+    private SPerson retrievePerson(final long personId) throws EntityDoesNotExistsServiceException {
+        final SPerson person = this.personService.findOne(personId);
+        if (person == null) {
+            throw new EntityDoesNotExistsServiceException(SPerson.class, personId);
+        }
+        return person;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public SUser save(final SUser persistable) {
-		try {
-			return this.registerNewUser(persistable);
-		} catch (UserRegistrationException e) {
-			LOGGER.fatal("Failed to save user instance, registration failed", e);
-		}
-		return null;
-	}
+    /**
+     * Message runs call to {@link org.agatom.springatom.server.repository.repositories.user.SUserRepository}
+     * to verify if passed {@code person} is already associated with any {@link org.agatom.springatom.server.model.beans.user.SUser}.
+     * If so exception is thrown that will result in {@link org.agatom.springatom.server.service.exceptions.UserRegistrationException}
+     *
+     * @param person to check if it is associated with {@link org.agatom.springatom.server.model.beans.user.SUser}
+     *
+     * @throws Exception if person has corresponding {@link org.agatom.springatom.server.model.beans.user.SUser}
+     */
+    private void checkIfPersonAlreadyAssignedToUser(final SPerson person) throws Exception {
+        final QSUser sUser = QSUser.sUser;
+        final BooleanExpression eq = sUser.person.eq(person);
+        final SUser one = this.repository.findOne(eq);
+        if (one != null) {
+            throw new Exception(String.format("%s already has user associated with it", person));
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SUser save(final SUser persistable) {
+        try {
+            return this.registerNewUser(persistable);
+        } catch (UserRegistrationException e) {
+            LOGGER.fatal("Failed to save user instance, registration failed", e);
+        }
+        return null;
+    }
 }

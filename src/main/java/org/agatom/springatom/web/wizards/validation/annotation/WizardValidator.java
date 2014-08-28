@@ -15,12 +15,12 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.wizards;
+package org.agatom.springatom.web.wizards.validation.annotation;
 
+import org.agatom.springatom.core.annotations.LazyComponent;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Role;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.lang.annotation.ElementType;
@@ -29,22 +29,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@code Wizard} is {@link org.springframework.stereotype.Component} extensions marking particular
- * classes as {@link org.agatom.springatom.web.wizards.WizardProcessor}
+ * Designates annotated class as {@link WizardValidator}
  *
- * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
+ * <p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-27</small>
+ * </p>
  *
  * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component
+@LazyComponent
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @Scope(WebApplicationContext.SCOPE_SESSION)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Wizard {
+public @interface WizardValidator {
     String value() default "";
-
-    boolean validate() default false;
 }

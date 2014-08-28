@@ -177,4 +177,35 @@ public class SVWizardController
         return submission;
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/submit/{wizard}/step/{step}")
+    public WizardSubmission onStepSubmit(@PathVariable("wizard") final String wizard,
+                                         @PathVariable("step") final String step,
+                                         @RequestBody final Map<String, Object> formData,
+                                         final Locale locale) {
+        LOGGER.debug(String.format("onStepSubmit(wizard=%s,step=%s,formData=%s)", wizard, step, formData));
+        final long startTime = System.nanoTime();
+
+        WizardSubmission submission = null;
+        WizardResult result = null;
+
+        try {
+
+            final WizardProcessor<?> wizardProcessor = this.processorMap.get(wizard);
+            result = wizardProcessor.submitStep(step, formData, locale);
+
+        } catch (Exception exp) {
+            submission = (WizardSubmission) new WizardSubmission(null, Submission.SUBMIT_STEP).setError(exp).setSuccess(false).setSize(1);
+        }
+        final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+
+        if (result != null) {
+            submission = (WizardSubmission) new WizardSubmission(result, Submission.SUBMIT_STEP).setSize(1).setSuccess(true).setTime(endTime);
+        }
+
+        LOGGER.trace(String.format("onStepSubmit(wizard=%s,step=%s) completed in %d ms", wizard, step, endTime));
+
+        return submission;
+    }
+
 }

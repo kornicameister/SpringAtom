@@ -15,36 +15,31 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.wizards;
+package org.agatom.springatom.web.wizards.validation;
 
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Role;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
- * {@code Wizard} is {@link org.springframework.stereotype.Component} extensions marking particular
- * classes as {@link org.agatom.springatom.web.wizards.WizardProcessor}
- *
- * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
+ * {@code ValidationService} gives access to lookup for {@link org.springframework.stereotype.Component}
+ * for objects used in {@link org.agatom.springatom.web.wizards.WizardProcessor}
+ * <p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-27</small>
+ * </p>
  *
  * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-@Component
-@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-@Scope(WebApplicationContext.SCOPE_SESSION)
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Wizard {
-    String value() default "";
+public interface ValidatorsRepository {
 
-    boolean validate() default false;
+    /**
+     * Looks up for {@link org.agatom.springatom.web.wizards.validation.annotation.WizardValidator} for given {@code key}
+     *
+     * @param key the key, should be a form object name
+     *
+     * @return validator or null
+     */
+    @Cacheable("validatorsRepository")
+    Object getValidator(final String key);
+
 }

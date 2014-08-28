@@ -94,11 +94,11 @@ define(
                             }))
                         })
                     },
-                    stepSubmit: function (key, data) {
+                    stepSubmit: function (wizard, step, data) {
                         return angular.extend(commonHttpConf, {
                             method: 'POST',
                             data  : data,
-                            url   : urls.adjust(urls.stepSubmit.format({key: key}))
+                            url   : urls.adjust(urls.stepSubmit.format({key: step, wizard: wizard}))
                         })
                     },
                     submit    : function (key, data) {
@@ -125,11 +125,14 @@ define(
                         }
                         return doRequest(httpConf.stepInit(wizard, step));
                     },
-                    stepSubmit: function stepSubmit(key, data) {
-                        if (!angular.isDefined(key)) {
+                    stepSubmit: function stepSubmit(wizard, step, data) {
+                        if (!angular.isDefined(step)) {
                             throw new Error('Step key is not defined, failed to initialize');
                         }
-                        return doRequest(httpConf.stepSubmit(key, data));
+                        if (!angular.isDefined(wizard)) {
+                            throw new Error('Wizard key is not defined, failed to initialize');
+                        }
+                        return doRequest(httpConf.stepSubmit(wizard, step, data));
                     },
                     submit    : function submit(key, data) {
                         if (!angular.isDefined(key)) {

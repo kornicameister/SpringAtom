@@ -18,19 +18,29 @@
 package org.agatom.springatom.web.wizards.core;
 
 import org.agatom.springatom.web.locale.SMessageSource;
+import org.agatom.springatom.web.wizards.Wizard;
+import org.agatom.springatom.web.wizards.WizardProcessor;
+import org.agatom.springatom.web.wizards.data.result.WizardResult;
+import org.agatom.springatom.web.wizards.validation.ValidationService;
+import org.agatom.springatom.web.wizards.validation.model.ValidationBean;
 import org.apache.log4j.Logger;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.binding.message.Message;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.DefaultMessageCodesResolver;
+import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.WebDataBinder;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-18</small>
@@ -48,13 +58,23 @@ abstract class AbstractWizardHandler {
     protected            LocalValidatorFactoryBean   delegatedValidator = null;
     @Autowired
     protected            SMessageSource              messageSource      = null;
+    @Autowired
+    private              ValidationService           validationService  = null;
 
-    protected DataBinder bind(final DataBinder dataBinder, final Map<String, Object> params) throws Exception {
+    protected WizardResult bind(final DataBinder binder, final String step, final Map<String, Object> params) throws Exception {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Executing bind");
         }
-        this.doBind(dataBinder, params);
-        return dataBinder;
+        this.doBind(binder, params);
+
+        final WizardResult localResult = new WizardResult().setStepId(step);
+
+        if ((this.isValidationEnabled() || this.isValidationEnabledForStep(step))) {
+            // Do not validate if bindingErrors
+            this.doValidate(localResult, binder, params);
+        }
+
+        return localResult;
     }
 
     private void doBind(final DataBinder binder, Map<String, Object> params) throws Exception {
@@ -71,6 +91,49 @@ abstract class AbstractWizardHandler {
             LOGGER.debug(String.format("Binding completed for form object with name '%s', post-bind formObject toString = %s", binder.getObjectName(), binder.getTarget()));
             LOGGER.debug(String.format("There are [%d] errors, details: %s", binder.getBindingResult().getErrorCount(), binder.getBindingResult().getAllErrors()));
         }
+    }
+
+    protected boolean isValidationEnabled() {
+        final Wizard annotation = AnnotationUtils.findAnnotation(this.getClass(), Wizard.class);
+        return annotation.validate();
+    }
+
+    protected abstract boolean isValidationEnabledForStep(final String step);
+
+    private void doValidate(final WizardResult result, final DataBinder binder, final Map<String, Object> formData) throws Exception {
+
+        final BindingResult bindingResult = binder.getBindingResult();
+        final ValidationBean bean = new ValidationBean();
+
+        bean.setPartialResult(result);
+        bean.setStepId(result.getStepId());
+        bean.setCommandBean(bindingResult.getTarget());
+        bean.setCommandBeanName(this.getContextObjectName());
+        bean.setFormData(formData);
+        bean.setBindingModel(formData);
+
+        if (this.validationService.canValidate(bean)) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(String.format("Validating via validation service for validationBean=%s", bean));
+            }
+            this.validationService.validate(bean);
+        } else if (binder.getValidator() != null) {
+            final Validator validator = binder.getValidator();
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(String.format("Validating via Validator instance=%s", validator));
+            }
+            validator.validate(bean.getCommandBean(), bindingResult);
+        }
+
+        if (LOGGER.isDebugEnabled()) {
+            final Set<Message> messages = result.getValidationMessages();
+            final short count = (short) (messages == null ? 0 : messages.size());
+            LOGGER.debug(String.format("Validation completed, found %d validation errors", count));
+        }
+    }
+
+    protected String getContextObjectName() {
+        return WizardProcessor.DEFAULT_FORM_OBJECT_NAME;
     }
 
     protected DataBinder createBinder(final Object contextObject, final String contextObjectName) {

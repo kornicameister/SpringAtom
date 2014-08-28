@@ -19,6 +19,7 @@ package org.agatom.springatom.web.wizards;
 
 import org.agatom.springatom.core.exception.SException;
 import org.agatom.springatom.web.wizards.data.result.WizardResult;
+import org.springframework.validation.DataBinder;
 
 import java.util.Locale;
 import java.util.Map;
@@ -38,6 +39,8 @@ import java.util.Map;
  * @since 0.0.1
  */
 public interface WizardProcessor<T> {
+    static String DEFAULT_FORM_OBJECT_NAME = DataBinder.DEFAULT_OBJECT_NAME;
+
     /**
      * Initializes wizard bean. {@link org.agatom.springatom.web.wizards.data.WizardDescriptor} contains
      * information about wizard title as well description of steps. Steps are vital for client side processing
@@ -69,4 +72,5 @@ public interface WizardProcessor<T> {
      */
     WizardResult submit(final Map<String, Object> stepData, final Locale locale) throws Exception;
 
+    WizardResult submitStep(final String step, final Map<String, Object> formData, final Locale locale) throws Exception;
 }

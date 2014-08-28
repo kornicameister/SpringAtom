@@ -24,9 +24,9 @@
 
 	<div class="col-sm-9">
 		<div class="input-group">
-			<input type="date" class="form-control" ng-model="formData.beginDate" ng-required="true">
+			<input type="date" name="beginDate" class="form-control" ng-model="formData.beginDate" ng-required="true">
 			<span class="input-group-addon">/</span>
-			<input type="time" class="form-control" ng-model="formData.beginTime" ng-required="true">
+			<input type="time" name="beginTime" class="form-control" ng-model="formData.beginTime" ng-required="true">
 		</div>
 	</div>
 </div>
@@ -38,9 +38,9 @@
 
 	<div class="col-sm-9">
 		<div class="input-group">
-			<input type="date" class="form-control" ng-model="formData.endDate" ng-required="true">
+			<input type="date" name="endDate" class="form-control" ng-model="formData.endDate" ng-required="true">
 			<span class="input-group-addon">/</span>
-			<input type="time" class="form-control" ng-model="formData.endTime" ng-required="true">
+			<input type="time" name="endTime" class="form-control" ng-model="formData.endTime" ng-required="true">
 		</div>
 	</div>
 </div>
