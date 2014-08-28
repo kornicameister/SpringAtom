@@ -16,11 +16,11 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--%>
 
-<div class="alert alert-info alert-dismissible" ng-class="{hidden: bindErrors.length == 0}" ng-if="bindErrors.length"
+<div class="alert alert-info alert-dismissible" ng-class="{hidden: bindErrors.length === 0}"
      role="alert">
 	<button type="button" class="close" data-dismiss="alert">
 		<span aria-hidden="true">&times;</span>
-		<span class="sr-only"><s:message code="button.close"/></span>
+		<span class="sr-only" ng-click="bindErrors=[]"><s:message code="button.close"/></span>
 	</button>
 	<div class="panel-heading"><s:message code="wizard.notificationPromptMessage"/></div>
 	<div class="list-group">

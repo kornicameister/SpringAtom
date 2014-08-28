@@ -36,7 +36,8 @@
         "jsface"                : "latest",
         "animate.css"           : "latest",
         "normalize-css"         : "latest",
-        "ngprogress"            : "latest"
+        "ngprogress"            : "latest",
+        "underscore"            : "latest"
     },
     "resolutions" : {
         "jquery": "~2.x"

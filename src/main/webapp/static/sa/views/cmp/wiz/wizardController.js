@@ -21,9 +21,10 @@
 define(
     [
         'angular',
-        'utils'
+        'utils',
+        'underscore'
     ],
-    function (angular, utils) {
+    function (angular, utils, _) {
         /**
          * Following arguments are injected from resolve of the state:
          * - title,
@@ -47,6 +48,7 @@ define(
             $log.debug('Entering wizardController');
 
             var exitState = $cookies.lastState,// retrieve state from which application entered wizard, for cancel action
+                errorStateName = 'error',
                 dlg = undefined,
                 actionMap = {},
                 stepsMap = {},
@@ -98,7 +100,7 @@ define(
                     }
                 },
                 helpers = {
-                    setActiveStep   : function setActiveStep(step) {
+                    setActiveStep      : function setActiveStep(step) {
                         $log.debug('setActiveStep(step={s})'.format({s: step}));
                         if (!angular.isDefined(step)) {
                             var message = 'Can not set active step in scope, because step variable in not defined';
@@ -115,7 +117,7 @@ define(
                      * Returns actions property of the current {@code $scope}
                      * @returns {*}
                      */
-                    getActions      : function () {
+                    getActions         : function () {
                         return $scope.actions;
                     },
                     /**
@@ -123,7 +125,7 @@ define(
                      * @param actionName action identifier
                      * @param visible true/false, true if enable the action
                      */
-                    setActionVisible: function setActionVisible(actionName, visible) {
+                    setActionVisible   : function setActionVisible(actionName, visible) {
                         visible = angular.isUndefined(visible) ? true : visible;
                         var actions = helpers.getActions();
                         actions[actionMap[actionName]].visible = visible;
@@ -134,15 +136,55 @@ define(
                      * @returns {boolean} true if enabled
                      * @see helpers.setActionVisible(actionName,enabled)
                      */
-                    isActionVisible : function isActionVisible(actionName) {
+                    isActionVisible    : function isActionVisible(actionName) {
                         var actions = helpers.getActions();
                         return actions[actionMap[actionName]].visible === true;
                     },
-                    setSiblingState : function setSiblingState(dir) {
+                    setSiblingState    : function setSiblingState(dir) {
                         var currentStep = $scope.activeState,
                             index = stepsMap[currentStep],
                             nextStep = stepsMap[index + dir];
                         helpers.setActiveStep(nextStep);
+                    },
+                    onSubmissionSuccess: function onSubmissionSuccess(wizardResult) {
+                        // Need to add analyzing the result and reacting upon
+                        helpers.setSiblingState(dirs.NEXT);
+                    },
+                    onSubmissionFailure: function onSubmissionFailure(errors) {
+                        var bindingErrors, // to be shown in wizard
+                            validationErrors; // to be shown in wizard
+                        $scope.messages = undefined;
+                        $scope.errors = undefined;
+                        if (_.isObject(errors) && _.keys(errors).length > 0) {
+
+                            if (errors.errors.length > 0) {
+                                // Server side errors (processing errors)
+                                $state.go(errorStateName, {
+                                    component: wizardKey,
+                                    errors   : errors.errors
+                                });
+                                return false;
+                            } else {
+                                validationErrors = errors.validation || [];
+                                bindingErrors = errors.binding || [];
+
+                                if (bindingErrors.length > 0 || validationErrors.length > 0) {
+                                    $scope.errors = bindingErrors;
+                                    $scope.messages = validationErrors;
+                                    return false;
+                                }
+                            }
+
+                            if (!_.isUndefined(errors.messages) && errors.messages.length > 0) {
+                                // growl, because these are FeedbackMessages
+                            }
+
+                        } else if (_.isString(errors) && errors.length > 0) {
+                            dialogs.error('Failed to submit form', errors);
+                            return false;
+                        }
+
+                        return true;
                     }
                 },
                 hooks = {
@@ -153,12 +195,7 @@ define(
                             success: function () {
                                 $state.go(exitState);
                             },
-                            failure: function (data) {
-                                dlg = dialogs.error(
-                                    'Failed to submit form',
-                                    data
-                                );
-                            }
+                            failure: helpers.onSubmissionFailure
                         });
                     },
                     /**
@@ -195,15 +232,8 @@ define(
                         $event.preventDefault();
                         wizardHandler.next({
                             $scope : $scope,
-                            success: function onSuccess() {
-                                helpers.setSiblingState(dirs.NEXT);
-                            },
-                            failure: function (data) {
-                                dlg = dialogs.error(
-                                    'Failed to enter next step',
-                                    data
-                                );
-                            }
+                            success: helpers.onSubmissionSuccess,
+                            failure: helpers.onSubmissionFailure
                         });
                     },
                     previous: function previousStep($event) {

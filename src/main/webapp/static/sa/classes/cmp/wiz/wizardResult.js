@@ -22,10 +22,11 @@ define(
     [
         'angular',
         'classes/cmp/wiz/feedbackMessage',
+        'classes/cmp/wiz/validationMessage',
         // jsFace to create classes
         'jsface'
     ],
-    function formResult(angular, FeedbackMessage) {
+    function formResult(angular, FeedbackMessage, ValidationMessage) {
         var scopes = {
             WIZARD   : 'wizard',
             FORM     : 'form',
@@ -40,11 +41,12 @@ define(
                     return data[scope][key];
                 },
                 lookupData = function lookupData(data, key) {
-                    var chunk = undefined;
+                    // for empty key create object
+                    var chunk = angular.isUndefined(key) ? {} : undefined;
                     angular.forEach(scopes, function (scope) {
                         if (angular.isUndefined(chunk)) {
                             if (angular.isUndefined(key)) {
-                                chunk = data[scope];
+                                chunk[scope] = data[scope];
                             } else {
                                 chunk = data[scope][key];
                             }
@@ -53,14 +55,11 @@ define(
                     return chunk;
                 };
             return {
-                $statics           : {
+                $statics             : {
                     SCOPES: scopes
                 },
-                constructor        : function (cfg) {
+                constructor          : function (cfg) {
                     this.dataMap = cfg.dataMap || {};
-                    this.messages = cfg.messages || [];
-                    this.errors = cfg.errors || [];
-                    this.validationErrors = cfg.validationErrors || [];
                     this.oid = cfg.oid;
                     this.stepId = cfg.stepId;
                     this.wizardId = cfg.wizardId;
@@ -69,43 +68,75 @@ define(
                         //noinspection JSValidateTypes
                         this.success = true;
                     }
+
+                    // binding, errors etc.
+
+                    this.feedbackMessages = cfg.feedbackMessages || [];
+                    this.validationMessages = cfg.validationMessages || [];
+                    this.bindingErrors = cfg.bindingErrors || [];
+                    this.errors = cfg.errors || [];
+
                 },
-                hasErrors          : function hasErrors() {
+                hasErrors            : function hasErrors() {
                     return this.errors.length > 0;
                 },
-                hasValidationErrors: function hasValidationErrors() {
-                    return this.validationErrors.length > 0;
+                hasBindingErrors     : function hasBindingErrors() {
+                    return this.bindingErrors.length > 0;
                 },
-                hasMessages        : function hasMessages() {
-                    return this.messages.length > 0;
+                hasFeedbackMessages  : function hasFeedbackMessages() {
+                    return this.feedbackMessages.length > 0;
                 },
-                isSuccess          : function () {
-                    return this.success && !this.hasErrors() && !this.hasValidationErrors();
+                hasValidationMessages: function hasValidationMessages() {
+                    return this.feedbackMessages.length > 0;
                 },
-                getData            : function () {
+                isSuccess            : function () {
+                    return this.success;
+                },
+                getData              : function () {
                     return lookupData(this.dataMap, arguments[0]);
                 },
-                getWizardData      : function () {
+                getWizardData        : function () {
                     return getScopeData(this.dataMap, scopes.WIZARD, arguments[0]);
                 },
-                getFormData        : function () {
+                getFormData          : function () {
                     return getScopeData(this.dataMap, scopes.FORM, arguments[0]);
                 },
-                getFormDataData    : function () {
+                getFormDataData      : function () {
                     return getScopeData(this.dataMap, scopes.FORM_DATA, arguments[0]);
                 },
-                getStepData        : function () {
+                getStepData          : function () {
                     return getScopeData(this.dataMap, scopes.STEP, arguments[0]);
                 },
-                getMessages        : function getMessages() {
+                getFeedbackMessages  : function getMessages() {
                     var local = [];
-                    angular.forEach(this.messages, function msgIt(msg) {
+                    angular.forEach(this.feedbackMessages, function msgIt(msg) {
                         local.push(new FeedbackMessage(msg));
                     });
                     return local;
                 },
-                getErrors          : function getErrors() {
+                getValidationMessages: function getValidationMessages() {
+                    var local = [];
+                    angular.forEach(this.validationMessages, function msgIt(msg) {
+                        local.push(new ValidationMessage(msg));
+                    });
+                    return local;
+                },
+                getBindingErrors     : function getBindingErrors() {
+                    return this.bindingErrors;
+                },
+                getErrors            : function getErrors() {
                     return this.errors;
+                },
+                getViolations        : function getViolations() {
+                    return {
+                        binding   : this.getBindingErrors(),
+                        validation: this.getValidationMessages(),
+                        errors    : this.getErrors(),
+                        messages  : this.getFeedbackMessages()
+                    }
+                },
+                getErrorsForPath     : function getErrorsForPath() {
+
                 }
             }
         });

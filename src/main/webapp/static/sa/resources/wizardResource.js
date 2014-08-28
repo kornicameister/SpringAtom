@@ -27,9 +27,8 @@ define(
         'jsface'
     ],
     function wizardResource(app, utils, WizardResult) {
-        var resource = function ($log, $http, $q, $state, $rootScope) {
-            var errorStateName = 'error',
-                urls = {
+        var resource = function ($log, $http, $q) {
+            var urls = {
                     init      : '/app/cmp/wiz/init/{key}',
                     stepInit  : '/app/cmp/wiz/init/{wizard}/step/{step}',
                     stepSubmit: '/app/cmp/wiz/submit/{wizard}/step/{key}',
@@ -51,31 +50,17 @@ define(
                     responseType     : 'json',
                     transformResponse: function (data) {
                         if (!data.success) {
-                            angular.extend($rootScope, {
-                                lastError: {
-                                    error  : data.error,
-                                    message: data.message
-                                }
-                            });
-                            $state.go(errorStateName, {
-                                component: 'wizard'
+                            return $q.reject({
+                                error  : data.error,
+                                message: data.message
                             });
                         } else {
                             var result = new WizardResult(data.content);
-                            if (result.hasErrors()) {
-                                angular.extend($rootScope, {
-                                    lastError: {
-                                        error: result.getErrors()
-                                    }
-                                });
-                                $state.go(errorStateName, {
-                                    component: 'wizard'
-                                });
-                            } else {
-                                return result;
+                            if (!result.isSuccess()) {
+                                return $q.reject(result.getViolations());
                             }
                         }
-                        return [];
+                        return result;
                     }
                 },
                 httpConf = {
@@ -175,6 +160,6 @@ define(
             }
         };
 
-        app.factory('wizardResource', ['$log', '$http', '$q', '$state', '$rootScope', resource]);
+        app.factory('wizardResource', ['$log', '$http', '$q', resource]);
     }
 );

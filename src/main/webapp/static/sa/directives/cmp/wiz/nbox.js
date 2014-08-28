@@ -21,9 +21,10 @@
 define(
     [
         'angular',
+        'underscore',
         'config/ext'
     ],
-    function header(angular) {
+    function header(angular, _) {
         var wizNBox = function wizBindErrorDirective($filter) {
             var severityIconMapping = {
                     'INFO'   : 'list-group-item-info',
@@ -59,26 +60,39 @@ define(
                         })
                     });
                     // sort by severity
-                    bindErrors = $filter('orderBy')(bindErrors, function _sort(a, b) {
+                    bindErrors = _.sortBy(bindErrors, function _sort(a, b) {
                         return a.weight > b.weight ? 1 : -1
                     });
                     return bindErrors;
                 },
-                link = function (scope, el, attrs) {
-                    var errors = scope.$eval(attrs['errors'] || []),
-                        messages = scope.$eval(attrs['messages'] || []);
-                    angular.forEach(errors, function (err) {
-                        messages.push({
-                            severity     : 'ERROR',
-                            text         : err['defaultMessage'],
-                            rejectedValue: err['rejectedValue']
+                link = function (scope) {
+                    var errors = scope.errors,
+                        messages = scope.messages;
+
+                    scope.bindErrors = [];
+
+                    scope.$watch('errors', function (arg) {
+                        var local = [];
+                        _.each(arg, function (err) {
+                            local.push({
+                                severity     : 'ERROR',
+                                text         : err['defaultMessage'],
+                                rejectedValue: err['rejectedValue']
+                            });
                         });
+                        scope.bindErrors = _.union(scope.bindErrors, createScopeMsg(local));
                     });
-                    scope.bindErrors = createScopeMsg(messages);
+                    scope.$watch('messages', function (msg) {
+                        scope.bindErrors = _.union(scope.bindErrors, createScopeMsg(msg));
+                    });
+
                 };
             return {
                 restrict   : 'E',
-                scope      : true,
+                scope: {
+                    errors  : '=',
+                    messages: '='
+                },
                 templateUrl: '/ui/wiz/nbox.jsp',
                 link       : link
             }
