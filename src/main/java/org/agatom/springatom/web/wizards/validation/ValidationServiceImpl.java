@@ -191,8 +191,7 @@ class ValidationServiceImpl
 
     private MessageContext validateGlobal(final Object validator, final ValidationBean validationBean) {
         final MessageContext messageContext = this.getMessageContext();
-        final Method validateMethod = ReflectionUtils.findMethod(validator.getClass(), "validate",
-                new Class[]{ValidationContext.class});
+        final Method validateMethod = this.findValidationMethod(validationBean.getCommandBean(), validator, "validate", ValidationContext.class);
         if (validateMethod != null) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Invoking default model validation method 'validate(ValidationContext)'");
