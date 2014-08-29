@@ -86,6 +86,11 @@ define(
                         scope.bindErrors = _.union(scope.bindErrors, createScopeMsg(msg));
                     });
 
+                    scope.closeNBOX = function ($event) {
+                        $event.preventDefault();
+                        scope.bindErrors = [];
+                    }
+
                 };
             return {
                 restrict   : 'E',
