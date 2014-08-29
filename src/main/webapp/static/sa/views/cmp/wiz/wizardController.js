@@ -22,7 +22,9 @@ define(
     [
         'angular',
         'utils',
-        'underscore'
+        'underscore',
+        // angular injections
+        'resources/wizardResource'
     ],
     function (angular, utils, _) {
         /**
@@ -43,8 +45,7 @@ define(
                                          dialogs,
                                          wizardResult,
                                          actions,
-                                         wizardKey,
-                                         wizardHandler) {
+                                         wizardKey, wizardHandler, wizardResource) {
             $log.debug('Entering wizardController');
 
             var exitState = $cookies.lastState,// retrieve state from which application entered wizard, for cancel action
@@ -100,7 +101,7 @@ define(
                     }
                 },
                 helpers = {
-                    setActiveStep      : function setActiveStep(step) {
+                    setActiveStep          : function setActiveStep(step) {
                         $log.debug('setActiveStep(step={s})'.format({s: step}));
                         if (!angular.isDefined(step)) {
                             var message = 'Can not set active step in scope, because step variable in not defined';
@@ -114,10 +115,17 @@ define(
                         $state.go(step);
                     },
                     /**
+                     * Returns currently selected step
+                     * @returns {*}
+                     */
+                    getActiveStep          : function getActiveStep() {
+                        return $scope.activeState;
+                    },
+                    /**
                      * Returns actions property of the current {@code $scope}
                      * @returns {*}
                      */
-                    getActions         : function () {
+                    getActions             : function () {
                         return $scope.actions;
                     },
                     /**
@@ -125,7 +133,7 @@ define(
                      * @param actionName action identifier
                      * @param visible true/false, true if enable the action
                      */
-                    setActionVisible   : function setActionVisible(actionName, visible) {
+                    setActionVisible       : function setActionVisible(actionName, visible) {
                         visible = angular.isUndefined(visible) ? true : visible;
                         var actions = helpers.getActions();
                         actions[actionMap[actionName]].visible = visible;
@@ -136,21 +144,21 @@ define(
                      * @returns {boolean} true if enabled
                      * @see helpers.setActionVisible(actionName,enabled)
                      */
-                    isActionVisible    : function isActionVisible(actionName) {
+                    isActionVisible        : function isActionVisible(actionName) {
                         var actions = helpers.getActions();
                         return actions[actionMap[actionName]].visible === true;
                     },
-                    setSiblingState    : function setSiblingState(dir) {
+                    setSiblingState        : function setSiblingState(dir) {
                         var currentStep = $scope.activeState,
                             index = stepsMap[currentStep],
                             nextStep = stepsMap[index + dir];
                         helpers.setActiveStep(nextStep);
                     },
-                    onSubmissionSuccess: function onSubmissionSuccess(wizardResult) {
+                    onSubmissionSuccess    : function onSubmissionSuccess(wizardResult) {
                         // Need to add analyzing the result and reacting upon
                         helpers.setSiblingState(dirs.NEXT);
                     },
-                    onSubmissionFailure: function onSubmissionFailure(errors) {
+                    onSubmissionFailure    : function onSubmissionFailure(errors) {
                         var bindingErrors, // to be shown in wizard
                             validationErrors; // to be shown in wizard
                         $scope.messages = undefined;
@@ -185,6 +193,9 @@ define(
                         }
 
                         return true;
+                    },
+                    getActiveStepParentFree: function getActiveStepParentFree() {
+                        return this.getActiveStep().replace(wizardKey + '.', '');
                     }
                 },
                 hooks = {
@@ -230,11 +241,11 @@ define(
                      */
                     next    : function nextStep($event) {
                         $event.preventDefault();
-                        wizardHandler.next({
-                            $scope : $scope,
-                            success: helpers.onSubmissionSuccess,
-                            failure: helpers.onSubmissionFailure
-                        });
+                        wizardResource.stepSubmit(
+                            wizardKey,
+                            helpers.getActiveStepParentFree(),
+                            wizardHandler.getStepFormData($scope, helpers.getActiveStep())
+                        ).then(helpers.onSubmissionSuccess, helpers.onSubmissionFailure);
                     },
                     previous: function previousStep($event) {
                         $event.preventDefault();

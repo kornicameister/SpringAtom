@@ -55,6 +55,8 @@ public class SVWizardController
     private static final   Logger                          LOGGER       = Logger.getLogger(SVWizardController.class);
     @Autowired
     private                Map<String, WizardProcessor<?>> processorMap = null;
+    @Autowired
+    private WizardFormDataConverter converter = null;
 
     public SVWizardController() {
         super(CTRL_NAME);
@@ -115,6 +117,7 @@ public class SVWizardController
     @RequestMapping(value = "/init/{wizard}/step/{step}", method = RequestMethod.GET)
     protected WizardSubmission onStepInit(@PathVariable("wizard") final String wizard, @PathVariable("step") final String step, final Locale locale) {
         LOGGER.debug(String.format("onStepInit(wizard=%s,step=%s,locale=%s)", wizard, step, locale));
+
         final long startTime = System.nanoTime();
 
         WizardSubmission submission = null;
@@ -153,7 +156,9 @@ public class SVWizardController
     @RequestMapping(value = "/submit/{key}")
     protected WizardSubmission onWizardSubmit(@PathVariable("key") final String key, @RequestBody final Map<String, Object> formData, final Locale locale) {
         LOGGER.debug(String.format("onWizardSubmit(key=%s,formData=%s)", key, formData));
+
         final long startTime = System.nanoTime();
+        final WizardFormData data = this.converter.convert(formData);
 
         WizardSubmission submission = null;
         WizardResult result = null;
@@ -161,7 +166,7 @@ public class SVWizardController
         try {
 
             final WizardProcessor<?> wizardProcessor = this.processorMap.get(key);
-            result = wizardProcessor.submit(formData, locale);
+            result = wizardProcessor.submit(data.asMap(), locale);
 
         } catch (Exception exp) {
             submission = (WizardSubmission) new WizardSubmission(null, Submission.SUBMIT).setError(exp).setSuccess(false).setSize(1);
@@ -184,7 +189,9 @@ public class SVWizardController
                                          @RequestBody final Map<String, Object> formData,
                                          final Locale locale) {
         LOGGER.debug(String.format("onStepSubmit(wizard=%s,step=%s,formData=%s)", wizard, step, formData));
+
         final long startTime = System.nanoTime();
+        final WizardFormData data = this.converter.convert(formData);
 
         WizardSubmission submission = null;
         WizardResult result = null;
@@ -192,7 +199,7 @@ public class SVWizardController
         try {
 
             final WizardProcessor<?> wizardProcessor = this.processorMap.get(wizard);
-            result = wizardProcessor.submitStep(step, formData, locale);
+            result = wizardProcessor.submitStep(step, data.asMap(), locale);
 
         } catch (Exception exp) {
             submission = (WizardSubmission) new WizardSubmission(null, Submission.SUBMIT_STEP).setError(exp).setSuccess(false).setSize(1);

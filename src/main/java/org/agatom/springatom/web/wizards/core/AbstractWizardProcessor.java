@@ -29,6 +29,7 @@ import org.springframework.core.GenericTypeResolver;
 import org.springframework.data.domain.Persistable;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Errors;
@@ -97,6 +98,48 @@ abstract public class AbstractWizardProcessor<T>
             LOGGER.error("Failed to build descriptor for wizard", exp);
             throw new SException(exp.getMessage(), exp);
         }
+
+        return result;
+    }
+
+    /**
+     * Returns {@link org.agatom.springatom.web.wizards.data.WizardDescriptor} that contain full definition
+     * of a step.
+     *
+     * @param locale current locale
+     *
+     * @return the descriptor
+     */
+    protected abstract WizardDescriptor getDescriptor(final Locale locale);
+
+    @Override
+    public final WizardResult initializeStep(final String step, final Locale locale) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("initializeStep(step=%s,locale=%s)", step, locale));
+        }
+
+        final long startTime = System.nanoTime();
+        final WizardResult result = new WizardResult().setWizardId(this.getWizardID()).setStepId(step);
+        result.addDebugData("locale", locale);
+
+        try {
+            final ModelMap modelMap = this.getStepInitData(step, locale);
+            if (!CollectionUtils.isEmpty(modelMap)) {
+                result.addStepData(modelMap);
+            } else {
+                LOGGER.trace(String.format("%s does not initialized step=%s", ClassUtils.getShortName(this.getClass()), step));
+            }
+        } catch (Exception exp) {
+            LOGGER.error(String.format("initializeStep(step=%s) has failed", step), exp);
+            result.addError(exp);
+        }
+
+        final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("initializeStep(step=%s,locale=%s) executed in %d ms", step, locale, endTime));
+        }
+
+        result.addDebugData("time", endTime);
 
         return result;
     }
@@ -202,15 +245,7 @@ abstract public class AbstractWizardProcessor<T>
         return message;
     }
 
-    /**
-     * Returns {@link org.agatom.springatom.web.wizards.data.WizardDescriptor} that contain full definition
-     * of a step.
-     *
-     * @param locale current locale
-     *
-     * @return the descriptor
-     */
-    protected abstract WizardDescriptor getDescriptor(final Locale locale);
+    protected abstract ModelMap getStepInitData(final String step, final Locale locale) throws Exception;
 
     protected OID getOID(final T contextObject) {
         final OID oid = new OID();
@@ -230,4 +265,11 @@ abstract public class AbstractWizardProcessor<T>
         ModelMap init(final Locale locale) throws Exception;
     }
 
+    protected abstract static class AbstractStepHelper
+            implements StepHelper {
+        @Override
+        public ModelMap init(final Locale locale) throws Exception {
+            return new ModelMap();
+        }
+    }
 }

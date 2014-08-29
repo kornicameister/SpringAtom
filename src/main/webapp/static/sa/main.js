@@ -44,8 +44,9 @@
                 'jsface'               : adjustPath('../libs/jsface/dist/jsface.all.min.js'),
                 'moment'               : adjustPath('../libs/moment/min/moment-with-langs.min.js'),
                 'ngGrid'               : adjustPath('../libs/ng-grid/build/ng-grid.min.js'),
-                'ngProgress': adjustPath('../libs/ngprogress/build/ngProgress.min.js'),
-                'underscore': adjustPath('../libs/underscore/underscore-min.js')
+                'ngProgress'           : adjustPath('../libs/ngprogress/build/ngProgress.min.js'),
+                'underscore'           : adjustPath('../libs/underscore/underscore-min.js'),
+                'ngMultiSelect'        : adjustPath('../libs/isteven-angular-multiselect/angular-multi-select.js')
             },
             priority: [
                 'angular'
@@ -121,6 +122,7 @@
                         'jquery'
                     ]
                 },
+                'ngMultiSelect'        : ['angular'],
                 'bProgressBar'         : ['bootstrap'],
                 'bJasny'               : ['bootstrap']
             }

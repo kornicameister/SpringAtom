@@ -32,6 +32,8 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.style.StylerUtils;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.DefaultMessageCodesResolver;
@@ -46,7 +48,7 @@ import java.util.Set;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-18</small>
  *
  * @author trebskit
- * @version 0.0.1
+ * @version 0.0.3
  * @since 0.0.1
  */
 abstract class AbstractWizardHandler {
@@ -67,7 +69,7 @@ abstract class AbstractWizardHandler {
         }
         this.doBind(binder, params);
 
-        final WizardResult localResult = new WizardResult().setStepId(step);
+        final WizardResult localResult = new WizardResult().setStepId(step).setWizardId(this.getWizardID());
 
         if ((this.isValidationEnabled() || this.isValidationEnabledForStep(step))) {
             // Do not validate if bindingErrors
@@ -93,9 +95,16 @@ abstract class AbstractWizardHandler {
         }
     }
 
+    protected String getWizardID() {
+        final String value = this.getWizardAnnotation().value();
+        if (!StringUtils.hasText(value)) {
+            return StringUtils.uncapitalize(ClassUtils.getShortName(this.getClass()));
+        }
+        return value;
+    }
+
     protected boolean isValidationEnabled() {
-        final Wizard annotation = AnnotationUtils.findAnnotation(this.getClass(), Wizard.class);
-        return annotation.validate();
+        return this.getWizardAnnotation().validate();
     }
 
     protected abstract boolean isValidationEnabledForStep(final String step);
@@ -130,6 +139,10 @@ abstract class AbstractWizardHandler {
             final short count = (short) (messages == null ? 0 : messages.size());
             LOGGER.debug(String.format("Validation completed, found %d validation errors", count));
         }
+    }
+
+    private Wizard getWizardAnnotation() {
+        return AnnotationUtils.findAnnotation(this.getClass(), Wizard.class);
     }
 
     protected String getContextObjectName() {

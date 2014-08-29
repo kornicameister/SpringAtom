@@ -23,21 +23,22 @@
         "tests"
     ],
     "dependencies": {
-        "bootstrap"             : "latest",
-        "ng-grid"               : "latest",
-        "angular-bootstrap"     : "latest",
-        "angular-ui-router"     : "latest",
-        "angular-ui-calendar"   : "latest",
-        "angular-animate"       : "latest",
-        "angular-moment"        : "latest",
-        "angular-cookies"       : "latest",
-        "angular-dialog-service": "latest",
-        "jasny-bootstrap"       : "latest",
-        "jsface"                : "latest",
-        "animate.css"           : "latest",
-        "normalize-css"         : "latest",
-        "ngprogress"            : "latest",
-        "underscore"            : "latest"
+        "bootstrap"                  : "latest",
+        "ng-grid"                    : "latest",
+        "angular-bootstrap"          : "latest",
+        "angular-ui-router"          : "latest",
+        "angular-ui-calendar"        : "latest",
+        "angular-animate"            : "latest",
+        "angular-moment"             : "latest",
+        "angular-cookies"            : "latest",
+        "angular-dialog-service"     : "latest",
+        "jasny-bootstrap"            : "latest",
+        "jsface"                     : "latest",
+        "animate.css"                : "latest",
+        "normalize-css"              : "latest",
+        "ngprogress"                 : "latest",
+        "underscore"                 : "latest",
+        "isteven-angular-multiselect": "latest"
     },
     "resolutions" : {
         "jquery": "~2.x"

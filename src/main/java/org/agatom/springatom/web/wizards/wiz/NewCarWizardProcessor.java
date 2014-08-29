@@ -54,7 +54,7 @@ import java.util.*;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
  *
  * @author trebskit
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @Wizard("newCar")
@@ -141,38 +141,6 @@ class NewCarWizardProcessor
     }
 
     @Override
-    protected SCar getContextObject() throws Exception {
-        final SCar car = super.getContextObject();
-        car.setCarMaster(new SCarMaster());
-        return car;
-    }
-
-    @Override
-    protected WizardResult submitWizard(SCar contextObject, final Map<String, Object> stepData, final Locale locale) throws Exception {
-        final SCarMaster carMaster = contextObject.getCarMaster();
-        carMaster.setManufacturedIn(CountryCode.valueOf((String) stepData.get("manufacturedIn")));
-        contextObject = this.carService.save(contextObject);
-
-        final WizardResult result = new WizardResult()
-                .setWizardId("newCar");
-
-        result.setOid(this.getOID(contextObject));
-        result.addFeedbackMessage(
-                FeedbackMessage
-                        .newInfo()
-                        .setMessage(
-                                this.messageSource.getMessage(
-                                        "sa.msg.objectCreated",
-                                        new Object[]{this.messageSource.getMessage("scar", locale)},
-                                        locale
-                                )
-                        )
-        );
-
-        return result;
-    }
-
-    @Override
     protected WizardDescriptor getDescriptor(final Locale locale) {
         LOGGER.debug(String.format("getDescriptor(locale=%s)", locale));
         final WizardDescriptor descriptor = new WizardDescriptor();
@@ -206,12 +174,40 @@ class NewCarWizardProcessor
     }
 
     @Override
-    public WizardResult initializeStep(final String step, final Locale locale) {
-        final ModelMap modelMap = new ModelMap();
+    protected SCar getContextObject() throws Exception {
+        final SCar car = super.getContextObject();
+        car.setCarMaster(new SCarMaster());
+        return car;
+    }
+
+    @Override
+    protected WizardResult submitWizard(SCar contextObject, final Map<String, Object> stepData, final Locale locale) throws Exception {
+        final SCarMaster carMaster = contextObject.getCarMaster();
+        carMaster.setManufacturedIn(CountryCode.valueOf((String) stepData.get("manufacturedIn")));
+        contextObject = this.carService.save(contextObject);
 
         final WizardResult result = new WizardResult()
-                .setStepId(step)
                 .setWizardId("newCar");
+
+        result.setOid(this.getOID(contextObject));
+        result.addFeedbackMessage(
+                FeedbackMessage
+                        .newInfo()
+                        .setMessage(
+                                this.messageSource.getMessage(
+                                        "sa.msg.objectCreated",
+                                        new Object[]{this.messageSource.getMessage("scar", locale)},
+                                        locale
+                                )
+                        )
+        );
+
+        return result;
+    }
+
+    @Override
+    protected ModelMap getStepInitData(final String step, final Locale locale) {
+        final ModelMap modelMap = new ModelMap();
 
         switch (step) {
             case "car":
@@ -221,7 +217,7 @@ class NewCarWizardProcessor
                 modelMap.addAllAttributes(this.initializeOwnerStep());
         }
 
-        return result.addWizardData(modelMap);
+        return modelMap;
     }
 
     private Map<String, Object> initializeCarStep(final Locale locale) {

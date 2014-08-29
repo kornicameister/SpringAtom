@@ -54,7 +54,7 @@ import java.util.*;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
  *
  * @author trebskit
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @Wizard(value = NewAppointmentWizardProcessor.WIZARD_ID, validate = true)
@@ -134,6 +134,20 @@ class NewAppointmentWizardProcessor
     }
 
     @Override
+    protected WizardDescriptor getDescriptor(final Locale locale) {
+        LOGGER.debug(String.format("getDescriptor(locale=%s)", locale));
+
+        final WizardDescriptor descriptor = new WizardDescriptor();
+
+        descriptor.setLabel(this.messageSource.getMessage("sappointment", locale));
+        descriptor.addStep(this.steps.DEFINITION.getDescriptor(locale));
+        descriptor.addStep(this.steps.TASKS.getDescriptor(locale));
+        descriptor.addStep(this.steps.COMMENT.getDescriptor(locale));
+
+        return descriptor;
+    }
+
+    @Override
     protected WizardResult submitWizard(SAppointment contextObject, final Map<String, Object> stepData, final Locale locale) throws Exception {
         final WizardResult result = new WizardResult()
                 .setWizardId("newAppointment");
@@ -196,43 +210,20 @@ class NewAppointmentWizardProcessor
     }
 
     @Override
-    protected WizardDescriptor getDescriptor(final Locale locale) {
-        LOGGER.debug(String.format("getDescriptor(locale=%s)", locale));
-
-        final WizardDescriptor descriptor = new WizardDescriptor();
-
-        descriptor.setLabel(this.messageSource.getMessage("sappointment", locale));
-        descriptor.addStep(this.steps.DEFINITION.getDescriptor(locale));
-        descriptor.addStep(this.steps.TASKS.getDescriptor(locale));
-        descriptor.addStep(this.steps.COMMENT.getDescriptor(locale));
-
-        return descriptor;
-    }
-
-    @Override
-    public WizardResult initializeStep(final String step, final Locale locale) {
+    protected ModelMap getStepInitData(final String step, final Locale locale) throws Exception {
         LOGGER.debug(String.format("initializeStep(step=%s, locale=%s)", step, locale));
         final ModelMap modelMap = new ModelMap();
 
-        final WizardResult result = new WizardResult()
-                .setStepId(step)
-                .setWizardId(WIZARD_ID);
-        try {
-            switch (step) {
-                case "definition":
-                    modelMap.putAll(this.steps.DEFINITION.init(locale));
-                    break;
-                case "tasks":
-                    modelMap.putAll(this.steps.TASKS.init(locale));
-                    break;
-            }
-        } catch (Exception exp) {
-            result.addError(exp);
-            result.addFeedbackMessage(FeedbackMessage.newError().setMessage(exp.getLocalizedMessage()));
-            return result;
+        switch (step) {
+            case "definition":
+                modelMap.putAll(this.steps.DEFINITION.init(locale));
+                break;
+            case "tasks":
+                modelMap.putAll(this.steps.TASKS.init(locale));
+                break;
         }
 
-        return result.addStepData(modelMap);
+        return modelMap;
     }
 
     /**

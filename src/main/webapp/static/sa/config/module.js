@@ -33,7 +33,8 @@ define(
         'angular-moment',
         'bProgressBar',
         'bJasny',
-        'ngProgress'
+        'ngProgress',
+        'ngMultiSelect'
     ],
     function (angular, utils) {
         var appName = 'springatom',
@@ -48,7 +49,8 @@ define(
                 'dialogs.default-translations',
                 'pascalprecht.translate',
                 'angularMoment',
-                'ngProgress'
+                'ngProgress',
+                'multi-select'
             ],
             module = angular.module(appName, dependencies),
             generalConf = function configureApp($httpProvider) {

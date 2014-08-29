@@ -15,20 +15,18 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizards.wizard.newUser;
+package org.agatom.springatom.web.wizards.wiz.validator;
 
 import org.agatom.springatom.server.model.beans.person.SPerson;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.service.domain.SPersonService;
 import org.agatom.springatom.server.service.domain.SUserService;
+import org.agatom.springatom.web.wizards.validation.annotation.WizardValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Role;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.regex.Matcher;
@@ -41,8 +39,7 @@ import java.util.regex.Pattern;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Lazy(value = false)
-@Role(BeanDefinition.ROLE_SUPPORT)
+@WizardValidator
 public class UserValidator {
     private static final Logger         LOGGER         = Logger.getLogger(UserValidator.class);
     private static final String         PASSWORD_REGEX = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})";
@@ -63,7 +60,7 @@ public class UserValidator {
      * @param user    {@link org.agatom.springatom.server.model.beans.user.SUser} to validate
      * @param context current {@link org.springframework.binding.validation.ValidationContext}
      */
-    public void validateDefinition(final SUser user, final ValidationContext context) {
+    public void validateCredentials(final SUser user, final ValidationContext context) {
         LOGGER.info(String.format("validateStep1(user=%s,context=%s)", user, context));
 
         final MessageContext messageContext = context.getMessageContext();

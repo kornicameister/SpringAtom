@@ -14,22 +14,25 @@
   ~ You should have received a copy of the GNU General Public License                             ~
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-<groups xmlns="http://www.isdc.ro/wro">
 
-    <group name="css-libs">
-        <css>/app/static/libs/normalize-css/normalize.css</css>
-        <css>/app/static/libs/angular/angular-csp.css</css>
-        <css>/app/static/libs/fullcalendar/fullcalendar.css</css>
-        <css>/app/static/libs/jasny-bootstrap/dist/css/jasny-bootstrap.min.css</css>
-        <css>/app/static/libs/animate.css/animate.min.css</css>
-        <css>/app/static/libs/angular-dialog-service/dialogs.min.css</css>
-        <css>/app/static/libs/ngprogress/ngProgress.css</css>
-        <css>/app/static/libs/isteven-angular-multiselect/angular-multi-select.css</css>
-    </group>
-    <group name="css-files">
-        <css>/app/static/css/core.css</css>
-        <css>/app/static/css/infopages.css</css>
-        <css>/app/static/css/wiz.css</css>
-    </group>
+<div class="form-group">
+    <label class="col-sm-2 control-label">
+        <span>{{labels.authorities}}</span>
+    </label>
 
-</groups>
+    <div class="col-sm-9">
+        <multi-select
+                button-label="icon label"
+                item-label="icon label"
+                tick-property="ticked"
+                orientation="vertical"
+                selection-mode="multiple"
+                helper-elements="all none filter reset"
+                default-label="{{extraLabels.selectOnePlease}}"
+                output-model="selectedAuthorities"
+                group-property="isGroup"
+                on-close="onCloseCallback(selectedAuthorities)"
+                input-model="authorities">
+        </multi-select>
+    </div>
+</div>
