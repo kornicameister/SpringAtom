@@ -114,6 +114,7 @@ class ValidationServiceImpl
             }
 
             partialResult = this.applyMessages(messageContext, partialResult);
+            partialResult.addDebugData("validator", ClassUtils.getShortName(validator.getClass()));
             validationBean.setPartialResult(partialResult);
         }
 

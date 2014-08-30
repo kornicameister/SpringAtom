@@ -60,15 +60,12 @@ define(
                                     case 'firstname':
                                     case 'lastname':
                                     case 'primarymail':
-                                        if (_.isUndefined(local.person)) {
-                                            local.person = {};
-                                        }
                                         if (key === 'firstname') {
-                                            local.person.firstName = dataForKey;
+                                            local['person.firstName'] = dataForKey;
                                         } else if (key === 'lastname') {
-                                            local.person.lastName = dataForKey;
+                                            local['person.lastName'] = dataForKey;
                                         } else if (key === 'primarymail') {
-                                            local.person.primaryMail = dataForKey;
+                                            local['person.primaryMail'] = dataForKey;
                                         }
                                         break;
                                     default:
@@ -78,18 +75,22 @@ define(
                             return local;
                         },
                         'newUser.authorities': function (data) {
-                            return data.authorities;
+                            return {
+                                authorities: data.authorities
+                            };
                         },
                         'newUser.contacts'   : function (data) {
                             var local = [];
-                            data = data.contact;
+                            data = data.contacts;
                             _.each(data, function (contact) {
                                 local.push({
                                     contact: contact.contact,
                                     type   : contact.type.value
                                 })
                             });
-                            return local;
+                            return {
+                                'person.contacts': local
+                            };
                         }
                     },
                     getFormData = function getFormData() {

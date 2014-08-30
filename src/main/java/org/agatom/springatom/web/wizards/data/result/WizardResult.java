@@ -303,7 +303,14 @@ public class WizardResult
     }
 
     public WizardResult setDebugData(final ModelMap debugData) {
-        this.debugData = debugData;
+        if (CollectionUtils.isEmpty(debugData)) {
+            return this;
+        }
+        if (this.debugData == null) {
+            this.debugData = debugData;
+        } else {
+            this.debugData.putAll(debugData);
+        }
         return this;
     }
 

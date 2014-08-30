@@ -43,6 +43,7 @@ import org.springframework.web.bind.WebDataBinder;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-18</small>
@@ -67,9 +68,22 @@ abstract class AbstractWizardHandler {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Executing bind");
         }
-        this.doBind(binder, params);
 
         final WizardResult localResult = new WizardResult().setStepId(step).setWizardId(this.getWizardID());
+        final long startTime = System.nanoTime();
+
+        try {
+            this.doBind(binder, params);
+        } catch (Exception exp) {
+            LOGGER.error("Binding error detected", exp);
+            localResult.addError(exp);
+        }
+
+        final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+
+        localResult.addDebugData("bindingTime", endTime);
+        localResult.addDebugData("stepBinding", StringUtils.hasText(step));
+        localResult.addDebugData("dataSize", params.size());
 
         if ((this.isValidationEnabled() || this.isValidationEnabledForStep(step))) {
             // Do not validate if bindingErrors
@@ -77,6 +91,14 @@ abstract class AbstractWizardHandler {
         }
 
         return localResult;
+    }
+
+    protected String getWizardID() {
+        final String value = this.getWizardAnnotation().value();
+        if (!StringUtils.hasText(value)) {
+            return StringUtils.uncapitalize(ClassUtils.getShortName(this.getClass()));
+        }
+        return value;
     }
 
     private void doBind(final DataBinder binder, Map<String, Object> params) throws Exception {
@@ -93,14 +115,6 @@ abstract class AbstractWizardHandler {
             LOGGER.debug(String.format("Binding completed for form object with name '%s', post-bind formObject toString = %s", binder.getObjectName(), binder.getTarget()));
             LOGGER.debug(String.format("There are [%d] errors, details: %s", binder.getBindingResult().getErrorCount(), binder.getBindingResult().getAllErrors()));
         }
-    }
-
-    protected String getWizardID() {
-        final String value = this.getWizardAnnotation().value();
-        if (!StringUtils.hasText(value)) {
-            return StringUtils.uncapitalize(ClassUtils.getShortName(this.getClass()));
-        }
-        return value;
     }
 
     protected boolean isValidationEnabled() {

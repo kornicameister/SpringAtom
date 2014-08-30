@@ -26,6 +26,7 @@ import org.agatom.springatom.web.wizards.data.result.FeedbackMessage;
 import org.agatom.springatom.web.wizards.data.result.WizardResult;
 import org.apache.log4j.Logger;
 import org.springframework.core.GenericTypeResolver;
+import org.springframework.core.convert.converter.ConditionalConverter;
 import org.springframework.data.domain.Persistable;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ClassUtils;
@@ -155,6 +156,8 @@ abstract public class AbstractWizardProcessor<T>
     public WizardResult submitStep(final String step, final Map<String, Object> stepData, final Locale locale) throws Exception {
         LOGGER.debug(String.format("submitStep(step=%s, stepData=%s)", step, stepData));
 
+        final long startTime = System.nanoTime();
+
         T contextObject = this.getContextObject();
         DataBinder binder = this.createBinder(contextObject);
 
@@ -186,6 +189,14 @@ abstract public class AbstractWizardProcessor<T>
                 result.addBindingError(objectError);
             }
         }
+
+        final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("submitStep(step=%s, stepData=%s) executed in %d ms", step, stepData, endTime));
+        }
+
+        result.addDebugData("totalTime", endTime);
+        result.addDebugData("processor", ClassUtils.getShortName(this.getClass()));
 
         // collect garbage
         binder = null;
@@ -271,5 +282,9 @@ abstract public class AbstractWizardProcessor<T>
         public ModelMap init(final Locale locale) throws Exception {
             return new ModelMap();
         }
+    }
+
+    protected abstract static class MatcherConverter
+            implements ConditionalConverter {
     }
 }

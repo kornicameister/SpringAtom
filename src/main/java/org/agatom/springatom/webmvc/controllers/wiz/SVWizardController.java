@@ -55,8 +55,6 @@ public class SVWizardController
     private static final   Logger                          LOGGER       = Logger.getLogger(SVWizardController.class);
     @Autowired
     private                Map<String, WizardProcessor<?>> processorMap = null;
-    @Autowired
-    private WizardFormDataConverter converter = null;
 
     public SVWizardController() {
         super(CTRL_NAME);
@@ -158,7 +156,6 @@ public class SVWizardController
         LOGGER.debug(String.format("onWizardSubmit(key=%s,formData=%s)", key, formData));
 
         final long startTime = System.nanoTime();
-        final WizardFormData data = this.converter.convert(formData);
 
         WizardSubmission submission = null;
         WizardResult result = null;
@@ -166,7 +163,7 @@ public class SVWizardController
         try {
 
             final WizardProcessor<?> wizardProcessor = this.processorMap.get(key);
-            result = wizardProcessor.submit(data.asMap(), locale);
+            result = wizardProcessor.submit(formData, locale);
 
         } catch (Exception exp) {
             submission = (WizardSubmission) new WizardSubmission(null, Submission.SUBMIT).setError(exp).setSuccess(false).setSize(1);
@@ -191,7 +188,6 @@ public class SVWizardController
         LOGGER.debug(String.format("onStepSubmit(wizard=%s,step=%s,formData=%s)", wizard, step, formData));
 
         final long startTime = System.nanoTime();
-        final WizardFormData data = this.converter.convert(formData);
 
         WizardSubmission submission = null;
         WizardResult result = null;
@@ -199,7 +195,7 @@ public class SVWizardController
         try {
 
             final WizardProcessor<?> wizardProcessor = this.processorMap.get(wizard);
-            result = wizardProcessor.submitStep(step, data.asMap(), locale);
+            result = wizardProcessor.submitStep(step, formData, locale);
 
         } catch (Exception exp) {
             submission = (WizardSubmission) new WizardSubmission(null, Submission.SUBMIT_STEP).setError(exp).setSuccess(false).setSize(1);

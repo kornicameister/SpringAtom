@@ -18,12 +18,16 @@
 package org.agatom.springatom.web.wizards.wiz;
 
 import com.google.common.base.Function;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.agatom.springatom.server.model.beans.person.SPersonContact;
 import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.beans.user.authority.SAuthority;
 import org.agatom.springatom.server.model.types.contact.ContactType;
 import org.agatom.springatom.server.model.types.user.SRole;
+import org.agatom.springatom.server.service.domain.SUserService;
 import org.agatom.springatom.web.component.ComponentCompilationException;
 import org.agatom.springatom.web.component.select.SelectComponent;
 import org.agatom.springatom.web.component.select.factory.SelectComponentFactory;
@@ -31,21 +35,26 @@ import org.agatom.springatom.web.wizards.Wizard;
 import org.agatom.springatom.web.wizards.core.AbstractWizardProcessor;
 import org.agatom.springatom.web.wizards.data.WizardDescriptor;
 import org.agatom.springatom.web.wizards.data.WizardStepDescriptor;
+import org.agatom.springatom.web.wizards.data.result.FeedbackMessage;
 import org.agatom.springatom.web.wizards.data.result.WizardResult;
 import org.apache.log4j.Logger;
+import org.springframework.beans.PropertyValuesEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.convert.converters.StringToEnum;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.DataBinder;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -53,7 +62,7 @@ import java.util.*;
  * </p>
  *
  * @author trebskit
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
 @Wizard(value = "newUser", validate = true)
@@ -64,6 +73,8 @@ public class NewUserWizardProcessor
     private final        StepsDefinitionHolder  steps                  = new StepsDefinitionHolder();
     @Autowired
     private              SelectComponentFactory selectComponentFactory = null;
+    @Autowired
+    private SUserService userService = null;
 
     @Override
     protected WizardDescriptor getDescriptor(final Locale locale) {
@@ -80,8 +91,35 @@ public class NewUserWizardProcessor
     }
 
     @Override
-    protected WizardResult submitWizard(final SUser contextObject, final Map<String, Object> stepData, final Locale locale) throws Exception {
-        return null;
+    protected WizardResult submitWizard(SUser contextObject, final Map<String, Object> stepData, final Locale locale) throws Exception {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("submitWizard(contextObject=%s)", contextObject));
+        }
+        final long startTime = System.nanoTime();
+        final WizardResult result = new WizardResult()
+                .setWizardId(this.getWizardID());
+
+        try {
+            contextObject = this.userService.registerNewUser(contextObject);
+            result.setOid(this.getOID(contextObject));
+        } catch (Exception exp) {
+            result.addError(Throwables.getRootCause(exp));
+            result.addFeedbackMessage(
+                    FeedbackMessage
+                            .newError()
+                            .setMessage(
+                                    this.messageSource.getMessage("newUser.user.registrationFailed",
+                                            new Object[]{contextObject.getUsername(), exp.getMessage()}, locale)
+                            )
+            );
+        }
+
+        final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("submitWizard(contextObject=%s) took %d ms", contextObject, endTime));
+        }
+        result.addDebugData("submissionTime", endTime);
+        return result;
     }
 
     @Override
@@ -109,6 +147,56 @@ public class NewUserWizardProcessor
     @Override
     protected String getContextObjectName() {
         return FORM_OBJECT_NAME;
+    }
+
+    @Override
+    protected DataBinder createBinder(final Object contextObject, final String contextObjectName) {
+        final DataBinder binder = super.createBinder(contextObject, contextObjectName);
+        final StringToEnum stringToEnum = new StringToEnum();
+        binder.registerCustomEditor(Set.class, "authorities", new PropertyValuesEditor() {
+
+            @Override
+            public Object getValue() {
+                final List<?> list = (List<?>) super.getValue();
+                final Set<GrantedAuthority> authorities = Sets.newHashSet();
+                for (final Object rawRole : list) {
+                    final String role = (String) rawRole;
+                    try {
+                        final SRole sRole = (SRole) stringToEnum.convertSourceToTargetClass(role, SRole.class);
+                        final SAuthority sAuthority = new SAuthority();
+                        sAuthority.setRole(sRole);
+                        authorities.add(sAuthority);
+                        LOGGER.trace(String.format("Resolved authority from %s to %s", sRole, sAuthority));
+                    } catch (Exception e) {
+                        Logger.getLogger(this.getClass()).error("PropertyValuesEditor failed", e);
+                    }
+                }
+                return authorities;
+            }
+
+        });
+        binder.registerCustomEditor(List.class, "person.contacts", new PropertyValuesEditor() {
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public Object getValue() {
+                final List<?> value = (List<?>) super.getValue();
+                final List<SPersonContact> contacts = Lists.newArrayList();
+                for (Object map : value) {
+                    try {
+                        final Map<String, String> roleAsMap = (Map<String, String>) map;
+                        final SPersonContact contact = new SPersonContact();
+                        contact.setContact(roleAsMap.get("contact"));
+                        contact.setType((ContactType) stringToEnum.convertSourceToTargetClass(roleAsMap.get("type".toUpperCase()), ContactType.class));
+                        contacts.add(contact);
+                    } catch (Exception exp) {
+                        Logger.getLogger(this.getClass()).error("PropertyValuesEditor failed", exp);
+                    }
+                }
+                return contacts;
+            }
+        });
+        return binder;
     }
 
     private class StepsDefinitionHolder {
