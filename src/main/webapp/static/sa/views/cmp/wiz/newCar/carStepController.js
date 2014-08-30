@@ -28,10 +28,10 @@ define(
         var carStepController = function carStepController($scope, $log, $filter, brandModelDialog, carStepData) {
             var initData = carStepData,
                 getFuelTypes = function getFuelTypes() {
-                    return initData.getData('fuelTypes');
+                    return initData.getStepData('fuelTypes');
                 },
                 getCarMasters = function getCarMasters() {
-                    return initData.getData('carMasters');
+                    return initData.getStepData('carMasters');
                 },
                 hooks = {
                     /**

@@ -23,17 +23,59 @@ define(
         'config/module',
         'utils',
         'services/cmp/wiz/wizardService',
-        'moment',
-        // angular injections
-        'resources/wizardResource',
-        'resources/vinNumberResource'
+        'moment'
     ],
     function newCar(app, utils, wizService, moment) {
         var mainName = 'newCar',
-            newCarService = function newCarService($log, wizardResource, vinNumberResource) {
+            newCarService = function newCarService($log) {
                 var vinState = wizService.getState(mainName, 'vin'),
                     carState = wizService.getState(mainName, 'car'),
                     ownerState = wizService.getState(mainName, 'owner'),
+                    formDataKeysPerStep = {
+                        'newCar.vin'  : [
+                            'vinNumber'
+                        ],
+                        'newCar.car'  : [
+                            'carMaster',
+                            'licencePlate',
+                            'fuelType',
+                            'yearOfProduction'
+                        ],
+                        'newCar.owner': [
+                            'owner'
+                        ]
+                    },
+                    adjusters = {
+                        'newCar.car'  : function (data) {
+                            var keys = _.keys(data),
+                                stepKeys = formDataKeysPerStep[carState],
+                                local = {};
+                            keys = _.intersection(stepKeys, keys);
+                            _.each(keys, function keyIt(key) {
+                                var dataForKey = data[key];
+                                if (key === 'carMaster' && dataForKey.value === -1) {
+                                    var split = data.label.split(' ');
+                                    local['brand'] = split[0];
+                                    local['model'] = split[1];
+                                } else if (key === 'yearOfProduction' || key === 'fuelType' || key === 'carMaster') {
+                                    local[key] = data.value;
+                                } else {
+                                    local[key] = dataForKey;
+                                }
+                            });
+                            return local;
+                        },
+                        'newCar.vin'  : function (data) {
+                            return {
+                                vinNumber: data['vinNumber']
+                            };
+                        },
+                        'newCar.owner': function (data) {
+                            return {
+                                owner: data['owner'].value
+                            }
+                        }
+                    },
                     getFormData = function getFormData() {
                         return {
                             vinNumber       : '',
@@ -76,80 +118,29 @@ define(
                         }
                         return enabled;
                     },
-                    next = function next(conf) {
-
-                        var state = conf.$scope.activeState,
-                            form = conf.$scope['wizardForm'],
-                            successCallback = conf.success,
-                            failureCallback = conf.failure;
-
-                        if (state === vinState) {
-                            vinNumberResource.decode(form.vinNumber.$modelValue).then(
-                                function onDecodeSuccess(data) {
-                                    angular.extend(conf.$scope, {
-                                        years: (function toNgOption(years) {
-                                            var obj = [];
-                                            angular.forEach(years, function (year) {
-                                                obj.push({
-                                                    label: year,
-                                                    value: year
-                                                });
-                                            });
-                                            return obj;
-                                        }(data.years))
-                                    });
-                                    angular.extend(conf.$scope.formData, {
-                                        manufacturedIn: data.manufacturedIn
-                                    });
-                                    successCallback.call(this);
-                                },
-                                function onDecodeError(data) {
-                                    failureCallback.call(this, data);
-                                }
-                            );
-                        } else {
-                            successCallback.call(this);
-                        }
-
+                    getStepSubmissionData = function getStepSubmissionData($scope, activeStep) {
+                        var data = {},
+                            formData = $scope.formData;
+                        _.extend(data, adjusters[activeStep](formData));
+                        return data;
                     },
-                    submit = function submit(conf) {
-                        var successCallback = conf.success,
-                            failureCallback = conf.failure,
-                            /**
-                             * Cleans up the data package. It is required to do, due to
-                             * data binding requirements defined on server side which automatically
-                             * binds properties to context object of a single form's context object
-                             * @param data raw data
-                             * @returns {*} cleaned up data
-                             */
-                            clearData = function clearData(data) {
-                                var localData = {};
-                                angular.forEach(data, function (chunk, key) {
-                                    if (key === 'carMaster' && chunk.value === -1) {
-                                        var split = chunk.label.split(' ');
-                                        localData['brand'] = split[0];
-                                        localData['model'] = split[1];
-                                    } else if (key === 'yearOfProduction' || key === 'fuelType' || key === 'owner' || key === 'carMaster') {
-                                        localData[key] = chunk.value;
-                                    } else {
-                                        localData[key] = chunk;
-                                    }
-                                });
-                                return localData;
-                            };
-                        wizardResource
-                            .submit(mainName, clearData(conf.$scope.formData))
-                            .then(successCallback, failureCallback);
+                    getSubmissionData = function getSubmissionData($scope) {
+                        var localData = {},
+                            formData = $scope.formData;
+                        _.extend(localData, adjusters[vinState](formData));
+                        _.extend(localData, adjusters[carState](formData));
+                        _.extend(localData, adjusters[ownerState](formData));
+                        return localData;
                     };
 
                 return wizService.getProvider({
-                    getFormData    : getFormData,
-                    isActionEnabled: isActionEnabled,
-                    next           : next,
-                    submit         : submit
+                    getFormData          : getFormData,
+                    getStepSubmissionData: getStepSubmissionData,
+                    isActionEnabled      : isActionEnabled,
+                    getSubmissionData    : getSubmissionData
                 });
             };
 
-        app.factory(mainName, ['$log', 'wizardResource', 'vinNumberResource', newCarService]);
+        app.factory(mainName, ['$log', newCarService]);
     }
 );

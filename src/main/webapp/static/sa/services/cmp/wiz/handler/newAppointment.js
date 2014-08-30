@@ -22,17 +22,71 @@ define(
     [
         'config/module',
         'utils',
-        'services/cmp/wiz/wizardService',
-        'moment',
-        // angular injections
-        'resources/wizardResource'
+        'services/cmp/wiz/wizardService'
     ],
-    function newCar(app, utils, wizService, moment) {
+    function newCar(app, utils, wizService) {
         var mainName = 'newAppointment',
-            newAppointmentService = function newAppointmentService($log, wizardResource) {
+            newAppointmentService = function newAppointmentService() {
                 var defineState = wizService.getState(mainName, 'definition'),
                     tasksState = wizService.getState(mainName, 'tasks'),
-                    onwerState = wizService.getState(mainName, 'comment'),
+                    commentState = wizService.getState(mainName, 'comment'),
+                    formDataKeysPerStep = {
+                        'newAppointment.definition': [
+                            'beginDate',
+                            'beginTime',
+                            'endDate',
+                            'endTime',
+                            'reporter',
+                            'assignee',
+                            'car'
+                        ],
+                        'newAppointment.tasks'     : [
+                            'tasks'
+                        ],
+                        'newAppointment.comment'   : [
+                            'comment'
+                        ]
+                    },
+                    adjusters = {
+                        'newAppointment.definition': function (data) {
+                            var keys = _.keys(data),
+                                stepKeys = formDataKeysPerStep[defineState],
+                                localData = {};
+                            keys = _.intersection(stepKeys, keys);
+                            _.each(keys, function keyIt(key) {
+                                var chunk = data[key];
+                                switch (key) {
+                                    case 'assignee':
+                                    case 'reporter':
+                                    case 'car':
+                                    case 'owner':
+                                        localData[key] = chunk.value;
+                                        break;
+                                    default :
+                                        localData[key] = chunk;
+                                }
+                            });
+                            return localData;
+                        },
+                        'newAppointment.comment'   : function (data) {
+                            return {
+                                comment: data.comment
+                            };
+                        },
+                        'newAppointment.tasks'     : function (data) {
+                            var local = [];
+                            data = data.tasks;
+                            _.each(data, function (task) {
+                                local.push({
+                                    contact: task.task,
+                                    type   : task.type.value
+                                })
+                            });
+                            return {
+                                'tasks': local
+                            };
+                        }
+                    },
                     getFormData = function getFormData() {
                         var date = new Date().dt;
                         return {
@@ -55,80 +109,29 @@ define(
                     isActionEnabled = function isActionEnabled(action, currentStep, wizardForm) {
                         return true;
                     },
-                    next = function next(conf) {
-                        var state = conf.$scope.activeState,
-                            form = conf.$scope['wizardForm'],
-                            successCallback = conf.success,
-                            failureCallback = conf.failure;
-
-                        if (state === defineState) {
-                            wizardResource
-                                .stepSubmit(mainName, 'definition', {
-                                    beginDate: form.beginDate.$modelValue,
-                                    beginTime: form.beginTime.$modelValue,
-                                    endDate  : form.endDate.$modelValue,
-                                    endTime  : form.endTime.$modelValue,
-                                    reporter : form.reporter.$modelValue.value,
-                                    assignee : form.assignee.$modelValue.value,
-                                    car      : form.car.$modelValue.value
-                                })
-                                .then(successCallback, failureCallback);
-                        } else {
-                            successCallback.call(this);
-                        }
-
+                    getStepSubmissionData = function getStepSubmissionData($scope, activeStep) {
+                        var data = {},
+                            formData = $scope.formData;
+                        _.extend(data, adjusters[activeStep](formData));
+                        return data;
                     },
-                    submit = function submit(conf) {
-                        var successCallback = conf.success,
-                            failureCallback = conf.failure,
-                            /**
-                             * Cleans up the data package. It is required to do, due to
-                             * data binding requirements defined on server side which automatically
-                             * binds properties to context object of a single form's context object
-                             * @param data raw data
-                             * @returns {*} cleaned up data
-                             */
-                            clearData = function clearData(data) {
-                                var localData = {};
-                                angular.forEach(data, function (chunk, key) {
-                                    switch (key) {
-                                        case 'assignee':
-                                        case 'reporter':
-                                        case 'car':
-                                        case 'owner':
-                                            localData[key] = chunk.value;
-                                            break;
-                                        case 'tasks':
-                                        {
-                                            var tasks = [];
-                                            angular.forEach(chunk, function tIt(val) {
-                                                tasks.push({
-                                                    task: val.task,
-                                                    type: val.type.value
-                                                });
-                                            });
-                                            localData[key] = tasks;
-                                        }
-                                            break;
-                                        default :
-                                            localData[key] = chunk;
-                                    }
-                                });
-                                return localData;
-                            };
-                        wizardResource
-                            .submit(mainName, clearData(conf.$scope.formData))
-                            .then(successCallback, failureCallback);
+                    getSubmissionData = function getSubmissionData($scope) {
+                        var localData = {},
+                            formData = $scope.formData;
+                        _.extend(localData, adjusters[defineState](formData));
+                        _.extend(localData, adjusters[commentState](formData));
+                        _.extend(localData, adjusters[tasksState](formData));
+                        return localData;
                     };
 
                 return wizService.getProvider({
-                    getFormData    : getFormData,
-                    isActionEnabled: isActionEnabled,
-                    next           : next,
-                    submit         : submit
+                    getFormData          : getFormData,
+                    getStepSubmissionData: getStepSubmissionData,
+                    isActionEnabled      : isActionEnabled,
+                    getSubmissionData    : getSubmissionData
                 });
             };
 
-        app.factory(mainName, ['$log', 'wizardResource', newAppointmentService]);
+        app.factory(mainName, newAppointmentService);
     }
 );

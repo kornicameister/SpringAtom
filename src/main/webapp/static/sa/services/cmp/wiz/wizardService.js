@@ -35,8 +35,8 @@ define(
             providerMap = [
                 'getFormData',
                 'isActionEnabled',
-                'next',
-                'submit'
+                'getStepSubmissionData',
+                'getSubmissionData'
             ],
             getNext = function getNext(step) {
                 return step.next || false;

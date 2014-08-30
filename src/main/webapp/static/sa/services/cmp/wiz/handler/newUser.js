@@ -117,50 +117,26 @@ define(
                         var enabled = true;
                         return enabled;
                     },
-                    next = function next(conf) {
-
-                        var state = conf.$scope.activeState,
-                            form = conf.$scope['wizardForm'],
-                            successCallback = conf.success,
-                            failureCallback = conf.failure;
-
-                        successCallback.call(this);
-
-                    },
-                    getStepFormData = function getStepFormData($scope, activeStep) {
+                    getStepSubmissionData = function getStepSubmissionData($scope, activeStep) {
                         var data = {},
                             formData = $scope.formData;
                         _.extend(data, adjusters[activeStep](formData));
                         return data;
                     },
-                    submit = function submit(conf) {
-                        var successCallback = conf.success,
-                            failureCallback = conf.failure,
-                            /**
-                             * Cleans up the data package. It is required to do, due to
-                             * data binding requirements defined on server side which automatically
-                             * binds properties to context object of a single form's context object
-                             * @param data raw data
-                             * @returns {*} cleaned up data
-                             */
-                            clearData = function clearData(data) {
-                                var localData = {};
-                                _.extend(localData, adjusters[credentialsState](data));
-                                _.extend(localData, adjusters[authoritiesState](data));
-                                _.extend(localData, adjusters[contactsState](data));
-                                return localData;
-                            };
-                        wizardResource
-                            .submit(mainName, clearData(conf.$scope.formData))
-                            .then(successCallback, failureCallback);
+                    getSubmissionData = function getSubmissionData($scope) {
+                        var localData = {},
+                            formData = $scope.formData;
+                        _.extend(localData, adjusters[credentialsState](formData));
+                        _.extend(localData, adjusters[authoritiesState](formData));
+                        _.extend(localData, adjusters[contactsState](formData));
+                        return localData;
                     };
 
                 return wizService.getProvider({
-                    getFormData    : getFormData,
-                    getStepFormData: getStepFormData,
-                    isActionEnabled: isActionEnabled,
-                    next           : next,
-                    submit         : submit
+                    getFormData          : getFormData,
+                    getStepSubmissionData: getStepSubmissionData,
+                    isActionEnabled      : isActionEnabled,
+                    getSubmissionData    : getSubmissionData
                 });
             };
 

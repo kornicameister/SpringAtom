@@ -44,8 +44,7 @@ define(
                                          timeoutDelay,
                                          dialogs,
                                          wizardResult,
-                                         actions,
-                                         wizardKey, wizardHandler, wizardResource) {
+                                         actions, wizardKey, wizardHandler, wizardResource) {
             $log.debug('Entering wizardController');
 
             var exitState = $cookies.lastState,// retrieve state from which application entered wizard, for cancel action
@@ -201,13 +200,11 @@ define(
                 hooks = {
                     finish  : function finishForm($event) {
                         $event.preventDefault();
-                        wizardHandler.submit({
-                            $scope : $scope,
-                            success: function () {
+                        wizardResource
+                            .submit(wizardKey, wizardHandler.getSubmissionData($scope))
+                            .then(function () {
                                 $state.go(exitState);
-                            },
-                            failure: helpers.onSubmissionFailure
-                        });
+                            }, helpers.onSubmissionFailure);
                     },
                     /**
                      * On <b>cancel</b> hook. Displays simple prompt box and cancels the state
@@ -244,7 +241,7 @@ define(
                         wizardResource.stepSubmit(
                             wizardKey,
                             helpers.getActiveStepParentFree(),
-                            wizardHandler.getStepFormData($scope, helpers.getActiveStep())
+                            wizardHandler.getStepSubmissionData($scope, helpers.getActiveStep())
                         ).then(helpers.onSubmissionSuccess, helpers.onSubmissionFailure);
                     },
                     previous: function previousStep($event) {
