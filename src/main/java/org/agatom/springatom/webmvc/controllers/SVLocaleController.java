@@ -128,6 +128,25 @@ public class SVLocaleController
         return this.messageSource.getLocalizedMessages(LocaleContextHolder.getLocale());
     }
 
+
+    @ResponseBody
+    @RequestMapping(
+            value = "/by/locale",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public Object getAllByLocale(@RequestParam(value = "lang", required = true) final Locale locale) {
+
+        final SLocalizedMessages localizedMessages = this.messageSource.getLocalizedMessages(locale);
+        final Set<SLocalizedMessage> preferences = localizedMessages.getPreferences();
+        final Map<String, String> map = Maps.newHashMapWithExpectedSize(preferences.size());
+        for (SLocalizedMessage preference : preferences) {
+            map.put(preference.getKey(), preference.getMessage());
+        }
+
+        return map;
+    }
+
     @ResponseBody
     @RequestMapping(
             value = "/all/by/locale",

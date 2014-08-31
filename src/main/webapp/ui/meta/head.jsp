@@ -31,3 +31,7 @@
     <c:out value="${pageTitleBean.paramValue}" default="[SA]::SpringAtom"/>
 </title>
 
+<script type="text/javascript">
+	window.SA_LANG = '<%=lang.getLanguage()%>'
+</script>
+

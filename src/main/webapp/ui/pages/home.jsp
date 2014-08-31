@@ -18,5 +18,6 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <section>
-    <img src="<s:url value="/static/images/agatom_logo.png"/>">
+	<img src="<s:url value="/static/images/agatom_logo.png"/>">
+	{{'GASOLINE' | translate}}
 </section>

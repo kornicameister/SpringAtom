@@ -34,7 +34,10 @@ define(
         'bProgressBar',
         'bJasny',
         'ngProgress',
-        'ngMultiSelect'
+        'ngMultiSelect',
+        'ngTranslateLoader',
+        'ngTranslateLocalStorage',
+        'ngTranslateHandlerLog'
     ],
     function (angular, utils) {
         var appName = 'springatom',

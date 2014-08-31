@@ -23,24 +23,28 @@
         "tests"
     ],
     "dependencies": {
-        "bootstrap"                  : "latest",
-        "ng-grid"                    : "latest",
-        "angular-bootstrap"          : "latest",
-        "angular-ui-router"          : "latest",
-        "angular-ui-calendar"        : "latest",
-        "angular-animate"            : "latest",
-        "angular-moment"             : "latest",
-        "angular-cookies"            : "latest",
-        "angular-dialog-service"     : "latest",
-        "jasny-bootstrap"            : "latest",
-        "jsface"                     : "latest",
-        "animate.css"                : "latest",
-        "normalize-css"              : "latest",
-        "ngprogress"                 : "latest",
-        "underscore"                 : "latest",
-        "isteven-angular-multiselect": "latest"
+        "bootstrap"                      : "latest",
+        "ng-grid"                        : "latest",
+        "angular-bootstrap"              : "latest",
+        "angular-ui-router"              : "latest",
+        "angular-ui-calendar"            : "latest",
+        "angular-animate"                : "latest",
+        "angular-moment"                 : "latest",
+        "angular-cookies"                : "latest",
+        "angular-dialog-service"         : "latest",
+        "jasny-bootstrap"                : "latest",
+        "jsface"                         : "latest",
+        "animate.css"                    : "latest",
+        "normalize-css"                  : "latest",
+        "ngprogress"                     : "latest",
+        "underscore"                     : "latest",
+        "isteven-angular-multiselect"    : "latest",
+        "angular-translate-loader-url"   : "2.2.0",
+        "angular-translate-storage-local": "latest",
+        "angular-translate-handler-log"  : "latest"
     },
     "resolutions" : {
-        "jquery": "~2.x"
+        "jquery"           : "~2.x",
+        "angular-translate": "2.2.0"
     }
 }

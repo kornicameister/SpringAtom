@@ -26,14 +26,11 @@ define(
     ],
     function langModule(module, utils) {
         var defaultLang = 'pl',
-            configureLang = function (amMoment, $cookies) {
+            configureLang = function (amMoment, $cookies, $translate) {
                 var params = utils.getUrlParams(),
                     lang = defaultLang;
                 if (angular.isDefined(params['lang'])) {
                     lang = params['lang'];
-                    if (lang.indexOf('_') > 0) {
-                        lang = lang.substring(0, lang.indexOf('_'));
-                    }
                 }
                 var cookiesLangDefined = angular.isDefined($cookies.lang);
                 if (cookiesLangDefined) {
@@ -46,28 +43,38 @@ define(
                     $cookies.lang = lang;
                 }
                 amMoment.changeLanguage(lang);
+                $translate.use(lang);
             },
             dialogsTranslations = function ($translateProvider) {
                 // TODO add reading those values from a server
-                var translations = {
-                    DIALOGS_ERROR            : "Błąd",
-                    DIALOGS_ERROR_MSG        : "Wystąpił nieznany błąd",
-                    DIALOGS_CLOSE            : "Zamknij",
-                    DIALOGS_PLEASE_WAIT      : "Proszę czekać",
-                    DIALOGS_PLEASE_WAIT_ELIPS: "Proszę czekać...",
-                    DIALOGS_PLEASE_WAIT_MSG  : "Operacja w trakcie, proszę czekać...",
-                    DIALOGS_PERCENT_COMPLETE : "% zakończono",
-                    DIALOGS_NOTIFICATION     : "Powiadomienie",
-                    DIALOGS_NOTIFICATION_MSG : "Nieznane powiadomienie...",
-                    DIALOGS_CONFIRMATION     : "Potwierdzenie",
-                    DIALOGS_CONFIRMATION_MSG : "Wymagane potwierdzenie",
-                    DIALOGS_OK               : "Ok",
-                    DIALOGS_YES              : "Tak",
-                    DIALOGS_NO               : "Nie"
-                };
-                $translateProvider.translations('pl-PL', translations);
-                $translateProvider.translations('pl', translations);
-                $translateProvider.preferredLanguage('pl');
+                //var translations = {
+                //    DIALOGS_ERROR            : "Błąd",
+                //    DIALOGS_ERROR_MSG        : "Wystąpił nieznany błąd",
+                //    DIALOGS_CLOSE            : "Zamknij",
+                //    DIALOGS_PLEASE_WAIT      : "Proszę czekać",
+                //    DIALOGS_PLEASE_WAIT_ELIPS: "Proszę czekać...",
+                //    DIALOGS_PLEASE_WAIT_MSG  : "Operacja w trakcie, proszę czekać...",
+                //    DIALOGS_PERCENT_COMPLETE : "% zakończono",
+                //    DIALOGS_NOTIFICATION     : "Powiadomienie",
+                //    DIALOGS_NOTIFICATION_MSG : "Nieznane powiadomienie...",
+                //    DIALOGS_CONFIRMATION     : "Potwierdzenie",
+                //    DIALOGS_CONFIRMATION_MSG : "Wymagane potwierdzenie",
+                //    DIALOGS_OK               : "Ok",
+                //    DIALOGS_YES              : "Tak",
+                //    DIALOGS_NO               : "Nie"
+                //};
+
+                //noinspection JSUnresolvedFunction
+                $translateProvider
+                    .preferredLanguage(window['SA_LANG']);
+                $translateProvider.useSanitizeValueStrategy('escaped');
+                //noinspection JSUnresolvedFunction
+                $translateProvider.useUrlLoader('/app/data/lang/by/locale');
+                //noinspection JSUnresolvedFunction
+                $translateProvider.useLocalStorage();
+                //noinspection JSUnresolvedFunction
+                $translateProvider.useMissingTranslationHandlerLog();
+
             };
 
         module.run(configureLang)
