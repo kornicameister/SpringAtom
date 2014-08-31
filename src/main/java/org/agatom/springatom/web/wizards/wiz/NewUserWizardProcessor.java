@@ -71,7 +71,7 @@ import java.util.concurrent.TimeUnit;
  * @since 0.0.1
  */
 @Wizard(value = "newUser", validate = true)
-public class NewUserWizardProcessor
+class NewUserWizardProcessor
         extends CreateObjectWizardProcessor<SUser> {
     private static final Logger                 LOGGER                 = Logger.getLogger(NewUserWizardProcessor.class);
     private static final String                 FORM_OBJECT_NAME       = "user";
