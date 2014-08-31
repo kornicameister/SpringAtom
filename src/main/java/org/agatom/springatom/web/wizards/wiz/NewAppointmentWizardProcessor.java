@@ -169,7 +169,9 @@ class NewAppointmentWizardProcessor
             @Override
             public void initializeBinder(final DataBinder binder) {
 
-                binder.registerCustomEditor(Collection.class, "tasks", new PropertyValuesEditor() {
+                final String propertyName = getPropertyName(QSAppointment.sAppointment.tasks);
+
+                binder.registerCustomEditor(Collection.class, propertyName, new PropertyValuesEditor() {
                     @Override
                     public Object getValue() {
 
@@ -194,7 +196,8 @@ class NewAppointmentWizardProcessor
                     }
                 });
 
-                binder.setRequiredFields(getPropertyName(QSAppointment.sAppointment.tasks));
+                binder.setRequiredFields(propertyName);
+                binder.setAllowedFields(propertyName);
             }
 
             private SelectComponent<String, String> getTaskTypes(final Locale locale) throws ComponentCompilationException {
@@ -330,7 +333,9 @@ class NewAppointmentWizardProcessor
 
             @Override
             public void initializeBinder(final DataBinder binder) {
-                binder.setRequiredFields(this.getRequiredFields());
+                final String[] fields = this.getRequiredFields();
+                binder.setRequiredFields(fields);
+                binder.setAllowedFields(fields);
             }
 
             private String[] getRequiredFields() {

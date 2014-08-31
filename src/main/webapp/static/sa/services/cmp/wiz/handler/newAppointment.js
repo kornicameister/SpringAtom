@@ -38,7 +38,8 @@ define(
                             'endTime',
                             'reporter',
                             'assignee',
-                            'car'
+                            'car',
+                            'owner'
                         ],
                         'newAppointment.tasks'     : [
                             'tasks'
@@ -78,8 +79,8 @@ define(
                             data = data.tasks;
                             _.each(data, function (task) {
                                 local.push({
-                                    contact: task.task,
-                                    type   : task.type.value
+                                    task: task.task,
+                                    type: task.type.value
                                 })
                             });
                             return {

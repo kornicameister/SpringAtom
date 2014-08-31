@@ -177,9 +177,9 @@ public class NewUserWizardProcessor
                 binder.setRequiredFields(
                         getPropertyName(user.credentials.password),
                         getPropertyName(user.credentials.username),
-                        getPropertyName(user.person) + getPropertyName(person.firstName),
-                        getPropertyName(user.person) + getPropertyName(person.lastName),
-                        getPropertyName(user.person) + getPropertyName(person.primaryMail)
+                        getPropertyName(user.person) + "." + getPropertyName(person.firstName),
+                        getPropertyName(user.person) + "." + getPropertyName(person.lastName),
+                        getPropertyName(user.person) + "." + getPropertyName(person.primaryMail)
                 );
 
                 super.initializeBinder(binder);

@@ -182,6 +182,9 @@ public class WizardResult
     }
 
     public WizardResult setBindingErrors(final Set<ObjectError> bindingErrors) {
+        if (CollectionUtils.isEmpty(bindingErrors)) {
+            return this;
+        }
         if (this.bindingErrors == null) {
             this.bindingErrors = bindingErrors;
         } else {
