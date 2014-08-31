@@ -17,205 +17,238 @@
 
 package org.agatom.springatom.web.wizards.core;
 
-import org.agatom.springatom.core.exception.SException;
-import org.agatom.springatom.server.model.OID;
+import org.agatom.springatom.web.locale.SMessageSource;
+import org.agatom.springatom.web.wizards.StepHelper;
+import org.agatom.springatom.web.wizards.Wizard;
 import org.agatom.springatom.web.wizards.WizardProcessor;
-import org.agatom.springatom.web.wizards.data.WizardDescriptor;
-import org.agatom.springatom.web.wizards.data.WizardStepDescriptor;
 import org.agatom.springatom.web.wizards.data.result.FeedbackMessage;
+import org.agatom.springatom.web.wizards.data.result.WizardDebugDataKeys;
 import org.agatom.springatom.web.wizards.data.result.WizardResult;
+import org.agatom.springatom.web.wizards.validation.ValidationService;
+import org.agatom.springatom.web.wizards.validation.model.ValidationBean;
 import org.apache.log4j.Logger;
-import org.springframework.core.GenericTypeResolver;
-import org.springframework.core.convert.converter.ConditionalConverter;
-import org.springframework.data.domain.Persistable;
+import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.binding.message.Message;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.style.StylerUtils;
+import org.springframework.format.support.FormattingConversionService;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.DataBinder;
-import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.*;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.bind.WebDataBinder;
 
+import javax.annotation.PostConstruct;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * {@code AbstractWizardProcessor} contains basic set of logic to process single wizard.
- * Logic for initializing, submitting is enclosed within and it delegates further processing to subclasses.
- * It is done like this to separate creation of {@link org.agatom.springatom.web.wizards.data.result.WizardResult}
- * from actual logic required to execute particular job.
+ * {@code AbstractWizardProcessor} combines overall logic to access wizard properties as well
+ * execute binding and validation process
  *
- * <b>Changelog</b>
- * <ol>
- * <li>adjusted to feedback messaging system</li>
- * <li>{@link #initialize(java.util.Locale)} updated to check for {@link java.lang.Exception} and if any would be thrown returned appropriate {@link org.agatom.springatom.web.wizards.data.result.WizardResult}</li>
- * <li>added expection checking for submitWizard method</li>
- * </ol>
- *
- * <p>
- * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-17</small>
- * </p>
- *
- * @param <T> params object {@link org.agatom.springatom.web.wizards.WizardProcessor} submits upon finish
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-18</small>
  *
  * @author trebskit
- * @version 0.0.2
+ * @version 0.0.4
  * @since 0.0.1
  */
-abstract public class AbstractWizardProcessor<T>
-        extends AbstractWizardHandler
-        implements WizardProcessor<T> {
-    private static final Logger LOGGER              = Logger.getLogger(AbstractWizardProcessor.class);
-    private static final String WIZ_INITIALIZED_MSG = "sa.msg.wizard.initialized";
-    private static final String DESCRIPTOR_KEY      = "descriptor";
-    private static final String DEBUG_COMPILE_TIME  = "compilationTime";
-    private static final String DEBUG_HANDLER       = "handler";
-    private static final String DEBUG_LOCALE        = "locale";
+abstract class AbstractWizardProcessor {
+    private static final Logger                      LOGGER             = Logger.getLogger(AbstractWizardProcessor.class);
+    @Autowired
+    @Qualifier(value = "springAtomConversionService")
+    protected            FormattingConversionService conversionService  = null;
+    @Autowired
+    protected            LocalValidatorFactoryBean   delegatedValidator = null;
+    @Autowired
+    protected            SMessageSource              messageSource      = null;
+    protected            StepHelperDelegate          stepHelperDelegate = null;
+    protected            Validator                   localValidator     = null;
+    @Autowired
+    private              ValidationService           validationService  = null;
 
-    @Override
-    public final WizardResult initialize(final Locale locale) throws SException {
-        LOGGER.debug(String.format("initialize(locale=%s)", locale));
+    /**
+     * Executes actual binding. Provider {@link org.springframework.validation.DataBinder} is used to verify
+     * if {@link org.springframework.validation.DataBinder#getTarget()} is valid in context of raw field to actual field mapping.
+     * For instance {@code params.get("anAttribute")} must have corresponding property in {@code binder.getTargetObject()}.
+     * Type mismatches are resolved via supplied {@link java.beans.PropertyEditorSupport} instances available through {@code binder} and
+     * registered before this method executes
+     *
+     * @param binder binder to use, must be initialized prior this method calling
+     * @param step   current step, may be null if {@code binder} binds entire wizard
+     * @param params supplied params to be set in {@link org.springframework.validation.DataBinder#getTarget()}
+     * @param locale current locale
+     *
+     * @return local {@link org.agatom.springatom.web.wizards.data.result.WizardResult}
+     *
+     * @throws Exception if any
+     */
+    protected WizardResult bind(final DataBinder binder, final String step, final ModelMap params, final Locale locale) throws Exception {
 
+        final WizardResult localResult = new WizardResult().setStepId(step).setWizardId(this.getWizardID());
         final long startTime = System.nanoTime();
-        final WizardResult result = new WizardResult();
 
         try {
-            final WizardDescriptor descriptor = this.getDescriptor(locale);
-            final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
-
-            result.addWizardData(DESCRIPTOR_KEY, descriptor);
-            result.addFeedbackMessage(
-                    FeedbackMessage
-                            .newInfo()
-                            .setMessage(this.messageSource.getMessage(WIZ_INITIALIZED_MSG, locale))
-            );
-
-            result.addDebugData(DEBUG_COMPILE_TIME, endTime)
-                    .addDebugData(DEBUG_HANDLER, ClassUtils.getShortName(this.getClass()))
-                    .addDebugData(DEBUG_LOCALE, locale);
-
+            this.doBind(binder, params);
         } catch (Exception exp) {
-            LOGGER.error("Failed to build descriptor for wizard", exp);
-            throw new SException(exp.getMessage(), exp);
+            LOGGER.error("Binding error detected", exp);
+            localResult.addError(exp);
         }
 
-        return result;
+        this.addErrorsToResultIfAny(binder, locale, localResult);
+
+        final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+
+        localResult.addDebugData(WizardDebugDataKeys.BINDING_TIME, endTime);
+        localResult.addDebugData(WizardDebugDataKeys.IS_STEP_BINDING, StringUtils.hasText(step));
+        localResult.addDebugData(WizardDebugDataKeys.DATA_SIZE, params.size());
+
+        if ((this.isValidationEnabled() || this.isValidationEnabledForStep(step))) {
+            // Do not validate if bindingErrors
+            this.doValidate(localResult, binder, step, params, locale);
+        }
+
+        return localResult;
+    }
+
+    protected String getWizardID() {
+        final String value = this.getWizardAnnotation().value();
+        if (!StringUtils.hasText(value)) {
+            return StringUtils.uncapitalize(ClassUtils.getShortName(this.getClass()));
+        }
+        return value;
+    }
+
+    private void doBind(final DataBinder binder, Map<String, Object> params) throws Exception {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("Binding allowed request parameters in %s to form object with name '%s', pre-bind formObject toString = %s", params, binder.getObjectName(), binder.getTarget()));
+            if (binder.getAllowedFields() != null && binder.getAllowedFields().length > 0) {
+                LOGGER.debug(String.format("(Allowed fields are %s)", StylerUtils.style(binder.getAllowedFields())));
+            } else {
+                LOGGER.debug("(Any field is allowed)");
+            }
+        }
+        binder.bind(new MutablePropertyValues(params));
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("Binding completed for form object with name '%s', post-bind formObject toString = %s", binder.getObjectName(), binder.getTarget()));
+            LOGGER.debug(String.format("There are [%d] errors, details: %s", binder.getBindingResult().getErrorCount(), binder.getBindingResult().getAllErrors()));
+        }
     }
 
     /**
-     * Returns {@link org.agatom.springatom.web.wizards.data.WizardDescriptor} that contain full definition
-     * of a step.
+     * If {@link org.springframework.validation.DataBinder#getBindingResult()}} contains any errors then this method
+     * will update {@code localResult} with :
+     * <ol>
+     * <li>{@link org.springframework.validation.ObjectError} to {@link org.agatom.springatom.web.wizards.data.result.WizardResult#addBindingError(org.springframework.validation.ObjectError)}</li>
+     * <li>{@link org.agatom.springatom.web.wizards.data.result.FeedbackMessage} to {@link org.agatom.springatom.web.wizards.data.result.WizardResult#addFeedbackMessage(org.agatom.springatom.web.wizards.data.result.FeedbackMessage)}</li>
+     * </ol>
      *
-     * @param locale current locale
+     * @param binder      current binder
+     * @param locale      current locale
+     * @param localResult current result
      *
-     * @return the descriptor
+     * @see org.agatom.springatom.web.wizards.data.result.FeedbackMessage#newError()
+     * @see org.agatom.springatom.web.wizards.data.result.FeedbackType
+     * @see org.springframework.validation.Errors
+     * @see #getBindErrorFM(org.springframework.validation.ObjectError, java.util.Locale)
      */
-    protected abstract WizardDescriptor getDescriptor(final Locale locale);
-
-    @Override
-    public final WizardResult initializeStep(final String step, final Locale locale) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("initializeStep(step=%s,locale=%s)", step, locale));
-        }
-
-        final long startTime = System.nanoTime();
-        final WizardResult result = new WizardResult().setWizardId(this.getWizardID()).setStepId(step);
-        result.addDebugData("locale", locale);
-
-        try {
-            final ModelMap modelMap = this.getStepInitData(step, locale);
-            if (!CollectionUtils.isEmpty(modelMap)) {
-                result.addStepData(modelMap);
-            } else {
-                LOGGER.trace(String.format("%s does not initialized step=%s", ClassUtils.getShortName(this.getClass()), step));
-            }
-        } catch (Exception exp) {
-            LOGGER.error(String.format("initializeStep(step=%s) has failed", step), exp);
-            result.addError(exp);
-        }
-
-        final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("initializeStep(step=%s,locale=%s) executed in %d ms", step, locale, endTime));
-        }
-
-        result.addDebugData("time", endTime);
-
-        return result;
-    }
-
-    @Override
-    public WizardResult submit(final Map<String, Object> stepData, final Locale locale) throws Exception {
-        LOGGER.debug(String.format("submit(stepData=%s)", stepData));
-        return this.submitStep(null, stepData, locale);
-    }
-
-    @Override
-    @SuppressWarnings("UnusedAssignment")
-    public WizardResult submitStep(final String step, final Map<String, Object> stepData, final Locale locale) throws Exception {
-        LOGGER.debug(String.format("submitStep(step=%s, stepData=%s)", step, stepData));
-
-        final long startTime = System.nanoTime();
-
-        T contextObject = this.getContextObject();
-        DataBinder binder = this.createBinder(contextObject);
-
-        if (StringUtils.hasText(step)) {
-            // temporary solution
-            binder.setAllowedFields();
-            binder.setRequiredFields();
-        }
-
-        final WizardResult result = this.bind(binder, step, stepData);
+    private void addErrorsToResultIfAny(final DataBinder binder, final Locale locale, final WizardResult localResult) {
         final Errors errors = binder.getBindingResult();
-
-        // If there are no errors and this is not step submit --> finish up wizard
-        if (!result.hasErrors() && !StringUtils.hasText(step)) {
-            LOGGER.debug(String.format("Bound to context object=%s without bindingResult", contextObject));
-            try {
-                result.merge(this.submitWizard(contextObject, stepData, locale));
-            } catch (Exception submitExp) {
-                LOGGER.error(String.format("submitWizard failed for contextObject=%s", contextObject), submitExp);
-                result.addError(submitExp);
-                result.addFeedbackMessage(FeedbackMessage.newError().setMessage(submitExp.getLocalizedMessage()));
-            } finally {
-                binder.close();
-            }
-        } else if (errors.hasErrors()) {
+        if (errors.hasErrors()) {
+            final Object contextObject = binder.getTarget();
             LOGGER.warn(String.format("Found %d binding bindingResult for context object=%s", errors.getErrorCount(), contextObject));
             for (final ObjectError objectError : errors.getAllErrors()) {
-                result.addFeedbackMessage(this.getBindErrorFM(objectError, locale));
-                result.addBindingError(objectError);
+                localResult.addFeedbackMessage(this.getBindErrorFM(objectError, locale));
+                localResult.addBindingError(objectError);
             }
         }
+    }
 
-        final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace(String.format("submitStep(step=%s, stepData=%s) executed in %d ms", step, stepData, endTime));
+    protected boolean isValidationEnabled() {
+        return this.getWizardAnnotation().validate();
+    }
+
+    private boolean isValidationEnabledForStep(final String step) {
+        return this.stepHelperDelegate.isValidationEnabled(step);
+    }
+
+    @SuppressWarnings("UnusedAssignment")
+    private void doValidate(final WizardResult result, final DataBinder binder, final String step, final Map<String, Object> formData, final Locale locale) throws Exception {
+
+        final Object target = binder.getTarget();
+
+        try {
+            final BindingResult bindingResult = binder.getBindingResult();
+            boolean alreadyValidate = false;
+
+            if (this.localValidator != null) {
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug(String.format("Validating via Validator instance=%s", this.localValidator));
+                }
+                this.validationService.validate(this.localValidator, bindingResult, result);
+                alreadyValidate = true;
+            }
+
+            if (!alreadyValidate) {
+                ValidationBean bean = new ValidationBean();
+
+                bean.setPartialResult(result);
+                bean.setStepId(result.getStepId());
+                bean.setCommandBean(bindingResult.getTarget());
+                bean.setCommandBeanName(this.getContextObjectName());
+                bean.setFormData(formData);
+                bean.setBindingModel(formData);
+
+                if (this.validationService.canValidate(bean)) {
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug(String.format("Validating via validation service for validationBean=%s", bean));
+                    }
+                    this.validationService.validate(bean);
+                }
+
+            }
+
+            if (!alreadyValidate && !StringUtils.hasText(step)) {
+                LOGGER.debug(String.format("Not yet validated (tried localValidator and via validationService), assuming that is wizard submission due to step===null, validating through binder"));
+                final Validator validator = binder.getValidator();
+                if (validator != null) {
+
+                    final long startTime = System.nanoTime();
+                    validator.validate(target, bindingResult);
+                    final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+
+                    result.addDebugData(WizardDebugDataKeys.VALIDATION_TIME, endTime);
+                    result.addDebugData(WizardDebugDataKeys.VALIDATOR, ClassUtils.getShortName(validator.getClass()));
+
+                }
+            }
+
+            if (LOGGER.isDebugEnabled()) {
+                final Set<Message> messages = result.getValidationMessages();
+                final short count = (short) (messages == null ? 0 : messages.size());
+                LOGGER.debug(String.format("Validation completed, found %d validation errors", count));
+            }
+        } catch (Exception exp) {
+            // Catch any validation exception and add it as an error
+            LOGGER.error("Validation failed either via [localValidator,validationService,binder#validator", exp);
+            result.addError(exp);
+            result.addFeedbackMessage(
+                    FeedbackMessage.newError()
+                            .setTitle(this.messageSource.getMessage("sa.wiz.validationError.title", locale))
+                            .setMessage(this.messageSource.getMessage("sa.wiz.validationError.msg", new Object[]{target.toString()}, locale))
+            );
         }
 
-        result.addDebugData("totalTime", endTime);
-        result.addDebugData("processor", ClassUtils.getShortName(this.getClass()));
-
-        // collect garbage
-        binder = null;
-        contextObject = null;
-        System.gc();
-
-        return result;
     }
 
-    @SuppressWarnings("unchecked")
-    protected T getContextObject() throws Exception {
-        return (T) GenericTypeResolver.resolveTypeArgument(getClass(), AbstractWizardProcessor.class).newInstance();
+    private Wizard getWizardAnnotation() {
+        return AnnotationUtils.findAnnotation(this.getClass(), Wizard.class);
     }
-
-    private DataBinder createBinder(final T contextObject) throws Exception {
-        return this.createBinder(contextObject, this.getContextObjectName());
-    }
-
-    protected abstract WizardResult submitWizard(final T contextObject, final Map<String, Object> stepData, final Locale locale) throws Exception;
 
     /**
      * Creates {@link org.agatom.springatom.web.wizards.data.result.FeedbackMessage#newError()} message out of {@link org.springframework.validation.ObjectError}.
@@ -252,39 +285,138 @@ abstract public class AbstractWizardProcessor<T>
         if (!found) {
             msg = objectError.getDefaultMessage();
         }
+
         message.setMessage(msg);
+
         return message;
     }
 
-    protected abstract ModelMap getStepInitData(final String step, final Locale locale) throws Exception;
+    /**
+     * By default this method returns {@link org.agatom.springatom.web.wizards.WizardProcessor#DEFAULT_FORM_OBJECT_NAME}.
+     * To specify different name override this method.
+     *
+     * @return context object name
+     */
+    protected String getContextObjectName() {
+        return WizardProcessor.DEFAULT_FORM_OBJECT_NAME;
+    }
 
-    protected OID getOID(final T contextObject) {
-        final OID oid = new OID();
-        oid.setObjectClass(ClassUtils.getUserClass(contextObject.getClass()).getSimpleName());
-        oid.setPrefix("M");
-        if (ClassUtils.isAssignableValue(Persistable.class, contextObject)) {
-            oid.setId((Long) ((Persistable<?>) contextObject).getId());
-        } else {
-            oid.setId(System.nanoTime());
+    /**
+     * Creates <b>global binder</b>. The initialization of such binder (ran through {@link #initializeGlobalBinder(org.springframework.validation.DataBinder)})
+     * should be equivalent to initializing binder for each step at the time.
+     *
+     * @param contextObject context object
+     *
+     * @return initialized global binder
+     *
+     * @throws Exception if any
+     * @see #initializeGlobalBinder(org.springframework.validation.DataBinder)
+     */
+    protected final DataBinder createGlobalBinder(final Object contextObject) throws Exception {
+        final DataBinder binder = this.createBinder(contextObject, this.getContextObjectName());
+        this.initializeGlobalBinder(binder);
+        return binder;
+    }
+
+    /**
+     * Creates {@link org.springframework.validation.DataBinder} without paying attention on {@link org.springframework.validation.DataBinder#setAllowedFields(String...)} or
+     * {@link org.springframework.validation.DataBinder#setRequiredFields(String...)}
+     *
+     * @param contextObject     context object
+     * @param contextObjectName context object name
+     *
+     * @return the binder
+     */
+    private DataBinder createBinder(final Object contextObject, final String contextObjectName) {
+        LOGGER.debug(String.format("createGlobalBinder(contextObject=%s,contextObjectName=%s)", contextObject, contextObjectName));
+
+        Assert.notNull(contextObject, "contextObject must not be null");
+        Assert.notNull(contextObjectName, "contextObjectName must not be null");
+
+        final DataBinder binder = new WebDataBinder(contextObject, contextObjectName);
+
+        binder.setIgnoreUnknownFields(true);
+        binder.setAutoGrowNestedPaths(true);
+        binder.setConversionService(this.conversionService);
+        binder.setValidator(this.delegatedValidator);
+        binder.setMessageCodesResolver(new DefaultMessageCodesResolver());
+
+        return binder;
+    }
+
+    /**
+     * Purpose of this method is to initialize raw {@link org.springframework.validation.DataBinder} as created
+     * via {@link #createGlobalBinder(Object)}
+     *
+     * @param binder raw binder
+     */
+    protected void initializeGlobalBinder(final DataBinder binder) {
+        this.stepHelperDelegate.initializeGlobalBinder(binder);
+    }
+
+    /**
+     * Creates {@code step} specific binder. It is different then calling {@link #initializeGlobalBinder(org.springframework.validation.DataBinder)}
+     * because abilities of such binder are limited, in context of required / allowed fields and {@link java.beans.PropertyEditorSupport}, to the actual step
+     *
+     * @param contextObject context object
+     * @param step          active step
+     *
+     * @return initialized step binder
+     *
+     * @throws Exception if any
+     * @see #initializeStepBinder(org.springframework.validation.DataBinder, String)
+     */
+    protected final DataBinder createStepBinder(final Object contextObject, final String step) throws Exception {
+        Assert.notNull(step, "step can not null");
+        Assert.notNull(contextObject, "contextObject can not null");
+        final DataBinder binder = this.createBinder(contextObject, this.getContextObjectName());
+        this.initializeStepBinder(binder, step);
+        return binder;
+    }
+
+    /**
+     * Allows to initialize step specific binder as created via {@link #createStepBinder(Object, String)}
+     *
+     * @param binder raw binder
+     * @param step   active step
+     */
+    protected void initializeStepBinder(final DataBinder binder, final String step) {
+        this.stepHelperDelegate.initializeBinder(step, binder);
+    }
+
+    protected ModelMap initializeStep(final String step, final Locale locale) throws Exception {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("initializeStep(step=%s,locale=%s)", step, locale));
         }
-        return oid;
+        return this.stepHelperDelegate.initialize(step, locale);
     }
 
-    protected static interface StepHelper {
-        WizardStepDescriptor getDescriptor(final Locale locale);
-
-        ModelMap init(final Locale locale) throws Exception;
+    @PostConstruct
+    private void loadStepHelperDelegate() {
+        LOGGER.trace("loadStepHelperDelegate()");
+        final StepHelper[] helpers = this.getStepHelpers();
+        Assert.notNull(helpers, "Helpers cannot be null");
+        this.stepHelperDelegate = new StepHelperDelegate(helpers);
     }
 
-    protected abstract static class AbstractStepHelper
-            implements StepHelper {
-        @Override
-        public ModelMap init(final Locale locale) throws Exception {
-            return new ModelMap();
-        }
-    }
+    /**
+     * Must be implemented by subclasses in order to make
+     * some method to be automatically routed to the appropriate {@link org.agatom.springatom.web.wizards.StepHelper}
+     * via {@link org.agatom.springatom.web.wizards.core.StepHelperDelegate}
+     *
+     * @return array of step helpers
+     */
+    protected abstract StepHelper[] getStepHelpers();
 
-    protected abstract static class MatcherConverter
-            implements ConditionalConverter {
+    /**
+     * If {@link #localValidator} is enabled therefore it is possible to run validation
+     * through it instead of via {@link org.agatom.springatom.web.wizards.validation.ValidationService}.
+     * Notice that setting validators is not inclusively, therefore only one validation
+     * applies at the moment. If {@link #localValidator} is set, validation will be run only through it
+     *
+     * @param localValidator local validator
+     */
+    public void setLocalValidator(final Validator localValidator) {
+        this.localValidator = localValidator;
     }
 }

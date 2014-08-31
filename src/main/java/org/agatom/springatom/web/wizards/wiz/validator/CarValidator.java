@@ -15,40 +15,43 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.wizards.validation;
+package org.agatom.springatom.web.wizards.wiz.validator;
 
-import org.agatom.springatom.web.wizards.data.result.WizardResult;
-import org.agatom.springatom.web.wizards.validation.model.ValidationBean;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
+import org.agatom.springatom.server.model.beans.car.SCar;
+import org.agatom.springatom.server.service.vinNumber.validator.VinNumberValidator;
+import org.agatom.springatom.web.wizards.validation.annotation.WizardValidator;
+import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageContext;
+import org.springframework.binding.validation.ValidationContext;
 
 /**
  * <p>
- * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-27</small>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-31</small>
  * </p>
  *
  * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ValidationService {
+@WizardValidator
+public class CarValidator {
 
-    /**
-     * Invoke single validator. Method invokes global validator for entire wizard.
-     * This is done {@link org.agatom.springatom.web.wizards.WizardProcessor#onWizardSubmit(java.util.Map, java.util.Locale)}}.
-     *
-     * @param validationBean validation information
-     */
-    void validate(final ValidationBean validationBean);
+    private final VinNumberValidator vinNumberValidator = new VinNumberValidator();
 
-    boolean canValidate(final ValidationBean validationBean);
+    public void validateVin(final SCar car, final ValidationContext validationContext) {
+        final boolean validate = this.vinNumberValidator.validate(car.getVinNumber());
+        if (!validate) {
+            final MessageContext messageContext = validationContext.getMessageContext();
+            final MessageBuilder messageBuilder = new MessageBuilder();
+            messageContext.addMessage(
+                    messageBuilder
+                            .source("vinNumber")
+                            .code("invalid.car.vinNumber")
+                            .error()
+                            .arg(car.getVinNumber())
+                            .build()
+            );
+        }
+    }
 
-    /**
-     * Routes validation via {@code localValidator} in order to be able to append some result to the {@link org.agatom.springatom.web.wizards.data.result.WizardResult}
-     *
-     * @param localValidator local validator to call
-     * @param errors         current errors
-     * @param result         result to update with {@link org.agatom.springatom.web.wizards.data.result.WizardDebugDataKeys}
-     */
-    void validate(Validator localValidator, Errors errors, final WizardResult result);
 }

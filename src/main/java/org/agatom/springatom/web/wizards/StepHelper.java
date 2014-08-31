@@ -15,40 +15,31 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.wizards.validation;
+package org.agatom.springatom.web.wizards;
 
-import org.agatom.springatom.web.wizards.data.result.WizardResult;
-import org.agatom.springatom.web.wizards.validation.model.ValidationBean;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
+import org.agatom.springatom.web.wizards.data.WizardStepDescriptor;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.DataBinder;
+
+import java.util.Locale;
 
 /**
  * <p>
- * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-27</small>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-30</small>
  * </p>
  *
  * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ValidationService {
+public interface StepHelper {
+    WizardStepDescriptor getStepDescriptor(final Locale locale);
 
-    /**
-     * Invoke single validator. Method invokes global validator for entire wizard.
-     * This is done {@link org.agatom.springatom.web.wizards.WizardProcessor#onWizardSubmit(java.util.Map, java.util.Locale)}}.
-     *
-     * @param validationBean validation information
-     */
-    void validate(final ValidationBean validationBean);
+    ModelMap initialize(final Locale locale) throws Exception;
 
-    boolean canValidate(final ValidationBean validationBean);
+    void initializeBinder(final DataBinder binder);
 
-    /**
-     * Routes validation via {@code localValidator} in order to be able to append some result to the {@link org.agatom.springatom.web.wizards.data.result.WizardResult}
-     *
-     * @param localValidator local validator to call
-     * @param errors         current errors
-     * @param result         result to update with {@link org.agatom.springatom.web.wizards.data.result.WizardDebugDataKeys}
-     */
-    void validate(Validator localValidator, Errors errors, final WizardResult result);
+    String getStep();
+
+    boolean isValidationEnabled();
 }

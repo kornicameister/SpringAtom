@@ -22,7 +22,9 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.agatom.springatom.server.model.beans.person.QSPerson;
 import org.agatom.springatom.server.model.beans.person.SPersonContact;
+import org.agatom.springatom.server.model.beans.user.QSUser;
 import org.agatom.springatom.server.model.beans.user.SUser;
 import org.agatom.springatom.server.model.beans.user.authority.SAuthority;
 import org.agatom.springatom.server.model.types.contact.ContactType;
@@ -31,11 +33,14 @@ import org.agatom.springatom.server.service.domain.SUserService;
 import org.agatom.springatom.web.component.ComponentCompilationException;
 import org.agatom.springatom.web.component.select.SelectComponent;
 import org.agatom.springatom.web.component.select.factory.SelectComponentFactory;
+import org.agatom.springatom.web.wizards.StepHelper;
 import org.agatom.springatom.web.wizards.Wizard;
-import org.agatom.springatom.web.wizards.core.AbstractWizardProcessor;
+import org.agatom.springatom.web.wizards.core.AbstractStepHelper;
+import org.agatom.springatom.web.wizards.core.CreateObjectWizardProcessor;
 import org.agatom.springatom.web.wizards.data.WizardDescriptor;
 import org.agatom.springatom.web.wizards.data.WizardStepDescriptor;
 import org.agatom.springatom.web.wizards.data.result.FeedbackMessage;
+import org.agatom.springatom.web.wizards.data.result.WizardDebugDataKeys;
 import org.agatom.springatom.web.wizards.data.result.WizardResult;
 import org.apache.log4j.Logger;
 import org.springframework.beans.PropertyValuesEditor;
@@ -67,31 +72,31 @@ import java.util.concurrent.TimeUnit;
  */
 @Wizard(value = "newUser", validate = true)
 public class NewUserWizardProcessor
-        extends AbstractWizardProcessor<SUser> {
+        extends CreateObjectWizardProcessor<SUser> {
     private static final Logger                 LOGGER                 = Logger.getLogger(NewUserWizardProcessor.class);
     private static final String                 FORM_OBJECT_NAME       = "user";
-    private final        StepsDefinitionHolder  steps                  = new StepsDefinitionHolder();
+    private final        UserSteps              steps                  = new UserSteps();
     @Autowired
     private              SelectComponentFactory selectComponentFactory = null;
     @Autowired
-    private SUserService userService = null;
+    private              SUserService           userService            = null;
 
     @Override
-    protected WizardDescriptor getDescriptor(final Locale locale) {
-        LOGGER.debug(String.format("getDescriptor(locale=%s)", locale));
+    protected WizardDescriptor initializeWizard(final Locale locale) {
+        LOGGER.debug(String.format("initializeWizard(locale=%s)", locale));
 
         final WizardDescriptor descriptor = new WizardDescriptor();
 
-        descriptor.setLabel(this.messageSource.getMessage("suser", locale));
-        descriptor.addStep(this.steps.CREDENTIALS.getDescriptor(locale));
-        descriptor.addStep(this.steps.AUTHORITIES.getDescriptor(locale));
-        descriptor.addStep(this.steps.CONTACTS.getDescriptor(locale));
+        descriptor.setLabel(this.messageSource.getMessage("wizard.NewUserWizard.title", locale));
+        descriptor.addStep(this.steps.CREDENTIALS.getStepDescriptor(locale));
+        descriptor.addStep(this.steps.AUTHORITIES.getStepDescriptor(locale));
+        descriptor.addStep(this.steps.CONTACTS.getStepDescriptor(locale));
 
         return descriptor;
     }
 
     @Override
-    protected WizardResult submitWizard(SUser contextObject, final Map<String, Object> stepData, final Locale locale) throws Exception {
+    protected WizardResult submitWizard(SUser contextObject, final ModelMap stepData, final Locale locale) throws Exception {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("submitWizard(contextObject=%s)", contextObject));
         }
@@ -118,30 +123,8 @@ public class NewUserWizardProcessor
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("submitWizard(contextObject=%s) took %d ms", contextObject, endTime));
         }
-        result.addDebugData("submissionTime", endTime);
+        result.addDebugData(WizardDebugDataKeys.SUBMISSION_TIME, endTime);
         return result;
-    }
-
-    @Override
-    protected ModelMap getStepInitData(final String step, final Locale locale) throws Exception {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("getStepInitData(step=%s,locale=%s)", step, locale));
-        }
-        final ModelMap modelMap = new ModelMap();
-        switch (step) {
-            case "authorities":
-                modelMap.putAll(this.steps.AUTHORITIES.init(locale));
-                break;
-            case "contacts":
-                modelMap.putAll(this.steps.CONTACTS.init(locale));
-                break;
-        }
-        return modelMap;
-    }
-
-    @Override
-    protected boolean isValidationEnabledForStep(final String step) {
-        return "credentials".equals(step);
     }
 
     @Override
@@ -150,64 +133,30 @@ public class NewUserWizardProcessor
     }
 
     @Override
-    protected DataBinder createBinder(final Object contextObject, final String contextObjectName) {
-        final DataBinder binder = super.createBinder(contextObject, contextObjectName);
-        final StringToEnum stringToEnum = new StringToEnum();
-        binder.registerCustomEditor(Set.class, "authorities", new PropertyValuesEditor() {
-
-            @Override
-            public Object getValue() {
-                final List<?> list = (List<?>) super.getValue();
-                final Set<GrantedAuthority> authorities = Sets.newHashSet();
-                for (final Object rawRole : list) {
-                    final String role = (String) rawRole;
-                    try {
-                        final SRole sRole = (SRole) stringToEnum.convertSourceToTargetClass(role, SRole.class);
-                        final SAuthority sAuthority = new SAuthority();
-                        sAuthority.setRole(sRole);
-                        authorities.add(sAuthority);
-                        LOGGER.trace(String.format("Resolved authority from %s to %s", sRole, sAuthority));
-                    } catch (Exception e) {
-                        Logger.getLogger(this.getClass()).error("PropertyValuesEditor failed", e);
-                    }
-                }
-                return authorities;
-            }
-
-        });
-        binder.registerCustomEditor(List.class, "person.contacts", new PropertyValuesEditor() {
-
-            @Override
-            @SuppressWarnings("unchecked")
-            public Object getValue() {
-                final List<?> value = (List<?>) super.getValue();
-                final List<SPersonContact> contacts = Lists.newArrayList();
-                for (Object map : value) {
-                    try {
-                        final Map<String, String> roleAsMap = (Map<String, String>) map;
-                        final SPersonContact contact = new SPersonContact();
-                        contact.setContact(roleAsMap.get("contact"));
-                        contact.setType((ContactType) stringToEnum.convertSourceToTargetClass(roleAsMap.get("type".toUpperCase()), ContactType.class));
-                        contacts.add(contact);
-                    } catch (Exception exp) {
-                        Logger.getLogger(this.getClass()).error("PropertyValuesEditor failed", exp);
-                    }
-                }
-                return contacts;
-            }
-        });
-        return binder;
+    protected StepHelper[] getStepHelpers() {
+        return new StepHelper[]{
+                this.steps.CREDENTIALS,
+                this.steps.AUTHORITIES,
+                this.steps.CONTACTS
+        };
     }
 
-    private class StepsDefinitionHolder {
-        final StepHelper CREDENTIALS = new AbstractStepHelper() {
-            final String step = "credentials";
+    /**
+     * Inner per step definition helpers
+     */
+    private class UserSteps {
+        final StringToEnum stringToEnum = new StringToEnum();
+        final StepHelper   CREDENTIALS  = new AbstractStepHelper("credentials") {
 
             @Override
-            public WizardStepDescriptor getDescriptor(final Locale locale) {
-                return (WizardStepDescriptor) new WizardStepDescriptor()
+            public boolean isValidationEnabled() {
+                return true;
+            }
+
+            @Override
+            public WizardStepDescriptor getStepDescriptor(final Locale locale) {
+                return (WizardStepDescriptor) super.getStepDescriptor(locale)
                         .setRequired(true)
-                        .setStep(this.step)
                         .addLabel("username", messageSource.getMessage("susercredentials.username", locale))
                         .addLabel("password", messageSource.getMessage("susercredentials.password", locale))
                         .addLabel("firstname", messageSource.getMessage("sperson.firstname", locale))
@@ -215,22 +164,37 @@ public class NewUserWizardProcessor
                         .addLabel("primarymail", messageSource.getMessage("sperson.primarymail", locale))
                         .addLabel("user", messageSource.getMessage("suser", locale))
                         .addLabel("person", messageSource.getMessage("sperson", locale))
-                        .setLabel(messageSource.getMessage("suser", locale));
+                        .setLabel(messageSource.getMessage("wizard.NewUserWizard.step1.desc", locale));
             }
 
+            @Override
+            public void initializeBinder(final DataBinder binder) {
+
+                final QSUser user = QSUser.sUser;
+                final QSPerson person = QSPerson.sPerson;
+
+                binder.setRequiredFields(
+                        getPropertyName(user.credentials.password),
+                        getPropertyName(user.credentials.username),
+                        getPropertyName(user.person) + getPropertyName(person.firstName),
+                        getPropertyName(user.person) + getPropertyName(person.lastName),
+                        getPropertyName(user.person) + getPropertyName(person.primaryMail)
+                );
+
+                super.initializeBinder(binder);
+            }
         };
 
-        final StepHelper AUTHORITIES = new AbstractStepHelper() {
+        final StepHelper AUTHORITIES = new AbstractStepHelper("authorities") {
             final Logger logger = Logger.getLogger(this.getClass());
             final Set<SRole> excludedRoles = Sets.newHashSet();
-            final String step = "authorities";
 
             @Override
-            public ModelMap init(final Locale locale) throws Exception {
+            public ModelMap initialize(final Locale locale) throws Exception {
                 if (this.logger.isDebugEnabled()) {
-                    this.logger.debug(String.format("init(locale=%s)", locale));
+                    this.logger.debug(String.format("initialize(locale=%s)", locale));
                 }
-                final ModelMap map = super.init(locale);
+                final ModelMap map = super.initialize(locale);
                 map.addAttribute("roles", this.getRoles(locale));
                 map.addAttribute("extraLabels", this.getExtraLabels(locale));
                 return map;
@@ -314,34 +278,58 @@ public class NewUserWizardProcessor
             }
 
             @Override
-            public WizardStepDescriptor getDescriptor(final Locale locale) {
-                return (WizardStepDescriptor) new WizardStepDescriptor()
+            public WizardStepDescriptor getStepDescriptor(final Locale locale) {
+                return (WizardStepDescriptor) super.getStepDescriptor(locale)
                         .setRequired(true)
-                        .setStep(this.step)
                         .addLabel("authorities", messageSource.getMessage("suser.roles", locale))
-                        .setLabel(messageSource.getMessage("suser.roles", locale));
+                        .setLabel(messageSource.getMessage("wizard.NewUserWizard.step2.desc", locale));
             }
 
+            @Override
+            public void initializeBinder(final DataBinder binder) {
+                binder.registerCustomEditor(Set.class, "authorities", new PropertyValuesEditor() {
+
+                    @Override
+                    public Object getValue() {
+                        final List<?> list = (List<?>) super.getValue();
+                        final Set<GrantedAuthority> authorities = Sets.newHashSet();
+                        for (final Object rawRole : list) {
+                            final String role = (String) rawRole;
+                            try {
+                                final SRole sRole = (SRole) stringToEnum.convertSourceToTargetClass(role, SRole.class);
+                                final SAuthority sAuthority = new SAuthority();
+                                sAuthority.setRole(sRole);
+                                authorities.add(sAuthority);
+                                LOGGER.trace(String.format("Resolved authority from %s to %s", sRole, sAuthority));
+                            } catch (Exception e) {
+                                logger.error("initializeBinder failed", e);
+                            }
+                        }
+                        return authorities;
+                    }
+
+                });
+
+                binder.setRequiredFields("authorities");
+            }
 
         };
 
-        final StepHelper CONTACTS = new AbstractStepHelper() {
-            final String step = "contacts";
+        final StepHelper CONTACTS = new AbstractStepHelper("contacts") {
 
             @Override
-            public WizardStepDescriptor getDescriptor(final Locale locale) {
-                return (WizardStepDescriptor) new WizardStepDescriptor()
+            public WizardStepDescriptor getStepDescriptor(final Locale locale) {
+                return (WizardStepDescriptor) super.getStepDescriptor(locale)
                         .setRequired(true)
-                        .setStep(this.step)
                         .addLabel("contacts", messageSource.getMessage("sperson.contacts", locale))
                         .addLabel("contacts.contact", messageSource.getMessage("sabstractcontact.contact", locale))
                         .addLabel("contacts.type", messageSource.getMessage("sabstractcontact.type", locale))
-                        .setLabel(messageSource.getMessage("sperson.contacts", locale));
+                        .setLabel(messageSource.getMessage("wizard.NewUserWizard.step3.desc", locale));
             }
 
             @Override
-            public ModelMap init(final Locale locale) throws Exception {
-                final ModelMap map = super.init(locale);
+            public ModelMap initialize(final Locale locale) throws Exception {
+                final ModelMap map = super.initialize(locale);
                 map.put("contactTypes", this.getContactTypes(locale));
                 return map;
             }
@@ -370,6 +358,35 @@ public class NewUserWizardProcessor
                             }
                         })
                         .get();
+            }
+
+            @Override
+            public void initializeBinder(final DataBinder binder) {
+                final String personContactsPropertyKye = "person.contacts";
+
+                binder.registerCustomEditor(List.class, personContactsPropertyKye, new PropertyValuesEditor() {
+
+                    @Override
+                    @SuppressWarnings("unchecked")
+                    public Object getValue() {
+                        final List<?> value = (List<?>) super.getValue();
+                        final List<SPersonContact> contacts = Lists.newArrayList();
+                        for (Object map : value) {
+                            try {
+                                final Map<String, String> roleAsMap = (Map<String, String>) map;
+                                final SPersonContact contact = new SPersonContact();
+                                contact.setContact(roleAsMap.get("contact"));
+                                contact.setType((ContactType) stringToEnum.convertSourceToTargetClass(roleAsMap.get("type".toUpperCase()), ContactType.class));
+                                contacts.add(contact);
+                            } catch (Exception exp) {
+                                Logger.getLogger(this.getClass()).error("PropertyValuesEditor failed", exp);
+                            }
+                        }
+                        return contacts;
+                    }
+                });
+
+                binder.setRequiredFields(personContactsPropertyKye);
             }
         };
     }

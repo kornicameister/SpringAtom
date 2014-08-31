@@ -62,20 +62,20 @@ public class SVWizardController
 
     /**
      * <b>onWizardInit</b> is called as the first method when new wizard is launched. Selects {@link org.agatom.springatom.web.wizards.WizardProcessor}
-     * out of {@link #processorMap} and calls {@link org.agatom.springatom.web.wizards.WizardProcessor#initialize(java.util.Locale)} in order to
+     * out of {@link #processorMap} and calls {@link org.agatom.springatom.web.wizards.WizardProcessor#onWizardInit(java.util.Locale)} in order to
      * retrieve {@link org.agatom.springatom.web.wizards.data.WizardDescriptor} for the {@code key} wizard.
      *
-     * <b>URI: /cmp/wiz/init/{key}</b>
+     * <b>URI: /cmp/wiz/initialize/{wizard}</b>
      *
-     * @param key    unique id of the {@link org.agatom.springatom.web.wizards.WizardProcessor}
+     * @param wizard unique id of the {@link org.agatom.springatom.web.wizards.WizardProcessor}
      * @param locale current locale (vital to return descriptor with valid labels etc.)
      *
      * @return {@link org.agatom.springatom.web.wizards.data.WizardSubmission} the submission
      */
     @ResponseBody
-    @RequestMapping(value = "/init/{key}", method = RequestMethod.GET)
-    protected WizardSubmission onWizardInit(@PathVariable("key") final String key, final Locale locale) {
-        LOGGER.debug(String.format("onWizardInit(key=%s,locale=%s)", key, locale));
+    @RequestMapping(value = "/init/{wizard}", method = RequestMethod.GET)
+    protected WizardSubmission onWizardInit(@PathVariable("wizard") final String wizard, final Locale locale) {
+        LOGGER.debug(String.format("onWizardInit(key=%s,locale=%s)", wizard, locale));
         final long startTime = System.nanoTime();
 
         WizardSubmission submission = null;
@@ -83,8 +83,8 @@ public class SVWizardController
 
         try {
 
-            final WizardProcessor<?> wizardProcessor = this.processorMap.get(key);
-            result = wizardProcessor.initialize(locale);
+            final WizardProcessor<?> wizardProcessor = this.processorMap.get(wizard);
+            result = wizardProcessor.onWizardInit(locale);
 
         } catch (Exception exp) {
             submission = (WizardSubmission) new WizardSubmission(null, Submission.INIT).setError(exp).setSuccess(false).setSize(1);
@@ -95,14 +95,14 @@ public class SVWizardController
             submission = (WizardSubmission) new WizardSubmission(result, Submission.INIT).setSize(1).setSuccess(true).setTime(endTime);
         }
 
-        LOGGER.trace(String.format("onWizardInit(key=%s) completed in %d ms", key, endTime));
+        LOGGER.trace(String.format("onWizardInit(wizard=%s) completed in %d ms", wizard, endTime));
 
         return submission;
     }
 
     /**
      * <b>onStepInit</b> picks up {@link org.agatom.springatom.web.wizards.WizardProcessor} according to the {@code wizard} (corresponds to value in {@link #processorMap}) and calls
-     * {@link org.agatom.springatom.web.wizards.WizardProcessor#initializeStep(String, java.util.Locale)}.
+     * {@link org.agatom.springatom.web.wizards.WizardProcessor#onStepInit(String, java.util.Locale)}.
      * Returned value contains all <b>data</b> to properly sets up active step in client.
      *
      * @param wizard unique id of the {@link org.agatom.springatom.web.wizards.WizardProcessor}
@@ -124,7 +124,7 @@ public class SVWizardController
         try {
 
             final WizardProcessor<?> wizardProcessor = this.processorMap.get(wizard);
-            result = wizardProcessor.initializeStep(step, locale);
+            result = wizardProcessor.onStepInit(step, locale);
 
         } catch (Exception exp) {
             submission = (WizardSubmission) new WizardSubmission(null, Submission.INIT_STEP).setError(exp).setSuccess(false).setSize(1);
@@ -142,18 +142,18 @@ public class SVWizardController
 
     /**
      * <b>onWizardSubmit</b> is the last method called for a single {@link org.agatom.springatom.web.wizards.WizardProcessor}. Its job is to pick
-     * up {@link org.agatom.springatom.web.wizards.WizardProcessor} out of {@link #processorMap} and call {@link org.agatom.springatom.web.wizards.WizardProcessor#submit(java.util.Map, java.util.Locale)}
+     * up {@link org.agatom.springatom.web.wizards.WizardProcessor} out of {@link #processorMap} and call {@link org.agatom.springatom.web.wizards.WizardProcessor#onWizardSubmit(java.util.Map, java.util.Locale)}
      * in order to finalize the processing job
      *
-     * @param key      unique id of the {@link org.agatom.springatom.web.wizards.WizardProcessor}
+     * @param wizard   unique id of the {@link org.agatom.springatom.web.wizards.WizardProcessor}
      * @param formData form data
      *
      * @return {@link org.agatom.springatom.web.wizards.data.WizardSubmission} the submission
      */
     @ResponseBody
-    @RequestMapping(value = "/submit/{key}")
-    protected WizardSubmission onWizardSubmit(@PathVariable("key") final String key, @RequestBody final Map<String, Object> formData, final Locale locale) {
-        LOGGER.debug(String.format("onWizardSubmit(key=%s,formData=%s)", key, formData));
+    @RequestMapping(value = "/submit/{wizard}")
+    protected WizardSubmission onWizardSubmit(@PathVariable("wizard") final String wizard, @RequestBody final Map<String, Object> formData, final Locale locale) {
+        LOGGER.debug(String.format("onWizardSubmit(wizard=%s,formData=%s)", wizard, formData));
 
         final long startTime = System.nanoTime();
 
@@ -162,8 +162,8 @@ public class SVWizardController
 
         try {
 
-            final WizardProcessor<?> wizardProcessor = this.processorMap.get(key);
-            result = wizardProcessor.submit(formData, locale);
+            final WizardProcessor<?> wizardProcessor = this.processorMap.get(wizard);
+            result = wizardProcessor.onWizardSubmit(formData, locale);
 
         } catch (Exception exp) {
             submission = (WizardSubmission) new WizardSubmission(null, Submission.SUBMIT).setError(exp).setSuccess(false).setSize(1);
@@ -174,7 +174,7 @@ public class SVWizardController
             submission = (WizardSubmission) new WizardSubmission(result, Submission.SUBMIT).setSize(1).setSuccess(true).setTime(endTime);
         }
 
-        LOGGER.trace(String.format("onWizardInit(key=%s) completed in %d ms", key, endTime));
+        LOGGER.trace(String.format("onWizardInit(wizard=%s) completed in %d ms", wizard, endTime));
 
         return submission;
     }
@@ -195,7 +195,7 @@ public class SVWizardController
         try {
 
             final WizardProcessor<?> wizardProcessor = this.processorMap.get(wizard);
-            result = wizardProcessor.submitStep(step, formData, locale);
+            result = wizardProcessor.onStepSubmit(step, formData, locale);
 
         } catch (Exception exp) {
             submission = (WizardSubmission) new WizardSubmission(null, Submission.SUBMIT_STEP).setError(exp).setSuccess(false).setSize(1);

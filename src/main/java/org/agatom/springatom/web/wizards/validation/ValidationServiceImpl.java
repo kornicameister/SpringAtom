@@ -22,6 +22,7 @@ import com.google.common.collect.Sets;
 import org.agatom.springatom.server.service.domain.SUserService;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.wizards.WizardProcessor;
+import org.agatom.springatom.web.wizards.data.result.WizardDebugDataKeys;
 import org.agatom.springatom.web.wizards.data.result.WizardResult;
 import org.agatom.springatom.web.wizards.validation.model.ValidationBean;
 import org.apache.log4j.Logger;
@@ -39,6 +40,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -75,6 +78,7 @@ class ValidationServiceImpl
             return result;
         }
     };
+    public static final String VALIDATION_TIME = "validationTime";
     private static final Logger               LOGGER             = Logger.getLogger(ValidationServiceImpl.class);
     @Autowired
     private              ValidatorsRepository repository         = null;
@@ -114,12 +118,13 @@ class ValidationServiceImpl
             }
 
             partialResult = this.applyMessages(messageContext, partialResult);
-            partialResult.addDebugData("validator", ClassUtils.getShortName(validator.getClass()));
+            partialResult.addDebugData(WizardDebugDataKeys.VALIDATOR, ClassUtils.getShortName(validator.getClass()));
             validationBean.setPartialResult(partialResult);
         }
 
         final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
-        validationBean.getPartialResult().addDebugData("validationTime", endTime);
+        validationBean.getPartialResult().addDebugData(VALIDATION_TIME, endTime);
+
         LOGGER.debug(String.format("validate(validationBean=%s) took %d ms", validationBean, endTime));
     }
 
@@ -157,6 +162,18 @@ class ValidationServiceImpl
             LOGGER.debug(String.format("No suitable validator for key=%s", commandBeanName));
         }
         return false;
+    }
+
+    @Override
+    public void validate(final Validator localValidator, final Errors errors, final WizardResult result) {
+
+        final long startTime = System.nanoTime();
+        localValidator.validate(localValidator, errors);
+        final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+
+        result.addDebugData(WizardDebugDataKeys.VALIDATOR, ClassUtils.getShortName(localValidator.getClass()));
+        result.addDebugData(WizardDebugDataKeys.VALIDATION_TIME, endTime);
+
     }
 
     private MessageContext validateStep(final Object validator, final String stepId, final ValidationBean validationBean) {

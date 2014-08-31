@@ -51,18 +51,18 @@ public interface WizardProcessor<T> {
      *
      * @return initialized {@link org.agatom.springatom.web.wizards.data.WizardDescriptor}
      */
-    WizardResult initialize(final Locale locale) throws SException;
+    WizardResult onWizardInit(final Locale locale) throws SException;
 
     /**
      * Performs {@code step} initialization. This method must be defined in order to put specific data when wizard's step
      * is being about to enter.
      *
-     * @param step   step to init
+     * @param step   step to initialize
      * @param locale active locale
      *
-     * @return {@code step} init data
+     * @return {@code step} initialize data
      */
-    WizardResult initializeStep(final String step, final Locale locale);
+    WizardResult onStepInit(final String step, final Locale locale);
 
     /**
      * Submits the form. May call a service or execute any other persisting job. Nevertheless it will always
@@ -70,7 +70,7 @@ public interface WizardProcessor<T> {
      *
      * @return submitted object
      */
-    WizardResult submit(final Map<String, Object> stepData, final Locale locale) throws Exception;
+    WizardResult onWizardSubmit(final Map<String, Object> stepData, final Locale locale) throws Exception;
 
-    WizardResult submitStep(final String step, final Map<String, Object> formData, final Locale locale) throws Exception;
+    WizardResult onStepSubmit(final String step, final Map<String, Object> formData, final Locale locale) throws Exception;
 }

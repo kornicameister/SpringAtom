@@ -19,7 +19,6 @@ package org.agatom.springatom.web.wizards.wiz;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.mysema.query.types.Path;
 import org.agatom.springatom.server.model.beans.appointment.QSAppointment;
 import org.agatom.springatom.server.model.beans.appointment.QSAppointmentTask;
 import org.agatom.springatom.server.model.beans.appointment.SAppointment;
@@ -34,13 +33,16 @@ import org.agatom.springatom.web.component.ComponentCompilationException;
 import org.agatom.springatom.web.component.select.SelectComponent;
 import org.agatom.springatom.web.component.select.factory.SelectComponentFactory;
 import org.agatom.springatom.web.locale.SMessageSource;
+import org.agatom.springatom.web.wizards.StepHelper;
 import org.agatom.springatom.web.wizards.Wizard;
-import org.agatom.springatom.web.wizards.core.AbstractWizardProcessor;
+import org.agatom.springatom.web.wizards.core.AbstractStepHelper;
+import org.agatom.springatom.web.wizards.core.CreateObjectWizardProcessor;
 import org.agatom.springatom.web.wizards.data.WizardDescriptor;
 import org.agatom.springatom.web.wizards.data.WizardStepDescriptor;
 import org.agatom.springatom.web.wizards.data.result.FeedbackMessage;
 import org.agatom.springatom.web.wizards.data.result.WizardResult;
 import org.apache.log4j.Logger;
+import org.springframework.beans.PropertyValuesEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
@@ -59,12 +61,10 @@ import java.util.*;
  */
 @Wizard(value = NewAppointmentWizardProcessor.WIZARD_ID, validate = true)
 class NewAppointmentWizardProcessor
-        extends AbstractWizardProcessor<SAppointment> {
+        extends CreateObjectWizardProcessor<SAppointment> {
     protected static final String                 WIZARD_ID              = "newAppointment";
     private static final   Logger                 LOGGER                 = Logger.getLogger(NewAppointmentWizardProcessor.class);
     private static final   String                 FORM_OBJECT_NAME       = "appointment";
-    private static final   String[]               REQUIRED_FIELDS        = NewAppointmentWizardProcessor.getRequiredFields();
-    private static final   String[]               ALLOWED_FIELDS         = NewAppointmentWizardProcessor.getAllowedFields();
     private static final   String                 CARS                   = "cars";
     private static final   String                 ASSIGNEES              = "assignees";
     private static final   String                 REPORTERS              = "reporters";
@@ -84,75 +84,39 @@ class NewAppointmentWizardProcessor
     @Autowired
     private                SelectComponentFactory selectComponentFactory = null;
 
-    /**
-     * Returns array of allowed fields for {@link org.springframework.validation.DataBinder}
-     *
-     * @return allowed fields
-     */
-    private static String[] getAllowedFields() {
-        final QSAppointment appointment = QSAppointment.sAppointment;
-        final List<String> required = Lists.newArrayList(getRequiredFields());
-        required.add(getPropertyName(appointment.assigned));
-        return required.toArray(new String[required.size()]);
-    }
-
-    /**
-     * Returns array of required fields for {@link org.springframework.validation.DataBinder}
-     *
-     * @return required fields
-     */
-    private static String[] getRequiredFields() {
-        final QSAppointment appointment = QSAppointment.sAppointment;
-        return new String[]{
-                "beginDate", "endDate", "beginTime", "endTime",
-                getPropertyName(appointment.assignee),
-                getPropertyName(appointment.reporter),
-                getPropertyName(appointment.car),
-        };
-    }
-
-    private static String getPropertyName(final Path<?> path) {
-        return path.getMetadata().getName();
-    }
-
-    @Override
-    protected boolean isValidationEnabledForStep(final String step) {
-        return "definition".equals(step);
-    }
-
     @Override
     public String getContextObjectName() {
         return FORM_OBJECT_NAME;
     }
 
     @Override
-    protected DataBinder createBinder(final Object contextObject, final String contextObjectName) {
-        final DataBinder binder = super.createBinder(contextObject, contextObjectName);
-        binder.setRequiredFields(REQUIRED_FIELDS);
-        binder.setAllowedFields(ALLOWED_FIELDS);
-        return binder;
+    protected StepHelper[] getStepHelpers() {
+        return new StepHelper[]{
+                this.steps.DEFINITION,
+                this.steps.TASKS,
+                this.steps.COMMENT
+        };
     }
 
     @Override
-    protected WizardDescriptor getDescriptor(final Locale locale) {
-        LOGGER.debug(String.format("getDescriptor(locale=%s)", locale));
+    protected WizardDescriptor initializeWizard(final Locale locale) {
+        LOGGER.debug(String.format("initializeWizard(locale=%s)", locale));
 
         final WizardDescriptor descriptor = new WizardDescriptor();
 
-        descriptor.setLabel(this.messageSource.getMessage("sappointment", locale));
-        descriptor.addStep(this.steps.DEFINITION.getDescriptor(locale));
-        descriptor.addStep(this.steps.TASKS.getDescriptor(locale));
-        descriptor.addStep(this.steps.COMMENT.getDescriptor(locale));
+        descriptor.setLabel(this.messageSource.getMessage("wizard.NewAppointmentWizard.title", locale));
+        descriptor.addStep(this.steps.DEFINITION.getStepDescriptor(locale));
+        descriptor.addStep(this.steps.TASKS.getStepDescriptor(locale));
+        descriptor.addStep(this.steps.COMMENT.getStepDescriptor(locale));
 
         return descriptor;
     }
 
     @Override
-    protected WizardResult submitWizard(SAppointment contextObject, final Map<String, Object> stepData, final Locale locale) throws Exception {
+    protected WizardResult submitWizard(SAppointment contextObject, final ModelMap stepData, final Locale locale) throws Exception {
         final WizardResult result = new WizardResult()
                 .setWizardId("newAppointment");
 
-        contextObject = this.setTasks(contextObject, stepData);
         contextObject = this.setComment(contextObject, stepData);
         contextObject = this.appointmentService.save(contextObject);
 
@@ -169,39 +133,7 @@ class NewAppointmentWizardProcessor
                         )
         );
 
-
         return result;
-    }
-
-    /**
-     * Sets {@link org.agatom.springatom.server.model.beans.appointment.SAppointment#tasks} in {@code contextObject}.
-     * It is done locally after binding process in order to keep {@link org.springframework.format.support.FormattingConversionService} unpolluted with very
-     * specific converters.
-     *
-     * @param contextObject raw context object
-     * @param stepData      step data to get tasks from
-     *
-     * @return updated context object
-     *
-     * @see #submit(java.util.Map, java.util.Locale)
-     */
-    private SAppointment setTasks(final SAppointment contextObject, final Map<String, Object> stepData) {
-        LOGGER.debug(String.format("setTasks(contextObject=%s)", contextObject));
-        final List<?> tasks = (List<?>) stepData.get(getPropertyName(QSAppointment.sAppointment.tasks));
-        if (!CollectionUtils.isEmpty(tasks)) {
-            final Collection<SAppointmentTask> appointmentTasks = Lists.newArrayListWithExpectedSize(tasks.size());
-            Map<?, ?> rawTaskMap;
-            for (final Object rawTask : tasks) {
-                rawTaskMap = (Map<?, ?>) rawTask;
-                final Object task = rawTaskMap.get(getPropertyName(QSAppointmentTask.sAppointmentTask.task));
-                final Object type = rawTaskMap.get(getPropertyName(QSAppointmentTask.sAppointmentTask.type));
-                if (task != null && type != null) {
-                    appointmentTasks.add(new SAppointmentTask().setTask((String) task).setType((String) type));
-                }
-            }
-            contextObject.setTasks(appointmentTasks);
-        }
-        return contextObject;
     }
 
     private SAppointment setComment(final SAppointment contextObject, final Map<String, Object> stepData) {
@@ -209,34 +141,17 @@ class NewAppointmentWizardProcessor
         return StringUtils.hasText(comment) ? (SAppointment) contextObject.setComment(comment) : contextObject;
     }
 
-    @Override
-    protected ModelMap getStepInitData(final String step, final Locale locale) throws Exception {
-        LOGGER.debug(String.format("initializeStep(step=%s, locale=%s)", step, locale));
-        final ModelMap modelMap = new ModelMap();
-
-        switch (step) {
-            case "definition":
-                modelMap.putAll(this.steps.DEFINITION.init(locale));
-                break;
-            case "tasks":
-                modelMap.putAll(this.steps.TASKS.init(locale));
-                break;
-        }
-
-        return modelMap;
-    }
-
     /**
      * Lists of steps for the appointment
      */
     private class StepsDefinitionHolder {
-        final StepHelper TASKS      = new StepHelper() {
-            final String step = "tasks";
+        final StepHelper TASKS = new AbstractStepHelper("tasks") {
+
+            private final Logger logger = Logger.getLogger(this.getClass());
 
             @Override
-            public WizardStepDescriptor getDescriptor(final Locale locale) {
-                return (WizardStepDescriptor) new WizardStepDescriptor()
-                        .setStep(this.step)
+            public WizardStepDescriptor getStepDescriptor(final Locale locale) {
+                return (WizardStepDescriptor) super.getStepDescriptor(locale)
                         .setRequired(true)
                         .addLabel("tasks", messageSource.getMessage("sappointment.tasks", locale))
                         .addLabel("tasks.task", messageSource.getMessage("sappointment.task.task", locale))
@@ -245,10 +160,41 @@ class NewAppointmentWizardProcessor
             }
 
             @Override
-            public ModelMap init(final Locale locale) throws ComponentCompilationException {
+            public ModelMap initialize(final Locale locale) throws ComponentCompilationException {
                 final ModelMap map = new ModelMap();
                 map.addAttribute("taskTypes", this.getTaskTypes(locale));
                 return map;
+            }
+
+            @Override
+            public void initializeBinder(final DataBinder binder) {
+
+                binder.registerCustomEditor(Collection.class, "tasks", new PropertyValuesEditor() {
+                    @Override
+                    public Object getValue() {
+
+                        final List<?> tasks = (List<?>) super.getValue();
+                        final Collection<SAppointmentTask> appointmentTasks = Lists.newArrayListWithExpectedSize(tasks.size());
+
+                        logger.debug(String.format("setTasks(rawTasks=%s)", tasks));
+
+                        if (!CollectionUtils.isEmpty(tasks)) {
+                            Map<?, ?> rawTaskMap;
+                            for (final Object rawTask : tasks) {
+                                rawTaskMap = (Map<?, ?>) rawTask;
+                                final Object task = rawTaskMap.get(getPropertyName(QSAppointmentTask.sAppointmentTask.task));
+                                final Object type = rawTaskMap.get(getPropertyName(QSAppointmentTask.sAppointmentTask.type));
+                                if (task != null && type != null) {
+                                    appointmentTasks.add(new SAppointmentTask().setTask((String) task).setType((String) type));
+                                }
+                            }
+                        }
+
+                        return appointmentTasks;
+                    }
+                });
+
+                binder.setRequiredFields(getPropertyName(QSAppointment.sAppointment.tasks));
             }
 
             private SelectComponent<String, String> getTaskTypes(final Locale locale) throws ComponentCompilationException {
@@ -276,24 +222,25 @@ class NewAppointmentWizardProcessor
 
             }
         };
-        final StepHelper COMMENT    = new StepHelper() {
-            final String step = "comment";
+
+        final StepHelper COMMENT = new AbstractStepHelper("comment") {
 
             @Override
-            public WizardStepDescriptor getDescriptor(final Locale locale) {
-                return (WizardStepDescriptor) new WizardStepDescriptor()
-                        .setStep(this.step)
+            public WizardStepDescriptor getStepDescriptor(final Locale locale) {
+                return (WizardStepDescriptor) super.getStepDescriptor(locale)
                         .setRequired(true)
                         .addLabel("comment", messageSource.getMessage("sactivity.comment", locale))
                         .setLabel(messageSource.getMessage("wizard.NewAppointmentWizard.step3.desc", locale));
             }
 
             @Override
-            public ModelMap init(final Locale locale) {
-                return null;
+            public void initializeBinder(final DataBinder binder) {
+                binder.setAllowedFields(getPropertyName(QSAppointment.sAppointment.comment));
             }
+
         };
-        final StepHelper DEFINITION = new StepHelper() {
+
+        final StepHelper DEFINITION = new AbstractStepHelper("definition") {
             final Function<SUser, String> keyFunctionUser = new Function<SUser, String>() {
                 @Nullable
                 @Override
@@ -329,7 +276,12 @@ class NewAppointmentWizardProcessor
             final String step = "definition";
 
             @Override
-            public WizardStepDescriptor getDescriptor(final Locale locale) {
+            public boolean isValidationEnabled() {
+                return true;
+            }
+
+            @Override
+            public WizardStepDescriptor getStepDescriptor(final Locale locale) {
                 return (WizardStepDescriptor) new WizardStepDescriptor()
                         .setStep(this.step)
                         .setRequired(true)
@@ -342,7 +294,7 @@ class NewAppointmentWizardProcessor
             }
 
             @Override
-            public ModelMap init(final Locale locale) throws Exception {
+            public ModelMap initialize(final Locale locale) throws Exception {
                 final ModelMap map = new ModelMap();
 
                 map.addAttribute("dateFormat", messageSource.getMessage("data.format.value", locale));
@@ -374,10 +326,24 @@ class NewAppointmentWizardProcessor
                         .withValueOrder(KEY_ORDER)
                         .get();
             }
+
+
+            @Override
+            public void initializeBinder(final DataBinder binder) {
+                binder.setRequiredFields(this.getRequiredFields());
+            }
+
+            private String[] getRequiredFields() {
+                final QSAppointment appointment = QSAppointment.sAppointment;
+                return new String[]{
+                        "beginDate", "endDate", "beginTime", "endTime",
+                        getPropertyName(appointment.assignee),
+                        getPropertyName(appointment.reporter),
+                        getPropertyName(appointment.car),
+                };
+            }
         };
 
-
     }
-
 
 }
