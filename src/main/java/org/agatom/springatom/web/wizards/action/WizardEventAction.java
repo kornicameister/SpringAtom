@@ -15,12 +15,10 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.flows.wizards.events;
+package org.agatom.springatom.web.wizards.action;
 
 import com.google.common.base.Objects;
 import org.agatom.springatom.web.action.model.AbstractAction;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 
 /**
  * <p>WizardEventAction class.</p>
@@ -29,7 +27,6 @@ import org.springframework.context.annotation.Scope;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class WizardEventAction
         extends AbstractAction {
     private static final long   serialVersionUID = 7927406578178789028L;

@@ -74,7 +74,7 @@
 
         <!-- spring -->
         <spring.version>4.0.6.RELEASE</spring.version>
-        <spring-webflow.version>2.4.0.RC1</spring-webflow.version>
+        <spring-binding.version>2.4.0.RC1</spring-binding.version>
         <spring-security.version>3.2.4.RELEASE</spring-security.version>
         <spring-data-commons.version>1.8.1.RELEASE</spring-data-commons.version>
         <spring-data-jpa.version>1.6.1.RELEASE</spring-data-jpa.version>
@@ -327,8 +327,8 @@
         <!-- spring -->
         <dependency>
             <groupId>org.springframework.webflow</groupId>
-            <artifactId>spring-webflow</artifactId>
-            <version>${spring-webflow.version}</version>
+            <artifactId>spring-binding</artifactId>
+            <version>${spring-binding.version}</version>
         </dependency>
 
         <!--spring data -->

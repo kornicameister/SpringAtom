@@ -250,7 +250,7 @@ public class NewUserWizardProcessor
              */
             private void getRolesToExcludeInWizard() throws Exception {
                 try {
-                    final File file = ResourceUtils.getFile("classpath:org/agatom/springatom/web/flows/wizards/wizard/newUser/excluded-roles.properties");
+                    final File file = ResourceUtils.getFile("classpath:org/agatom/springatom/web/wizards/wizard/newUser/excluded-roles.properties");
                     if (file.canRead()) {
                         final Properties properties = PropertiesLoaderUtils.loadProperties(new FileSystemResource(file));
                         final String property = properties.getProperty("springatom.excludedRolesInCreate", "");

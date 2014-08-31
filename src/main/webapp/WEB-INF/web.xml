@@ -166,10 +166,6 @@
 
     <jsp-config>
         <taglib>
-            <taglib-uri>http://www.example.org/sa/swf</taglib-uri>
-            <taglib-location>/WEB-INF/tags/sa/swf.tld</taglib-location>
-        </taglib>
-        <taglib>
             <taglib-uri>http://www.example.org/sa/scmp</taglib-uri>
             <taglib-location>/WEB-INF/tags/sa/cmp.tld</taglib-location>
         </taglib>

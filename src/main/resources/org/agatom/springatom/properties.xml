@@ -16,8 +16,8 @@
   ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="webProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -34,9 +34,6 @@
     </bean>
     <bean id="urlMappingsProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location" value="classpath:org/agatom/springatom/webmvc/url-mapping.properties"/>
-    </bean>
-    <bean id="flowProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="location" value="classpath:org/agatom/springatom/web/flows/flows.properties"/>
     </bean>
     <bean id="sAppointmentProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location"
