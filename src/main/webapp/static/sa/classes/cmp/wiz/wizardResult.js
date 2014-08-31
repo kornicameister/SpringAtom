@@ -28,9 +28,9 @@ define(
     ],
     function formResult(angular, FeedbackMessage, ValidationMessage) {
         var scopes = {
-            WIZARD   : 'wizard',
-            FORM     : 'form',
-            STEP     : 'step'
+            WIZARD: 'wizard',
+            FORM  : 'form',
+            STEP  : 'step'
         };
         return Class(function WizardResult() {
             var getScopeData = function getScopeData(data, scope, key) {
@@ -43,16 +43,22 @@ define(
                     // for empty key create object
                     var chunk = angular.isUndefined(key) ? {} : undefined,
                         keepOn = true;
+
                     angular.forEach(scopes, function (scope) {
                         if (keepOn) {
                             if (angular.isUndefined(key)) {
                                 chunk[scope] = data[scope];
-                            } else {
-                                chunk = data[scope][key];
-                                keepOn = false;
+                                // keep iterating to return completely merged data
+                            } else if (_.has(data, scope)) {
+                                chunk = data[scope];
+                                if (_.has(chunk, key)) {
+                                    chunk = chunk[key];
+                                    keepOn = false;
+                                }
                             }
                         }
                     });
+
                     return chunk;
                 };
             return {
