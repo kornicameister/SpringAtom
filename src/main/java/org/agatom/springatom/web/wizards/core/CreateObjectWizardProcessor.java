@@ -33,6 +33,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.DataBinder;
+import org.springframework.validation.Validator;
 
 import java.util.Locale;
 import java.util.Map;
@@ -159,7 +160,7 @@ abstract public class CreateObjectWizardProcessor<T>
         final long startTime = System.nanoTime();
         final boolean isSubmitStep = StringUtils.hasText(step);
 
-        if (LOGGER.isDebugEnabled()) {
+        if (LOGGER.isDebugEnabled() && isSubmitStep) {
             LOGGER.debug(String.format("step=%s therefore it is a step submit", step));
         }
 
@@ -212,7 +213,7 @@ abstract public class CreateObjectWizardProcessor<T>
 
     @SuppressWarnings("unchecked")
     protected T getContextObject() throws Exception {
-        return (T) GenericTypeResolver.resolveTypeArgument(getClass(), CreateObjectWizardProcessor.class).newInstance();
+        return (T) this.getContextObjectClass().newInstance();
     }
 
     /**
@@ -232,6 +233,10 @@ abstract public class CreateObjectWizardProcessor<T>
 
     protected abstract WizardResult submitWizard(final T contextObject, final ModelMap stepData, final Locale locale) throws Exception;
 
+    private Class<?> getContextObjectClass() {
+        return GenericTypeResolver.resolveTypeArgument(getClass(), CreateObjectWizardProcessor.class);
+    }
+
     /**
      * Returns {@link org.springframework.ui.ModelMap} map of the attributes that will be added to {@link org.agatom.springatom.web.wizards.data.context.DataScope#STEP}
      * in returned {@link org.agatom.springatom.web.wizards.data.result.WizardResult}
@@ -247,6 +252,15 @@ abstract public class CreateObjectWizardProcessor<T>
      */
     protected ModelMap initializeStep(final String step, final Locale locale) throws Exception {
         return this.stepHelperDelegate.initialize(step, locale);
+    }
+
+    @Override
+    public void setLocalValidator(final Validator localValidator) {
+        final Class<?> contextObjectClass = this.getContextObjectClass();
+        if (!localValidator.supports(contextObjectClass)) {
+            throw new IllegalArgumentException(String.format("Validator [%s] does not support form object class [%s]", localValidator, contextObjectClass));
+        }
+        super.setLocalValidator(localValidator);
     }
 
     /**
@@ -270,5 +284,4 @@ abstract public class CreateObjectWizardProcessor<T>
         }
         return oid;
     }
-
 }

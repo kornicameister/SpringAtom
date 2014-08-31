@@ -99,20 +99,6 @@ class NewAppointmentWizardProcessor
     }
 
     @Override
-    protected WizardDescriptor initializeWizard(final Locale locale) {
-        LOGGER.debug(String.format("initializeWizard(locale=%s)", locale));
-
-        final WizardDescriptor descriptor = new WizardDescriptor();
-
-        descriptor.setLabel(this.messageSource.getMessage("wizard.NewAppointmentWizard.title", locale));
-        descriptor.addStep(this.steps.DEFINITION.getStepDescriptor(locale));
-        descriptor.addStep(this.steps.TASKS.getStepDescriptor(locale));
-        descriptor.addStep(this.steps.COMMENT.getStepDescriptor(locale));
-
-        return descriptor;
-    }
-
-    @Override
     protected WizardResult submitWizard(SAppointment contextObject, final ModelMap stepData, final Locale locale) throws Exception {
         final WizardResult result = new WizardResult()
                 .setWizardId("newAppointment");
@@ -134,6 +120,20 @@ class NewAppointmentWizardProcessor
         );
 
         return result;
+    }
+
+    @Override
+    protected WizardDescriptor initializeWizard(final Locale locale) {
+        LOGGER.debug(String.format("initializeWizard(locale=%s)", locale));
+
+        final WizardDescriptor descriptor = new WizardDescriptor();
+
+        descriptor.setLabel(this.messageSource.getMessage("wizard.NewAppointmentWizard.title", locale));
+        descriptor.addStep(this.steps.DEFINITION.getStepDescriptor(locale));
+        descriptor.addStep(this.steps.TASKS.getStepDescriptor(locale));
+        descriptor.addStep(this.steps.COMMENT.getStepDescriptor(locale));
+
+        return descriptor;
     }
 
     private SAppointment setComment(final SAppointment contextObject, final Map<String, Object> stepData) {
@@ -223,7 +223,7 @@ class NewAppointmentWizardProcessor
             }
         };
 
-        final StepHelper COMMENT = new AbstractStepHelper("comment") {
+        final StepHelper COMMENT = new AbstractStepHelper("comment", true) {
 
             @Override
             public WizardStepDescriptor getStepDescriptor(final Locale locale) {

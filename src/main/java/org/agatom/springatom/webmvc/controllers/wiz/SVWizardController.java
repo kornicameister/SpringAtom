@@ -174,7 +174,7 @@ public class SVWizardController
             submission = (WizardSubmission) new WizardSubmission(result, Submission.SUBMIT).setSize(1).setSuccess(true).setTime(endTime);
         }
 
-        LOGGER.trace(String.format("onWizardInit(wizard=%s) completed in %d ms", wizard, endTime));
+        LOGGER.trace(String.format("onWizardSubmit(wizard=%s) completed in %d ms", wizard, endTime));
 
         return submission;
     }

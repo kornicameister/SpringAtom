@@ -41,5 +41,7 @@ public interface StepHelper {
 
     String getStep();
 
+    boolean isFinalStep();
+
     boolean isValidationEnabled();
 }

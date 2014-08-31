@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.web.wizards.core;
 
+import com.google.common.base.Throwables;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.wizards.StepHelper;
 import org.agatom.springatom.web.wizards.Wizard;
@@ -28,6 +29,7 @@ import org.agatom.springatom.web.wizards.validation.ValidationService;
 import org.agatom.springatom.web.wizards.validation.model.ValidationBean;
 import org.apache.log4j.Logger;
 import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.binding.message.Message;
@@ -40,9 +42,9 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.*;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.bind.WebDataBinder;
 
 import javax.annotation.PostConstruct;
+import javax.naming.ConfigurationException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -55,7 +57,7 @@ import java.util.concurrent.TimeUnit;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-18</small>
  *
  * @author trebskit
- * @version 0.0.4
+ * @version 0.0.5
  * @since 0.0.1
  */
 abstract class AbstractWizardProcessor {
@@ -75,7 +77,7 @@ abstract class AbstractWizardProcessor {
     /**
      * Executes actual binding. Provider {@link org.springframework.validation.DataBinder} is used to verify
      * if {@link org.springframework.validation.DataBinder#getTarget()} is valid in context of raw field to actual field mapping.
-     * For instance {@code params.get("anAttribute")} must have corresponding property in {@code binder.getTargetObject()}.
+     * For instance {@code params.get(anAttribute)} must have corresponding property in {@code binder.getTargetObject()}.
      * Type mismatches are resolved via supplied {@link java.beans.PropertyEditorSupport} instances available through {@code binder} and
      * registered before this method executes
      *
@@ -169,12 +171,41 @@ abstract class AbstractWizardProcessor {
         }
     }
 
+    /**
+     * Returns true only if {@link org.agatom.springatom.web.wizards.Wizard#validate()} is true
+     *
+     * @return true if validation is enabled for entire wizard
+     */
     protected boolean isValidationEnabled() {
         return this.getWizardAnnotation().validate();
     }
 
-    private boolean isValidationEnabledForStep(final String step) {
-        return this.stepHelperDelegate.isValidationEnabled(step);
+    /**
+     * Method will return true if
+     * <ol>
+     * <li>{@code step} has text</li>
+     * <li>particular {@link org.agatom.springatom.web.wizards.StepHelper} returns true for validation question</li>
+     * </ol>
+     *
+     * @param step current step, may be null if validating entire wizard submission
+     *
+     * @return true if step validation enabled
+     *
+     * @see org.springframework.util.StringUtils#hasText(String)
+     * @see org.agatom.springatom.web.wizards.core.StepHelperDelegate#isValidationEnabled(String)
+     * @see org.agatom.springatom.web.wizards.StepHelper#isValidationEnabled()
+     */
+    private boolean isValidationEnabledForStep(String step) {
+        final boolean isStepSubmission = StringUtils.hasText(step);
+        if (!isStepSubmission) {
+            LOGGER.trace(String.format("step is not defined, therefore it may be a wizard submission, getting last step pointer"));
+            step = this.stepHelperDelegate.getLastStep();
+        }
+        final boolean enabled = this.stepHelperDelegate.isValidationEnabled(step);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("Validation for step=%s as %s step is %s", step, (isStepSubmission ? "not last" : "last"), (enabled ? "enabled" : "disabled")));
+        }
+        return enabled;
     }
 
     @SuppressWarnings("UnusedAssignment")
@@ -195,7 +226,7 @@ abstract class AbstractWizardProcessor {
             }
 
             if (!alreadyValidate) {
-                ValidationBean bean = new ValidationBean();
+                final ValidationBean bean = new ValidationBean();
 
                 bean.setPartialResult(result);
                 bean.setStepId(result.getStepId());
@@ -209,11 +240,20 @@ abstract class AbstractWizardProcessor {
                         LOGGER.debug(String.format("Validating via validation service for validationBean=%s", bean));
                     }
                     this.validationService.validate(bean);
+                    alreadyValidate = true;
                 }
-
             }
 
-            if (!alreadyValidate && !StringUtils.hasText(step)) {
+            /* Will validate only if not yet validated it is not step submission and wizard is allowed to validate
+             * This a last opportunity to validate however unlike validation via
+             * - localValidator
+             * - validationService
+             * this validation will be run only if
+             * - not yet validated
+             * - current (or last) step has validation flag set
+             * - entire wizard has validation flag set
+             */
+            if (!alreadyValidate && this.isValidationEnabledForStep(step) && this.isValidationEnabled()) {
                 LOGGER.debug(String.format("Not yet validated (tried localValidator and via validationService), assuming that is wizard submission due to step===null, validating through binder"));
                 final Validator validator = binder.getValidator();
                 if (validator != null) {
@@ -333,7 +373,7 @@ abstract class AbstractWizardProcessor {
         Assert.notNull(contextObject, "contextObject must not be null");
         Assert.notNull(contextObjectName, "contextObjectName must not be null");
 
-        final DataBinder binder = new WebDataBinder(contextObject, contextObjectName);
+        final DataBinder binder = new WizardDataBinder(contextObject, contextObjectName);
 
         binder.setIgnoreUnknownFields(true);
         binder.setAutoGrowNestedPaths(true);
@@ -396,7 +436,12 @@ abstract class AbstractWizardProcessor {
         LOGGER.trace("loadStepHelperDelegate()");
         final StepHelper[] helpers = this.getStepHelpers();
         Assert.notNull(helpers, "Helpers cannot be null");
-        this.stepHelperDelegate = new StepHelperDelegate(helpers);
+        try {
+            this.stepHelperDelegate = StepHelperDelegate.newStepHelperDelegate(helpers);
+        } catch (ConfigurationException e) {
+            LOGGER.fatal("Failed to initialized stepHelperDelegate, configuration failed", e);
+            throw new BeanInitializationException(e.getMessage(), Throwables.getRootCause(e));
+        }
     }
 
     /**

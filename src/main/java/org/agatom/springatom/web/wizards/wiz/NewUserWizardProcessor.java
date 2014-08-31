@@ -82,20 +82,6 @@ public class NewUserWizardProcessor
     private              SUserService           userService            = null;
 
     @Override
-    protected WizardDescriptor initializeWizard(final Locale locale) {
-        LOGGER.debug(String.format("initializeWizard(locale=%s)", locale));
-
-        final WizardDescriptor descriptor = new WizardDescriptor();
-
-        descriptor.setLabel(this.messageSource.getMessage("wizard.NewUserWizard.title", locale));
-        descriptor.addStep(this.steps.CREDENTIALS.getStepDescriptor(locale));
-        descriptor.addStep(this.steps.AUTHORITIES.getStepDescriptor(locale));
-        descriptor.addStep(this.steps.CONTACTS.getStepDescriptor(locale));
-
-        return descriptor;
-    }
-
-    @Override
     protected WizardResult submitWizard(SUser contextObject, final ModelMap stepData, final Locale locale) throws Exception {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("submitWizard(contextObject=%s)", contextObject));
@@ -128,6 +114,20 @@ public class NewUserWizardProcessor
     }
 
     @Override
+    protected WizardDescriptor initializeWizard(final Locale locale) {
+        LOGGER.debug(String.format("initializeWizard(locale=%s)", locale));
+
+        final WizardDescriptor descriptor = new WizardDescriptor();
+
+        descriptor.setLabel(this.messageSource.getMessage("wizard.NewUserWizard.title", locale));
+        descriptor.addStep(this.steps.CREDENTIALS.getStepDescriptor(locale));
+        descriptor.addStep(this.steps.AUTHORITIES.getStepDescriptor(locale));
+        descriptor.addStep(this.steps.CONTACTS.getStepDescriptor(locale));
+
+        return descriptor;
+    }
+
+    @Override
     protected String getContextObjectName() {
         return FORM_OBJECT_NAME;
     }
@@ -149,11 +149,6 @@ public class NewUserWizardProcessor
         final StepHelper   CREDENTIALS  = new AbstractStepHelper("credentials") {
 
             @Override
-            public boolean isValidationEnabled() {
-                return true;
-            }
-
-            @Override
             public WizardStepDescriptor getStepDescriptor(final Locale locale) {
                 return (WizardStepDescriptor) super.getStepDescriptor(locale)
                         .setRequired(true)
@@ -166,6 +161,12 @@ public class NewUserWizardProcessor
                         .addLabel("person", messageSource.getMessage("sperson", locale))
                         .setLabel(messageSource.getMessage("wizard.NewUserWizard.step1.desc", locale));
             }
+
+            @Override
+            public boolean isValidationEnabled() {
+                return true;
+            }
+
 
             @Override
             public void initializeBinder(final DataBinder binder) {
@@ -315,7 +316,7 @@ public class NewUserWizardProcessor
 
         };
 
-        final StepHelper CONTACTS = new AbstractStepHelper("contacts") {
+        final StepHelper CONTACTS = new AbstractStepHelper("contacts", true) {
 
             @Override
             public WizardStepDescriptor getStepDescriptor(final Locale locale) {

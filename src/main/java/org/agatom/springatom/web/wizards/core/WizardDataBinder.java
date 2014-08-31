@@ -17,66 +17,53 @@
 
 package org.agatom.springatom.web.wizards.core;
 
-import org.agatom.springatom.web.wizards.StepHelper;
-import org.agatom.springatom.web.wizards.data.WizardStepDescriptor;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.DataBinder;
-
-import java.util.Locale;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.PropertyAccessorUtils;
+import org.springframework.web.bind.WebDataBinder;
 
 /**
- * {@code AbstractStepHelper} is a convient abstract class combining logic
- * to handle particular step in {@link AbstractWizardProcessor}
+ * {@code WizardDataBinder} is customized {@link org.springframework.web.bind.WebDataBinder}
+ * that is aware of updating {@link #requiredFields} and {@link #allowedFields} instead of replacing them.
+ * It is crucial to update due to binder is initialized in the loop via {@link org.agatom.springatom.web.wizards.core.StepHelperDelegate}
  *
  * <p>
- * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-30</small>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-31</small>
  * </p>
  *
  * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-public abstract class AbstractStepHelper
-        implements StepHelper {
-    private final String  step;
-    private final boolean finalStep;
+class WizardDataBinder
+        extends WebDataBinder {
 
-    public AbstractStepHelper(final String step) {
-        this(step, false);
-    }
-
-    public AbstractStepHelper(final String step, final boolean finalStep) {
-        this.step = step;
-        this.finalStep = finalStep;
+    WizardDataBinder(final Object target, final String objectName) {
+        super(target, objectName);
     }
 
     @Override
-    public WizardStepDescriptor getStepDescriptor(final Locale locale) {
-        return new WizardStepDescriptor().setStep(this.getStep());
+    public void setAllowedFields(final String... allowedFields) {
+        final String[] oldFields = this.getAllowedFields();
+        String[] newFields = PropertyAccessorUtils.canonicalPropertyNames(allowedFields);
+        if (this.areFieldsSet(oldFields)) {
+            // update
+            newFields = ArrayUtils.addAll(oldFields, newFields);
+        }
+        super.setAllowedFields(newFields);
     }
 
     @Override
-    public ModelMap initialize(final Locale locale) throws Exception {
-        return new ModelMap();
+    public void setRequiredFields(final String... requiredFields) {
+        final String[] oldFields = this.getRequiredFields();
+        String[] newFields = PropertyAccessorUtils.canonicalPropertyNames(requiredFields);
+        if (this.areFieldsSet(oldFields)) {
+            // update
+            newFields = ArrayUtils.addAll(oldFields, newFields);
+        }
+        super.setRequiredFields(newFields);
     }
 
-    @Override
-    public void initializeBinder(final DataBinder binder) {
-
-    }
-
-    @Override
-    public final String getStep() {
-        return this.step;
-    }
-
-    @Override
-    public boolean isFinalStep() {
-        return this.finalStep;
-    }
-
-    @Override
-    public boolean isValidationEnabled() {
-        return false;
+    private boolean areFieldsSet(final String[] fields) {
+        return fields != null && fields.length > 0;
     }
 }
