@@ -112,14 +112,6 @@ public class WizardResult
         return this;
     }
 
-    public WizardResult addFormDataData(final java.lang.Object data) {
-        if (this.data == null) {
-            this.data = new WizardDataScopeHolder();
-        }
-        this.data.addFormDataData(data);
-        return this;
-    }
-
     public WizardResult addStepData(final java.lang.Object data) {
         if (this.data == null) {
             this.data = new WizardDataScopeHolder();
@@ -133,14 +125,6 @@ public class WizardResult
             this.data = new WizardDataScopeHolder();
         }
         this.data.addStepData(key, data);
-        return this;
-    }
-
-    public WizardResult addFormDataData(final String key, final java.lang.Object data) {
-        if (this.data == null) {
-            this.data = new WizardDataScopeHolder();
-        }
-        this.data.addFormDataData(key, data);
         return this;
     }
 

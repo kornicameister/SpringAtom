@@ -40,11 +40,10 @@ define(
                                          $timeout,
                                          $log,
                                          $state,
-                                         $cookies,
+                                         $cookies, $q, $rootScope,
                                          timeoutDelay,
                                          dialogs,
-                                         wizardResult,
-                                         actions, wizardKey, wizardHandler, wizardResource) {
+                                         wizardResult, actions, wizardKey, wizardHandler, wizardResource) {
             $log.debug('Entering wizardController');
 
             var exitState = $cookies.lastState,// retrieve state from which application entered wizard, for cancel action
@@ -153,9 +152,68 @@ define(
                             nextStep = stepsMap[index + dir];
                         helpers.setActiveStep(nextStep);
                     },
+                    submissionDataHandlers : {
+                        form  : function formSDH(data) {
+                            var keys = _.keys(data);
+                            _.each(keys, function keyIt(key) {
+                                $scope.formData[key] = data[key];
+                            });
+                        },
+                        wizard: function wizardSDH(data) {
+                            var keys = _.keys(data);
+                            _.each(keys, function keyIt(key) {
+                                $scope[key] = data[key];
+                            });
+                        },
+                        /**
+                         * Emits $rootScope event with key computed over wizardId and stepId using dot notation
+                         * Argument is the data of the step and event should be caught by corresponding step
+                         * controller
+                         *
+                         * @param data
+                         * @param wizardId wizardID
+                         */
+                        step: function stepSDH(data, wizardId) {
+                            var emitKey = '{wiz}.step.submission'.format({
+                                wiz : wizardId
+                            });
+                            $rootScope.$emit(emitKey, data);
+                        }
+                    },
                     onSubmissionSuccess    : function onSubmissionSuccess(wizardResult) {
-                        // Need to add analyzing the result and reacting upon
-                        helpers.setSiblingState(dirs.NEXT);
+                        var asyncApply = function () {
+                            // analyze dataMap
+                            var dataMap = wizardResult.getData(),
+                                keys = _.keys(dataMap),
+                                deferred = $q.defer();
+
+                            setTimeout(function apply() {
+                                deferred.notify('submissionSuccess(wiz={wiz}, step={step})'.format({
+                                    wiz : wizardResult.wizardId,
+                                    step: wizardResult.stepId
+                                }));
+
+                                if (utils.isDebug()) {
+                                    $log.debug(wizardResult.getDebugData());
+                                }
+
+                                _.each(keys, function keysIt(key) {
+                                    var value = dataMap[key];
+                                    if (!_.isUndefined(value)) {
+                                        helpers.submissionDataHandlers[key](value, wizardResult.wizardId, wizardResult.stepId);
+                                    }
+                                });
+
+                                deferred.resolve(dataMap);
+
+                            }, timeoutDelay);
+
+                            return deferred.promise;
+                        };
+
+                        asyncApply().then(function allPropagated() {
+                            helpers.setSiblingState(dirs.NEXT);
+                        });
                     },
                     onSubmissionFailure    : function onSubmissionFailure(errors) {
                         var bindingErrors, // to be shown in wizard

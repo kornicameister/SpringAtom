@@ -30,7 +30,6 @@ define(
         var scopes = {
             WIZARD   : 'wizard',
             FORM     : 'form',
-            FORM_DATA: 'formdata',
             STEP     : 'step'
         };
         return Class(function WizardResult() {
@@ -42,13 +41,15 @@ define(
                 },
                 lookupData = function lookupData(data, key) {
                     // for empty key create object
-                    var chunk = angular.isUndefined(key) ? {} : undefined;
+                    var chunk = angular.isUndefined(key) ? {} : undefined,
+                        keepOn = true;
                     angular.forEach(scopes, function (scope) {
-                        if (angular.isUndefined(chunk)) {
+                        if (keepOn) {
                             if (angular.isUndefined(key)) {
                                 chunk[scope] = data[scope];
                             } else {
                                 chunk = data[scope][key];
+                                keepOn = false;
                             }
                         }
                     });
@@ -64,6 +65,7 @@ define(
                     this.stepId = cfg.stepId;
                     this.wizardId = cfg.wizardId;
                     this.success = cfg.success;
+                    this.debugData = cfg.debugData;
                     if (!angular.isDefined(this.success)) {
                         //noinspection JSValidateTypes
                         this.success = true;
@@ -101,9 +103,6 @@ define(
                 getFormData          : function () {
                     return getScopeData(this.dataMap, scopes.FORM, arguments[0]);
                 },
-                getFormDataData      : function () {
-                    return getScopeData(this.dataMap, scopes.FORM_DATA, arguments[0]);
-                },
                 getStepData          : function () {
                     return getScopeData(this.dataMap, scopes.STEP, arguments[0]);
                 },
@@ -137,6 +136,9 @@ define(
                 },
                 getErrorsForPath     : function getErrorsForPath() {
 
+                },
+                getDebugData         : function getDebugData() {
+                    return this.debugData;
                 }
             }
         });

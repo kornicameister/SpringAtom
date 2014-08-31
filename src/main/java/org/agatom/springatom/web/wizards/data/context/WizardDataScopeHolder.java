@@ -94,10 +94,6 @@ public final class WizardDataScopeHolder
         return this.addData(DataScope.FORM, null, data);
     }
 
-    public WizardDataScopeHolder addFormDataData(final Object data) {
-        return this.addData(DataScope.FORM_DATA, null, data);
-    }
-
     public WizardDataScopeHolder addStepData(final Object data) {
         return this.addData(DataScope.STEP, null, data);
     }
@@ -108,10 +104,6 @@ public final class WizardDataScopeHolder
 
     public WizardDataScopeHolder addFormData(final String key, final Object data) {
         return this.addData(DataScope.FORM, key, data);
-    }
-
-    public WizardDataScopeHolder addFormDataData(final String key, final Object data) {
-        return this.addData(DataScope.FORM_DATA, key, data);
     }
 
     public WizardDataScopeHolder addStepData(final String key, final Object data) {

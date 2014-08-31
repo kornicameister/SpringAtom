@@ -27,19 +27,26 @@ package org.agatom.springatom.web.wizards.data.context;
  */
 enum DataScope {
     /**
-     * Scope dedicated to store data directly in wizard controller in client
+     * Corresponds to the scope of the main wizard controller in the client.
+     * Data set here wont be propagated to the client on submission however can
+     * be used to provide some initial data that main controller will understand.
+     * This is basically used when wizard is initialized.
+     *
+     * However for submission of a step this scope can be used to update
+     * main scope of the controller with arbitrary data.
      */
     WIZARD,
     /**
-     * Scope dedicated to store data in form scope in client
+     * Corresponds to the scope.formData in the client. Any data set here
+     * will be available as data that will be submitted back to client
+     * on step / wizard submission
      */
     FORM,
     /**
-     * Scope dedicated to store data in formData in client
-     */
-    FORM_DATA,
-    /**
-     * Scope dedicated to store data in step in client
+     * Scope dedicated to store data in step in client. Such data is propagated
+     * from the main wizard controller on each submission or is populated on the server
+     * when new step is being initialized to supply initial data like for instance
+     * options for select components
      */
     STEP
 }

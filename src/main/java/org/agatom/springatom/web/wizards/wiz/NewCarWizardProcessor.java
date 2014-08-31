@@ -18,6 +18,7 @@
 package org.agatom.springatom.web.wizards.wiz;
 
 import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -106,16 +107,10 @@ class NewCarWizardProcessor
     }
 
     @Override
-    protected WizardDescriptor initializeWizard(final Locale locale) {
-        LOGGER.debug(String.format("initializeWizard(locale=%s)", locale));
-        final WizardDescriptor descriptor = new WizardDescriptor();
-
-        descriptor.setLabel(this.messageSource.getMessage("wizard.NewCarWizard.title", locale));
-        descriptor.addStep(this.steps.VIN.getStepDescriptor(locale));
-        descriptor.addStep(this.steps.CAR.getStepDescriptor(locale));
-        descriptor.addStep(this.steps.OWNER.getStepDescriptor(locale));
-
-        return descriptor;
+    protected SCar getContextObject() throws Exception {
+        final SCar car = super.getContextObject();
+        car.setCarMaster(new SCarMaster());
+        return car;
     }
 
     @Override
@@ -130,15 +125,18 @@ class NewCarWizardProcessor
 
         try {
             final VinNumberData decode = this.vinDecoder.decode(vinNumber);
-
-            // populate to expected scopes in client
-            result.addWizardData("years", decode.getYears());
+            result.addWizardData("years", selectComponentFactory
+                            .<Integer, Integer, Integer>newSelectComponent()
+                            .from(decode.getYears())
+                            .usingLabelFunction(Functions.<Integer>identity())
+                            .usingValueFunction(Functions.<Integer>identity())
+                            .get()
+                            .getOptions()
+            );
             result.addFormData("manufacturedIn", decode.getManufacturedIn());
-
-            // append entire vinNumberData for the controller
             result.addStepData("vinNumberData", decode);
 
-        } catch (VinDecodingException e) {
+        } catch (VinDecodingException | ComponentCompilationException e) {
             LOGGER.error(String.format("Vin decoding failed, for vinNumber=%s", vinNumber), e);
             result.addError(e);
         }
@@ -179,10 +177,16 @@ class NewCarWizardProcessor
     }
 
     @Override
-    protected SCar getContextObject() throws Exception {
-        final SCar car = super.getContextObject();
-        car.setCarMaster(new SCarMaster());
-        return car;
+    protected WizardDescriptor initializeWizard(final Locale locale) {
+        LOGGER.debug(String.format("initializeWizard(locale=%s)", locale));
+        final WizardDescriptor descriptor = new WizardDescriptor();
+
+        descriptor.setLabel(this.messageSource.getMessage("wizard.NewCarWizard.title", locale));
+        descriptor.addStep(this.steps.VIN.getStepDescriptor(locale));
+        descriptor.addStep(this.steps.CAR.getStepDescriptor(locale));
+        descriptor.addStep(this.steps.OWNER.getStepDescriptor(locale));
+
+        return descriptor;
     }
 
     private class StepsHolder {
@@ -191,17 +195,18 @@ class NewCarWizardProcessor
 
         final StepHelper VIN = new AbstractStepHelper("vin") {
             @Override
-            public boolean isValidationEnabled() {
-                return true;
-            }
-
-            @Override
             public WizardStepDescriptor getStepDescriptor(final Locale locale) {
                 return (WizardStepDescriptor) super.getStepDescriptor(locale)
                         .setRequired(true)
                         .addLabel("vinNumber", messageSource.getMessage("scar.vinnumber", locale))
                         .setLabel(messageSource.getMessage("wizard.NewCarWizard.setupVin.desc", locale));
             }
+
+            @Override
+            public boolean isValidationEnabled() {
+                return true;
+            }
+
 
             @Override
             public void initializeBinder(final DataBinder binder) {
