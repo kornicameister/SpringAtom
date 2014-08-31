@@ -54,11 +54,11 @@ define(
                             _.each(keys, function keyIt(key) {
                                 var dataForKey = data[key];
                                 if (key === 'carMaster' && dataForKey.value === -1) {
-                                    var split = data.label.split(' ');
+                                    var split = dataForKey.label.split(' ');
                                     local['brand'] = split[0];
                                     local['model'] = split[1];
                                 } else if (key === 'yearOfProduction' || key === 'fuelType' || key === 'carMaster') {
-                                    local[key] = data.value;
+                                    local[key] = dataForKey.value;
                                 } else {
                                     local[key] = dataForKey;
                                 }

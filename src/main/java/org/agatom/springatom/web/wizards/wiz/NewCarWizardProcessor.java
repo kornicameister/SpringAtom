@@ -22,7 +22,6 @@ import com.google.common.base.Functions;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.neovisionaries.i18n.CountryCode;
 import org.agatom.springatom.server.model.beans.car.QSCar;
 import org.agatom.springatom.server.model.beans.car.SCar;
 import org.agatom.springatom.server.model.beans.car.SCarMaster;
@@ -119,42 +118,43 @@ class NewCarWizardProcessor
             LOGGER.debug(String.format("submitStep(contextObject=%s)", contextObject));
         }
 
-        final long startTime = System.nanoTime();
         final WizardResult result = new WizardResult();
-        final String vinNumber = contextObject.getVinNumber();
 
-        try {
-            final VinNumberData decode = this.vinDecoder.decode(vinNumber);
-            result.addWizardData("years", selectComponentFactory
-                            .<Integer, Integer, Integer>newSelectComponent()
-                            .from(decode.getYears())
-                            .usingLabelFunction(Functions.<Integer>identity())
-                            .usingValueFunction(Functions.<Integer>identity())
-                            .get()
-                            .getOptions()
-            );
-            result.addFormData("manufacturedIn", decode.getManufacturedIn());
-            result.addStepData("vinNumberData", decode);
+        if (this.steps.VIN.getStep().equals(step)) {
+            final long startTime = System.nanoTime();
+            final String vinNumber = contextObject.getVinNumber();
 
-        } catch (VinDecodingException | ComponentCompilationException e) {
-            LOGGER.error(String.format("Vin decoding failed, for vinNumber=%s", vinNumber), e);
-            result.addError(e);
+            try {
+                final VinNumberData decode = this.vinDecoder.decode(vinNumber);
+                result.addWizardData("years", selectComponentFactory
+                                .<Integer, Integer, Integer>newSelectComponent()
+                                .from(decode.getYears())
+                                .usingLabelFunction(Functions.<Integer>identity())
+                                .usingValueFunction(Functions.<Integer>identity())
+                                .get()
+                                .getOptions()
+                );
+                result.addFormData("manufacturedIn", decode.getManufacturedIn());
+                result.addStepData("vinNumberData", decode);
+
+            } catch (VinDecodingException | ComponentCompilationException e) {
+                LOGGER.error(String.format("Vin decoding failed, for vinNumber=%s", vinNumber), e);
+                result.addError(e);
+            }
+
+            final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(String.format("submitStep(contextObject=%s) took %d ms", contextObject, endTime));
+            }
+
+            result.addDebugData(WizardDebugDataKeys.SUBMISSION_TIME, endTime);
         }
-
-        final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("submitStep(contextObject=%s) took %d ms", contextObject, endTime));
-        }
-
-        result.addDebugData(WizardDebugDataKeys.SUBMISSION_TIME, endTime);
 
         return result;
     }
 
     @Override
     protected WizardResult submitWizard(SCar contextObject, final ModelMap stepData, final Locale locale) throws Exception {
-        final SCarMaster carMaster = contextObject.getCarMaster();
-        carMaster.setManufacturedIn(CountryCode.valueOf((String) stepData.get("manufacturedIn")));
         contextObject = this.carService.save(contextObject);
 
         final WizardResult result = new WizardResult()
@@ -193,7 +193,7 @@ class NewCarWizardProcessor
 
         final QSCar car = QSCar.sCar;
 
-        final StepHelper VIN = new AbstractStepHelper("vin") {
+        final StepHelper VIN   = new AbstractStepHelper("vin") {
             @Override
             public WizardStepDescriptor getStepDescriptor(final Locale locale) {
                 return (WizardStepDescriptor) super.getStepDescriptor(locale)
@@ -210,61 +210,12 @@ class NewCarWizardProcessor
 
             @Override
             public void initializeBinder(final DataBinder binder) {
-                binder.setRequiredFields(getPropertyName(car.vinNumber));
+                final String vinPropertyName = getPropertyName(car.vinNumber);
+                binder.setRequiredFields(vinPropertyName);
+                binder.setAllowedFields(vinPropertyName);
             }
         };
-
-        private class CarMasterBean
-                extends SelectOption<Long, String> {
-            private static final long   serialVersionUID = 2416206557929038223L;
-            private              String tooltip          = null;
-
-            public String getTooltip() {
-                return tooltip;
-            }
-
-            public CarMasterBean setTooltip(final String tooltip) {
-                this.tooltip = tooltip;
-                return this;
-            }
-        }
-
-        private class OwnerBean
-                implements Serializable {
-            private static final long                      serialVersionUID = 1349406708171914877L;
-            private              String                    ownerIdentity    = null;
-            private              Long                      ownerId          = null;
-            private              List<Map<String, Object>> carsMap          = Lists.newArrayList();
-
-            public String getOwnerIdentity() {
-                return ownerIdentity;
-            }
-
-            public OwnerBean setOwnerIdentity(final String ownerIdentity) {
-                this.ownerIdentity = ownerIdentity;
-                return this;
-            }
-
-            public Long getOwnerId() {
-                return ownerId;
-            }
-
-            public OwnerBean setOwnerId(final Long ownerId) {
-                this.ownerId = ownerId;
-                return this;
-            }
-
-            public List<Map<String, Object>> getCarsMap() {
-                return carsMap;
-            }
-
-            public OwnerBean setCarsMap(final List<Map<String, Object>> carsMap) {
-                this.carsMap = carsMap;
-                return this;
-            }
-        }
-
-        final StepHelper CAR = new AbstractStepHelper("car") {
+        final StepHelper CAR   = new AbstractStepHelper("car") {
             final Logger logger = Logger.getLogger(this.getClass());
 
             @Override
@@ -388,9 +339,7 @@ class NewCarWizardProcessor
             }
 
         };
-
-
-        final StepHelper OWNER = new AbstractStepHelper("owner") {
+        final StepHelper OWNER = new AbstractStepHelper("owner", true) {
             @Override
             public WizardStepDescriptor getStepDescriptor(final Locale locale) {
                 return (WizardStepDescriptor) super.getStepDescriptor(locale)
@@ -401,7 +350,9 @@ class NewCarWizardProcessor
 
             @Override
             public void initializeBinder(final DataBinder binder) {
-                binder.setRequiredFields(getPropertyName(car.owner));
+                final String propertyName = getPropertyName(car.owner);
+                binder.setRequiredFields(propertyName);
+                binder.setAllowedFields(propertyName);
             }
 
             @Override
@@ -436,6 +387,56 @@ class NewCarWizardProcessor
                         .toSet();
             }
         };
+
+        private class CarMasterBean
+                extends SelectOption<Long, String> {
+            private static final long   serialVersionUID = 2416206557929038223L;
+            private              String tooltip          = null;
+
+            public String getTooltip() {
+                return tooltip;
+            }
+
+            public CarMasterBean setTooltip(final String tooltip) {
+                this.tooltip = tooltip;
+                return this;
+            }
+        }
+
+        private class OwnerBean
+                implements Serializable {
+            private static final long                      serialVersionUID = 1349406708171914877L;
+            private              String                    ownerIdentity    = null;
+            private              Long                      ownerId          = null;
+            private              List<Map<String, Object>> carsMap          = Lists.newArrayList();
+
+            public String getOwnerIdentity() {
+                return ownerIdentity;
+            }
+
+            public OwnerBean setOwnerIdentity(final String ownerIdentity) {
+                this.ownerIdentity = ownerIdentity;
+                return this;
+            }
+
+            public Long getOwnerId() {
+                return ownerId;
+            }
+
+            public OwnerBean setOwnerId(final Long ownerId) {
+                this.ownerId = ownerId;
+                return this;
+            }
+
+            public List<Map<String, Object>> getCarsMap() {
+                return carsMap;
+            }
+
+            public OwnerBean setCarsMap(final List<Map<String, Object>> carsMap) {
+                this.carsMap = carsMap;
+                return this;
+            }
+        }
 
     }
 
