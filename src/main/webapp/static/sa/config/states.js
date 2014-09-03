@@ -27,7 +27,8 @@ define(
         'states/navigator',
         'states/ip',
         'states/wizards',
-        'states/error/errorState'
+        'states/error/errorState',
+        'states/calendar'
         // states
     ],
     function configStates(app, utils) {

@@ -17,8 +17,6 @@
 
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="swf" tagdir="/WEB-INF/tags/swf" %>
-<%@ taglib prefix="swf2" uri="/WEB-INF/tags/sa/swf.tld" %>
 
 <nav class="navbar navbar-inverse" role="navigation">
 	<div class="collapse navbar-collapse" id="{{wizardId}}-collapse">

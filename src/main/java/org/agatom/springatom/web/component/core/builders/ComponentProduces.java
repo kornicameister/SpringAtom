@@ -26,6 +26,11 @@ package org.agatom.springatom.web.component.core.builders;
  * @since 0.0.1
  */
 public enum ComponentProduces {
-	PAGE_COMPONENT,
-	TABLE_COMPONENT
+    PAGE_COMPONENT,
+    TABLE_COMPONENT,
+    /**
+     * Other component marks specific {@link org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder}
+     * to builds component different then {@link #PAGE_COMPONENT} and {@link #TABLE_COMPONENT}
+     */
+    OTHER_COMPONENT
 }

@@ -15,44 +15,34 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core.builders;
+package org.agatom.springatom.web.calendar;
 
-import com.google.common.base.Objects;
-import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
-import org.agatom.springatom.web.locale.SMessageSource;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.AnnotationUtils;
+import org.agatom.springatom.web.component.core.Component;
+
+import java.util.HashMap;
 
 /**
- * {@code AbstractBuilder} is a root for all <b>component builder</b>. Defines root fields and functionality.
- * It is not an actual {@link org.agatom.springatom.web.component.core.builders.ComponentDataBuilder}
- * or {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder}, yet all concrete implementations
- * starts from it
- * <small>Class is a part of <b>SpringAtom</b> and was created at 27.05.14</small>
+ * <p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-09-01</small>
+ * </p>
  *
- * @author kornicameister
- * @version 0.0.2
+ * @author trebskit
+ * @version 0.0.1
  * @since 0.0.1
  */
-abstract public class AbstractBuilder
-        implements Builder {
-    protected final Logger         logger        = Logger.getLogger(getClass());
-    @Autowired
-    protected       SMessageSource messageSource = null;
+class Calendar
+        extends HashMap<String, Object>
+        implements Component {
+    private static final long serialVersionUID = 6652812453541549468L;
 
-    /** {@inheritDoc} */
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("id", getId())
-                .toString();
+    public String getLabel() {
+        return (String) this.get("label");
     }
 
-    /** {@inheritDoc} */
     @Override
-    public String getId() {
-        final Class<? extends AbstractBuilder> clazz = this.getClass();
-        return String.valueOf(AnnotationUtils.getValue(clazz.getAnnotation(ComponentBuilder.class)));
+    public Component setLabel(final String title) {
+        this.put("label", title);
+        return this;
     }
 }

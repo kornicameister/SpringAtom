@@ -23,6 +23,7 @@ import org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuil
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 import org.agatom.springatom.web.component.core.data.RequestedBy;
+import org.agatom.springatom.web.component.core.request.ComponentRequest;
 import org.agatom.springatom.web.component.infopages.elements.InfoPageComponent;
 import org.agatom.springatom.web.component.infopages.link.InfoPageRequest;
 import org.agatom.springatom.web.component.infopages.request.InfoPageComponentRequest;
@@ -146,6 +147,42 @@ public class SVComponentsDefinitionController
             LOGGER.error(String.format("onTableConfigRequest(builderId=%s,webRequest=%s) failed...", builderId, webRequest), exp);
             throw new ControllerTierException(String.format("Failed to get table config for builderId=%s", builderId), exp);
         }
+    }
+
+    @ResponseBody
+    @RequestMapping(
+            value = "/{builderId}",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public Object onOtherComponentConfigRequest(@PathVariable("builderId") final String builderId, final WebRequest webRequest) throws ControllerTierException {
+        LOGGER.trace(String.format("onOtherComponentConfigRequest(builderId=%s,webRequest=%s)", builderId, webRequest));
+        try {
+            final Builder builder = this.builderRepository.getBuilder(builderId);
+
+            Assert.notNull(builder, String.format("Builder for builderId=%s not found", builderId));
+            Assert.isInstanceOf(ComponentDefinitionBuilder.class, builder, String.format("Builder for builderId=%s not capable of producing definition", builderId));
+
+            final ComponentDefinitionBuilder<?> definitionBuilder = (ComponentDefinitionBuilder<?>) builder;
+
+            LOGGER.trace(String.format("For builderId=%s using object=%s", builderId, definitionBuilder));
+
+            final ComponentDataRequest request = this.combineRequest(new OtherDefinitionRequest(), webRequest);
+            request.setRequestedBy(RequestedBy.OTHER);
+
+            final CmpResource<?> resource = this.toComponentResource(request, definitionBuilder.getDefinition(request));
+            resource.add(linkTo(methodOn(SVComponentsDefinitionController.class).onOtherComponentConfigRequest(builderId, webRequest)).withSelfRel());
+            return resource;
+
+        } catch (Exception exp) {
+            LOGGER.error(String.format("onOtherComponentConfigRequest(builderId=%s,webRequest=%s) failed...", builderId, webRequest), exp);
+            throw new ControllerTierException(String.format("Failed to get other config for builderId=%s", builderId), exp);
+        }
+    }
+
+    private static class OtherDefinitionRequest
+            implements ComponentRequest {
+        private static final long serialVersionUID = -259181880154046474L;
     }
 
 }

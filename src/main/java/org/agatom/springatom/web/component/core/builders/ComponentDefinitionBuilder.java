@@ -30,32 +30,31 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentDefinitionBuilder<COMP extends Serializable>
-		extends ComponentDataBuilder {
+public interface ComponentDefinitionBuilder<COMP extends Serializable> {
 
-	/**
-	 * Returns value of {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
-	 *
-	 * @return what builder produces
-	 */
-	ComponentProduces getProduces();
+    /**
+     * Returns value of {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
+     *
+     * @return what builder produces
+     */
+    ComponentProduces getProduces();
 
-	/**
-	 * Returns a component class built by this builder
-	 *
-	 * @return a component class
-	 */
-	Class<?> getBuilds();
+    /**
+     * Returns a component class built by this builder
+     *
+     * @return a component class
+     */
+    Class<?> getBuilds();
 
-	/**
-	 * Returns valid definition appropriate for this builder. Definition must be {@link java.io.Serializable}
-	 *
-	 * @param dataRequest to access the request and conditionally build definition if necessary
-	 *
-	 * @return builder definition
-	 *
-	 * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException in case of an error
-	 */
-	ComponentDataResponse getDefinition(final ComponentDataRequest dataRequest) throws ComponentException;
+    /**
+     * Returns valid definition appropriate for this builder. Definition must be {@link java.io.Serializable}
+     *
+     * @param dataRequest to access the request and conditionally build definition if necessary
+     *
+     * @return builder definition
+     *
+     * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException in case of an error
+     */
+    ComponentDataResponse getDefinition(final ComponentDataRequest dataRequest) throws ComponentException;
 
 }

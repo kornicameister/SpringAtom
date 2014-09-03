@@ -19,7 +19,9 @@
  * Created by trebskit on 2014-08-14.
  */
 define(
-    [
+    [,
+        // angular injections
+        'resources/componentResource',
         'views/cmp/ip/infoPageController'
     ],
     function ipStates() {
@@ -31,13 +33,19 @@ define(
                  * Points to generic view holding Angular based InfoPage View view
                  */
                 templateUrl: '/app/cmp/ip/generic',
+                resolve    : {
+                    definition: ['componentResource', '$stateParams', function (componentResource, $stateParams) {
+                        return componentResource.getInfoPageDefinition($stateParams.domain, $stateParams.id);
+                    }]
+                },
                 controller : [
-                    '$scope', '$stateParams',
-                    function ($scope, $stateParams) {
+                    '$scope', '$stateParams', 'definition',
+                    function ($scope, $stateParams, definition) {
                         $scope.infopage = {
                             key   : $stateParams.id,
                             domain: $stateParams.domain
                         };
+                        console.log(definition);
                     }
                 ]
             }

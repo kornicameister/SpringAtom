@@ -137,7 +137,7 @@
         <jackson.version>2.4.0</jackson.version>
 
         <tomcat.version>8.0.9</tomcat.version>
-        <guava.version>17.0</guava.version>
+        <guava.version>18.0</guava.version>
         <tomcat.maven.version>2.1</tomcat.maven.version>
         <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
         <castor.version>1.2</castor.version>

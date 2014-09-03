@@ -28,6 +28,7 @@ package org.agatom.springatom.web.component.core.data;
  * @since 0.0.1
  */
 public enum RequestedBy {
-	INFOPAGE,
-	TABLE
+    INFOPAGE,
+    OTHER,
+    TABLE
 }

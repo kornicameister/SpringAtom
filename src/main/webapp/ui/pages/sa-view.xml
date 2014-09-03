@@ -17,56 +17,56 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <!DOCTYPE tiles-definitions PUBLIC
-		"-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
-		"http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 
-<tiles-definitions >
+<tiles-definitions>
 
-	<definition name="springatom.tiles.index" extends="ui.core.Page" />
-	<definition name="springatom.tiles.home" template="/ui/pages/home.jsp" />
-	<definition name="springatom.tiles.about" template="/ui/pages/about.jsp" />
+    <definition name="springatom.tiles.index" extends="ui.core.Page"/>
+    <definition name="springatom.tiles.home" template="/ui/pages/home.jsp"/>
+    <definition name="springatom.tiles.about" template="/ui/pages/about.jsp"/>
 
-	<definition name="springatom.tiles.garage" template="/ui/pages/garage/panel.jsp" />
-	<definition name="springatom.tiles.garage.lifts" template="/ui/pages/garage/lifts/panel.jsp" />
-	<definition name="springatom.tiles.garage.mechanics" template="/ui/pages/garage/mechanics/panel.jsp" />
+    <definition name="springatom.tiles.garage" template="/ui/pages/garage/panel.jsp"/>
+    <definition name="springatom.tiles.garage.lifts" template="/ui/pages/garage/lifts/panel.jsp"/>
+    <definition name="springatom.tiles.garage.mechanics" template="/ui/pages/garage/mechanics/panel.jsp"/>
 
-	<definition name="springatom.tiles.dashboard" template="/ui/pages/dashboard/panel.jsp" />
-	<definition name="springatom.tiles.dashboard.cars" template="/ui/pages/dashboard/cars/panel.jsp" />
-	<definition name="springatom.tiles.dashboard.calendar" template="/ui/pages/dashboard/calendar/panel.jsp" />
-	<definition name="springatom.tiles.dashboard.clients" template="/ui/pages/dashboard/clients/panel.jsp" />
-	<definition name="springatom.tiles.dashboard.reports" template="/ui/pages/dashboard/reports/panel.jsp" />
-	<definition name="springatom.tiles.dashboard.reports.Download"
-	            template="/ui/pages/dashboard/reports/download_report.jsp" />
+    <definition name="springatom.tiles.dashboard" template="/ui/pages/dashboard/panel.html"/>
+    <definition name="springatom.tiles.dashboard.cars" template="/ui/pages/dashboard/cars/panel.jsp"/>
+    <definition name="springatom.tiles.dashboard.calendar" template="/ui/pages/dashboard/calendar/calendar.html"/>
+    <definition name="springatom.tiles.dashboard.clients" template="/ui/pages/dashboard/clients/panel.jsp"/>
+    <definition name="springatom.tiles.dashboard.reports" template="/ui/pages/dashboard/reports/panel.jsp"/>
+    <definition name="springatom.tiles.dashboard.reports.Download"
+                template="/ui/pages/dashboard/reports/download_report.jsp"/>
 
-	<!-- springatom.tiles.auth.* -->
-	<definition name="springatom.tiles.auth.register" template="/ui/pages/auth/register.jsp" />
-	<definition name="springatom.tiles.auth.action.login" template="/ui/pages/auth/actions/loginAction.jsp" />
-	<definition name="springatom.tiles.auth.action.logout" template="/ui/pages/auth/actions/logoutAction.jsp" />
-	<definition name="springatom.tiles.auth.login" template="/ui/pages/auth/login.jsp" />
-	<definition name="springatom.tiles.auth.login.failed" extends="springatom.tiles.auth.login" >
-		<put-attribute name="error" value="/ui/pages/auth/error_login_failed.jsp" />
-	</definition >
-	<definition name="springatom.tiles.auth.access.denied" extends="springatom.tiles.auth.login" >
-		<put-attribute name="error" value="/ui/pages/auth/error_access_is_denied.jsp" />
-	</definition >
-	<!-- springatom.tiles.auth.* -->
+    <!-- springatom.tiles.auth.* -->
+    <definition name="springatom.tiles.auth.register" template="/ui/pages/auth/register.jsp"/>
+    <definition name="springatom.tiles.auth.action.login" template="/ui/pages/auth/actions/loginAction.jsp"/>
+    <definition name="springatom.tiles.auth.action.logout" template="/ui/pages/auth/actions/logoutAction.jsp"/>
+    <definition name="springatom.tiles.auth.login" template="/ui/pages/auth/login.jsp"/>
+    <definition name="springatom.tiles.auth.login.failed" extends="springatom.tiles.auth.login">
+        <put-attribute name="error" value="/ui/pages/auth/error_login_failed.jsp"/>
+    </definition>
+    <definition name="springatom.tiles.auth.access.denied" extends="springatom.tiles.auth.login">
+        <put-attribute name="error" value="/ui/pages/auth/error_access_is_denied.jsp"/>
+    </definition>
+    <!-- springatom.tiles.auth.* -->
 
-	<definition name="springatom.tiles.admin" template="/ui/pages/admin/panel.jsp" />
-	<definition name="springatom.tiles.admin.db" template="/ui/pages/admin/db/panel.jsp" />
-	<definition name="springatom.tiles.admin.language" template="/ui/pages/admin/language/panel.jsp" />
-	<definition name="springatom.tiles.admin.settings" template="/ui/pages/admin/language/panel.jsp" />
+    <definition name="springatom.tiles.admin" template="/ui/pages/admin/panel.jsp"/>
+    <definition name="springatom.tiles.admin.db" template="/ui/pages/admin/db/panel.jsp"/>
+    <definition name="springatom.tiles.admin.language" template="/ui/pages/admin/language/panel.jsp"/>
+    <definition name="springatom.tiles.admin.settings" template="/ui/pages/admin/language/panel.jsp"/>
 
-	<!-- components -->
-	<definition name="ui.nav.Navigator" template="/ui/navigator/navigator.jsp" />
-	<definition name="ui.nav.DropdownMenu" template="/ui/navigator/dropdownMenu.jsp" />
-	<definition name="springatom.tiles.ip.AInfoPage" template="/ui/ip/angular_template.jsp" />
-	<definition name="springatom.tiles.ip.AGrid" template="/ui/ip/angular_grid.jsp" />
-	<!-- components -->
+    <!-- components -->
+    <definition name="ui.nav.Navigator" template="/ui/navigator/navigator.jsp"/>
+    <definition name="ui.nav.DropdownMenu" template="/ui/navigator/dropdownMenu.jsp"/>
+    <definition name="springatom.tiles.ip.AInfoPage" template="/ui/ip/angular_template.jsp"/>
+    <definition name="springatom.tiles.ip.AGrid" template="/ui/ip/angular_grid.jsp"/>
+    <!-- components -->
 
-	<!-- meta chunks -->
-	<definition name="ui.meta.Head" template="/ui/meta/head.jsp" />
-	<definition name="ui.meta.head.JS" template="/ui/meta/js.jsp" />
-	<definition name="ui.meta.head.CSS" template="/ui/meta/css.jsp" />
-	<!-- meta chunks -->
+    <!-- meta chunks -->
+    <definition name="ui.meta.Head" template="/ui/meta/head.jsp"/>
+    <definition name="ui.meta.head.JS" template="/ui/meta/js.jsp"/>
+    <definition name="ui.meta.head.CSS" template="/ui/meta/css.jsp"/>
+    <!-- meta chunks -->
 
-</tiles-definitions >
+</tiles-definitions>
