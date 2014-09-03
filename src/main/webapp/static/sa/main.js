@@ -50,7 +50,8 @@
                 'ngGrid'                  : adjustPath('../libs/ng-grid/build/ng-grid.min.js'),
                 'ngProgress'              : adjustPath('../libs/ngprogress/build/ngProgress.min.js'),
                 'underscore'              : adjustPath('../libs/underscore/underscore-min.js'),
-                'ngMultiSelect'           : adjustPath('../libs/isteven-angular-multiselect/angular-multi-select.js')
+                'ngMultiSelect'      : adjustPath('../libs/isteven-angular-multiselect/angular-multi-select.js'),
+                'angularLocalStorage': adjustPath('../libs/angular-local-storage/angular-local-storage.min.js')
             },
             priority: [
                 'angular'
@@ -61,6 +62,11 @@
                     deps   : [
                         'jquery',
                         'jquery-ui'
+                    ]
+                },
+                'angularLocalStorage'     : {
+                    deps: [
+                        'angular'
                     ]
                 },
                 'ngTranslateHandlerLog'   : {

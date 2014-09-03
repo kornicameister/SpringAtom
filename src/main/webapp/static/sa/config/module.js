@@ -37,7 +37,8 @@ define(
         'ngMultiSelect',
         'ngTranslateLoader',
         'ngTranslateLocalStorage',
-        'ngTranslateHandlerLog'
+        'ngTranslateHandlerLog',
+        'angularLocalStorage'
     ],
     function (angular, utils) {
         var appName = 'springatom',
@@ -53,7 +54,8 @@ define(
                 'pascalprecht.translate',
                 'angularMoment',
                 'ngProgress',
-                'multi-select'
+                'multi-select',
+                'LocalStorageModule'
             ],
             module = angular.module(appName, dependencies),
             generalConf = function configureApp($httpProvider) {

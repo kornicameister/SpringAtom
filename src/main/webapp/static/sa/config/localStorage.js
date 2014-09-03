@@ -15,30 +15,24 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.
  */
 
+/**
+ * Created by trebskit on 2014-09-03.
+ */
 define(
     [
         'config/module',
-        'config/directives',
-        'config/states',
-        'config/localStorage',
-        'config/lang',
-        'config/ext',
-        'jsface'
+        // angular injections
+        'angularLocalStorage'
     ],
-    function app(module, directives, states, localStorage) {
+    function localStorage(app) {
 
-        // load parts of the application
-        states.configure();
-        directives.configure();
-        localStorage.configure();
-        // load parts of the application
+        var configureLSP = function configureLSP(localStorageServiceProvider, appName) {
+            localStorageServiceProvider.setPrefix(appName);
+        };
 
         return {
-            init: function () {
-                setTimeout(function () {
-                    window.name = 'NG_DEFER_BOOTSTRAP';
-                    angular.bootstrap(document, [ module.name ])
-                }, 100);
+            configure: function configureLocalStorage() {
+                app.config(configureLSP);
             }
         }
     }
