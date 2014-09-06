@@ -15,34 +15,33 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.
  */
 
+/**
+ * Created by trebskit on 2014-09-07.
+ */
 define(
     [
         'config/module',
-        'config/directives',
-        'config/states',
-        'config/localStorage',
-        'config/rest',
-        'config/filters',
-        'config/lang',
-        'config/ext',
-        'jsface'
+        'underscore',
+        // filters
+        'filters/booleanFilter'
     ],
-    function app(module, directives, states, localStorage, rest, filters) {
-
-        // load parts of the application
-        states.configure();
-        directives.configure();
-        localStorage.configure();
-        rest.configure();
-        filters.configure();
-        // load parts of the application
+    function (app, _) {
+        var offset = 2,
+            filters = (function getFilters(filters) {
+                var local = [],
+                    it = offset;
+                for (it; it < filters.length; it++) {
+                    local.push(filters[it]);
+                }
+                console.log('Read {d} filters'.format({d: local.length}));
+                return local;
+            }(arguments));
 
         return {
-            init: function () {
-                setTimeout(function () {
-                    window.name = 'NG_DEFER_BOOTSTRAP';
-                    angular.bootstrap(document, [ module.name ])
-                }, 100);
+            configure: function () {
+                _.each(filters, function (filter) {
+                    app.filter(filter.name, filter.definition);
+                })
             }
         }
     }

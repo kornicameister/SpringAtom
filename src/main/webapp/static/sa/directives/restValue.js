@@ -20,12 +20,14 @@
  */
 define(
     [
-        'underscore'
+        'underscore',
+        // angular injections
+        'filters/booleanFilter'
     ],
     function restValue(_) {
         return {
             name      : 'restValue',
-            definition: function restValue() {
+            definition: function restValue($filter) {
                 return {
                     restrict: 'A',
                     scope   : {
@@ -37,6 +39,9 @@ define(
                         var tpl = scope.template,
                             tplMethod = scope.templateMethod;
                         if (_.isUndefined(tpl) && !_.isObject(scope.value)) {
+                            if (_.isBoolean(scope.value)) {
+                                scope.value = $filter('booleanFilter')(scope.value);
+                            }
                             element.text(scope.value);
                         } else {
                             scope.$watch('value', function (val, oldValue) {

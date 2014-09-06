@@ -58,7 +58,8 @@ define(
                         },
                         {
                             field      : 'allDay',
-                            displayName: translations['sappointment.allday']
+                            displayName: translations['sappointment.allday'],
+                            cellFilter : 'booleanFilter'
                         },
                         {
                             field      : 'assigned',
@@ -66,14 +67,8 @@ define(
                         },
                         {
                             field      : 'closed',
-                            displayName: translations['sappointment.closed']
-                        },
-                        {
-                            field      : 'comment',
-                            displayName: translations['sactivity.comment'],
-                            groupable  : false,
-                            pinnable   : false,
-                            sortable   : false
+                            displayName: translations['sappointment.closed'],
+                            cellFilter : 'booleanFilter'
                         }
                     ]
                 },
@@ -168,6 +163,10 @@ define(
                                     label: translations['sappointment.reporter'],
                                     value: serverSelected.one('reporter').get().$object,
                                     tpl  : 'identity'
+                                },
+                                {
+                                    value: selected['comment'],
+                                    label: translations['sactivity.comment']
                                 },
                                 {
                                     label : translations['sappointment.tasks'],
