@@ -15,32 +15,31 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.
  */
 
+/**
+ * Created by trebskit on 2014-09-03.
+ */
 define(
     [
         'config/module',
-        'config/directives',
-        'config/states',
-        'config/localStorage',
-        'config/rest',
-        'config/lang',
-        'config/ext',
-        'jsface'
+        'restangular'
     ],
-    function app(module, directives, states, localStorage, rest) {
-
-        // load parts of the application
-        states.configure();
-        directives.configure();
-        localStorage.configure();
-        rest.configure();
-        // load parts of the application
-
+    function rest(app) {
+        var configureRest = function configureRest(RestangularProvider) {
+            RestangularProvider.setBaseUrl('/');
+            RestangularProvider.setExtraFields([
+                '_links',
+                '_embedded',
+            ]);
+            RestangularProvider.setDefaultHttpFields({
+                cache: true
+            });
+            RestangularProvider.setDefaultHeaders({
+                token: "sa-restangular"
+            });
+        };
         return {
-            init: function () {
-                setTimeout(function () {
-                    window.name = 'NG_DEFER_BOOTSTRAP';
-                    angular.bootstrap(document, [ module.name ])
-                }, 100);
+            configure: function configureRestAngular() {
+                app.config(configureRest);
             }
         }
     }

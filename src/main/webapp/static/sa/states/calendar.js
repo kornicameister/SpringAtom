@@ -21,16 +21,20 @@
 define(
     [
         'views/cmp/calendar/calendarController',
+        'views/cmp/calendar/gridController',
         // angular injections
-        'resources/componentResource'
+        'resources/componentResource',
+        'resources/rest/appointmentResource'
     ],
-    function calendar(calendarController) {
+    function calendar(calendarController, gridController) {
+        // TODO: need to enter calendar.organizer at opening of calendar
         return [
             {
                 name      : 'calendar',
                 definition: {
+                    abstract   : true,
                     url        : '/sa/dashboard/calendar',
-                    templateUrl: '/ui/pages/dashboard/calendar/calendar.html'
+                    templateUrl: '/static/sa/views/cmp/calendar/calendar.html'
                 }
             },
             {
@@ -38,7 +42,7 @@ define(
                 definition: {
                     url        : '/organizer',
                     controller : calendarController,
-                    templateUrl: '/ui/pages/dashboard/calendar/organizer.html',
+                    templateUrl: '/static/sa/views/cmp/calendar/organizer.html',
                     resolve    : {
                         'organizerDefinition': function (componentResource) {
                             return componentResource.getOtherDefinition('calendarBuilder')
@@ -49,13 +53,33 @@ define(
             {
                 name      : 'calendar.grid',
                 definition: {
-                    url       : '/grid',
-                    controller: calendarController,
-                    template  : (function getTemplate() {
-                        var local = [];
-                        local.push('<dynamic-grid class="panel" config="calendarGridConfig" origin="\'infopage\'""></dynamic-grid>');
-                        return local.join('');
-                    }())
+                    url        : '/grid',
+                    resolve    : {
+                        translations: function ($translate) {
+                            return $translate([
+                                'sappointment.begintime',
+                                'sappointment.endtime',
+                                'sappointment.begindate',
+                                'sappointment.enddate',
+                                'sappointment.allday',
+                                'sappointment.closed',
+                                'sactivity.comment',
+                                'sappointment.tasks',
+                                'sappointment.car',
+                                'sappointment.assignee',
+                                'sappointment.assigned',
+                                'sappointment.reporter',
+                                'sappointment.interval',
+                                'sappointment',
+                                // task types [TMP solution]
+                                'SAT_OIL_CHANGE',
+                                'SAT_REPAIR',
+                                'SAT_NORMAL'
+                            ]);
+                        }
+                    },
+                    controller : gridController,
+                    templateUrl: '/static/sa/views/cmp/calendar/grid.html'
                 }
             }
         ]

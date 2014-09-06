@@ -38,7 +38,8 @@ define(
         'ngTranslateLoader',
         'ngTranslateLocalStorage',
         'ngTranslateHandlerLog',
-        'angularLocalStorage'
+        'angularLocalStorage',
+        'restangular'
     ],
     function (angular, utils) {
         var appName = 'springatom',
@@ -55,7 +56,8 @@ define(
                 'angularMoment',
                 'ngProgress',
                 'multi-select',
-                'LocalStorageModule'
+                'LocalStorageModule',
+                'restangular'
             ],
             module = angular.module(appName, dependencies),
             generalConf = function configureApp($httpProvider) {

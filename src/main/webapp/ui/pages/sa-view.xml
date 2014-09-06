@@ -32,7 +32,7 @@
 
     <definition name="springatom.tiles.dashboard" template="/ui/pages/dashboard/panel.html"/>
     <definition name="springatom.tiles.dashboard.cars" template="/ui/pages/dashboard/cars/panel.jsp"/>
-    <definition name="springatom.tiles.dashboard.calendar" template="/ui/pages/dashboard/calendar/calendar.html"/>
+    <definition name="springatom.tiles.dashboard.calendar" template="/static/sa/views/cmp/calendar/calendar.html"/>
     <definition name="springatom.tiles.dashboard.clients" template="/ui/pages/dashboard/clients/panel.jsp"/>
     <definition name="springatom.tiles.dashboard.reports" template="/ui/pages/dashboard/reports/panel.jsp"/>
     <definition name="springatom.tiles.dashboard.reports.Download"

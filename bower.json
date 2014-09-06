@@ -41,8 +41,9 @@
         "isteven-angular-multiselect"    : "latest",
         "angular-translate-loader-url"   : "2.2.0",
         "angular-translate-storage-local": "latest",
-        "angular-translate-handler-log": "latest",
-        "angular-local-storage"        : "0.0.7"
+        "angular-translate-handler-log"  : "latest",
+        "angular-local-storage"          : "0.0.7",
+        "restangular"                    : "1.4.0"
     },
     "resolutions" : {
         "jquery"           : "~2.x",

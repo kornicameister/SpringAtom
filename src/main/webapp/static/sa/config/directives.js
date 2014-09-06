@@ -33,7 +33,8 @@ define(
         'directives/cmp/wiz/actions',
         'directives/cmp/wiz/nbox',
         'directives/stacktrace',
-        'directives/button/actionButtons'
+        'directives/button/actionButtons',
+        'directives/restValue'
         // directives
     ],
     function configDirectives(app, utils) {

@@ -169,16 +169,10 @@ define(
                             calendar: baseConfig
                         }
                     },
-                    getGridConfig  : function getGridConfig() {
-                        return {
-                            builderId: ''
-                        }
-                    },
                     init           : function init() {
                         _.extend($scope, {
-                            uiConfig          : calendar.initCalendar(),
-                            eventSources      : calendar.getEventSources(),
-                            calendarGridConfig: calendar.getGridConfig()
+                            uiConfig    : calendar.initCalendar(),
+                            eventSources: calendar.getEventSources()
                         });
                     }
                 };
