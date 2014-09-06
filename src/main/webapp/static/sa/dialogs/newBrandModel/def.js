@@ -24,7 +24,7 @@ define(
         'utils'
     ],
     function newBrandModel(app, utils) {
-        var templateUrl = '/ui/dialogs/newBrandModel.jsp',
+        var templateUrl = '/static/sa/dialogs/view.html',
             newBrandModelCtrl = function newBrandModelCtrl($scope, $modalInstance, data) {
                 angular.extend($scope, {
                     bm        : undefined,

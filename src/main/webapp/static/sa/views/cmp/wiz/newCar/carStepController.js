@@ -22,7 +22,7 @@ define(
     [
         'angular',
         // angular injections
-        'dialogs/newBrandModel'
+        'dialogs/newBrandModel/def'
     ],
     function carStepController(angular) {
         var carStepController = function carStepController($scope, $log, $filter, brandModelDialog, carStepData) {
