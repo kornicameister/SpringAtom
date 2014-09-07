@@ -40,10 +40,16 @@ define(
                                          $timeout,
                                          $log,
                                          $state,
-                                         $cookies, $q, $rootScope,
+                                         $cookies,
+                                         $q,
+                                         $rootScope,
                                          timeoutDelay,
                                          dialogs,
-                                         wizardResult, actions, wizardKey, wizardHandler, wizardResource) {
+                                         wizardResult,
+                                         actions,
+                                         wizardKey,
+                                         wizardHandler,
+                                         wizardResource) {
             $log.debug('Entering wizardController');
 
             var exitState = $cookies.lastState,// retrieve state from which application entered wizard, for cancel action
@@ -110,7 +116,10 @@ define(
                             }
                         }
                         $scope.activeState = step;
-                        $state.go(step);
+                        // to prevent reentering the same step, if rule was set in the view
+                        if ($state.current.name !== step) {
+                            $state.go(step);
+                        }
                     },
                     /**
                      * Returns currently selected step
@@ -173,9 +182,9 @@ define(
                          * @param data
                          * @param wizardId wizardID
                          */
-                        step: function stepSDH(data, wizardId) {
+                        step  : function stepSDH(data, wizardId) {
                             var emitKey = '{wiz}.step.submission'.format({
-                                wiz : wizardId
+                                wiz: wizardId
                             });
                             $rootScope.$emit(emitKey, data);
                         }
@@ -366,7 +375,7 @@ define(
             // set up watchers
             $scope.$watch('activeState', watchers.onActiveStepChange);
 
-            // enter first state in definition
+//            enter first state in definition
             $timeout(function enterFirstStep() {
                 var state = init.getInitialState();
                 if (state) {

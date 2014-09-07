@@ -31,12 +31,21 @@ define(
             mainName = 'newAppointment';
         return [
             {
+                rule: {
+                    when: mainUrl,
+                    then: mainUrl + '/definition'
+                }
+            },
+            {
                 name      : mainName,
                 definition: {
                     url        : mainUrl,
                     templateUrl: '/ui/wiz/wizard.jsp',
                     controller : wizCtrl,
-                    resolve    : wizService.getResolve(mainName)
+                    resolve: wizService.getResolve(mainName),
+                    onEnter: function (navigationService) {
+                        navigationService.setNavigatorModel([]);
+                    }
                 }
             },
             {

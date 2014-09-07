@@ -40,9 +40,7 @@ define(
                         return array.join(' ');
                     },
                     getTemplate = function getTemplate() {
-                        return '<div><span ng-hide="data">Loading...</span>' +
-                            '<div ng-show="data">' + cmpTemplate() + '</div>' +
-                            '</div>';
+                        return cmpTemplate();
                     };
 
                 return {

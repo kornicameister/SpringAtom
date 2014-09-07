@@ -28,7 +28,10 @@ define(
             definition: {
                 url        : '/sa/error',
                 templateUrl: '/ui/pages/error/error.jsp',
-                controller : errorCtrl
+                controller: errorCtrl,
+                onEnter   : function (navigationService) {
+                    navigationService.setNavigatorModel([]);
+                }
             }
         }
     }

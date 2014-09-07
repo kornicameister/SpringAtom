@@ -47,7 +47,10 @@ define(
                         };
                         console.log(definition);
                     }
-                ]
+                ],
+                onEnter    : function (navigationService) {
+                    navigationService.setNavigatorModel([]);
+                }
             }
         }
     }
