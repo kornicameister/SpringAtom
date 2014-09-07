@@ -111,6 +111,23 @@
             ]
         },
         {
+            "name"       : "dashboard.page.calendar",
+            "description": "List of actions visible when calendar is open",
+            "actions"    : [
+                {
+                    "index"         : 1,
+                    "name"          : "newAppointment",
+                    "type"          : "org.agatom.springatom.server.model.beans.appointment.SAppointment",
+                    "resourceBundle": "springatom.actions.action.newAppointment",
+                    "command"       : {
+                        "type"    : "wizard",
+                        "url"     : "/app/wizard/NewAppointmentWizard",
+                        "redirect": "false"
+                    }
+                }
+            ]
+        },
+        {
             "name"       : "garage-navigation",
             "description": "Entries allowing to access garage management",
             "actions"    : [

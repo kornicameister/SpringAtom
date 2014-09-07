@@ -25,11 +25,11 @@ define(
         'services/stateLoadingService',
         // states
         'states/home',
+        'states/dashboard/dashboard',
         'states/navigator',
         'states/ip',
         'states/wizards',
-        'states/error/errorState',
-        'states/calendar'
+        'states/error/errorState'
         // states
     ],
     function configStates(app, utils) {

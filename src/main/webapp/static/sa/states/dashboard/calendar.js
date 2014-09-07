@@ -30,11 +30,24 @@ define(
         // TODO: need to enter calendar.organizer at opening of calendar
         return [
             {
+                rule: {
+                    when: '/sa/dashboard/calendar',
+                    then: '/sa/dashboard/calendar/organizer'
+                }
+            },
+            {
                 name      : 'calendar',
                 definition: {
-                    abstract   : true,
                     url        : '/sa/dashboard/calendar',
-                    templateUrl: '/static/sa/views/cmp/calendar/calendar.html'
+                    templateUrl: '/static/sa/views/cmp/calendar/calendar.html',
+                    resolve    : {
+                        actionModel: function (navigationService) {
+                            return navigationService.getNavigationModel('dashboard.page.calendar')
+                        }
+                    },
+                    onEnter    : function (actionModel, navigationService) {
+                        navigationService.setNavigatorModel(actionModel);
+                    }
                 }
             },
             {
