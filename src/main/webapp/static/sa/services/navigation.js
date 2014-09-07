@@ -20,123 +20,36 @@
  */
 define(
     [
-        'config/module'
+        'config/module',
+        'underscore',
+        // angular injections
+        'resources/navigationResource'
     ],
     function (app) {
+        app.factory('navigationService', function navigationService($rootScope,
+                                                                    localStorageService,
+                                                                    navigationResource) {
 
-        /**
-         * NavigationModel is the class wrapping up actions retrieved from the
-         * server. Contains several method that are able to represent such model
-         * in formats understandable by directives or stateService
-         * @param config configuration object, should contain key {@code key} and {@code model}
-         * @constructor NavigationModel constructor
-         */
-        function NavigationModel(config) {
-            this.key = config.key;
-            this.model = config.model;
-        }
+            // This will keep last navigator model between refreshes of the page
+            var navigatorModel = 'navigatorModel',
+                model = localStorageService.get(navigatorModel);
 
-        NavigationModel.prototype = (function initNavigationModelPrototype() {
-            var keysToDirective = ['id', 'name', 'mode', 'iconClass', 'label'];
-
-            /**
-             * Narrows the navigation [action] model according to the passed {@code keys}
-             * @param model original models [as array]
-             * @param keys keys to narrows {@code model}
-             * @return {Array} array of narrowed models
-             */
-            function narrowModel(model, keys) {
-                var local = [];
-                angular.forEach(model, function toDirectiveFC(value) {
-                    var localObj = {};
-                    angular.forEach(keys, function overKeys(kValue) {
-                        localObj[kValue] = value[kValue];
-                    });
-                    local.push(localObj);
-                });
-                return local;
+            if (!_.isUndefined(model)) {
+                $rootScope.viewActionModel = model;
             }
 
             return {
-                key         : undefined,
-                model       : undefined,
-                getKey      : function getKey() {
-                    return this.key;
+                getNavigationModel: function (key) {
+                    return navigationResource.getActionModel(key);
                 },
-                setKey      : function setKey(key) {
-                    this.key = key;
-                    return key;
-                },
-                getModel    : function getModel() {
-                    return this.model;
-                },
-                setModel    : function setModel(model) {
-                    this.model = model;
-                    return model;
-                },
-                toDirective : function toDirective() {
-                    return narrowModel(this.model, keysToDirective);
-                },
-                toViewStates: function toViewStates() {
-                    var local = [];
-                    angular.forEach(this.model, function toViewStatesFC(index, value) {
-
-                    });
-                    return local;
+                setNavigatorModel : function (model) {
+                    if (!!model.toDirective) {
+                        model = model.toDirective();
+                    }
+                    $rootScope.viewActionModel = model;
+                    localStorageService.set(navigatorModel, model);
                 }
             }
-        }());
-
-        var service = function navigationService($http, $log, $q) {
-            var directiveData = {},
-                dataPromise = {},
-                /**
-                 * Points to the controller where <b>main.navigation</b> actions are defined
-                 * @type {string}
-                 */
-                url = '/app/cmp/actions/model/jsp/';
-
-            function loadNavigationModelByKey(key) {
-                $log.log('loading navigationModel by key=' + key);
-                if (dataPromise[key]) {
-                    $log.debug('dataPromise[' + key + '] is already promised');
-                    return dataPromise[key];
-                }
-
-                var deferred = $q.defer();
-                dataPromise[key] = deferred.promise;
-
-                $log.debug('dataPromise[' + key + '] has been created');
-
-                if (directiveData[key]) {
-                    deferred.resolve(directiveData[key]);
-                } else {
-                    $log.debug('directiveData[' + key + '] GET call');
-                    $http.get(url + key)
-                        .success(function (data) {
-                            directiveData[key] = new NavigationModel({
-                                key  : key,
-                                model: data
-                            });
-                            deferred.resolve(directiveData[key]);
-                        })
-                        .error(function () {
-                            deferred.reject('Failed to load data');
-                        });
-                }
-
-                return dataPromise[key];
-            }
-
-            return {
-                loadNavigation: function (key) {
-                    $log.log('loading navigation by key=' + key);
-                    return loadNavigationModelByKey(key);
-                }
-            }
-
-        };
-
-        app.factory('navigationService', ['$http', '$log', '$q', service])
+        })
     }
 );

@@ -41,20 +41,10 @@ define(
                     scope.btnLabel = attrs['btnlabel'];
                     scope.btnClass = attrs['btnclass'];
 
-                    scope.hook = {};
-                    scope.hook.launchWizard = function (event, am) {
-                        event.preventDefault();
-                        var id = am.id;
-                        $log.debug('hook.launchWizard(id={i},wiz={w})'.format({i: id, w: am['wizardName']}));
-//                    swfLoader.getLinkedResource(id, {
-//                        popup: true,
-//                        mode : 'embedded'
-//                    }, true);
-                    };
-
+                    // TODO: should be done via navigationResource
                     setTimeout(function onTimeout() {
                         navigationService
-                            .loadNavigation(actionModel)
+                            .getNavigationModel(actionModel)
                             .then(function onSuccess(data) {
                                 scope.data = data;
                             }, function onError() {

@@ -24,43 +24,35 @@ define(
         'services/navigation'
     ],
     function navigatorDirective() {
-        var directive = function ($log, navigationService) {
-            $log.log('navigator-directive in progress...');
-
-            var cmpTemplate = function computeTemplate() {
-                    var array = [];
-                    array.push('<ul class="nav nav-pills nav-stacked">');
-                    array.push('<li ng-repeat="action in data">');
-                    array.push('<a id="{{action.id}}" ui-sref="{{action.name}}" role="{{action.mode}}">');
-                    array.push('<i ng-show="action.iconClass" ng-class="action.iconClass"></i>');
-                    array.push('{{action.label}}');
-                    array.push('</a></li></ul>');
-                    return array.join(' ');
-                },
-                getTemplate = function getTemplate() {
-                    return '<div><span ng-hide="data">Loading...</span>' +
-                        '<div ng-show="data">' + cmpTemplate() + '</div>' +
-                        '</div>';
-                },
-                linkFn = function (scope) {
-                    navigationService
-                        .loadNavigation('main.navigation')
-                        .then(function onSuccess(data) {
-                            scope.data = data.toDirective();
-                        }, function onError() {
-                            scope.data = 'ERROR: failed to load data';
-                        })
-                };
-
-            return {
-                restrict: 'E',
-                template: getTemplate,
-                link    : linkFn
-            }
-        };
         return {
             name      : 'navigator',
-            definition: ['$log', 'navigationService', directive]
+            definition: function ($log) {
+                $log.log('navigator-directive in progress...');
+
+                var cmpTemplate = function computeTemplate() {
+                        var array = [];
+                        array.push('<ul class="nav nav-pills nav-stacked">');
+                        array.push('<li ng-repeat="action in data">');
+                        array.push('<a id="{{action.id}}" ui-sref="{{action.name}}" role="{{action.mode}}">');
+                        array.push('<i ng-show="action.iconClass" ng-class="action.iconClass"></i>');
+                        array.push('{{action.label}}');
+                        array.push('</a></li></ul>');
+                        return array.join(' ');
+                    },
+                    getTemplate = function getTemplate() {
+                        return '<div><span ng-hide="data">Loading...</span>' +
+                            '<div ng-show="data">' + cmpTemplate() + '</div>' +
+                            '</div>';
+                    };
+
+                return {
+                    restrict: 'E',
+                    scope   : {
+                        data: '=ngModel'
+                    },
+                    template: getTemplate
+                }
+            }
         }
     }
 );

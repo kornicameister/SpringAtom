@@ -23,13 +23,6 @@ define(
     function navigatorStates() {
         return [
             {
-                name      : 'home',
-                definition: {
-                    url        : '/sa',
-                    templateUrl: '/app/home'
-                }
-            },
-            {
                 name      : 'dashboards',
                 definition: {
                     url        : '/sa/dashboard',

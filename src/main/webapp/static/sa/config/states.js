@@ -24,6 +24,7 @@ define(
         'utils',
         'services/stateLoadingService',
         // states
+        'states/home',
         'states/navigator',
         'states/ip',
         'states/wizards',

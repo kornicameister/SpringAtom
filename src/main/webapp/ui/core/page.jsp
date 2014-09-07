@@ -29,7 +29,9 @@
 </head>
 <body>
 <tiles:insertAttribute name="top-nav-header"/>
-<navigator class="navbar navbar-left col-sm-2 navbar-nav ui-spinner" role="navigation"></navigator>
+<navigator class="navbar navbar-left col-sm-2 navbar-nav ui-spinner"
+           ng-model="viewActionModel"
+           role="navigation"></navigator>
 <div class="col-sm-10 content-wrapper container-fluid">
 	<tiles:insertAttribute name="header"/>
 	<section class="slide" ui-view></section>
