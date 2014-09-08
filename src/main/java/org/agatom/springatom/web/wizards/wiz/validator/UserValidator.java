@@ -18,17 +18,27 @@
 package org.agatom.springatom.web.wizards.wiz.validator;
 
 import org.agatom.springatom.server.model.beans.person.SPerson;
+import org.agatom.springatom.server.model.beans.person.SPersonContact;
 import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.types.contact.ContactType;
 import org.agatom.springatom.server.service.domain.SPersonService;
 import org.agatom.springatom.server.service.domain.SUserService;
+import org.agatom.springatom.server.service.support.constraints.PhoneNumber;
+import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.wizards.validation.annotation.WizardValidator;
 import org.apache.log4j.Logger;
+import org.hibernate.validator.internal.constraintvalidators.EmailValidator;
+import org.hibernate.validator.internal.constraintvalidators.PatternValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
+import org.springframework.binding.message.MessageResolver;
 import org.springframework.binding.validation.ValidationContext;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,9 +57,11 @@ public class UserValidator {
     private              SUserService   userService    = null;
     @Autowired
     private              SPersonService personService  = null;
+    @Autowired
+    private SMessageSource messageSource = null;
 
     /**
-     * Performs first step {@link org.agatom.springatom.web.flows.wizards.wizard.newUser.NewUserWizardStep1} validation
+     * Performs first step validation
      * Validation steps:
      * <ol>
      * <li>checks if user for the {@link org.agatom.springatom.server.model.beans.user.SUser#getUsername()} already exists</li>
@@ -61,7 +73,7 @@ public class UserValidator {
      * @param context current {@link org.springframework.binding.validation.ValidationContext}
      */
     public void validateCredentials(final SUser user, final ValidationContext context) {
-        LOGGER.info(String.format("validateStep1(user=%s,context=%s)", user, context));
+        LOGGER.info(String.format("validateCredentials(user=%s,context=%s)", user, context));
 
         final MessageContext messageContext = context.getMessageContext();
         final MessageBuilder messageBuilder = new MessageBuilder();
@@ -105,13 +117,75 @@ public class UserValidator {
      * @param messageContext messageContext to put error message
      * @param messageBuilder builder to create new message
      */
-    public void validatePassword(final String password,
-                                 final MessageContext messageContext,
-                                 final MessageBuilder messageBuilder) {
+    private void validatePassword(final String password,
+                                  final MessageContext messageContext,
+                                  final MessageBuilder messageBuilder) {
         final Pattern pattern = Pattern.compile(PASSWORD_REGEX);
         final Matcher matcher = pattern.matcher(password);
         if (!matcher.matches()) {
             messageContext.addMessage(messageBuilder.source("password").code("newUser.user.invalidPassword").arg(password).error().build());
+        }
+    }
+
+    public void validateContacts(final SUser user, final ValidationContext context) {
+        LOGGER.info(String.format("validateContacts(user=%s,context=%s)", user, context));
+
+        final MessageContext messageContext = context.getMessageContext();
+        final MessageBuilder messageBuilder = new MessageBuilder();
+
+        final List<SPersonContact> contacts = user.getPerson().getContacts();
+        for (final SPersonContact contact : contacts) {
+            final MessageResolver resolver = this.validateContact(contact, messageBuilder);
+            if (resolver != null) {
+                messageContext.addMessage(resolver);
+            }
+        }
+    }
+
+    private MessageResolver validateContact(final SPersonContact spc, final MessageBuilder messageBuilder) {
+        final ContactType type = spc.getType();
+        final String contact = spc.getContact();
+
+        switch (type) {
+            case SCT_MAIL:
+                if (!new EmailValidator().isValid(contact, null)) {
+                    return messageBuilder
+                            .error()
+                            .source(type)
+                            .code("newUser.user.invalidEmail")
+                            .arg(contact)
+                            .build();
+                }
+                break;
+            default:
+                return PhoneNumberValidator.isValid(type, contact, messageBuilder, this.messageSource);
+        }
+
+        return null;
+    }
+
+    private static class PhoneNumberValidator {
+        private static javax.validation.constraints.Pattern pattern;
+        private static PatternValidator                     validator;
+
+        static MessageResolver isValid(final ContactType type, final String number, final MessageBuilder messageBuilder, final SMessageSource messageSource) {
+            if (!validator.isValid(number, null)) {
+                final String message = messageSource.getMessage(type.toString(), LocaleContextHolder.getLocale());
+                return messageBuilder
+                        .error()
+                        .source(type)
+                        .code("newUser.user.invalidContact")
+                        .args(message, number)
+                        .build();
+            }
+            return null;
+        }
+
+
+        static {
+            PhoneNumberValidator.pattern = AnnotationUtils.findAnnotation(PhoneNumber.class, javax.validation.constraints.Pattern.class);
+            PhoneNumberValidator.validator = new PatternValidator();
+            PhoneNumberValidator.validator.initialize(PhoneNumberValidator.pattern);
         }
     }
 

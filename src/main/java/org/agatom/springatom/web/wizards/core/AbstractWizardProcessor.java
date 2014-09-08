@@ -209,9 +209,18 @@ abstract class AbstractWizardProcessor {
     }
 
     @SuppressWarnings("UnusedAssignment")
-    private void doValidate(final WizardResult result, final DataBinder binder, final String step, final Map<String, Object> formData, final Locale locale) throws Exception {
+    private void doValidate(final WizardResult result, final DataBinder binder, String step, final Map<String, Object> formData, final Locale locale) throws Exception {
 
         final Object target = binder.getTarget();
+
+        if (!StringUtils.hasText(step)) {
+            // Wizard submission, because step is null
+            step = this.stepHelperDelegate.getLastStep();
+            if (!this.stepHelperDelegate.isValidationEnabled(step)) {
+                // reset the step again
+                step = null;
+            }
+        }
 
         try {
             final BindingResult bindingResult = binder.getBindingResult();
@@ -229,7 +238,7 @@ abstract class AbstractWizardProcessor {
                 final ValidationBean bean = new ValidationBean();
 
                 bean.setPartialResult(result);
-                bean.setStepId(result.getStepId());
+                bean.setStepId(step);
                 bean.setCommandBean(bindingResult.getTarget());
                 bean.setCommandBeanName(this.getContextObjectName());
                 bean.setFormData(formData);

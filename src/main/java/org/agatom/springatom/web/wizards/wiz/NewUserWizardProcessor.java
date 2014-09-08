@@ -377,7 +377,7 @@ class NewUserWizardProcessor
                                 final Map<String, String> roleAsMap = (Map<String, String>) map;
                                 final SPersonContact contact = new SPersonContact();
                                 contact.setContact(roleAsMap.get("contact"));
-                                contact.setType((ContactType) stringToEnum.convertSourceToTargetClass(roleAsMap.get("type".toUpperCase()), ContactType.class));
+                                contact.setType((ContactType) stringToEnum.convertSourceToTargetClass(roleAsMap.get("type").toUpperCase(), ContactType.class));
                                 contacts.add(contact);
                             } catch (Exception exp) {
                                 Logger.getLogger(this.getClass()).error("PropertyValuesEditor failed", exp);
@@ -388,6 +388,11 @@ class NewUserWizardProcessor
                 });
 
                 binder.setRequiredFields(personContactsPropertyKye);
+            }
+
+            @Override
+            public boolean isValidationEnabled() {
+                return true;
             }
         };
     }
