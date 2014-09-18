@@ -41,7 +41,7 @@
         <property name="fileEncodings" value="#{webProperties['sa.locale.fileEncoding']}"/>
         <property name="useCodeAsDefaultMessage" value="#{webProperties['sa.locale.useCodeAsDefaultMessage']}"/>
     </bean>
-    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.FixedLocaleResolver">
         <property name="defaultLocale" value="#{webProperties['sa.locale.defaultLocale']}"/>
     </bean>
 
