@@ -39,9 +39,6 @@
         <mvc:message-converters register-defaults="true">
             <ref bean="jackson2HttpMessageConverter"/>
         </mvc:message-converters>
-        <mvc:argument-resolvers>
-            <bean class="org.agatom.springatom.web.component.table.request.TableComponentRequestArgumentResolver"/>
-        </mvc:argument-resolvers>
     </mvc:annotation-driven>
     <!--suppress SpringModelInspection -->
     <mvc:resources mapping="/static/**"

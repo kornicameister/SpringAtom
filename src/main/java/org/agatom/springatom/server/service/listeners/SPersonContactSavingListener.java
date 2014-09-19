@@ -17,21 +17,17 @@
 
 package org.agatom.springatom.server.service.listeners;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import org.agatom.springatom.core.annotations.EventListener;
-import org.agatom.springatom.server.model.beans.user.SUser;
-import org.agatom.springatom.server.model.beans.user.authority.SAuthority;
-import org.agatom.springatom.server.model.beans.user.authority.SUserAuthority;
-import org.agatom.springatom.server.repository.repositories.SAuthorityRepository;
-import org.agatom.springatom.server.repository.repositories.user.SUserAuthorityRepository;
+import org.agatom.springatom.server.model.beans.person.SPerson;
+import org.agatom.springatom.server.model.beans.person.SPersonContact;
+import org.agatom.springatom.server.service.domain.SPersonContactService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.event.AbstractRepositoryEventListener;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * {@code SUserAuthoritiesSavingListener} is designed to persist {@link org.agatom.springatom.server.model.beans.user.authority.SAuthority}
@@ -44,35 +40,31 @@ import java.util.Collection;
  * @since 0.0.1
  */
 @EventListener
-class SUserAuthoritiesSavingListener
-        extends AbstractRepositoryEventListener<SUser> {
-    private static final Logger                   LOGGER                  = Logger.getLogger(SUserAuthoritiesSavingListener.class);
+class SPersonContactSavingListener
+        extends AbstractRepositoryEventListener<SPerson> {
+    private static final Logger                LOGGER  = Logger.getLogger(SPersonContactSavingListener.class);
     @Autowired
-    private              SUserAuthorityRepository userAuthorityRepository = null;
-    @Autowired
-    private              SAuthorityRepository     authorityRepository     = null;
+    private              SPersonContactService service = null;
 
     /** {@inheritDoc} */
     @Override
-    protected void onAfterCreate(final SUser user) {
-        LOGGER.trace(String.format("onAfterCreate(user=%s)", user));
-        final Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-        if (!CollectionUtils.isEmpty(authorities)) {
-            final Collection<SUserAuthority> authoritySet = Sets.newHashSetWithExpectedSize(authorities.size());
-            for (GrantedAuthority authority : authorities) {
-                if (ClassUtils.isAssignableValue(SAuthority.class, authority)) {
-                    final SAuthority entity = (SAuthority) authority;
-                    if (entity.isNew()) {
-                        final SAuthority sAuthority = this.authorityRepository.save(entity);
-                        authoritySet.add(new SUserAuthority(user, sAuthority));
+    protected void onAfterCreate(final SPerson person) {
+        LOGGER.trace(String.format("onAfterCreate(person=%s)", person));
+        final List<SPersonContact> contacts = person.getContacts();
+        if (!CollectionUtils.isEmpty(contacts)) {
+            try {
+                final List<SPersonContact> toSave = Lists.newArrayList();
+                for (SPersonContact contact : contacts) {
+                    if (contact.isNew()) {
+                        toSave.add(this.service.save(contact));
                     }
                 }
-            }
-            if (!CollectionUtils.isEmpty(authoritySet)) {
-                this.userAuthorityRepository.save(authoritySet);
+            } catch (Exception exp) {
+                LOGGER.error(String.format("Failed to save contact data for %s", person), exp);
+                throw new RuntimeException(exp);
             }
         } else {
-            LOGGER.trace(String.format("%s has no authorities, skipping", user));
+            LOGGER.trace(String.format("%s has no contacts, skipping", person));
         }
     }
 

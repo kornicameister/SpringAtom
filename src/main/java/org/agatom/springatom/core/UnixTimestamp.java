@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.core;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import org.joda.time.DateTime;
 
@@ -86,8 +87,8 @@ public class UnixTimestamp
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this)
-				.addValue(time)
+        return MoreObjects.toStringHelper(this)
+                .addValue(time)
 				.toString();
 	}
 }

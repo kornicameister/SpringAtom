@@ -23,7 +23,7 @@
 <link rel="stylesheet" media="all" href="<s:url value="/app/static/libs/bootstrap/dist/css/bootstrap.css"/>">
 <link rel="stylesheet" media="all" href="<s:url value="/app/static/libs/bootstrap/dist/css/bootstrap-theme.css"/>">
 <link rel="stylesheet" media="all" href="<s:url value="/app/static/libs/ng-grid/ng-grid.css"/>">
-<link rel="stylesheet" media="all" href="<s:url value="/app/static/font-awesome/4.1.0/css/font-awesome.min.css"/>">
+<link rel="stylesheet" media="all" href="<s:url value="/app/static/font-awesome/4.2.0/css/font-awesome.min.css"/>">
 <!-- required to load like this, otherwise not working -->
 <link rel="stylesheet" media="all" href="<s:url value="/app/wro/css-files.css"/>">
 <link rel="stylesheet" media="all" href="<s:url value="/app/wro/css-libs.css"/>">

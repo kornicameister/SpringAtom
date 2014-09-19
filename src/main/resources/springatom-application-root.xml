@@ -76,6 +76,7 @@
         <property name="modules">
             <list value-type="com.fasterxml.jackson.databind.Module">
                 <bean class="com.fasterxml.jackson.datatype.joda.JodaModule"/>
+                <bean class="com.fasterxml.jackson.datatype.guava.GuavaModule"/>
             </list>
         </property>
     </bean>
