@@ -42,7 +42,8 @@ import java.util.Collection;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {
-		"classpath:springatom-all.xml"
+        "classpath:springatom-application-root.xml",
+        "classpath:springatom-application-web.xml"
 })
 public abstract class AbstractSpringTestCase
 		extends ReflectionTestUtils {

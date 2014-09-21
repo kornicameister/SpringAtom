@@ -121,7 +121,6 @@ class InfoPageComponentBuilderServiceImpl
 
 			final InfoPagePanelComponent panelComponent = new InfoPagePanelComponent();
 			panelComponent.setLabel(panel.getTitle().getTitle(locale));
-			panelComponent.setLayoutCfg(panel.getLayout().asMap());
 			panelComponent.setPosition(panel.getPosition());
 			panelComponent.setIconCfg(panel.getIcon());
 

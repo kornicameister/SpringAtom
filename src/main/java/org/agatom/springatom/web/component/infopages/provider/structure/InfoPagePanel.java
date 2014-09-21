@@ -41,7 +41,6 @@ public class InfoPagePanel
 		implements Identifiable<String>, Serializable, Iterable<InfoPageAttribute>, Comparable<InfoPagePanel> {
 	private static final long                   serialVersionUID = -4966053815380618681L;
 	private              String                 id               = null;
-	private              InfoPageLayout         layout           = null;
 	private              InfoPageTitle          title            = null;
 	private              InfoPageIcon           icon             = null;
 	private              Set<InfoPageAttribute> attributes       = null;
@@ -54,15 +53,6 @@ public class InfoPagePanel
 
 	public InfoPagePanel setId(final String id) {
 		this.id = id;
-		return this;
-	}
-
-	public InfoPageLayout getLayout() {
-		return layout;
-	}
-
-	public InfoPagePanel setLayout(final InfoPageLayout layout) {
-		this.layout = layout;
 		return this;
 	}
 
@@ -120,8 +110,8 @@ public class InfoPagePanel
 	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, layout, title, icon, attributes, position);
-	}
+        return Objects.hashCode(id, title, icon, attributes, position);
+    }
 
 	/** {@inheritDoc} */
 	@Override
@@ -132,7 +122,6 @@ public class InfoPagePanel
 		InfoPagePanel that = (InfoPagePanel) o;
 
 		return Objects.equal(this.id, that.id) &&
-				Objects.equal(this.layout, that.layout) &&
 				Objects.equal(this.title, that.title) &&
 				Objects.equal(this.icon, that.icon) &&
 				Objects.equal(this.attributes, that.attributes) &&

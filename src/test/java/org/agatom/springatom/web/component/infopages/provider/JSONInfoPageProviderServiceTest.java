@@ -83,7 +83,6 @@ public class JSONInfoPageProviderServiceTest
 			for (final InfoPagePanel panel : page) {
 				Assert.assertTrue(StringUtils.hasText(panel.getId()));
 				Assert.assertNotNull(panel.getTitle());
-				Assert.assertNotNull(panel.getLayout());
 				int lastPos = -1;
 				Set<InfoPageAttribute> attributes = panel.getAttributes();
 				Assert.assertNotNull("Panel must have attributes", attributes != null && !attributes.isEmpty());

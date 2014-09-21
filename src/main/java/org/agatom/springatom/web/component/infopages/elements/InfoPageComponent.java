@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.web.component.infopages.elements;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.agatom.springatom.web.component.core.elements.ContentComponent;
 import org.springframework.hateoas.Identifiable;
 
@@ -57,7 +58,8 @@ public class InfoPageComponent
 	 *
 	 * @return a int.
 	 */
-	public int getSize() {
+    @JsonIgnore
+    public int getSize() {
 		return this.content.size();
 	}
 

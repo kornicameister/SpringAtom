@@ -18,9 +18,12 @@
 package org.agatom.springatom.web.component.infopages.provider;
 
 import org.agatom.springatom.core.exception.SException;
+import org.agatom.springatom.web.component.infopages.mapping.InfoPageMapping;
 import org.agatom.springatom.web.component.infopages.provider.structure.InfoPage;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Persistable;
+
+import java.util.Collection;
 
 /**
  * {@code InfoPageProviderService} loads {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} from
@@ -34,41 +37,43 @@ import org.springframework.data.domain.Persistable;
  */
 public interface InfoPageProviderService {
 
-	/**
-	 * Returns {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} for selected {@link org.springframework.data.domain.Persistable}
-	 * domain class
-	 *
-	 * @param persistableClass domain class to execute search
-	 * @param <T>              a T object.
-	 *
-	 * @return {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
-	 *
-	 * @throws org.agatom.springatom.core.exception.SException in case of error
-	 */
-	@Cacheable(value = "InfoPageProviderService.cache.class")
-	<T extends Persistable<?>> InfoPage getInfoPage(final Class<T> persistableClass) throws SException;
+    /**
+     * Returns {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} for selected {@link org.springframework.data.domain.Persistable}
+     * domain class
+     *
+     * @param persistableClass domain class to execute search
+     * @param <T>              a T object.
+     *
+     * @return {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
+     *
+     * @throws org.agatom.springatom.core.exception.SException in case of error
+     */
+    @Cacheable(value = "InfoPageProviderService.cache.class")
+    <T extends Persistable<?>> InfoPage getInfoPage(final Class<T> persistableClass) throws SException;
 
-	/**
-	 * Retrieves path to the file containing {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} declaration
-	 *
-	 * @param persistableClass domain class to get the path from
-	 *
-	 * @return the path
-	 */
-	@Cacheable(value = "InfoPageProviderService.cache.class.path")
-	<T extends Persistable<?>> String getFilePath(Class<T> persistableClass);
+    /**
+     * Retrieves path to the file containing {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} declaration
+     *
+     * @param persistableClass domain class to get the path from
+     *
+     * @return the path
+     */
+    @Cacheable(value = "InfoPageProviderService.cache.class.path")
+    <T extends Persistable<?>> String getFilePath(Class<T> persistableClass);
 
-	/**
-	 * Returns {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} for selected {@link org.springframework.data.domain.Persistable}
-	 * domain object
-	 *
-	 * @param persistable domain object to execute search
-	 *
-	 * @return {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
-	 *
-	 * @throws org.agatom.springatom.core.exception.SException in case of error
-	 */
-	@Cacheable(value = "InfoPageProviderService.cache.object")
-	InfoPage getInfoPage(final Persistable<?> persistable) throws SException;
+    /**
+     * Returns {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} for selected {@link org.springframework.data.domain.Persistable}
+     * domain object
+     *
+     * @param persistable domain object to execute search
+     *
+     * @return {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
+     *
+     * @throws org.agatom.springatom.core.exception.SException in case of error
+     */
+    @Cacheable(value = "InfoPageProviderService.cache.object")
+    InfoPage getInfoPage(final Persistable<?> persistable) throws SException;
+
+    Collection<InfoPageMapping> getRegisteredInfoPages();
 
 }

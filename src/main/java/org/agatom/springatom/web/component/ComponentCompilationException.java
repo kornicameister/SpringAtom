@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.web.component;
 
-import org.agatom.springatom.core.exception.SException;
+import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 
 /**
  * {@code ComponentCompilationException} is a custom exceptionn thrown during building, in case of error,
@@ -30,7 +30,7 @@ import org.agatom.springatom.core.exception.SException;
  * @since 0.0.1
  */
 public class ComponentCompilationException
-        extends SException {
+        extends ComponentException {
     private static final long serialVersionUID = -1452148899616678089L;
 
     public ComponentCompilationException(final String message) {
@@ -43,10 +43,6 @@ public class ComponentCompilationException
 
     public ComponentCompilationException(final Throwable cause) {
         super(cause);
-    }
-
-    public ComponentCompilationException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 
 }

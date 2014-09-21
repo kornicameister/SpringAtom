@@ -20,6 +20,8 @@ package org.agatom.springatom.web.component.infopages.provider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.agatom.springatom.core.exception.SException;
 import org.agatom.springatom.core.exception.SInvalidArgumentException;
+import org.agatom.springatom.web.component.infopages.mapping.InfoPageMapping;
+import org.agatom.springatom.web.component.infopages.mapping.InfoPageMappingService;
 import org.agatom.springatom.web.component.infopages.provider.structure.InfoPage;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,86 +41,94 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collection;
 
 @Component
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 @Description("InfoPageProviderService implementation designed to load InfoPages from json files")
 class JSONInfoPageProviderService
-		implements InfoPageProviderService {
-	private static final Logger       LOGGER       = Logger.getLogger(JSONInfoPageProviderService.class);
-	private static final String       EXTENSION    = "json";
-	private static final String       CLASSPATH    = "classpath";
-	@Autowired
-	@Qualifier("jackson2ObjectFactoryBean")
-	private              ObjectMapper objectMapper = null;
+        implements InfoPageProviderService {
+    private static final Logger                 LOGGER                 = Logger.getLogger(JSONInfoPageProviderService.class);
+    private static final String                 EXTENSION              = "json";
+    private static final String                 CLASSPATH              = "classpath";
+    @Autowired
+    @Qualifier("jackson2ObjectFactoryBean")
+    private              ObjectMapper           objectMapper           = null;
+    @Autowired
+    private              InfoPageMappingService infoPageMappingService = null;
 
-	@PostConstruct
-	private void postConstruct() {
-		Assert.notNull(this.objectMapper, "ObjectMapper not initialized");
-	}
+    @PostConstruct
+    private void postConstruct() {
+        Assert.notNull(this.objectMapper, "ObjectMapper not initialized");
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public <T extends Persistable<?>> InfoPage getInfoPage(final Class<T> persistableClass) throws SException {
-		LOGGER.debug(String.format("getInfoPage(persistableClass=%s)", persistableClass));
-		if (persistableClass == null) {
-			throw new SInvalidArgumentException("persistableClass", new NullPointerException());
-		}
-		final String filePath = this.getFilePath(persistableClass);
-		final File file = this.getFile(filePath);
+    /** {@inheritDoc} */
+    @Override
+    public <T extends Persistable<?>> InfoPage getInfoPage(final Class<T> persistableClass) throws SException {
+        LOGGER.debug(String.format("getInfoPage(persistableClass=%s)", persistableClass));
+        if (persistableClass == null) {
+            throw new SInvalidArgumentException("persistableClass", new NullPointerException());
+        }
+        final String filePath = this.getFilePath(persistableClass);
+        final File file = this.getFile(filePath);
 
-		try {
-			return this.objectMapper.readValue(file, InfoPage.class);
-		} catch (IOException e) {
-			LOGGER.fatal(String.format("getInfoPage(persistableClass=%s) failed...", persistableClass), e);
-			throw new SException(e);
-		}
-	}
+        try {
+            return this.objectMapper.readValue(file, InfoPage.class);
+        } catch (IOException e) {
+            LOGGER.fatal(String.format("getInfoPage(persistableClass=%s) failed...", persistableClass), e);
+            throw new SException(e);
+        }
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public <T extends Persistable<?>> String getFilePath(final Class<T> persistableClass) {
-		final String name = ClassUtils.getShortName(persistableClass).toLowerCase();
-		final String packageName = ClassUtils.getPackageName(persistableClass).replaceAll("\\.", "/");
-		final String path = String.format("%s/%s.%s", packageName, name, EXTENSION);
-		return StringUtils.cleanPath(path);
-	}
+    /** {@inheritDoc} */
+    @Override
+    public <T extends Persistable<?>> String getFilePath(final Class<T> persistableClass) {
+        final String name = ClassUtils.getShortName(persistableClass).toLowerCase();
+        final String packageName = ClassUtils.getPackageName(persistableClass).replaceAll("\\.", "/");
+        final String path = String.format("%s/%s.%s", packageName, name, EXTENSION);
+        return StringUtils.cleanPath(path);
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public InfoPage getInfoPage(final Persistable<?> persistable) throws SException {
-		LOGGER.debug(String.format("getInfoPage(persistable=%s)", persistable));
-		if (persistable == null) {
-			throw new SInvalidArgumentException("persistable", new NullPointerException());
-		}
-		return this.getInfoPage(persistable.getClass());
-	}
+    /** {@inheritDoc} */
+    @Override
+    public InfoPage getInfoPage(final Persistable<?> persistable) throws SException {
+        LOGGER.debug(String.format("getInfoPage(persistable=%s)", persistable));
+        if (persistable == null) {
+            throw new SInvalidArgumentException("persistable", new NullPointerException());
+        }
+        return this.getInfoPage(persistable.getClass());
+    }
 
-	/**
-	 * Returns a file, as classpath resource, for passed {@code filePath}
-	 *
-	 * @param filePath path to get a file from
-	 *
-	 * @return {@link java.io.File} with {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} definition
-	 *
-	 * @throws SException If file not found or not readable
-	 */
-	private File getFile(final String filePath) throws SException {
-		try {
-			final File file = ResourceUtils.getFile(String.format("%s:%s", CLASSPATH, filePath));
-			if (!file.canRead()) {
-				throw new SException(String.format("%s can not be read", filePath));
-			}
-			return file;
-		} catch (FileNotFoundException exp) {
-			final String message = String.format("Could not locate the page definition under %s", filePath);
-			LOGGER.fatal(message);
-			throw new SException(message, exp);
-		} catch (SException exp) {
-			LOGGER.fatal(exp.getMessage());
-			throw exp;
-		}
-	}
+    @Override
+    public Collection<InfoPageMapping> getRegisteredInfoPages() {
+        return this.infoPageMappingService.getInfoPageMappings();
+    }
+
+    /**
+     * Returns a file, as classpath resource, for passed {@code filePath}
+     *
+     * @param filePath path to get a file from
+     *
+     * @return {@link java.io.File} with {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} definition
+     *
+     * @throws SException If file not found or not readable
+     */
+    private File getFile(final String filePath) throws SException {
+        try {
+            final File file = ResourceUtils.getFile(String.format("%s:%s", CLASSPATH, filePath));
+            if (!file.canRead()) {
+                throw new SException(String.format("%s can not be read", filePath));
+            }
+            return file;
+        } catch (FileNotFoundException exp) {
+            final String message = String.format("Could not locate the page definition under %s", filePath);
+            LOGGER.fatal(message);
+            throw new SException(message, exp);
+        } catch (SException exp) {
+            LOGGER.fatal(exp.getMessage());
+            throw exp;
+        }
+    }
 
 }

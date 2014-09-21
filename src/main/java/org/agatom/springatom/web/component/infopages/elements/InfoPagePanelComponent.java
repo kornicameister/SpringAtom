@@ -37,7 +37,6 @@ import java.util.Map;
 public class InfoPagePanelComponent
 		extends PanelComponent<InfoPageAttributeComponent> {
 	private static final long                serialVersionUID = 4239054882163081910L;
-	private              Map<String, String> layoutCfg        = null;
 	private              Map<String, String> iconCfg          = null;
 
 	/**
@@ -74,18 +73,6 @@ public class InfoPagePanelComponent
 
 	public InfoPagePanelComponent setIconCfg(final Map<String, String> iconCfg) {
 		this.iconCfg = iconCfg;
-		return this;
-	}
-
-	public Map<String, String> getLayoutCfg() {
-		return this.layoutCfg == null ? Maps.<String, String>newHashMap() : this.layoutCfg;
-	}
-
-	public InfoPagePanelComponent setLayoutCfg(final Map<String, String> layoutCfg) {
-		this.layoutCfg = layoutCfg;
-		if (this.layoutCfg.containsKey("type")) {
-			this.setLayout(this.layoutCfg.get("type"));
-		}
 		return this;
 	}
 
