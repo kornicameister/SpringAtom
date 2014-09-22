@@ -25,6 +25,7 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.QueryDslJpaRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import java.io.Serializable;
 
 /**
@@ -75,4 +76,10 @@ public class SBasicRepositoryImpl<T, ID extends Serializable>
 	public JPQLQuery createCustomQuery() {
 		return new JPAQuery(this.entityManager);
 	}
+
+    @Override
+    public T refreshToRead(final T object) {
+        this.entityManager.refresh(object, LockModeType.READ);
+        return object;
+    }
 }

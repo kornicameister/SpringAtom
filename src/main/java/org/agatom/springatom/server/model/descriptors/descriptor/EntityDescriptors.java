@@ -48,220 +48,222 @@ import java.util.concurrent.TimeUnit;
  * @since 0.0.1
  */
 public class EntityDescriptors {
-	private EntityDescriptorReader             reader           = null;
-	private Cache<Class<?>, EntityAssociation> associationCache = null;
+    private EntityDescriptorReader             reader           = null;
+    private Cache<Class<?>, EntityAssociation> associationCache = null;
 
-	@PostConstruct
-	private void initialize() {
-		this.associationCache = CacheBuilder.<Class<?>, EntityAssociation>newBuilder()
-				.maximumSize(666)
-				.expireAfterAccess(60, TimeUnit.MINUTES)
-				.expireAfterWrite(60, TimeUnit.MINUTES)
-				.build();
-		Assert.notNull(this.associationCache);
-	}
+    @PostConstruct
+    private void initialize() {
+        this.associationCache = CacheBuilder.<Class<?>, EntityAssociation>newBuilder()
+                .maximumSize(666)
+                .expireAfterAccess(60, TimeUnit.MINUTES)
+                .expireAfterWrite(60, TimeUnit.MINUTES)
+                .build();
+        Assert.notNull(this.associationCache);
+    }
 
-	/**
-	 * <p>Setter for the field <code>reader</code>.</p>
-	 *
-	 * @param reader a {@link org.agatom.springatom.server.model.descriptors.EntityDescriptorReader} object.
-	 */
-	public void setReader(final EntityDescriptorReader reader) {
-		this.reader = reader;
-	}
+    /**
+     * <p>Setter for the field <code>reader</code>.</p>
+     *
+     * @param reader a {@link org.agatom.springatom.server.model.descriptors.EntityDescriptorReader} object.
+     */
+    public void setReader(final EntityDescriptorReader reader) {
+        this.reader = reader;
+    }
 
-	/**
-	 * <p>getDescriptor.</p>
-	 *
-	 * @param className a {@link java.lang.String} object.
-	 *
-	 * @return a {@link org.agatom.springatom.server.model.descriptors.EntityDescriptor} object.
-	 */
-	public EntityDescriptor<?> getDescriptor(final String className) {
-		final String cleanedClassName = this.cleanClassName(className);
-		if (!ClassUtils.isPresent(className, this.getClass().getClassLoader())) {
-			final Optional<EntityDescriptor<?>> optional = FluentIterable
-					.from(this.reader.getDefinitions())
-					.firstMatch(new Predicate<EntityDescriptor<?>>() {
-						@Override
-						public boolean apply(@Nullable final EntityDescriptor<?> input) {
-							assert input != null;
-							return input.getJavaClass().getName().equals(cleanedClassName);
-						}
-					});
-			if (optional.isPresent()) {
-				return optional.get();
-			} else {
-				return null;
-			}
-		}
-		return this.getDescriptor(ClassUtils.resolveClassName(className, this.getClass().getClassLoader()));
-	}
+    /**
+     * <p>getDescriptor.</p>
+     *
+     * @param className a {@link java.lang.String} object.
+     *
+     * @return a {@link org.agatom.springatom.server.model.descriptors.EntityDescriptor} object.
+     */
+    public EntityDescriptor<?> getDescriptor(final String className) {
+        final String cleanedClassName = this.cleanClassName(className);
+        if (!ClassUtils.isPresent(className, this.getClass().getClassLoader())) {
+            final Optional<EntityDescriptor<?>> optional = FluentIterable
+                    .from(this.reader.getDefinitions())
+                    .firstMatch(new Predicate<EntityDescriptor<?>>() {
+                        @Override
+                        public boolean apply(@Nullable final EntityDescriptor<?> input) {
+                            assert input != null;
+                            return input.getJavaClass().getName().equals(cleanedClassName);
+                        }
+                    });
+            if (optional.isPresent()) {
+                return optional.get();
+            } else {
+                return null;
+            }
+        }
+        return this.getDescriptor(ClassUtils.resolveClassName(className, this.getClass().getClassLoader()));
+    }
 
-	private String cleanClassName(String className) {
-		if (className.startsWith("class")) {
-			final String[] classes = className.split("class");
-			className = classes[1].trim();
-		}
-		return StringUtils.trimAllWhitespace(className);
-	}
+    private String cleanClassName(String className) {
+        if (className.startsWith("class")) {
+            final String[] classes = className.split("class");
+            className = classes[1].trim();
+        }
+        return StringUtils.trimAllWhitespace(className);
+    }
 
-	/**
-	 * <p>getDescriptor.</p>
-	 *
-	 * @param xClass a {@link java.lang.Class} object.
-	 * @param <X>    a X object.
-	 *
-	 * @return a {@link org.agatom.springatom.server.model.descriptors.EntityDescriptor} object.
-	 */
-	public <X> EntityDescriptor<X> getDescriptor(final Class<X> xClass) {
-		return this.reader.getDefinition(xClass, false);
-	}
+    /**
+     * <p>getDescriptor.</p>
+     *
+     * @param xClass a {@link java.lang.Class} object.
+     * @param <X>    a X object.
+     *
+     * @return a {@link org.agatom.springatom.server.model.descriptors.EntityDescriptor} object.
+     */
+    @SuppressWarnings("unchecked")
+    public <X> EntityDescriptor<X> getDescriptor(Class<X> xClass) {
+        xClass = (Class<X>) ClassUtils.getUserClass(xClass);
+        return this.reader.getDefinition(xClass, false);
+    }
 
-	/**
-	 * <p>getSlimDescriptor.</p>
-	 *
-	 * @param className a {@link java.lang.String} object.
-	 *
-	 * @return a {@link org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor} object.
-	 */
-	public SlimEntityDescriptor<?> getSlimDescriptor(final String className) {
+    /**
+     * <p>getSlimDescriptor.</p>
+     *
+     * @param className a {@link java.lang.String} object.
+     *
+     * @return a {@link org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor} object.
+     */
+    public SlimEntityDescriptor<?> getSlimDescriptor(final String className) {
 
-		final String cleanedClassName = this.cleanClassName(className);
-		final ClassLoader classLoader = this.getClass().getClassLoader();
+        final String cleanedClassName = this.cleanClassName(className);
+        final ClassLoader classLoader = this.getClass().getClassLoader();
 
-		if (ClassUtils.isPresent(cleanedClassName, classLoader)) {
-			final Class<?> resolvedClass = ClassUtils.resolveClassName(cleanedClassName, classLoader);
-			return this.getSlimDescriptor(resolvedClass);
-		} else {
-			return null;
-		}
-	}
+        if (ClassUtils.isPresent(cleanedClassName, classLoader)) {
+            final Class<?> resolvedClass = ClassUtils.resolveClassName(cleanedClassName, classLoader);
+            return this.getSlimDescriptor(resolvedClass);
+        } else {
+            return null;
+        }
+    }
 
-	/**
-	 * <p>getSlimDescriptor.</p>
-	 *
-	 * @param javaClass a {@link java.lang.Class} object.
-	 * @param <X>       a X object.
-	 *
-	 * @return a {@link org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor} object.
-	 */
-	public <X> SlimEntityDescriptor<X> getSlimDescriptor(final Class<X> javaClass) {
-		final EntityDescriptor<X> entityDescriptor = this.getDescriptor(javaClass);
-		return new SlimEntityTypeDescriptor<>(entityDescriptor.getName(), entityDescriptor.getJavaClass());
-	}
+    /**
+     * <p>getSlimDescriptor.</p>
+     *
+     * @param javaClass a {@link java.lang.Class} object.
+     * @param <X>       a X object.
+     *
+     * @return a {@link org.agatom.springatom.server.model.descriptors.SlimEntityDescriptor} object.
+     */
+    public <X> SlimEntityDescriptor<X> getSlimDescriptor(final Class<X> javaClass) {
+        final EntityDescriptor<X> entityDescriptor = this.getDescriptor(javaClass);
+        return new SlimEntityTypeDescriptor<>(entityDescriptor.getName(), entityDescriptor.getJavaClass());
+    }
 
-	/**
-	 * <p>getEntityName.</p>
-	 *
-	 * @param xClass a {@link java.lang.Class} object.
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getEntityName(final Class<?> xClass) {
-		return this.reader.getDefinition(xClass, false).getEntityType().getName();
-	}
+    /**
+     * <p>getEntityName.</p>
+     *
+     * @param xClass a {@link java.lang.Class} object.
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getEntityName(final Class<?> xClass) {
+        return this.reader.getDefinition(xClass, false).getEntityType().getName();
+    }
 
-	/**
-	 * <p>getColumns.</p>
-	 *
-	 * @param javaClass a {@link java.lang.Class} object.
-	 * @param <X>       a X object.
-	 *
-	 * @return a {@link java.util.Set} object.
-	 */
-	public <X> Set<EntityDescriptorColumn<X>> getColumns(final Class<X> javaClass) {
-		final EntityDescriptor<X> descriptor = this.getDescriptor(javaClass);
-		final Set<Attribute<? super X, ?>> attributes = descriptor.getEntityType().getAttributes();
-		final Set<EntityDescriptorColumn<X>> columns = Sets.newLinkedHashSet();
-		for (final Attribute<? super X, ?> attribute : attributes) {
-			if (ClassUtils.isAssignable(PluralAttribute.class, attribute.getClass())) {
-				final PluralAttribute pluralAttribute = (PluralAttribute) attribute;
-				columns.add(new EntityTypeDescriptorCollectionColumn<X>().setElementClass(pluralAttribute.getElementType().getJavaType())
-						.setName(attribute.getName())
-						.setColumnClass(attribute.getJavaType())
-						.setEntityDescriptor(descriptor));
-			} else {
-				columns.add(new EntityTypeDescriptorColumn<X>().setName(attribute.getName())
-						.setColumnClass(attribute.getJavaType())
-						.setEntityDescriptor(descriptor));
-			}
-		}
-		return columns;
-	}
+    /**
+     * <p>getColumns.</p>
+     *
+     * @param javaClass a {@link java.lang.Class} object.
+     * @param <X>       a X object.
+     *
+     * @return a {@link java.util.Set} object.
+     */
+    public <X> Set<EntityDescriptorColumn<X>> getColumns(final Class<X> javaClass) {
+        final EntityDescriptor<X> descriptor = this.getDescriptor(javaClass);
+        final Set<Attribute<? super X, ?>> attributes = descriptor.getEntityType().getAttributes();
+        final Set<EntityDescriptorColumn<X>> columns = Sets.newLinkedHashSet();
+        for (final Attribute<? super X, ?> attribute : attributes) {
+            if (ClassUtils.isAssignable(PluralAttribute.class, attribute.getClass())) {
+                final PluralAttribute pluralAttribute = (PluralAttribute) attribute;
+                columns.add(new EntityTypeDescriptorCollectionColumn<X>().setElementClass(pluralAttribute.getElementType().getJavaType())
+                        .setName(attribute.getName())
+                        .setColumnClass(attribute.getJavaType())
+                        .setEntityDescriptor(descriptor));
+            } else {
+                columns.add(new EntityTypeDescriptorColumn<X>().setName(attribute.getName())
+                        .setColumnClass(attribute.getJavaType())
+                        .setEntityDescriptor(descriptor));
+            }
+        }
+        return columns;
+    }
 
-	/**
-	 * <p>getAssociations.</p>
-	 *
-	 * @return a {@link java.util.Map} object.
-	 */
-	public Map<Class<?>, EntityAssociation> getAssociations() {
-		for (SlimEntityDescriptor<?> descriptor : this.getSlimDescriptors()) {
-			final Class<?> javaClass = descriptor.getJavaClass();
-			this.getAssociation(javaClass);
-		}
-		return this.associationCache.asMap();
-	}
+    /**
+     * <p>getAssociations.</p>
+     *
+     * @return a {@link java.util.Map} object.
+     */
+    public Map<Class<?>, EntityAssociation> getAssociations() {
+        for (SlimEntityDescriptor<?> descriptor : this.getSlimDescriptors()) {
+            final Class<?> javaClass = descriptor.getJavaClass();
+            this.getAssociation(javaClass);
+        }
+        return this.associationCache.asMap();
+    }
 
-	/**
-	 * <p>getSlimDescriptors.</p>
-	 *
-	 * @return a {@link java.util.Set} object.
-	 */
-	public Set<SlimEntityDescriptor<?>> getSlimDescriptors() {
-		final Set<EntityDescriptor<?>> descriptors = this.getDescriptors();
-		return FluentIterable
-				.from(descriptors)
-				.transform(new Function<EntityDescriptor<?>, SlimEntityDescriptor<?>>() {
-					@Nullable
-					@Override
-					public SlimEntityDescriptor<?> apply(@Nullable final EntityDescriptor<?> input) {
-						assert input != null;
-						return new SlimEntityTypeDescriptor<>(input.getName(), input.getJavaClass());
-					}
-				})
-				.toSet();
-	}
+    /**
+     * <p>getSlimDescriptors.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
+    public Set<SlimEntityDescriptor<?>> getSlimDescriptors() {
+        final Set<EntityDescriptor<?>> descriptors = this.getDescriptors();
+        return FluentIterable
+                .from(descriptors)
+                .transform(new Function<EntityDescriptor<?>, SlimEntityDescriptor<?>>() {
+                    @Nullable
+                    @Override
+                    public SlimEntityDescriptor<?> apply(@Nullable final EntityDescriptor<?> input) {
+                        assert input != null;
+                        return new SlimEntityTypeDescriptor<>(input.getName(), input.getJavaClass());
+                    }
+                })
+                .toSet();
+    }
 
-	/**
-	 * <p>getAssociation.</p>
-	 *
-	 * @param clazz a {@link java.lang.Class} object.
-	 *
-	 * @return a {@link org.agatom.springatom.server.model.descriptors.EntityAssociation} object.
-	 */
-	public EntityAssociation getAssociation(final Class<?> clazz) {
-		final EntityAssociation entityAssociation = this.associationCache.getIfPresent(clazz);
-		if (entityAssociation == null) {
-			this.associationCache.invalidate(clazz);
-			return this.doGetAssociation(clazz);
-		}
-		return entityAssociation;
-	}
+    /**
+     * <p>getAssociation.</p>
+     *
+     * @param clazz a {@link java.lang.Class} object.
+     *
+     * @return a {@link org.agatom.springatom.server.model.descriptors.EntityAssociation} object.
+     */
+    public EntityAssociation getAssociation(final Class<?> clazz) {
+        final EntityAssociation entityAssociation = this.associationCache.getIfPresent(clazz);
+        if (entityAssociation == null) {
+            this.associationCache.invalidate(clazz);
+            return this.doGetAssociation(clazz);
+        }
+        return entityAssociation;
+    }
 
-	/**
-	 * <p>getDescriptors.</p>
-	 *
-	 * @return a {@link java.util.Set} object.
-	 */
-	public Set<EntityDescriptor<?>> getDescriptors() {
-		return this.reader.getDefinitions();
-	}
+    /**
+     * <p>getDescriptors.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
+    public Set<EntityDescriptor<?>> getDescriptors() {
+        return this.reader.getDefinitions();
+    }
 
-	private EntityAssociation doGetAssociation(final Class<?> clazz) {
-		final EntityDescriptor<?> descriptor = this.getDescriptor(clazz);
-		final SimpleEntityAssociation association = new SimpleEntityAssociation();
+    private EntityAssociation doGetAssociation(final Class<?> clazz) {
+        final EntityDescriptor<?> descriptor = this.getDescriptor(clazz);
+        final SimpleEntityAssociation association = new SimpleEntityAssociation();
 
-		association.setMaster(descriptor);
-		for (final ManyToOnePropertyDescriptor propertyDescriptor : descriptor.getManyToOneProperties()) {
-			association.addAssociation(this.getDescriptor(propertyDescriptor.getJavaType()));
-		}
-		for (final OneToManyPropertyDescriptor propertyDescriptor : descriptor.getOneToManyProperties()) {
-			association.addAssociation(this.getDescriptor(propertyDescriptor.getJavaType()));
-		}
+        association.setMaster(descriptor);
+        for (final ManyToOnePropertyDescriptor propertyDescriptor : descriptor.getManyToOneProperties()) {
+            association.addAssociation(this.getDescriptor(propertyDescriptor.getJavaType()));
+        }
+        for (final OneToManyPropertyDescriptor propertyDescriptor : descriptor.getOneToManyProperties()) {
+            association.addAssociation(this.getDescriptor(propertyDescriptor.getJavaType()));
+        }
 
-		this.associationCache.put(clazz, association);
+        this.associationCache.put(clazz, association);
 
-		return association;
-	}
+        return association;
+    }
 }

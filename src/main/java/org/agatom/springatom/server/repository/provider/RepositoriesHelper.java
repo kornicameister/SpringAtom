@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,52 +15,46 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.repository;
+package org.agatom.springatom.server.repository.provider;
 
-import com.mysema.query.jpa.JPQLQuery;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.mapping.PersistentEntity;
+import org.springframework.data.repository.core.CrudInvoker;
+import org.springframework.data.repository.core.EntityInformation;
+import org.springframework.data.repository.core.RepositoryInformation;
+import org.springframework.data.repository.query.QueryMethod;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
- * {@code SBasicRepository} is the foundamental interface for the repositories.
- * By extending {@link org.springframework.data.jpa.repository.JpaRepository} and {@link org.springframework.data.querydsl.QueryDslPredicateExecutor} it allows to query the database
- * with the help of <b>QueryDSL [{@link org.springframework.data.jpa.repository.support.Querydsl}]</b>.
- * Also it boosts already available functionality with new one.
+ * <p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-09-19</small>
+ * </p>
  *
- * @author kornicameister
- * @version 0.0.2
+ * @author trebskit
+ * @version 0.0.1
  * @since 0.0.1
  */
-public interface SBasicRepository<T, ID extends Serializable>
-		extends JpaRepository<T, ID>,
-		QueryDslPredicateExecutor<T> {
+public interface RepositoriesHelper {
 
-	/**
-	 * Method to detach, if necessary, the object from the session.
-	 *
-	 * @param t object to be detached
-	 *
-	 * @return detached object
-	 */
-	T detach(T t);
+    @Cacheable("repositoriesHelper.getRepositoryFor")
+    <T> Object getRepositoryFor(final Class<T> clazz);
 
-	/**
-	 * Returns plain {@link com.mysema.query.jpa.JPQLQuery} without any target and {@link com.mysema.query.types.Predicate} embedded
-	 *
-	 * @return the query
-	 */
-	JPQLQuery createCustomQuery();
+    @Cacheable("repositoriesHelper.getEntityInformationFor")
+    <T, S extends Serializable> EntityInformation<T, S> getEntityInformationFor(Class<?> domainClass);
 
-    T refreshToRead(final T object);
+    @Cacheable("repositoriesHelper.getRepositoryInformationFor")
+    RepositoryInformation getRepositoryInformationFor(Class<?> domainClass);
 
-	/**
-	 * Custom operators to be used when constructing the queries
-	 */
-	public static enum Operators {
-		BEFORE,
-		AFTER,
-		EQ
-	}
+    @Cacheable("repositoriesHelper.getPersistentEntity")
+    PersistentEntity<?, ?> getPersistentEntity(Class<?> domainClass);
+
+    @Cacheable("repositoriesHelper.getQueryMethodsFor")
+    List<QueryMethod> getQueryMethodsFor(Class<?> domainClass);
+
+    @Cacheable("repositoriesHelper.getCrudInvoker")
+    <T> CrudInvoker<T> getCrudInvoker(Class<T> domainClass);
+
+    Object refreshRead(Object persistable);
 }
