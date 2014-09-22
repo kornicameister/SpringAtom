@@ -19,7 +19,10 @@
  * Created by trebskit on 2014-08-15.
  */
 define(
-    function ext() {
+    [
+        'underscore'
+    ],
+    function ext(_) {
         String.prototype.startsWith = function (str) {
             var length = str.length;
             return this.substring(0, length) === str;
@@ -43,5 +46,27 @@ define(
             }
             return newStr;
         };
+
+        // adding using underscore as mixin
+        _.mixin({
+            capitalize: function (string) {
+                return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
+            },
+            asBoolean : function (string) {
+                switch (string.toLowerCase()) {
+                    case "true":
+                    case "yes":
+                    case "1":
+                        return true;
+                    case "false":
+                    case "no":
+                    case "0":
+                    case null:
+                        return false;
+                    default:
+                        return Boolean(string);
+                }
+            }
+        });
     }
 );

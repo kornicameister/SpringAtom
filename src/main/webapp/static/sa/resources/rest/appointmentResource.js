@@ -23,48 +23,69 @@ define(
         'config/module',
         'underscore',
         // angular injections
+        'restangular',
         'resources/rest/baseRestResource'
     ],
     function appointmentsResource(app, _) {
-        var resource = function ($log, $location, $rootScope, baseRestResource) {
-            var apps = baseRestResource.service('appointment', {
-                    root: 'appointments'
-                }),
-                search = function (what, argMap, page) {
-                    var configuration = argMap;
-                    if (!_.isUndefined(page)) {
-                        configuration.page = page;
-                    }
-                    return this.all('search/' + what).getList(configuration);
+
+        var knownAssociations = {
+                getAssignee: 'assignee',
+                getCar     : 'car',
+                getReporter: 'reporter',
+                getTasks   : 'tasks'
+            },
+            resource = function ($log, $location, $rootScope, baseRestResource) {
+                var route = 'appointment',
+                    apps = baseRestResource
+                        .create(route)
+                        .addNestedInterceptors({
+                            tasks: function (data) {
+                                var actual = data._embedded;
+                                return actual;
+                            }
+                        }),
+                    search = function (what, argMap, page) {
+                        var configuration = argMap;
+                        if (!_.isUndefined(page)) {
+                            configuration.page = page;
+                        }
+                        return this.all(route + '/search/' + what).getList(configuration);
+                    };
+
+                apps.queries = {
+                    feed              : function (begin, end) {
+                        return search('feed', {
+                            begin: begin,
+                            end  : end,
+                            sort : 'begin'
+                        });
+                    }.bind(apps),
+                    findByAssignee    : function (assignee, page) {
+                        return search('findByAssignee', {
+                            assignee: assignee
+                        }, page);
+                    }.bind(apps),
+                    findByReporter    : function (reporter, page) {
+                        return search('findByReporter', {
+                            reporter: reporter
+                        }, page);
+                    }.bind(apps),
+                    findByLicencePlate: function (lp, page) {
+                        return search('findByCarLicencePlate', {
+                            licencePlate: lp
+                        }, page);
+                    }.bind(apps)
                 };
 
-            apps.queries = {
-                feed              : function (begin, end) {
-                    return search('feed', {
-                        begin: begin,
-                        end  : end,
-                        sort : 'begin'
+                apps.extendModel(route, function (appointment) {
+                    _.each(knownAssociations, function (path, name) {
+                        appointment.addRestangularMethod(name, 'get', path, {}, {Resource: 'appointmentResource'});
                     });
-                }.bind(apps),
-                findByAssignee    : function (assignee, page) {
-                    return search('findByAssignee', {
-                        assignee: assignee
-                    }, page);
-                }.bind(apps),
-                findByReporter    : function (reporter, page) {
-                    return search('findByReporter', {
-                        reporter: reporter
-                    }, page);
-                }.bind(apps),
-                findByLicencePlate: function (lp, page) {
-                    return search('findByCarLicencePlate', {
-                        licencePlate: lp
-                    }, page);
-                }.bind(apps)
-            };
+                    return appointment;
+                });
 
-            return apps;
-        };
+                return apps;
+            };
         app.factory('appointmentResource', resource);
     }
 );

@@ -20,124 +20,79 @@
  */
 define(
     [
-        'config/module',
-        'classes/cmp/ip/page',
-        // angular injections
-        'services/cmp/ip/ip'
+        'underscore',
+        'utils',
+        // extensions
+        'config/ext'
     ],
-    function infoPageController(app, InfoPageComponent) {
-        var infoPageController = function _infoPageController($log, $scope, ipService) {
-            var me = this,
-                currentStep = 0,
-                stepsTotalCount = 4,
-                rawConfig,
-                rawData;
+    function infoPageController(_, utils) {
 
-            me.data = undefined;
-
-            me.isLoading = function () {
-                return !me.data;
-            };
-            me.isDebug = function () {
-                return false;
-            };
-            me.getLoadingProgress = function () {
-                var humanized = arguments.length == 1,
-                    progress = currentStep / stepsTotalCount;
-                return humanized ? (progress * 100.0) : progress;
-            };
-
-            function combineDataAndFinish() {
-                $log.debug('Configuration and data load for infoPage=[{ip}/{key}]'.format({
-                    ip : $scope.$parent.infopage.domain,
-                    key: $scope.$parent.infopage.key
-                }));
-
-                me.data = new InfoPageComponent(rawConfig, rawData);
-
-                rawConfig = undefined;
-                rawData = undefined;
-
-                currentStep += 1;
-            }
-
-            function loadDataAfterConfig() {
-
-                if (me.error) {
-                    $log.error('Cannot load data, found error={error}'.format({
-                        error: me.error
-                    }));
-                    return;
-                }
-
-                var config = rawConfig;
-
-                if (!config) {
-                    throw new Error('Called without configuration loaded');
-                }
-
-                function infoPageDataRequestCreate(ip) {
-                    return {
-                        method: 'POST',
-                        url   : '/app/cmp/data/ip',
-                        cache : false,
-                        data  : (function buildParams() {
-                            var params = {
-                                pageId: config['id'],
-                                id    : ip['key'],
-                                domain: config['domain']
-                            };
-                            params['version'] = ip['version'] || -1;
-                            params['revision'] = ip['revision'] || -1;
-                            params['attributes'] = (function () {
-                                var localArray = [];
-                                angular.forEach(config.content, function (panel) {
-                                    angular.forEach(panel.content, function (attribute) {
-                                        localArray.push({
-                                            path: attribute['path'],
-                                            type: attribute['displayAs']
-                                        })
-                                    });
-                                });
-                                return localArray;
-                            }());
-                            currentStep += 1;
-                            return params;
-                        }())
+        var getPageId = function getPageId(definition) {
+                return definition.id;
+            },
+            getPageLabel = function getPageLabel(definition) {
+                return definition.label;
+            },
+            getAttributeRenderer = function getAttributeRenderer(attribute, dataChunk) {
+                var displayType = attribute['displayAs'],
+                    renderAs = dataChunk['renderAs'];
+                if (_.isUndefined(displayType) && !_.isUndefined(renderAs)) {
+                    return renderAs.toLowerCase();
+                } else if (!_.isUndefined(displayType)) {
+                    switch (displayType) {
+                        case 'VALUE_ATTRIBUTE':
+                            return 'text';
+                        case 'TABLE_ATTRIBUTE':
+                            return 'table';
+                        case 'INFOPAGE_ATTRIBUTE':
+                            return 'link';
                     }
                 }
-
-                ipService
-                    .loadData($scope.$parent.infopage, infoPageDataRequestCreate)
-                    .then(function onSuccess(data) {
-                        $log.debug('Loaded configuration object in {time} ms, builder = {builder}'.format({
-                            time   : moment(data['time']).milliseconds(),
-                            builder: data['builtBy']
-                        }));
-                        currentStep += 1;
-                        rawData = data.data;
-                        combineDataAndFinish();
-                    }, function onError() {
-                        me.error = 'ERROR: failed to load batch [config,data]';
-                    });
-            }
-
-            ipService
-                .loadConfiguration($scope.$parent.infopage)
-                .then(function onSuccess(data) {
-                    $log.debug('Loaded configuration object in {time} ms, builder = {builder}'.format({
-                        time   : moment(data['time']).milliseconds(),
-                        builder: data['builtBy']
-                    }));
-                    rawConfig = data.data;
-                    currentStep += 1;
-                    loadDataAfterConfig();
-                }, function onError() {
-                    me.error = 'ERROR: failed to load batch [config,data]';
+                return 'no_value';
+            },
+            getAttributesOfPanel = function getAttributesOfPanel(panel, data) {
+                var attributes = panel.content,
+                    attributesOfPanel = _.pluck(attributes, 'path'),
+                    dataOfPanel = _.pick(data, attributesOfPanel),
+                    attrs = [];
+                _.each(attributes, function attrIt(attribute) {
+                    var path = attribute.path,
+                        dataChunk = dataOfPanel[path] || {},
+                        item = {
+                            path : path,
+                            label: attribute.label,
+                            value: dataChunk.value,
+                            as   : getAttributeRenderer(attribute, dataChunk)
+                        };
+                    attrs.push(item);
                 });
-            currentStep += 1;
-        };
+                return attrs;
+            },
+            getPanels = function getPanels(definition, data) {
+                var content = definition.content,
+                    panels = [];
+                _.each(content, function contentIt(panel) {
+                    panels.push({
+                        label     : panel.label,
+                        icon      : panel['iconCfg']['iconCls'],
+                        attributes: getAttributesOfPanel(panel, data)
+                    })
+                });
+                return panels;
+            };
 
-        app.controller('InfoPageController', ['$log', '$scope', 'ipService', infoPageController])
+        return function _infoPageController($log, $scope, oid, configuration) {
+            $scope.debug = utils.isDebug();
+
+            var data = configuration.data,
+                definition = configuration.definition;
+
+            // setup view variables
+            $scope.uniqueId = _.uniqueId('infopage');
+            $scope.pageId = getPageId(definition);
+            $scope.pageLabel = getPageLabel(definition);
+            $scope.panels = getPanels(definition, data);
+            $scope.context = oid;
+        };
     }
 );

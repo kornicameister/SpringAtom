@@ -19,38 +19,31 @@
  * Created by trebskit on 2014-08-14.
  */
 define(
-    [,
+    [
+        'views/cmp/ip/infoPageController',
         // angular injections
-        'resources/componentResource',
-        'views/cmp/ip/infoPageController'
+        'services/oidService',
+        'resources/componentResource'
     ],
-    function ipStates() {
+    function ipStates(infoPageController) {
+        var relToBuilder = {
+            appointment: 'appointmentInfoPageBuilder',
+            car        : 'carInfoPageBuilder'
+        };
         return {
             name      : 'infopage',
             definition: {
-                url        : '/sa/infopage/:domain/:id',
-                /**
-                 * Points to generic view holding Angular based InfoPage View view
-                 */
-                templateUrl: '/app/cmp/ip/generic',
+                url        : '/sa/infopage/:rel/:id',
+                templateUrl: '/static/sa/views/cmp/ip/infopage.html',
                 resolve    : {
-                    definition: ['componentResource', '$stateParams', function (componentResource, $stateParams) {
-                        return componentResource.getInfoPageDefinition($stateParams.domain, $stateParams.id);
-                    }]
-                },
-                controller : [
-                    '$scope', '$stateParams', 'definition',
-                    function ($scope, $stateParams, definition) {
-                        $scope.infopage = {
-                            key   : $stateParams.id,
-                            domain: $stateParams.domain
-                        };
-                        console.log(definition);
+                    oid          : function ($stateParams, oidService) {
+                        return oidService.getOid($stateParams.rel, $stateParams.id);
+                    },
+                    configuration: function ($stateParams, oid, componentResource) {
+                        return componentResource.getInfoPageComponentConfiguration(relToBuilder[$stateParams.rel], oid);
                     }
-                ],
-                onEnter    : function (navigationService) {
-                    navigationService.setNavigatorModel([]);
-                }
+                },
+                controller : infoPageController
             }
         }
     }

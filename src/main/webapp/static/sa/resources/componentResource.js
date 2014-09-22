@@ -23,93 +23,132 @@ define(
         'config/module',
         'utils',
         'underscore',
-        // jsface
-        'jsface'
+        // angular injections
+        'restangular',
+        'services/contextObjectService'
     ],
     function componentResource(app, utils, _) {
-        var localCache = {};
-        var resource = function ($log, $http, $q) {
-            var baseURL = '/app/cmp',
-                configBaseURL = baseURL + '/config',
-                dataBaseURLR = baseURL + '/data',
-                commonHttpConf = {
-                    cache            : !utils.isDebug(),
-                    responseType     : 'json',
-                    transformResponse: function (data) {
-                        if (!data.success) {
-                            return $q.reject({
-                                error  : data.error,
-                                message: data.message
+
+        var extensions = [
+                {
+                    route       : 'builders',
+                    isCollection: true,
+                    extension   : function buildersTransformer(element) {
+
+                        element.getBuildersIds = function getBuildersIds() {
+                            console.log('test');
+                        };
+                        element.getBuildersForBranch = function getBuildersForBranch(branch) {
+                            return _.filter(this, function predicate(entry) {
+                                return _.some(entry.definitions, function some(def) {
+                                    return def['produces'] === branch;
+                                })
                             });
-                        }
-                        return data.data;
+                        };
+                        element.getInfoPageBuilder = function getInfoPageBuilder(rel) {
+                            var infoPageBuilders = this.getBuildersForBranch('PAGE_COMPONENT'),
+                                builder = undefined;
+                            _.each(infoPageBuilders, function (entry, key) {
+                                if (_.isUndefined(builder)) {
+                                    builder = _.find(entry.definitions, function (def) {
+                                        return def['nestedMetaData']['componentId'] === rel;
+                                    });
+                                    if (!_.isUndefined(builder)) {
+                                        builder = _.extend(builder, {
+                                            builderId: entry.builderId
+                                        })
+                                    }
+                                }
+                            });
+                            return builder;
+                        };
+
+                        return element;
                     }
-                },
-                configurationHttpConf = _.extend(commonHttpConf, {
-                    method: 'GET'
-                }),
-                configurationHandlers = {
-                    other: function (builderID) {
-                        return doRequest(_.extend(configurationHttpConf, {
-                            url: configBaseURL + '/' + builderID
-                        }));
-                    },
-                    ip   : function (domain, id) {
-                        return doRequest(_.extend(configurationHttpConf, {
-                            url: '{base}/ip/{domain}/{id}'.format({
-                                base  : configBaseURL,
-                                domain: domain,
-                                id    : id
-                            })
-                        })).then(function (data) {
-
-                        }, function (error) {
-
-                        })
-                    },
-                    table: function (builderID) {
-
+                }
+            ],
+            setUpExtensions = function setUpExtensions() {
+                var resource = this;
+                _.each(extensions, function (tr) {
+                    if (_.isUndefined(tr.isCollection)) {
+                        tr.isCollection = false;
                     }
-                },
-                doRequest = function doRequest(conf) {
-                    var directiveData = undefined,
-                        dataPromise = undefined;
-
-                    if (dataPromise) {
-                        return dataPromise;
-                    }
-
-                    var deferred = $q.defer();
-                    dataPromise = deferred.promise;
-
-                    if (directiveData) {
-                        deferred.resolve(directiveData);
+                    if (tr.isCollection) {
+                        resource.extendCollection(tr.route, tr.extension)
                     } else {
-                        $http(conf)
-                            .success(function (data) {
-                                directiveData = data;
-                                deferred.resolve(directiveData);
-                            })
-                            .error(function () {
-                                deferred.reject('Failed to load data');
+                        resource.extendModel(tr.route, tr.extension)
+                    }
+                });
+            };
+
+        app.factory('componentResource', function navigationResource(Restangular, $log, contextObjectService) {
+            var resource = Restangular.withConfig(function configurer(RestangularConfigurer) {
+                RestangularConfigurer.setBaseUrl('cmp/components');
+                RestangularConfigurer.setRestangularFields({
+                    selfLink: 'links.self'
+                });
+                RestangularConfigurer.addResponseInterceptor(function responseInterceptor(data, operation, what) {
+                    var actualData = data.content,
+                        toReturn = actualData,
+                        links = data.links;
+
+                    // set links
+                    actualData.links = {};
+                    _.each(links, function (link) {
+                        actualData.links[link.rel] = link.href;
+                    });
+
+                    switch (operation) {
+                        case 'getList':
+                            toReturn = [];
+                    }
+
+                    // post process
+                    switch (what) {
+                        case 'builders':
+                            _.each(actualData, function (val, key) {
+                                if (key !== 'links') {
+                                    toReturn.push({
+                                        builderId  : key,
+                                        definitions: val
+                                    });
+                                }
                             });
+                            toReturn.links = actualData.links;
+                            break;
                     }
 
-                    return dataPromise;
-                },
-                getConfigurationHandler = function getConfigurationHandler(handler) {
-                    if (_.isUndefined(handler)) {
-                        return configurationHandlers.other
-                    }
-                    return configurationHandlers[handler];
-                };
-            return {
-                getInfoPageDefinition: getConfigurationHandler('ip'),
-                getTableDefinition   : getConfigurationHandler('table'),
-                getOtherDefinition   : getConfigurationHandler()
-            }
-        };
+                    return toReturn;
+                });
+            });
 
-        app.factory('componentResource', ['$log', '$http', '$q', resource]);
+            resource.getBuildersMap = function () {
+                return this.all('builders').getList();
+            }.bind(resource);
+            resource.getInfoPageComponentConfiguration = function (builder, oid) {
+                return this.getComponentConfiguration(builder, {
+                    oid   : oid,
+                    pageId: builder.replace('InfoPageBuilder', ''),
+                    type  : 'PAGE_COMPONENT'
+                });
+            }.bind(resource);
+            resource.getTableComponentConfiguration = function (builder, oid) {
+                return this.getComponentConfiguration(builder, {
+                    oid : oid,
+                    type: 'TABLE_COMPONENT'
+                });
+            }.bind(resource);
+            resource.getComponentConfiguration = function (builderId, params) {
+                return this.one('get/component', builderId).get(params);
+            }.bind(resource);
+            resource.reloadData = function (builderId) {
+                var co = arguments.length === 2 ? arguments[1] : contextObjectService.getContextObject();
+                return this.one('data/reload', builderId).get(co);
+            }.bind(resource);
+
+            setUpExtensions.bind(resource)();
+
+            return resource;
+        });
     }
 );

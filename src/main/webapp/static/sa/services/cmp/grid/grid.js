@@ -29,50 +29,24 @@ define(
     function grid(app) {
         var gridService = function gridService(dataHelper, configHelper, pageHelper) {
             return {
-                loadConfiguration : function gs_loadConfiguration(cfg) {
-                    var successCallback = cfg.success,
-                        failureCallback = cfg.failure,
-                        localSuccess = function (data) {
-                            successCallback.apply(this, [configHelper.unpackConfiguration(data)]);
-                        },
-                        localFailure = function (data) {
-                            failureCallback.apply(this, [data]);
-                        };
-
-                    // clear up
-                    delete cfg.success;
-                    delete cfg.failure;
-
-                    configHelper.loadConfiguration(cfg).then(localSuccess, localFailure);
+                unpackConfiguration: function (configuration) {
+                    return configHelper.unpackConfiguration(configuration);
                 },
-                loadData          : function gs_loadData(cfg) {
-                    var successCallback = cfg.success,
-                        failureCallback = cfg.failure,
-                        localSuccess = function (data) {
-                            successCallback.apply(this, [dataHelper.unpackData(data)]);
-                        },
-                        localFailure = function (data) {
-                            failureCallback.apply(this, [data]);
-                        };
-
-                    // clear up
-                    delete cfg.success;
-                    delete cfg.failure;
-
-                    dataHelper.loadData(cfg).then(localSuccess, localFailure);
+                unpackData         : function (data) {
+                    return dataHelper.unpackData(data);
                 },
-                getPageSizes      : function delegate_getPageSizes() {
+                getPageSizes       : function delegate_getPageSizes() {
                     return pageHelper.getPageSizes();
                 },
-                getDefaultPageSize: function delegate_getDefaultPageSize() {
+                getDefaultPageSize : function delegate_getDefaultPageSize() {
                     return pageHelper.getDefaultPageSize();
                 },
-                getInitialPage    : function delegate_getInitialPage() {
+                getInitialPage     : function delegate_getInitialPage() {
                     return pageHelper.getInitialPage();
                 }
             }
         };
 
-        app.factory('gridService', [ 'gridDataHelper', 'gridConfigurationHelper', 'gridPageHelper', gridService]);
+        app.factory('gridService', ['gridDataHelper', 'gridConfigurationHelper', 'gridPageHelper', gridService]);
     }
 );

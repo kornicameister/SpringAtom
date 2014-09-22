@@ -27,14 +27,19 @@ define(
     ],
     function baseRestResource(app, _) {
 
-        var baseUrl = '/rest',
+        var baseUrl = 'rest',
             operations = {
                 GET_LIST: 'getList',
                 PUT     : 'put',
                 GET     : 'get'
             },
             resource = function resource($log, $location, Restangular) {
-                var getIdFromSelfLink = function (href) {
+                var location = {
+                        host    : $location.host(),
+                        port    : $location.port(),
+                        protocol: $location.protocol()
+                    },
+                    getIdFromSelfLink = function (href) {
                         href = href.split('/');
                         return Number(href[href.length - 1]);
                     },
@@ -57,9 +62,13 @@ define(
                     handleSingleGet = function (data) {
                         var links = data._links;
                         delete data._links;
-                        return _.extend(data, {
-                            associations: links
+                        data.associations = links;
+                        _.each(data.associations, function (assoc, key) {
+                            if (key === 'self') {
+                                data.id = getIdFromSelfLink(assoc.href);
+                            }
                         });
+                        return data;
                     },
                     handleGetList = function (data, dataRoot) {
                         var unwrappedData = data._embedded;
@@ -89,15 +98,18 @@ define(
 
                 return {
                     operations  : operations,
-                    restLocation: {
-                        host    : $location.host(),
-                        port    : $location.port(),
-                        protocol: $location.protocol()
-                    },
+                    restLocation: location,
                     baseUrl     : baseUrl,
-                    service     : function init(route, config) {
+                    create      : function service(route) {
                         var instance = Restangular.withConfig(function configurer(RestangularConfigurer) {
-                            RestangularConfigurer.setBaseUrl(baseUrl);
+                            RestangularConfigurer.setBaseUrl(
+                                '{protocol}://{host}:{port}/{base}/'.format({
+                                    port    : location.port,
+                                    protocol: location.protocol,
+                                    host    : location.host,
+                                    base    : baseUrl
+                                })
+                            );
                             RestangularConfigurer.setRequestSuffix('/');
                             RestangularConfigurer.setRestangularFields({
                                 selfLink: 'associations.self.href'
@@ -121,46 +133,52 @@ define(
                                 }
                                 return true;
                             });
-                            RestangularConfigurer.addResponseInterceptor(function responseInterceptor(data,
-                                                                                                      operation,
-                                                                                                      what,
-                                                                                                      url,
-                                                                                                      response,
-                                                                                                      deffered) {
-                                var newResponse = undefined;
-                                try {
-                                    switch (operation) {
-                                        case operations.GET_LIST:
-                                            var embeddedData = data._embedded,
-                                                keys = _.keys(embeddedData),
-                                                dataRoot = keys[0];
-                                            newResponse = handleGetList(data, dataRoot);
-                                            break;
-                                        case operations.GET:
-                                            newResponse = handleSingleGet(data);
-                                    }
-                                } catch (error) {
-                                    deffered.reject(error);
-                                }
-                                return newResponse;
-                            });
                         });
 
-                        /**
-                         * This is slightly inappropriate to do it this way
-                         * because all restangular method are lost. But
-                         * returning instance created via RestangularConfigurer
-                         * directly with baseUrl+route as URL will result
-                         * in invalid URL used for instance for getList which would
-                         * become
-                         * /rest/{route}/undefined <- undefined we dont want
-                         */
-                        return Restangular.service(route, instance);
+                        instance.addResponseInterceptor(function (data, operation, what, url, response, deffered) {
+                            var self = this,
+                                nestedInterceptors = self.nestedInterceptors,
+                                newResponse = undefined;
+                            try {
+                                switch (operation) {
+                                    case operations.GET_LIST:
+                                        var embeddedData = data._embedded,
+                                            keys = _.keys(embeddedData),
+                                            dataRoot = keys[0];
+                                        newResponse = handleGetList(data, dataRoot);
+                                        break;
+                                    case operations.GET:
+                                        newResponse = handleSingleGet(data);
+                                }
+                            } catch (error) {
+                                deffered.reject(error);
+                            }
+                            return nestedInterceptors[what] ? nestedInterceptors[what](newResponse) : newResponse;
+                        }.bind(instance));
+
+                        instance.getAll = function () {
+                            return this.all(route).getList();
+                        }.bind(instance);
+                        instance.getOne = function (id) {
+                            return this.one(route, id).get();
+                        }.bind(instance);
+
+                        // register nested interceptors
+                        instance.addNestedInterceptors = function (hash) {
+                            var self = this;
+                            if (_.isUndefined(hash)) {
+                                hash = {};
+                            }
+                            self.nestedInterceptors = hash;
+                            return self;
+                        }.bind(instance);
+
+                        return instance;
                     }
                 };
 
             };
 
-        app.factory('baseRestResource', ['$log', '$location', 'Restangular', resource]);
+        app.factory('baseRestResource', resource);
     }
 );

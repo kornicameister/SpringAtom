@@ -22,135 +22,64 @@ define(
     [
         'config/module',
         'utils',
+        'underscore',
         'moment',
         // angular injections
         'services/cmp/grid/pageHelper'
     ],
-    function dataHelper(app, utils) {
+    function dataHelper(app, utils, _) {
         var gridDataHelper = function gridDataHelper($http, $q, $log, gridPageHelper) {
-            var priv = {
-                    getHttpConfiguration: function _createHTTPConfiguration(conf) {
-                        var searchText = conf['request']['searchText'] || '',
-                            page = conf['request']['page'] || 1,
-                            pageSize = conf['request']['limit'] || gridPageHelper.getDefaultPageSize(),
-                            url = conf['url'];
-                        if (!url || url === '') {
-                            throw new Error('URL is not defined, can not proceed');
-                        }
-                        var retConf = {
-                            method: 'POST',
-                            cache : false,
-                            url   : url,
-                            params: {
-                                start: page === 0 ? 0 : (page * pageSize),
-                                page : page,
-                                limit: pageSize
-                            }
-                        };
-                        delete conf['request']['page'];
-                        delete conf['request']['limit'];
-                        delete conf['request']['searchText'];
-                        delete conf['url'];
-
-                        angular.extend(retConf.params, conf.request);
-
-                        return retConf
-                    },
-                    /**
-                     * Loads data for the grid
-                     * @param conf configuration of the object. Must at least contain;
-                     * <ul>
-                     *     <li>url</li>
-                     *     <li>page: size, index</li>
-                     *     <li>searchText</li>
-                     * </ul>
-                     * @private
-                     */
-                    loadData            : function _loadData(conf) {
-                        var whatData,
-                            whatDataPromise,
-                            httpConf = priv.getHttpConfiguration(conf);
-
-                        if (whatDataPromise) {
-                            return whatDataPromise;
-                        }
-
-                        var deferred = $q.defer();
-                        whatDataPromise = deferred.promise;
-
-                        if (whatData) {
-                            deferred.resolve(whatData);
-                        } else {
-                            $http(httpConf)
-                                .success(function (data) {
-                                    $log.debug('gridDataHelper :: Loaded data of the grid');
-                                    whatData = data;
-                                    deferred.resolve(whatData);
-                                })
-                                .error(function () {
-                                    deferred.reject('Unable to load data');
-                                });
-                        }
-
-                        return whatDataPromise;
+            var unpacks = {
+                unpackChunk      : function _unpackChunk(chunk) {
+                    if (!chunk) {
+                        $log.warn('unpackChunk :: cannot unpack, chunk not defined');
                     }
+                    var localChunk = {};
+                    _.each(chunk, function (value, key) {
+                        localChunk[key] = value['value'];
+                    });
+                    return localChunk;
                 },
-                unpacks = {
-                    unpackChunk      : function _unpackChunk(chunk) {
-                        if (!chunk) {
-                            $log.warn('unpackChunk :: cannot unpack, chunk not defined');
-                        }
-                        var localChunk = {};
-                        angular.forEach(chunk, function (value, key) {
-                            localChunk[key] = value['value'];
-                        });
-                        return localChunk;
-                    },
-                    unpackDataPackage: function _unpackDataPackage(data) {
-                        if (!data) {
-                            throw new Error('data not defined, cannot unpack')
-                        }
-                        $log.debug('unpackDataPackage :: unpacking {size} data objects'.format({size: data.length}));
-                        var localData = [],
-                            sTime = utils.now();
-
-                        angular.forEach(data, function (chunk) {
-                            var singleColumn;
-                            if (angular.isDefined((singleColumn = unpacks.unpackChunk(chunk)))) {
-                                localData.push(singleColumn);
-                            }
-                        });
-
-                        $log.debug('unpackDataPackage :: completed in {time} ms'.format({time: (utils.now() - sTime)}));
-
-                        return localData;
-                    },
-                    unpackData       : function _unpackData(data) {
-                        $log.debug('gridDataHelper :: Unpacking data');
-                        $log.debug('gridDataHelper :: Loaded configuration object in {time} ms, builder = {builder}'.format({
-                            time   : moment(data['time']).milliseconds(),
-                            builder: data['builtBy']
-                        }));
-
-                        var dataBean = data.data,
-                            sTime = utils.now();
-
-                        if (!angular.isDefined(dataBean)) {
-                            throw new Error('Invalid dataBean of the grid');
-                        }
-
-                        var localData = {
-                            data: unpacks.unpackDataPackage(dataBean)
-                        };
-
-                        $log.debug('unpackData :: completed in {time} ms'.format({time: (utils.now() - sTime)}));
-
-                        return localData;
+                unpackDataPackage: function _unpackDataPackage(data) {
+                    if (!data) {
+                        throw new Error('data not defined, cannot unpack')
                     }
-                };
+                    $log.debug('unpackDataPackage :: unpacking {size} data objects'.format({size: data.length}));
+                    var localData = [],
+                        sTime = utils.now();
+
+                    _.each(data, function (chunk) {
+                        var singleColumn;
+                        if (!_.isUndefined((singleColumn = unpacks.unpackChunk(chunk)))) {
+                            localData.push(singleColumn);
+                        }
+                    });
+
+                    $log.debug('unpackDataPackage :: completed in {time} ms'.format({time: (utils.now() - sTime)}));
+
+                    return localData;
+                },
+                unpackData       : function _unpackData(data) {
+                    $log.debug('gridDataHelper :: Unpacking data');
+                    $log.debug('gridDataHelper :: Loaded configuration object in {time} ms, builder = {builder}'.format({
+                        time   : moment(data['time']).milliseconds(),
+                        builder: data['builtBy']
+                    }));
+
+                    var dataBean = _.isArray(data) ? data : (_.has(data, 'data') ? data.data : undefined),
+                        sTime = utils.now();
+
+                    if (_.isUndefined(dataBean)) {
+                        throw new Error('Invalid dataBean of the grid');
+                    }
+
+                    $log.debug('unpackData :: completed in {time} ms'.format({time: (utils.now() - sTime)}));
+
+                    return unpacks.unpackDataPackage(dataBean);
+                }
+            };
 
             return {
-                loadData  : priv.loadData,
                 unpackData: unpacks.unpackData
             }
         };

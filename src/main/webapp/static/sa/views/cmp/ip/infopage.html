@@ -1,0 +1,45 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                  ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is free software: you can redistribute it and/or modify                          ~
+  ~ it under the terms of the GNU General Public License as published by                          ~
+  ~ the Free Software Foundation, either version 3 of the License, or                             ~
+  ~ (at your option) any later version.                                                           ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is distributed in the hope that it will be useful,                               ~
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of                                ~
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                 ~
+  ~ GNU General Public License for more details.                                                  ~
+  ~                                                                                               ~
+  ~ You should have received a copy of the GNU General Public License                             ~
+  ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<section id="{{uniqueId}}" class="container">
+    <div id="{{pageId}}">
+        <infopage-header label="pageLabel"></infopage-header>
+        <div class="panel panel-info" ng-show="panels.length" ng-repeat="panel in panels">
+
+            <div class="x-ip-header panel-heading">
+                <i ng-show="panel.icon" ng-class="panel.icon"></i>{{panel.label}}
+            </div>
+
+            <div class="panel-body">
+                <div class="row" ng-repeat="attribute in panel.attributes">
+                    <div ng-switch="attribute.as">
+                        <div ng-switch-when="table">
+                            <grid-infopage-attribute attribute="attribute"></grid-infopage-attribute>
+                        </div>
+                        <div ng-switch-when="link">
+                            <link-infopage-attribute attribute="attribute"></link-infopage-attribute>
+                        </div>
+                        <div ng-switch-when="text">
+                            <text-infopage-attribute attribute="attribute"></text-infopage-attribute>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
