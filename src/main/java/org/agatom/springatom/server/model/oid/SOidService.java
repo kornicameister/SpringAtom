@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
 
 @Validated
 public interface SOidService {
-    @Cacheable(value = "oidService.string")
+    @Cacheable("oidService.string")
     SOid getOid(@Nonnull String oid) throws Exception;
 
     @Cacheable("oidService.object")

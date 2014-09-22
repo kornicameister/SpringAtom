@@ -42,6 +42,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import static org.springframework.core.GenericTypeResolver.resolveTypeArgument;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
  * <p>
