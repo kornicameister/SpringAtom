@@ -124,11 +124,15 @@
         </property>
     </bean>
 
-    <bean id="persistableToStringGenericConverter"
-          class="org.agatom.springatom.server.model.conversion.PersistableToStringGenericConverter"
-          lazy-init="false"
-          depends-on="springAtomConversionService"/>
-
     <bean id="autoWirer"
           class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+    <bean id="wroFilter" class="ro.isdc.wro.http.ConfigurableWroFilter">
+        <property name="properties">
+            <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+                <property name="location" value="classpath:wro.properties"/>
+            </bean>
+        </property>
+    </bean>
+
 </beans>

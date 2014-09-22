@@ -23,13 +23,4 @@
     <import resource="org/agatom/springatom/web/web.xml"/>
     <import resource="org/agatom/springatom/webmvc/webmvc.xml"/>
 
-    <bean id="wroFilter" class="ro.isdc.wro.http.ConfigurableWroFilter">
-        <property name="properties">
-            <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-                <property name="location" value="classpath:wro.properties"/>
-            </bean>
-        </property>
-    </bean>
-
-
 </beans>

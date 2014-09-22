@@ -34,6 +34,5 @@
         <property name="sortParamName" value="#{restProperties['rest.sortParamName']}"/>
         <property name="defaultPageSize" value="#{restProperties['rest.defaultPageSize']}"/>
     </bean>
-    <bean class="org.agatom.springatom.rest.AdditionalRestConfiguration" lazy-init="true"/>
 
 </beans>
