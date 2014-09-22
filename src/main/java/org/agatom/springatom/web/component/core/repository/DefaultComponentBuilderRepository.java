@@ -20,14 +20,15 @@ package org.agatom.springatom.web.component.core.repository;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.collect.ComparisonChain;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Maps;
+import com.google.common.base.Supplier;
+import com.google.common.collect.*;
 import org.agatom.springatom.web.component.core.builders.Builder;
 import org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder;
 import org.agatom.springatom.web.component.core.builders.ComponentProduces;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
+import org.agatom.springatom.web.component.core.builders.multi.MultiComponentBuilder;
+import org.agatom.springatom.web.component.core.builders.multi.MultiComponentDescriptor;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -35,19 +36,19 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Role;
 import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -63,195 +64,282 @@ import java.util.Map;
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 class DefaultComponentBuilderRepository
-		implements ComponentBuilderRepository, ApplicationContextAware, BeanFactoryAware {
-	private static final Logger                          LOGGER                   = Logger.getLogger(ComponentBuilderRepository.class);
-	@Autowired
-	private              List<Builder>                   builderList              = null;
-	private              ApplicationContext              context                  = null;
-	private              ConfigurableListableBeanFactory beanFactory              = null;
-	private              Map<DefinitionHolder, String>   definitionToBuilderIdMap = null;
-	private              Map<DefinitionHolder, Builder>  definitionToBuilderMap   = null;
+        implements ComponentBuilderRepository, BeanFactoryAware {
+    private static final Logger                          LOGGER                   = Logger.getLogger(ComponentBuilderRepository.class);
+    @Autowired
+    private              Map<String, Builder>            builderMap               = null;
+    private              ConfigurableListableBeanFactory beanFactory              = null;
+    private              Map<DefinitionHolder, String>   definitionToBuilderIdMap = null;
+    private              Map<DefinitionHolder, Builder>  definitionToBuilderMap   = null;
 
-	@PostConstruct
-	private void readBuilders() {
-		final String[] beanNamesForType = this.beanFactory.getBeanNamesForAnnotation(ComponentBuilder.class);
-		if (beanNamesForType.length > 0) {
+    @PostConstruct
+    private void readBuilders() {
+        final String[] beanNamesForType = this.beanFactory.getBeanNamesForAnnotation(ComponentBuilder.class);
+        if (beanNamesForType.length > 0) {
 
-			this.definitionToBuilderIdMap = Maps.newHashMap();
-			this.definitionToBuilderMap = Maps.newHashMap();
+            this.definitionToBuilderIdMap = Maps.newHashMap();
+            this.definitionToBuilderMap = Maps.newHashMap();
 
-			for (final String beanName : beanNamesForType) {
-				final ScannedGenericBeanDefinition definition = (ScannedGenericBeanDefinition) this.beanFactory.getBeanDefinition(beanName);
-				final Object beanClassName = definition.getBeanClassName();
+            for (final String beanName : beanNamesForType) {
+                final ScannedGenericBeanDefinition definition = (ScannedGenericBeanDefinition) this.beanFactory.getBeanDefinition(beanName);
 
-				final Builder builder = FluentIterable.from(this.builderList).firstMatch(new Predicate<Builder>() {
-					@Override
-					public boolean apply(@Nullable final Builder input) {
-						return input != null && input.getClass().getName().equals(beanClassName);
-					}
-				}).get();
+                final Builder builder = this.builderMap.get(beanName);
 
-				if (!definition.isAbstract()) {
+                if (!definition.isAbstract()) {
 
-					final ComponentProduces producesType = this.getComponentProduces(builder);
-					final Class<?> builds = this.getComponentBuilds(builder);
-					final Class<?> basedForEntity = this.getBasedForEntity(builder);
+                    final ComponentProduces producesType = this.getComponentProduces(builder);
+                    final Class<?> builds = this.getComponentBuilds(builder);
 
-					final DefinitionHolder holder = new DefinitionHolder(builds, producesType, basedForEntity);
+                    if (ClassUtils.isAssignableValue(MultiComponentBuilder.class, builder)) {
 
-					this.definitionToBuilderIdMap.put(holder, beanName);
-					this.definitionToBuilderMap.put(holder, builder);
+                        final MultiComponentBuilder multiComponentBuilder = (MultiComponentBuilder) builder;
+                        final Collection<MultiComponentDescriptor> descriptors = multiComponentBuilder.getDescriptors();
 
-					LOGGER.trace(String.format("/readBuilders -> %s", holder));
-				}
-			}
-		}
-	}
+                        for (MultiComponentDescriptor descriptor : descriptors) {
+                            final String alias = descriptor.getAlias();
+                            final Collection<Class<?>> supportedClasses = descriptor.getSupportedClasses();
 
-	/**
-	 * Returns {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
-	 * is {@code convert} is {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder}
-	 *
-	 * @param source {@link org.agatom.springatom.web.component.core.builders.Builder} convert
-	 *
-	 * @return {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
-	 */
-	private ComponentProduces getComponentProduces(final Builder source) {
-		if (ClassUtils.isAssignableValue(ComponentDefinitionBuilder.class, source)) {
-			return ((ComponentDefinitionBuilder<?>) source).getProduces();
-		}
-		return null;
-	}
+                            DefinitionHolder holder = new DefinitionHolder(builds, producesType, supportedClasses, alias);
 
-	/**
-	 * Returns the {@link java.lang.Class} that {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder}
-	 * object is built by the class
-	 *
-	 * @param source {@link org.agatom.springatom.web.component.core.builders.Builder} convert
-	 *
-	 * @return the built class
-	 */
-	private Class<?> getComponentBuilds(final Builder source) {
-		if (ClassUtils.isAssignableValue(ComponentDefinitionBuilder.class, source)) {
-			return ((ComponentDefinitionBuilder<?>) source).getBuilds();
-		}
-		return null;
-	}
+                            this.definitionToBuilderIdMap.put(holder, alias);
+                            this.definitionToBuilderMap.put(holder, builder);
+                        }
 
-	/**
-	 * Returns {@link org.agatom.springatom.web.component.core.builders.annotation.EntityBased#entity()} value, if
-	 * {@code builder} is designated to build data/definition for domain specific class
-	 *
-	 * @param builder to get based for entity
-	 *
-	 * @return the class or null, if builder has no {@link org.agatom.springatom.web.component.core.builders.annotation.EntityBased} annotation
-	 */
-	private Class<?> getBasedForEntity(final Builder builder) {
-		final EntityBased annotation = AnnotationUtils.findAnnotation(builder.getClass(), EntityBased.class);
-		if (annotation != null) {
-			return (Class<?>) AnnotationUtils.getValue(annotation, "entity");
-		}
-		return null;
-	}
+                    } else {
+                        final Collection<Class<?>> basedForEntity = this.getBasedForEntity(builder);
+                        DefinitionHolder holder = new DefinitionHolder(builds, producesType, basedForEntity);
+                        this.definitionToBuilderIdMap.put(holder, beanName);
+                        this.definitionToBuilderMap.put(holder, builder);
+                    }
+                }
+            }
+        }
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public Builder getBuilder(final String componentId) {
-		return (Builder) this.context.getBean(componentId);
-	}
+    /**
+     * Returns {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
+     * is {@code convert} is {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder}
+     *
+     * @param source {@link org.agatom.springatom.web.component.core.builders.Builder} convert
+     *
+     * @return {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
+     */
+    private ComponentProduces getComponentProduces(final Builder source) {
+        if (ClassUtils.isAssignableValue(ComponentDefinitionBuilder.class, source)) {
+            return ((ComponentDefinitionBuilder<?>) source).getProduces();
+        }
+        return null;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean hasBuilder(final Class<?> target) {
-		return this.hasBuilder(target, ComponentProduces.TABLE_COMPONENT);
-	}
+    /**
+     * Returns the {@link java.lang.Class} that {@link org.agatom.springatom.web.component.core.builders.ComponentDefinitionBuilder}
+     * object is built by the class
+     *
+     * @param source {@link org.agatom.springatom.web.component.core.builders.Builder} convert
+     *
+     * @return the built class
+     */
+    private Class<?> getComponentBuilds(final Builder source) {
+        if (ClassUtils.isAssignableValue(ComponentDefinitionBuilder.class, source)) {
+            return ((ComponentDefinitionBuilder<?>) source).getBuilds();
+        }
+        return null;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean hasBuilder(final Class<?> target, final ComponentProduces produces) {
-		return this.getBuilderId(target, produces) != null;
-	}
+    /**
+     * Returns {@link org.agatom.springatom.web.component.core.builders.annotation.EntityBased#entity()} value, if
+     * {@code builder} is designated to build data/definition for domain specific class
+     *
+     * @param builder to get based for entity
+     *
+     * @return the class or null, if builder has no {@link org.agatom.springatom.web.component.core.builders.annotation.EntityBased} annotation
+     */
+    private Collection<Class<?>> getBasedForEntity(final Builder builder) {
+        final EntityBased annotation = AnnotationUtils.findAnnotation(builder.getClass(), EntityBased.class);
+        final Collection<Class<?>> entitiesList = Sets.newHashSet();
+        if (annotation != null) {
+            final Class<?> entity = (Class<?>) AnnotationUtils.getValue(annotation, "entity");
 
-	/** {@inheritDoc} */
-	@Override
-	public String getBuilderId(final Class<?> target) {
-		return this.getBuilderId(target, ComponentProduces.TABLE_COMPONENT);
-	}
+            if (entity != null && !entity.equals(Void.class)) {
+                entitiesList.add(entity);
+            }
 
-	/** {@inheritDoc} */
-	@Override
-	public String getBuilderId(final Class<?> target, final ComponentProduces produces) {
-		final Optional<DefinitionHolder> match = FluentIterable.from(this.definitionToBuilderMap.keySet()).firstMatch(new Predicate<DefinitionHolder>() {
-			@Override
-			public boolean apply(@Nullable final DefinitionHolder input) {
-				return input != null && input.canBuiltForEntity(target, produces);
-			}
-		});
-		if (match.isPresent()) {
-			final DefinitionHolder definitionHolder = match.get();
-			return this.definitionToBuilderIdMap.get(definitionHolder);
-		}
-		return null;
-	}
+            final Class<?>[] entities = (Class<?>[]) AnnotationUtils.getValue(annotation, "entities");
+            if (entities != null && entities.length > 0) {
+                entitiesList.addAll(Arrays.asList(entities));
+            }
+        }
+        return entitiesList;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
-		this.context = applicationContext;
-	}
+    /** {@inheritDoc} */
+    @Override
+    public Builder getBuilder(final String componentId) {
+        if (this.builderMap.containsKey(componentId)) {
+            return this.builderMap.get(componentId);
+        }
+        // not found, might be alias request
+        final Optional<DefinitionHolder> match = FluentIterable.from(this.definitionToBuilderIdMap.keySet())
+                .filter(new Predicate<DefinitionHolder>() {
+                    @Override
+                    public boolean apply(@Nullable final DefinitionHolder input) {
+                        return input != null && StringUtils.hasText(input.alias);
+                    }
+                })
+                .firstMatch(new Predicate<DefinitionHolder>() {
+                    @Override
+                    public boolean apply(@Nullable final DefinitionHolder input) {
+                        return definitionToBuilderIdMap.get(input).equals(componentId);
+                    }
+                });
+        if (match.isPresent()) {
+            final DefinitionHolder holder = match.get();
+            return this.definitionToBuilderMap.get(holder);
+        }
+        return null;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
-		this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
-	}
+    /** {@inheritDoc} */
+    @Override
+    public boolean hasBuilder(final Class<?> target) {
+        return this.hasBuilder(target, ComponentProduces.TABLE_COMPONENT);
+    }
 
-	private static class DefinitionHolder
-			implements Comparable<DefinitionHolder> {
+    /** {@inheritDoc} */
+    @Override
+    public boolean hasBuilder(final Class<?> target, final ComponentProduces produces) {
+        return this.getBuilderId(target, produces) != null;
+    }
 
-		private final Class<?>          builds;
-		private final ComponentProduces produces;
-		private final Class<?>          basedForEntity;
+    /** {@inheritDoc} */
+    @Override
+    public String getBuilderId(final Class<?> target) {
+        return this.getBuilderId(target, ComponentProduces.TABLE_COMPONENT);
+    }
 
-		public DefinitionHolder(final Class<?> builds, final ComponentProduces produces, final Class<?> basedForEntity) {
-			this.builds = builds;
-			this.produces = produces;
-			this.basedForEntity = basedForEntity;
-		}
+    /** {@inheritDoc} */
+    @Override
+    public String getBuilderId(final Class<?> target, final ComponentProduces produces) {
+        final Optional<DefinitionHolder> match = FluentIterable
+                .from(this.definitionToBuilderMap.keySet()).firstMatch(new Predicate<DefinitionHolder>() {
+                    @Override
+                    public boolean apply(@Nullable final DefinitionHolder input) {
+                        return input != null && input.canBuiltForEntity(target, produces);
+                    }
+                });
+        if (match.isPresent()) {
+            final DefinitionHolder definitionHolder = match.get();
+            return this.definitionToBuilderIdMap.get(definitionHolder);
+        }
+        return null;
+    }
 
-		@Override
-		public int compareTo(@Nonnull final DefinitionHolder o) {
-			return ComparisonChain.start().compare(this.builds.getName(), o.builds.getName()).compare(this.produces, o.produces).result();
-		}
+    @Override
+    public Multimap<String, ComponentMetaData> getAllBuilders() {
+        final Map<DefinitionHolder, String> normal = this.definitionToBuilderIdMap;
+        final Map<String, Collection<ComponentMetaData>> map = Maps.newHashMap();
+        final Multimap<String, ComponentMetaData> reversed = Multimaps.newMultimap(map, new Supplier<Collection<ComponentMetaData>>() {
+            @Override
+            public Collection<ComponentMetaData> get() {
+                return Sets.newHashSet();
+            }
+        });
+        for (final DefinitionHolder holder : normal.keySet()) {
+            reversed.put(normal.get(holder), holder);
+        }
+        return reversed;
+    }
 
-		@Override
-		public int hashCode() {
-			return Objects.hashCode(builds, produces, basedForEntity);
-		}
+    /** {@inheritDoc} */
+    @Override
+    public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
+    }
 
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
+    private static class DefinitionHolder
+            implements Comparable<DefinitionHolder>, ComponentMetaData {
 
-			DefinitionHolder that = (DefinitionHolder) o;
+        protected final Class<?>             builds;
+        protected final ComponentProduces    produces;
+        protected final Collection<Class<?>> basedForEntity;
+        protected final String               alias;
 
-			return Objects.equal(this.builds, that.builds) &&
-					Objects.equal(this.produces, that.produces) &&
-					Objects.equal(this.basedForEntity, that.basedForEntity);
-		}
+        public DefinitionHolder(final Class<?> builds, final ComponentProduces produces, final Collection<Class<?>> basedForEntity) {
+            this(builds, produces, basedForEntity, null);
+        }
 
-		@Override
-		public String toString() {
-			return Objects.toStringHelper(this)
-					.addValue(builds)
-					.addValue(produces)
-					.addValue(basedForEntity)
-					.toString();
-		}
+        public DefinitionHolder(final Class<?> builds, final ComponentProduces produces, final Collection<Class<?>> basedForEntity, final String alias) {
+            this.alias = alias;
+            this.builds = builds;
+            this.produces = produces;
+            this.basedForEntity = basedForEntity;
+        }
 
-		public boolean canBuiltForEntity(final Class<?> target, final ComponentProduces produces) {
-			return this.produces.equals(produces) && (this.basedForEntity != null && ClassUtils.isAssignable(this.basedForEntity, target));
-		}
-	}
+        @Override
+        public String getAlias() {
+            return alias;
+        }
+
+        @Override
+        public Class<?> getBuilds() {
+            return builds;
+        }
+
+        @Override
+        public ComponentProduces getProduces() {
+            return produces;
+        }
+
+        @Override
+        public Collection<Class<?>> getBasedForEntity() {
+            return basedForEntity;
+        }
+
+        public boolean canBuiltForEntity(Class<?> target, final ComponentProduces produces) {
+            final Class<?> localTarget = ClassUtils.getUserClass(target);
+            return this.produces.equals(produces)
+                    && (this.basedForEntity != null
+                    && !FluentIterable
+                    .from(this.basedForEntity)
+                    .filter(new Predicate<Class<?>>() {
+                        @Override
+                        public boolean apply(@Nullable Class<?> input) {
+                            if (input != null) {
+                                input = ClassUtils.getUserClass(input);
+                            }
+                            return input != null && ClassUtils.isAssignable(input, localTarget);
+                        }
+                    })
+                    .isEmpty()
+            );
+        }
+
+        @Override
+        public int compareTo(@Nonnull final DefinitionHolder o) {
+            return ComparisonChain
+                    .start()
+                    .compare(this.builds.getName(), o.builds.getName())
+                    .compare(this.produces, o.produces)
+                    .compare(this.alias, o.alias)
+                    .result();
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(builds, produces, basedForEntity, alias);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            DefinitionHolder that = (DefinitionHolder) o;
+
+            return Objects.equal(this.builds, that.builds) &&
+                    Objects.equal(this.produces, that.produces) &&
+                    Objects.equal(this.basedForEntity, that.basedForEntity) &&
+                    Objects.equal(this.alias, that.alias);
+        }
+    }
 }

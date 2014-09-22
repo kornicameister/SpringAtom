@@ -15,34 +15,25 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.conversion.converter.impl;
+package org.agatom.springatom.web.component.core.repository;
 
-import org.agatom.springatom.server.model.beans.appointment.SAppointmentTask;
-import org.agatom.springatom.server.model.conversion.annotation.PersistableConverterUtility;
-import org.agatom.springatom.server.model.conversion.converter.PersistableConverterImpl;
+import org.agatom.springatom.web.component.core.builders.ComponentProduces;
 
 /**
- * {@code AppointmentConverter} is a default converter for {@link org.agatom.springatom.server.model.beans.appointment.SAppointment}
- * Returns String representation containing:
- * <ul>
- * <li>{@link org.agatom.springatom.server.model.beans.appointment.SAppointment#getBegin()}</li>
- * <li>{@link org.agatom.springatom.server.model.beans.appointment.SAppointment#getEnd()}</li>
- * <li>{@link org.agatom.springatom.server.model.beans.appointment.SAppointment#getCar()}</li>
- * </ul>
+ * <p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-09-10</small>
+ * </p>
  *
- * @author kornicameister
+ * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
+public interface ComponentMetaData {
+    String getAlias();
 
-@PersistableConverterUtility
-public class AppointmentTaskConverter
-		extends PersistableConverterImpl<SAppointmentTask> {
+    Class<?> getBuilds();
 
-	/** {@inheritDoc} */
-	@Override
-	public String convert(final SAppointmentTask source) {
-		return String.format("%s - %s", source.getType(), source.getTask());
-	}
+    ComponentProduces getProduces();
 
+    java.util.Collection<Class<?>> getBasedForEntity();
 }

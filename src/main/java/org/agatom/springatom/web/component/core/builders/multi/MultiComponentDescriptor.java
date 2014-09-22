@@ -15,25 +15,45 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.conversion.converter.impl;
+package org.agatom.springatom.web.component.core.builders.multi;
 
-import org.agatom.springatom.server.model.beans.person.SPersonContact;
-import org.agatom.springatom.server.model.conversion.annotation.PersistableConverterUtility;
-import org.agatom.springatom.server.model.conversion.converter.PersistableConverterImpl;
+import com.google.common.collect.Sets;
+
+import java.util.Collection;
 
 /**
- * <small>Class is a part of <b>SpringAtom</b> and was created at 27.03.14</small>
+ * <p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-09-22</small>
+ * </p>
  *
- * @author kornicameister
+ * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-@PersistableConverterUtility
-public class SPersonContactConvert
-		extends PersistableConverterImpl<SPersonContact> {
-	/** {@inheritDoc} */
-	@Override
-	public String convert(final SPersonContact source) {
-		return String.format("%s\n", source.getContact());
-	}
+public class MultiComponentDescriptor {
+    private String               alias            = null;
+    private Collection<Class<?>> supportedClasses = null;
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public MultiComponentDescriptor setAlias(final String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    public Collection<Class<?>> getSupportedClasses() {
+        return supportedClasses;
+    }
+
+    public MultiComponentDescriptor setSupportedClasses(final Collection<Class<?>> supportedClasses) {
+        this.supportedClasses = supportedClasses;
+        return this;
+    }
+
+    public MultiComponentDescriptor setSupportedClasses(final Class<?>... supportedClasses) {
+        this.supportedClasses = Sets.newHashSet(supportedClasses);
+        return this;
+    }
 }

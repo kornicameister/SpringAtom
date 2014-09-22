@@ -17,77 +17,92 @@
 
 package org.agatom.springatom.web.component.core.data;
 
-import org.agatom.springatom.web.component.core.Component;
-import org.agatom.springatom.web.component.core.request.ComponentRequest;
+import com.google.common.base.MoreObjects;
+import org.agatom.springatom.server.model.oid.SOid;
+import org.agatom.springatom.webmvc.request.LastRequest;
 import org.springframework.ui.ModelMap;
 
 /**
- * {@code ComponentDataRequest} wraps {@link org.agatom.springatom.web.component.core.request.ComponentRequest} (marshalled
- * from Ajax], {@link #component} and {@link #values} of the request
+ * TODO: add JavaDoc
  *
  * @author kornicameister
- * @version 0.0.5
+ * @version 0.0.6
  * @since 0.0.1
  */
 public class ComponentDataRequest {
-	private final ModelMap         values;
-	private final ComponentRequest request;
-	private       Component        component;
-	private RequestedBy requestedBy = null;
+    private Object      component   = null;
+    private LastRequest lastRequest = null;
+    private SOid        oid         = null;
+    private ModelMap attributesMap;
+    private ModelMap headersMap;
+    private ModelMap parametersMap;
 
-	/**
-	 * <p>Constructor for ComponentDataRequest.</p>
-	 *
-	 * @param modelMap a {@link org.springframework.ui.ModelMap} object.
-	 * @param request  a {@link org.agatom.springatom.web.component.core.request.ComponentRequest} object.
-	 */
-	public ComponentDataRequest(final ModelMap modelMap, final ComponentRequest request) {
-		this.values = modelMap;
-		this.request = request;
-	}
+    public ComponentDataRequest() {
+    }
 
-	/**
-	 * <p>Getter for the field <code>component</code>.</p>
-	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.Component} object.
-	 */
-	public Component getComponent() {
-		return component;
-	}
+    public Object getComponent() {
+        return component;
+    }
 
-	/**
-	 * <p>Setter for the field <code>component</code>.</p>
-	 *
-	 * @param component a {@link org.agatom.springatom.web.component.core.Component} object.
-	 */
-	public void setComponent(final Component component) {
-		this.component = component;
-	}
+    public void setComponent(final Object component) {
+        this.component = component;
+    }
 
-	/**
-	 * <p>Getter for the field <code>values</code>.</p>
-	 *
-	 * @return a {@link org.springframework.ui.ModelMap} object.
-	 */
-	public ModelMap getValues() {
-		return this.values;
-	}
+    public LastRequest getLastRequest() {
+        return lastRequest;
+    }
 
-	/**
-	 * <p>getComponentRequest.</p>
-	 *
-	 * @return a {@link org.agatom.springatom.web.component.core.request.ComponentRequest} object.
-	 */
-	public ComponentRequest getComponentRequest() {
-		return request;
-	}
+    public ComponentDataRequest setLastRequest(final LastRequest lastRequest) {
+        this.lastRequest = lastRequest;
+        return this;
+    }
 
-	public RequestedBy getRequestedBy() {
-		return requestedBy;
-	}
+    public SOid getOid() {
+        return oid;
+    }
 
-	public ComponentDataRequest setRequestedBy(final RequestedBy requestedBy) {
-		this.requestedBy = requestedBy;
-		return this;
-	}
+    public ComponentDataRequest setOid(final SOid oid) {
+        this.oid = oid;
+        return this;
+    }
+
+    public boolean hasContext() {
+        return this.oid != null;
+    }
+
+
+    public ModelMap getAttributesMap() {
+        return attributesMap;
+    }
+
+    public ComponentDataRequest setAttributesMap(final ModelMap attributesMap) {
+        this.attributesMap = attributesMap;
+        return this;
+    }
+
+    public ModelMap getHeadersMap() {
+        return headersMap;
+    }
+
+    public ComponentDataRequest setHeadersMap(final ModelMap headersMap) {
+        this.headersMap = headersMap;
+        return this;
+    }
+
+    public ModelMap getParametersMap() {
+        return parametersMap;
+    }
+
+    public ComponentDataRequest setParametersMap(final ModelMap parametersMap) {
+        this.parametersMap = parametersMap;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("lastRequest", lastRequest)
+                .add("oid", oid)
+                .toString();
+    }
 }

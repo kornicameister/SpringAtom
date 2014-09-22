@@ -15,20 +15,46 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.conversion.converter;
+package org.agatom.springatom.webmvc.controllers.components.data;
 
-import org.springframework.core.convert.converter.ConditionalConverter;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.domain.Persistable;
+import com.google.common.base.MoreObjects;
 
 /**
- * <p>PersistableConverter interface.</p>
+ * <p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-09-16</small>
+ * </p>
  *
- * @author kornicameister
+ * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface PersistableConverter<S extends Persistable>
-		extends Converter<S, String>,
-		ConditionalConverter {
+class CmpDataConfiguration {
+    private Object data       = null;
+    private Object definition = null;
+
+    public Object getData() {
+        return data;
+    }
+
+    public CmpDataConfiguration setData(final Object data) {
+        this.data = data;
+        return this;
+    }
+
+    public Object getDefinition() {
+        return definition;
+    }
+
+    public CmpDataConfiguration setDefinition(final Object configuration) {
+        this.definition = configuration;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("data", data)
+                .add("definition", definition)
+                .toString();
+    }
 }

@@ -18,20 +18,17 @@
 package org.agatom.springatom.web.component.core.builders;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.mysema.query.types.Path;
-import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
+import org.agatom.springatom.web.component.ComponentCompilationException;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.EntityType;
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,111 +42,67 @@ import java.util.concurrent.TimeUnit;
  * @since 0.0.1
  */
 abstract public class AbstractComponentDataBuilder
-		extends AbstractBuilder
-		implements ComponentDataBuilder {
+        extends AbstractBuilder
+        implements ComponentDataBuilder {
 
-	/** {@inheritDoc} */
-	@Override
-	public final ComponentDataResponse getData(final ComponentDataRequest dataRequest) throws ComponentException {
-		this.logger.debug(String.format("getData(dataRequest=%s)", dataRequest));
-		final long startTime = System.nanoTime();
-		try {
-			Assert.notNull(dataRequest, "DataRequest can not be null");
+    /** {@inheritDoc} */
+    @Override
+    public final Object getData(final ComponentDataRequest dataRequest) throws ComponentException {
+        this.logger.debug(String.format("getData(dataRequest=%s)", dataRequest));
+        final long startTime = System.nanoTime();
+        try {
+            Assert.notNull(dataRequest, "DataRequest can not be null");
 
-			final Object data = this.buildData(dataRequest);
+            final Object data = this.buildData(dataRequest);
 
-			if (data == null) {
-				this.logger.warn(String.format("For request=%s, builder returned null data", dataRequest));
-			} else {
-				this.logger.trace(String.format("For request=%s, builder returned data=%s", dataRequest, data));
-			}
+            if (data == null) {
+                this.logger.warn(String.format("For request=%s, builder returned null data", dataRequest));
+            } else {
+                this.logger.trace(String.format("For request=%s, builder returned data=%s", dataRequest, data));
+            }
 
-			final long endTime = System.nanoTime() - startTime;
-			this.logger.info(String.format("getData(dataRequest=%s) executed in %dms", dataRequest, TimeUnit.NANOSECONDS.toMillis(endTime)));
+            final long endTime = System.nanoTime() - startTime;
+            this.logger.info(String.format("getData(dataRequest=%s) executed in %dms", dataRequest, TimeUnit.NANOSECONDS.toMillis(endTime)));
 
-			return ComponentDataResponse.success(this.getId(), data, endTime);
-		} catch (Exception exp) {
-			this.logger.fatal(String.format("getData(dataRequest=%s) failed...", dataRequest), exp);
-			return ComponentDataResponse.error(this.getId(), exp, System.nanoTime() - startTime);
-		}
-	}
+            return this.getAsImmutable(data);
+        } catch (Exception exp) {
+            this.logger.fatal(String.format("getData(dataRequest=%s) failed...", dataRequest), exp);
+            throw new ComponentCompilationException(exp);
+        }
+    }
 
-	/**
-	 * Implement this method to return actual data of this builder
-	 *
-	 * @param dataRequest request to work with
-	 *
-	 * @return response for this builder
-	 *
-	 * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException if any
-	 */
-	protected abstract Object buildData(final ComponentDataRequest dataRequest) throws ComponentException;
+    /**
+     * Implement this method to return actual data of this builder
+     *
+     * @param dataRequest request to work with
+     *
+     * @return response for this builder
+     *
+     * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException if any
+     */
+    protected abstract Object buildData(final ComponentDataRequest dataRequest) throws ComponentException;
 
-	/**
-	 * Retrieves {@link javax.persistence.metamodel.Attribute} for given path out of {@link #getEntityDescriptor()}
-	 *
-	 * @param path lookup path
-	 *
-	 * @return persistence attribute
-	 */
-	protected Attribute<?, ?> getEntityAttribute(final String path) {
-		EntityType<?> entityType = this.getEntityDescriptor().getEntityType();
-		Attribute<?, ?> attribute = null;
-		try {
-			final List<String> paths = Lists.newArrayListWithExpectedSize(1);
-			if (path.contains(".")) {
-				paths.addAll(Lists.newArrayList(StringUtils.split(path, ".")));
-			} else {
-				paths.add(path);
-			}
-			if (paths.size() == 1) {
-				attribute = entityType.getAttribute(path);
-			} else {
-				for (int i = 0; i < paths.size(); i++) {
-					final String nestedPath = paths.get(i);
-					attribute = entityType.getAttribute(nestedPath);
-					if (i != paths.size() - 1) {
-						entityType = this.getEntityDescriptor(attribute.getJavaType()).getEntityType();
-					}
-				}
-			}
-		} finally {
-			if (attribute != null) {
-				this.logger.trace(String.format("%s has no attribute %s", entityType.getName(), path));
-			}
-		}
-		return attribute;
-	}
+    private Object getAsImmutable(final Object data) {
+        if (ClassUtils.isAssignableValue(Collection.class, data)) {
+            return Collections.unmodifiableCollection((Collection<?>) data);
+        } else if (ClassUtils.isAssignableValue(Map.class, data)) {
+            return Collections.unmodifiableMap((Map<?, ?>) data);
+        }
+        return data;
+    }
 
-	/**
-	 * Returns either {@link org.springframework.beans.factory.annotation.Autowired} or set by other means
-	 * value the object of {@link org.agatom.springatom.server.model.descriptors.EntityDescriptor}
-	 *
-	 * @return the entity descriptor
-	 */
-	protected abstract EntityDescriptor getEntityDescriptor();
-
-	/**
-	 * Returns {@link org.agatom.springatom.server.model.descriptors.EntityDescriptor} for particular {@code forClass}
-	 *
-	 * @param forClass java type to look descriptor for
-	 *
-	 * @return descriptor for {@code forClass}
-	 */
-	protected abstract EntityDescriptor getEntityDescriptor(final Class<?> forClass);
-
-	/**
-	 * Computes the attribute name out of {@link com.mysema.query.types.Path} through {@link com.mysema.query.types.PathMetadata}
-	 *
-	 * @param path to get the name of attribute from
-	 *
-	 * @return the name
-	 */
-	protected String getAttributeName(final Object path) {
-		Preconditions.checkNotNull(path, "Path can not be null");
-		if (ClassUtils.isAssignableValue(Path.class, path)) {
-			return ((Path<?>) path).getMetadata().getName();
-		}
-		return ObjectUtils.getDisplayString(path);
-	}
+    /**
+     * Computes the attribute name out of {@link com.mysema.query.types.Path} through {@link com.mysema.query.types.PathMetadata}
+     *
+     * @param path to get the name of attribute from
+     *
+     * @return the name
+     */
+    protected String getAttributeName(final Object path) {
+        Preconditions.checkNotNull(path, "Path can not be null");
+        if (ClassUtils.isAssignableValue(Path.class, path)) {
+            return ((Path<?>) path).getMetadata().getName();
+        }
+        return ObjectUtils.getDisplayString(path);
+    }
 }

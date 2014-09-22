@@ -17,8 +17,10 @@
 
 package org.agatom.springatom.web.component.core.repository;
 
+import com.google.common.collect.Multimap;
 import org.agatom.springatom.web.component.core.builders.Builder;
 import org.agatom.springatom.web.component.core.builders.ComponentProduces;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * {@code ComponentBuilderRepository} provides access to the {@link org.agatom.springatom.web.component.core.builders.Builder} instances
@@ -29,64 +31,69 @@ import org.agatom.springatom.web.component.core.builders.ComponentProduces;
  */
 public interface ComponentBuilderRepository {
 
-	/**
-	 * Retrieves builder for given {@code componentId}, the same as defined in {@link org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder#value()}
-	 *
-	 * @param componentId the id of the builder
-	 *
-	 * @return the {@link org.agatom.springatom.web.component.core.builders.Builder}
-	 */
-	Builder getBuilder(final String componentId);
+    /**
+     * Retrieves builder for given {@code componentId}, the same as defined in {@link org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder#value()}
+     *
+     * @param componentId the id of the builder
+     *
+     * @return the {@link org.agatom.springatom.web.component.core.builders.Builder}
+     */
+    @Cacheable("componentBuilderRepository.getBuilder.builderId")
+    Builder getBuilder(final String componentId);
 
-	/**
-	 * Verifies is there is {@link org.agatom.springatom.web.component.core.builders.Builder} defined
-	 * to build {@code target} class. By default this method evaluates {@link org.agatom.springatom.web.component.core.builders.ComponentProduces#TABLE_COMPONENT} existence
-	 *
-	 * @param target class
-	 *
-	 * @return true/false
-	 *
-	 * @see #hasBuilder(Class, org.agatom.springatom.web.component.core.builders.ComponentProduces)
-	 */
-	boolean hasBuilder(Class<?> target);
+    /**
+     * Verifies is there is {@link org.agatom.springatom.web.component.core.builders.Builder} defined
+     * to build {@code target} class. By default this method evaluates {@link org.agatom.springatom.web.component.core.builders.ComponentProduces#TABLE_COMPONENT} existence
+     *
+     * @param target class
+     *
+     * @return true/false
+     *
+     * @see #hasBuilder(Class, org.agatom.springatom.web.component.core.builders.ComponentProduces)
+     */
+    boolean hasBuilder(Class<?> target);
 
-	/**
-	 * Verifies is there is {@link org.agatom.springatom.web.component.core.builders.Builder} defined
-	 * to build {@code target} and {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
-	 *
-	 * @param target   class
-	 * @param produces what builder produces
-	 *
-	 * @return true/false
-	 *
-	 * @see #hasBuilder(Class)
-	 */
-	boolean hasBuilder(Class<?> target, ComponentProduces produces);
+    /**
+     * Verifies is there is {@link org.agatom.springatom.web.component.core.builders.Builder} defined
+     * to build {@code target} and {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
+     *
+     * @param target   class
+     * @param produces what builder produces
+     *
+     * @return true/false
+     *
+     * @see #hasBuilder(Class)
+     */
+    boolean hasBuilder(Class<?> target, ComponentProduces produces);
 
-	/**
-	 * Retrieves {@link org.agatom.springatom.web.component.core.builders.Builder} for
-	 * {@code target} class. By default this method evaluates for {@link org.agatom.springatom.web.component.core.builders.ComponentProduces#TABLE_COMPONENT}
-	 *
-	 * @param target class
-	 *
-	 * @return builder id
-	 *
-	 * @see #getBuilderId(Class, org.agatom.springatom.web.component.core.builders.ComponentProduces)
-	 * @see #getBuilder(String)
-	 * @see #getBuilderId(Class, org.agatom.springatom.web.component.core.builders.ComponentProduces)
-	 * @see #getBuilder(String)
-	 */
-	String getBuilderId(Class<?> target);
+    /**
+     * Retrieves {@link org.agatom.springatom.web.component.core.builders.Builder} for
+     * {@code target} class. By default this method evaluates for {@link org.agatom.springatom.web.component.core.builders.ComponentProduces#TABLE_COMPONENT}
+     *
+     * @param target class
+     *
+     * @return builder id
+     *
+     * @see #getBuilderId(Class, org.agatom.springatom.web.component.core.builders.ComponentProduces)
+     * @see #getBuilder(String)
+     * @see #getBuilderId(Class, org.agatom.springatom.web.component.core.builders.ComponentProduces)
+     * @see #getBuilder(String)
+     */
+    @Cacheable("componentBuilderRepository.getBuilder.target")
+    String getBuilderId(Class<?> target);
 
-	/**
-	 * Retrieves {@link org.agatom.springatom.web.component.core.builders.Builder} for
-	 * {@code target} class and particular {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
-	 *
-	 * @param target   class
-	 * @param produces what builder produces
-	 *
-	 * @return builder id
-	 */
-	String getBuilderId(Class<?> target, ComponentProduces produces);
+    /**
+     * Retrieves {@link org.agatom.springatom.web.component.core.builders.Builder} for
+     * {@code target} class and particular {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}
+     *
+     * @param target   class
+     * @param produces what builder produces
+     *
+     * @return builder id
+     */
+    @Cacheable("componentBuilderRepository.getBuilder.target.produces")
+    String getBuilderId(Class<?> target, ComponentProduces produces);
 
+    @Cacheable("componentBuilderRepository")
+    Multimap<String, ComponentMetaData> getAllBuilders();
 }

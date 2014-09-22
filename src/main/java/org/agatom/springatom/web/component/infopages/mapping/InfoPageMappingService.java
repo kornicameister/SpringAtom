@@ -20,6 +20,8 @@ package org.agatom.springatom.web.component.infopages.mapping;
 import org.agatom.springatom.web.component.infopages.InfoPageNotFoundException;
 import org.springframework.data.domain.Persistable;
 
+import java.util.Collection;
+
 /**
  * {@code InfoPageMappingService} provides information about registered {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage}
  * <p/>
@@ -30,8 +32,10 @@ import org.springframework.data.domain.Persistable;
  * @since 0.0.1
  */
 public interface InfoPageMappingService {
-	/**
-	 * <p>hasInfoPage.</p>
+    Collection<InfoPageMapping> getInfoPageMappings();
+
+    /**
+     * <p>hasInfoPage.</p>
 	 *
 	 * @param rel a {@link java.lang.String} object.
 	 *

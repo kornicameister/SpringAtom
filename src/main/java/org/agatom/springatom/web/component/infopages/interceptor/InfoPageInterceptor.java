@@ -26,7 +26,6 @@ import org.agatom.springatom.web.component.infopages.mapping.InfoPageMappingServ
 import org.agatom.springatom.web.component.infopages.provider.InfoPageProviderService;
 import org.agatom.springatom.web.component.infopages.provider.builder.InfoPageComponentBuilderService;
 import org.agatom.springatom.web.component.infopages.provider.structure.InfoPage;
-import org.agatom.springatom.webmvc.controllers.components.SVComponentsDataController;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +37,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * {@code InfoPageInterceptor} is specialized interceptor ({@link org.springframework.web.servlet.HandlerInterceptor}) designed
@@ -119,7 +115,8 @@ public class InfoPageInterceptor
 	}
 
 	private Link getDataSourceLink() throws ControllerTierException {
-		return linkTo(methodOn(SVComponentsDataController.class).onInfoPageDataRequest(null, null)).withRel(InfoPageConstants.INFOPAGE_DS);
-	}
+//		return linkTo(methodOn(SVComponentsDataController.class).onInfoPageDataRequest(null, null)).withRel(InfoPageConstants.INFOPAGE_DS);
+        return null;
+    }
 
 }

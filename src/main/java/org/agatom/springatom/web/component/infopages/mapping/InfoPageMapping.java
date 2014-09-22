@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,64 +15,64 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core.elements;
+package org.agatom.springatom.web.component.infopages.mapping;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.agatom.springatom.web.component.core.EmbeddableComponent;
-
-import javax.annotation.Nonnull;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+import org.springframework.data.domain.Persistable;
 
 /**
- * <p>PanelComponent class.</p>
+ * <p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-09-10</small>
+ * </p>
  *
- * @author kornicameister
- * @version 0.0.2
+ * @author trebskit
+ * @version 0.0.1
  * @since 0.0.1
  */
-public class PanelComponent<T extends EmbeddableComponent>
-        extends ContentComponent<T>
-        implements EmbeddableComponent {
-    private static final long   serialVersionUID = 8998087479297251535L;
-    protected            int    position         = -1;
-    protected            String layout           = null;
+public class InfoPageMapping {
+    private String                          rel  = null;
+    private Class<? extends Persistable<?>> type = null;
 
-    /**
-     * <p>Getter for the field <code>layout</code>.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getLayout() {
-        return this.layout;
+    public String getRel() {
+        return rel;
     }
 
-    /**
-     * <p>Setter for the field <code>layout</code>.</p>
-     *
-     * @param layout a {@link java.lang.String} object.
-     *
-     * @return a {@link org.agatom.springatom.web.component.core.elements.PanelComponent} object.
-     */
-    public PanelComponent<T> setLayout(final String layout) {
-        this.layout = layout;
+    public InfoPageMapping setRel(final String rel) {
+        this.rel = rel;
         return this;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    @JsonIgnore
-    public int getPosition() {
-        return position;
+    public Class<? extends Persistable<?>> getType() {
+        return type;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setPosition(final int position) {
-        this.position = position;
+    public InfoPageMapping setType(final Class<? extends Persistable<?>> type) {
+        this.type = type;
+        return this;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public int compareTo(final @Nonnull EmbeddableComponent panel) {
-        return Integer.compare(this.position, panel.getPosition());
+    public int hashCode() {
+        return Objects.hashCode(rel, type);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InfoPageMapping that = (InfoPageMapping) o;
+
+        return Objects.equal(this.rel, that.rel) &&
+                Objects.equal(this.type, that.type);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("rel", rel)
+                .add("type", type)
+                .toString();
     }
 }

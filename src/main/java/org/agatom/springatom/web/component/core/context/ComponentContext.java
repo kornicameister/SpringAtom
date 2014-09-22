@@ -45,100 +45,108 @@ import java.lang.ref.WeakReference;
  * @since 0.0.1
  */
 public class ComponentContext
-		implements Serializable, Comparable<ComponentContext> {
-	private static final long                       serialVersionUID = 5867417867216280653L;
-	private              Long                       id               = null;
-	private              Long                       revision         = null;
-	private              Long                       version          = null;
-	private              Class<?>                   domain           = null;
-	private              WeakReference<Persistable> object           = null;
+        implements Serializable, Comparable<ComponentContext> {
+    private static final long                       serialVersionUID = 5867417867216280653L;
+    private              Long                       id               = null;
+    private              Long                       revision         = null;
+    private              Long                       version          = null;
+    private              Class<?>                   domain           = null;
+    private              WeakReference<Persistable> object           = null;
 
-	/**
-	 * Creates new context for the {@code persistable} object
-	 *
-	 * @param persistable persistable to create context
-	 */
-	public ComponentContext(final Persistable<?> persistable) {
-		this(persistable.getId(), persistable.getClass());
-		this.object = new WeakReference<Persistable>(persistable);
-	}
+    public ComponentContext() {
+        super();
+    }
 
-	private ComponentContext(final Serializable id, final Class<?> domain) {
-		this.id = (Long) id;
-		this.domain = ClassUtils.getUserClass(domain);
-	}
+    /**
+     * Creates new context for the {@code persistable} object
+     *
+     * @param persistable persistable to create context
+     */
+    public ComponentContext(final Persistable<?> persistable) {
+        this(persistable.getId(), ClassUtils.getUserClass(persistable.getClass()));
+        this.object = new WeakReference<Persistable>(persistable);
+    }
 
-	public Long getId() {
-		return id;
-	}
+    private ComponentContext(final Serializable id, final Class<?> domain) {
+        this.id = (Long) id;
+        this.domain = ClassUtils.getUserClass(domain);
+    }
 
-	public ComponentContext setId(final Long id) {
-		this.id = id;
-		return this;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Long getRevision() {
-		return revision;
-	}
+    public ComponentContext setId(final Long id) {
+        this.id = id;
+        return this;
+    }
 
-	public ComponentContext setRevision(final Long revision) {
-		this.revision = revision;
-		return this;
-	}
+    public Long getRevision() {
+        return revision;
+    }
 
-	public Long getVersion() {
-		return version;
-	}
+    public ComponentContext setRevision(final Long revision) {
+        this.revision = revision;
+        return this;
+    }
 
-	public ComponentContext setVersion(final Long version) {
-		this.version = version;
-		return this;
-	}
+    public Long getVersion() {
+        return version;
+    }
 
-	public Class<?> getDomain() {
-		return domain;
-	}
+    public ComponentContext setVersion(final Long version) {
+        this.version = version;
+        return this;
+    }
 
-	public ComponentContext setDomain(final Class<? extends Persistable> domain) {
-		this.domain = domain;
-		return this;
-	}
+    public Class<?> getDomain() {
+        return domain;
+    }
 
-	public WeakReference<Persistable> getObject() {
-		return object;
-	}
+    public ComponentContext setDomain(final Class<? extends Persistable> domain) {
+        this.domain = domain;
+        return this;
+    }
 
-	public ComponentContext setObject(final WeakReference<Persistable> object) {
-		this.object = object;
-		return this;
-	}
+    public WeakReference<Persistable> getObject() {
+        return object;
+    }
 
-	@Override
-	public int compareTo(@Nonnull final ComponentContext cc) {
-		return ComparisonChain.start()
-				.compare(this.domain.getName(), cc.domain.getName())
-				.compare(this.id, cc.id)
-				.compare(this.revision, cc.revision)
-				.compare(this.version, cc.version)
-				.result();
-	}
+    public ComponentContext setObject(final WeakReference<Persistable> object) {
+        this.object = object;
+        return this;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(id, revision, version, domain, object);
-	}
+    public boolean isValid() {
+        return this.object != null;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public int compareTo(@Nonnull final ComponentContext cc) {
+        return ComparisonChain.start()
+                .compare(this.domain.getName(), cc.domain.getName())
+                .compare(this.id, cc.id)
+                .compare(this.revision, cc.revision)
+                .compare(this.version, cc.version)
+                .result();
+    }
 
-		ComponentContext that = (ComponentContext) o;
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, revision, version, domain, object);
+    }
 
-		return Objects.equal(this.id, that.id) &&
-				Objects.equal(this.revision, that.revision) &&
-				Objects.equal(this.version, that.version) &&
-				Objects.equal(this.domain, that.domain) &&
-				Objects.equal(this.object, that.object);
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ComponentContext that = (ComponentContext) o;
+
+        return Objects.equal(this.id, that.id) &&
+                Objects.equal(this.revision, that.revision) &&
+                Objects.equal(this.version, that.version) &&
+                Objects.equal(this.domain, that.domain) &&
+                Objects.equal(this.object, that.object);
+    }
 }

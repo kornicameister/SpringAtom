@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.web.component.core.elements;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import org.agatom.springatom.web.component.core.Component;
 
@@ -65,7 +66,8 @@ abstract public class DefaultComponent
 	 *
 	 * @return a {@link java.util.Map} object.
 	 */
-	public Map<String, Object> getDynamicProperties() {
+    @JsonIgnore
+    public Map<String, Object> getDynamicProperties() {
 		if (this.dynamicProperties == null) {
 			this.dynamicProperties = Maps.newHashMap();
 		}

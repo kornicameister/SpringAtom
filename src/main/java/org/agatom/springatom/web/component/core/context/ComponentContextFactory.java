@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.web.component.core.context;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.agatom.springatom.core.annotations.LazyComponent;
 import org.agatom.springatom.server.model.types.PersistentVersionedBean;
 import org.agatom.springatom.server.repository.SRepository;
@@ -26,6 +27,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.history.Revision;
 import org.springframework.data.mapping.PersistentEntity;
@@ -33,8 +35,10 @@ import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * {@code ComponentContextFactory} enables populating the context from {@link org.springframework.data.domain.Persistable}
@@ -49,51 +53,80 @@ import javax.annotation.PostConstruct;
  */
 @LazyComponent
 public class ComponentContextFactory
-		implements BeanFactoryAware {
-	private static final Logger              LOGGER       = Logger.getLogger(ComponentContextFactory.class);
-	private              Repositories        repositories = null;
-	private              ListableBeanFactory beanFactory  = null;
+        implements BeanFactoryAware {
+    private static final Logger              LOGGER       = Logger.getLogger(ComponentContextFactory.class);
+    private              Repositories        repositories = null;
+    private              ListableBeanFactory beanFactory  = null;
+    @Autowired
+    private              ObjectMapper        objectMapper = null;
 
-	@PostConstruct
-	private void setRepositories() {
-		this.repositories = new Repositories(this.beanFactory);
-	}
+    @PostConstruct
+    private void setRepositories() {
+        this.repositories = new Repositories(this.beanFactory);
+    }
 
-	public ComponentContext buildContext(final Persistable<?> persistable) throws Exception {
-		Assert.notNull(persistable, "Persistable can not be null");
-		LOGGER.debug(String.format("buildContext(persistable=%s)", persistable));
+    @SuppressWarnings("unchecked")
+    public ComponentContext buildContext(final HttpServletRequest request) throws Exception {
+        final String context = request.getParameter("context");
+        if (!StringUtils.hasText(context)) {
+            return new MissingComponentContext();
+        }
 
-		final ComponentContext componentContext = new ComponentContext(persistable);
-		if (ClassUtils.isAssignableValue(PersistentVersionedBean.class, persistable)) {
-			componentContext.setVersion(((PersistentVersionedBean) persistable).getVersion());
-		} else {
-			componentContext.setVersion((long) -1);
-		}
-		componentContext.setRevision(this.getLatestRevision(persistable));
-		return componentContext;
-	}
+        return this.objectMapper.readValue(context, ComponentContext.class);
+    }
 
-	@SuppressWarnings("unchecked")
-	private Long getLatestRevision(final Persistable persistable) {
-		if (this.isVersioned(persistable)) {
-			final SRepository repo = (SRepository) this.repositories.getRepositoryFor(ClassUtils.getUserClass(persistable));
-			if (repo != null) {
-				final Revision revision = repo.findLastChangeRevision(persistable.getId());
-				return (Long) revision.getRevisionNumber();
-			}
-		}
-		return (long) -1;
-	}
+    public ComponentContext buildContext(final Persistable<?> persistable) throws Exception {
+        Assert.notNull(persistable, "Persistable can not be null");
+        LOGGER.debug(String.format("buildContext(persistable=%s)", persistable));
 
-	private boolean isVersioned(final Persistable<?> persistable) {
-		final PersistentEntity<?, ?> entity = this.repositories.getPersistentEntity(ClassUtils.getUserClass(persistable));
-		final Audited audited = entity.findAnnotation(Audited.class);
-		final PersistentProperty<?> persistentProperty = entity.getPersistentProperty(Audited.class);
-		return audited != null || persistentProperty != null;
-	}
+        final ComponentContext componentContext = new ComponentContext(persistable);
+        if (ClassUtils.isAssignableValue(PersistentVersionedBean.class, persistable)) {
+            componentContext.setVersion(((PersistentVersionedBean) persistable).getVersion());
+        } else {
+            componentContext.setVersion((long) -1);
+        }
+        componentContext.setRevision(this.getLatestRevision(persistable));
+        return componentContext;
+    }
 
-	@Override
-	public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
-		this.beanFactory = (ListableBeanFactory) beanFactory;
-	}
+    @SuppressWarnings("unchecked")
+    private Long getLatestRevision(final Persistable persistable) {
+        if (this.isVersioned(persistable)) {
+            final SRepository repo = (SRepository) this.repositories.getRepositoryFor(ClassUtils.getUserClass(persistable));
+            if (repo != null) {
+                final Revision revision = repo.findLastChangeRevision(persistable.getId());
+                if (revision != null) {
+                    return (Long) revision.getRevisionNumber();
+                }
+            }
+        }
+        return (long) -1;
+    }
+
+    private boolean isVersioned(final Persistable<?> persistable) {
+        final PersistentEntity<?, ?> entity = this.repositories.getPersistentEntity(ClassUtils.getUserClass(persistable));
+        final Audited audited = entity.findAnnotation(Audited.class);
+        final PersistentProperty<?> persistentProperty = entity.getPersistentProperty(Audited.class);
+        return audited != null || persistentProperty != null;
+    }
+
+    @Override
+    public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = (ListableBeanFactory) beanFactory;
+    }
+
+    private class MissingComponentContext
+            extends ComponentContext {
+        private static final long serialVersionUID = -1784967006215448033L;
+
+        public MissingComponentContext() {
+            super(null);
+        }
+
+        @Override
+        public boolean isValid() {
+            return false;
+        }
+    }
+
 }

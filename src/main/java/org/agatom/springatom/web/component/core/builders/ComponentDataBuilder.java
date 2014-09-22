@@ -19,7 +19,6 @@ package org.agatom.springatom.web.component.core.builders;
 
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 
 /**
  * {@code ComponentDataBuilder} is an interface for <b>component builders</b>
@@ -42,5 +41,5 @@ public interface ComponentDataBuilder
 	 *
 	 * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException if any
 	 */
-	ComponentDataResponse getData(final ComponentDataRequest dataRequest) throws ComponentException;
+    Object getData(final ComponentDataRequest dataRequest) throws ComponentException;
 }

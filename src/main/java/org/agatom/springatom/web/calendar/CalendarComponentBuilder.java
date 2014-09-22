@@ -24,7 +24,6 @@ import org.agatom.springatom.web.component.core.builders.ComponentProduces;
 import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,7 +33,6 @@ import org.springframework.util.StringUtils;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -82,11 +80,10 @@ public class CalendarComponentBuilder
     }
 
     @Override
-    public ComponentDataResponse getDefinition(final ComponentDataRequest dataRequest) throws ComponentException {
+    public Calendar getDefinition(final ComponentDataRequest dataRequest) throws ComponentException {
         final Calendar configuration = new Calendar();
 
         final Locale locale = LocaleContextHolder.getLocale();
-        final long startTime = System.nanoTime();
 
         configuration.put(MONTH_NAMES, this.toJSArray(messageSource.getMessage("date.months", locale)));
         configuration.put(MONTH_NAMES_SHORT, this.toJSArray(messageSource.getMessage("date.months.short", locale)));
@@ -106,7 +103,7 @@ public class CalendarComponentBuilder
 
         configuration.setLabel(this.messageSource.getMessage("scalendar", locale));
 
-        return ComponentDataResponse.success(BUILDER_ID, configuration, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime));
+        return configuration;
     }
 
     private String[] toJSArray(final String message) {

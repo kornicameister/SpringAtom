@@ -15,23 +15,19 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.controllers.components.data;
+package org.agatom.springatom.web.component.core.builders.multi;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.Collection;
 
 /**
- * <small>Class is a part of <b>SpringAtom</b> and was created at 20.07.14</small>
+ * <p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-09-22</small>
+ * </p>
  *
- * @author kornicameister
+ * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-public class CmpDataResource
-		extends CmpResource<Object> {
-	private static final long serialVersionUID = 6347289165130876714L;
-
-	public CmpDataResource(final Object content) {
-		super(content);
-	}
+public interface MultiComponentBuilder {
+    Collection<MultiComponentDescriptor> getDescriptors();
 }

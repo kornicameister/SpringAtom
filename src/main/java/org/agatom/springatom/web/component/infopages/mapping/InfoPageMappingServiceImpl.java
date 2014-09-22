@@ -17,6 +17,7 @@
 
 package org.agatom.springatom.web.component.infopages.mapping;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
@@ -34,6 +35,7 @@ import org.springframework.util.ClassUtils;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -54,93 +56,108 @@ import java.util.concurrent.TimeUnit;
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 @Description("InfoPageMappingService gives access to verify if an InfoPage exists for certain information (rel,class,object)")
 class InfoPageMappingServiceImpl
-		implements InfoPageMappingService {
-	private static final Logger                                       LOGGER             = Logger.getLogger(InfoPageMappingServiceImpl.class);
-	private static final String                                       MAPPING_PROPERTIES = "infoPageProperties";
-	private static final String                                       REGISTER_PREFIX    = "springatom.infoPages.register.";
-	private              Map<String, Class<? extends Persistable<?>>> relToClassMap      = Maps.newHashMapWithExpectedSize(5);
-	@Autowired
-	@Qualifier(MAPPING_PROPERTIES)
-	private              Properties                                   properties         = null;
+        implements InfoPageMappingService {
+    private static final Logger                                       LOGGER             = Logger.getLogger(InfoPageMappingServiceImpl.class);
+    private static final String                                       MAPPING_PROPERTIES = "infoPageProperties";
+    private static final String                                       REGISTER_PREFIX    = "springatom.infoPages.register.";
+    private              Map<String, Class<? extends Persistable<?>>> relToClassMap      = Maps.newHashMapWithExpectedSize(5);
+    @Autowired
+    @Qualifier(MAPPING_PROPERTIES)
+    private              Properties                                   properties         = null;
 
-	/**
-	 * Loads all registered {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} from {@code infoPageProperties}
-	 */
-	@PostConstruct
-	@SuppressWarnings("unchecked")
-	private void postConstruct() {
-		LOGGER.debug(String.format("Analyzing %s", MAPPING_PROPERTIES));
-		final long startTime = System.nanoTime();
-		{
+    /**
+     * Loads all registered {@link org.agatom.springatom.web.component.infopages.provider.structure.InfoPage} from {@code infoPageProperties}
+     */
+    @PostConstruct
+    @SuppressWarnings("unchecked")
+    private void postConstruct() {
+        LOGGER.debug(String.format("Analyzing %s", MAPPING_PROPERTIES));
+        final long startTime = System.nanoTime();
+        {
 
-			final Set<String> propertyNames = properties.stringPropertyNames();
-			final ClassLoader classLoader = this.getClass().getClassLoader();
+            final Set<String> propertyNames = properties.stringPropertyNames();
+            final ClassLoader classLoader = this.getClass().getClassLoader();
 
-			for (final String prop : propertyNames) {
-				if (prop.startsWith(REGISTER_PREFIX)) {
+            for (final String prop : propertyNames) {
+                if (prop.startsWith(REGISTER_PREFIX)) {
 
-					final String rel = prop.replaceFirst(REGISTER_PREFIX, "").trim();
-					final Class<?> clazz = ClassUtils.resolveClassName(this.properties.getProperty(prop), classLoader);
+                    final String rel = prop.replaceFirst(REGISTER_PREFIX, "").trim();
+                    final Class<?> clazz = ClassUtils.resolveClassName(this.properties.getProperty(prop), classLoader);
 
-					this.relToClassMap.put(rel, (Class<? extends Persistable<?>>) ClassUtils.getUserClass(clazz));
+                    this.relToClassMap.put(rel, (Class<? extends Persistable<?>>) ClassUtils.getUserClass(clazz));
 
-					LOGGER.trace(String.format("Hit in register, key = %s // clazz = %s", prop, ClassUtils.getShortName(clazz)));
-				}
-			}
+                    LOGGER.trace(String.format("Hit in register, key = %s // clazz = %s", prop, ClassUtils.getShortName(clazz)));
+                }
+            }
 
-		}
-		final long analyzeTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
-		LOGGER.debug(String.format("Analyzed %s in %d ms", MAPPING_PROPERTIES, analyzeTime));
-	}
+        }
+        final long analyzeTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+        LOGGER.debug(String.format("Analyzed %s in %d ms", MAPPING_PROPERTIES, analyzeTime));
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean hasInfoPage(final String rel) {
-		return this.relToClassMap.containsKey(rel);
-	}
+    @Override
+    public Collection<InfoPageMapping> getInfoPageMappings() {
+        return FluentIterable.from(this.relToClassMap.keySet())
+                .transform(new Function<String, InfoPageMapping>() {
+                    @Nullable
+                    @Override
+                    public InfoPageMapping apply(@Nullable final String rel) {
+                        return new InfoPageMapping().setRel(rel).setType(relToClassMap.get(rel));
+                    }
+                })
+                .toSet();
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	@SuppressWarnings({"UnusedDeclaration", "unchecked"})
-	public <T extends Persistable<?>> boolean hasInfoPage(final Class<T> persistableClass) {
-		final Class<T> cleanedClass = (Class<T>) ClassUtils.getUserClass(persistableClass);
-		return FluentIterable.from(this.relToClassMap.values()).firstMatch(new Predicate<Class<?>>() {
-			@Override
-			public boolean apply(@Nullable final Class<?> input) {
-				return ClassUtils.isAssignable(cleanedClass, input);
-			}
-		}).isPresent();
-	}
+    /** {@inheritDoc} */
+    @Override
+    public boolean hasInfoPage(final String rel) {
+        return this.relToClassMap.containsKey(rel);
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public <T extends Persistable<?>> boolean hasInfoPage(final T persistable) {
-		return this.hasInfoPage(persistable.getClass());
-	}
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings({"UnusedDeclaration", "unchecked"})
+    public <T extends Persistable<?>> boolean hasInfoPage(final Class<T> persistableClass) {
+        final Class<T> cleanedClass = (Class<T>) ClassUtils.getUserClass(persistableClass);
+        return FluentIterable.from(this.relToClassMap.values()).firstMatch(new Predicate<Class<?>>() {
+            @Override
+            public boolean apply(@Nullable final Class<?> input) {
+                return ClassUtils.isAssignable(cleanedClass, input);
+            }
+        }).isPresent();
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T extends Persistable<?>> Class<T> getMappedClass(final String rel) throws InfoPageNotFoundException {
-		if (!this.hasInfoPage(rel)) {
-			throw new InfoPageNotFoundException(rel);
-		}
-		return (Class<T>) this.relToClassMap.get(rel);
-	}
+    /** {@inheritDoc} */
+    @Override
+    public <T extends Persistable<?>> boolean hasInfoPage(final T persistable) {
+        return this.hasInfoPage(persistable.getClass());
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T extends Persistable<?>> String getMappedRel(final Class<T> clazz) throws InfoPageNotFoundException {
-		final Class<T> cleanedClazz = (Class<T>) ClassUtils.getUserClass(clazz);
-		if (!this.hasInfoPage(cleanedClazz)) {
-			throw new InfoPageNotFoundException(clazz);
-		}
-		return FluentIterable.from(this.relToClassMap.keySet()).firstMatch(new Predicate<String>() {
-			@Override
-			public boolean apply(@Nullable final String input) {
-				return input != null && relToClassMap.get(input).equals(cleanedClazz);
-			}
-		}).get();
-	}
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Persistable<?>> Class<T> getMappedClass(final String rel) throws InfoPageNotFoundException {
+        if (!this.hasInfoPage(rel)) {
+            throw new InfoPageNotFoundException(rel);
+        }
+        return (Class<T>) this.relToClassMap.get(rel);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Persistable<?>> String getMappedRel(final Class<T> clazz) throws InfoPageNotFoundException {
+        final Class<T> cleanedClazz = (Class<T>) ClassUtils.getUserClass(clazz);
+        if (!this.hasInfoPage(cleanedClazz)) {
+            throw new InfoPageNotFoundException(clazz);
+        }
+        return FluentIterable.from(this.relToClassMap.keySet()).firstMatch(new Predicate<String>() {
+            @Override
+            public boolean apply(@Nullable final String input) {
+                return input != null && relToClassMap.get(input).equals(cleanedClazz);
+            }
+        }).get();
+    }
+
+
 }

@@ -15,40 +15,63 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.infopages.request;
+package org.agatom.springatom.web.component.table.meta;
 
-import org.agatom.springatom.web.component.core.request.AbstractComponentRequest;
+import org.agatom.springatom.web.component.core.context.ComponentContext;
+import org.springframework.hateoas.Link;
+
+import java.io.Serializable;
 
 /**
- * <small>Class is a part of <b>SpringAtom</b> and was created at 29.05.14</small>
+ * <p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-09-21</small>
+ * </p>
  *
- * @author kornicameister
+ * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-public class InfoPageComponentRequest
-		extends AbstractComponentRequest {
-	private static final long   serialVersionUID = 5993317754887000242L;
-	private              String pageId           = null;
+public class TableRenderInformation
+        implements Serializable {
+    private static final long             serialVersionUID = -4822100087343529154L;
+    private              String           builderId        = null;
+    private              Link             url              = null;
+    private              ComponentContext context          = null;
+    private              String           oid              = null;
 
-	/**
-	 * <p>Getter for the field <code>pageId</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getPageId() {
-		return pageId;
-	}
+    public String getBuilderId() {
+        return builderId;
+    }
 
-	/**
-	 * <p>Setter for the field <code>pageId</code>.</p>
-	 *
-	 * @param pageId a {@link java.lang.String} object.
-	 *
-	 * @return a {@link org.agatom.springatom.web.component.infopages.request.InfoPageComponentRequest} object.
-	 */
-	public InfoPageComponentRequest setPageId(final String pageId) {
-		this.pageId = pageId;
-		return this;
-	}
+    public TableRenderInformation setBuilderId(final String builderId) {
+        this.builderId = builderId;
+        return this;
+    }
+
+    public Link getUrl() {
+        return url;
+    }
+
+    public TableRenderInformation setUrl(final Link url) {
+        this.url = url;
+        return this;
+    }
+
+    public ComponentContext getContext() {
+        return context;
+    }
+
+    public TableRenderInformation setContext(final ComponentContext context) {
+        this.context = context;
+        return this;
+    }
+
+    public String getOid() {
+        return oid;
+    }
+
+    public TableRenderInformation setOid(final String oid) {
+        this.oid = oid;
+        return this;
+    }
 }

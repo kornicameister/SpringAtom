@@ -25,11 +25,11 @@ package org.agatom.springatom.web.component.core.builders;
  * @since 0.0.1
  */
 public interface Builder {
-	/**
-	 * Returns this builder <b>ID</b>. The <b>ID</b> is retrieved from an annotation
-	 * {@link org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder}
-	 *
-	 * @return unique identification of the builder
-	 */
-	String getId();
+    /**
+     * Returns this builder <b>ID</b>. The <b>ID</b> is retrieved from an annotation
+     * {@link org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder}
+     *
+     * @return unique identification of the builder
+     */
+    String getId();
 }

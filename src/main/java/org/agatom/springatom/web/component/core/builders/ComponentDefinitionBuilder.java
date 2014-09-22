@@ -17,9 +17,9 @@
 
 package org.agatom.springatom.web.component.core.builders;
 
+import org.agatom.springatom.web.component.ComponentCompilationException;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 
 import java.io.Serializable;
 
@@ -55,6 +55,6 @@ public interface ComponentDefinitionBuilder<COMP extends Serializable> {
      *
      * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException in case of an error
      */
-    ComponentDataResponse getDefinition(final ComponentDataRequest dataRequest) throws ComponentException;
+    COMP getDefinition(final ComponentDataRequest dataRequest) throws ComponentException, ComponentCompilationException;
 
 }

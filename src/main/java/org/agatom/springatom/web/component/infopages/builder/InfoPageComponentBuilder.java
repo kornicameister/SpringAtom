@@ -21,26 +21,36 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import org.agatom.springatom.core.exception.SException;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
-import org.agatom.springatom.server.repository.SBasicRepository;
-import org.agatom.springatom.server.repository.SRepository;
-import org.agatom.springatom.web.component.core.builders.AbstractComponentDataBuilder;
+import org.agatom.springatom.server.model.oid.creators.PersistableOid;
+import org.agatom.springatom.server.repository.provider.RepositoriesHelper;
+import org.agatom.springatom.web.component.core.builders.AbstractComponentDefinitionBuilder;
+import org.agatom.springatom.web.component.core.builders.annotation.ComponentBuilder;
+import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
+import org.agatom.springatom.web.component.core.builders.multi.MultiComponentBuilder;
+import org.agatom.springatom.web.component.core.builders.multi.MultiComponentDescriptor;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
-import org.agatom.springatom.web.component.core.request.ComponentRequestAttribute;
+import org.agatom.springatom.web.component.infopages.elements.InfoPageAttributeComponent;
+import org.agatom.springatom.web.component.infopages.elements.InfoPageComponent;
+import org.agatom.springatom.web.component.infopages.elements.InfoPagePanelComponent;
 import org.agatom.springatom.web.component.infopages.link.InfoPageLinkHelper;
-import org.agatom.springatom.web.component.infopages.request.InfoPageComponentRequest;
-import org.agatom.springatom.web.locale.SMessageSource;
+import org.agatom.springatom.web.component.infopages.mapping.InfoPageMapping;
+import org.agatom.springatom.web.component.infopages.provider.InfoPageProviderService;
+import org.agatom.springatom.web.component.infopages.provider.builder.InfoPageComponentBuilderService;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.history.Revision;
 import org.springframework.util.ClassUtils;
 
 import javax.annotation.Nullable;
 import java.beans.PropertyDescriptor;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,139 +59,131 @@ import java.util.Set;
  * with specific class as an generic type. Scoped as {@link org.springframework.beans.factory.config.BeanDefinition#SCOPE_PROTOTYPE}
  * takes advantage from dependency injection process.
  *
- * @param <Y> marker for {@link org.springframework.data.domain.Persistable} that builder builds data for
- *
  * @author kornicameister
  * @version 0.0.5
  * @since 0.0.1
  */
-public abstract class InfoPageComponentBuilder<Y extends Persistable<?>>
-		extends AbstractComponentDataBuilder {
-	/** Constant <code>BUILDER_ID="genericInfoPageBuilder"</code> */
-	protected static final String                     BUILDER_ID                 = "genericInfoPageBuilder";
-	protected              SBasicRepository<Y, Long>  repository                 = null;
-	protected              EntityDescriptors          descriptors                = null;
-	protected              ComponentBuilderRepository componentBuilderRepository = null;
-	protected              SMessageSource             messageSource              = null;
-	protected              Class<Y>                   entity                     = null;
-	protected              InfoPageLinkHelper         linkHelper                 = null;
+@EntityBased(entity = Persistable.class)
+@ComponentBuilder(InfoPageComponentBuilder.BUILDER_ID)
+public class InfoPageComponentBuilder
+        extends AbstractComponentDefinitionBuilder<InfoPageComponent>
+        implements MultiComponentBuilder {
+    /** Constant <code>BUILDER_ID="genericInfoPageBuilder"</code> */
+    protected static final String                                                            BUILDER_ID         = "genericInfoPageBuilder";
+    private static final   Function<InfoPagePanelComponent, Set<InfoPageAttributeComponent>> GIPCR_FUNC         = new Function<InfoPagePanelComponent, Set<InfoPageAttributeComponent>>() {
+        @Nullable
+        @Override
+        public Set<InfoPageAttributeComponent> apply(@Nullable final InfoPagePanelComponent input) {
+            final Set<InfoPageAttributeComponent> attributes = Sets.newHashSet();
+            if (input == null) {
+                return attributes;
+            }
+            for (final InfoPageAttributeComponent attr : input) {
+                attributes.add(attr);
+            }
+            return attributes;
+        }
+    };
+    @Autowired
+    private                InfoPageProviderService                                           providerService    = null;
+    @Autowired
+    private                InfoPageComponentBuilderService                                   builderService     = null;
+    @Autowired
+    private                RepositoriesHelper                                                repositoriesHelper = null;
 
-	/**
-	 * <p>Constructor for InfoPageComponentBuilder.</p>
-	 *
-	 * @param domainClass a {@link java.lang.Class} object.
-	 */
-	public InfoPageComponentBuilder(final Class<Y> domainClass) {
-		super();
-		this.entity = domainClass;
-	}
+    /**
+     * {@inheritDoc}
+     *
+     * Returns fixed <b>ID</b> of {@link org.agatom.springatom.web.component.infopages.builder.InfoPageComponentBuilder}
+     */
+    @Override
+    public String getId() {
+        return BUILDER_ID;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * Returns fixed <b>ID</b> of {@link org.agatom.springatom.web.component.infopages.builder.InfoPageComponentBuilder}
-	 */
-	@Override
-	public String getId() {
-		return BUILDER_ID;
-	}
+    @Override
+    public Collection<MultiComponentDescriptor> getDescriptors() {
+        final Collection<InfoPageMapping> registeredInfoPages = this.providerService.getRegisteredInfoPages();
+        return FluentIterable.from(registeredInfoPages)
+                .transform(new Function<InfoPageMapping, MultiComponentDescriptor>() {
+                    @Nullable
+                    @Override
+                    public MultiComponentDescriptor apply(@Nullable final InfoPageMapping input) {
+                        assert input != null;
+                        final String alias = String.format("%sInfoPageBuilder", input.getRel());
+                        final Class<?> type = input.getType();
+                        return new MultiComponentDescriptor()
+                                .setAlias(alias)
+                                .setSupportedClasses(type);
+                    }
+                })
+                .toSet();
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	protected Object buildData(final ComponentDataRequest request) throws ComponentException {
-		this.logger.trace(String.format("buildData(dataRequest=%s)", request));
-		final InfoPageComponentRequest ipRequest = (InfoPageComponentRequest) request.getComponentRequest();
+    @Override
+    @SuppressWarnings("unchecked")
+    protected InfoPageComponent buildDefinition(final ComponentDataRequest dataRequest) throws ComponentException {
+        final PersistableOid oid = (PersistableOid) dataRequest.getOid();
+        try {
+            return this.builderService.buildInfoPage(oid.getObjectClass());
+        } catch (SException e) {
+            throw new ComponentException(e);
+        }
+    }
 
-		final Long objectId = ipRequest.getId();
-		final Long objectVersion = ipRequest.getVersion();
-		final Set<ComponentRequestAttribute> attributes = ipRequest.getAttributes();
+    /** {@inheritDoc} */
+    @Override
+    protected Object buildData(final ComponentDataRequest request) throws ComponentException {
 
-		final Y object = this.getOne(objectId, objectVersion);
-		if (object == null) {
-			throw new ComponentException(String.format("For ipRequest=%s found no object of type %s", ipRequest, ClassUtils.getShortName(this.entity)));
-		}
+        this.logger.trace(String.format("buildData(dataRequest=%s)", request));
+        final PersistableOid oid = (PersistableOid) request.getOid();
+        final Persistable<?> object = (Persistable<?>) this.repositoriesHelper.refreshRead(oid.getReference().get());
 
-		final BeanWrapper bw = new BeanWrapperImpl(object);
-		final Map<String, PropertyDescriptor> properties = FluentIterable
-				.from(Lists.newArrayList(bw.getPropertyDescriptors()))
-				.transform(new Function<PropertyDescriptor, String>() {
+        if (object == null) {
+            throw new ComponentException(String.format("For request=%s found no object of type %s", request, ClassUtils.getShortName(this.getClass())));
+        }
 
-					@Nullable
-					@Override
-					public String apply(@Nullable final PropertyDescriptor input) {
-						assert input != null;
-						return input.getName();
-					}
-				})
-				.toMap(new Function<String, PropertyDescriptor>() {
-					@Nullable
-					@Override
-					public PropertyDescriptor apply(@Nullable final String input) {
-						return bw.getPropertyDescriptor(input);
-					}
-				});
+        final InfoPageComponent component = (InfoPageComponent) request.getComponent();
 
-		this.logger.trace(String.format("processing object %s=%s", object, object.getId()));
+        final Set<InfoPageAttributeComponent> attributes = FluentIterable
+                .from(component.getContent())
+                .transformAndConcat(GIPCR_FUNC)
+                .toSet();
+        final BeanWrapper bw = new BeanWrapperImpl(object);
+        final Map<String, PropertyDescriptor> properties = FluentIterable
+                .from(Lists.newArrayList(bw.getPropertyDescriptors()))
+                .transform(new Function<PropertyDescriptor, String>() {
 
-		final Map<String, Object> data = Maps.newHashMap();
+                    @Nullable
+                    @Override
+                    public String apply(@Nullable final PropertyDescriptor input) {
+                        assert input != null;
+                        return input.getName();
+                    }
+                })
+                .toMap(new Function<String, PropertyDescriptor>() {
+                    @Nullable
+                    @Override
+                    public PropertyDescriptor apply(@Nullable final String input) {
+                        return bw.getPropertyDescriptor(input);
+                    }
+                });
 
-		for (final ComponentRequestAttribute attribute : attributes) {
-			this.logger.trace(String.format("Processing attribute for path=%s from %s", attribute.getPath(), attribute));
+        this.logger.trace(String.format("processing object %s=%s", object, object.getId()));
 
-			final String path = attribute.getPath();
-			final Object propertyValue = properties.containsKey(path) ? bw.getPropertyValue(path) : null;
+        final Map<String, Object> data = Maps.newHashMap();
 
-			this.logger.trace(String.format("Processed attribute for path=%s to %s", path, propertyValue));
+        for (final InfoPageAttributeComponent attribute : attributes) {
+            this.logger.trace(String.format("Processing attribute for path=%s from %s", attribute.getPath(), attribute));
 
-			data.put(path, propertyValue);
-		}
+            final String path = attribute.getPath();
+            final Object propertyValue = properties.containsKey(path) ? bw.getPropertyValue(path) : null;
 
-		return new InfoPageResponseWrapper().setData(data).setSource(object);
-	}
+            this.logger.trace(String.format("Processed attribute for path=%s to %s", path, propertyValue));
 
-	/**
-	 * Returns single {@code Y} {@link org.springframework.data.domain.Persistable} object.
-	 * If version is different than <b>-1</b>, method attempts to cast from {@link org.agatom.springatom.server.repository.SBasicRepository}
-	 * to {@link org.agatom.springatom.server.repository.SRepository} to retrieve object in given revision.
-	 *
-	 * @param id      the id
-	 * @param version the version
-	 *
-	 * @return {@link org.springframework.data.domain.Persistable} instance
-	 *
-	 * @throws ComponentException if {@link #repository} is not {@link org.agatom.springatom.server.repository.SRepository}
-	 */
-	private Y getOne(final Long id, final Long version) throws ComponentException {
-		if (version != null && !version.equals(-1l)) {
-			if (ClassUtils.isAssignableValue(SRepository.class, this.repository)) {
-				final Revision<Long, Y> inRevision = ((SRepository<Y, Long, Long>) this.repository).findInRevision(id, version);
-				this.logger.trace(String.format("getOne(id=%s,version=%s) found revision=%s", id, version, inRevision));
-				return inRevision.getEntity();
-			} else {
-				throw new ComponentException(String.format("Version was specified in the request, but repository %s does not support", ClassUtils.getShortName(this.repository.getClass())));
-			}
-		}
-		return this.repository.findOne(id);
-	}
+            data.put(path, propertyValue);
+        }
 
-	/** {@inheritDoc} */
-	@Override
-	protected EntityDescriptor<Y> getEntityDescriptor() {
-		return this.descriptors.getDescriptor(this.entity);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected EntityDescriptor getEntityDescriptor(final Class<?> forClass) {
-		return this.descriptors.getDescriptor(forClass);
-	}
-
-	/**
-	 * <p>getEntityName.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	protected String getEntityName() {
-		return this.getEntityDescriptor().getEntityType().getName();
-	}
+        return data;
+    }
 }

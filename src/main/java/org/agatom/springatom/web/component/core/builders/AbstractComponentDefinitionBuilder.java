@@ -17,9 +17,9 @@
 
 package org.agatom.springatom.web.component.core.builders;
 
+import org.agatom.springatom.web.component.ComponentCompilationException;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 import org.agatom.springatom.web.component.infopages.elements.InfoPageComponent;
 import org.agatom.springatom.web.component.table.elements.TableComponent;
 import org.springframework.core.GenericTypeResolver;
@@ -41,70 +41,72 @@ import java.util.concurrent.TimeUnit;
  * @since 0.0.1
  */
 abstract public class AbstractComponentDefinitionBuilder<COMP extends Serializable>
-		extends AbstractComponentDataBuilder
-		implements ComponentDefinitionBuilder<COMP> {
-	private Class<?>          builds            = getBuilds();
-	private ComponentProduces componentProduces = getProduces();
+        extends AbstractComponentDataBuilder
+        implements ComponentDefinitionBuilder<COMP> {
+    private Class<?>          builds            = getBuilds();
+    private ComponentProduces componentProduces = getProduces();
 
-	/** {@inheritDoc} */
-	@Override
-	public final ComponentProduces getProduces() {
-		if (this.componentProduces == null) {
-			if (ClassUtils.isAssignable(InfoPageComponent.class, this.getBuilds())) {
-				this.componentProduces = ComponentProduces.PAGE_COMPONENT;
-			} else if (ClassUtils.isAssignable(TableComponent.class, this.getBuilds())) {
-				this.componentProduces = ComponentProduces.TABLE_COMPONENT;
-			}
-			this.logger.trace(String.format("%s produces %s", ClassUtils.getShortName(this.getClass()), this.componentProduces));
-		}
-		return componentProduces;
-	}
+    /** {@inheritDoc} */
+    @Override
+    public final ComponentProduces getProduces() {
+        if (this.componentProduces == null) {
+            if (ClassUtils.isAssignable(InfoPageComponent.class, this.getBuilds())) {
+                this.componentProduces = ComponentProduces.PAGE_COMPONENT;
+            } else if (ClassUtils.isAssignable(TableComponent.class, this.getBuilds())) {
+                this.componentProduces = ComponentProduces.TABLE_COMPONENT;
+            } else {
+                this.componentProduces = ComponentProduces.OTHER_COMPONENT;
+            }
+            this.logger.trace(String.format("%s produces %s", ClassUtils.getShortName(this.getClass()), this.componentProduces));
+        }
+        return componentProduces;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public final Class<?> getBuilds() {
-		if (this.builds == null) {
-			this.builds = GenericTypeResolver.resolveTypeArgument(getClass(), ComponentDefinitionBuilder.class);
-			this.logger.trace(String.format("%s builds %s", ClassUtils.getShortName(this.getClass()), ClassUtils.getShortName(this.builds)));
-		}
-		return this.builds;
-	}
+    /** {@inheritDoc} */
+    @Override
+    public final Class<?> getBuilds() {
+        if (this.builds == null) {
+            this.builds = GenericTypeResolver.resolveTypeArgument(getClass(), ComponentDefinitionBuilder.class);
+            this.logger.trace(String.format("%s builds %s", ClassUtils.getShortName(this.getClass()), ClassUtils.getShortName(this.builds)));
+        }
+        return this.builds;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public final ComponentDataResponse getDefinition(final ComponentDataRequest dataRequest) throws ComponentException {
-		this.logger.debug(String.format("getDefinition(dataRequest=%s)", dataRequest));
-		final long startTime = System.nanoTime();
-		try {
-			Assert.notNull(dataRequest, "DataRequest can not be null");
+    /** {@inheritDoc} */
+    @Override
+    public final COMP getDefinition(final ComponentDataRequest dataRequest) throws ComponentException {
+        this.logger.debug(String.format("getDefinition(dataRequest=%s)", dataRequest));
+        final long startTime = System.nanoTime();
+        try {
+            Assert.notNull(dataRequest, "DataRequest can not be null");
 
-			final COMP definition = this.buildDefinition(dataRequest);
+            final COMP definition = this.buildDefinition(dataRequest);
 
-			if (definition == null) {
-				this.logger.warn(String.format("For request=%s, builder returned null definition", dataRequest));
-			} else {
-				this.logger.trace(String.format("For request=%s, builder returned definition=%s", dataRequest, definition));
-			}
+            if (definition == null) {
+                this.logger.warn(String.format("For request=%s, builder returned null definition", dataRequest));
+            } else {
+                this.logger.trace(String.format("For request=%s, builder returned definition=%s", dataRequest, definition));
+            }
 
-			final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
-			this.logger.info(String.format("getDefinition(dataRequest=%s) executed in %dms", dataRequest, endTime));
+            final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+            this.logger.info(String.format("getDefinition(dataRequest=%s) executed in %dms", dataRequest, endTime));
 
-			return ComponentDataResponse.success(this.getId(), definition, endTime);
-		} catch (Exception exp) {
-			this.logger.fatal(String.format("getDefinition(dataRequest=%s) failed...", dataRequest), exp);
-			return ComponentDataResponse.error(this.getId(), exp, TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime));
-		}
-	}
+            return definition;
+        } catch (Exception exp) {
+            this.logger.fatal(String.format("getDefinition(dataRequest=%s) failed...", dataRequest), exp);
+            throw new ComponentCompilationException(exp);
+        }
+    }
 
-	/**
-	 * Actual method to create definition. Param is used to create conditional definition based on data available in the request
-	 *
-	 * @param dataRequest request to work with
-	 *
-	 * @return the definition of {@link #getBuilds()}
-	 *
-	 * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException if any
-	 */
-	protected abstract COMP buildDefinition(final ComponentDataRequest dataRequest) throws ComponentException;
+    /**
+     * Actual method to create definition. Param is used to create conditional definition based on data available in the request
+     *
+     * @param dataRequest request to work with
+     *
+     * @return the definition of {@link #getBuilds()}
+     *
+     * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException if any
+     */
+    protected abstract COMP buildDefinition(final ComponentDataRequest dataRequest) throws ComponentException;
 
 }

@@ -22,20 +22,17 @@ import com.google.common.collect.Maps;
 import com.mysema.query.types.Path;
 import com.mysema.query.types.Predicate;
 import com.mysema.query.types.path.EntityPathBase;
-import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
-import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
+import org.agatom.springatom.server.model.oid.SOid;
+import org.agatom.springatom.server.model.oid.creators.PersistableOid;
 import org.agatom.springatom.server.repository.SBasicRepository;
-import org.agatom.springatom.server.repository.SRepository;
 import org.agatom.springatom.web.component.core.builders.AbstractComponentDefinitionBuilder;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentException;
 import org.agatom.springatom.web.component.core.builders.exception.ComponentPathEvaluationException;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.request.ComponentRequestAttribute;
 import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.web.component.table.elements.TableComponent;
+import org.agatom.springatom.web.component.table.elements.ng.NgTable;
 import org.agatom.springatom.web.component.table.elements.ng.NgTableColumn;
-import org.agatom.springatom.web.component.table.request.TableComponentRequest;
-import org.agatom.springatom.web.component.table.request.TableRequestColumnDef;
 import org.agatom.springatom.web.locale.beans.LocalizedClassModel;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -46,13 +43,11 @@ import org.springframework.core.GenericTypeResolver;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.history.Revision;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -80,206 +75,158 @@ import java.util.Set;
  * @since 0.0.1
  */
 abstract public class TableComponentBuilder<COMP extends TableComponent, Y extends Persistable<?>>
-		extends AbstractComponentDefinitionBuilder<COMP> {
-	@Autowired
-	protected ApplicationContext        context           = null;
-	@Autowired
-	protected SBasicRepository<Y, Long> repository        = null;
-	protected Class<Y>                  entity            = null;
-	@Autowired
-	private   EntityDescriptors         entityDescriptors = null;
+        extends AbstractComponentDefinitionBuilder<COMP> {
+    @Autowired
+    protected ApplicationContext        context    = null;
+    @Autowired
+    protected SBasicRepository<Y, Long> repository = null;
+    protected Class<Y>                  entity     = null;
 
-	@PostConstruct
-	@SuppressWarnings("unchecked")
-	private void postConstruct() {
-		this.entity = (Class<Y>) GenericTypeResolver.resolveTypeArguments(getClass(), TableComponentBuilder.class)[1];
-	}
+    @PostConstruct
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
+    private void postConstruct() {
+        this.entity = (Class<Y>) GenericTypeResolver.resolveTypeArguments(getClass(), TableComponentBuilder.class)[1];
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	protected Object buildData(final ComponentDataRequest dataRequest) throws ComponentException {
-		final TableComponentRequest request = (TableComponentRequest) dataRequest.getComponentRequest();
-		final long revision = request.getRevision();
-		final Set<ComponentRequestAttribute> attributes = request.getAttributes();
-		if (revision > -1) {
-			// TODO how to merge predicate and revision ?
-			final SRepository<Y, Long, Long> sRepository = (SRepository<Y, Long, Long>) this.repository;
-			final Revision<Long, Y> inRevision = sRepository.findInRevision(request.getId(), request.getRevision());
-		} else {
-			final Predicate predicate = this.getPredicate(request);
-			final long countInContext = predicate != null ?
-					this.repository.count(predicate) :
-					this.repository.count();
-			final List<TableResponseRow> data = Lists.newArrayListWithExpectedSize((int) countInContext);
+    /** {@inheritDoc} */
+    @Override
+    protected Object buildData(final ComponentDataRequest request) throws ComponentException {
+        final NgTable component = (NgTable) request.getComponent();
+        final Predicate predicate = this.getPredicate(request);
+        final long countInContext = predicate != null ?
+                this.repository.count(predicate) :
+                this.repository.count();
+        final Collection<Map<String, Object>> data = Lists.newLinkedList();
 
-			if (countInContext != 0) {
-				final Page<Y> all = this.getAllEntities(request, predicate, countInContext);
-				for (final Y object : all) {
-					final BeanWrapper wrapper = new BeanWrapperImpl(object);
-					final Map<String, Object> rowData = Maps.newHashMapWithExpectedSize(attributes.size());
-					for (ComponentRequestAttribute attribute : attributes) {
-						final String path = attribute.getPath();
-						rowData.put(path, wrapper.getPropertyValue(path));
-					}
-					data.add(new TableResponseRow().setSource(object).setRowData(rowData));
-				}
-			}
-			return new TableResponseWrapper().setRows(data);
-		}
-		return null;
-	}
+        final Set<NgTableColumn> content = component.getContent();
 
-	/** {@inheritDoc} */
-	@Override
-	protected EntityDescriptor getEntityDescriptor() {
-		return this.getEntityDescriptor(this.entity);
-	}
+        if (countInContext != 0) {
+            final Page<Y> all = this.getAllEntities(request, predicate, countInContext);
+            for (final Y object : all) {
+                final BeanWrapper wrapper = new BeanWrapperImpl(object);
+                final Map<String, Object> rowData = Maps.newHashMapWithExpectedSize(content.size());
+                for (final NgTableColumn column : content) {
+                    final String path = column.getDataIndex();
+                    rowData.put(path, wrapper.getPropertyValue(path));
+                }
+                data.add(rowData);
+            }
+        }
+        return data;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	protected EntityDescriptor getEntityDescriptor(final Class<?> forClass) {
-		return this.entityDescriptors.getDescriptor(forClass);
-	}
+    private Predicate getPredicate(final ComponentDataRequest dc) throws ComponentPathEvaluationException {
+        if (!this.isInContext(dc)) {
+            this.logger.debug("No context detected...looking for matching QueryDSL");
+            final String shortName = ClassUtils.getShortName(this.entity);
+            final ClassLoader classLoader = this.getClass().getClassLoader();
+            final String qClassName = String.format("%s.%s", ClassUtils.getPackageName(this.entity), String.format("Q%s", shortName));
+            try {
+                if (ClassUtils.isPresent(qClassName, classLoader)) {
+                    final Class<?> qClass = ClassUtils.resolveClassName(qClassName, classLoader);
+                    if (ClassUtils.isAssignable(EntityPathBase.class, qClass)) {
+                        // safe to return null
+                        this.logger.debug(String.format("No context detect and found matching QueryDSL=>%s", qClassName));
+                        return null;
+                    }
+                }
+                throw new IllegalStateException(String.format(
+                        "%s does not correspond to any QueryDSL class => %s", shortName, qClassName
+                ));
+            } catch (Exception e) {
+                throw new ComponentPathEvaluationException(String
+                        .format("failed to evaluate %s [no context]", ClassUtils.getShortName(Predicate.class)), e);
+            }
+        }
+        final Predicate predicate = this.getPredicate(dc.getOid());
+        if (predicate == null) {
+            throw new ComponentPathEvaluationException(String.format("failed to evaluate %s for oid=%s", ClassUtils.getShortName(Predicate.class), dc.getOid()));
+        }
+        logger.debug(String.format("processing with predicate %s", predicate));
+        return predicate;
+    }
 
-	/**
-	 * Using passed {@link org.agatom.springatom.web.component.table.request.TableComponentRequest} method
-	 * constructs {@link com.mysema.query.types.Predicate} for the {@link org.springframework.data.repository.Repository}
-	 *
-	 * @param dc current request data holder
-	 *
-	 * @return valid predicate
-	 *
-	 * @throws ComponentPathEvaluationException if predicate was impossible to built
-	 */
-	private Predicate getPredicate(final TableComponentRequest dc) throws ComponentPathEvaluationException {
-		if (!this.isInContext(dc)) {
-			this.logger.debug("No context detected...looking for matching QueryDSL");
-			final String shortName = ClassUtils.getShortName(this.entity);
-			final ClassLoader classLoader = this.getClass().getClassLoader();
-			final String qClassName = String.format("%s.%s", ClassUtils.getPackageName(this.entity), String.format("Q%s", shortName));
-			try {
-				if (ClassUtils.isPresent(qClassName, classLoader)) {
-					final Class<?> qClass = ClassUtils.resolveClassName(qClassName, classLoader);
-					if (ClassUtils.isAssignable(EntityPathBase.class, qClass)) {
-						// safe to return null
-						this.logger.debug(String.format("No context detect and found matching QueryDSL=>%s", qClassName));
-						return null;
-					}
-				}
-				throw new IllegalStateException(String.format(
-						"%s does not correspond to any QueryDSL class => %s", shortName, qClassName
-				));
-			} catch (Exception e) {
-				throw new ComponentPathEvaluationException(String
-						.format("failed to evaluate %s [no context]", ClassUtils.getShortName(Predicate.class)), e);
-			}
-		}
-		final Predicate predicate = this.getPredicate(dc.getId(), dc.getDomain());
-		if (predicate == null) {
-			throw new ComponentPathEvaluationException(String
-					.format("failed to evaluate %s for contextClass=%s", ClassUtils.getShortName(Predicate.class), ClassUtils
-							.getShortName(dc.getDomain())));
-		}
-		logger.debug(String.format("processing with predicate %s", predicate));
-		return predicate;
-	}
+    @SuppressWarnings("ConstantConditions")
+    private Page<Y> getAllEntities(final ComponentDataRequest dc, final Predicate predicate, final long countInContext) {
 
-	/**
-	 * Method checks if table builder was called in some specific context
-	 *
-	 * @param dc current request data holder
-	 *
-	 * @return true if in context, false otherwise
-	 */
-	private boolean isInContext(final TableComponentRequest dc) {
-		return (dc.getId() != null && dc.getId() > 0) && (dc.getClass() != null);
-	}
+        Integer pageParam = (Integer) dc.getParametersMap().get("page");
+        Integer pageSizeParam = (Integer) dc.getParametersMap().get("size");
 
-	/**
-	 * Internal method for {@link org.agatom.springatom.web.component.table.TableComponentBuilder}'s that extends this base class
-	 *
-	 * @param contextKey   value set in another {@link org.agatom.springatom.web.component.core.builders.Builder} which is most likely the {@link
-	 *                     org.springframework.data.domain.Persistable#getId()} of a {@code contextClass}
-	 * @param contextClass points to a {@link Class} correlating to the {@code contextKey}
-	 *
-	 * @return valid {@link com.mysema.query.types.Predicate} or null
-	 *
-	 * @see org.agatom.springatom.web.component.table.TableComponentBuilder#getPredicate(org.agatom.springatom.web.component.table.request.TableComponentRequest)
-	 */
-	protected abstract Predicate getPredicate(final Long contextKey, final Class<?> contextClass);
+        if (pageParam == null) {
+            pageParam = 0;
+        }
+        if (pageSizeParam == null) {
+            pageSizeParam = Long.valueOf(countInContext).intValue();
+        }
 
-	private Page<Y> getAllEntities(final TableComponentRequest dc, final Predicate predicate, final long countInContext) {
-		final PageRequest pageable = this.getPageable(countInContext, dc.getPage(), dc.getLimit(), dc.getSortingColumnDefs());
-		Page<Y> page;
+        final PageRequest pageable = this.getPageable(pageParam, pageSizeParam);
 
-		if (predicate != null) {
-			page = this.repository.findAll(predicate, pageable);
-		} else {
-			page = this.repository.findAll(pageable);
-		}
+        if (predicate != null) {
+            return this.repository.findAll(predicate, pageable);
+        }
 
-		return page;
-	}
+        return this.repository.findAll(pageable);
+    }
 
-	/**
-	 * <p>getPageable.</p>
-	 *
-	 * @param total a long.
-	 * @param limit a int.
-	 * @param sort  a {@link java.util.List} object.
-	 *
-	 * @return a {@link org.springframework.data.domain.PageRequest} object.
-	 */
-	protected PageRequest getPageable(final long total, int pageNumber, final int limit, final List<TableRequestColumnDef> sort) {
-		pageNumber = pageNumber - 1;
-		if (!CollectionUtils.isEmpty(sort)) {
-			for (final TableRequestColumnDef columnDef : sort) {
-				if (columnDef.isSortable() && columnDef.isSorted()) {
-					continue;
-				}
-				final Sort.Direction direction = Sort.Direction.fromStringOrNull(columnDef.getSortDirection().toString());
-				columnDef.setSorted(true);
-				return new PageRequest(pageNumber, limit, direction, columnDef.getName());
-			}
-		}
-		return new PageRequest(pageNumber, limit);
-	}
+    private boolean isInContext(final ComponentDataRequest dc) {
+        return dc.getOid() != null;
+    }
 
-	/**
-	 * <p>getPageNumber.</p>
-	 *
-	 * @param totalObjects a long.
-	 * @param pageSize     a int.
-	 *
-	 * @return a int.
-	 */
-	protected int getPageNumber(final long totalObjects, final int pageSize) {
-		if (pageSize > totalObjects) {
-			return 0;
-		} else {
-			final int pageNumber = (int) Math.floor(totalObjects / pageSize);
-			if (pageNumber * pageSize < totalObjects) {
-				return 0;
-			}
-			return pageNumber;
-		}
-	}
+    /**
+     * Method checks if table builder was called in some specific context
+     *
+     * @param oid OID from the request
+     *
+     * @return true if in context, false otherwise
+     */
 
-	/**
-	 * Returns {@link org.agatom.springatom.web.locale.beans.LocalizedClassModel} for {@link #entity}
-	 *
-	 * @return localized class model
-	 */
-	protected LocalizedClassModel<Y> getLocalizedClassModel() {
-		return this.messageSource.getLocalizedClassModel(this.entity, LocaleContextHolder.getLocale());
-	}
+    private Predicate getPredicate(final SOid oid) {
+        Assert.isInstanceOf(PersistableOid.class, oid);
+        final PersistableOid persistableOid = (PersistableOid) oid;
+        return this.getPredicate(persistableOid.getObjectId(), persistableOid.getObjectClass());
+    }
 
-	protected NgTableColumn newColumn(final Path<?> path, final AttributeDisplayAs displayAs, final LocalizedClassModel<Y> lModel) {
-		return (NgTableColumn) new NgTableColumn()
-				.setTooltip(lModel.getLocalizedAttribute(this.getAttributeName(path)))
-				.setDataIndex(this.getAttributeName(path))
-				.setText(lModel.getLocalizedAttribute(this.getAttributeName(path)))
-				.setDisplayAs(displayAs);
-	}
+    /**
+     * <p>getPageable.</p>
+     *
+     * @param limit      a int.
+     * @param pageNumber a int.
+     *
+     * @return a {@link org.springframework.data.domain.PageRequest} object.
+     */
+    protected PageRequest getPageable(int pageNumber, final int limit) {
+        if (pageNumber - 1 == 0 && pageNumber == 1) {
+            pageNumber -= 1;
+        }
+        return new PageRequest(pageNumber, limit);
+    }
+
+    /**
+     * Internal method for {@link org.agatom.springatom.web.component.table.TableComponentBuilder}'s that extends this base class
+     *
+     * @param contextKey   value set in another {@link org.agatom.springatom.web.component.core.builders.Builder} which is most likely the {@link
+     *                     org.springframework.data.domain.Persistable#getId()} of a {@code contextClass}
+     * @param contextClass points to a {@link Class} correlating to the {@code contextKey}
+     *
+     * @return valid {@link com.mysema.query.types.Predicate} or null
+     */
+    protected abstract Predicate getPredicate(final Long contextKey, final Class<?> contextClass);
+
+    /**
+     * Returns {@link org.agatom.springatom.web.locale.beans.LocalizedClassModel} for {@link #entity}
+     *
+     * @return localized class model
+     */
+    protected LocalizedClassModel<Y> getLocalizedClassModel() {
+        return this.messageSource.getLocalizedClassModel(this.entity, LocaleContextHolder.getLocale());
+    }
+
+    protected NgTableColumn newColumn(final Path<?> path, final AttributeDisplayAs displayAs, final LocalizedClassModel<Y> lModel) {
+        return (NgTableColumn) new NgTableColumn()
+                .setTooltip(lModel.getLocalizedAttribute(this.getAttributeName(path)))
+                .setDataIndex(this.getAttributeName(path))
+                .setText(lModel.getLocalizedAttribute(this.getAttributeName(path)))
+                .setDisplayAs(displayAs);
+    }
 
 }
