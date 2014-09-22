@@ -38,49 +38,44 @@ import java.util.Locale;
  * @since 0.0.1
  */
 @WebConverter(types = {Interval.class, Duration.class})
-public class IntervalWebConverter
-		extends AbstractWebConverter {
+class IntervalWebConverter
+        extends AbstractWebConverter {
 
-	/** {@inheritDoc} */
-	@Override
-	protected TextGuiComponent doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
-		if (value != null) {
-			final long intervalValue = this.getIntervalValue(ClassUtils.isAssignableValue(Interval.class, value) ? ((Interval) value).toDuration() : (Duration) value);
-			final String intervalFormat = this.getIntervalLocalizedValue(intervalValue, LocaleContextHolder.getLocale());
+    /** {@inheritDoc} */
+    @Override
+    protected TextGuiComponent doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+        if (value != null) {
+            final long intervalValue = this.getIntervalValue(ClassUtils.isAssignableValue(Interval.class, value) ? ((Interval) value).toDuration() : (Duration) value);
+            final String intervalFormat = this.getIntervalLocalizedValue(intervalValue, LocaleContextHolder.getLocale());
+            final TextGuiComponent component = new TextGuiComponent();
+            component.setValue(intervalFormat);
+            return component;
+        }
+        return null;
+    }
 
-			final TextGuiComponent component = new TextGuiComponent();
+    /**
+     * Extracts the value to be used to create localized duration value. By Default {@link org.joda.time.Duration#getStandardMinutes()} is used
+     *
+     * @param duration duration to get interval value from
+     *
+     * @return interval value
+     */
+    protected long getIntervalValue(final Duration duration) {
+        return duration.getStandardMinutes();
+    }
 
-			component.setName(key);
-			component.setRawValue(intervalValue);
-			component.setValue(intervalFormat);
-
-			return component;
-		}
-		return null;
-	}
-
-	/**
-	 * Extracts the value to be used to create localized duration value. By Default {@link org.joda.time.Duration#getStandardMinutes()} is used
-	 *
-	 * @param duration duration to get interval value from
-	 *
-	 * @return interval value
-	 */
-	protected long getIntervalValue(final Duration duration) {
-		return duration.getStandardMinutes();
-	}
-
-	/**
-	 * Creates localized {@link java.lang.String} value out of {@code intervalValue}. By default <b>minute</b> scoped
-	 * message is created
-	 *
-	 * @param intervalValue extracted duration from {@link #getIntervalValue(org.joda.time.Duration)}
-	 * @param locale        current locale
-	 *
-	 * @return localized value
-	 */
-	protected String getIntervalLocalizedValue(final long intervalValue, final Locale locale) {
-		return this.messageSource.getMessage("date.interval.minutes.format", new Object[]{intervalValue}, locale);
-	}
+    /**
+     * Creates localized {@link java.lang.String} value out of {@code intervalValue}. By default <b>minute</b> scoped
+     * message is created
+     *
+     * @param intervalValue extracted duration from {@link #getIntervalValue(org.joda.time.Duration)}
+     * @param locale        current locale
+     *
+     * @return localized value
+     */
+    protected String getIntervalLocalizedValue(final long intervalValue, final Locale locale) {
+        return this.messageSource.getMessage("date.interval.minutes.format", new Object[]{intervalValue}, locale);
+    }
 
 }

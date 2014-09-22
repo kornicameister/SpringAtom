@@ -37,77 +37,68 @@ import java.util.Locale;
  * @since 0.0.1
  */
 @WebConverter(types = {
-		String.class,
-		Boolean.class,
-		Number.class,
-		Enum.class
+        String.class,
+        Boolean.class,
+        Number.class,
+        Enum.class
 })
-public class PrimitivesWebConverter
-		extends AbstractWebConverter {
+class PrimitivesWebConverter
+        extends AbstractWebConverter {
 
-	/** {@inheritDoc} */
-	@Override
-	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
-		if (value == null) {
-			return null;
-		}
+    /** {@inheritDoc} */
+    @Override
+    protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+        if (value == null) {
+            return null;
+        }
 
-		GuiComponent component;
+        GuiComponent component;
 
-		if (ClassUtils.isAssignableValue(Boolean.class, value)) {
-			component = this.doConvertFromBoolean(key, value, persistable, webRequest);
-		} else if (ClassUtils.isAssignableValue(Enum.class, value)) {
-			component = this.doConvertFromEnum(key, value, persistable, webRequest);
-		} else if (ClassUtils.isAssignableValue(Number.class, value)) {
-			component = this.doConvertFromNumber(key, value, persistable, webRequest);
-		} else {
-			component = this.doConvertFromString(key, value, persistable, webRequest);
-		}
+        if (ClassUtils.isAssignableValue(Boolean.class, value)) {
+            component = this.doConvertFromBoolean(key, value, persistable, webRequest);
+        } else if (ClassUtils.isAssignableValue(Enum.class, value)) {
+            component = this.doConvertFromEnum(key, value, persistable, webRequest);
+        } else if (ClassUtils.isAssignableValue(Number.class, value)) {
+            component = this.doConvertFromNumber(key, value, persistable, webRequest);
+        } else {
+            component = this.doConvertFromString(key, value, persistable, webRequest);
+        }
 
-		return component;
-	}
+        return component;
+    }
 
-	protected GuiComponent doConvertFromString(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
-		final TextGuiComponent cmp = new TextGuiComponent();
-		cmp.setName(key);
-		cmp.setRawValue(value);
-		cmp.setValue(String.valueOf(value));
-		return cmp;
-	}
+    protected GuiComponent doConvertFromBoolean(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+        final Locale locale = LocaleContextHolder.getLocale();
+        final Boolean aBoolean = (Boolean) value;
+        String retValue;
+        if (aBoolean.equals(true)) {
+            retValue = this.messageSource.getMessage("boolean.true", locale);
+        } else {
+            retValue = this.messageSource.getMessage("boolean.false", locale);
+        }
+        final TextGuiComponent cmp = new TextGuiComponent();
+        cmp.setValue(retValue);
+        return cmp;
+    }
 
-	protected GuiComponent doConvertFromNumber(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
-		final TextGuiComponent cmp = new TextGuiComponent();
-		cmp.setName(key);
-		cmp.setRawValue(value);
-		cmp.setValue(String.valueOf(value));
-		return cmp;
-	}
+    protected GuiComponent doConvertFromEnum(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+        final Locale locale = LocaleContextHolder.getLocale();
+        final String retValue = this.messageSource.getMessage(((Enum<?>) value).name(), locale);
+        final TextGuiComponent cmp = new TextGuiComponent();
+        cmp.setValue(retValue);
+        return cmp;
+    }
 
-	protected GuiComponent doConvertFromBoolean(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
-		final Locale locale = LocaleContextHolder.getLocale();
-		final Boolean aBoolean = (Boolean) value;
-		String retValue;
-		if (aBoolean.equals(true)) {
-			retValue = this.messageSource.getMessage("boolean.true", locale);
-		} else {
-			retValue = this.messageSource.getMessage("boolean.false", locale);
-		}
-		final TextGuiComponent cmp = new TextGuiComponent();
-		cmp.setTooltip(retValue);
-		cmp.setValue(retValue);
-		cmp.setRawValue(value);
-		cmp.setName(key);
-		return cmp;
-	}
+    protected GuiComponent doConvertFromNumber(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+        final TextGuiComponent cmp = new TextGuiComponent();
+        cmp.setValue(String.valueOf(value));
+        return cmp;
+    }
 
-	protected GuiComponent doConvertFromEnum(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
-		final Locale locale = LocaleContextHolder.getLocale();
-		final String retValue = this.messageSource.getMessage(((Enum<?>) value).name(), locale);
-		final TextGuiComponent cmp = new TextGuiComponent();
-		cmp.setValue(retValue);
-		cmp.setRawValue(value);
-		cmp.setName(key);
-		return cmp;
-	}
+    protected GuiComponent doConvertFromString(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+        final TextGuiComponent cmp = new TextGuiComponent();
+        cmp.setValue(String.valueOf(value));
+        return cmp;
+    }
 
 }

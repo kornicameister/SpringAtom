@@ -18,24 +18,17 @@
 package org.agatom.springatom.webmvc.converters.du;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import org.agatom.springatom.server.model.beans.user.SUser;
+import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
 import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
-import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.request.AbstractComponentRequest;
-import org.agatom.springatom.web.component.core.request.ComponentRequestAttribute;
-import org.agatom.springatom.web.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
 import org.agatom.springatom.webmvc.converters.du.converters.ToInfoPageLinkWebConverter;
 import org.agatom.springatom.webmvc.converters.du.converters.ToTableRequestWebConverter;
 import org.agatom.springatom.webmvc.converters.du.exception.WebConverterException;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -54,6 +47,8 @@ import org.springframework.util.ClassUtils;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.EntityType;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -79,217 +74,145 @@ import java.util.concurrent.TimeUnit;
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @Description("WebDataGenericConverter is a generic converter exposing WebDataConverter")
-public class WebDataGenericConverter
-		implements GenericConverter,
-		ConditionalConverter {
-	private static final Logger                                        LOGGER            = Logger.getLogger(WebDataGenericConverter.class);
-	@Autowired
-	@Qualifier("springAtomConversionService")
-	private              FormattingConversionService                   conversionService = null;
-	@Autowired
-	private              ListableBeanFactory                           beanFactory       = null;
-	@Autowired
-	private EntityDescriptors entityDescriptors = null;
-	private              Map<WebDataConverterKey, WebDataConverter<?>> converterMap      = Maps.newHashMap();
+class WebDataGenericConverter
+        implements GenericConverter,
+        ConditionalConverter {
+    private static final Logger                                        LOGGER            = Logger.getLogger(WebDataGenericConverter.class);
+    @Autowired
+    @Qualifier("springAtomConversionService")
+    private              FormattingConversionService                   conversionService = null;
+    @Autowired
+    private              Map<String, WebDataConverter<?>>              converters        = null;
+    @Autowired
+    private              EntityDescriptors                             entityDescriptors = null;
+    private              Map<WebDataConverterKey, WebDataConverter<?>> converterMap      = null;
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-		final Class<?> sType = sourceType.getObjectType();
-		final Class<?> tType = targetType.getObjectType();
-		return ClassUtils.isAssignable(ConvertibleValueWrapper.class, sType) && ClassUtils.isAssignable(Object.class, tType);
-	}
+    /** {@inheritDoc} */
+    @Override
+    public boolean matches(final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+        final Class<?> sType = sourceType.getObjectType();
+        final Class<?> tType = targetType.getObjectType();
+        return ClassUtils.isAssignable(ConvertibleValueWrapper.class, sType) && ClassUtils.isAssignable(Object.class, tType);
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public Set<ConvertiblePair> getConvertibleTypes() {
-		return Sets.newHashSet(new ConvertiblePair(ConvertibleValueWrapper.class, Object.class));
-	}
+    /** {@inheritDoc} */
+    @Override
+    public Set<ConvertiblePair> getConvertibleTypes() {
+        return Sets.newHashSet(new ConvertiblePair(ConvertibleValueWrapper.class, Object.class));
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	@SuppressWarnings("unchecked")
-	public Object convert(final Object source, final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-		Assert.isInstanceOf(ConvertibleValueWrapper.class, source, "Source is not WebData");
-		final ConvertibleValueWrapper webData = (ConvertibleValueWrapper) source;
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings("unchecked")
+    public Object convert(final Object source, final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+        Assert.isInstanceOf(ConvertibleValueWrapper.class, source, "Source is not WebData");
+        final ConvertibleValueWrapper webData = (ConvertibleValueWrapper) source;
 
-		LOGGER.debug(String.format("Converting webData %s", webData.getKey()));
+        LOGGER.debug(String.format("Converting webData %s", webData.getKey()));
 
-		final ComponentDataRequest request = webData.getRequest();
-		final Object value = webData.getValue();
-		final Persistable<?> persistable = webData.getSource();
-		final String key = webData.getKey();
-		final Class<?> valueType = ClassUtils.getUserClass(value != null ? value.getClass() : Void.class);
-		AttributeDisplayAs displayAs = this.getValueRenderType(((AbstractComponentRequest) webData.getRequest().getComponentRequest()).getAttributes(), key);
+        final Object value = webData.getValue();
+        final Persistable<?> persistable = webData.getSource();
+        final String key = webData.getKey();
+        final Class<?> valueType = ClassUtils.getUserClass(value != null ? value.getClass() : Void.class);
 
-		String localKey = null;
-		switch ((displayAs = this.getDisplayAs(displayAs, value, persistable))) {
-			case LINK_ATTRIBUTE:
-			case INFOPAGE_ATTRIBUTE:
-				localKey = ToInfoPageLinkWebConverter.SELECTOR;
-				break;
-			case TABLE_ATTRIBUTE:
-				localKey = ToTableRequestWebConverter.SELECTOR;
-				break;
-			case VALUE_ATTRIBUTE:
-				localKey = key;
-				break;
-		}
+        final Map<WebDataConverterKey, WebDataConverter<?>> capable = this.getWebConverterMap(key, persistable, valueType);
 
-		LOGGER.trace(String.format("For %s using key %s to pick converter", displayAs, localKey));
+        if (capable.size() > 1) {
+            final String message = String.format("Unambiguous web convert choice, for key=%s, type=%s found %d converters", key, value, capable.size());
+            LOGGER.warn(message);
+            return null;
+        } else if (capable.size() == 0) {
+            final String message = String.format("No web convert choice, for key=%s, type=%s found %d converters", key, value, capable.size());
+            LOGGER.warn(message);
+            return null;
+        }
 
-		final Map<WebDataConverterKey, WebDataConverter<?>> capable = this.pickUpCapable(localKey, valueType);
+        final WebDataConverter<?> next = capable.values().iterator().next();
+        try {
+            final Object data = next.convert(key, value, persistable, webData.getRequest());
+            LOGGER.debug(String.format("Converted for key=%s to data=%s", key, data));
+            return data;
+        } catch (Exception exp) {
+            LOGGER.fatal(String.format("Failure in conversion for key >> %s", key));
+            throw new WebConverterException(String.format("Failure in conversion for key >> %s", key), exp).setConversionKey(key).setConversionValue(value);
+        }
 
-		if (capable.size() > 1) {
-			final String message = String.format("Unambiguous web convert choice, for key=%s, type=%s found %d converters", key, value, capable.size());
-			LOGGER.warn(message);
-			return null;
-		} else if (capable.size() == 0) {
-			final String message = String.format("No web convert choice, for key=%s, type=%s found %d converters", key, value, capable.size());
-			LOGGER.warn(message);
-			return null;
-		}
+    }
 
-		final WebDataConverter<?> next = capable.values().iterator().next();
-		try {
-			final Object data = next.convert(key, value, persistable, request);
-			LOGGER.debug(String.format("Converted for key=%s to data=%s", key, data));
-			return data;
-		} catch (Exception exp) {
-			LOGGER.fatal(String.format("Failure in conversion for key >> %s", key));
-			throw new WebConverterException(String.format("Failure in conversion for key >> %s", key), exp).setConversionKey(key).setConversionValue(value);
-		}
+    private Map<WebDataConverterKey, WebDataConverter<?>> getWebConverterMap(String key, final Persistable<?> persistable, final Class<?> valueType) {
+        final String localKey = this.getConverterKey(key, persistable, valueType);
+        FluentIterable<WebDataConverterKey> map = FluentIterable.from(this.converterMap.keySet())
+                .filter(new Predicate<WebDataConverterKey>() {
+                    @Override
+                    public boolean apply(@Nullable final WebDataConverterKey input) {
+                        return input != null && input.getKey().equals(localKey);
+                    }
+                });
+        if (map.isEmpty()) {
+            map = FluentIterable.from(this.converterMap.keySet())
+                    .filter(new Predicate<WebDataConverterKey>() {
+                        @Override
+                        public boolean apply(@Nullable final WebDataConverterKey input) {
+                            return input != null && input.capableOfType(valueType);
+                        }
+                    });
+        }
+        return map.toMap(new Function<WebDataConverterKey, WebDataConverter<?>>() {
+            @Nullable
+            @Override
+            public WebDataConverter<?> apply(@Nullable final WebDataConverterKey input) {
+                return converterMap.get(input);
+            }
+        });
+    }
 
-	}
+    private String getConverterKey(final String key, final Persistable<?> persistable, final Class<?> valueType) {
+        final EntityDescriptor<? extends Persistable> entityDescriptor = this.entityDescriptors.getDescriptor(persistable.getClass());
+        final EntityType<? extends Persistable> entityType = entityDescriptor.getEntityType();
 
-	private AttributeDisplayAs getDisplayAs(AttributeDisplayAs displayAs, final Object value, final Persistable<?> source) {
-		Assert.notNull(source, "Source persistable can not be null");
-		if (value == null) {
-			displayAs = AttributeDisplayAs.VALUE_ATTRIBUTE;
-		}
-		if (displayAs == null) {
-			if (ClassUtils.isAssignableValue(SUser.class, value)) {
-				return AttributeDisplayAs.INFOPAGE_ATTRIBUTE;
-			}
-		}
-		// if still not found, use default VALUE_ATTRIBUTE
-		if (displayAs == null) {
-			LOGGER.warn(String.format("For value=[ %s ] could not determine AttributeDisplayAs", value));
-			displayAs = AttributeDisplayAs.VALUE_ATTRIBUTE;
-		}
-		return displayAs;
-	}
+        // 1. Check if it is an multi association from persistable
+        Attribute<?, ?> attribute = null;
+        try {
+            attribute = entityType.getAttribute(key);
+        } catch (Exception ignore) {
+        }
+        if (attribute == null) {
+            return key;
+        }
+        final Attribute.PersistentAttributeType attributeType = attribute.getPersistentAttributeType();
+        if (attribute.isCollection() || Attribute.PersistentAttributeType.ONE_TO_MANY.equals(attributeType)) {
+            return ToTableRequestWebConverter.SELECTOR;
+        }
+        // 2. If not, perhaps it is one-to-many from persistable
+        if (attributeType.equals(Attribute.PersistentAttributeType.MANY_TO_ONE) || attributeType.equals(Attribute.PersistentAttributeType.ONE_TO_ONE)) {
+            return ToInfoPageLinkWebConverter.SELECTOR;
+        }
 
-	private AttributeDisplayAs getValueRenderType(final Set<ComponentRequestAttribute> attributes, final String key) {
-		final Optional<ComponentRequestAttribute> match = FluentIterable.from(attributes).firstMatch(new Predicate<ComponentRequestAttribute>() {
-			@Override
-			public boolean apply(@Nullable final ComponentRequestAttribute input) {
-				return input != null && input.getPath().equals(key);
-			}
-		});
-		final ComponentRequestAttribute attribute = match.get();
-		try {
-			return AttributeDisplayAs.valueOf(attribute.getType());
-		} catch (Exception exp) {
-			return null;
-		}
-	}
+        return key;
+    }
 
-	private Map<WebDataConverterKey, WebDataConverter<?>> pickUpCapable(final String key, final Class<?> valueType) {
-		FluentIterable<WebDataConverterKey> map = FluentIterable.from(this.converterMap.keySet())
-				.filter(new Predicate<WebDataConverterKey>() {
-					@Override
-					public boolean apply(@Nullable final WebDataConverterKey input) {
-						return input != null && input.key.equals(key);
-					}
-				});
-		if (map.isEmpty()) {
-			map = FluentIterable.from(this.converterMap.keySet())
-					.filter(new Predicate<WebDataConverterKey>() {
-						@Override
-						public boolean apply(@Nullable final WebDataConverterKey input) {
-							return input != null && input.capableOfType(valueType);
-						}
-					});
-		}
-		return map.toMap(new Function<WebDataConverterKey, WebDataConverter<?>>() {
-			@Nullable
-			@Override
-			public WebDataConverter<?> apply(@Nullable final WebDataConverterKey input) {
-				return converterMap.get(input);
-			}
-		});
-	}
+    /**
+     * Registers this {@link org.agatom.springatom.webmvc.converters.du.WebDataGenericConverter} as {@link org.springframework.core.convert.converter.GenericConverter}
+     * in {@link org.springframework.format.support.FormattingConversionService}
+     */
+    @PostConstruct
+    private void register() {
+        LOGGER.trace(String.format("Registering in %d converters", converters.size()));
 
-	/**
-	 * Registers this {@link org.agatom.springatom.webmvc.converters.du.WebDataGenericConverter} as {@link org.springframework.core.convert.converter.GenericConverter}
-	 * in {@link org.springframework.format.support.FormattingConversionService}
-	 */
-	@PostConstruct
-	private void register() {
-		final Map<String, Object> converters = this.beanFactory.getBeansWithAnnotation(WebConverter.class);
+        final long startTime = System.nanoTime();
 
-		LOGGER.trace(String.format("Registering in %d converters", converters.size()));
+        this.conversionService.addConverter(this);
+        this.converterMap = Maps.newHashMapWithExpectedSize(this.converters.size());
+        for (final String converterId : converters.keySet()) {
+            final WebDataConverter<?> converter = this.converters.get(converterId);
+            final WebConverter annotation = converter.getClass().getAnnotation(WebConverter.class);
+            final WebDataConverterKey key = new WebDataConverterKey(converterId, annotation.key(), annotation.types());
 
-		final long startTime = System.nanoTime();
+            LOGGER.trace(String.format("Registering WebDataConverter with id=%s, key=%s", converterId, key));
 
-		this.conversionService.addConverter(this);
-		for (final String converterId : converters.keySet()) {
-			final WebDataConverter<?> converter = (WebDataConverter<?>) this.beanFactory.getBean(converterId);
-			final WebConverter annotation = converter.getClass().getAnnotation(WebConverter.class);
-			final WebDataConverterKey key = new WebDataConverterKey(annotation.key(), annotation.types());
+            this.converterMap.put(key, converter);
+        }
 
-			LOGGER.trace(String.format("Registering WebDataConverter with id=%s, key=%s", converterId, key));
-
-			this.converterMap.put(key, converter);
-		}
-
-		LOGGER.debug(String.format("Registration completed in %dms", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)));
-	}
-
-	/**
-	 * Used in {@link java.util.Map} as the key for which converter will be picked up
-	 */
-	private class WebDataConverterKey {
-		private final String        key;
-		private final Set<Class<?>> types;
-
-		private WebDataConverterKey(final String key, final Class<?>... types) {
-			this.key = key;
-			this.types = Sets.newHashSet(types);
-		}
-
-		public boolean capableOfType(final Class<?> valueType) {
-			for (Class<?> type : this.types) {
-				if (ClassUtils.isAssignable(type, valueType)) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hashCode(key, types);
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			WebDataConverterKey that = (WebDataConverterKey) o;
-
-			return Objects.equal(this.key, that.key) &&
-					Objects.equal(this.types, that.types);
-		}
-
-		@Override
-		public String toString() {
-			return Objects.toStringHelper(this)
-					.add("key", key)
-					.add("types", types)
-					.toString();
-		}
-	}
+        LOGGER.debug(String.format("Registration completed in %dms", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)));
+    }
 }

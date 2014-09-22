@@ -17,21 +17,27 @@
 
 package org.agatom.springatom.webmvc.converters.du.converters;
 
+import org.agatom.springatom.server.model.oid.SOidService;
 import org.agatom.springatom.server.model.types.PersistentIdentity;
+import org.agatom.springatom.web.component.core.builders.ComponentProduces;
+import org.agatom.springatom.web.component.core.context.ComponentContextFactory;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.infopages.InfoPageNotFoundException;
-import org.agatom.springatom.web.component.infopages.link.InfoPageLinkHelper;
+import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
+import org.agatom.springatom.web.component.infopages.mapping.InfoPageMappingService;
+import org.agatom.springatom.webmvc.controllers.components.SVComponentController;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
-import org.agatom.springatom.webmvc.converters.du.component.IconGuiComponent;
-import org.agatom.springatom.webmvc.converters.du.component.LinkGuiComponent;
+import org.agatom.springatom.webmvc.converters.du.component.InfoPageLinkGuiComponent;
 import org.agatom.springatom.webmvc.converters.du.component.TextGuiComponent;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
-import org.springframework.hateoas.Link;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 import java.io.Serializable;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * {@code ToInfoPageLinkWebConverter}
@@ -42,46 +48,53 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-@WebConverter(key = ToInfoPageLinkWebConverter.SELECTOR)
+@WebConverter(key = ToInfoPageLinkWebConverter.SELECTOR, types = Persistable.class)
 public class ToInfoPageLinkWebConverter
-		extends AbstractWebConverter {
-	/** Constant <code>SELECTOR="infoPageLink"</code> */
-	public static final  String             SELECTOR   = "infoPageLink";
-	private static final Logger             LOGGER     = Logger.getLogger(ToInfoPageLinkWebConverter.class);
-	@Autowired
-	private              InfoPageLinkHelper linkHelper = null;
+        extends AbstractWebConverter {
+    /** Constant <code>SELECTOR="infoPageLink"</code> */
+    public static final  String                     SELECTOR          = "infoPageLink";
+    private static final Logger                     LOGGER            = Logger.getLogger(ToInfoPageLinkWebConverter.class);
+    @Autowired
+    private              ComponentBuilderRepository builderRepository = null;
+    @Autowired
+    private              InfoPageMappingService     mappingService    = null;
+    @Autowired
+    private              ComponentContextFactory    contextFactory    = null;
+    @Autowired
+    private              SOidService                oidService        = null;
 
-	/** {@inheritDoc} */
-	@Override
-	@SuppressWarnings("unchecked")
-	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
-		if (!ClassUtils.isAssignableValue(Persistable.class, value)) {
-			return null;
-		}
-		try {
-			final String linkLabel = this.getLinkLabel(key, value, persistable);
-			final Link link = this.linkHelper.getInfoPageLink((Persistable<Serializable>) value).withRel(linkLabel);
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings("unchecked")
+    protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+        if (!ClassUtils.isAssignableValue(Persistable.class, value)) {
+            return null;
+        }
 
-			final LinkGuiComponent linkGuiComponent = new LinkGuiComponent();
+        try {
+            final String linkLabel = this.getLinkLabel(key, value, persistable);
+            final String mappedRel = this.mappingService.getMappedRel((Class<Persistable<?>>) ClassUtils.getUserClass(value));
+            final String builderId = this.builderRepository.getBuilderId(ClassUtils.getUserClass(value), ComponentProduces.PAGE_COMPONENT);
+            Assert.hasText(builderId, "BuilderID not found");
 
-			linkGuiComponent.setValue(link.getHref());
-			linkGuiComponent.setRawValue(link);
-			linkGuiComponent.setLinkLabel(linkLabel);
-			linkGuiComponent.setName(key);
-			linkGuiComponent.setIcon(new IconGuiComponent().setCls("fa fa-link fa-fw"));
+            final InfoPageLinkGuiComponent cmp = new InfoPageLinkGuiComponent();
+            cmp.setHref(linkTo(methodOn(SVComponentController.class).onComponentRequest(builderId, null, null)).withRel("builder"));
+            cmp.setRel(mappedRel);
+            cmp.setLabel(linkLabel);
+            cmp.setContext(this.contextFactory.buildContext((Persistable<?>) value));
+            cmp.setOid(this.oidService.getOid(value));
 
-			return linkGuiComponent;
-		} catch (InfoPageNotFoundException exp) {
-			LOGGER.error(String.format("Failed to create InfoPage link component for key=%s,value=%s", key, value), exp);
-			final TextGuiComponent component = new TextGuiComponent();
-			component.setRawValue(((Persistable<Serializable>) value).getId());
-			component.setValue(((PersistentIdentity) value).getIdentity());
-			component.addDynamicProperty("exception", exp.getMessage());
-			return component;
-		}
-	}
+            return cmp;
+        } catch (Exception exp) {
+            LOGGER.warn(String.format("Failed to find InfoPage for key=%s,value=%s", key, value), exp);
+            final TextGuiComponent component = new TextGuiComponent();
+            component.setValue(((PersistentIdentity) value).getIdentity());
+            return component;
+        }
 
-	protected String getLinkLabel(final String key, final Object value, final Persistable<?> persistable) {
-		return ((PersistentIdentity) value).getIdentity();
-	}
+    }
+
+    protected String getLinkLabel(final String key, final Object value, final Persistable<?> persistable) {
+        return ((PersistentIdentity) value).getIdentity();
+    }
 }

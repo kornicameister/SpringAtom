@@ -19,7 +19,6 @@ package org.agatom.springatom.webmvc.converters.du.converters;
 
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
-import org.agatom.springatom.webmvc.converters.du.component.IconGuiComponent;
 import org.agatom.springatom.webmvc.converters.du.component.TextGuiComponent;
 import org.springframework.data.domain.Persistable;
 
@@ -32,30 +31,28 @@ import org.springframework.data.domain.Persistable;
  * @since 0.0.1
  */
 @WebConverter(key = "id")
-public class PrimaryKeyWebConverter
-		extends AbstractWebConverter {
+class PrimaryKeyWebConverter
+        extends AbstractWebConverter {
 
-	/** {@inheritDoc} */
-	@Override
-	@SuppressWarnings("unchecked")
-	protected TextGuiComponent doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
-		final TextGuiComponent component = new TextGuiComponent();
-		component.setValue(this.getPrimaryKeyValue(value, persistable));
-		component.setRawValue(value);
-		component.setIcon(new IconGuiComponent().setCls("fa fa-key fa-fw"));
-		return component;
-	}
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings("unchecked")
+    protected TextGuiComponent doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+        final TextGuiComponent component = new TextGuiComponent();
+        component.setValue(this.getPrimaryKeyValue(value, persistable));
+        return component;
+    }
 
-	/**
-	 * Returns primary key value. If {@code value} is null, method tries to extract the value from {@link org.springframework.data.domain.Persistable#getId()}
-	 *
-	 * @param value       current "id" value
-	 * @param persistable persistable having the value
-	 *
-	 * @return primary key value
-	 */
-	protected String getPrimaryKeyValue(final Object value, final Persistable<?> persistable) {
-		return String.valueOf(value != null ? value : persistable.getId());
-	}
+    /**
+     * Returns primary key value. If {@code value} is null, method tries to extract the value from {@link org.springframework.data.domain.Persistable#getId()}
+     *
+     * @param value       current "id" value
+     * @param persistable persistable having the value
+     *
+     * @return primary key value
+     */
+    protected String getPrimaryKeyValue(final Object value, final Persistable<?> persistable) {
+        return String.valueOf(value != null ? value : persistable.getId());
+    }
 
 }

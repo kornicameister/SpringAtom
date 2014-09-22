@@ -25,16 +25,11 @@ package org.agatom.springatom.webmvc.converters.du.component;
  * @since 0.0.1
  */
 public class TextGuiComponent
-		extends AbstractGuiComponent<String> {
-	private static final long             serialVersionUID = 1733628750470095953L;
-	private              IconGuiComponent icon             = null;
+        extends AbstractGuiComponent<String> {
+    private static final long serialVersionUID = 1733628750470095953L;
 
-	public IconGuiComponent getIcon() {
-		return icon;
-	}
-
-	public void setIcon(final IconGuiComponent icon) {
-		this.icon = icon;
-	}
-
+    @Override
+    public RenderAs getRenderAs() {
+        return RenderAs.TEXT;
+    }
 }

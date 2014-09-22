@@ -20,7 +20,6 @@ package org.agatom.springatom.webmvc.converters.du.converters;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
 import org.agatom.springatom.webmvc.converters.du.component.DateTimeGuiComponent;
-import org.agatom.springatom.webmvc.converters.du.component.IconGuiComponent;
 import org.agatom.springatom.webmvc.converters.du.component.TextGuiComponent;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
@@ -46,36 +45,33 @@ import java.util.Date;
  * @since 0.0.1
  */
 @WebConverter(types = {DateTime.class, LocalDateTime.class, Date.class})
-public class DateTimeWebConverter
-		extends AbstractWebConverter {
+class DateTimeWebConverter
+        extends AbstractWebConverter {
 
-	/** {@inheritDoc} */
-	@Override
-	protected TextGuiComponent doConvert(final String key, final Object value, final Persistable persistable, final ComponentDataRequest webRequest) {
-		String data = null;
+    /** {@inheritDoc} */
+    @Override
+    protected TextGuiComponent doConvert(final String key, final Object value, final Persistable persistable, final ComponentDataRequest webRequest) {
+        String data = null;
 
-		final String format = this.messageSource.getMessage("data.format.value", LocaleContextHolder.getLocale());
+        final String format = this.messageSource.getMessage("data.format.value", LocaleContextHolder.getLocale());
 
-		if (ClassUtils.isAssignableValue(DateTime.class, value) || ClassUtils.isAssignableValue(LocalDateTime.class, value)) {
-			if (ClassUtils.isAssignableValue(DateTime.class, value)) {
-				data = ((DateTime) value).toString(format);
-			} else {
-				data = ((LocalDateTime) value).toString(format);
-			}
-		} else if (ClassUtils.isAssignableValue(Date.class, value)) {
-			final Date date = (Date) value;
-			data = DateTimeFormat.forPattern(format).print(date.getTime());
-		}
+        if (ClassUtils.isAssignableValue(DateTime.class, value) || ClassUtils.isAssignableValue(LocalDateTime.class, value)) {
+            if (ClassUtils.isAssignableValue(DateTime.class, value)) {
+                data = ((DateTime) value).toString(format);
+            } else {
+                data = ((LocalDateTime) value).toString(format);
+            }
+        } else if (ClassUtils.isAssignableValue(Date.class, value)) {
+            final Date date = (Date) value;
+            data = DateTimeFormat.forPattern(format).print(date.getTime());
+        }
 
-		final DateTimeGuiComponent component = new DateTimeGuiComponent();
+        final DateTimeGuiComponent component = new DateTimeGuiComponent();
 
-		component.setIcon(new IconGuiComponent().setCls("fa fa-calendar fa-fw"));
-		component.setValue(data);
-		component.setRawValue(value);
-		component.setName(key);
-		component.setFormat(format);
-		component.setLocale(LocaleContextHolder.getLocale());
+        component.setValue(data);
+        component.setFormat(format);
+        component.setLocale(LocaleContextHolder.getLocale());
 
-		return component;
-	}
+        return component;
+    }
 }

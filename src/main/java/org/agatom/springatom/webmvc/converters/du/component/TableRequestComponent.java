@@ -17,21 +17,21 @@
 
 package org.agatom.springatom.webmvc.converters.du.component;
 
-import java.io.Serializable;
+import org.agatom.springatom.web.component.table.meta.TableRenderInformation;
 
 /**
- * <small>Class is a part of <b>SpringAtom</b> and was created at 17.06.14</small>
+ * <p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-09-21</small>
+ * </p>
  *
- * @author kornicameister
+ * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface GuiComponent<T extends Serializable>
-        extends Serializable {
-    static final String WHITE_SPACE = "&nbsp;";
-    static final String NEW_LINE    = "</br>";
-
-    T getValue();
-
-    RenderAs getRenderAs();
+public class TableRequestComponent
+        extends AbstractGuiComponent<TableRenderInformation> {
+    @Override
+    public RenderAs getRenderAs() {
+        return RenderAs.TABLE;
+    }
 }

@@ -17,7 +17,7 @@
 
 package org.agatom.springatom.webmvc.converters.du.component;
 
-import com.google.common.base.Objects;
+import org.agatom.springatom.web.action.model.actions.LinkAction;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 01.06.14</small>
@@ -27,65 +27,11 @@ import com.google.common.base.Objects;
  * @since 0.0.1
  */
 public class LinkGuiComponent
-		extends TextGuiComponent {
-	private static final long   serialVersionUID = -1536553355416884697L;
-	private              String linkLabel        = null;
-	private              String target           = "_self";
-	private              String download         = null;
+        extends AbstractGuiComponent<LinkAction> {
+    private static final long serialVersionUID = -1536553355416884697L;
 
-	/**
-	 * <p>Getter for the field <code>linkLabel</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String getLinkLabel() {
-		return linkLabel;
-	}
-
-	/**
-	 * <p>Setter for the field <code>linkLabel</code>.</p>
-	 *
-	 * @param linkLabel a {@link java.lang.String} object.
-	 *
-	 * @return a {@link LinkGuiComponent} object.
-	 */
-	public LinkGuiComponent setLinkLabel(final String linkLabel) {
-		this.linkLabel = linkLabel;
-		return this;
-	}
-
-	public String getTarget() {
-		return target;
-	}
-
-	public LinkGuiComponent setTarget(final String target) {
-		this.target = target;
-		return this;
-	}
-
-	public String getDownload() {
-		return download;
-	}
-
-	public LinkGuiComponent setDownload(final String download) {
-		this.download = download;
-		return this;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(linkLabel, super.hashCode());
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		LinkGuiComponent that = (LinkGuiComponent) o;
-
-		return Objects.equal(this.linkLabel, that.linkLabel) && super.equals(o);
-	}
+    @Override
+    public RenderAs getRenderAs() {
+        return RenderAs.LINK;
+    }
 }

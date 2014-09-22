@@ -17,13 +17,10 @@
 
 package org.agatom.springatom.webmvc.converters.du.component;
 
-import com.google.common.collect.Lists;
-import org.agatom.springatom.web.component.core.elements.DefaultComponent;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 17.06.14</small>
@@ -33,81 +30,38 @@ import java.util.List;
  * @since 0.0.1
  */
 abstract public class AbstractGuiComponent<T extends Serializable>
-		extends DefaultComponent
-		implements GuiComponent {
-	private static final long         serialVersionUID = -2742680241932145098L;
-	protected            String       name             = null;
-	protected            Object       rawValue         = null;
-	protected            T            value            = null;
-	protected            String       tooltip          = null;
-	protected            boolean      multiValued      = false;    // true if there is more than one value
-	private              List<String> styles           = null;
+        implements GuiComponent<T> {
+    private static final long serialVersionUID = -2742680241932145098L;
+    protected            T    value            = null;
 
-	public String getName() {
-		return this.name;
-	}
+    @Override
+    public T getValue() {
+        return value;
+    }
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+    public void setValue(final T value) {
+        this.value = value;
+    }
 
-	public boolean isMultiValued() {
-		return multiValued;
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
+    }
 
-	public void setMultiValued(final boolean multiValued) {
-		this.multiValued = multiValued;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	public String getTooltip() {
-		return tooltip;
-	}
+        AbstractGuiComponent that = (AbstractGuiComponent) o;
 
-	public void setTooltip(final String tooltip) {
-		this.tooltip = tooltip;
-	}
+        return Objects.equal(this.value, that.value);
+    }
 
-	public T getValue() {
-		return value;
-	}
-
-	public void setValue(final T value) {
-		this.value = value;
-	}
-
-	@Override
-	public Object getRawValue() {
-		return this.rawValue;
-	}
-
-	public void setRawValue(final Object rawValue) {
-		this.rawValue = rawValue;
-	}
-
-	public List<String> getStyles() {
-		return styles;
-	}
-
-	public void setStyles(final List<String> styles) {
-		this.styles = styles;
-	}
-
-	public void addStyle(final String style) {
-		if (!StringUtils.hasText(style)) {
-			return;
-		}
-		if (this.styles == null) {
-			this.styles = Lists.newArrayList();
-		}
-		this.styles.add(style);
-	}
-
-	/**
-	 * To be reimplemented by subclass. By default returns short and decapitalized class name
-	 *
-	 * @return xtype for ExtJS
-	 */
-	public String getType() {
-		return StringUtils.uncapitalize(ClassUtils.getShortName(this.getClass()));
-	}
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("value", value)
+                .toString();
+    }
 }

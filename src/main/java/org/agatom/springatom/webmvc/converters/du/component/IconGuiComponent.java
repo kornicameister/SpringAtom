@@ -17,6 +17,8 @@
 
 package org.agatom.springatom.webmvc.converters.du.component;
 
+import java.io.Serializable;
+
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 17.06.14</small>
  *
@@ -25,36 +27,26 @@ package org.agatom.springatom.webmvc.converters.du.component;
  * @since 0.0.1
  */
 public class IconGuiComponent
-		implements GuiComponent {
-	private static final long   serialVersionUID = 3802580675439239804L;
-	private              String cls              = null;
-	private              String path             = null;
-	private              String autoEl           = null;
+        implements Serializable {
+    private static final long   serialVersionUID = 3802580675439239804L;
+    private              String cls              = null;
+    private              String path             = null;
 
-	public String getCls() {
-		return cls;
-	}
+    public String getCls() {
+        return cls;
+    }
 
-	public IconGuiComponent setCls(final String cls) {
-		this.cls = cls;
-		return this;
-	}
+    public IconGuiComponent setCls(final String cls) {
+        this.cls = cls;
+        return this;
+    }
 
-	public String getPath() {
-		return path;
-	}
+    public String getPath() {
+        return path;
+    }
 
-	public IconGuiComponent setPath(final String path) {
-		this.path = path;
-		return this;
-	}
-
-	public String getAutoEl() {
-		return this.cls != null ? "i" : "img";
-	}
-
-	@Override
-	public Object getRawValue() {
-		return this.cls != null ? this.cls : this.path;
-	}
+    public IconGuiComponent setPath(final String path) {
+        this.path = path;
+        return this;
+    }
 }

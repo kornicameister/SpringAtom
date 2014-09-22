@@ -29,15 +29,15 @@ import org.springframework.data.domain.Persistable;
  * @since 0.0.1
  */
 @WebConverter(key = "idVersion")
-public class PrimaryVersionKeyWebConverter
-		extends PrimaryKeyWebConverter {
+class PrimaryVersionKeyWebConverter
+        extends PrimaryKeyWebConverter {
 
-	/**
-	 * Returns combined {@link org.springframework.data.domain.Persistable#getId()} and {@link org.agatom.springatom.server.model.types.PersistentVersionedBean#getVersion()}
-	 */
-	@Override
-	protected String getPrimaryKeyValue(final Object value, final Persistable<?> persistable) {
-		return String.format("%s [%s]", persistable.getId(), ((PersistentVersionedBean) persistable).getVersion());
-	}
+    /**
+     * Returns combined {@link org.springframework.data.domain.Persistable#getId()} and {@link org.agatom.springatom.server.model.types.PersistentVersionedBean#getVersion()}
+     */
+    @Override
+    protected String getPrimaryKeyValue(final Object value, final Persistable<?> persistable) {
+        return String.format("%s [%s]", persistable.getId(), ((PersistentVersionedBean) persistable).getVersion());
+    }
 
 }

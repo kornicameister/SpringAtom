@@ -20,27 +20,26 @@ package org.agatom.springatom.webmvc.converters.du.converters;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Sets;
 import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
+import org.agatom.springatom.server.model.oid.SOidService;
 import org.agatom.springatom.web.component.core.EmbeddableComponent;
 import org.agatom.springatom.web.component.core.builders.ComponentProduces;
-import org.agatom.springatom.web.component.core.context.ComponentContext;
 import org.agatom.springatom.web.component.core.context.ComponentContextFactory;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.core.elements.ContentComponent;
 import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
 import org.agatom.springatom.web.component.infopages.elements.InfoPageAttributeComponent;
 import org.agatom.springatom.web.component.infopages.elements.InfoPagePanelComponent;
-import org.agatom.springatom.webmvc.controllers.components.SVComponentsDataController;
-import org.agatom.springatom.webmvc.controllers.components.SVComponentsDefinitionController;
+import org.agatom.springatom.web.component.table.meta.TableRenderInformation;
+import org.agatom.springatom.webmvc.controllers.components.SVComponentController;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
-import org.agatom.springatom.webmvc.converters.du.component.AbstractGuiComponent;
+import org.agatom.springatom.webmvc.converters.du.component.TableRequestComponent;
 import org.agatom.springatom.webmvc.converters.du.component.TextGuiComponent;
 import org.agatom.springatom.webmvc.converters.du.exception.WebConverterException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
-import org.springframework.hateoas.Link;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -49,14 +48,10 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.PluralAttribute;
 import java.io.Serializable;
 import java.util.Map;
-import java.util.Set;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * {@link org.agatom.springatom.webmvc.converters.du.converters.ToTableRequestWebConverter}
- * crates instance of {@link org.agatom.springatom.webmvc.converters.du.converters.ToTableRequestWebConverter.TableRequest} component.
+ * crates instance of {@link org.agatom.springatom.webmvc.converters.du.component.TableRequestComponent} component.
  * Provides information required to make a request to retrieve table configuration and data.
  * <small>Class is a part of <b>SpringAtom</b> and was created at 01.06.14</small>
  *
@@ -66,194 +61,143 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
  */
 @WebConverter(key = ToTableRequestWebConverter.SELECTOR)
 public class ToTableRequestWebConverter
-		extends AbstractWebConverter {
-	/** Constant <code>SELECTOR="tableRequestInitMaker"</code> */
-	public static final  String                     SELECTOR                = "tableRequestInitMaker";
-	private static final Logger                     LOGGER                  = Logger.getLogger(ToTableRequestWebConverter.class);
-	@Autowired
-	private              ComponentBuilderRepository builderRepository       = null;
-	@Autowired
-	private              ComponentContextFactory    componentContextFactory = null;
+        extends AbstractWebConverter {
+    /** Constant <code>SELECTOR="tableRequestInitMaker"</code> */
+    public static final  String                     SELECTOR                = "tableRequestInitMaker";
+    private static final Logger                     LOGGER                  = Logger.getLogger(ToTableRequestWebConverter.class);
+    @Autowired
+    protected            ComponentBuilderRepository builderRepository       = null;
+    @Autowired
+    protected            ComponentContextFactory    componentContextFactory = null;
+    @Autowired
+    protected            SOidService                oidService              = null;
 
-	/** {@inheritDoc} */
-	@Override
-	protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) throws Exception {
-		LOGGER.trace(String.format("doConverter(key=%s,value=%s)", key, value));
-		if (value == null) {
-			return null;
-		}
+    /** {@inheritDoc} */
+    @Override
+    protected Serializable doConvert(final String key, final Object value, final Persistable<?> persistable, final ComponentDataRequest webRequest) throws Exception {
+        LOGGER.trace(String.format("doConverter(key=%s,value=%s)", key, value));
 
-		final String builderId = this.getBuilderId(key, persistable, webRequest);
+        final String builderId = this.getBuilderId(key, persistable, webRequest);
 
-		if (StringUtils.hasText(builderId)) {
-			final TableRequest request = new TableRequest();
+        if (StringUtils.hasText(builderId)) {
+            final TableRequestComponent request = new TableRequestComponent();
+            final TableRenderInformation renderInformation = new TableRenderInformation();
 
-			request.setLabel(this.getLabel(key, persistable));
-			request.setBuilderId(builderId)
-					.setConfigurationUrl(linkTo(methodOn(SVComponentsDefinitionController.class).onTableConfigRequest(builderId, null)).withRel("configuration"))
-					.setDataUrl(linkTo(methodOn(SVComponentsDataController.class).onTableDataRequest(builderId, null, null)).withSelfRel().withRel("data"))
-					.setValue(this.componentContextFactory.buildContext(persistable));
+            renderInformation.setBuilderId(builderId)
+                    .setUrl(ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(SVComponentController.class).onComponentRequest(builderId, null, null)).withRel("definition"))
+                    .setContext(this.componentContextFactory.buildContext(persistable))
+                    .setOid(this.oidService.getOid(persistable).getOid());
 
-			request.setName(key);
+            request.setValue(renderInformation);
+            return request;
+        }
 
-			return request;
-		}
+        final TextGuiComponent component = new TextGuiComponent();
+        component.setValue("[missing-builder]");
 
-		final TextGuiComponent component = new TextGuiComponent();
-		component.setName(key);
-		component.setValue("[missing-builder]");
+        return null;
+    }
 
-		return null;
-	}
+    /**
+     * Retrieves {@code builderId}. Tries to find explicitly set value or implicitly defined from value type
+     *
+     * @param key         property path
+     * @param persistable persistable to get {@link javax.persistence.metamodel.Attribute} definition for {@code path}
+     * @param webRequest  web request to get {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent} from
+     *
+     * @return builderId
+     *
+     * @see #getBuilderIdFromTableDataType(String, org.springframework.data.domain.Persistable)
+     * @see #getExplicitlyDefinedBuilderId(String, org.agatom.springatom.web.component.core.data.ComponentDataRequest)
+     */
+    protected String getBuilderId(final String key, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
+        String builderId = this.getExplicitlyDefinedBuilderId(key, webRequest);
+        if (!StringUtils.hasText(builderId)) {
+            builderId = this.getBuilderIdFromTableDataType(key, persistable);
+        }
+        return builderId;
+    }
 
-	/**
-	 * Retrieves {@code builderId}. Tries to find explicitly set value or implicitly defined from value type
-	 *
-	 * @param key         property path
-	 * @param persistable persistable to get {@link javax.persistence.metamodel.Attribute} definition for {@code path}
-	 * @param webRequest  web request to get {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent} from
-	 *
-	 * @return builderId
-	 *
-	 * @see #getBuilderIdFromTableDataType(String, org.springframework.data.domain.Persistable)
-	 * @see #getExplicitlyDefinedBuilderId(String, org.agatom.springatom.web.component.core.data.ComponentDataRequest)
-	 */
-	private String getBuilderId(final String key, final Persistable<?> persistable, final ComponentDataRequest webRequest) {
-		String builderId = this.getExplicitlyDefinedBuilderId(key, webRequest);
-		if (!StringUtils.hasText(builderId)) {
-			builderId = this.getBuilderIdFromTableDataType(key, persistable);
-		}
-		return builderId;
-	}
+    /**
+     * Tries to locate explicitly defined {@code builderId} if such was set in {@link org.agatom.springatom.web.component.infopages.elements.InfoPageAttributeComponent}
+     * during compile time for {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent} template
+     *
+     * @param key        property path
+     * @param webRequest web request to get {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent} from
+     *
+     * @return builderId if found or null
+     *
+     * @see org.agatom.springatom.web.component.infopages.provider.builder.InfoPageComponentBuilderService
+     * @see org.agatom.springatom.web.component.infopages.elements.InfoPageAttributeComponent#dynamicProperties
+     */
+    protected String getExplicitlyDefinedBuilderId(final String key, final ComponentDataRequest webRequest) {
+        String builderId = null;
 
-	/**
-	 * Resolves {@code builderId} using {@code key} and {@link org.springframework.data.domain.Persistable}.
-	 * If {@code key} is a property of {@code persistable} therefore {@link javax.persistence.metamodel.EntityType#getAttribute(String)} returns
-	 * valid {@link javax.persistence.metamodel.PluralAttribute} for {@code key}, this method is able to determine {@code builderId} by calling
-	 * {@link org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository#getBuilderId(Class, org.agatom.springatom.web.component.core.builders.ComponentProduces)}
-	 * where:
-	 * <ol>
-	 * <li>{@code class} corresponds to attribute type</li>
-	 * <li>{@link org.agatom.springatom.web.component.core.builders.ComponentProduces} is {@link org.agatom.springatom.web.component.core.builders.ComponentProduces#TABLE_COMPONENT}</li>
-	 * </ol>
-	 *
-	 * <b>Note</b>
-	 * This method will throw {@link org.agatom.springatom.webmvc.converters.du.exception.WebConverterException} if found {@link javax.persistence.metamodel.Attribute} is neither {@link javax.persistence.metamodel.Attribute#isCollection()}
-	 * nor {@link javax.persistence.metamodel.Attribute#isAssociation()}
-	 *
-	 * @param key         property path
-	 * @param persistable persistable to get {@link javax.persistence.metamodel.Attribute} definition for {@code path}
-	 *
-	 * @return builderId
-	 */
-	private String getBuilderIdFromTableDataType(final String key, final Persistable<?> persistable) {
-		String builderId = null;
+        final ContentComponent<?> component = (ContentComponent<?>) webRequest.getComponent();
+        final Optional<? extends EmbeddableComponent> match = FluentIterable.from(component).firstMatch(new Predicate<EmbeddableComponent>() {
+            @Override
+            public boolean apply(@Nullable final EmbeddableComponent input) {
+                if (input == null) {
+                    return false;
+                }
+                if (ClassUtils.isAssignableValue(InfoPagePanelComponent.class, input)) {
+                    final InfoPagePanelComponent panelComponent = (InfoPagePanelComponent) input;
+                    return panelComponent.containsAttributeForPath(key);
+                }
+                return false;
+            }
+        });
+        if (match.isPresent()) {
+            final InfoPagePanelComponent tmp = (InfoPagePanelComponent) match.get();
+            final InfoPageAttributeComponent forPath = tmp.getAttributeForPath(key);
+            final Map<String, Object> dynamicProperties = forPath.getDynamicProperties();
+            builderId = (String) dynamicProperties.get("builderId");
+        }
+        return builderId;
+    }
 
-		final EntityDescriptor<? extends Persistable> descriptor = this.entityDescriptors.getDescriptor(persistable.getClass());
+    /**
+     * Resolves {@code builderId} using {@code key} and {@link org.springframework.data.domain.Persistable}.
+     * If {@code key} is a property of {@code persistable} therefore {@link javax.persistence.metamodel.EntityType#getAttribute(String)} returns
+     * valid {@link javax.persistence.metamodel.PluralAttribute} for {@code key}, this method is able to determine {@code builderId} by calling
+     * {@link org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository#getBuilderId(Class, org.agatom.springatom.web.component.core.builders.ComponentProduces)}
+     * where:
+     * <ol>
+     * <li>{@code class} corresponds to attribute type</li>
+     * <li>{@link org.agatom.springatom.web.component.core.builders.ComponentProduces} is {@link org.agatom.springatom.web.component.core.builders.ComponentProduces#TABLE_COMPONENT}</li>
+     * </ol>
+     *
+     * <b>Note</b>
+     * This method will throw {@link org.agatom.springatom.webmvc.converters.du.exception.WebConverterException} if found {@link javax.persistence.metamodel.Attribute} is neither {@link javax.persistence.metamodel.Attribute#isCollection()}
+     * nor {@link javax.persistence.metamodel.Attribute#isAssociation()}
+     *
+     * @param key         property path
+     * @param persistable persistable to get {@link javax.persistence.metamodel.Attribute} definition for {@code path}
+     *
+     * @return builderId
+     */
+    protected String getBuilderIdFromTableDataType(final String key, final Persistable<?> persistable) {
+        String builderId = null;
 
-		final Attribute<?, ?> attribute = descriptor.getEntityType().getAttribute(key);
-		if (!attribute.isAssociation() || !attribute.isCollection()) {
-			throw new WebConverterException(String.format("Requested to convert %s as table request, but %s was not recognized as association for %s", key, key, ClassUtils.getUserClass(persistable.getClass())));
-		}
+        final EntityDescriptor<? extends Persistable> descriptor = this.entityDescriptors.getDescriptor(persistable.getClass());
 
-		final PluralAttribute<?, ?, ?> pluralAttribute = (PluralAttribute<?, ?, ?>) attribute;
-		final Class<?> associatedType = ClassUtils.getUserClass(pluralAttribute.getElementType().getJavaType());
+        final Attribute<?, ?> attribute = descriptor.getEntityType().getAttribute(key);
+        if (!attribute.isAssociation() || !attribute.isCollection()) {
+            throw new WebConverterException(String.format("Requested to convert %s as table request, but %s was not recognized as association for %s", key, key, ClassUtils.getUserClass(persistable.getClass())));
+        }
 
-		LOGGER.trace(String.format("%s corresponds to %s", key, ClassUtils.getUserClass(associatedType)));
+        final PluralAttribute<?, ?, ?> pluralAttribute = (PluralAttribute<?, ?, ?>) attribute;
+        final Class<?> associatedType = ClassUtils.getUserClass(pluralAttribute.getElementType().getJavaType());
 
-		final boolean hasBuilder = this.builderRepository.hasBuilder(associatedType, ComponentProduces.TABLE_COMPONENT);
-		if (hasBuilder) {
-			builderId = this.builderRepository.getBuilderId(associatedType, ComponentProduces.TABLE_COMPONENT);
-		}
+        LOGGER.trace(String.format("%s corresponds to %s", key, ClassUtils.getUserClass(associatedType)));
 
-		LOGGER.trace(String.format("%s %s to existing %s builder", associatedType, (hasBuilder ? "corresponds" : "does not corresponds"), ComponentProduces.TABLE_COMPONENT));
-		return builderId;
-	}
+        final boolean hasBuilder = this.builderRepository.hasBuilder(associatedType, ComponentProduces.TABLE_COMPONENT);
+        if (hasBuilder) {
+            builderId = this.builderRepository.getBuilderId(associatedType, ComponentProduces.TABLE_COMPONENT);
+        }
 
-	/**
-	 * Tries to locate explicitly defined {@code builderId} if such was set in {@link org.agatom.springatom.web.component.infopages.elements.InfoPageAttributeComponent}
-	 * during compile time for {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent} template
-	 *
-	 * @param key        property path
-	 * @param webRequest web request to get {@link org.agatom.springatom.web.component.infopages.elements.InfoPageComponent} from
-	 *
-	 * @return builderId if found or null
-	 *
-	 * @see org.agatom.springatom.web.component.infopages.provider.builder.InfoPageComponentBuilderService
-	 * @see org.agatom.springatom.web.component.infopages.elements.InfoPageAttributeComponent#dynamicProperties
-	 */
-	private String getExplicitlyDefinedBuilderId(final String key, final ComponentDataRequest webRequest) {
-		String builderId = null;
-
-		final ContentComponent<?> component = (ContentComponent<?>) webRequest.getComponent();
-		final Optional<? extends EmbeddableComponent> match = FluentIterable.from(component).firstMatch(new Predicate<EmbeddableComponent>() {
-			@Override
-			public boolean apply(@Nullable final EmbeddableComponent input) {
-				if (input == null) {
-					return false;
-				}
-				if (ClassUtils.isAssignableValue(InfoPagePanelComponent.class, input)) {
-					final InfoPagePanelComponent panelComponent = (InfoPagePanelComponent) input;
-					return panelComponent.containsAttributeForPath(key);
-				}
-				return false;
-			}
-		});
-		if (match.isPresent()) {
-			final InfoPagePanelComponent tmp = (InfoPagePanelComponent) match.get();
-			final InfoPageAttributeComponent forPath = tmp.getAttributeForPath(key);
-			final Map<String, Object> dynamicProperties = forPath.getDynamicProperties();
-			builderId = (String) dynamicProperties.get("builderId");
-		}
-		return builderId;
-	}
-
-	/**
-	 * Internal class. Carries information required to request for config and data for {@link org.agatom.springatom.web.component.table.elements.TableComponent}
-	 */
-	protected static class TableRequest
-			extends AbstractGuiComponent<ComponentContext> {
-		private static final long      serialVersionUID = 4160071560623816868L;
-		private              String    builderId        = null;
-		private              Set<Link> urls             = Sets.newHashSet();
-
-		public String getBuilderId() {
-			return builderId;
-		}
-
-		public TableRequest setBuilderId(final String builderId) {
-			this.builderId = builderId;
-			return this;
-		}
-
-		public Set<Link> getUrls() {
-			return urls;
-		}
-
-		public TableRequest setUrls(final Set<Link> urls) {
-			this.urls = urls;
-			return this;
-		}
-
-		public TableRequest setDataUrl(final Link url) {
-			this.urls.add(url);
-			return this;
-		}
-
-		public TableRequest setConfigurationUrl(final Link url) {
-			this.urls.add(url);
-			return this;
-		}
-
-		@Override
-		public Object getRawValue() {
-			return null;
-		}
-
-		@Override
-		public String getType() {
-			return "tableRequest";
-		}
-	}
+        LOGGER.trace(String.format("%s %s to existing %s builder", associatedType, (hasBuilder ? "corresponds" : "does not corresponds"), ComponentProduces.TABLE_COMPONENT));
+        return builderId;
+    }
 
 }
