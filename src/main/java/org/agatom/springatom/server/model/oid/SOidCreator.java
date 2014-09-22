@@ -15,20 +15,25 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.component.core.request;
+package org.agatom.springatom.server.model.oid;
 
-import java.io.Serializable;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
- * {@code ComponentRequest} marks implementing class as carrying the component request.
- * Request can concern either definition or data.
+ * <p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-09-18</small>
+ * </p>
  *
- * <small>Class is a part of <b>SpringAtom</b> and was created at 02.06.14</small>
- *
- * @author kornicameister
+ * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentRequest
-		extends Serializable {
+public interface SOidCreator<T> {
+
+    @Cacheable("sOidCreator.fromString")
+    SOid fromString(final String from) throws Exception;
+
+    @Cacheable("sOidCreator.fromObject")
+    <S extends T> SOid fromObject(final S from) throws Exception;
+
 }

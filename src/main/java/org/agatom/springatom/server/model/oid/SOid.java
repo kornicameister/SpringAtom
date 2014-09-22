@@ -15,25 +15,22 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model.conversion.converter.impl;
+package org.agatom.springatom.server.model.oid;
 
-import org.agatom.springatom.server.model.beans.person.SPersonContact;
-import org.agatom.springatom.server.model.conversion.annotation.PersistableConverterUtility;
-import org.agatom.springatom.server.model.conversion.converter.PersistableConverterImpl;
+import org.springframework.hateoas.Identifiable;
+
+import java.io.Serializable;
 
 /**
- * <small>Class is a part of <b>SpringAtom</b> and was created at 27.03.14</small>
+ * <p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-09-18</small>
+ * </p>
  *
- * @author kornicameister
+ * @author trebskit
  * @version 0.0.1
  * @since 0.0.1
  */
-@PersistableConverterUtility(selector = "assignee")
-public class SPersonContactConvertWithAssignee
-		extends PersistableConverterImpl<SPersonContact> {
-	/** {@inheritDoc} */
-	@Override
-	public String convert(final SPersonContact source) {
-		return String.format("%s - %s\n", source.getAssigned().getIdentity(), source.getContact());
-	}
+public interface SOid
+        extends Serializable {
+    String getOid();
 }

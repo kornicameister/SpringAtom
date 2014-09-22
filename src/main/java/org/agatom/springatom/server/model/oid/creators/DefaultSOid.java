@@ -15,13 +15,14 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.server.model;
+package org.agatom.springatom.server.model.oid.creators;
 
-import com.google.common.base.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ComparisonChain;
-import org.agatom.springatom.core.util.StringAdaptable;
+import org.agatom.springatom.server.model.oid.SOid;
 
-import java.io.Serializable;
+import javax.annotation.Nonnull;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-23</small>
@@ -30,62 +31,64 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public class OID
-        implements Serializable, Comparable<OID>, StringAdaptable {
-    private static final long   serialVersionUID = 4999512443240841991L;
-    private              long   id               = -1;
-    private              String objectClass      = null;
-    private              String prefix           = null;
+class DefaultSOid<T, ID extends Comparable>
+        implements SOid, Comparable<DefaultSOid> {
+    private static final long     serialVersionUID = 4999512443240841991L;
+    private              String   objectPrefix     = null;
+    private              ID       objectId         = null;
+    private              Class<T> objectClass      = null;
 
-    public long getId() {
-        return id;
+    @JsonIgnore
+    public ID getObjectId() {
+        return this.objectId;
     }
 
-    public OID setId(final long id) {
-        this.id = id;
+    public DefaultSOid<T, ID> setObjectId(final ID objectId) {
+        this.objectId = objectId;
         return this;
     }
 
-    public String getObjectClass() {
-        return objectClass;
+    @JsonIgnore
+    public Class<T> getObjectClass() {
+        return this.objectClass;
     }
 
-    public OID setObjectClass(final String objectClass) {
+    public DefaultSOid<T, ID> setObjectClass(final Class<T> objectClass) {
         this.objectClass = objectClass;
         return this;
     }
 
-    public String getPrefix() {
-        return prefix;
+    @JsonIgnore
+    public String getObjectPrefix() {
+        return objectPrefix;
     }
 
-    public OID setPrefix(final String prefix) {
-        this.prefix = prefix;
+    public DefaultSOid<T, ID> setObjectPrefix(final String objectPrefix) {
+        this.objectPrefix = objectPrefix;
         return this;
     }
 
     @Override
-    public int compareTo(final OID o) {
+    public int compareTo(@Nonnull final DefaultSOid o) {
         return ComparisonChain
                 .start()
-                .compare(this.id, o.id)
-                .compare(this.objectClass, o.objectClass)
-                .compare(this.prefix, o.prefix)
+                .compare(this.objectId, o.objectId)
+                .compare(this.objectClass.getName(), o.objectClass.getName())
                 .result();
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("serialVersionUID", serialVersionUID)
-                .add("id", id)
-                .add("objectClass", objectClass)
-                .add("prefix", prefix)
+        return MoreObjects.toStringHelper(this)
+                .add("oid", this.getOid())
+                .add("objectPrefix", this.objectPrefix)
+                .add("objectClass", this.objectClass)
+                .add("objectId", this.objectId)
                 .toString();
     }
 
     @Override
-    public String asString() {
-        return String.format("%s:%s:%s", this.prefix, this.objectClass, this.id);
+    public String getOid() {
+        return String.format("%s:%s:%s", this.objectPrefix, this.objectClass.getName(), this.objectId);
     }
 }
