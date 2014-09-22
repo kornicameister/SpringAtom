@@ -19,7 +19,6 @@ package org.agatom.springatom.web.component.core.data;
 
 import com.google.common.base.MoreObjects;
 import org.agatom.springatom.server.model.oid.SOid;
-import org.agatom.springatom.webmvc.request.LastRequest;
 import org.springframework.ui.ModelMap;
 
 /**
@@ -30,12 +29,11 @@ import org.springframework.ui.ModelMap;
  * @since 0.0.1
  */
 public class ComponentDataRequest {
-    private Object      component   = null;
-    private LastRequest lastRequest = null;
-    private SOid        oid         = null;
-    private ModelMap attributesMap;
-    private ModelMap headersMap;
-    private ModelMap parametersMap;
+    private Object   component     = null;
+    private SOid     oid           = null;
+    private ModelMap attributesMap = null;
+    private ModelMap headersMap    = null;
+    private ModelMap parametersMap = null;
 
     public ComponentDataRequest() {
     }
@@ -46,15 +44,6 @@ public class ComponentDataRequest {
 
     public void setComponent(final Object component) {
         this.component = component;
-    }
-
-    public LastRequest getLastRequest() {
-        return lastRequest;
-    }
-
-    public ComponentDataRequest setLastRequest(final LastRequest lastRequest) {
-        this.lastRequest = lastRequest;
-        return this;
     }
 
     public SOid getOid() {
@@ -101,7 +90,6 @@ public class ComponentDataRequest {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("lastRequest", lastRequest)
                 .add("oid", oid)
                 .toString();
     }
