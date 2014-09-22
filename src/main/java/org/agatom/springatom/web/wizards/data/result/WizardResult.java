@@ -20,7 +20,7 @@ package org.agatom.springatom.web.wizards.data.result;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
-import org.agatom.springatom.server.model.OID;
+import org.agatom.springatom.server.model.oid.SOid;
 import org.agatom.springatom.web.wizards.data.context.WizardDataScopeHolder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.binding.message.Message;
@@ -50,17 +50,17 @@ public class WizardResult
     private              String                stepId             = null;
     private              Set<FeedbackMessage>  feedbackMessages   = null;
     private              Set<Throwable>        errors             = null;
-    private              OID                   oid                = null;
+    private SOid oid = null;
     private              WizardDataScopeHolder data               = null;
     private              ModelMap              debugData          = null;
     private              Set<Message>          validationMessages = null;
     private              Set<ObjectError>      bindingErrors      = null;
 
-    public OID getOid() {
+    public SOid getOid() {
         return oid;
     }
 
-    public WizardResult setOid(final OID oid) {
+    public WizardResult setOid(final SOid oid) {
         if (this.oid != null) {
             return this;
         }

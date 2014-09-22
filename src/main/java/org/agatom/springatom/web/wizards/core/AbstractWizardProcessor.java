@@ -18,6 +18,7 @@
 package org.agatom.springatom.web.wizards.core;
 
 import com.google.common.base.Throwables;
+import org.agatom.springatom.server.model.oid.SOidService;
 import org.agatom.springatom.web.locale.SMessageSource;
 import org.agatom.springatom.web.wizards.StepHelper;
 import org.agatom.springatom.web.wizards.Wizard;
@@ -71,6 +72,8 @@ abstract class AbstractWizardProcessor {
     protected            SMessageSource              messageSource      = null;
     protected            StepHelperDelegate          stepHelperDelegate = null;
     protected            Validator                   localValidator     = null;
+    @Autowired
+    protected SOidService oidService = null;
     @Autowired
     private              ValidationService           validationService  = null;
 

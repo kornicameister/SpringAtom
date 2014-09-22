@@ -19,7 +19,7 @@ package org.agatom.springatom.web.wizards.core;
 
 import com.mysema.query.types.Path;
 import org.agatom.springatom.core.exception.SException;
-import org.agatom.springatom.server.model.OID;
+import org.agatom.springatom.server.model.oid.SOid;
 import org.agatom.springatom.web.wizards.WizardProcessor;
 import org.agatom.springatom.web.wizards.data.WizardDescriptor;
 import org.agatom.springatom.web.wizards.data.result.FeedbackMessage;
@@ -27,7 +27,6 @@ import org.agatom.springatom.web.wizards.data.result.WizardDebugDataKeys;
 import org.agatom.springatom.web.wizards.data.result.WizardResult;
 import org.apache.log4j.Logger;
 import org.springframework.core.GenericTypeResolver;
-import org.springframework.data.domain.Persistable;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
@@ -273,15 +272,7 @@ abstract public class CreateObjectWizardProcessor<T>
      */
     protected abstract WizardDescriptor initializeWizard(final Locale locale);
 
-    protected OID getOID(final T contextObject) {
-        final OID oid = new OID();
-        oid.setObjectClass(ClassUtils.getUserClass(contextObject.getClass()).getSimpleName());
-        oid.setPrefix("M");
-        if (ClassUtils.isAssignableValue(Persistable.class, contextObject)) {
-            oid.setId((Long) ((Persistable<?>) contextObject).getId());
-        } else {
-            oid.setId(System.nanoTime());
-        }
-        return oid;
+    protected SOid getOID(final T contextObject) throws Exception {
+        return this.oidService.getOid(contextObject);
     }
 }
