@@ -31,7 +31,7 @@
     </context-param>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:springatom-all.xml</param-value>
+        <param-value>classpath:springatom-application-root.xml,classpath:springatom-rest-mvc.xml</param-value>
     </context-param>
     <!-- context param -->
 
@@ -163,13 +163,6 @@
         <session-timeout>20</session-timeout>
     </session-config>
     <!-- session -->
-
-    <jsp-config>
-        <taglib>
-            <taglib-uri>http://www.example.org/sa/scmp</taglib-uri>
-            <taglib-location>/WEB-INF/tags/sa/cmp.tld</taglib-location>
-        </taglib>
-    </jsp-config>
 
     <welcome-file-list>
         <welcome-file>index.jps</welcome-file>
