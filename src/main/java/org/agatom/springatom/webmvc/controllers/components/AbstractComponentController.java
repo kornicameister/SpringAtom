@@ -18,11 +18,10 @@
 package org.agatom.springatom.webmvc.controllers.components;
 
 import com.google.common.collect.Maps;
+import org.agatom.springatom.server.model.oid.SOid;
+import org.agatom.springatom.server.model.oid.SOidService;
 import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.web.component.core.data.ComponentDataResponse;
 import org.agatom.springatom.web.component.core.repository.ComponentBuilderRepository;
-import org.agatom.springatom.web.component.core.request.ComponentRequest;
-import org.agatom.springatom.webmvc.controllers.components.data.CmpResource;
 import org.agatom.springatom.webmvc.core.SVDefaultController;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.apache.log4j.Logger;
@@ -31,8 +30,10 @@ import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
@@ -50,18 +51,18 @@ import java.util.Map;
  * <small>Class is a part of <b>SpringAtom</b> and was created at 02.06.14</small>
  *
  * @author kornicameister
- * @version 0.0.4
+ * @version 0.0.5
  * @since 0.0.1
  */
 abstract class AbstractComponentController
         extends SVDefaultController {
-    private static final Logger                     LOGGER                  = Logger.getLogger(AbstractComponentController.class);
+    private static final Logger LOGGER = Logger.getLogger(AbstractComponentController.class);
     @Autowired
-    protected            ComponentBuilderRepository builderRepository       = null;
+    protected            ComponentBuilderRepository builderRepository = null;
     @Autowired
-    protected            InfoPageControllerUtils    infoPageControllerUtils = null;
+    protected            CDRReturnValueConverter    converter         = null;
     @Autowired
-    private              CDRReturnValueConverter    converter               = null;
+    protected            SOidService                oidService        = null;
 
     /**
      * <p>Constructor for SVDefaultController.</p>
@@ -73,65 +74,58 @@ abstract class AbstractComponentController
     }
 
     /**
-     * Pushes data through {@link org.agatom.springatom.webmvc.controllers.components.CDRReturnValueConverter}
-     * which applies web converters logic to the data
-     *
-     * @param request component request
-     * @param data    component raw data
-     *
-     * @return adjusted data
-     *
-     * @throws ControllerTierException if any
-     */
-    protected CmpResource<?> toComponentResource(final ComponentDataRequest request, final ComponentDataResponse data) throws ControllerTierException {
-        try {
-            return this.converter.convert(data, request);
-        } catch (Exception exp) {
-            throw new ControllerTierException("Failed to convert data using CDRReturnValueConverter", exp);
-        }
-    }
-
-    /**
-     * Combines {@link org.agatom.springatom.web.component.core.request.ComponentRequest} and {@link org.springframework.web.context.request.WebRequest}
+     * Transforms @link org.springframework.web.context.request.WebRequest}
      * into valid {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest}.
      *
-     * @param cmpRequest component request
      * @param webRequest web request
      *
      * @return {@link org.agatom.springatom.web.component.core.data.ComponentDataRequest} instance
      */
-    protected ComponentDataRequest combineRequest(final ComponentRequest cmpRequest, final WebRequest webRequest) {
-        LOGGER.trace(String.format("Combining request for cmpRequest=%s,webRequest=%s", cmpRequest, webRequest.getClass()));
+    protected ComponentDataRequest getComponentDataRequest(final NativeWebRequest webRequest) throws Exception {
+        LOGGER.trace(String.format("Combining request for webRequest=%s", webRequest.getClass()));
+        final ComponentDataRequest componentDataRequest = new ComponentDataRequest();
 
-        final ModelMap modelMap = new ModelMap(webRequest.getParameterMap());
-        modelMap.addAttribute(webRequest.getLocale());
-        modelMap.put("user", webRequest.getUserPrincipal());
+        ModelMap localMap = new ModelMap(webRequest.getParameterMap());
+        localMap.addAttribute("locale", webRequest.getLocale());
+        localMap.addAttribute("user", webRequest.getUserPrincipal());
 
-        Map<String, Object> localMap = Maps.newHashMap();
+        componentDataRequest.setParametersMap(localMap);
+
+        localMap = new ModelMap();
 
         final Iterator<String> headerNames = webRequest.getHeaderNames();
-
         while (headerNames.hasNext()) {
             final String key = headerNames.next();
             localMap.put(key, webRequest.getHeaderValues(key));
         }
-        modelMap.put("headers", localMap);
+        componentDataRequest.setHeadersMap(localMap);
 
+        localMap = new ModelMap();
         final int scopes[] = {
                 RequestAttributes.SCOPE_REQUEST,
                 RequestAttributes.SCOPE_SESSION,
                 RequestAttributes.SCOPE_GLOBAL_SESSION
         };
         for (int scope : scopes) {
-            localMap = Maps.newHashMap();
+            final Map<String, Object> localHM = Maps.newHashMap();
             final String[] attributeNames = webRequest.getAttributeNames(scope);
             for (String attributeName : attributeNames) {
-                localMap.put(attributeName, webRequest.getAttribute(attributeName, scope));
+                localHM.put(attributeName, webRequest.getAttribute(attributeName, scope));
             }
-            modelMap.put(scope == 0 ? "requestAttributes" : (scope == 1 ? "sessionAttributes" : "globalSessionAttributes"), localMap);
+            localMap.put(scope == 0 ? "requestAttributes" : (scope == 1 ? "sessionAttributes" : "globalSessionAttributes"), localHM);
         }
+        componentDataRequest.setAttributesMap(localMap);
 
-        return new ComponentDataRequest(modelMap, cmpRequest);
+        return componentDataRequest
+                .setOid(this.getOid(webRequest));
+    }
+
+    protected SOid getOid(final WebRequest request) throws Exception {
+        final String oid = request.getParameter("oid");
+        if (!StringUtils.hasText(oid)) {
+            return null;
+        }
+        return this.oidService.getOid(oid);
     }
 
     /**
@@ -152,5 +146,4 @@ abstract class AbstractComponentController
     public ResponseEntity<?> handleConversionExecutionException(final ConversionExecutionException npe) {
         return this.errorResponse(npe, HttpStatus.UNPROCESSABLE_ENTITY);
     }
-
 }

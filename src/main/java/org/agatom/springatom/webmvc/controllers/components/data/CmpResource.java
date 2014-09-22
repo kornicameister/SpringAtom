@@ -17,9 +17,13 @@
 
 package org.agatom.springatom.webmvc.controllers.components.data;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.collect.Multimap;
+import org.agatom.springatom.web.component.core.repository.ComponentMetaData;
 import org.agatom.springatom.webmvc.data.DataResource;
-import org.springframework.hateoas.Link;
+
+import javax.xml.bind.annotation.XmlAnyElement;
 
 /**
  * <small>Class is a part of <b>SpringAtom</b> and was created at 20.07.14</small>
@@ -29,25 +33,23 @@ import org.springframework.hateoas.Link;
  * @since 0.0.1
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-abstract public class CmpResource<T>
-		extends DataResource<T> {
-	private static final long   serialVersionUID = -2046530736751451451L;
-	private              String builtBy          = null;
+public class CmpResource
+        extends DataResource<Object> {
+    private static final long   serialVersionUID = -2046530736751451451L;
+    private              String builtBy          = null;
 
-	public CmpResource(final T content, final Link... links) {
-		super(content, links);
-	}
+    public CmpResource(final Object data, final Object definition) {
+        super(new CmpDataConfiguration().setDefinition(definition).setData(data));
+    }
 
-	public CmpResource(final T content, final Iterable<Link> links) {
-		super(content, links);
-	}
+    public CmpResource(final Multimap<String, ComponentMetaData> allBuilders) {
+        super(allBuilders);
+    }
 
-	public String getBuiltBy() {
-		return builtBy;
-	}
-
-	public CmpResource setBuiltBy(final String builtBy) {
-		this.builtBy = builtBy;
-		return this;
-	}
+    @Override
+    @JsonUnwrapped(enabled = false)
+    @XmlAnyElement
+    public Object getContent() {
+        return super.getContent();
+    }
 }
