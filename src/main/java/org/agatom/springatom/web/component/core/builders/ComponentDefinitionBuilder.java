@@ -30,7 +30,8 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface ComponentDefinitionBuilder<COMP extends Serializable> {
+public interface ComponentDefinitionBuilder<COMP extends Serializable>
+        extends Builder {
 
     /**
      * Returns value of {@link org.agatom.springatom.web.component.core.builders.ComponentProduces}

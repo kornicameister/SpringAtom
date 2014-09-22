@@ -23,8 +23,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.core.exception.SException;
-import org.agatom.springatom.server.model.descriptors.EntityDescriptor;
-import org.agatom.springatom.server.model.descriptors.descriptor.EntityDescriptors;
 import org.agatom.springatom.server.model.oid.creators.PersistableOid;
 import org.agatom.springatom.server.repository.provider.RepositoriesHelper;
 import org.agatom.springatom.web.component.core.builders.AbstractComponentDefinitionBuilder;
@@ -37,7 +35,6 @@ import org.agatom.springatom.web.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.web.component.infopages.elements.InfoPageAttributeComponent;
 import org.agatom.springatom.web.component.infopages.elements.InfoPageComponent;
 import org.agatom.springatom.web.component.infopages.elements.InfoPagePanelComponent;
-import org.agatom.springatom.web.component.infopages.link.InfoPageLinkHelper;
 import org.agatom.springatom.web.component.infopages.mapping.InfoPageMapping;
 import org.agatom.springatom.web.component.infopages.provider.InfoPageProviderService;
 import org.agatom.springatom.web.component.infopages.provider.builder.InfoPageComponentBuilderService;
@@ -50,7 +47,6 @@ import org.springframework.util.ClassUtils;
 import javax.annotation.Nullable;
 import java.beans.PropertyDescriptor;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -65,7 +61,7 @@ import java.util.Set;
  */
 @EntityBased(entity = Persistable.class)
 @ComponentBuilder(InfoPageComponentBuilder.BUILDER_ID)
-public class InfoPageComponentBuilder
+class InfoPageComponentBuilder
         extends AbstractComponentDefinitionBuilder<InfoPageComponent>
         implements MultiComponentBuilder {
     /** Constant <code>BUILDER_ID="genericInfoPageBuilder"</code> */

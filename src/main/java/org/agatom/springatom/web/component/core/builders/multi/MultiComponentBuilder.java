@@ -17,6 +17,8 @@
 
 package org.agatom.springatom.web.component.core.builders.multi;
 
+import org.agatom.springatom.web.component.core.builders.Builder;
+
 import java.util.Collection;
 
 /**
@@ -28,6 +30,7 @@ import java.util.Collection;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface MultiComponentBuilder {
+public interface MultiComponentBuilder
+        extends Builder {
     Collection<MultiComponentDescriptor> getDescriptors();
 }

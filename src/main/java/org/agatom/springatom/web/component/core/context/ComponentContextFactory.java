@@ -21,23 +21,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.agatom.springatom.core.annotations.LazyComponent;
 import org.agatom.springatom.server.model.types.PersistentVersionedBean;
 import org.agatom.springatom.server.repository.SRepository;
+import org.agatom.springatom.server.repository.provider.RepositoriesHelper;
 import org.apache.log4j.Logger;
 import org.hibernate.envers.Audited;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.history.Revision;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
-import org.springframework.data.repository.support.Repositories;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -52,18 +47,12 @@ import javax.servlet.http.HttpServletRequest;
  * @since 0.0.1
  */
 @LazyComponent
-public class ComponentContextFactory
-        implements BeanFactoryAware {
-    private static final Logger              LOGGER       = Logger.getLogger(ComponentContextFactory.class);
-    private              Repositories        repositories = null;
-    private              ListableBeanFactory beanFactory  = null;
+public class ComponentContextFactory {
+    private static final Logger             LOGGER       = Logger.getLogger(ComponentContextFactory.class);
     @Autowired
-    private              ObjectMapper        objectMapper = null;
-
-    @PostConstruct
-    private void setRepositories() {
-        this.repositories = new Repositories(this.beanFactory);
-    }
+    private              RepositoriesHelper repositories = null;
+    @Autowired
+    private              ObjectMapper       objectMapper = null;
 
     @SuppressWarnings("unchecked")
     public ComponentContext buildContext(final HttpServletRequest request) throws Exception {
@@ -108,11 +97,6 @@ public class ComponentContextFactory
         final Audited audited = entity.findAnnotation(Audited.class);
         final PersistentProperty<?> persistentProperty = entity.getPersistentProperty(Audited.class);
         return audited != null || persistentProperty != null;
-    }
-
-    @Override
-    public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = (ListableBeanFactory) beanFactory;
     }
 
     private class MissingComponentContext

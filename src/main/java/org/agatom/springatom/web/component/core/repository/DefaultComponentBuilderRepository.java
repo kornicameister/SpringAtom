@@ -29,7 +29,6 @@ import org.agatom.springatom.web.component.core.builders.annotation.ComponentBui
 import org.agatom.springatom.web.component.core.builders.annotation.EntityBased;
 import org.agatom.springatom.web.component.core.builders.multi.MultiComponentBuilder;
 import org.agatom.springatom.web.component.core.builders.multi.MultiComponentDescriptor;
-import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -65,12 +64,11 @@ import java.util.Map;
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 class DefaultComponentBuilderRepository
         implements ComponentBuilderRepository, BeanFactoryAware {
-    private static final Logger                          LOGGER                   = Logger.getLogger(ComponentBuilderRepository.class);
     @Autowired
-    private              Map<String, Builder>            builderMap               = null;
-    private              ConfigurableListableBeanFactory beanFactory              = null;
-    private              Map<DefinitionHolder, String>   definitionToBuilderIdMap = null;
-    private              Map<DefinitionHolder, Builder>  definitionToBuilderMap   = null;
+    private Map<String, Builder>            builderMap               = null;
+    private ConfigurableListableBeanFactory beanFactory              = null;
+    private Map<DefinitionHolder, String>   definitionToBuilderIdMap = null;
+    private Map<DefinitionHolder, Builder>  definitionToBuilderMap   = null;
 
     @PostConstruct
     private void readBuilders() {
