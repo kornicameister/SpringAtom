@@ -43,15 +43,8 @@
     <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
         <property name="paramName" value="#{webProperties['sa.locale.requestParam']}"/>
     </bean>
-    <bean id="infoPageInterceptor"
-          class="org.agatom.springatom.web.component.infopages.interceptor.InfoPageInterceptor"/>
 
     <mvc:interceptors>
-        <mvc:interceptor>
-            <!-- first * is context path -->
-            <mvc:mapping path="/*/cmp/ip/**/*/*"/>
-            <ref bean="infoPageInterceptor"/>
-        </mvc:interceptor>
         <ref bean="scdrViewInterceptor"/>
         <ref bean="localeChangeInterceptor"/>
     </mvc:interceptors>
