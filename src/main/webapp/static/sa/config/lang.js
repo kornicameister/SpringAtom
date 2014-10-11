@@ -25,7 +25,7 @@ define(
         'angular-moment'
     ],
     function langModule(module, utils) {
-        var defaultLang = 'pl',
+        var defaultLang = 'pl_PL',
             configureLang = function (amMoment, $cookies, $translate) {
                 var params = utils.getUrlParams(),
                     lang = defaultLang;

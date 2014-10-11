@@ -58,7 +58,7 @@ define(
                     templateUrl: '/static/sa/views/cmp/calendar/organizer.html',
                     resolve    : {
                         'organizerDefinition': function (componentResource) {
-                            return componentResource.getOtherDefinition('calendarBuilder')
+                            return componentResource.getComponentConfiguration('calendarBuilder')
                         }
                     }
                 }

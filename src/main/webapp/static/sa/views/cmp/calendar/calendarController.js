@@ -81,14 +81,13 @@ define(
                         }
 
                         var getIdFromSelfLink = function getIdFromSelfLink(links) {
-                            var id = undefined;
-                            _.find(links, function linksIt(link) {
-                                if (link.href === 'self') {
-                                    id = link.href.split('/');
-                                    id = id[id.length - 1];
-                                    return id;
-                                }
-                            })
+                            var id = undefined,
+                                link = links.self;
+
+                            id = link.href.split('/');
+                            id = id[id.length - 1];
+
+                            return id;
                         };
 
                         if (_.isUndefined(eventData.id)) {
@@ -156,7 +155,7 @@ define(
                 },
                 calendar = {
                     getEventSources: function getEventSources() {
-                        var eventSources = organizerDefinition.eventSources,
+                        var eventSources = organizerDefinition.definition.eventSources,
                             sources = [];
                         _.each(eventSources, function eventSourceIt(eventSource) {
                             sources.push(_.extend(eventSource, baseConfigES));

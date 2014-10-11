@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -50,11 +49,7 @@ import java.util.Set;
 @RequestMapping(value = "/data/lang")
 public class SVLocaleController
         extends SVDefaultController {
-    /** Constant <code>SA_LOCALE_SUPPORTS="sa.locale.supports"</code> */
-    public static final  String   SA_LOCALE_SUPPORTS = "sa.locale.supports";
-    /** Constant <code>CONTROLLER_NAME="sa.controller.data.lang.LocaleDataResol"{trunked}</code> */
     public static final  String   CONTROLLER_NAME    = "sa.controller.data.lang.LocaleDataResolverController";
-    private static final String[] IGNORED_KEYS       = {"_dc", "page", "start", "limit"};
     private static final Logger   LOGGER             = Logger.getLogger(SVLocaleController.class);
     @Value(value = "${sa.locale.supports}")
     private              String   appResources       = null;
@@ -68,18 +63,6 @@ public class SVLocaleController
      */
     protected SVLocaleController() {
         super(SVLocaleController.CONTROLLER_NAME);
-    }
-
-    /**
-     * <p>initBinder.</p>
-     *
-     * @param binder a {@link org.springframework.web.bind.WebDataBinder} object.
-     */
-    @InitBinder
-    public void initBinder(final WebDataBinder binder) {
-        binder.setDisallowedFields(IGNORED_KEYS);
-        binder.setIgnoreInvalidFields(true);
-        binder.setIgnoreUnknownFields(true);
     }
 
     /**
@@ -135,7 +118,7 @@ public class SVLocaleController
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public Object getAllByLocale(@RequestParam(value = "lang", required = true) final Locale locale) {
+    public Object getAllByLocale(@RequestParam(value = "lg", required = true) final Locale locale) {
 
         final SLocalizedMessages localizedMessages = this.messageSource.getLocalizedMessages(locale);
         final Set<SLocalizedMessage> preferences = localizedMessages.getPreferences();

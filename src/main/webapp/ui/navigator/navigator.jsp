@@ -19,8 +19,6 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
-<%@ taglib prefix="sac" uri="http://www.example.org/sa/scmp" %>
 
 <jsp:useBean id="actionModel" scope="request" class="java.lang.String"/>
 <s:eval expression="@actionsModelReader.getActionModel(actionModel)" var="CC"/>
-<sac:evaluateActionModelSecurity actionModel="${CC}"/>

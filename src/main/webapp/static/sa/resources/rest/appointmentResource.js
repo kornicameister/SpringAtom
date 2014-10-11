@@ -52,6 +52,10 @@ define(
                         return this.all(route + '/search/' + what).getList(configuration);
                     };
 
+                apps.getList = function (page) {
+                    return this.all(route).getList(page);
+                }.bind(apps);
+
                 apps.queries = {
                     feed              : function (begin, end) {
                         return search('feed', {
