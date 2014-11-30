@@ -39,11 +39,11 @@ define(
                 $scope.actions = {
                     popupLoginDialog : function ($event) {
                         $event.stopPropagation();
-                        loginDialog.loginDialog();
+                        return loginDialog.loginDialog();
                     },
                     popupLogoutDialog: function ($event) {
                         $event.stopPropagation();
-                        loginDialog.logoutDialog();
+                        return loginDialog.logoutDialog();
                     }
                 };
             }

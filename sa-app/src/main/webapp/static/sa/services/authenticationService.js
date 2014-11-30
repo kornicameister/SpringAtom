@@ -89,7 +89,7 @@ define(
                     if (!this.isAuthenticated()) {
                         return;
                     }
-                    return authenticationResource.logout().then(callback.onLogout.func, callback.onLogout.func);
+                    return authenticationResource.logout().then(callbacks.onLogout.func, callbacks.onLogout.func);
                 },
                 hasAuthority     : function (expectedRoles, defaultDecision) {
                     defaultDecision = _.isUndefined(defaultDecision) ? false : defaultDecision;

@@ -30,8 +30,8 @@
                 'ngCalendar'              : adjustPath('../libs/angular-ui-calendar/src/calendar.js'),
                 'ngRouter'                : adjustPath('../libs/angular-ui-router/release/angular-ui-router.js'),
                 'ngCookies'               : adjustPath('../libs/angular-cookies/angular-cookies.min.js'),
-                'ngDialogs'               : adjustPath('../libs/angular-dialog-service/dialogs.min.js'),
-                'ngDialogsTranslations'   : adjustPath('../libs/angular-dialog-service/dialogs-default-translations.min.js'),
+                'ngDialogs'            : adjustPath('../libs/angular-dialog-service/dist/dialogs.min.js'),
+                'ngDialogsTranslations': adjustPath('../libs/angular-dialog-service/dist/dialogs-default-translations.min.js'),
                 'ngSanitize'              : adjustPath('../libs/angular-sanitize/angular-sanitize.min.js'),
                 'ngTranslate'             : adjustPath('../libs/angular-translate/angular-translate.min.js'),
                 'ngTranslateLoader'       : adjustPath('../libs/angular-translate-loader-url/angular-translate-loader-url.min.js'),
@@ -40,20 +40,19 @@
                 'ngTranslateHandlerLog'   : adjustPath('../libs/angular-translate-handler-log/angular-translate-handler-log.min.js'),
                 'angular-moment'          : adjustPath('../libs/angular-moment/angular-moment.min.js'),
                 'bootstrap'               : adjustPath('../libs/bootstrap/dist/js/bootstrap.min.js'),
-                'bProgressBar'            : adjustPath('../libs/bootstrap-progressbar/bootstrap-progressbar.min.js'),
                 'bJasny'                  : adjustPath('../libs/jasny-bootstrap/dist/js/jasny-bootstrap.min.js'),
                 'fullcalendar'            : adjustPath('../libs/fullcalendar/fullcalendar.min.js'),
                 'jquery'                  : adjustPath('../libs/jquery/dist/jquery.min.js'),
                 'jquery-ui'               : adjustPath('../libs/jquery-ui/ui/minified/jquery-ui.min.js'),
                 'jsface'                  : adjustPath('../libs/jsface/dist/jsface.all.min.js'),
-                'moment'                  : adjustPath('../libs/moment/min/moment-with-langs.min.js'),
+                'moment'               : adjustPath('../libs/moment/min/moment-with-locales.min.js'),
                 'ngGrid'                  : adjustPath('../libs/ng-grid/build/ng-grid.min.js'),
                 'ngProgress'              : adjustPath('../libs/ngprogress/build/ngProgress.min.js'),
                 'underscore'              : adjustPath('../libs/underscore/underscore-min.js'),
                 'restangular'             : adjustPath('../libs/restangular/dist/restangular.js'),
                 'lodash'                  : adjustPath('../libs/lodash/dist/lodash.min.js'),
                 'ngMultiSelect'           : adjustPath('../libs/isteven-angular-multiselect/angular-multi-select.js'),
-                'angularLocalStorage'     : adjustPath('../libs/angular-local-storage/angular-local-storage.min.js')
+                'angularLocalStorage'  : adjustPath('../libs/angular-local-storage/dist/angular-local-storage.min.js')
             },
             priority: [
                 'angular'
@@ -166,7 +165,6 @@
                     ]
                 },
                 'ngMultiSelect'           : ['angular'],
-                'bProgressBar'            : ['bootstrap'],
                 'bJasny'                  : ['bootstrap'],
                 'jquery-ui'               : {
                     deps: [

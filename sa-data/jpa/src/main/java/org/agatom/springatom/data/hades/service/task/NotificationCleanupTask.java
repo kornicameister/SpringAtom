@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -67,11 +68,12 @@ class NotificationCleanupTask {
         return FluentIterable.from(toDelete).size();
     }
 
-    protected FluentIterable<NNotification> filter(final DateTime now, final Iterable<NNotification> notificationsBefore) {
+    protected List<NNotification> filter(final DateTime now, final Iterable<NNotification> notificationsBefore) {
         return FluentIterable
                 .from(notificationsBefore)
                 .filter(this.getNotReadPredicate())
-                .filter(this.getMillisPredicate(now));
+                .filter(this.getMillisPredicate(now))
+                .toList();
     }
 
     protected Predicate<NNotification> getNotReadPredicate() {
@@ -95,7 +97,7 @@ class NotificationCleanupTask {
             public boolean apply(final NNotification input) {
                 final DateTime sent = input.getSent();
                 final DateTime minus = now.minus(sent.getMillis());
-                return minus.getMillis() <= olderThenMillis;
+                return minus.getMillis() >= olderThenMillis;
             }
         };
     }

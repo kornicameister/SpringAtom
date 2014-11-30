@@ -13,7 +13,7 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li ng-if="!authentication.authenticated">
-                    <a href="#" title="{{'button.login'|translate}}" ng-click="actions.popupLoginDialog($event)">
+                    <a title="{{'button.login'|translate}}" ng-click="actions.popupLoginDialog($event)">
                         <i class="glyphicon glyphicon-log-in"></i>&nbsp;{{'button.login'|translate}}
                     </a>
                 </li>
@@ -21,7 +21,7 @@
                                btnClass="glyphicon glyphicon-user"
                                ng-if="authentication.authenticated"></dropdown-menu>
                 <li ng-if="authentication.authenticated">
-                    <a href="#" title="{{'button.login'|translate}}" login ng-click="actions.popupLogoutDialog($event)">
+                    <a title="{{'button.login'|translate}}" login ng-click="actions.popupLogoutDialog($event)">
                         <i class="glyphicon glyphicon-log-out" title="{{'button.logout'|translate}}"></i>
                     </a>
                 </li>

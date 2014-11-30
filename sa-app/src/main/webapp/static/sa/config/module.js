@@ -31,7 +31,6 @@ define(
         'ngCookies',
         'ngDialogs',
         'angular-moment',
-        'bProgressBar',
         'bJasny',
         'ngProgress',
         'ngMultiSelect',
