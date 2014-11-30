@@ -1,0 +1,52 @@
+{
+   "name": "SpringAtom",
+   "version": "0.0.1",
+   "homepage": "https://github.com/kornicameister/SpringAtom",
+   "description": "SpringAtom - Client Side Package",
+   "main": "src/main/webapp/static/sa/springatom.js",
+   "keywords": [
+      "spring",
+      "car",
+      "service",
+      "management"
+   ],
+   "authors": [
+      "kornicameister@gmail.com"
+   ],
+   "license": "MIT",
+   "private": true,
+   "ignore": [
+      "**/.*",
+      "node_modules",
+      "bower_components",
+      "test",
+      "tests"
+   ],
+   "dependencies": {
+      "bootstrap": "latest",
+      "ng-grid": "latest",
+      "angular-bootstrap": "latest",
+      "angular-ui-router": "latest",
+      "angular-ui-calendar": "latest",
+      "angular-animate": "latest",
+      "angular-moment": "latest",
+      "angular-cookies": "latest",
+      "angular-dialog-service": "latest",
+      "jasny-bootstrap": "latest",
+      "jsface": "latest",
+      "animate.css": "latest",
+      "normalize-css": "latest",
+      "ngprogress": "latest",
+      "underscore": "latest",
+      "isteven-angular-multiselect": "latest",
+      "angular-translate-loader-url": "2.2.0",
+      "angular-translate-storage-local": "latest",
+      "angular-translate-handler-log": "latest",
+      "angular-local-storage": "0.0.7",
+      "restangular": "1.4.0"
+   },
+   "resolutions": {
+      "jquery": "~2.x",
+      "angular-translate": "2.2.0"
+   }
+}

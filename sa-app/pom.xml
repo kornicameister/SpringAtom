@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <artifactId>sa-app</artifactId>
+    <packaging>war</packaging>
+    <parent>
+        <artifactId>springatom-core</artifactId>
+        <groupId>org.agatom.springatom</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.agatom.springatom</groupId>
+            <artifactId>sa-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.agatom.springatom</groupId>
+            <artifactId>sa-data-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.agatom.springatom</groupId>
+            <artifactId>sa-data-jpa</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.agatom.springatom</groupId>
+            <artifactId>sa-data-oid</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.agatom.springatom</groupId>
+            <artifactId>sa-data-xml</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.agatom.springatom</groupId>
+            <artifactId>sa-data-vin</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.agatom.springatom</groupId>
+            <artifactId>sa-components</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- wro -->
+        <dependency>
+            <groupId>ro.isdc.wro4j</groupId>
+            <artifactId>wro4j-core</artifactId>
+            <version>${wro4j.version}</version>
+        </dependency>
+        <!-- wro -->
+
+        <!-- webjars -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>font-awesome</artifactId>
+            <version>${webjars.font-awesome.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>bootstrap</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- webjars -->
+
+    </dependencies>
+
+    <properties>
+        <tomcat.maven.version>2.1</tomcat.maven.version>
+        <project.maven-war-plugin.version>2.4</project.maven-war-plugin.version>
+        <jetty-maven-plugin.version>9.2.3.v20140905</jetty-maven-plugin.version>
+        <webjars.font-awesome.version>4.2.0</webjars.font-awesome.version>
+        <wro4j.version>1.7.6</wro4j.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${project.maven-war-plugin.version}</version>
+                <configuration>
+                    <warName>springatom</warName>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty-maven-plugin.version}</version>
+                <configuration>
+                    <scanIntervalSeconds>5</scanIntervalSeconds>
+                    <httpConnector>
+                        <port>8888</port>
+                    </httpConnector>
+                    <stopPort>6666</stopPort>
+                    <stopKey>ARES</stopKey>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>${tomcat.maven.version}</version>
+                <configuration>
+                    <url>http://localhost:8888/</url>
+                    <server>TomcatServer</server>
+                    <port>8888</port>
+                    <path>/</path>
+                    <mode>dev</mode>
+                    <failOnError>true</failOnError>
+                    <systemProperties>
+                        <JAVA_OPTS>-Xms256m -Xmx512m -XX:MaxPermSize=256m</JAVA_OPTS>
+                    </systemProperties>
+                    <update>true</update>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

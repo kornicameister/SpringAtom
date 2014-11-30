@@ -1,0 +1,85 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                  ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is free software: you can redistribute it and/or modify                          ~
+  ~ it under the terms of the GNU General Public License as published by                          ~
+  ~ the Free Software Foundation, either version 3 of the License, or                             ~
+  ~ (at your option) any later version.                                                           ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is distributed in the hope that it will be useful,                               ~
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of                                ~
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                 ~
+  ~ GNU General Public License for more details.                                                  ~
+  ~                                                                                               ~
+  ~ You should have received a copy of the GNU General Public License                             ~
+  ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="true" monitoring="autodetect"
+         dynamicConfig="true">
+
+    <diskStore path="java.io.tmpdir/springatom"/>
+
+    <defaultCache maxEntriesLocalHeap="10000" eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="120"
+                  diskSpoolBufferSizeMB="30"
+                  maxEntriesLocalDisk="10000000" diskExpiryThreadIntervalSeconds="120" memoryStoreEvictionPolicy="LRU">
+        <persistence strategy="localTempSwap"/>
+    </defaultCache>
+
+    <!-- idle and live silently ignored-->
+    <cache name="cars"
+           timeToLiveSeconds="3600"
+           maxEntriesLocalHeap="200"
+           overflowToDisk="true"/>
+    <cache name="clients"
+           timeToLiveSeconds="3600"
+           maxEntriesLocalHeap="200"
+           overflowToDisk="true"/>
+    <cache name="appointment_principals"
+           timeToLiveSeconds="3600"
+           maxEntriesLocalHeap="5"
+           overflowToDisk="true"/>
+    <cache name="reports"
+           overflowToDisk="true"
+           diskPersistent="true"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           maxEntriesLocalHeap="20"/>
+
+    <cache name="org_springatom_cache_revisions"
+           overflowToDisk="true"
+           diskPersistent="true"
+           timeToIdleSeconds="100"
+           timeToLiveSeconds="600"
+           maxEntriesLocalHeap="5"/>
+    <cache name="org_springatom_cache_revisions_first"
+           overflowToDisk="true"
+           diskPersistent="true"
+           timeToIdleSeconds="60"
+           timeToLiveSeconds="120"
+           maxEntriesLocalHeap="5"/>
+    <cache name="org_springatom_cache_revisions_last"
+           overflowToDisk="true"
+           diskPersistent="true"
+           timeToIdleSeconds="60"
+           timeToLiveSeconds="120"
+           maxEntriesLocalHeap="5"/>
+    <cache name="org_springatom_cache_revisions_count"
+           overflowToDisk="true"
+           diskPersistent="true"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           maxEntriesLocalHeap="20"/>
+
+    <cache name="org_agatom_springatom_tableBuilders"
+           maxElementsInMemory="55"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="300"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+</ehcache>

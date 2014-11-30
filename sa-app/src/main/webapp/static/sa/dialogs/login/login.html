@@ -1,0 +1,91 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                  ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is free software: you can redistribute it and/or modify                          ~
+  ~ it under the terms of the GNU General Public License as published by                          ~
+  ~ the Free Software Foundation, either version 3 of the License, or                             ~
+  ~ (at your option) any later version.                                                           ~
+  ~                                                                                               ~
+  ~ [SpringAtom] is distributed in the hope that it will be useful,                               ~
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of                                ~
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                 ~
+  ~ GNU General Public License for more details.                                                  ~
+  ~                                                                                               ~
+  ~ You should have received a copy of the GNU General Public License                             ~
+  ~ along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                 ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<div class="modal-header dialog-header-prompt">
+    <h4 class="modal-title">
+        {{'sa.msg.login.dialog'|translate}}
+    </h4>
+</div>
+<div class="modal-body">
+    <form name="authForm"
+          action="/app/auth/login.do"
+          method="post"
+          accept-charset="UTF-8"
+          role="form"
+          class="form-horizontal"
+          autocomplete="on">
+        <div class="form-group">
+            <label for="username" class="col-sm-2 control-label">
+                {{'label.auth.login'|translate}}
+            </label>
+
+            <div class="col-sm-10">
+                <input type="text"
+                       name="ares"
+                       id="username"
+                       placeholder="{{'sa.msg.login.prompt'|translate}}"
+                       autofocus
+                       class="form-control"
+                       ng-model="formData.username"
+                       required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password" class="col-sm-2 control-label">
+                {{'label.auth.password'|translate}}
+            </label>
+
+            <div class="col-sm-10">
+                <input type="password"
+                       name="athena"
+                       id="password"
+                       placeholder="{{'sa.msg.password.prompt'|translate}}"
+                       class="form-control"
+                       ng-model="formData.password"
+                       required>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <div class="btn-toolbar" style="float:right">
+        <div class="btn-group">
+            <button class="btn btn-default"
+                    ng-click="login(authForm,$event)"
+                    title="{{'button.login' | translate}}">
+                <i class="glyphicon glyphicon-log-in"></i>
+            </button>
+            <button class="btn btn-default"
+                    ng-click="forgotPassword(authForm,$event)"
+                    title="{{'sa.msg.forgotPassword' | translate}}">
+                <i class="glyphicon glyphicon-log-in"></i>
+            </button>
+            <button class="btn btn-default"
+                    ng-click="register(authForm,$event)"
+                    title="{{'sa.msg.register' | translate}}">
+                <i class="glyphicon glyphicon-log-in"></i>
+            </button>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-default"
+                    ng-click="cancel(authForm,$event)"
+                    title="{{'button.cancel' | translate}}">
+                <i class="fa fa-fw fa-power-off"></i>
+            </button>
+        </div>
+    </div>
+</div>

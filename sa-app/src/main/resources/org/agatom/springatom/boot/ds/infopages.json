@@ -1,0 +1,6 @@
+{
+   "pages": [
+      "org/agatom/springatom/hades/model/appointment/nappointment.json",
+      "org/agatom/springatom/hades/model/car/car.json"
+   ]
+}

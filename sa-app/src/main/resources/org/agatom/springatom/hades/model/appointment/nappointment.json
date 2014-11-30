@@ -1,0 +1,102 @@
+{
+   "id": "appointment_ip_v_1",
+   "rel": "appointment",
+   "version": "1.0",
+   "domain": "org.agatom.springatom.data.hades.model.appointment.NAppointment",
+   "content": [
+      {
+         "id": "basicAttributes",
+         "layout": {
+            "type": "vbox"
+         },
+         "title": {
+            "en_us": "Basic",
+            "pl_pl": "Podstawowe"
+         },
+         "icon": {
+            "iconCls": "fa fa-info-circle fa-color-black"
+         },
+         "position": 0,
+         "attributes": [
+            {
+               "path": "id",
+               "position": 0
+            },
+            {
+               "path": "begin",
+               "position": 1
+            },
+            {
+               "path": "interval",
+               "position": 2
+            },
+            {
+               "path": "end",
+               "position": 3
+            },
+            {
+               "path": "closed",
+               "position": 4
+            },
+            {
+               "path": "comment",
+               "position": 5
+            },
+            {
+               "path": "assigned",
+               "position": 6
+            }
+         ]
+      },
+      {
+         "id": "tasks",
+         "layout": {
+            "type": "vbox"
+         },
+         "title": {
+            "en_us": "Tasks",
+            "pl_pl": "Zadanie"
+         },
+         "position": 1,
+         "icon": {
+            "iconCls": "fa fa-fast-backward fa-color-black"
+         },
+         "attributes": [
+            {
+               "path": "tasks",
+               "position": 0,
+               "type": "grid",
+               "builderId": "appointmentTaskTableBuilder"
+            }
+         ]
+      },
+      {
+         "id": "assignees",
+         "layout": {
+            "type": "vbox"
+         },
+         "title": {
+            "en_us": "Assigned to",
+            "pl_pl": "Przypisane do"
+         },
+         "icon": {
+            "iconCls": "fa fa-fast-forward fa-color-black"
+         },
+         "position": 2,
+         "attributes": [
+            {
+               "path": "car",
+               "position": 0
+            },
+            {
+               "path": "assignee",
+               "position": 1
+            },
+            {
+               "path": "reporter",
+               "position": 2
+            }
+         ]
+      }
+   ]
+}
