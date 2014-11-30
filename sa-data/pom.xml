@@ -22,7 +22,7 @@
 
     <artifactId>sa-data</artifactId>
     <parent>
-        <artifactId>springatom-core</artifactId>
+        <artifactId>springatom</artifactId>
         <groupId>org.agatom.springatom</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
