@@ -1,34 +1,11 @@
 *.class
-target/*
-logs/*
-
+target/
 
 # Package Files #
 *.jar
 *.war
 *.ear
 
-# idea
-.idea/*
+# Idea
+.idea/
 *.iml
-
-# db
-database/**.mwb.bak
-database/**.png
-database/**.pdf
-
-# tmp
-*~*
-
-# SAClient - mock
-SAClient/**
-src/main/webapp/static/log/**
-
-# libs
-lib/*
-
-#docs
-docs/**
-
-#bower installed packages
-src/main/webapp/static/libs/**
