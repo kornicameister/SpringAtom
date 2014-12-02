@@ -21,5 +21,4 @@ public interface SRecentlyUpdatedService {
 
     Page<RecentUpdateBean> getRecentlyUpdated(final Pageable pageable);
 
-
 }

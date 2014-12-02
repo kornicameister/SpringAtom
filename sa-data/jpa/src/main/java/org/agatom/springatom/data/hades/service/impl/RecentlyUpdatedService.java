@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import org.agatom.springatom.data.event.PersistenceEventListenerAdapter;
 import org.agatom.springatom.data.hades.service.NRecentlyUpdatedService;
 import org.agatom.springatom.data.support.rupdate.RecentUpdateBean;
+import org.agatom.springatom.data.types.rupdate.RecentUpdateType;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,6 +86,22 @@ class RecentlyUpdatedService
             private Logger logger = LoggerFactory.getLogger(this.getClass());
 
             @Override
+            protected void onAfterCreate(final Persistable<Long> entity) {
+                final boolean offer = recentlyUpdatedQueue.offer(new RecentlyUpdated(entity, RecentUpdateType.CREATE));
+                if (!offer) {
+                    logger.info("{} was not offered into the recently updated queue for key={}", entity, RecentUpdateType.CREATE);
+                }
+            }
+
+            @Override
+            protected void onAfterSave(final Persistable<Long> entity) {
+                final boolean offer = recentlyUpdatedQueue.offer(new RecentlyUpdated(entity, RecentUpdateType.UPDATE));
+                if (!offer) {
+                    logger.info("{} was not offered into the recently updated queue for key={}", entity, RecentUpdateType.UPDATE);
+                }
+            }
+
+            @Override
             public boolean canAccept(final Object object) {
                 final Class<?> aClass = object.getClass();
                 if (notSupportedCache.contains(aClass)) {
@@ -104,22 +121,6 @@ class RecentlyUpdatedService
                 }
                 return contains;
             }
-
-            @Override
-            protected void onAfterCreate(final Persistable<Long> entity) {
-                final boolean offer = recentlyUpdatedQueue.offer(new RecentlyUpdated(entity, UpdateType.CREATE));
-                if (!offer) {
-                    logger.info("{} was not offered into the recently updated queue for key={}", entity, UpdateType.CREATE);
-                }
-            }
-
-            @Override
-            protected void onAfterSave(final Persistable<Long> entity) {
-                final boolean offer = recentlyUpdatedQueue.offer(new RecentlyUpdated(entity, UpdateType.UPDATE));
-                if (!offer) {
-                    logger.info("{} was not offered into the recently updated queue for key={}", entity, UpdateType.UPDATE);
-                }
-            }
         });
     }
 
@@ -130,21 +131,19 @@ class RecentlyUpdatedService
 
     @Override
     public Page<RecentUpdateBean> getRecentlyUpdated(final Pageable pageable) {
+        final int pageSize = pageable.getPageSize();
+        final int pageNumber = pageable.getPageNumber();
+        final int queueSize = this.recentlyUpdatedQueue.size();
         return null;
     }
 
-    private static enum UpdateType {
-        CREATE,
-        UPDATE
-    }
-
     private static class RecentlyUpdated {
-        DateTime   ts;
-        UpdateType updateType;
-        Class<?>   clazz;
-        Long       id;
+        DateTime         ts;
+        RecentUpdateType updateType;
+        Class<?>         clazz;
+        Long             id;
 
-        public RecentlyUpdated(final Persistable<Long> entity, final UpdateType updateType) {
+        public RecentlyUpdated(final Persistable<Long> entity, final RecentUpdateType updateType) {
             this.updateType = updateType;
             this.clazz = ClassUtils.getUserClass(entity);
             this.id = entity.getId();
