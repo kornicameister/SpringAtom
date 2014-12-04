@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -23,7 +24,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @Component
 class ErrorCapturingHandler
-        implements Thread.UncaughtExceptionHandler, RejectedExecutionHandler {
+        implements UncaughtExceptionHandler, RejectedExecutionHandler {
     private static final Logger               LOGGER              = LoggerFactory.getLogger(ErrorCapturingHandler.class);
     @Autowired
     private              NNotificationService notificationService = null;

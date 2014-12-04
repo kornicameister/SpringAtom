@@ -19,6 +19,8 @@ import org.springframework.util.ResourceUtils;
  * @since 0.0.1
  */
 @Configuration
+//@DevProfile
+//@ProductionProfile
 @EnableCaching(mode = AdviceMode.ASPECTJ, order = 1)
 public class EhCacheConfiguration {
 

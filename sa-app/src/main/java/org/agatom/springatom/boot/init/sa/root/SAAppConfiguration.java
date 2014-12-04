@@ -34,8 +34,6 @@ import org.springframework.format.datetime.joda.DateTimeFormatterFactory;
 import org.springframework.format.datetime.joda.JodaTimeFormatterRegistrar;
 import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 import org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ResourceUtils;
 
 import javax.annotation.PostConstruct;
@@ -131,11 +129,6 @@ public class SAAppConfiguration {
         set.add(new LongToDateTimeConverter());
         set.add(new StringToUnixTimestampConverter());
         return set;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Configuration

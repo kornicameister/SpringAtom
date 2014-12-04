@@ -40,7 +40,6 @@ class NotificationCleanupTask {
     @Value("#{applicationProperties['org.agatom.springatom.data.hades.service.task.NotificationCleanupTask.clearTimeUnit']}")
     private              TimeUnit             clearTimeUnit       = null;
 
-    // TODO add cron to run every morning at 6:00 AM
     @Scheduled(initialDelay = DELAY, fixedRate = RATE)
     public void scheduledRun() {
         LOGGER.info(String.format("%s scheduled execution", ClassUtils.getShortName(NotificationCleanupTask.class)));

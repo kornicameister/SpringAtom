@@ -1,12 +1,15 @@
 package org.agatom.springatom.data.hades.service.impl;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import org.agatom.springatom.data.event.PersistenceEventListenerAdapter;
+import org.agatom.springatom.data.hades.model.reference.NEntityReference;
+import org.agatom.springatom.data.hades.model.rupdate.NRecentUpdate;
+import org.agatom.springatom.data.hades.repo.repositories.rupdate.NRecentUpdateRepository;
 import org.agatom.springatom.data.hades.service.NRecentlyUpdatedService;
 import org.agatom.springatom.data.support.rupdate.RecentUpdateBean;
+import org.agatom.springatom.data.types.reference.EntityReference;
 import org.agatom.springatom.data.types.rupdate.RecentUpdateType;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -19,8 +22,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Properties;
 
 /**
  * <p>
@@ -32,28 +37,36 @@ import java.util.*;
  * @since 0.0.1
  */
 @Service
+//@DevProfile
+//@ProductionProfile
 class RecentlyUpdatedService
-        extends BaseDomainService
+        extends AbstractDomainService<NRecentUpdate>
         implements NRecentlyUpdatedService {
-    private static final Logger                 LOGGER                = LoggerFactory.getLogger(RecentlyUpdatedService.class);
-    private static final String                 PROP_KEY              = "org.agatom.springatom.data.services.SRecentlyUpdatedService.supported";
-    private static final String                 PROP_KEY_QS           = "org.agatom.springatom.data.services.SRecentlyUpdatedService.queueSize";
-    private static final ClassLoader            CLASS_LOADER          = RecentlyUpdatedService.class.getClassLoader();
+    private static final Logger               LOGGER                = LoggerFactory.getLogger(RecentlyUpdatedService.class);
+    private static final String               PROP_KEY              = "org.agatom.springatom.data.services.SRecentlyUpdatedService.supported";
+    private static final ClassLoader          CLASS_LOADER          = RecentlyUpdatedService.class.getClassLoader();
+    private static final String               DEFAULT_VALUE         = "";
     @Autowired
     @Qualifier("applicationProperties")
-    private              Properties             applicationProperties = null;
-    private              Collection<Class<?>>   supportedTypes        = null;
-    private              Collection<Class<?>>   notSupportedCache     = Lists.newArrayList();
-    private              Queue<RecentlyUpdated> recentlyUpdatedQueue  = null;
+    private              Properties           applicationProperties = null;
+    private              Collection<Class<?>> supportedTypes        = null;
+    private              Collection<Class<?>> notSupportedCache     = Lists.newArrayList();
+
+    protected NRecentUpdateRepository repo() {
+        return (NRecentUpdateRepository) this.repository;
+    }
 
     @Override
     protected void init() {
         super.init();
-        this.readSupportedTypes(this.applicationProperties.getProperty(PROP_KEY));
-        this.recentlyUpdatedQueue = this.initQueue();
+        this.readSupportedTypes(this.applicationProperties.getProperty(PROP_KEY, DEFAULT_VALUE));
     }
 
     private void readSupportedTypes(final String property) {
+        if (!StringUtils.hasLength(property)) {
+            LOGGER.info(String.format("No supported types for recently updated found"));
+            return;
+        }
         final String[] split = property.split(",");
         final Collection<Class<?>> supports = Lists.newArrayListWithExpectedSize(split.length);
         for (final String className : split) {
@@ -66,39 +79,51 @@ class RecentlyUpdatedService
         this.supportedTypes = supports;
     }
 
-    private Queue<RecentlyUpdated> initQueue() {
-        final int capacity = Integer.parseInt(this.applicationProperties.getProperty(PROP_KEY_QS, "10"));
-        return new PriorityQueue<>(capacity, new Comparator<RecentlyUpdated>() {
-            @Override
-            public int compare(final RecentlyUpdated o1, final RecentlyUpdated o2) {
-                return ComparisonChain.start()
-                        .compare(o1.updateType, o2.updateType)
-                        .compare(o1.ts, o2.ts)
-                        .result();
-            }
-        });
+    @Override
+    protected void registerListeners(final ListenerAppender listenerAppender) {
+        listenerAppender.add(this.getRecentUpdateListener());
+    }
+
+    protected NRecentUpdate newRecentUpdate(final Persistable<Long> persistable) {
+        final NEntityReference entityReference = (NEntityReference) this.entityReferenceHelper.toReference(persistable);
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("Using entity reference %s", entityReference));
+        }
+        return this.save(new NRecentUpdate().setRef(entityReference).setTs(DateTime.now()).setType(RecentUpdateType.CREATE));
+    }
+
+    protected NRecentUpdate getRecentUpdate(final Persistable<Long> persistable) {
+        final EntityReference entityReference = this.entityReferenceHelper.toReference(persistable);
+        this.repo().findAll();
+        return null;
     }
 
     @Override
-    protected void registerListeners(final ListenerAppender listenerAppender) {
-        listenerAppender.add(new PersistenceEventListenerAdapter<Persistable<Long>>() {
+    public Collection<RecentUpdateBean> getRecentlyUpdated() {
+        return null;
+    }
+
+    @Override
+    public Page<RecentUpdateBean> getRecentlyUpdated(final Pageable pageable) {
+        return null;
+    }
+
+    protected PersistenceEventListenerAdapter<Persistable<Long>> getRecentUpdateListener() {
+        return new PersistenceEventListenerAdapter<Persistable<Long>>() {
 
             private Logger logger = LoggerFactory.getLogger(this.getClass());
 
             @Override
             protected void onAfterCreate(final Persistable<Long> entity) {
-                final boolean offer = recentlyUpdatedQueue.offer(new RecentlyUpdated(entity, RecentUpdateType.CREATE));
-                if (!offer) {
-                    logger.info("{} was not offered into the recently updated queue for key={}", entity, RecentUpdateType.CREATE);
+                final NRecentUpdate recentUpdate = newRecentUpdate(entity);
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("recentUpdate(%s) saved for persistable(%s)", recentUpdate, entity));
                 }
             }
 
             @Override
             protected void onAfterSave(final Persistable<Long> entity) {
-                final boolean offer = recentlyUpdatedQueue.offer(new RecentlyUpdated(entity, RecentUpdateType.UPDATE));
-                if (!offer) {
-                    logger.info("{} was not offered into the recently updated queue for key={}", entity, RecentUpdateType.UPDATE);
-                }
+
             }
 
             @Override
@@ -121,33 +146,7 @@ class RecentlyUpdatedService
                 }
                 return contains;
             }
-        });
+        };
     }
 
-    @Override
-    public Collection<RecentUpdateBean> getRecentlyUpdated() {
-        return null;
-    }
-
-    @Override
-    public Page<RecentUpdateBean> getRecentlyUpdated(final Pageable pageable) {
-        final int pageSize = pageable.getPageSize();
-        final int pageNumber = pageable.getPageNumber();
-        final int queueSize = this.recentlyUpdatedQueue.size();
-        return null;
-    }
-
-    private static class RecentlyUpdated {
-        DateTime         ts;
-        RecentUpdateType updateType;
-        Class<?>         clazz;
-        Long             id;
-
-        public RecentlyUpdated(final Persistable<Long> entity, final RecentUpdateType updateType) {
-            this.updateType = updateType;
-            this.clazz = ClassUtils.getUserClass(entity);
-            this.id = entity.getId();
-            this.ts = DateTime.now();
-        }
-    }
 }

@@ -27,16 +27,24 @@ abstract public class BootCondition
 
     @Override
     public boolean matches(final ConditionContext context, final AnnotatedTypeMetadata metadata) {
-        final ResourceLoader resourceLoader = context.getResourceLoader();
-        final Resource resource = resourceLoader.getResource(CLASSPATH_BOOT_PROPERTIES);
+        final Resource resource = this.getResource(context);
         final Properties properties = new Properties();
         try {
-            properties.load(resource.getInputStream());
+            if (resource.exists()) {
+                properties.load(resource.getInputStream());
+            } else {
+                LOGGER.warn(String.format("%s does not exists, fine if testing...", CLASSPATH_BOOT_PROPERTIES));
+            }
             return this.matches(properties);
         } catch (IOException e) {
             LOGGER.error("Failed to get boot.properties", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private Resource getResource(final ConditionContext context) {
+        final ResourceLoader resourceLoader = context.getResourceLoader();
+        return resourceLoader.getResource(CLASSPATH_BOOT_PROPERTIES);
     }
 
     protected abstract boolean matches(final Properties bootProperties);

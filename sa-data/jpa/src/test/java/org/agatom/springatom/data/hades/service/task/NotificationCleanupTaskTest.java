@@ -121,7 +121,7 @@ public class NotificationCleanupTaskTest {
             }
         });
 
-        final List<NNotification> filter = this.cleanupTask.filter(now, notifications).toList();
+        final List<NNotification> filter = this.cleanupTask.filter(now, notifications);
 
         Assert.assertNotEquals(String.format("#filter(...) should return different amount then initial"), count, filter.size());
         Assert.assertEquals(String.format("#filter(...) returned %d where it should return %d", filter.size(), readCount), readCount, filter.size());
@@ -156,7 +156,7 @@ public class NotificationCleanupTaskTest {
             }
         });
 
-        final List<NNotification> filter = this.cleanupTask.filter(now, notifications).toList();
+        final List<NNotification> filter = this.cleanupTask.filter(now, notifications);
 
         Assert.assertEquals(String.format("#filter(...) should return different amount then initial"), count, filter.size());
     }

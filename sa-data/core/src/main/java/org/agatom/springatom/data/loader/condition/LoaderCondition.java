@@ -15,10 +15,11 @@ import java.util.Properties;
  */
 abstract class LoaderCondition
         extends BootCondition {
+    private static final String DEFAULT_VALUE = "false";
 
     @Override
     protected boolean matches(final Properties bootProperties) {
-        return this.isLoaderManagerEnabled(Boolean.valueOf(bootProperties.getProperty("boot.data.load")));
+        return this.isLoaderManagerEnabled(Boolean.valueOf(bootProperties.getProperty("boot.data.load", DEFAULT_VALUE)));
     }
 
     protected abstract boolean isLoaderManagerEnabled(final Boolean loadData);

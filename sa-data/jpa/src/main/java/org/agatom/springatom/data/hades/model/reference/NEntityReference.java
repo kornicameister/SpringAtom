@@ -24,11 +24,11 @@ public class NEntityReference
         implements EntityReference {
     private static final long     serialVersionUID = 2106085283451189416L;
     @NotNull
-    @Column(name = "ref_c", length = 400)
+    @Column(name = "ref_c", length = 400, nullable = false)
     private              Class<?> refClass         = null;
     @Min(value = 1)
     @NotNull
-    @Column(name = "ref_id")
+    @Column(name = "ref_id", nullable = false)
     private              Long     refId            = null;
 
     @Override

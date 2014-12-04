@@ -2,6 +2,7 @@ package org.agatom.springatom.data.hades.service.impl;
 
 import org.agatom.springatom.data.hades.repo.NRepository;
 import org.agatom.springatom.data.services.SDomainService;
+import org.agatom.springatom.data.services.ref.EntityReferenceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,11 @@ import javax.validation.constraints.NotNull;
 abstract class AbstractDomainService<T extends Persistable<Long>>
         extends BaseDomainService
         implements SDomainService<T> {
-    private static final Logger         LOGGER     = LoggerFactory.getLogger(AbstractDomainService.class);
+    private static final Logger                LOGGER                = LoggerFactory.getLogger(AbstractDomainService.class);
     @Autowired
-    protected            NRepository<T> repository = null;
+    protected            NRepository<T>        repository            = null;
+    @Autowired
+    protected            EntityReferenceHelper entityReferenceHelper = null;
 
     @Override
     public T findOne(final Long id) {

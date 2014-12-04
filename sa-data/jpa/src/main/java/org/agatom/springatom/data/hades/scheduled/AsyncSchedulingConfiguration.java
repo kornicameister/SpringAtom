@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @ComponentScan(
         basePackageClasses = AsyncSchedulingConfiguration.class,
-        includeFilters = {
+        excludeFilters = {
                 @Filter(value = Configuration.class)
         }
 )

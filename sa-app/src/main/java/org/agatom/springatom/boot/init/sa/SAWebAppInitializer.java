@@ -45,6 +45,15 @@ public class SAWebAppInitializer
         super.onStartup(servletContext);
         this.registerListeners(servletContext);
     }
+//
+//    @Override
+//    protected WebApplicationContext createRootApplicationContext() {
+//        final AnnotationConfigWebApplicationContext context = (AnnotationConfigWebApplicationContext) super.createRootApplicationContext();
+//        context.getEnvironment().setActiveProfiles(
+//                DevProfile.PROFILE_NAME
+//        );
+//        return context;
+//    }
 
     @Override
     protected String getServletName() {

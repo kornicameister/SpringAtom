@@ -21,13 +21,16 @@ import javax.validation.constraints.NotNull;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Table
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "ref_idx", columnNames = {"ref_c", "ref_id"})
+})
 public class NRecentUpdate
         extends NAbstractPersistable
         implements RecentUpdate {
     private static final long             serialVersionUID = -170801423066805823L;
     private static final String           DATE_TIME_TYPE   = "org.jadira.usertype.dateandtime.joda.PersistentDateTime";
+    @Embedded
     private              NEntityReference ref              = null;
     @NotNull
     @Type(type = DATE_TIME_TYPE)

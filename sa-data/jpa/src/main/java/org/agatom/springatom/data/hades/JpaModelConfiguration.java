@@ -9,6 +9,7 @@ import org.agatom.springatom.data.hades.scheduled.AsyncSchedulingConfiguration;
 import org.agatom.springatom.data.loader.DataLoaderConfiguration;
 import org.agatom.springatom.data.repositories.provider.RepositoriesConfiguration;
 import org.agatom.springatom.data.services.provider.DomainServicesConfiguration;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
@@ -19,12 +20,15 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.persistence.SharedCacheMode;
 import javax.persistence.ValidationMode;
 import javax.validation.Validator;
+import java.security.SecureRandom;
 import java.util.Map;
 
 /**
@@ -68,11 +72,17 @@ import java.util.Map;
 public class JpaModelConfiguration {
     protected static final String MODEL_BASE_PACKAGE = "org.agatom.springatom.data.hades.model";
     protected static final String REPOS_BASE_PACKAGE = "org.agatom.springatom.data.hades.repo.repositories";
+    private static final   int    STRENGTH           = 10;
 
     @Autowired
     private HikariDataSource dataSource  = null;
     @Autowired
     private Environment      environment = null;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(STRENGTH, new SecureRandom(DateTime.now().toString().getBytes()));
+    }
 
     @Bean
     public Validator validator() {
