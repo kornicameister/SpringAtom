@@ -22,7 +22,8 @@ import org.agatom.springatom.data.vin.decoder.VinDecoder;
 import org.agatom.springatom.data.vin.exception.VinDecodingException;
 import org.agatom.springatom.data.vin.model.VinNumberData;
 import org.agatom.springatom.webmvc.core.SVDefaultController;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,8 +47,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 )
 public class SVVinController
         extends SVDefaultController {
-    protected static final String     CTRL_NAME  = "vinController";
-    private static final   Logger     LOGGER     = Logger.getLogger(SVVinController.class);
+    private static final   Logger     LOGGER     = LoggerFactory.getLogger(SVVinController.class);
     @Autowired
     private                VinDecoder vinDecoder = null;
 

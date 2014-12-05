@@ -26,7 +26,8 @@ import org.agatom.springatom.cmp.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.cmp.component.core.repository.ComponentMetaData;
 import org.agatom.springatom.core.web.DataResource;
 import org.agatom.springatom.webmvc.controllers.components.data.CmpResource;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Description;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.MediaType;
@@ -58,7 +59,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @Description(value = "Controller for components")
 public class SVComponentController
         extends AbstractComponentController {
-    private static final Logger LOGGER = Logger.getLogger(SVComponentController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SVComponentController.class);
 
     @ResponseBody
     @RequestMapping(value = "/builders", method = RequestMethod.GET) /* /cmp/components/get/builders/map */

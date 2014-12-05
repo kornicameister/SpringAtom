@@ -26,7 +26,8 @@ import com.google.common.collect.Sets;
 import org.agatom.springatom.cmp.locale.beans.*;
 import org.agatom.springatom.core.util.LocalizationAware;
 import org.agatom.springatom.core.util.Localized;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.ClassUtils;
@@ -53,7 +54,7 @@ import java.util.regex.Pattern;
 class SMessageSourceImpl
         extends ReloadableResourceBundleMessageSource
         implements SMessageSource {
-    private static final Logger LOGGER = Logger.getLogger(SMessageSourceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SMessageSourceImpl.class);
 
     private static class InternalLocalizedClassAttribute
             implements LocalizedClassAttribute {

@@ -24,7 +24,8 @@ import org.agatom.springatom.data.oid.SOid;
 import org.agatom.springatom.data.oid.SOidService;
 import org.agatom.springatom.webmvc.core.SVDefaultController;
 import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.http.HttpStatus;
@@ -56,7 +57,7 @@ import java.util.Map;
  */
 abstract class AbstractComponentController
         extends SVDefaultController {
-    private static final Logger                     LOGGER            = Logger.getLogger(AbstractComponentController.class);
+    private static final Logger                     LOGGER            = LoggerFactory.getLogger(AbstractComponentController.class);
     @Autowired
     protected            ComponentBuilderRepository builderRepository = null;
     @Autowired

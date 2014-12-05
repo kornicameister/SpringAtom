@@ -22,7 +22,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import org.agatom.springatom.cmp.component.infopages.InfoPageNotFoundException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -57,7 +58,7 @@ import java.util.concurrent.TimeUnit;
 @Description("InfoPageMappingService gives access to verify if an InfoPage exists for certain information (rel,class,object)")
 class InfoPageMappingServiceImpl
         implements InfoPageMappingService {
-    private static final Logger                                       LOGGER             = Logger.getLogger(InfoPageMappingServiceImpl.class);
+    private static final Logger                                       LOGGER             = LoggerFactory.getLogger(InfoPageMappingServiceImpl.class);
     private static final String                                       MAPPING_PROPERTIES = "infoPageProperties";
     private static final String                                       REGISTER_PREFIX    = "springatom.infoPages.register.";
     private              Map<String, Class<? extends Persistable<?>>> relToClassMap      = Maps.newHashMapWithExpectedSize(5);

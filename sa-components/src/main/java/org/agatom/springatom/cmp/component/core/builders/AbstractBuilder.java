@@ -20,7 +20,8 @@ package org.agatom.springatom.cmp.component.core.builders;
 import com.google.common.base.MoreObjects;
 import org.agatom.springatom.cmp.component.core.builders.annotation.ComponentBuilder;
 import org.agatom.springatom.cmp.locale.SMessageSource;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 
@@ -37,7 +38,7 @@ import org.springframework.core.annotation.AnnotationUtils;
  */
 abstract public class AbstractBuilder
         implements Builder {
-    protected final Logger         logger        = Logger.getLogger(getClass());
+    protected final Logger         logger        = LoggerFactory.getLogger(getClass());
     @Autowired
     protected       SMessageSource messageSource = null;
 

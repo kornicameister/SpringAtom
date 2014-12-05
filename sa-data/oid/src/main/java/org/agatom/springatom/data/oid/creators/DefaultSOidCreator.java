@@ -21,7 +21,8 @@ import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;
 import org.agatom.springatom.data.oid.SOid;
 import org.agatom.springatom.data.oid.SOidCreator;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
@@ -38,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  */
 abstract class DefaultSOidCreator<T>
         implements SOidCreator<T> {
-    private static final Logger LOGGER            = Logger.getLogger(DefaultSOidCreator.class);
+    private static final Logger LOGGER            = LoggerFactory.getLogger(DefaultSOidCreator.class);
     private static final int    TYPE_PREFIX_INDEX = 0;
     private static final int    CLASS_NAME_INDEX  = 1;
     private static final int    ID_INDEX          = 2;

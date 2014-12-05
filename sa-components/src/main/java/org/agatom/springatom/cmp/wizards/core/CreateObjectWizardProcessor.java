@@ -25,7 +25,8 @@ import org.agatom.springatom.cmp.wizards.data.result.WizardDebugDataKeys;
 import org.agatom.springatom.cmp.wizards.data.result.WizardResult;
 import org.agatom.springatom.data.oid.SOid;
 import org.agatom.springatom.data.oid.SOidService;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.ui.ModelMap;
@@ -66,7 +67,7 @@ import java.util.concurrent.TimeUnit;
 abstract public class CreateObjectWizardProcessor<T>
         extends AbstractWizardProcessor
         implements WizardProcessor {
-    private static final Logger      LOGGER              = Logger.getLogger(CreateObjectWizardProcessor.class);
+    private static final Logger      LOGGER              = LoggerFactory.getLogger(CreateObjectWizardProcessor.class);
     private static final String      WIZ_INITIALIZED_MSG = "sa.msg.wizard.initialized";
     private static final String      DESCRIPTOR_KEY      = "descriptor";
     @Autowired

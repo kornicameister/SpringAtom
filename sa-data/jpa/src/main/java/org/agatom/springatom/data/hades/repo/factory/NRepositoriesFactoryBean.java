@@ -20,8 +20,9 @@ package org.agatom.springatom.data.hades.repo.factory;
 import org.agatom.springatom.data.hades.model.revision.AuditedRevisionEntity;
 import org.agatom.springatom.data.hades.repo.NRepository;
 import org.agatom.springatom.data.hades.repo.NVersionedRepository;
-import org.apache.log4j.Logger;
 import org.hibernate.envers.DefaultRevisionEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.envers.repository.support.ReflectionRevisionEntityInformation;
@@ -66,7 +67,7 @@ public class NRepositoriesFactoryBean<T extends NRepository<S>, S>
 
     private static class SRepositoryFactory
             extends JpaRepositoryFactory {
-        private static final Logger LOGGER = Logger.getLogger(SRepositoryFactory.class);
+        private static final Logger LOGGER = LoggerFactory.getLogger(SRepositoryFactory.class);
         private final Class<?>                  revisionEntityClass;
         private final RevisionEntityInformation revisionEntityInformation;
         private final ApplicationEventPublisher eventPublisher;

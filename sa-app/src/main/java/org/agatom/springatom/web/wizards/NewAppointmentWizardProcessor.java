@@ -39,7 +39,8 @@ import org.agatom.springatom.data.hades.model.car.NCar;
 import org.agatom.springatom.data.hades.model.user.NUser;
 import org.agatom.springatom.data.hades.service.NAppointmentService;
 import org.agatom.springatom.data.hades.service.NCarService;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.PropertyValuesEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
@@ -61,7 +62,7 @@ import java.util.*;
 class NewAppointmentWizardProcessor
         extends CreateObjectWizardProcessor<NAppointment> {
     protected static final String                 WIZARD_ID              = "newAppointment";
-    private static final   Logger                 LOGGER                 = Logger.getLogger(NewAppointmentWizardProcessor.class);
+    private static final   Logger                 LOGGER                 = LoggerFactory.getLogger(NewAppointmentWizardProcessor.class);
     private static final   String                 FORM_OBJECT_NAME       = "appointment";
     private static final   String                 CARS                   = "cars";
     private static final   String                 ASSIGNEES              = "assignees";
@@ -146,7 +147,7 @@ class NewAppointmentWizardProcessor
     private class StepsDefinitionHolder {
         final StepHelper TASKS = new AbstractStepHelper("tasks") {
 
-            private final Logger logger = Logger.getLogger(this.getClass());
+            private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
             @Override
             public WizardStepDescriptor getStepDescriptor(final Locale locale) {

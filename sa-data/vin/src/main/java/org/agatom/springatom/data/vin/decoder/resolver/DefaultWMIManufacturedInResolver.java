@@ -28,7 +28,8 @@ import com.google.common.collect.Maps;
 import com.neovisionaries.i18n.CountryCode;
 import javassist.NotFoundException;
 import org.agatom.springatom.core.annotations.LazyComponent;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Description;
@@ -61,7 +62,7 @@ import java.util.Set;
 @Description("Retrieves manufacturedIn by looking up in the entries loaded from file storage")
 class DefaultWMIManufacturedInResolver
         implements WMIManufacturedInResolver {
-    private static final Logger                             LOGGER         = Logger.getLogger(DefaultWMIManufacturedInResolver.class);
+    private static final Logger                             LOGGER         = LoggerFactory.getLogger(DefaultWMIManufacturedInResolver.class);
     private static final String                             WMI_PATH       = "classpath:org/agatom/springatom/data/vin/wmi.json";
     @Autowired
     private              ObjectMapper                       objectMapper   = null;

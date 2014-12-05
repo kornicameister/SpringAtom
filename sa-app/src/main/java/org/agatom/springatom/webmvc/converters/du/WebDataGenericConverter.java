@@ -24,7 +24,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
 import org.agatom.springatom.webmvc.converters.du.exception.WebConverterException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Description;
@@ -70,7 +71,7 @@ import java.util.concurrent.TimeUnit;
 class WebDataGenericConverter
         implements GenericConverter,
         ConditionalConverter {
-    private static final Logger                                        LOGGER            = Logger.getLogger(WebDataGenericConverter.class);
+    private static final Logger                                        LOGGER            = LoggerFactory.getLogger(WebDataGenericConverter.class);
     @Autowired
     private              FormattingConversionService                   conversionService = null;
     @Autowired
@@ -123,7 +124,7 @@ class WebDataGenericConverter
             LOGGER.debug(String.format("Converted for key=%s to data=%s", key, data));
             return data;
         } catch (Exception exp) {
-            LOGGER.fatal(String.format("Failure in conversion for key >> %s", key));
+            LOGGER.error(String.format("Failure in conversion for key >> %s", key));
             throw new WebConverterException(String.format("Failure in conversion for key >> %s", key), exp).setConversionKey(key).setConversionValue(value);
         }
 

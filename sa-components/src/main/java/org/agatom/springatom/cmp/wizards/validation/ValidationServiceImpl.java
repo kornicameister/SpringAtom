@@ -24,7 +24,8 @@ import org.agatom.springatom.cmp.wizards.WizardProcessor;
 import org.agatom.springatom.cmp.wizards.data.result.WizardDebugDataKeys;
 import org.agatom.springatom.cmp.wizards.data.result.WizardResult;
 import org.agatom.springatom.cmp.wizards.validation.model.ValidationBean;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -78,7 +79,7 @@ class ValidationServiceImpl
         }
     };
     private static final String               VALIDATION_TIME    = "validationTime";
-    private static final Logger               LOGGER             = Logger.getLogger(ValidationServiceImpl.class);
+    private static final Logger               LOGGER             = LoggerFactory.getLogger(ValidationServiceImpl.class);
     @Autowired
     private              ValidatorsRepository repository         = null;
     @Autowired

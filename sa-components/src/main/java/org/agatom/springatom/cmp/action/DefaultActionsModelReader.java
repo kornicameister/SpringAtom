@@ -36,7 +36,8 @@ import org.agatom.springatom.cmp.action.model.security.ActionSecurityCheck;
 import org.agatom.springatom.cmp.action.model.security.DefaultActionRole;
 import org.agatom.springatom.cmp.action.reader.ActionsModelReader;
 import org.agatom.springatom.cmp.locale.SMessageSource;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.*;
@@ -57,7 +58,7 @@ import java.util.concurrent.TimeUnit;
  */
 class DefaultActionsModelReader
         implements ActionsModelReader {
-    private static final Logger                               LOGGER              = Logger.getLogger(DefaultActionsModelReader.class);
+    private static final Logger                               LOGGER              = LoggerFactory.getLogger(DefaultActionsModelReader.class);
     private static final String                               ACTION_MODELS_KEY   = "actionModels";
     private static final String                               RESOURCE_BUNDLE_KEY = "resourceBundle";
     private              String                               modelFile           = null;

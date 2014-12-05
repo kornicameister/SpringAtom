@@ -28,7 +28,8 @@ import org.agatom.springatom.core.annotations.LazyComponent;
 import org.agatom.springatom.data.services.enumeration.SEnumerationService;
 import org.agatom.springatom.data.types.enumeration.Enumeration;
 import org.agatom.springatom.data.types.enumeration.EnumerationEntry;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Role;
@@ -54,7 +55,7 @@ import java.util.concurrent.TimeUnit;
 @Role(BeanDefinition.ROLE_SUPPORT)
 class SelectComponentFactoryImpl
         implements SelectComponentFactory {
-    private static final Logger                    LOGGER             = Logger.getLogger(SelectComponentBuilderImpl.class);
+    private static final Logger                    LOGGER             = LoggerFactory.getLogger(SelectComponentBuilderImpl.class);
     @Autowired
     private              SEnumerationService<?, ?> enumerationService = null;
     @Autowired
@@ -119,7 +120,7 @@ class SelectComponentFactoryImpl
 
     private class SelectComponentBuilderImpl<V, L, D>
             implements SelectComponentBuilder<V, L, D> {
-        private final Logger              LOGGER          = Logger.getLogger(SelectComponentBuilder.class);
+        private final Logger              LOGGER          = LoggerFactory.getLogger(SelectComponentBuilder.class);
         private       String              label           = null;
         private       Collection<D>       data            = null;
         private       Comparator<V>       valueComparator = null;

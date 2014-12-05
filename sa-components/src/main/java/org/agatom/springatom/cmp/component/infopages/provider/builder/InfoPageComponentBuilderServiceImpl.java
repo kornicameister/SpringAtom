@@ -29,7 +29,8 @@ import org.agatom.springatom.cmp.component.infopages.provider.structure.InfoPage
 import org.agatom.springatom.cmp.component.infopages.provider.structure.InfoPageTitle;
 import org.agatom.springatom.cmp.locale.SMessageSource;
 import org.agatom.springatom.cmp.locale.beans.LocalizedClassModel;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Description;
@@ -55,7 +56,7 @@ import java.util.concurrent.TimeUnit;
 @Description("Creates InfoPageComponent out of InfoPage structure")
 class InfoPageComponentBuilderServiceImpl
         implements InfoPageComponentBuilderService {
-    private static final Logger                  LOGGER        = Logger.getLogger(InfoPageComponentBuilderServiceImpl.class);
+    private static final Logger                  LOGGER        = LoggerFactory.getLogger(InfoPageComponentBuilderServiceImpl.class);
     @Autowired
     private              InfoPageProviderService provider      = null;
     @Autowired

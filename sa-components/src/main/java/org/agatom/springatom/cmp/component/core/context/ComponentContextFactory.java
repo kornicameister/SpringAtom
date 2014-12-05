@@ -21,7 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.agatom.springatom.core.annotations.LazyComponent;
 import org.agatom.springatom.data.repositories.provider.RepositoriesHelper;
 import org.agatom.springatom.data.types.PersistentVersionedBean;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.Assert;
@@ -43,7 +44,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @LazyComponent
 public class ComponentContextFactory {
-    private static final Logger             LOGGER       = Logger.getLogger(ComponentContextFactory.class);
+    private static final Logger             LOGGER       = LoggerFactory.getLogger(ComponentContextFactory.class);
     @Autowired
     private              RepositoriesHelper repositories = null;
     @Autowired

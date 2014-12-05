@@ -17,7 +17,8 @@
 
 package org.agatom.springatom.data.xml;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 
@@ -34,7 +35,7 @@ import java.io.*;
  */
 class OXMLEngine
         implements XMLHelper {
-    private static final Logger LOGGER = Logger.getLogger(OXMLEngine.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OXMLEngine.class);
     protected Marshaller   marshaller;
     protected Unmarshaller unmarshaller;
 
@@ -46,7 +47,7 @@ class OXMLEngine
             os = new FileOutputStream(filePath);
             getMarshaller().marshal(object, new StreamResult(os));
         } catch (NullPointerException exception) {
-            LOGGER.fatal("Marshaller is null, could not convert xml>object", exception);
+            LOGGER.error("Marshaller is null, could not convert xml>object", exception);
         } finally {
             if (os != null) {
                 os.close();
@@ -102,7 +103,7 @@ class OXMLEngine
             is = new FileInputStream(xmlFile);
             return this.convertFromXMLToObject(is);
         } catch (NullPointerException exception) {
-            LOGGER.fatal("Unmarshaller is null, could not convert xml>object", exception);
+            LOGGER.error("Unmarshaller is null, could not convert xml>object", exception);
         } finally {
             if (is != null) {
                 is.close();

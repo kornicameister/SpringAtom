@@ -19,7 +19,8 @@ package org.agatom.springatom.cmp.component.infopages.provider;
 
 import org.agatom.springatom.cmp.component.core.builders.exception.ComponentException;
 import org.agatom.springatom.cmp.component.infopages.provider.structure.InfoPage;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Description;
 import org.springframework.context.annotation.Role;
@@ -41,7 +42,7 @@ import java.io.InputStream;
 class JSONInfoPageProviderService
         extends AbstractInfoPageProvider
         implements InfoPageProviderService {
-    private static final Logger LOGGER    = Logger.getLogger(JSONInfoPageProviderService.class);
+    private static final Logger LOGGER    = LoggerFactory.getLogger(JSONInfoPageProviderService.class);
     private static final String EXTENSION = "json";
     private static final String CLASSPATH = "classpath";
 
@@ -58,7 +59,7 @@ class JSONInfoPageProviderService
         try {
             return this.objectMapper.readValue(stream, InfoPage.class);
         } catch (IOException e) {
-            LOGGER.fatal(String.format("getInfoPage(persistableClass=%s) failed...", persistableClass), e);
+            LOGGER.error(String.format("getInfoPage(persistableClass=%s) failed...", persistableClass), e);
             throw new ComponentException(e);
         }
     }
@@ -89,7 +90,7 @@ class JSONInfoPageProviderService
             }
             return stream;
         } catch (Exception exp) {
-            LOGGER.fatal(exp.getMessage());
+            LOGGER.error(exp.getMessage());
             throw exp;
         }
     }

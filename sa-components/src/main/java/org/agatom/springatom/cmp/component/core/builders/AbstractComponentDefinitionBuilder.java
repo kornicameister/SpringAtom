@@ -93,7 +93,7 @@ abstract public class AbstractComponentDefinitionBuilder<COMP extends Serializab
 
             return definition;
         } catch (Exception exp) {
-            this.logger.fatal(String.format("getDefinition(dataRequest=%s) failed...", dataRequest), exp);
+            this.logger.error(String.format("getDefinition(dataRequest=%s) failed...", dataRequest), exp);
             throw new ComponentCompilationException(exp);
         }
     }

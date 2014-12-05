@@ -28,7 +28,8 @@ import org.agatom.springatom.webmvc.controllers.components.SVComponentController
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
 import org.agatom.springatom.webmvc.converters.du.component.InfoPageLinkGuiComponent;
 import org.agatom.springatom.webmvc.converters.du.component.TextGuiComponent;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.Assert;
@@ -54,7 +55,7 @@ public class ToInfoPageLinkWebConverter
         extends AbstractWebConverter {
     /** Constant <code>SELECTOR="infoPageLink"</code> */
     public static final  String                     SELECTOR          = "infoPageLink";
-    private static final Logger                     LOGGER            = Logger.getLogger(ToInfoPageLinkWebConverter.class);
+    private static final Logger                     LOGGER            = LoggerFactory.getLogger(ToInfoPageLinkWebConverter.class);
     @Autowired
     private              ComponentBuilderRepository builderRepository = null;
     @Autowired

@@ -3,7 +3,8 @@ package org.agatom.springatom.boot.init.sa;
 import net.sf.ehcache.constructs.web.ShutdownListener;
 import org.agatom.springatom.boot.init.sa.mvc.SAMvcConfiguration;
 import org.agatom.springatom.boot.init.sa.root.SAAppConfiguration;
-import org.agatom.springatom.boot.init.sa.root.SARestConfiguration;
+import org.agatom.springatom.core.annotations.profile.DevProfile;
+import org.agatom.springatom.core.annotations.profile.ProductionProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
@@ -11,7 +12,9 @@ import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.context.ContextCleanupListener;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextListener;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.filter.HttpPutFormContentFilter;
@@ -45,15 +48,16 @@ public class SAWebAppInitializer
         super.onStartup(servletContext);
         this.registerListeners(servletContext);
     }
-//
-//    @Override
-//    protected WebApplicationContext createRootApplicationContext() {
-//        final AnnotationConfigWebApplicationContext context = (AnnotationConfigWebApplicationContext) super.createRootApplicationContext();
-//        context.getEnvironment().setActiveProfiles(
-//                DevProfile.PROFILE_NAME
-//        );
-//        return context;
-//    }
+
+    @Override
+    protected WebApplicationContext createRootApplicationContext() {
+        final AnnotationConfigWebApplicationContext context = (AnnotationConfigWebApplicationContext) super.createRootApplicationContext();
+        context.getEnvironment().setActiveProfiles(
+                ProductionProfile.PROFILE_NAME,
+                DevProfile.PROFILE_NAME
+        );
+        return context;
+    }
 
     @Override
     protected String getServletName() {
@@ -134,8 +138,7 @@ public class SAWebAppInitializer
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class<?>[]{
-                SAAppConfiguration.class,
-                SARestConfiguration.class
+                SAAppConfiguration.class
         };
     }
 

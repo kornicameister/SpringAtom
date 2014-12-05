@@ -20,7 +20,7 @@
         <spring-data-jpa.version>1.6.4.RELEASE</spring-data-jpa.version>
         <spring-data-envers.version>0.2.0.RELEASE</spring-data-envers.version>
         <ehcache.version>2.6.9</ehcache.version>
-        <hikariCP-version>2.0.1</hikariCP-version>
+        <hikariCP-version>2.2.5</hikariCP-version>
     </properties>
 
     <dependencies>
@@ -91,12 +91,22 @@
                     <groupId>org.hibernate.javax.persistence</groupId>
                     <artifactId>hibernate-jpa-2.0-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-commons-annotations</artifactId>
             <version>3.2.0.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- annotations -->
 
@@ -171,7 +181,16 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP-java6</artifactId>
             <version>${hikariCP-version}</version>
-            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

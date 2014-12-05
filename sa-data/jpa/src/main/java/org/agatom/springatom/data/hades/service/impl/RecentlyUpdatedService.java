@@ -3,6 +3,8 @@ package org.agatom.springatom.data.hades.service.impl;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
+import org.agatom.springatom.core.annotations.profile.DevProfile;
+import org.agatom.springatom.core.annotations.profile.ProductionProfile;
 import org.agatom.springatom.data.event.PersistenceEventListenerAdapter;
 import org.agatom.springatom.data.hades.model.reference.NEntityReference;
 import org.agatom.springatom.data.hades.model.rupdate.NRecentUpdate;
@@ -37,8 +39,8 @@ import java.util.Properties;
  * @since 0.0.1
  */
 @Service
-//@DevProfile
-//@ProductionProfile
+@DevProfile
+@ProductionProfile
 class RecentlyUpdatedService
         extends AbstractDomainService<NRecentUpdate>
         implements NRecentlyUpdatedService {

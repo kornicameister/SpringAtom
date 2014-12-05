@@ -34,7 +34,8 @@ import org.agatom.springatom.webmvc.controllers.components.SVComponentController
 import org.agatom.springatom.webmvc.converters.du.annotation.WebConverter;
 import org.agatom.springatom.webmvc.converters.du.component.TableRequestComponent;
 import org.agatom.springatom.webmvc.converters.du.component.TextGuiComponent;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -60,7 +61,7 @@ public class ToTableRequestWebConverter
         extends AbstractWebConverter {
     /** Constant <code>SELECTOR="tableRequestInitMaker"</code> */
     public static final  String                     SELECTOR                = "tableRequestInitMaker";
-    private static final Logger                     LOGGER                  = Logger.getLogger(ToTableRequestWebConverter.class);
+    private static final Logger                     LOGGER                  = LoggerFactory.getLogger(ToTableRequestWebConverter.class);
     @Autowired
     protected            ComponentBuilderRepository builderRepository       = null;
     @Autowired

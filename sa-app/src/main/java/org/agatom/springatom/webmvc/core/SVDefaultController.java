@@ -17,7 +17,8 @@
 
 package org.agatom.springatom.webmvc.core;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.rest.webmvc.support.ExceptionMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ import org.springframework.web.context.support.WebApplicationObjectSupport;
 public abstract class SVDefaultController
         extends WebApplicationObjectSupport
         implements SController {
-    private static final Logger LOGGER = Logger.getLogger(SVDefaultController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SVDefaultController.class);
 
     /**
      * <p>errorResponse.</p>

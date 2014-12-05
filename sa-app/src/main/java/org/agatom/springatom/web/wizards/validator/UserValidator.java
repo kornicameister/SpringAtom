@@ -24,9 +24,10 @@ import org.agatom.springatom.data.hades.model.person.NPersonContact;
 import org.agatom.springatom.data.hades.model.user.NUser;
 import org.agatom.springatom.data.hades.service.NPersonService;
 import org.agatom.springatom.data.hades.service.NUserService;
-import org.apache.log4j.Logger;
 import org.hibernate.validator.internal.constraintvalidators.EmailValidator;
 import org.hibernate.validator.internal.constraintvalidators.PatternValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
@@ -49,7 +50,7 @@ import java.util.regex.Pattern;
  */
 @WizardValidator
 class UserValidator {
-    private static final Logger         LOGGER         = Logger.getLogger(UserValidator.class);
+    private static final Logger         LOGGER         = LoggerFactory.getLogger(UserValidator.class);
     private static final String         PASSWORD_REGEX = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})";
     @Autowired
     private              NUserService   userService    = null;

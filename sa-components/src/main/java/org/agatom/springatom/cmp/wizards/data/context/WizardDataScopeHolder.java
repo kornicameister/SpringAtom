@@ -21,7 +21,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.binding.collection.MapAdaptable;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ClassUtils;
@@ -34,8 +35,8 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * {@code WizardDataScopeHolder} is a class designed to contain {@link org.agatom.springatom.web.wizards.data.context.DataScope}
- * data for result messaging system of {@link org.agatom.springatom.web.wizards.WizardProcessor}
+ * {@code WizardDataScopeHolder} is a class designed to contain {@link org.agatom.springatom.cmp.wizards.data.context.DataScope}
+ * data for result messaging system of {@link org.agatom.springatom.cmp.wizards.WizardProcessor}
  *
  * <small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-22</small>
  *
@@ -47,7 +48,7 @@ public final class WizardDataScopeHolder
         implements Serializable, MapAdaptable<String, Object> {
     private static final long                     serialVersionUID = 3492872742060913573L;
     private static final DataScope[]              DATA_SCOPES      = DataScope.values();
-    private static final Logger                   LOGGER           = Logger.getLogger(WizardDataScopeHolder.class);
+    private static final Logger                   LOGGER           = LoggerFactory.getLogger(WizardDataScopeHolder.class);
     private final        Map<DataScope, ModelMap> data             = Maps.newHashMapWithExpectedSize(DATA_SCOPES.length);
 
     public WizardDataScopeHolder addWizardData(final Object data) {

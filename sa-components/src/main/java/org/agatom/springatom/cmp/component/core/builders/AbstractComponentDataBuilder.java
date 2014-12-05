@@ -66,7 +66,7 @@ abstract public class AbstractComponentDataBuilder
 
             return this.getAsImmutable(data);
         } catch (Exception exp) {
-            this.logger.fatal(String.format("getData(dataRequest=%s) failed...", dataRequest), exp);
+            this.logger.error(String.format("getData(dataRequest=%s) failed...", dataRequest), exp);
             throw new ComponentCompilationException(exp);
         }
     }
@@ -78,7 +78,7 @@ abstract public class AbstractComponentDataBuilder
      *
      * @return response for this builder
      *
-     * @throws org.agatom.springatom.web.component.core.builders.exception.ComponentException if any
+     * @throws org.agatom.springatom.cmp.component.core.builders.exception.ComponentException if any
      */
     protected abstract Object buildData(final ComponentDataRequest dataRequest) throws ComponentException;
 

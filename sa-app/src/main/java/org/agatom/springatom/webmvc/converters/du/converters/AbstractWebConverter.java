@@ -23,7 +23,8 @@ import org.agatom.springatom.cmp.locale.beans.LocalizedClassAttribute;
 import org.agatom.springatom.data.hades.service.NUserService;
 import org.agatom.springatom.webmvc.converters.du.WebDataConverter;
 import org.agatom.springatom.webmvc.converters.du.exception.WebConverterException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Persistable;
@@ -49,7 +50,7 @@ import java.util.concurrent.TimeUnit;
  */
 abstract public class AbstractWebConverter
         implements WebDataConverter<Serializable> {
-    private static final Logger         LOGGER        = Logger.getLogger(AbstractWebConverter.class);
+    private static final Logger         LOGGER        = LoggerFactory.getLogger(AbstractWebConverter.class);
     @Autowired
     protected            SMessageSource messageSource = null;
     @Autowired
@@ -68,7 +69,7 @@ abstract public class AbstractWebConverter
             return convertedValue;
         } catch (Exception exp) {
             final String message = String.format("getValue(key=%s,value=%s,persistable=%s,request=%s) failed...", key, value, persistable, request);
-            LOGGER.fatal(message, exp);
+            LOGGER.error(message, exp);
             throw new WebConverterException(message, exp);
         }
     }

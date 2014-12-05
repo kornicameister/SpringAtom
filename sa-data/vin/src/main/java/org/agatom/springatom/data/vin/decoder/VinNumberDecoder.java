@@ -22,7 +22,8 @@ import org.agatom.springatom.data.vin.decoder.resolver.WMIManufacturedInResolver
 import org.agatom.springatom.data.vin.exception.VinDecodingException;
 import org.agatom.springatom.data.vin.model.VinNumber;
 import org.agatom.springatom.data.vin.model.VinNumberData;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Description;
@@ -43,7 +44,7 @@ import org.springframework.util.ClassUtils;
 @Description("vinNumberDecoder resolves all possible to retrieve information from passed vin number")
 class VinNumberDecoder
         implements VinDecoder {
-    private static final Logger                    LOGGER                    = Logger.getLogger(VinNumberDecoder.class);
+    private static final Logger                    LOGGER                    = LoggerFactory.getLogger(VinNumberDecoder.class);
     @Autowired
     private              VISYearResolver           yearDecoder               = null;
     @Autowired
@@ -55,7 +56,7 @@ class VinNumberDecoder
         try {
             return this.decode(VinNumber.newVinNumber(vinNumber));
         } catch (Exception exp) {
-            LOGGER.fatal(exp);
+            LOGGER.error("Decode failed due to exception", exp);
             if (ClassUtils.isAssignableValue(VinDecodingException.class, exp)) {
                 //noinspection ConstantConditions
                 throw (VinDecodingException) exp;

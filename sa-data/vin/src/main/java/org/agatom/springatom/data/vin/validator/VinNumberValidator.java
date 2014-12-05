@@ -18,7 +18,8 @@
 package org.agatom.springatom.data.vin.validator;
 
 import org.agatom.springatom.data.vin.model.VinNumber;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -32,7 +33,7 @@ import org.springframework.validation.Validator;
  */
 public class VinNumberValidator
         implements Validator {
-    private static final Logger LOGGER     = Logger.getLogger(VinNumberValidator.class);
+    private static final Logger LOGGER     = LoggerFactory.getLogger(VinNumberValidator.class);
     private static final int    VIN_LENGTH = 17;
     private static final int[]  WEIGHTS    = {8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2};
 

@@ -45,7 +45,8 @@ import org.agatom.springatom.data.vin.decoder.VinDecoder;
 import org.agatom.springatom.data.vin.exception.VinDecodingException;
 import org.agatom.springatom.data.vin.model.VinNumberData;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.DataBinder;
@@ -68,7 +69,7 @@ import java.util.concurrent.TimeUnit;
 @Wizard("newCar")
 class NewCarWizardProcessor
         extends CreateObjectWizardProcessor<NCar> {
-    private static final Logger                 LOGGER                 = Logger.getLogger(NewCarWizardProcessor.class);
+    private static final Logger                 LOGGER                 = LoggerFactory.getLogger(NewCarWizardProcessor.class);
     private static final String                 FORM_OBJECT_NAME       = "car";
     private static final String                 BRANDS                 = "brands";
     private static final String                 MODELS                 = "models";
@@ -220,7 +221,7 @@ class NewCarWizardProcessor
             }
         };
         final StepHelper CAR   = new AbstractStepHelper("car") {
-            final Logger logger = Logger.getLogger(this.getClass());
+            final Logger logger = LoggerFactory.getLogger(this.getClass());
 
             @Override
             public WizardStepDescriptor getStepDescriptor(final Locale locale) {

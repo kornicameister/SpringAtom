@@ -23,7 +23,8 @@ import org.agatom.springatom.cmp.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.data.oid.SOid;
 import org.agatom.springatom.data.oid.creators.PersistableOid;
 import org.agatom.springatom.webmvc.converters.du.ConvertibleValueWrapper;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Role;
@@ -50,7 +51,7 @@ import java.util.Map;
 @Role(BeanDefinition.ROLE_APPLICATION)
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 class CDRReturnValueConverter {
-    private static final Logger                      LOGGER            = Logger.getLogger(CDRReturnValueConverter.class);
+    private static final Logger                      LOGGER            = LoggerFactory.getLogger(CDRReturnValueConverter.class);
     @Autowired
     private              FormattingConversionService conversionService = null;
 

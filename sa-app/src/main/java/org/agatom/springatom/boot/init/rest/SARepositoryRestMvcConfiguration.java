@@ -22,13 +22,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.binding.convert.converters.StringToEnum;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.util.Assert;
@@ -57,16 +59,27 @@ class SARepositoryRestMvcConfiguration
         extends RepositoryRestMvcConfiguration {
     /** Constant <code>STRING_TO_ENUM</code> */
     public static final  StringToEnum               STRING_TO_ENUM        = new StringToEnum();
-    private static final Logger                     LOGGER                = Logger.getLogger(SARepositoryRestMvcConfiguration.class);
+    private static final Logger                     LOGGER                = LoggerFactory.getLogger(SARepositoryRestMvcConfiguration.class);
     @Autowired
     @Qualifier("applicationProperties")
-    private              Properties                 restProperties        = null;
+    private              Properties                 properties        = null;
     private              Map<Boolean, List<Object>> enableDisableFeatures = Maps.newHashMap();
 
     @PostConstruct
     private void postConstruct() {
-        Assert.notNull(this.restProperties, "restProperties not found [null]");
+        Assert.notNull(this.properties, "restProperties not found [null]");
         this.populateEnableDisable();
+    }
+
+    @Override
+    protected void configureRepositoryRestConfiguration(final RepositoryRestConfiguration configuration) {
+        configuration.setReturnBodyOnCreate(Boolean.parseBoolean(this.properties.getProperty("rest.returnBodyOnCreate")));
+        configuration.setReturnBodyOnUpdate(Boolean.parseBoolean(this.properties.getProperty("rest.returnBodyOnUpdate")));
+        configuration.setMaxPageSize(Integer.parseInt(this.properties.getProperty("rest.maxPageSize")));
+        configuration.setLimitParamName(this.properties.getProperty("rest.limitParamName"));
+        configuration.setPageParamName(this.properties.getProperty("rest.pageParamName"));
+        configuration.setSortParamName(this.properties.getProperty("rest.sortParamName"));
+        configuration.setDefaultPageSize(Integer.parseInt(this.properties.getProperty("rest.defaultPageSize")));
     }
 
     private void populateEnableDisable() {
@@ -75,7 +88,7 @@ class SARepositoryRestMvcConfiguration
     }
 
     private void populateForProperty(final String propProperties, final boolean key, final StringToEnum stringToEnum) {
-        String[] val = this.restProperties.getProperty(propProperties).split(",");
+        String[] val = this.properties.getProperty(propProperties).split(",");
         List<Object> objects = Lists.newArrayListWithExpectedSize(val.length);
 
         for (final String prop : val) {

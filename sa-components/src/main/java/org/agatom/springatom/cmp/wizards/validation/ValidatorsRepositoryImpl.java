@@ -20,7 +20,8 @@ package org.agatom.springatom.cmp.wizards.validation;
 import com.google.common.collect.Maps;
 import org.agatom.springatom.cmp.wizards.WizardProcessor;
 import org.agatom.springatom.cmp.wizards.validation.annotation.WizardValidator;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -55,7 +56,7 @@ import java.util.concurrent.TimeUnit;
 class ValidatorsRepositoryImpl
         implements ValidatorsRepository {
     public static final  String                     VALIDATOR_KEY_SUFFIX = "Validator";
-    private static final Logger                     LOGGER               = Logger.getLogger(ValidatorsRepositoryImpl.class);
+    private static final Logger                     LOGGER               = LoggerFactory.getLogger(ValidatorsRepositoryImpl.class);
     @Autowired
     private              DefaultListableBeanFactory beanFactory          = null;
     private              Map<String, Object>        validatorsMap        = null;

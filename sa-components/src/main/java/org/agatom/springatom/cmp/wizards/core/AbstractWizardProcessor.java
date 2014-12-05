@@ -27,7 +27,8 @@ import org.agatom.springatom.cmp.wizards.data.result.WizardDebugDataKeys;
 import org.agatom.springatom.cmp.wizards.data.result.WizardResult;
 import org.agatom.springatom.cmp.wizards.validation.ValidationService;
 import org.agatom.springatom.cmp.wizards.validation.model.ValidationBean;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ import java.util.concurrent.TimeUnit;
  * @since 0.0.1
  */
 abstract class AbstractWizardProcessor {
-    private static final Logger                      LOGGER             = Logger.getLogger(AbstractWizardProcessor.class);
+    private static final Logger                      LOGGER             = LoggerFactory.getLogger(AbstractWizardProcessor.class);
     @Autowired
     protected            FormattingConversionService conversionService  = null;
     @Autowired
@@ -447,7 +448,7 @@ abstract class AbstractWizardProcessor {
         try {
             this.stepHelperDelegate = StepHelperDelegate.newStepHelperDelegate(helpers);
         } catch (ConfigurationException e) {
-            LOGGER.fatal("Failed to initialized stepHelperDelegate, configuration failed", e);
+            LOGGER.error("Failed to initialized stepHelperDelegate, configuration failed", e);
             throw new BeanInitializationException(e.getMessage(), Throwables.getRootCause(e));
         }
     }

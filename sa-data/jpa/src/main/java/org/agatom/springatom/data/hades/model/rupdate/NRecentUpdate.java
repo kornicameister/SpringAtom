@@ -22,9 +22,15 @@ import javax.validation.constraints.NotNull;
  * @since 0.0.1
  */
 @Entity
-@Table(uniqueConstraints = {
-        @UniqueConstraint(name = "ref_idx", columnNames = {"ref_c", "ref_id"})
-})
+@Table(
+        indexes = {
+                @Index(name = "ts_idx", columnList = "ru_ts"),
+                @Index(name = "ref_idx", columnList = "ref_c,ref_id", unique = true)
+        },
+        uniqueConstraints = {
+                @UniqueConstraint(name = "ref_idx", columnNames = {"ref_c", "ref_id"})
+        }
+)
 public class NRecentUpdate
         extends NAbstractPersistable
         implements RecentUpdate {

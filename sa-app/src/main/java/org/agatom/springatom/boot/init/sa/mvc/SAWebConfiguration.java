@@ -3,14 +3,16 @@ package org.agatom.springatom.boot.init.sa.mvc;
 import com.google.common.collect.Lists;
 import org.agatom.springatom.cmp.locale.MessageSourceConfiguration;
 import org.agatom.springatom.cmp.wizards.WizardsConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachingConfigurer;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.guava.GuavaCacheManager;
-import org.springframework.cache.interceptor.KeyGenerator;
-import org.springframework.cache.interceptor.SimpleKeyGenerator;
+import org.springframework.cache.interceptor.*;
 import org.springframework.cache.support.CompositeCacheManager;
 import org.springframework.context.annotation.*;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -54,11 +56,48 @@ public class SAWebConfiguration {
     @Configuration
     @EnableCaching(mode = AdviceMode.ASPECTJ, order = 2)
     public static class CachingConfiguration
-            implements CachingConfigurer {
+            extends CachingConfigurerSupport {
 
         @Override
         public CacheManager cacheManager() {
             return this.compositeCacheManager();
+        }
+
+        @Override
+        public CacheResolver cacheResolver() {
+            return new SimpleCacheResolver(this.cacheManager());
+        }
+
+        @Override
+        public KeyGenerator keyGenerator() {
+            return new SimpleKeyGenerator();
+        }
+
+        @Override
+        public CacheErrorHandler errorHandler() {
+            return new SimpleCacheErrorHandler() {
+                private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+                @Override
+                public void handleCacheGetError(final RuntimeException exception, final Cache cache, final Object key) {
+                    logger.error(String.format("CacheGetError :: In cache %s for key %s, exception was thrown", cache.getName(), key), exception);
+                }
+
+                @Override
+                public void handleCachePutError(final RuntimeException exception, final Cache cache, final Object key, final Object value) {
+                    logger.error(String.format("CachePutError :: In cache %s for key %s, exception was thrown", cache.getName(), key), exception);
+                }
+
+                @Override
+                public void handleCacheEvictError(final RuntimeException exception, final Cache cache, final Object key) {
+                    logger.error(String.format("CacheEvictError :: In cache %s for key %s, exception was thrown", cache.getName(), key), exception);
+                }
+
+                @Override
+                public void handleCacheClearError(final RuntimeException exception, final Cache cache) {
+                    logger.error(String.format("CacheCleanError :: In cache %s, exception was thrown", cache.getName()), exception);
+                }
+            };
         }
 
         @Bean(name = "webCacheManager")
@@ -76,11 +115,6 @@ public class SAWebConfiguration {
             final GuavaCacheManager manager = new GuavaCacheManager();
             manager.setAllowNullValues(false);
             return manager;
-        }
-
-        @Override
-        public KeyGenerator keyGenerator() {
-            return new SimpleKeyGenerator();
         }
     }
 }

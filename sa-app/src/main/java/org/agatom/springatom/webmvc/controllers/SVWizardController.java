@@ -23,7 +23,8 @@ import org.agatom.springatom.cmp.wizards.data.WizardSubmission;
 import org.agatom.springatom.cmp.wizards.data.result.WizardResult;
 import org.agatom.springatom.cmp.wizards.repository.WizardsRepository;
 import org.agatom.springatom.webmvc.core.SVDefaultController;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.MediaType;
@@ -52,8 +53,7 @@ import java.util.concurrent.TimeUnit;
 @Description(value = "Controller to initialize wizards and submits them")
 public class SVWizardController
         extends SVDefaultController {
-    protected static final String            CTRL_NAME    = "wizardController";
-    private static final   Logger            LOGGER       = Logger.getLogger(SVWizardController.class);
+    private static final   Logger            LOGGER       = LoggerFactory.getLogger(SVWizardController.class);
     @Autowired
     private                WizardsRepository processorMap = null;
 

@@ -50,6 +50,16 @@
             <groupId>com.mysema.querydsl</groupId>
             <artifactId>querydsl-core</artifactId>
             <version>${querydsl.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.mysema.querydsl</groupId>
@@ -60,17 +70,9 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-lucene3</artifactId>
-            <version>${querydsl.version}</version>
-            <optional>true</optional>
-            <exclusions>
                 <exclusion>
-                    <groupId>org.apache.lucene</groupId>
-                    <artifactId>lucene-core</artifactId>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
