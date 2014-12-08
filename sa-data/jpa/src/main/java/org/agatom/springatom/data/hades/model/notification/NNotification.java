@@ -84,7 +84,6 @@ public class NNotification
         return null == this.sent ? null : this.sent;
     }
 
-
     @Override
     public Boolean isRead() {
         return this.read;
@@ -119,6 +118,16 @@ public class NNotification
 
     public NNotification setRead() {
         this.read = true;
+        return this;
+    }
+
+    public NNotification setNotRead() {
+        this.read = false;
+        return this;
+    }
+
+    public NNotification setSent(final DateTime dt){
+        this.sent = new DateTime(dt);
         return this;
     }
 

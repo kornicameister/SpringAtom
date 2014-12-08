@@ -12,96 +12,76 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @ContextConfiguration
 public class NotificationCleanupTaskTest {
-
+    private static final boolean                 CLEAR_NOT_READ               = true;
+    private static final int                     CLEAR_OLDER_THEN             = 30;
+    private static final int                     CLEAR_OLDER_THEN_IF_NOT_READ = 60;
+    private static final TimeUnit                CLEAR_TIME_UNIT              = TimeUnit.DAYS;
     @Spy
-    private NotificationCleanupTask cleanupTask         = null;
+    private              NotificationCleanupTask cleanupTask                  = null;
     @Mock
-    private NNotificationService    notificationService = null;
+    private              NNotificationService    notificationService          = null;
 
     @Before
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
+
         ReflectionTestUtils.setField(this.cleanupTask, "notificationService", this.notificationService);
+        ReflectionTestUtils.setField(this.cleanupTask, "clearNotRead", CLEAR_NOT_READ);
+        ReflectionTestUtils.setField(this.cleanupTask, "clearOlderThen", CLEAR_OLDER_THEN);
+        ReflectionTestUtils.setField(this.cleanupTask, "clearTimeUnit", CLEAR_TIME_UNIT);
+        ReflectionTestUtils.setField(this.cleanupTask, "clearOlderThenIfNotRead", CLEAR_OLDER_THEN_IF_NOT_READ);
     }
 
 
     @Test
+    @DirtiesContext
     public void testClean() throws Exception {
-
         // expected
         final DateTime now = DateTime.now();
-        final boolean clearNotRead = true;
-        final int clearOlderThen = 30;
-        final TimeUnit clearTimeUnit = TimeUnit.DAYS;
-        final int count = 100;
+        final int count = 10;
         // expected
 
-        // set up fields
-        this.setServiceProperties(clearNotRead, clearOlderThen, clearTimeUnit);
-        // set up fields
-
         // set up mocks
-        final Iterable<NNotification> notifications = this.getNotifications(count);
-        int idx = 0;
-        final int readThreshlod = 30;
-        final int millisThreshold = 10;
-        for (NNotification notification : notifications) {
-            if (idx < readThreshlod) {
-                ReflectionTestUtils.setField(notification, "read", true);
-            } else if (idx < millisThreshold + readThreshlod) {
-                ReflectionTestUtils.setField(notification, "sent", this.getDateTimeBefore(now, clearOlderThen, clearTimeUnit));
-            }
-            idx++;
-        }
+        final List<NNotification> notifications = this.getNotifications(count);
+
+        notifications.get(0).setRead().setSent(this.getDateTimeBefore(now, CLEAR_OLDER_THEN, CLEAR_TIME_UNIT));
+        notifications.get(1).setRead().setSent(this.getDateTimeBefore(now, CLEAR_OLDER_THEN, CLEAR_TIME_UNIT));
+        notifications.get(2).setRead().setSent(this.getDateTimeBefore(now, CLEAR_OLDER_THEN, CLEAR_TIME_UNIT));
+        notifications.get(3).setNotRead();
+        notifications.get(4).setNotRead();
+        notifications.get(5).setNotRead();
+        notifications.get(6).setNotRead();
+        notifications.get(7).setNotRead();
+        notifications.get(8).setNotRead().setSent(this.getDateTimeBefore(now, CLEAR_OLDER_THEN_IF_NOT_READ, CLEAR_TIME_UNIT));
+        notifications.get(9).setNotRead().setSent(this.getDateTimeBefore(now, CLEAR_OLDER_THEN_IF_NOT_READ, CLEAR_TIME_UNIT));
+
         Mockito.when(this.notificationService.getNotificationsBefore(now)).thenReturn(notifications);
         // set up mocks
 
-        final int expected = ((count - readThreshlod) + (count - (millisThreshold + readThreshlod))) - count;
+        final int expected = 5;
         final int actual = this.cleanupTask.clean(now);
 
         Assert.assertEquals(expected, actual);
 
     }
 
-    private void setServiceProperties(final boolean clearNotRead, final int clearOlderThen, final TimeUnit clearTimeUnit) {
-        ReflectionTestUtils.setField(this.cleanupTask, "clearNotRead", clearNotRead);
-        ReflectionTestUtils.setField(this.cleanupTask, "clearOlderThen", clearOlderThen);
-        ReflectionTestUtils.setField(this.cleanupTask, "clearTimeUnit", clearTimeUnit);
-    }
-
-    protected Iterable<NNotification> getNotifications(final int count) {
-        final Collection<NNotification> collection = Lists.newArrayListWithExpectedSize(count);
-        for (int i = 0; i < count; i++) {
-            collection.add(new NNotification().setMessage(String.valueOf(i)));
-        }
-        return collection;
-    }
-
-    private DateTime getDateTimeBefore(final DateTime now, final int clearOlderThen, final TimeUnit clearTimeUnit) {
-        final long millis = clearTimeUnit.toMillis(clearOlderThen) - 1000;
-        return now.minus(millis);
-    }
-
     @Test
+    @DirtiesContext
     public void testFilter_ClearNotRead() throws Exception {
         // expected
         final DateTime now = DateTime.now();
-        final boolean clearNotRead = true;
-        final int clearOlderThen = 30;
-        final TimeUnit clearTimeUnit = TimeUnit.DAYS;
         final int count = 100;
         // expected
-
-        this.setServiceProperties(clearNotRead, clearOlderThen, clearTimeUnit);
 
         final Iterable<NNotification> notifications = this.getNotifications(count);
         int idx = 0;
@@ -114,7 +94,7 @@ public class NotificationCleanupTaskTest {
         }
 
         // set up mock for getMillisPredicate, does not affect this test
-        Mockito.when(cleanupTask.getMillisPredicate(now)).thenReturn(new Predicate<NNotification>() {
+        Mockito.when(cleanupTask.timePredicate(now)).thenReturn(new Predicate<NNotification>() {
             @Override
             public boolean apply(final NNotification input) {
                 return true;
@@ -129,29 +109,28 @@ public class NotificationCleanupTaskTest {
     }
 
     @Test
+    @DirtiesContext
     public void testFilter_DoNotClearNotRead() throws Exception {
         // expected
         final DateTime now = DateTime.now();
-        final boolean clearNotRead = false;
-        final int clearOlderThen = 30;
-        final TimeUnit clearTimeUnit = TimeUnit.DAYS;
-        final int count = 100;
+        final int count = 5;
         // expected
 
-        this.setServiceProperties(clearNotRead, clearOlderThen, clearTimeUnit);
+        ReflectionTestUtils.setField(this.cleanupTask, "clearNotRead", false);
 
         final Iterable<NNotification> notifications = this.getNotifications(count);
         int idx = 0;
         for (NNotification notification : notifications) {
-            if (idx++ % 6 == 0) {
+            if (idx++ % 2 == 0) {
                 ReflectionTestUtils.setField(notification, "read", true);
             }
         }
 
         // set up mock for getMillisPredicate, does not affect this test
-        Mockito.when(cleanupTask.getMillisPredicate(now)).thenReturn(new Predicate<NNotification>() {
+        Mockito.when(this.cleanupTask.timePredicate(now)).thenReturn(new Predicate<NNotification>() {
             @Override
             public boolean apply(final NNotification input) {
+                // dont execute time predicate
                 return true;
             }
         });
@@ -161,18 +140,22 @@ public class NotificationCleanupTaskTest {
         Assert.assertEquals(String.format("#filter(...) should return different amount then initial"), count, filter.size());
     }
 
-    @Test
-    public void testGetClearOlderThenInMillis() {
-        final int clearOlderThen = 30;
-        final TimeUnit clearTimeUnit = TimeUnit.DAYS;
+    protected List<NNotification> getNotifications(final int count) {
+        final List<NNotification> collection = Lists.newArrayListWithExpectedSize(count);
+        for (int i = 0; i < count; i++) {
+            collection.add(new NNotification().setMessage(String.valueOf(i)));
+        }
+        return collection;
+    }
 
-        ReflectionTestUtils.setField(this.cleanupTask, "clearOlderThen", clearOlderThen);
-        ReflectionTestUtils.setField(this.cleanupTask, "clearTimeUnit", clearTimeUnit);
-
-        // expected
-        final long expectedClearOlderThen = TimeUnit.DAYS.toMillis(clearOlderThen);
-        final long actualOlderThenMillis = this.cleanupTask.getOlderThenMillis();
-
-        Assert.assertEquals("Times in MS are not the same", expectedClearOlderThen, actualOlderThenMillis);
+    private DateTime getDateTimeBefore(final DateTime now, final int clearOlderThen, final TimeUnit clearTimeUnit) {
+        final int nextInt = Math.abs(new Random().nextInt(1000));
+        switch (clearTimeUnit) {
+            case DAYS:
+                return now.minusDays(clearOlderThen + nextInt);
+            case HOURS:
+                return now.minusDays(clearOlderThen + nextInt);
+        }
+        throw new IllegalArgumentException("Failed to calculate prior date");
     }
 }
