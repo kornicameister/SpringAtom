@@ -1,5 +1,7 @@
 package org.agatom.springatom.data.hades.ds;
 
+import org.agatom.springatom.core.annotations.profile.DevProfile;
+import org.agatom.springatom.core.annotations.profile.ProductionProfile;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
@@ -19,8 +21,8 @@ import org.springframework.util.ResourceUtils;
  * @since 0.0.1
  */
 @Configuration
-//@DevProfile
-//@ProductionProfile
+@DevProfile
+@ProductionProfile
 @EnableCaching(mode = AdviceMode.ASPECTJ, order = 1)
 public class EhCacheConfiguration {
 

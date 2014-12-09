@@ -4,6 +4,8 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
+import org.agatom.springatom.core.annotations.profile.DevProfile;
+import org.agatom.springatom.core.annotations.profile.ProductionProfile;
 import org.agatom.springatom.data.hades.model.notification.NNotification;
 import org.agatom.springatom.data.hades.service.NNotificationService;
 import org.joda.time.DateTime;
@@ -32,6 +34,8 @@ import java.util.concurrent.TimeUnit;
  * @since 0.0.1
  */
 @Component
+@DevProfile
+@ProductionProfile
 class NotificationCleanupTask {
     private static final Logger               LOGGER                  = LoggerFactory.getLogger(NotificationCleanupTask.class);
     private static final int                  DELAY                   = 50000;

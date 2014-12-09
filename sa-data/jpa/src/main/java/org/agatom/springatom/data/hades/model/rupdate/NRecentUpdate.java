@@ -26,9 +26,6 @@ import javax.validation.constraints.NotNull;
         indexes = {
                 @Index(name = "ts_idx", columnList = "ru_ts"),
                 @Index(name = "ref_idx", columnList = "ref_c,ref_id", unique = true)
-        },
-        uniqueConstraints = {
-                @UniqueConstraint(name = "ref_idx", columnNames = {"ref_c", "ref_id"})
         }
 )
 public class NRecentUpdate

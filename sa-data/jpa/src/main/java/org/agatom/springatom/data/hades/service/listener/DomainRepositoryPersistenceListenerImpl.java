@@ -1,6 +1,7 @@
 package org.agatom.springatom.data.hades.service.listener;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
 import org.agatom.springatom.data.event.PersistenceEvent;
 import org.agatom.springatom.data.event.PersistenceEventListenerAdapter;
 import org.slf4j.Logger;
@@ -46,7 +47,12 @@ class DomainRepositoryPersistenceListenerImpl
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug(String.format("%s accepts %s", ClassUtils.getUserClass(listener), event));
                 }
-                listener.onApplicationEvent(event);
+                try {
+                    listener.onApplicationEvent(event);
+                } catch (Exception error) {
+                    LOGGER.error(String.format("%s from %s threw an error", ClassUtils.getShortName(event.getClass()), listener));
+                    throw error;
+                }
             }
         }
         if (LOGGER.isTraceEnabled()) {
@@ -57,9 +63,12 @@ class DomainRepositoryPersistenceListenerImpl
     @Override
     public void setListeners(final Collection<PersistenceEventListenerAdapter<?>> applicationListeners) {
         if (this.listeners == null) {
-            this.listeners = applicationListeners;
+            this.listeners = Lists.newArrayList(applicationListeners);
         } else {
             this.listeners.addAll(applicationListeners);
+        }
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("Registered %d new listeners", applicationListeners.size()));
         }
     }
 }

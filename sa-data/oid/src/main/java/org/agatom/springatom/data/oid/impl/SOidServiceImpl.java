@@ -37,6 +37,7 @@ import org.springframework.util.ClassUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -86,6 +87,16 @@ class SOidServiceImpl
 
     @Override
     public SOid getOid(@Nonnull final Object obj) throws Exception {
+        try {
+            final Class<?> userClass = ClassUtils.getUserClass(obj);
+            final Method getOid = ClassUtils.getMethod(userClass, "getOid");
+            final Object invoke = getOid.invoke(obj);
+            if (invoke != null) {
+                return (SOid) invoke;
+            }
+        } catch (Exception exp) {
+            // ignore
+        }
         final SOidCreator creator = this.getCreator(ClassUtils.getUserClass(obj));
         return creator != null ? creator.fromObject(obj) : null;
     }

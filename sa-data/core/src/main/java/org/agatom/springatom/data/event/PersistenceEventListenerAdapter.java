@@ -1,5 +1,6 @@
 package org.agatom.springatom.data.event;
 
+import com.google.common.base.MoreObjects;
 import org.agatom.springatom.data.event.after.*;
 import org.agatom.springatom.data.event.before.*;
 import org.springframework.context.ApplicationListener;
@@ -150,4 +151,10 @@ public abstract class PersistenceEventListenerAdapter<T extends Persistable<Long
         return ClassUtils.isAssignable(INTERESTED_TYPE, theClass);
     }
 
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("INTERESTED_TYPE", INTERESTED_TYPE)
+                .toString();
+    }
 }

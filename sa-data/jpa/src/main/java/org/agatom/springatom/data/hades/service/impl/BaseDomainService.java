@@ -3,8 +3,11 @@ package org.agatom.springatom.data.hades.service.impl;
 import com.google.common.collect.Sets;
 import org.agatom.springatom.data.event.PersistenceEventListenerAdapter;
 import org.agatom.springatom.data.hades.service.listener.DomainRepositoryPersistenceListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.util.ClassUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.Collection;
@@ -19,10 +22,11 @@ import java.util.Collection;
  * @since 0.0.1
  */
 class BaseDomainService {
+    private static final Logger                              LOGGER           = LoggerFactory.getLogger(BaseDomainService.class);
     @Autowired
-    protected MessageSource                       messageSource    = null;
+    protected            MessageSource                       messageSource    = null;
     @Autowired
-    private   DomainRepositoryPersistenceListener listenerDelegate = null;
+    private              DomainRepositoryPersistenceListener listenerDelegate = null;
 
     @PostConstruct
     protected void init() {
@@ -32,6 +36,12 @@ class BaseDomainService {
     private Collection<PersistenceEventListenerAdapter<?>> registerListeners() {
         final ListenerAppender listenerAppender = new ListenerAppender();
         this.registerListeners(listenerAppender);
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(String.format("%s defined %d listeners", ClassUtils.getUserClass(this), listenerAppender.listeners.size()));
+            for (final PersistenceEventListenerAdapter<?> listener : listenerAppender.listeners) {
+                LOGGER.trace(listener.toString());
+            }
+        }
         return listenerAppender.listeners;
     }
 
