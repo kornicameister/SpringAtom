@@ -1,0 +1,14 @@
+<!-- TODO: add bootstrap paging -->
+<div id="{{grid.id}}" ng-if="grid && grid.css.visible" class="container-fluid">
+    <div class="panel panel-primary center-block">
+        <div class="panel-heading" ng-if="grid.title">{{grid.title}}</div>
+        <div class="panel-body" ng-if="grid.description">{{grid.description}}</div>
+        <div class="table sg-grid"
+             ng-class="{
+             'table-responsive':grid.css.responsive,
+             'table-bordered': grid.css.border,
+             'table-hover': grid.css.hover
+             }"
+             ng-grid="grid.options"></div>
+    </div>
+</div>

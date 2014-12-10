@@ -55,3 +55,7 @@
 .dialog-header-confirm span, .dialog-header-confirm h4 {
     color : #ffffff;
 }
+
+.sg-grid {
+    min-height : 250px;
+}

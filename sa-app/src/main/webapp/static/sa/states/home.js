@@ -20,9 +20,12 @@
  */
 define(
     [
+        'views/home/homeController',
+        'views/home/recentlyUpdatedController',
+        // angular deps
         'services/navigation'
     ],
-    function navigatorStates() {
+    function navigatorStates(homeController, recentlyUpdatedController) {
         return {
             name      : 'home',
             definition: {
@@ -35,6 +38,12 @@ define(
                 },
                 onEnter    : function (actionModel, navigationService) {
                     navigationService.setNavigatorModel('main.navigation');
+                },
+                views      : {
+                    '': {
+                        controller : recentlyUpdatedController,
+                        templateUrl: '/static/sa/tpls/grid.html'
+                    }
                 }
             }
         }

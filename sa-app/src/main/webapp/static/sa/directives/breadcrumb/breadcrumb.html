@@ -1,5 +1,10 @@
-<ol class="breadcrumb">
-    <li ng-repeat="crumb in crumbs" ng-class="{active: crumb.active}">
-        {{crumb.label}}
-    </li>
-</ol>
+<header>
+    <div class="col-lg-2 container-fluid">
+        <img src="/static/images/agatom_logo.png" class="img-responsive img-thumbnail" alt="SpringAtom"/>
+    </div>
+    <ol class="breadcrumb">
+        <li ng-repeat="crumb in crumbs" ng-class="{active: crumb.active}">
+            {{crumb.label}}
+        </li>
+    </ol>
+</header>
