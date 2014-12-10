@@ -33,7 +33,11 @@ class DataResourceAOP {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataResourceAOP.class);
 
     @Pointcut("within(org.agatom.springatom.webmvc.controllers..*.*)")
-    private void asController() {
+    private void inControllers() {
+    }
+
+    @Pointcut("within(org.agatom.springatom.web.api..*.*)")
+    private void inWebApi() {
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.ResponseBody)")
@@ -41,7 +45,7 @@ class DataResourceAOP {
 
     }
 
-    @Around("asController() && withResponseBody()")
+    @Around("(inControllers() || inWebApi()) && withResponseBody()")
     public Object computeResourceValues(final ProceedingJoinPoint pjp) {
         final String name = pjp.getSignature().getName();
         if (LOGGER.isDebugEnabled()) {

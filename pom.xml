@@ -31,6 +31,7 @@
         <module>sa-data</module>
         <module>sa-components</module>
         <module>sa-app</module>
+        <module>sa-web-api</module>
     </modules>
 
     <developers>
@@ -132,6 +133,7 @@
         <commons-logging.version>1.2</commons-logging.version>
         <sa.version>1.0-SNAPSHOT</sa.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
+        <jsonassert.version>1.2.3</jsonassert.version>
     </properties>
 
     <repositories>
@@ -468,6 +470,12 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
             <version>${hamcrest-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.skyscreamer</groupId>
+            <artifactId>jsonassert</artifactId>
+            <version>${jsonassert.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- test -->

@@ -47,6 +47,11 @@
             <artifactId>sa-components</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.agatom.springatom</groupId>
+            <artifactId>sa-web-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- wro -->
         <dependency>

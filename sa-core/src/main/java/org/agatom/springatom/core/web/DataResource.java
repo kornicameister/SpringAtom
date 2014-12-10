@@ -101,6 +101,14 @@ abstract public class DataResource<T>
         return this;
     }
 
+    public DataResource<T> addLink(final Link link) {
+        if (null == link) {
+            return this;
+        }
+        this.add(link);
+        return this;
+    }
+
     @Override
     @JsonUnwrapped(enabled = false)
     @XmlAnyElement
