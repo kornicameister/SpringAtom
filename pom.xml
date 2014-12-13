@@ -673,36 +673,6 @@
                 <configuration>
                     <show>private</show>
                     <nohelp>true</nohelp>
-                    <groups>
-                        <group>
-                            <title>AOP</title>
-                            <packages>org.agatom.springatom.aop*</packages>
-                        </group>
-                        <group>
-                            <title>CORE</title>
-                            <packages>org.agatom.springatom.core*</packages>
-                        </group>
-                        <group>
-                            <title>REST</title>
-                            <packages>org.agatom.springatom.boot.rest*</packages>
-                        </group>
-                        <group>
-                            <title>SERVER</title>
-                            <packages>org.agatom.springatom.server*</packages>
-                        </group>
-                        <group>
-                            <title>DATA-MODEL</title>
-                            <packages>org.agatom.springatom.server.model*</packages>
-                        </group>
-                        <group>
-                            <title>WEB</title>
-                            <packages>org.agatom.springatom.web*</packages>
-                        </group>
-                        <group>
-                            <title>WEB-MVC</title>
-                            <packages>org.agatom.springatom.webmvc*</packages>
-                        </group>
-                    </groups>
                 </configuration>
             </plugin>
             <plugin>
