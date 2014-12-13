@@ -1,10 +1,8 @@
 package org.agatom.springatom.cmp.component.select.factory;
 
 import com.google.common.collect.Lists;
-import org.agatom.springatom.cmp.component.ComponentsConfiguration;
 import org.agatom.springatom.cmp.component.select.SelectComponent;
 import org.agatom.springatom.cmp.component.select.SelectOption;
-import org.agatom.springatom.cmp.locale.MessageSourceConfiguration;
 import org.agatom.springatom.cmp.locale.SMessageSource;
 import org.agatom.springatom.data.services.enumeration.SEnumerationService;
 import org.agatom.springatom.data.types.enumeration.Enumeration;
@@ -12,13 +10,11 @@ import org.agatom.springatom.data.types.enumeration.EnumerationEntry;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Persistable;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,11 +23,6 @@ import java.util.Locale;
 
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-        MessageSourceConfiguration.class,
-        ComponentsConfiguration.class
-})
 public class SelectComponentFactoryImplTest {
     private static final String                                   ENUM_NAME              = "TEST";
     @Mock
@@ -50,8 +41,11 @@ public class SelectComponentFactoryImplTest {
     @Test
     public void testFromEnumeration() throws Exception {
         final Locale locale = Locale.ENGLISH;
+        LocaleContextHolder.setLocale(locale);
+
         when(this.enumerationService.getEnumeration(ENUM_NAME)).thenReturn(this.getMockedEnumeration());
         when(this.messageSource.getMessage(ENUM_NAME, locale)).thenReturn(ENUM_NAME);
+
         final SelectComponent<String, String> component = this.selectComponentFactory.fromEnumeration(ENUM_NAME);
 
         Assert.assertNotNull("Component must not be null", component);
@@ -110,13 +104,13 @@ public class SelectComponentFactoryImplTest {
         }
 
         @Override
-        public String getName() {
-            return ENUM_NAME;
+        public int size() {
+            return ((List<?>) this.getEntries()).size();
         }
 
         @Override
-        public int size() {
-            return ((List<?>) this.getEntries()).size();
+        public String getName() {
+            return ENUM_NAME;
         }
 
         @Override
