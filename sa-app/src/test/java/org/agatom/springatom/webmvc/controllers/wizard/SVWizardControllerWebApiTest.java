@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Test verifies accessibility and content type for {@link org.agatom.springatom.webmvc.controllers.wizard.SVWizardController}
  * as defined via {@link org.agatom.springatom.web.api.WizardController}.
- * Test does not concern about validating the response structure. For that see {@link org.agatom.springatom.webmvc.controllers.wizard.SVWizardControllerFuncTest}
+ * Test does not concern about validating the response structure.
  */
 public class SVWizardControllerWebApiTest {
     private static final String                              WIZARD_STEP_ID   = "test";
