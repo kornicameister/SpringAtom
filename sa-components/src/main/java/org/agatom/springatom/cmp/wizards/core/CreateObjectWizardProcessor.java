@@ -78,7 +78,7 @@ abstract public class CreateObjectWizardProcessor<T>
     }
 
     @Override
-    public final WizardResult onWizardInit(final Locale locale) throws Exception {
+    public WizardResult onWizardInit(final Locale locale) throws Exception {
         LOGGER.debug(String.format("initialize(locale=%s)", locale));
 
         final long startTime = System.nanoTime();
@@ -121,7 +121,7 @@ abstract public class CreateObjectWizardProcessor<T>
      * {@inheritDoc}
      */
     @Override
-    public final WizardResult onStepInit(final String step, final Locale locale) {
+    public WizardResult onStepInit(final String step, final Locale locale) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("initializeStep(step=%s,locale=%s)", step, locale));
         }
@@ -187,7 +187,7 @@ abstract public class CreateObjectWizardProcessor<T>
      * {@inheritDoc}
      */
     @Override
-    public final WizardResult onWizardSubmit(final Map<String, Object> stepData, final Locale locale) throws Exception {
+    public WizardResult onWizardSubmit(final Map<String, Object> stepData, final Locale locale) throws Exception {
         LOGGER.debug(String.format("onWizardSubmit(stepData=%s)", stepData));
         return this.onStepSubmit(null, stepData, locale);
     }
@@ -197,7 +197,7 @@ abstract public class CreateObjectWizardProcessor<T>
      */
     @Override
     @SuppressWarnings("UnusedAssignment")
-    public final WizardResult onStepSubmit(final String step, final Map<String, Object> stepData, final Locale locale) throws Exception {
+    public WizardResult onStepSubmit(final String step, final Map<String, Object> stepData, final Locale locale) throws Exception {
         LOGGER.debug(String.format("onStepSubmit(step=%s, stepData=%s)", step, stepData));
 
         final long startTime = System.nanoTime();

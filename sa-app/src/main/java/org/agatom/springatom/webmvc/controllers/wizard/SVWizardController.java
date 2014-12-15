@@ -15,24 +15,27 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.controllers;
+package org.agatom.springatom.webmvc.controllers.wizard;
 
 import org.agatom.springatom.cmp.wizards.WizardProcessor;
 import org.agatom.springatom.cmp.wizards.core.Submission;
 import org.agatom.springatom.cmp.wizards.data.WizardSubmission;
 import org.agatom.springatom.cmp.wizards.data.result.WizardResult;
+import org.agatom.springatom.cmp.wizards.repository.WizardProcessorNotFoundException;
 import org.agatom.springatom.cmp.wizards.repository.WizardsRepository;
+import org.agatom.springatom.web.api.WizardController;
 import org.agatom.springatom.webmvc.core.SVDefaultController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Description;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -47,15 +50,21 @@ import java.util.concurrent.TimeUnit;
  * @since 0.0.1
  */
 @Controller
-@RequestMapping(value = "/cmp/wiz",
-        produces = {MediaType.APPLICATION_JSON_VALUE}
-)
-@Description(value = "Controller to initialize wizards and submits them")
 public class SVWizardController
-        extends SVDefaultController {
-    private static final   Logger            LOGGER       = LoggerFactory.getLogger(SVWizardController.class);
+        extends SVDefaultController
+        implements WizardController {
+    private static final Logger            LOGGER       = LoggerFactory.getLogger(SVWizardController.class);
     @Autowired
-    private                WizardsRepository processorMap = null;
+    private              WizardsRepository processorMap = null;
+
+    @ResponseBody
+    @ExceptionHandler(WizardProcessorNotFoundException.class)
+    public ResponseEntity<?> onWizardProcessorNotFoundException(final WizardProcessorNotFoundException exp) {
+        if (LOGGER.isWarnEnabled()) {
+            LOGGER.warn("onWizardProcessorNotFoundException(exp={}) kicked in...", exp);
+        }
+        return this.errorResponse(exp, HttpStatus.NOT_FOUND);
+    }
 
     /**
      * <b>onWizardInit</b> is called as the first method when new wizard is launched. Selects {@link WizardProcessor}
@@ -69,14 +78,12 @@ public class SVWizardController
      *
      * @return {@link WizardSubmission} the submission
      */
-    @ResponseBody
-    @RequestMapping(value = "/init/{wizard}", method = RequestMethod.GET)
-    public WizardSubmission onWizardInit(@PathVariable("wizard") final String wizard, final Locale locale) {
+    public WizardSubmission onWizardInit(final String wizard, final Locale locale) throws Exception {
         LOGGER.debug(String.format("onWizardInit(key=%s,locale=%s)", wizard, locale));
         final long startTime = System.nanoTime();
 
         WizardSubmission submission = null;
-        WizardResult result = null;
+        WizardResult result;
 
         try {
 
@@ -84,7 +91,8 @@ public class SVWizardController
             result = wizardProcessor.onWizardInit(locale);
 
         } catch (Exception exp) {
-            submission = (WizardSubmission) new WizardSubmission(null, Submission.INIT).setError(exp).setSuccess(false).setSize(1);
+            LOGGER.debug(String.format("onWizardInit(wizard=%s) failed", wizard), exp);
+            throw exp;
         }
         final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
 
@@ -108,15 +116,13 @@ public class SVWizardController
      *
      * @return {@link .WizardSubmission} the submission
      */
-    @ResponseBody
-    @RequestMapping(value = "/init/{wizard}/step/{step}", method = RequestMethod.GET)
-    public WizardSubmission onStepInit(@PathVariable("wizard") final String wizard, @PathVariable("step") final String step, final Locale locale) {
+    public WizardSubmission onStepInit(final String wizard, final String step, final Locale locale) throws Exception {
         LOGGER.debug(String.format("onStepInit(wizard=%s,step=%s,locale=%s)", wizard, step, locale));
 
         final long startTime = System.nanoTime();
 
         WizardSubmission submission = null;
-        WizardResult result = null;
+        WizardResult result;
 
         try {
 
@@ -124,7 +130,8 @@ public class SVWizardController
             result = wizardProcessor.onStepInit(step, locale);
 
         } catch (Exception exp) {
-            submission = (WizardSubmission) new WizardSubmission(null, Submission.INIT_STEP).setError(exp).setSuccess(false).setSize(1);
+            LOGGER.debug(String.format("onStepInit(wizard=%s,step=%s) failed", wizard, step), exp);
+            throw exp;
         }
         final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
 
@@ -147,15 +154,14 @@ public class SVWizardController
      *
      * @return {@link WizardSubmission} the submission
      */
-    @ResponseBody
-    @RequestMapping(value = "/submit/{wizard}")
-    public WizardSubmission onWizardSubmit(@PathVariable("wizard") final String wizard, @RequestBody final Map<String, Object> formData, final Locale locale) {
+    @Override
+    public WizardSubmission onWizardSubmit(final String wizard, final ModelMap formData, final Locale locale) throws Exception {
         LOGGER.debug(String.format("onWizardSubmit(wizard=%s,formData=%s)", wizard, formData));
 
         final long startTime = System.nanoTime();
 
         WizardSubmission submission = null;
-        WizardResult result = null;
+        WizardResult result;
 
         try {
 
@@ -163,7 +169,8 @@ public class SVWizardController
             result = wizardProcessor.onWizardSubmit(formData, locale);
 
         } catch (Exception exp) {
-            submission = (WizardSubmission) new WizardSubmission(null, Submission.SUBMIT).setError(exp).setSuccess(false).setSize(1);
+            LOGGER.debug(String.format("onWizardSubmit(wizard=%s) failed", wizard), exp);
+            throw exp;
         }
         final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
 
@@ -176,18 +183,14 @@ public class SVWizardController
         return submission;
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/submit/{wizard}/step/{step}")
-    public WizardSubmission onStepSubmit(@PathVariable("wizard") final String wizard,
-                                         @PathVariable("step") final String step,
-                                         @RequestBody final Map<String, Object> formData,
-                                         final Locale locale) {
+    @Override
+    public WizardSubmission onStepSubmit(final String wizard, final String step, final ModelMap formData, final Locale locale) throws Exception {
         LOGGER.debug(String.format("onStepSubmit(wizard=%s,step=%s,formData=%s)", wizard, step, formData));
 
         final long startTime = System.nanoTime();
 
         WizardSubmission submission = null;
-        WizardResult result = null;
+        WizardResult result;
 
         try {
 
@@ -195,7 +198,8 @@ public class SVWizardController
             result = wizardProcessor.onStepSubmit(step, formData, locale);
 
         } catch (Exception exp) {
-            submission = (WizardSubmission) new WizardSubmission(null, Submission.SUBMIT_STEP).setError(exp).setSuccess(false).setSize(1);
+            LOGGER.debug(String.format("onStepSubmit(wizard=%s,step=%s) failed", wizard, step), exp);
+            throw exp;
         }
         final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
 

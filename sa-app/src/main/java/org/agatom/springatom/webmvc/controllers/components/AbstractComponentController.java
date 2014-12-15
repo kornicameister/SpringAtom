@@ -23,7 +23,6 @@ import org.agatom.springatom.cmp.component.core.repository.ComponentBuilderRepos
 import org.agatom.springatom.data.oid.SOid;
 import org.agatom.springatom.data.oid.SOidService;
 import org.agatom.springatom.webmvc.core.SVDefaultController;
-import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,19 +117,6 @@ abstract class AbstractComponentController
             return null;
         }
         return this.oidService.getOid(oid);
-    }
-
-    /**
-     * <p>handleVinDecodingException.</p>
-     *
-     * @param npe a {@link org.agatom.springatom.webmvc.exceptions.ControllerTierException} object.
-     *
-     * @return a {@link org.springframework.http.ResponseEntity} object.
-     */
-    @ResponseBody
-    @ExceptionHandler({ControllerTierException.class})
-    public ResponseEntity<?> handleNPE(final ControllerTierException npe) {
-        return this.errorResponse(npe, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ResponseBody

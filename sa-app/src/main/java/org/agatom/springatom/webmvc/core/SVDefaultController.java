@@ -17,12 +17,15 @@
 
 package org.agatom.springatom.webmvc.core;
 
+import org.agatom.springatom.webmvc.exceptions.ControllerTierException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.rest.webmvc.support.ExceptionMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 
 /**
@@ -35,7 +38,13 @@ import org.springframework.web.context.support.WebApplicationObjectSupport;
 public abstract class SVDefaultController
         extends WebApplicationObjectSupport
         implements SController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SVDefaultController.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @ResponseBody
+    @ExceptionHandler({ControllerTierException.class, Exception.class})
+    public ResponseEntity<?> handleException(final Exception exp) {
+        return this.errorResponse(exp, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     /**
      * <p>errorResponse.</p>
@@ -62,7 +71,7 @@ public abstract class SVDefaultController
      */
     protected <T extends Throwable> ResponseEntity<ExceptionMessage> errorResponse(final HttpHeaders headers, final T throwable, final HttpStatus status) {
         if (null != throwable && null != throwable.getMessage()) {
-            LOGGER.error(throwable.getMessage(), throwable);
+            logger.error("errorResponse(err={})", throwable.getMessage());
             return response(headers, new ExceptionMessage(throwable), status);
         } else {
             return response(headers, null, status);
