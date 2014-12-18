@@ -4,14 +4,14 @@ import com.google.common.collect.Sets;
 import org.agatom.springatom.boot.security.SecurityConfiguration;
 import org.agatom.springatom.cmp.action.ActionsConfiguration;
 import org.agatom.springatom.cmp.component.ComponentsConfiguration;
-import org.agatom.springatom.cmp.locale.MessageSourceConfiguration;
-import org.agatom.springatom.cmp.locale.SMessageSource;
+import org.agatom.springatom.core.locale.ms.SMessageSource;
 import org.agatom.springatom.core.om.ObjectMapperConfiguration;
 import org.agatom.springatom.data.hades.JpaModelConfiguration;
 import org.agatom.springatom.data.loader.mgr.DataLoaderManager;
 import org.agatom.springatom.data.oid.OidConfiguration;
 import org.agatom.springatom.data.vin.VinNumberConfiguration;
 import org.agatom.springatom.data.xml.OXMLConfiguration;
+import org.agatom.springatom.locale.MessageSourceConfiguration;
 import org.agatom.springatom.webmvc.converters.CollectionToSizeConverter;
 import org.agatom.springatom.webmvc.converters.IntervalToStringConverter;
 import org.agatom.springatom.webmvc.converters.LongToDateTimeConverter;
@@ -122,5 +122,4 @@ public class SAAppConfiguration {
         set.add(new StringToUnixTimestampConverter());
         return set;
     }
-
 }

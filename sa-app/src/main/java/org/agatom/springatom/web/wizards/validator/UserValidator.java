@@ -17,8 +17,8 @@
 
 package org.agatom.springatom.web.wizards.validator;
 
-import org.agatom.springatom.cmp.locale.SMessageSource;
 import org.agatom.springatom.cmp.wizards.validation.annotation.WizardValidator;
+import org.agatom.springatom.core.locale.ms.SMessageSource;
 import org.agatom.springatom.data.constraints.PhoneNumber;
 import org.agatom.springatom.data.hades.model.person.NPersonContact;
 import org.agatom.springatom.data.hades.model.user.NUser;

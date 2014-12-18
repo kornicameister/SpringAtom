@@ -27,10 +27,10 @@ import org.agatom.springatom.cmp.component.table.elements.ng.NgTable;
 import org.agatom.springatom.cmp.component.table.elements.ng.NgTableColumn;
 import org.agatom.springatom.cmp.component.table.elements.ng.feature.NgPagingFeature;
 import org.agatom.springatom.cmp.component.table.elements.ng.feature.NgSummaryFeature;
-import org.agatom.springatom.cmp.locale.beans.LocalizedClassModel;
 import org.agatom.springatom.data.hades.model.appointment.NAppointment;
 import org.agatom.springatom.data.hades.model.appointment.QNAppointment;
 import org.agatom.springatom.data.hades.model.car.NCar;
+import org.agatom.springatom.data.locale.model.AttributedLocalizedClassModel;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -54,7 +54,7 @@ public class AppointmentsTableBuilder
     protected NgTable buildDefinition(final ComponentDataRequest dataRequest) {
         final QNAppointment appointment = QNAppointment.nAppointment;
         final NgTable table = new NgTable(TABLE_ID, BUILDER_ID);
-        final LocalizedClassModel<NAppointment> lModel = this.getLocalizedClassModel();
+        final AttributedLocalizedClassModel lModel = this.getLocalizedClassModel();
 
         table.setBorder(false)
                 .addFeature(new NgSummaryFeature().setRemoteRoot(this.getAttributeName(appointment.car)))

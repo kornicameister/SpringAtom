@@ -24,10 +24,10 @@ import org.agatom.springatom.cmp.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.cmp.component.table.TableComponentBuilder;
 import org.agatom.springatom.cmp.component.table.elements.ng.NgTable;
 import org.agatom.springatom.cmp.component.table.elements.ng.NgTableColumn;
-import org.agatom.springatom.cmp.locale.beans.LocalizedClassModel;
 import org.agatom.springatom.data.hades.model.person.NPerson;
 import org.agatom.springatom.data.hades.model.person.NPersonContact;
 import org.agatom.springatom.data.hades.model.person.QNPersonContact;
+import org.agatom.springatom.data.locale.model.AttributedLocalizedClassModel;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -51,7 +51,7 @@ public class ContactsForPersonTableBuilder
     protected NgTable buildDefinition(final ComponentDataRequest dataRequest) {
         final QNPersonContact contact = QNPersonContact.nPersonContact;
         final NgTable table = new NgTable(TABLE_ID, BUILDER_ID);
-        final LocalizedClassModel<NPersonContact> lModel = this.getLocalizedClassModel();
+        final AttributedLocalizedClassModel lModel = this.getLocalizedClassModel();
 
         table.setBorder(false)
                 .setSortable(true)

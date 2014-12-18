@@ -1,8 +1,8 @@
 package org.agatom.springatom.boot.init.sa.mvc;
 
 import com.google.common.collect.Lists;
-import org.agatom.springatom.cmp.locale.MessageSourceConfiguration;
 import org.agatom.springatom.cmp.wizards.WizardsConfiguration;
+import org.agatom.springatom.core.locale.ms.AbstractMessageSourceConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ import java.util.Properties;
  */
 @Configuration
 @Import(value = {
-        MessageSourceConfiguration.class,
+        AbstractMessageSourceConfiguration.class,
         WizardsConfiguration.class
 })
 @EnableAsync

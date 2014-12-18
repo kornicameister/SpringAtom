@@ -24,9 +24,9 @@ import org.agatom.springatom.cmp.component.core.data.ComponentDataRequest;
 import org.agatom.springatom.cmp.component.infopages.elements.meta.AttributeDisplayAs;
 import org.agatom.springatom.cmp.component.table.TableComponentBuilder;
 import org.agatom.springatom.cmp.component.table.elements.ng.NgTable;
-import org.agatom.springatom.cmp.locale.beans.LocalizedClassModel;
 import org.agatom.springatom.data.hades.model.car.NCar;
 import org.agatom.springatom.data.hades.model.car.QNCar;
+import org.agatom.springatom.data.locale.model.AttributedLocalizedClassModel;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -49,7 +49,7 @@ public class CarsTableBuilder
     protected NgTable buildDefinition(final ComponentDataRequest dataRequest) {
 
         final QNCar car = QNCar.nCar;
-        final LocalizedClassModel<NCar> lModel = this.getLocalizedClassModel();
+        final AttributedLocalizedClassModel lModel = this.getLocalizedClassModel();
         final NgTable table = new NgTable(TABLE_ID, BUILDER_ID)
                 .setBorder(false)
                 .setSortable(true)
