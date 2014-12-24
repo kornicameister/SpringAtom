@@ -41,7 +41,7 @@ public interface WizardProcessor {
     static String DEFAULT_FORM_OBJECT_NAME = DataBinder.DEFAULT_OBJECT_NAME;
 
     /**
-     * Initializes wizard bean. {@link org.agatom.springatom.cmp.wizards.data.WizardDescriptor} contains
+     * Initializes wizard model. {@link org.agatom.springatom.cmp.wizards.data.WizardDescriptor} contains
      * information about wizard title as well description of steps. Steps are vital for client side processing
      * because they contain information about names of the steps, their state keys as well labels or intel
      * if step is required

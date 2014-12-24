@@ -15,20 +15,63 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.cmp.component.infopages.elements.meta;
+package org.agatom.springatom.core.locale.ms;
+
+import org.agatom.springatom.core.util.Localized;
+import org.springframework.context.MessageSource;
+
+import java.util.Locale;
+import java.util.Map;
 
 /**
- * <p>AttributeDisplayAs class.</p>
+ * <p>SMessageSource interface.</p>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
-public enum AttributeDisplayAs {
-    VALUE_ATTRIBUTE,
-    TABLE_ATTRIBUTE,
-    EMBEDDED_ATTRIBUTE,
-    LINK_ATTRIBUTE,
-    INFOPAGE_ATTRIBUTE,
-    ACTION_ATTRIBUTE
+public interface SMessageSource
+        extends MessageSource {
+
+    /**
+     * Allows to returns localized value of the {@link org.agatom.springatom.core.util.Localized#getMessageKey()}
+     *
+     * @param localized localized to get rb value for it
+     * @param locale    current locale
+     *
+     * @return returned value
+     */
+    String getMessage(final Localized localized, final Locale locale);
+
+    /**
+     * Convenient version of {@link #getMessage(String, Object[], java.util.Locale)} where
+     * {@code args} are assumed to be null
+     *
+     * @param key    key of the msg
+     * @param locale current locale
+     *
+     * @return localized value
+     */
+    String getMessage(final String key, final Locale locale);
+
+    /**
+     * Works similarly to {@link #getMessage(String, java.util.Locale)}, difference is adding
+     * {@code default value}.
+     *
+     * @param key        key of the msg
+     * @param defaultMsg default msg
+     * @param locale     current locale
+     *
+     * @return localized value
+     */
+    String getMessage(final String key, final String defaultMsg, final Locale locale);
+
+    /**
+     * Returns all possible messages that were loaded for this message source
+     *
+     * @param locale current locale
+     *
+     * @return all messages
+     */
+    Map<String, String> getAllMessages(final Locale locale);
 }

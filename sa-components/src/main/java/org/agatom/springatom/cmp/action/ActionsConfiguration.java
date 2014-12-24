@@ -20,8 +20,9 @@ package org.agatom.springatom.cmp.action;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.agatom.springatom.cmp.action.reader.ActionsModelReader;
 import org.agatom.springatom.cmp.action.security.ActionSecurityFilter;
-import org.agatom.springatom.cmp.locale.SMessageSource;
+import org.agatom.springatom.core.locale.ms.SMessageSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
@@ -39,6 +40,7 @@ public class ActionsConfiguration {
     @Autowired
     private Environment    environment   = null;
     @Autowired
+    @Qualifier("objectMapper")
     private ObjectMapper   mapper        = null;
     @Autowired
     private SMessageSource messageSource = null;

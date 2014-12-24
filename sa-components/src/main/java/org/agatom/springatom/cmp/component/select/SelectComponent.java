@@ -18,7 +18,7 @@
 package org.agatom.springatom.cmp.component.select;
 
 import com.google.common.base.Objects;
-import org.agatom.springatom.cmp.component.core.elements.DefaultComponent;
+import org.agatom.springatom.cmp.component.Component;
 
 import java.util.Collection;
 
@@ -34,7 +34,7 @@ import java.util.Collection;
  * @since 0.0.1
  */
 public class SelectComponent<K, V>
-        extends DefaultComponent {
+        extends Component {
     private static final long                           serialVersionUID = -8009416832581079382L;
     private              Collection<SelectOption<K, V>> options          = null;
 

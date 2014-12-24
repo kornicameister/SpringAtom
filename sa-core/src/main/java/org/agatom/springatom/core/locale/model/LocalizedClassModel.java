@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,73 +15,37 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.cmp.locale.beans;
-
-import com.google.common.base.Objects;
+package org.agatom.springatom.core.locale.model;
 
 import java.io.Serializable;
 
 /**
- * <p>LocalizedMessageRequest class.</p>
+ * <p>LocalizedClassModel interface.</p>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class LocalizedMessageRequest
-        implements Serializable {
-    private static final long serialVersionUID = 5395003418793746321L;
-    private String[] keys;
-    private boolean  pattern;
-
+public interface LocalizedClassModel
+        extends Serializable {
     /**
-     * <p>Getter for the field <code>keys</code>.</p>
+     * <p>getSource.</p>
      *
-     * @return an array of {@link String} objects.
+     * @return a {@link Class} object.
      */
-    public String[] getKeys() {
-        return keys;
-    }
+    Class<?> getSource();
 
     /**
-     * <p>Setter for the field <code>keys</code>.</p>
+     * <p>getName.</p>
      *
-     * @param keys an array of {@link String} objects.
-     *
-     * @return a {@link org.agatom.springatom.web.locale.beans.LocalizedMessageRequest} object.
+     * @return a {@link String} object.
      */
-    public LocalizedMessageRequest setKeys(final String[] keys) {
-        this.keys = keys;
-        return this;
-    }
+    String getName();
 
     /**
-     * <p>isPattern.</p>
+     * <p>isFound.</p>
      *
      * @return a boolean.
      */
-    public boolean isPattern() {
-        return pattern;
-    }
-
-    /**
-     * <p>Setter for the field <code>pattern</code>.</p>
-     *
-     * @param pattern a boolean.
-     *
-     * @return a {@link org.agatom.springatom.web.locale.beans.LocalizedMessageRequest} object.
-     */
-    public LocalizedMessageRequest setPattern(final boolean pattern) {
-        this.pattern = pattern;
-        return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .addValue(keys)
-                .addValue(pattern)
-                .toString();
-    }
+    boolean isFound();
 }

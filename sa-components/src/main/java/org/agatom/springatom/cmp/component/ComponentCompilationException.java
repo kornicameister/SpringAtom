@@ -17,12 +17,8 @@
 
 package org.agatom.springatom.cmp.component;
 
-
-import org.agatom.springatom.cmp.component.core.builders.exception.ComponentException;
-
 /**
- * {@code ComponentCompilationException} is a custom exception thrown during building, in case of error,
- * of {@link org.agatom.springatom.cmp.component.core.Component}
+ * {@code ComponentCompilationException} is a custom exception thrown during building
  *
  * <p><small>Class is a part of <b>SpringAtom</b> and was created at 2014-08-25</small></p>
  *
@@ -31,7 +27,7 @@ import org.agatom.springatom.cmp.component.core.builders.exception.ComponentExce
  * @since 0.0.1
  */
 public class ComponentCompilationException
-        extends ComponentException {
+        extends Exception {
     private static final long serialVersionUID = -1452148899616678089L;
 
     public ComponentCompilationException(final String message) {

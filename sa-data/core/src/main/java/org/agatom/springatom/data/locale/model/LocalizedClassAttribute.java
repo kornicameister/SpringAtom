@@ -15,46 +15,37 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.cmp.component.table.exception;
+package org.agatom.springatom.data.locale.model;
+
+import org.agatom.springatom.core.util.Localized;
 
 /**
- * <p>DynamicColumnResolutionException class.</p>
+ * <small>Class is a part of <b>SpringAtom</b> and was created at 30.03.14</small>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public class DynamicColumnResolutionException
-        extends ComponentTableException {
-
-    private static final long serialVersionUID = -6331209247827860887L;
+public interface LocalizedClassAttribute
+        extends Localized {
+    /**
+     * <p>getName.</p>
+     *
+     * @return a {@link String} object.
+     */
+    String getName();
 
     /**
-     * <p>Constructor for DynamicColumnResolutionException.</p>
+     * <p>getLabel.</p>
      *
-     * @param message a {@link String} object.
+     * @return a {@link String} object.
      */
-    public DynamicColumnResolutionException(final String message) {
-        super(message);
-    }
+    String getLabel();
 
     /**
-     * <p>Constructor for DynamicColumnResolutionException.</p>
+     * <p>isFound.</p>
      *
-     * @param message a {@link String} object.
-     * @param cause   a {@link Throwable} object.
+     * @return a boolean.
      */
-    public DynamicColumnResolutionException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
-
-    /**
-     * <p>Constructor for DynamicColumnResolutionException.</p>
-     *
-     * @param cause a {@link Throwable} object.
-     */
-    public DynamicColumnResolutionException(final Throwable cause) {
-        super(cause);
-    }
-
+    boolean isFound();
 }

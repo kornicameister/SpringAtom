@@ -23,8 +23,8 @@ import com.google.common.collect.Sets;
 import org.agatom.springatom.cmp.component.ComponentCompilationException;
 import org.agatom.springatom.cmp.component.select.SelectComponent;
 import org.agatom.springatom.cmp.component.select.SelectOption;
-import org.agatom.springatom.cmp.locale.SMessageSource;
 import org.agatom.springatom.core.annotations.LazyComponent;
+import org.agatom.springatom.core.locale.ms.SMessageSource;
 import org.agatom.springatom.data.services.enumeration.SEnumerationService;
 import org.agatom.springatom.data.types.enumeration.Enumeration;
 import org.agatom.springatom.data.types.enumeration.EnumerationEntry;
@@ -35,7 +35,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Role;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -175,12 +174,10 @@ class SelectComponentFactoryImpl
                 cmp.setLabel(this.label);
                 cmp.setOptions(this.getOptions());
 
-                final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
-
-                cmp.addDynamicProperty("compilationTime", endTime);
-                cmp.addDynamicProperty("builder", ClassUtils.getShortName(this.getClass()));
-
-                LOGGER.trace(String.format("Compilation of SelectComponent took %d ms", endTime));
+                if (LOGGER.isTraceEnabled()) {
+                    final long endTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
+                    LOGGER.trace(String.format("Compilation of SelectComponent took %d ms", endTime));
+                }
 
                 return cmp;
             } catch (Exception exp) {

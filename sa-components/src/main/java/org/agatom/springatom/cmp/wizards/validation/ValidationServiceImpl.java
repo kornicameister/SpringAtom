@@ -19,11 +19,11 @@ package org.agatom.springatom.cmp.wizards.validation;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Sets;
-import org.agatom.springatom.cmp.locale.SMessageSource;
 import org.agatom.springatom.cmp.wizards.WizardProcessor;
 import org.agatom.springatom.cmp.wizards.data.result.WizardDebugDataKeys;
 import org.agatom.springatom.cmp.wizards.data.result.WizardResult;
 import org.agatom.springatom.cmp.wizards.validation.model.ValidationBean;
+import org.agatom.springatom.core.locale.ms.SMessageSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;

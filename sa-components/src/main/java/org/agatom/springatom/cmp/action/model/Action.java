@@ -18,7 +18,7 @@
 package org.agatom.springatom.cmp.action.model;
 
 import org.agatom.springatom.cmp.action.model.security.ActionSecurityCheck;
-import org.agatom.springatom.cmp.component.core.Component;
+import org.agatom.springatom.cmp.component.Component;
 import org.springframework.hateoas.Identifiable;
 
 import java.io.Serializable;

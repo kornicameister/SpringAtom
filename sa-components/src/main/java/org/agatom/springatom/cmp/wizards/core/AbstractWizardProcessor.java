@@ -18,7 +18,6 @@
 package org.agatom.springatom.cmp.wizards.core;
 
 import com.google.common.base.Throwables;
-import org.agatom.springatom.cmp.locale.SMessageSource;
 import org.agatom.springatom.cmp.wizards.StepHelper;
 import org.agatom.springatom.cmp.wizards.Wizard;
 import org.agatom.springatom.cmp.wizards.WizardProcessor;
@@ -27,6 +26,7 @@ import org.agatom.springatom.cmp.wizards.data.result.WizardDebugDataKeys;
 import org.agatom.springatom.cmp.wizards.data.result.WizardResult;
 import org.agatom.springatom.cmp.wizards.validation.ValidationService;
 import org.agatom.springatom.cmp.wizards.validation.model.ValidationBean;
+import org.agatom.springatom.core.locale.ms.SMessageSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.MutablePropertyValues;

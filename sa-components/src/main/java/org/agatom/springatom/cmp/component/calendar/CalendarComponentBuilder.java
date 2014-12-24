@@ -18,13 +18,7 @@
 package org.agatom.springatom.cmp.component.calendar;
 
 import com.google.common.collect.Maps;
-import org.agatom.springatom.cmp.component.core.builders.AbstractBuilder;
-import org.agatom.springatom.cmp.component.core.builders.ComponentDefinitionBuilder;
-import org.agatom.springatom.cmp.component.core.builders.ComponentProduces;
-import org.agatom.springatom.cmp.component.core.builders.annotation.ComponentBuilder;
-import org.agatom.springatom.cmp.component.core.builders.exception.ComponentException;
-import org.agatom.springatom.cmp.component.core.data.ComponentDataRequest;
-import org.agatom.springatom.cmp.locale.SMessageSource;
+import org.agatom.springatom.core.locale.ms.SMessageSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -43,10 +37,7 @@ import java.util.Properties;
  * @version 0.0.1
  * @since 0.0.1
  */
-@ComponentBuilder(CalendarComponentBuilder.BUILDER_ID)
-public class CalendarComponentBuilder
-        extends AbstractBuilder
-        implements ComponentDefinitionBuilder<Calendar> {
+public class CalendarComponentBuilder {
     protected static final String         BUILDER_ID            = "calendarBuilder";
     private static final   String[]       EMPTY_ARRAY_OF_STRING = new String[]{};
     private static final   String         DAY_NAMES             = "dayNames";
@@ -68,18 +59,7 @@ public class CalendarComponentBuilder
     @Qualifier("applicationProperties")
     private                Properties     applicationProperties = null;
 
-    @Override
-    public ComponentProduces getProduces() {
-        return ComponentProduces.OTHER_COMPONENT;
-    }
-
-    @Override
-    public Class<?> getBuilds() {
-        return Calendar.class;
-    }
-
-    @Override
-    public Calendar getDefinition(final ComponentDataRequest dataRequest) throws ComponentException {
+    public Calendar getDefinition() {
         final Calendar configuration = new Calendar();
 
         final Locale locale = LocaleContextHolder.getLocale();

@@ -35,7 +35,7 @@ import org.agatom.springatom.cmp.action.model.security.ActionRoleMap;
 import org.agatom.springatom.cmp.action.model.security.ActionSecurityCheck;
 import org.agatom.springatom.cmp.action.model.security.DefaultActionRole;
 import org.agatom.springatom.cmp.action.reader.ActionsModelReader;
-import org.agatom.springatom.cmp.locale.SMessageSource;
+import org.agatom.springatom.core.locale.ms.SMessageSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -364,7 +364,7 @@ class DefaultActionsModelReader
     /**
      * <p>Setter for the field <code>messageSource</code>.</p>
      *
-     * @param messageSource a {@link org.agatom.springatom.cmp.locale.SMessageSource} object.
+     * @param messageSource a {@link org.agatom.springatom.core.locale.ms.SMessageSource} object.
      */
     public void setMessageSource(final SMessageSource messageSource) {
         Assert.notNull(messageSource, "messageSource has no text");

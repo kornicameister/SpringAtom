@@ -17,8 +17,6 @@
 
 package org.agatom.springatom.cmp.component.calendar;
 
-import org.agatom.springatom.cmp.component.core.Component;
-
 import java.util.HashMap;
 
 /**
@@ -31,17 +29,14 @@ import java.util.HashMap;
  * @since 0.0.1
  */
 class Calendar
-        extends HashMap<String, Object>
-        implements Component {
+        extends HashMap<String, Object> {
     private static final long serialVersionUID = 6652812453541549468L;
 
-    @Override
     public String getLabel() {
         return (String) this.get("label");
     }
 
-    @Override
-    public Component setLabel(final String title) {
+    public Calendar setLabel(final String title) {
         this.put("label", title);
         return this;
     }
