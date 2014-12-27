@@ -19,9 +19,12 @@ package org.agatom.springatom.cmp.wizards.data;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import org.agatom.springatom.cmp.component.core.elements.ContentComponent;
+import com.google.common.collect.Sets;
+import org.agatom.springatom.cmp.component.Component;
 
 import javax.annotation.Nullable;
+import java.io.Serializable;
+import java.util.Set;
 
 /**
  * {@code WizardDescriptor} describes entire wizard. Contains meta information (title, labels, list of steps) that are used
@@ -30,15 +33,27 @@ import javax.annotation.Nullable;
  *
  * @author trebskit
  * @version 0.0.2
- * @see org.agatom.springatom.cmp.component.core.elements.ContentComponent
  * @since 0.0.1
  */
 public class WizardDescriptor
-        extends ContentComponent<WizardStepDescriptor> {
-    private static final long serialVersionUID = 8779554824213960312L;
+        extends Component
+        implements Serializable {
+    private static final long                      serialVersionUID = 8779554824213960312L;
+    private              Set<WizardStepDescriptor> descriptorSet    = null;
 
     public boolean addStep(final WizardStepDescriptor wizardStepDescriptor) {
         return this.addContent(wizardStepDescriptor);
+    }
+
+    private boolean addContent(final WizardStepDescriptor wizardStepDescriptor) {
+        return wizardStepDescriptor != null && this.getContent().add(wizardStepDescriptor);
+    }
+
+    private Set<WizardStepDescriptor> getContent() {
+        if (this.descriptorSet == null) {
+            this.descriptorSet = Sets.newHashSetWithExpectedSize(3);
+        }
+        return this.descriptorSet;
     }
 
     public WizardStepDescriptor getStep(final String key) {
@@ -51,7 +66,7 @@ public class WizardDescriptor
     }
 
     public boolean removeStep(final WizardStepDescriptor wizardStepDescriptor) {
-        return this.removeContent(wizardStepDescriptor);
+        return this.getContent().remove(wizardStepDescriptor);
     }
 
     public boolean containsStep(final WizardStepDescriptor wizardStepDescriptor) {

@@ -18,12 +18,9 @@
 package org.agatom.springatom.cmp.wizards.data;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Maps;
-import org.agatom.springatom.cmp.component.core.EmbeddableComponent;
-import org.agatom.springatom.cmp.component.core.elements.DefaultComponent;
+import org.agatom.springatom.cmp.component.Component;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -32,13 +29,11 @@ import java.util.Map;
  *
  * @author trebskit
  * @version 0.0.2
- * @see org.agatom.springatom.cmp.component.core.elements.DefaultComponent
- * @see org.agatom.springatom.cmp.component.core.EmbeddableComponent
+ * @see org.agatom.springatom.cmp.component.Component
  * @since 0.0.1
  */
 public class WizardStepDescriptor
-        extends DefaultComponent
-        implements EmbeddableComponent {
+        extends Component {
     private static final long                serialVersionUID = 3388862863826004584L;
     protected            String              step             = null;
     protected            short               index            = -1;
@@ -78,11 +73,6 @@ public class WizardStepDescriptor
     }
 
     @Override
-    public int compareTo(@Nonnull final EmbeddableComponent ws) {
-        return ComparisonChain.start().compare(this.index, ((WizardStepDescriptor) ws).index).result();
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hashCode(index, required, label, step);
     }
@@ -110,13 +100,4 @@ public class WizardStepDescriptor
                 .toString();
     }
 
-    @Override
-    public int getPosition() {
-        return this.index;
-    }
-
-    @Override
-    public void setPosition(final int position) {
-        this.index = (short) position;
-    }
 }
