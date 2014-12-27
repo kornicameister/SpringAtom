@@ -1,10 +1,12 @@
 package org.agatom.springatom.locale;
 
-import org.agatom.springatom.core.locale.ms.AbstractMessageSourceConfiguration;
+import org.agatom.springatom.core.locale.AbstractMessageSourceConfiguration;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Nonnull;
+
 /**
- * {@code MessageSourceConfiguration} extends from abstract {@link org.agatom.springatom.core.locale.ms.AbstractMessageSourceConfiguration}
+ * {@code MessageSourceConfiguration} extends from abstract {@link org.agatom.springatom.core.locale.AbstractMessageSourceConfiguration}
  * Defines set of resource bundles loaded for application module
  *
  * <p>
@@ -19,8 +21,13 @@ import org.springframework.context.annotation.Configuration;
 public class MessageSourceConfiguration
         extends AbstractMessageSourceConfiguration {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected String[] getBasenames() {
+    protected
+    @Nonnull
+    String[] getBasenames() {
         return new String[]{
                 "classpath:org/agatom/springatom/locale/actions",
                 "classpath:org/agatom/springatom/locale/domainObjects",

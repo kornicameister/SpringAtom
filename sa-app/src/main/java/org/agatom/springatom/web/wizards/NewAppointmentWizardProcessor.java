@@ -30,7 +30,7 @@ import org.agatom.springatom.cmp.wizards.data.WizardDescriptor;
 import org.agatom.springatom.cmp.wizards.data.WizardStepDescriptor;
 import org.agatom.springatom.cmp.wizards.data.result.FeedbackMessage;
 import org.agatom.springatom.cmp.wizards.data.result.WizardResult;
-import org.agatom.springatom.core.locale.ms.SMessageSource;
+import org.agatom.springatom.core.locale.SMessageSource;
 import org.agatom.springatom.data.hades.model.appointment.NAppointment;
 import org.agatom.springatom.data.hades.model.appointment.NAppointmentTask;
 import org.agatom.springatom.data.hades.model.appointment.QNAppointment;
