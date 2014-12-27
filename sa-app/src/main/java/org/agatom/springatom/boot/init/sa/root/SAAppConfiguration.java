@@ -2,9 +2,8 @@ package org.agatom.springatom.boot.init.sa.root;
 
 import com.google.common.collect.Sets;
 import org.agatom.springatom.boot.security.SecurityConfiguration;
-import org.agatom.springatom.cmp.action.ActionsConfiguration;
-import org.agatom.springatom.cmp.component.ComponentsConfiguration;
-import org.agatom.springatom.core.locale.ms.SMessageSource;
+import org.agatom.springatom.cmp.ComponentsConfigurations;
+import org.agatom.springatom.core.locale.SMessageSource;
 import org.agatom.springatom.core.om.ObjectMapperConfiguration;
 import org.agatom.springatom.data.hades.JpaModelConfiguration;
 import org.agatom.springatom.data.loader.mgr.DataLoaderManager;
@@ -48,8 +47,7 @@ import java.util.Set;
         ObjectMapperConfiguration.class,
         SecurityConfiguration.class,
         MessageSourceConfiguration.class,
-        ComponentsConfiguration.class,
-        ActionsConfiguration.class,
+        ComponentsConfigurations.class,
         OidConfiguration.class,
         JpaModelConfiguration.class,
         VinNumberConfiguration.class,
