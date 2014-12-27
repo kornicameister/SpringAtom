@@ -15,22 +15,52 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.core.util;
+package org.agatom.springatom.core.locale;
+
+import com.google.common.collect.Maps;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.util.StringUtils;
+
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 
 /**
- * <p>LocalizationAware interface.</p>
+ * <p>SMessageSourceImpl class.</p>
+ * {@code SMessageSourceImpl} is an implementation of the {@link SMessageSource}
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
-public interface LocalizationAware
-        extends Localized {
+public class SAMessageSource
+        extends ReloadableResourceBundleMessageSource
+        implements SMessageSource {
 
-    /**
-     * <p>setValueForMessageKey.</p>
-     *
-     * @param msg a {@link String} object.
-     */
-    void setValueForMessageKey(final String msg);
+    /** {@inheritDoc} */
+    @Override
+    public String getMessage(final String key, final Locale locale) {
+        return this.getMessage(key, (Object[]) null, locale);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getMessage(final String key, final String defaultMsg, final Locale locale) {
+        final String msg = this.getMessage(key, locale);
+        if (!StringUtils.hasText(msg) || msg.equalsIgnoreCase(key)) {
+            return defaultMsg;
+        }
+        return msg;
+    }
+
+    @Override
+    public Map<String, String> getAllMessages(final Locale locale) {
+        final Properties properties = this.getMergedProperties(locale).getProperties();
+        final Map<String, String> map = Maps.newHashMapWithExpectedSize(properties.size());
+        for (final Object propKey : properties.keySet()) {
+            map.put(propKey.toString(), properties.get(propKey).toString());
+        }
+        return map;
+    }
+
 }

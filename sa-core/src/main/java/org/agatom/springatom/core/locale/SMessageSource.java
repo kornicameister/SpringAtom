@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2014]                   *
+ * This file is part of [SpringAtom] Copyright [kornicameister@gmail.com][2013]                   *
  *                                                                                                *
  * [SpringAtom] is free software: you can redistribute it and/or modify                           *
  * it under the terms of the GNU General Public License as published by                           *
@@ -15,37 +15,52 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.core.locale.model;
+package org.agatom.springatom.core.locale;
 
-import java.io.Serializable;
+import org.springframework.context.MessageSource;
+
+import java.util.Locale;
+import java.util.Map;
 
 /**
- * <p>LocalizedClassModel interface.</p>
+ * <p>SMessageSource interface.</p>
  *
  * @author kornicameister
- * @version 0.0.1
+ * @version 0.0.2
  * @since 0.0.1
  */
-public interface LocalizedClassModel
-        extends Serializable {
-    /**
-     * <p>getSource.</p>
-     *
-     * @return a {@link Class} object.
-     */
-    Class<?> getSource();
+public interface SMessageSource
+        extends MessageSource {
 
     /**
-     * <p>getName.</p>
+     * Convenient version of {@link #getMessage(String, Object[], java.util.Locale)} where
+     * {@code args} are assumed to be null
      *
-     * @return a {@link String} object.
+     * @param key    key of the msg
+     * @param locale current locale
+     *
+     * @return localized value
      */
-    String getName();
+    String getMessage(final String key, final Locale locale);
 
     /**
-     * <p>isFound.</p>
+     * Works similarly to {@link #getMessage(String, java.util.Locale)}, difference is adding
+     * {@code default value}.
      *
-     * @return a boolean.
+     * @param key        key of the msg
+     * @param defaultMsg default msg
+     * @param locale     current locale
+     *
+     * @return localized value
      */
-    boolean isFound();
+    String getMessage(final String key, final String defaultMsg, final Locale locale);
+
+    /**
+     * Returns all possible messages that were loaded for this message source
+     *
+     * @param locale current locale
+     *
+     * @return all messages
+     */
+    Map<String, String> getAllMessages(final Locale locale);
 }

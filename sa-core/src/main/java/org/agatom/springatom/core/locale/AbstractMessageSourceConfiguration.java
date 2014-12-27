@@ -1,4 +1,4 @@
-package org.agatom.springatom.core.locale.ms;
+package org.agatom.springatom.core.locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.FileSystemResourceLoader;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -51,7 +52,15 @@ public abstract class AbstractMessageSourceConfiguration {
         return messageSource;
     }
 
-    protected abstract String[] getBasenames();
+    /**
+     * Must return a {@link java.lang.String} array containing a basename
+     * of all resource bundles ever used by the application
+     *
+     * @return array of locations of resource bundles
+     */
+    protected abstract
+    @Nonnull
+    String[] getBasenames();
 
     protected void configureMessageSource(final SAMessageSource messageSource) {
         // do nothing
