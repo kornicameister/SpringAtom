@@ -1,9 +1,9 @@
 package org.agatom.springatom.cmp.wizards.repository;
 
-import org.agatom.springatom.cmp.locale.SMessageSource;
 import org.agatom.springatom.cmp.wizards.Wizard;
 import org.agatom.springatom.cmp.wizards.WizardProcessor;
 import org.agatom.springatom.cmp.wizards.WizardsConfiguration;
+import org.agatom.springatom.core.locale.SMessageSource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

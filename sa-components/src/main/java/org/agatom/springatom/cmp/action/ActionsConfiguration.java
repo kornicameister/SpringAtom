@@ -20,7 +20,7 @@ package org.agatom.springatom.cmp.action;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.agatom.springatom.cmp.action.reader.ActionsModelReader;
 import org.agatom.springatom.cmp.action.security.ActionSecurityFilter;
-import org.agatom.springatom.core.locale.ms.SMessageSource;
+import org.agatom.springatom.core.locale.SMessageSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;

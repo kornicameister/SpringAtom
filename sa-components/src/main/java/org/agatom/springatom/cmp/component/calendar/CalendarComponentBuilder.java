@@ -18,7 +18,7 @@
 package org.agatom.springatom.cmp.component.calendar;
 
 import com.google.common.collect.Maps;
-import org.agatom.springatom.core.locale.ms.SMessageSource;
+import org.agatom.springatom.core.locale.SMessageSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.i18n.LocaleContextHolder;

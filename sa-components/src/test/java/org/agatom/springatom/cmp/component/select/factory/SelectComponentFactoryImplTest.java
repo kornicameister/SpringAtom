@@ -3,7 +3,7 @@ package org.agatom.springatom.cmp.component.select.factory;
 import com.google.common.collect.Lists;
 import org.agatom.springatom.cmp.component.select.SelectComponent;
 import org.agatom.springatom.cmp.component.select.SelectOption;
-import org.agatom.springatom.cmp.locale.SMessageSource;
+import org.agatom.springatom.core.locale.SMessageSource;
 import org.agatom.springatom.data.services.enumeration.SEnumerationService;
 import org.agatom.springatom.data.types.enumeration.Enumeration;
 import org.agatom.springatom.data.types.enumeration.EnumerationEntry;

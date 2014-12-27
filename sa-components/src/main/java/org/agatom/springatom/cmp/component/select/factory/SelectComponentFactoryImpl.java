@@ -24,7 +24,7 @@ import org.agatom.springatom.cmp.component.ComponentCompilationException;
 import org.agatom.springatom.cmp.component.select.SelectComponent;
 import org.agatom.springatom.cmp.component.select.SelectOption;
 import org.agatom.springatom.core.annotations.LazyComponent;
-import org.agatom.springatom.core.locale.ms.SMessageSource;
+import org.agatom.springatom.core.locale.SMessageSource;
 import org.agatom.springatom.data.services.enumeration.SEnumerationService;
 import org.agatom.springatom.data.types.enumeration.Enumeration;
 import org.agatom.springatom.data.types.enumeration.EnumerationEntry;
