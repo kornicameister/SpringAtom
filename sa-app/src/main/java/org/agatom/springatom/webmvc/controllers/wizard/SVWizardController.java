@@ -24,7 +24,7 @@ import org.agatom.springatom.cmp.wizards.data.result.WizardResult;
 import org.agatom.springatom.cmp.wizards.repository.WizardProcessorNotFoundException;
 import org.agatom.springatom.cmp.wizards.repository.WizardsRepository;
 import org.agatom.springatom.web.api.WizardController;
-import org.agatom.springatom.webmvc.core.SVDefaultController;
+import org.agatom.springatom.web.controller.SVDefaultController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

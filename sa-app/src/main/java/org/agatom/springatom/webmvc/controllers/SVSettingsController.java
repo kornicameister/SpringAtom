@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import org.agatom.springatom.core.web.DataResource;
 import org.agatom.springatom.core.web.MapDataResource;
 import org.agatom.springatom.core.web.PrimitiveDataSource;
-import org.agatom.springatom.webmvc.core.SVDefaultController;
+import org.agatom.springatom.web.controller.SVDefaultController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;

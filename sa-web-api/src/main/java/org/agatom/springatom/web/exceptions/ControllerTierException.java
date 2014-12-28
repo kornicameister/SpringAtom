@@ -15,17 +15,52 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.webmvc.core;
-
-import org.springframework.web.context.ServletContextAware;
+package org.agatom.springatom.web.exceptions;
 
 /**
- * <p>SController interface.</p>
+ * <p>ControllerTierException class.</p>
  *
  * @author kornicameister
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface SController
-        extends ServletContextAware {
+public class ControllerTierException
+        extends Exception {
+
+    private static final String MSG_PATTERN_1    = "ControllerTierException=\n\t=>%s\n";
+    private static final long   serialVersionUID = -61989976957896637L;
+
+    /**
+     * <p>Constructor for ControllerTierException.</p>
+     */
+    public ControllerTierException() {
+    }
+
+    /**
+     * <p>Constructor for ControllerTierException.</p>
+     *
+     * @param message a {@link String} object.
+     */
+    public ControllerTierException(final String message) {
+        super(String.format(MSG_PATTERN_1, message));
+    }
+
+    /**
+     * <p>Constructor for ControllerTierException.</p>
+     *
+     * @param cause a {@link Throwable} object.
+     */
+    public ControllerTierException(final Throwable cause) {
+        super(cause);
+    }
+
+    /**
+     * <p>Constructor for ControllerTierException.</p>
+     *
+     * @param message a {@link String} object.
+     * @param cause   a {@link Throwable} object.
+     */
+    public ControllerTierException(final String message, final Throwable cause) {
+        super(String.format("ControllerTierException=\n\t=>%s\n", message), cause);
+    }
 }

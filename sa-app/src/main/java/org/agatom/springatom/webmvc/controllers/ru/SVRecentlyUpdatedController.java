@@ -7,7 +7,7 @@ import org.agatom.springatom.core.web.PageDataResource;
 import org.agatom.springatom.data.services.SRecentlyUpdatedService;
 import org.agatom.springatom.data.support.rupdate.RecentUpdateBean;
 import org.agatom.springatom.web.api.RecentlyUpdatedController;
-import org.agatom.springatom.webmvc.core.SVDefaultController;
+import org.agatom.springatom.web.controller.SVDefaultController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

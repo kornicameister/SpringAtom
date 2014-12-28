@@ -21,7 +21,7 @@ import org.agatom.springatom.core.web.DataResource;
 import org.agatom.springatom.data.vin.decoder.VinDecoder;
 import org.agatom.springatom.data.vin.exception.VinDecodingException;
 import org.agatom.springatom.data.vin.model.VinNumberData;
-import org.agatom.springatom.webmvc.core.SVDefaultController;
+import org.agatom.springatom.web.controller.SVDefaultController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +72,7 @@ public class SVVinController
     /**
      * <p>handleVinDecodingException.</p>
      *
-     * @param error a {@link org.agatom.springatom.webmvc.exceptions.ControllerTierException} object.
+     * @param error a {@link org.agatom.springatom.web.exceptions.ControllerTierException} object.
      *
      * @return a {@link org.springframework.http.ResponseEntity} object.
      */

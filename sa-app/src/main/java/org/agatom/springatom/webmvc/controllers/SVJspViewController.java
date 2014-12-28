@@ -1,6 +1,6 @@
 package org.agatom.springatom.webmvc.controllers;
 
-import org.agatom.springatom.webmvc.core.SVDefaultController;
+import org.agatom.springatom.web.controller.SVDefaultController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

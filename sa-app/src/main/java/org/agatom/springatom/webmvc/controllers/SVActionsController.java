@@ -20,7 +20,7 @@ package org.agatom.springatom.webmvc.controllers;
 import javassist.NotFoundException;
 import org.agatom.springatom.cmp.action.model.ActionModel;
 import org.agatom.springatom.cmp.action.reader.ActionsModelReader;
-import org.agatom.springatom.webmvc.core.SVDefaultController;
+import org.agatom.springatom.web.controller.SVDefaultController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.MediaType;

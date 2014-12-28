@@ -7,7 +7,7 @@ import org.agatom.springatom.data.services.SUserService;
 import org.agatom.springatom.data.support.notification.UserNotification;
 import org.agatom.springatom.data.support.user.AuthenticatedUserBean;
 import org.agatom.springatom.data.support.user.NotAuthenticatedUserBean;
-import org.agatom.springatom.webmvc.core.SVDefaultController;
+import org.agatom.springatom.web.controller.SVDefaultController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
