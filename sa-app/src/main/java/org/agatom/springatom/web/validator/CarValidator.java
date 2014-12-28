@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.wizards.validator;
+package org.agatom.springatom.web.validator;
 
 import org.agatom.springatom.cmp.wizards.validation.annotation.WizardValidator;
 import org.agatom.springatom.data.hades.model.car.NCar;

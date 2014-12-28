@@ -15,7 +15,7 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.                  *
  **************************************************************************************************/
 
-package org.agatom.springatom.web.wizards;
+package org.agatom.springatom.web;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
