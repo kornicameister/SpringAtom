@@ -1,11 +1,11 @@
 package org.agatom.springatom.webmvc.controllers.wizard;
 
-import org.agatom.springatom.cmp.locale.SMessageSource;
 import org.agatom.springatom.cmp.wizards.core.CreateObjectWizardProcessor;
 import org.agatom.springatom.cmp.wizards.core.Submission;
 import org.agatom.springatom.cmp.wizards.data.result.WizardResult;
 import org.agatom.springatom.cmp.wizards.repository.WizardProcessorNotFoundException;
 import org.agatom.springatom.cmp.wizards.repository.WizardsRepository;
+import org.agatom.springatom.core.locale.SMessageSource;
 import org.agatom.springatom.data.oid.SOidService;
 import org.agatom.springatom.web.api.WizardController.Api;
 import org.hamcrest.core.IsEqual;
