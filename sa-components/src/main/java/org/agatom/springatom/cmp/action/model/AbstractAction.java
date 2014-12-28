@@ -20,7 +20,7 @@ package org.agatom.springatom.cmp.action.model;
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 import org.agatom.springatom.cmp.action.model.security.ActionSecurityCheck;
-import org.agatom.springatom.cmp.component.core.elements.DefaultComponent;
+import org.agatom.springatom.cmp.component.Component;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
  * @since 0.0.1
  */
 public class AbstractAction
-        extends DefaultComponent
+        extends Component
         implements Action {
     private static final long                serialVersionUID = -1186129891931343039L;
     private static final ActionSecurityCheck NO_SECURITY      = new ActionSecurityCheck().setAuthenticated(false);
@@ -118,7 +118,7 @@ public class AbstractAction
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(security, css, label, dynamicProperties);
+        return Objects.hashCode(security, css, label);
     }
 
     @Override
@@ -130,8 +130,7 @@ public class AbstractAction
 
         return Objects.equal(this.security, that.security) &&
                 Objects.equal(this.css, that.css) &&
-                Objects.equal(this.label, that.label) &&
-                Objects.equal(this.dynamicProperties, that.dynamicProperties);
+                Objects.equal(this.label, that.label);
     }
 
     @Override
