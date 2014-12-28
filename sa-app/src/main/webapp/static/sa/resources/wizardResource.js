@@ -29,10 +29,10 @@ define(
     function wizardResource(app, utils, WizardResult) {
         var resource = function ($log, $http, $q) {
             var urls = {
-                    init      : '/app/cmp/wiz/init/{key}',
-                    stepInit  : '/app/cmp/wiz/init/{wizard}/step/{step}',
-                    stepSubmit: '/app/cmp/wiz/submit/{wizard}/step/{key}',
-                    submit    : '/app/cmp/wiz/submit/{key}',
+                    init      : '/app/rest/wizard/init/{key}',
+                    stepInit  : '/app/rest/wizard/init/{wizard}/step/{step}',
+                    stepSubmit: '/app/rest/wizard/submit/{wizard}/step/{key}',
+                    submit    : '/app/rest/wizard/submit/{key}',
                     /**
                      * Adds some magic number to the end of the url to stop caches.
                      * It is vital due to localization. If server picks up locale
