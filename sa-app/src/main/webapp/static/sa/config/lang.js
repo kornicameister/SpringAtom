@@ -69,7 +69,7 @@ define(
                     .preferredLanguage(window['SA_LANG']);
                 $translateProvider.useSanitizeValueStrategy('escaped');
                 //noinspection JSUnresolvedFunction
-                $translateProvider.useUrlLoader('/app/data/lang/by/locale');
+                $translateProvider.useUrlLoader('/app/rest/locales');
                 //noinspection JSUnresolvedFunction
                 $translateProvider.useLocalStorage();
                 //noinspection JSUnresolvedFunction
