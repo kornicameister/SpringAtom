@@ -1,0 +1,64 @@
+{
+   "name"           : "SpringAtom",
+   "version"        : "0.0.1",
+   "homepage"       : "https://github.com/kornicameister/SpringAtom",
+   "repository"     : {
+      "type": "git",
+      "url" : "git://github.com/kornicameister/SpringAtom.git"
+   },
+   "description"    : "SpringAtom - Client Side Package",
+   "main"           : "static/sa/springatom.js",
+   "keywords"       : [
+      "spring",
+      "car",
+      "service",
+      "management"
+   ],
+   "authors"        : [
+      "kornicameister@gmail.com"
+   ],
+   "license"        : "MIT",
+   "private"        : true,
+   "ignore"         : [
+      "**/.*",
+      "node_modules",
+      "bower_components",
+      "test",
+      "tests"
+   ],
+   "dependencies"   : {
+      "requirejs"                      : "latest",
+      "jsface"                         : "latest",
+      "underscore"                     : "latest",
+      "animate.css"                    : "latest",
+      "normalize-css"                  : "latest",
+      "angular"                        : "latest",
+      "restangular"                    : "latest",
+      "ng-grid"                        : "latest",
+      "ngprogress"                     : "latest",
+      "angular-bootstrap"              : "latest",
+      "angular-ui-router"              : "latest",
+      "angular-ui-calendar"            : "latest",
+      "angular-animate"                : "latest",
+      "angular-moment"                 : "latest",
+      "angular-cookies"                : "latest",
+      "angular-dialog-service"         : "latest",
+      "angular-translate-loader-url"   : "latest",
+      "angular-translate-storage-local": "latest",
+      "angular-translate-handler-log"  : "latest",
+      "angular-local-storage"          : "latest",
+      "isteven-angular-multiselect"    : "latest",
+      "bootstrap"                      : "latest",
+      "jasny-bootstrap"                : "latest",
+      "jquery"                         : "latest"
+   },
+   "devDependencies": {
+      "angular-mocks"   : "latest",
+      "angular-scenario": "latest"
+   },
+   "resolutions"    : {
+      "angular-translate": "~2.4.2",
+      "angular"          : "1.3.4",
+      "jquery"           : ">= 1.9.1"
+   }
+}
