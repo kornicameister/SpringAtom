@@ -1,0 +1,6 @@
+# dont include node related modules in the repo
+test/node_modules/
+# dont include bower components in the repo
+test/libs/
+# dont include test results in the repo
+test/results/

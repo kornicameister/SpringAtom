@@ -45,8 +45,8 @@ require.config({
         'ngMultiSelect'           : '../libs/isteven-angular-multiselect/angular-multi-select',
         'angularLocalStorage'     : '../libs/angular-local-storage/dist/angular-local-storage',
         // test dependencies
-        'angularMocks'            : '../libs/angular-mocks/angular-mocks',
-        'angularScenario'         : '../libs/angular-scenario/angular-scenario'
+        'angularMocks'   : '../test/libs/angular-mocks/angular-mocks',
+        'angularScenario': '../test/libs/angular-scenario/angular-scenario'
     },
     shim    : {
         'angular'                 : {
