@@ -85,7 +85,7 @@
 
     <properties>
         <tomcat.maven.version>2.1</tomcat.maven.version>
-        <project.maven-war-plugin.version>2.4</project.maven-war-plugin.version>
+        <project.maven-war-plugin.version>2.5</project.maven-war-plugin.version>
         <jetty-maven-plugin.version>9.2.3.v20140905</jetty-maven-plugin.version>
         <webjars.font-awesome.version>4.2.0</webjars.font-awesome.version>
         <wro4j.version>1.7.6</wro4j.version>
