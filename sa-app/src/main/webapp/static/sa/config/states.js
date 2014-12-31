@@ -35,7 +35,8 @@ define(
     function configStates(app, utils) {
         'use strict';
 
-        var otherwiseRoute = '/sa',
+        var ready = false,
+            otherwiseRoute = '/sa',
             offset = 3,
             states = (function getStates(states) {
                 var local = [],
@@ -80,12 +81,19 @@ define(
                 stateLoadingService.init();
             };
         return {
-            configure: function () {
+            isConfigured: function () {
+                return ready;
+            },
+            configure   : function () {
+                if (this.isConfigured()) {
+                    return true;
+                }
                 app.config(function localConfigure($stateProvider, $urlRouterProvider) {
                     _register.call($stateProvider, $urlRouterProvider, states);
                     $urlRouterProvider.otherwise(otherwiseRoute);
                 });
                 app.run(['stateLoadingService', configureStateListeners]);
+                return ready = true;
             }
         };
     }

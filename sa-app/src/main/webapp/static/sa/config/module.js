@@ -94,7 +94,7 @@ define(
             .config(configureDialogs)
             .provider('urlHelper', urlHelperProvider)
             .filter('getByProperty', getByPropertyFilter)
-            .constant('appName', 'SpringAtom')
+            .constant('appName', appName)
             .constant('timeoutDelay', 666);
 
         return module;
