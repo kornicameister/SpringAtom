@@ -10,7 +10,7 @@ module.exports = function (config) {
             'test/test-main.js'
         ],
         logLevel : config.LOG_INFO,
-        singleRun: true,
+        singleRun: false,
         browsers : ['ChromeCanary']
     }));
 

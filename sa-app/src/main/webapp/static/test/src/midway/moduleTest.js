@@ -11,22 +11,39 @@ define(
 
         describe('moduleTest', function () {
             var appName = 'springatom',
-                module;
+                appModule;
 
             beforeEach(function () {
-                module = angular.module(appName);
+                appModule = module(appName);
             });
 
-            it('springatom :: should be registered', function () {
-                expect(module).not.toBeNull();
-            });
+            it('springatom :: should have constant name set', inject(function ($injector) {
+                "use strict";
 
-            it('springatom :: should have constant name set', function () {
+                var constantName = $injector.get('appName');
 
-            });
+                expect(constantName).toBeDefined();
+                expect(constantName).toEqual('springatom');
+            }));
 
-            it('springatom :: should have constant timeoutDelay set', function () {
+            it('springatom :: should have constant timeoutDelay set', inject(function ($injector) {
+                "use strict";
 
+                var timeoutDelay = $injector.get('timeoutDelay');
+
+                expect(timeoutDelay).toBeDefined();
+            }));
+
+            describe('springatom :: module should be initialized from config/module', function () {
+                it('springatom :: should be registered', function () {
+                    var localModule = angular.module(appName);
+
+                    expect(localModule).not.toBeNull();
+
+                    // should ensure that this is angular module
+                    expect(localModule.run).toBeDefined();
+                    expect(localModule.config).toBeDefined();
+                });
             });
 
             describe('springatom :: dependencies', function () {
@@ -52,7 +69,8 @@ define(
                     };
 
                 beforeEach(function () {
-                    deps = module.value(appName).requires;
+                    appModule = angular.module(appName);
+                    deps = appModule.requires;
                 });
 
                 it('should have all required dependencies as a dependency', function () {

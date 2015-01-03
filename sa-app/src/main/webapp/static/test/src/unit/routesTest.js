@@ -10,9 +10,7 @@ define(
         'angularMocks'
     ],
     function routesTest_midway(states) {
-        console.log('routesTest_midway');
-
-        describe('routesTest_midway >', function () {
+        describe('routesTest', function () {
 
             var state;
 
