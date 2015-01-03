@@ -46,13 +46,15 @@ require.config({
         'angularLocalStorage'     : '../libs/angular-local-storage/dist/angular-local-storage',
         // test dependencies
         'angularMocks'   : '../test/libs/angular-mocks/angular-mocks',
-        'angularScenario': '../test/libs/angular-scenario/angular-scenario'
+        'angularScenario': '../test/libs/angular-scenario/angular-scenario',
+        'ngMidwayTester' : '../test/node_modules/ng-midway-tester/src/ngMidwayTester'
     },
     shim    : {
         'angular'                 : {
             exports: 'angular',
             deps   : ['jquery', 'jquery-ui']
         },
+        'ngMidwayTester': ['angular'],
         'angularMocks'            : ['angular'],
         'angularScenario'         : ['angular', 'angularMocks'],
         'restangular'             : ['angular', 'lodash'],

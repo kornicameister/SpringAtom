@@ -25,20 +25,18 @@
  */
 define(
     [
-        'config/ext',
         'states/wizards/newCar',
         'states/wizards/newAppointment',
         'states/wizards/newUser'
     ],
     function ipStates() {
-        var offset = 1;
+        var offset = 0;
         return (function getWizards(wizards) {
             var local = [],
                 it = offset;
             for (it; it < wizards.length; it++) {
                 local.push(wizards[it]);
             }
-            console.log('Read {d} wizards'.format({d: local.length}));
             return local;
         }(arguments));
     }

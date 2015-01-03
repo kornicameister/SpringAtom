@@ -9,7 +9,7 @@ define(
     function moduleTest() {
 
 
-        describe('moduleTest', function () {
+        describe('Midway :: moduleTest', function () {
             var appName = 'springatom',
                 appModule;
 

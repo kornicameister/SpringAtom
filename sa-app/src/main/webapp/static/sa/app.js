@@ -40,6 +40,7 @@ define(
         return {
             init: function () {
                 setTimeout(function () {
+                    console.log('Bootstrapping application + ' + module.name);
                     window.name = 'NG_DEFER_BOOTSTRAP';
                     angular.bootstrap(document, [module.name])
                 }, 100);

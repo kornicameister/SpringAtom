@@ -46,8 +46,7 @@ module.exports = function (conf) {
         ],
         reporters       : ['progress', 'coverage', 'junit'],
         preprocessors   : {
-            'sa/**/*.js'  : ['coverage'],
-            'test/**/*.js': ['coverage']
+            'sa/**/*.js': ['coverage']
         },
         coverageReporter: {
             type: 'html',
