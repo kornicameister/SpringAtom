@@ -15,9 +15,6 @@
  * along with [SpringAtom].  If not, see <http://www.gnu.org/licenses/gpl.html>.
  */
 
-/**
- * Created by trebskit on 2014-08-11.
- */
 define(
     [
         'views/home/homeController',
@@ -25,7 +22,7 @@ define(
         // angular deps
         'services/navigation'
     ],
-    function navigatorStates(homeController, recentlyUpdatedController) {
+    function homeState(homeController, recentlyUpdatedController) {
         return {
             name      : 'home',
             definition: {

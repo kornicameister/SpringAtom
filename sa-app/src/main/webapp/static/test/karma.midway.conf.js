@@ -13,7 +13,7 @@ module.exports = function (config) {
         exclude  : [
             'test/node_modules/ng-midway-tester/test/**'
         ],
-        logLevel : config.LOG_DEBUG,
+        logLevel: config.LOG_INFO,
         singleRun: false,
         browsers : ['ChromeCanary']
     });
