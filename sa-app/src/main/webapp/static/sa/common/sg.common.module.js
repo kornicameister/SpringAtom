@@ -20,10 +20,6 @@ define(
          *
          * @module sg.common
          */
-        return angular.module('sg.common', [
-            'sg.common.directives',
-            'sg.common.filters',
-            'sg.common.dialogs'
-        ]);
+        return angular.module('sg.common', []);
     }
 );

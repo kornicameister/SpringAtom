@@ -18,11 +18,11 @@
 define(
     [
         'angular',
-        'common/utils',
-        'app/root',
-        'common/common'
+        'ilib/utils',
+        'app/app.module',
+        'common/sg.common.module'
     ],
-    function app(angular, utils, appRoot, commonRoot) {
+    function app(angular, utils, appModule, commonModule) {
 
         (function applyGlobalDefaults(window) {
             console.log('Applying global defaults used in configuration');
@@ -45,8 +45,8 @@ define(
         var appName = 'springatom',
             app = angular
                 .module(appName, [
-                    utils.getModuleName(appRoot),
-                    utils.getModuleName(commonRoot)
+                    utils.getModuleName(appModule),
+                    utils.getModuleName(commonModule)
                 ])
                 .constant('appName', appName);
 
