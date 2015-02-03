@@ -48,8 +48,7 @@ define(
                 });
                 it('should return undefined for valid definition but no explicitly defined label', function () {
                     var state = {
-                        name      : '',
-                        definition: {}
+                        name: ''
                     };
 
                     expect($stateLabelResolve.resolveLabel(state)).not.toBeDefined();
@@ -57,10 +56,8 @@ define(
                 it('should return string for string defined label', function () {
                     var label = 'Test',
                         state = {
-                            name      : '',
-                            definition: {
-                                label: label
-                            }
+                            name : '',
+                            label: label
                         };
 
                     expect($stateLabelResolve.resolveLabel(state)).toBeDefined();
@@ -72,30 +69,26 @@ define(
                             return label;
                         },
                         state = {
-                            name      : '',
-                            definition: {
-                                label: labelFunc
-                            }
+                            name : '',
+                            label: labelFunc
                         };
 
-                    spyOn(state.definition, 'label').and.callThrough();
+                    spyOn(state, 'label').and.callThrough();
 
                     var actualLabel = $stateLabelResolve.resolveLabel(state);
 
                     expect(actualLabel).toBeDefined();
                     expect(actualLabel).toEqual(label);
 
-                    expect(state.definition.label).toHaveBeenCalled();
-                    expect(state.definition.label.calls.count()).toEqual(1);
+                    expect(state.label).toHaveBeenCalled();
+                    expect(state.label.calls.count()).toEqual(1);
                 });
                 it('should return label for DI defined function', function () {
                     var label = 'Test',
                         state = {
-                            name      : '',
-                            definition: {
-                                label: function (labelService) {
-                                    return labelService.getLabel();
-                                }
+                            name : '',
+                            label: function (labelService) {
+                                return labelService.getLabel();
                             }
                         };
 
@@ -114,12 +107,10 @@ define(
                 it('should return label for DI as ARRAY defined function', function () {
                     var label = 'Test',
                         state = {
-                            name      : '',
-                            definition: {
-                                label: ['labelService', function (a) {
-                                    return a.getLabel();
-                                }]
-                            }
+                            name : '',
+                            label: ['labelService', function (a) {
+                                return a.getLabel();
+                            }]
                         };
 
                     spyOn(labelService, 'getLabel').and.callFake(function () {

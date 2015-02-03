@@ -74,7 +74,7 @@ define(
                         var inCache = service.isLabelResolved(state);
 
                         if (!inCache) {
-                            stateLabelCache.put(resolveName(state, label));
+                            stateLabelCache.put(resolveName(state), label);
                         }
 
                         return !inCache;
@@ -98,7 +98,7 @@ define(
                     }
 
                     function getStateName(state) {
-                        return state.name;
+                        return resolveName(state);
                     }
 
                     function getParentState(state) {
@@ -106,7 +106,7 @@ define(
                     }
 
                     function hasParentState(state) {
-                        return !_.isUndefined(service.getParentState(state));
+                        return !!service.getParentState(state);
                     }
 
                 }

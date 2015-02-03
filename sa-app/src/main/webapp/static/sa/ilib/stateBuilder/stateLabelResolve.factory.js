@@ -37,8 +37,7 @@ define(
                     return undefined;
                 }
 
-                var def = state.definition || {},
-                    label = def.label || undefined;
+                var label = state.label || undefined;
 
                 if (_.isUndefined(label)) {
                     return undefined;
