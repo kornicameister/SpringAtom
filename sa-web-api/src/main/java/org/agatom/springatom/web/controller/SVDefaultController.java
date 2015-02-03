@@ -40,6 +40,7 @@ import java.util.Collections;
  * @version 0.0.1
  * @since 0.0.1
  */
+// TODO extrac advices of exception to controller advice and if necessary remove WebApplicationObjectSupport
 public abstract class SVDefaultController
         extends WebApplicationObjectSupport {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

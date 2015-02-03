@@ -1,8 +1,0 @@
-{
-   "name"        : "SpringAtom-Test",
-   "description" : "Set of dependencies required to test frontend code of SpringAtom",
-   "dependencies": {
-      "angular-mocks"   : "latest",
-      "angular-scenario": "latest"
-   }
-}

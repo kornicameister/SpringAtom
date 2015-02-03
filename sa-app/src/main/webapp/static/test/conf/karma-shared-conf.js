@@ -20,18 +20,16 @@ module.exports = function (conf) {
          {@type Array} of files that will be included in every test suit
          */
         globalFilesToInclude = [
-            {pattern: 'libs/**/*.js', included: false},
-            {pattern: 'sa/**/*.js', included: false},
-            'test/node_modules/chai/chai.js'
+            {pattern: 'sa/**/*.js', included: false}
         ],
         /**
          {@type Array} of files that will be excluded in every test suit
          */
         globalToExclude = [
             'sa/main.js',       // dont run application
-            'libs/**/*Test.js', // dont run test in the libs
-            'libs/**/*Spec.js',
-            'libs/jquery/test/**'
+            'sa/vendor/**/*[tT]est.js', // dont run test in the libs
+            'sa/vendor/**/*[sS]pec.js',
+            'sa/vendor/jquery/test/**'
         ],
         defaultBrowsers = ['ChromeCanary', 'IE'];
 

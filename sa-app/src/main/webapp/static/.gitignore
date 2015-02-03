@@ -4,3 +4,6 @@ test/node_modules/
 test/libs/
 # dont include test results in the repo
 test/results/
+
+# ignore libraries
+sa/vendor/

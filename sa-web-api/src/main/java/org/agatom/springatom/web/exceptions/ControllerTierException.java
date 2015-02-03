@@ -24,6 +24,7 @@ package org.agatom.springatom.web.exceptions;
  * @version 0.0.1
  * @since 0.0.1
  */
+//TODO remove it
 public class ControllerTierException
         extends Exception {
 

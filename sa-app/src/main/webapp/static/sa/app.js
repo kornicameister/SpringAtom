@@ -17,33 +17,42 @@
 
 define(
     [
-        'config/module',
-        'config/directives',
-        'config/states',
-        'config/localStorage',
-        'config/rest',
-        'config/filters',
-        'config/lang',
-        'config/ext',
-        'jsface'
+        'angular',
+        'common/utils',
+        'app/root',
+        'common/common'
     ],
-    function app(module, directives, states, localStorage, rest, filters) {
+    function app(angular, utils, appRoot, commonRoot) {
 
-        // load parts of the application
-        states.configure();
-        directives.configure();
-        localStorage.configure();
-        rest.configure();
-        filters.configure();
-        // load parts of the application
+        (function applyGlobalDefaults(window) {
+            console.log('Applying global defaults used in configuration');
+            window.DEBUG_CONFIGURATION_HELPER = utils.isDebug();
+        }(window));
+
+        (function verifyAngularExists() {
+            if (!(angular && window.angular)) {
+                throw new Error('Angular has not been loaded so far, therefore there is no possibility to run the application');
+            }
+        }());
+
+        function bootstrapOnTimeout() {
+            var appName = utils.getModuleName(app);
+            console.log('Bootstrapping application + ' + appName);
+            window.name = 'NG_DEFER_BOOTSTRAP';
+            angular.bootstrap(document, [appName]);
+        }
+
+        var appName = 'springatom',
+            app = angular
+                .module(appName, [
+                    utils.getModuleName(appRoot),
+                    utils.getModuleName(commonRoot)
+                ])
+                .constant('appName', appName);
 
         return {
             init: function () {
-                setTimeout(function () {
-                    console.log('Bootstrapping application + ' + module.name);
-                    window.name = 'NG_DEFER_BOOTSTRAP';
-                    angular.bootstrap(document, [module.name])
-                }, 100);
+                setTimeout(bootstrapOnTimeout, 100);
             }
         }
     }
