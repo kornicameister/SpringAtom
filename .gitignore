@@ -9,3 +9,10 @@ target/
 # Idea
 .idea/
 *.iml
+
+# CODIO
+.codio
+.settings
+
+# log files
+*.log

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pl">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="pl"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+		<meta name="author" content="kornicameister@gmail.com"/>
+		<meta name="robots" content="noindex, nofollow"/>
+		<meta name="keywords" content="car,garage,car management,management,client,worker,tire"/>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+		
+		<header id="sg-header" class="sg-header"><section ui-view="sg.header" class="slide"/></header>
+
+		<div class="col-sm-10 sg-content-wrapper container-fluid">
+			<div class="sg-breadcrumb" breadcrumb/>
+			<section class="sg-content slide" ui-view/>
+		</div>
+		
+		<footer id="sg-footer" class="sg-footer"><section ui-view="sg.footer" class="slide"/></footer>
+		<nav id="sg-nav" class="navbar navbar-left col-sm-2 navbar-nav ui-spinner" role="navigation">
+			<section ui-view="navigation"></div>
+		</nav>
+	</body>
+
+<script type="text/javascript"
+        data-main="/app/static/sa/main.js"
+        src="/app/static/sa/vendor/requirejs/require.js"></script>
+
+</html>

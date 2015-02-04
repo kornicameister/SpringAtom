@@ -4,11 +4,10 @@
 define(
     [
         'angular',
-        'common/directives/directives',
-        'common/filters/filters',
-        'common/dialogs/dialogs'
+        './rootView/rootView.module',
+        './security/security.module'
     ],
-    function components(angular) {
+    function sgCommonModule(angular) {
         /**
          * <b>sg.components</b> is top level module for all global components:
          * - directives
@@ -18,8 +17,13 @@ define(
          *
          * that cannot be bound to specific functional part of the application
          *
+		 * @name sg.common module
          * @module sg.common
+		 * @requires sg.root-view
          */
-        return angular.module('sg.common', []);
+        return angular.module('sg.common', [
+            'sg.root-view',
+            'sg.security'
+        ]);
     }
 );

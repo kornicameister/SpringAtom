@@ -11,10 +11,10 @@ define(
          * @module sg.state-builder
          * @namespace sg
          */
-        angular.module('stateBuilder', ['ui.router'])
+        angular.module('sg.state-builder', ['ui.router'])
             .constant('MODULE_INFO', {
                 name   : 'sg.state-builder',
-                version: '0.0.1'
+                version: '0.0.2'
             })
             .factory('$stateLabelResolve', stateLabelResolveService)
             .provider('$stateBuilder', $stateBuilderProvider)

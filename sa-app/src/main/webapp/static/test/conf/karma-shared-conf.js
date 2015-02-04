@@ -35,9 +35,10 @@ module.exports = function (conf) {
 
     return {
         basePath        : '../',
-        port            : 9876,
+        port            : 8080,
         colors          : true,
         captureTimeout  : 60000,
+        hostname        : require('os').hostname() + '.codio.io',
         frameworks      : [
             'jasmine',
             'requirejs'
