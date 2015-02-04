@@ -10,7 +10,7 @@ define(
             var $stateLabelResolve,
                 labelService;
 
-            beforeEach(angular.mock.module('stateBuilder', function ($provide) {
+            beforeEach(angular.mock.module('sg.state-builder', function ($provide) {
                 labelService = {
                     getLabel: function () {
                     }

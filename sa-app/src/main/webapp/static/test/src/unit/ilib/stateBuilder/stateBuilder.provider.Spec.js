@@ -7,7 +7,7 @@ define(
         "use strict";
 
         describe('stateBuilderProvider', function () {
-            beforeEach(angular.mock.module('stateBuilder'));
+            beforeEach(angular.mock.module('sg.state-builder'));
 
             describe('provider', function () {
                 var stateBuilderProvider,
