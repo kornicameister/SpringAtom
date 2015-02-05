@@ -17,41 +17,42 @@
 
 (function springatom_requireJs_root(require) {
 
-    if (!!require) {
+    if (!require) {
         throw new Error('springatom_requireJs_root initialization failed due to missing requireJS');
     }
 
+    var localhostDev = SA_LOCALHOST_DEV || false;
     require.config({
-        baseUrl : '/app/static/sa',
+        baseUrl : localhostDev ? '' : '/app/static/sa',
         paths   : {
-            'angular'                 : 'vendor/angular/angular.min.js',
-            'ngAnimate'               : 'vendor/angular-animate/angular-animate.min.js',
-            'ngBootstrap'             : 'vendor/angular-bootstrap/ui-bootstrap-tpls.min.js',
-            'ngCalendar'              : 'vendor/angular-ui-calendar/src/calendar.js',
-            'ngRouter'                : 'vendor/angular-ui-router/release/angular-ui-router.js',
-            'ngCookies'               : 'vendor/angular-cookies/angular-cookies.min.js',
-            'ngDialogs'               : 'vendor/angular-dialog-service/dist/dialogs.min.js',
-            'ngDialogsTranslations'   : 'vendor/angular-dialog-service/dist/dialogs-default-translations.min.js',
-            'ngSanitize'              : 'vendor/angular-sanitize/angular-sanitize.min.js',
-            'ngTranslate'             : 'vendor/angular-translate/angular-translate.min.js',
-            'ngTranslateLoader'       : 'vendor/angular-translate-loader-url/angular-translate-loader-url.min.js',
-            'ngTranslateLocalStorage' : 'vendor/angular-translate-storage-local/angular-translate-storage-local.min.js',
-            'ngTranslateCookieStorage': 'vendor/angular-translate-storage-cookie/angular-translate-storage-cookie.min.js',
-            'ngTranslateHandlerLog'   : 'vendor/angular-translate-handler-log/angular-translate-handler-log.min.js',
-            'angular-moment'          : 'vendor/angular-moment/angular-moment.min.js',
-            'bootstrap'               : 'vendor/bootstrap/dist/js/bootstrap.min.js',
-            'bJasny'                  : 'vendor/jasny-bootstrap/dist/js/jasny-bootstrap.min.js',
-            'fullcalendar'            : 'vendor/fullcalendar/fullcalendar.min.js',
-            'jquery'                  : 'vendor/jquery/jquery.min.js',
-            'jquery-ui'               : 'vendor/jquery-ui/ui/minified/jquery-ui.min.js',
-            'jsface'                  : 'vendor/jsface/jsface.js',
-            'moment'                  : 'vendor/moment/min/moment-with-locales.min.js',
-            'ngGrid'                  : 'vendor/ng-grid/build/ng-grid.min.js',
-            'ngProgress'              : 'vendor/ngprogress/build/ngProgress.min.js',
-            'restangular'             : 'vendor/restangular/dist/restangular.js',
-            'lodash'                  : 'vendor/lodash/dist/lodash.min.js',
-            'ngMultiSelect'           : 'vendor/isteven-angular-multiselect/angular-multi-select.js',
-            'angularLocalStorage'     : 'vendor/angular-local-storage/dist/angular-local-storage.min.js'
+            'angular'                 : 'vendor/angular/angular' + (localhostDev ? '' : 'min'),
+            'ngAnimate'               : 'vendor/angular-animate/angular-animate.min',
+            'ngBootstrap'             : 'vendor/angular-bootstrap/ui-bootstrap-tpls.min',
+            'ngCalendar'              : 'vendor/angular-ui-calendar/src/calendar',
+            'angularUiRouter'         : 'vendor/angular-ui-router/release/angular-ui-router',
+            'ngCookies'               : 'vendor/angular-cookies/angular-cookies.min',
+            'ngDialogs'               : 'vendor/angular-dialog-service/dist/dialogs.min',
+            'ngDialogsTranslations'   : 'vendor/angular-dialog-service/dist/dialogs-default-translations.min',
+            'ngSanitize'              : 'vendor/angular-sanitize/angular-sanitize.min',
+            'ngTranslate'             : 'vendor/angular-translate/angular-translate.min',
+            'ngTranslateLoader'       : 'vendor/angular-translate-loader-url/angular-translate-loader-url.min',
+            'ngTranslateLocalStorage' : 'vendor/angular-translate-storage-local/angular-translate-storage-local.min',
+            'ngTranslateCookieStorage': 'vendor/angular-translate-storage-cookie/angular-translate-storage-cookie.min',
+            'ngTranslateHandlerLog'   : 'vendor/angular-translate-handler-log/angular-translate-handler-log.min',
+            'angular-moment'          : 'vendor/angular-moment/angular-moment.min',
+            'bootstrap'               : 'vendor/bootstrap/dist/js/bootstrap.min',
+            'bJasny'                  : 'vendor/jasny-bootstrap/dist/js/jasny-bootstrap.min',
+            'fullcalendar'            : 'vendor/fullcalendar/fullcalendar.min',
+            'jquery'                  : 'vendor/jquery/jquery.min',
+            'jquery-ui'               : 'vendor/jquery-ui/ui/minified/jquery-ui.min',
+            'jsface'                  : 'vendor/jsface/jsface',
+            'moment'                  : 'vendor/moment/min/moment-with-locales.min',
+            'ngGrid'                  : 'vendor/ng-grid/build/ng-grid.min',
+            'ngProgress'              : 'vendor/ngprogress/build/ngProgress.min',
+            'restangular'             : 'vendor/restangular/dist/restangular',
+            'lodash'                  : 'vendor/lodash/dist/lodash.min',
+            'ngMultiSelect'           : 'vendor/isteven-angular-multiselect/angular-multi-select',
+            'angularLocalStorage'     : 'vendor/angular-local-storage/dist/angular-local-storage.min'
         },
         priority: [
             'angular'
@@ -127,7 +128,7 @@
                     'angular'
                 ]
             },
-            'ngRouter'                : {
+            'angularUiRouter': {
                 deps: ['angular']
             },
             'ngCalendar'              : {

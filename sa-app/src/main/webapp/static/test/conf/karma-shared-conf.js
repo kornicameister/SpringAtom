@@ -1,6 +1,3 @@
-/**
- * Created by Tomasz on 2014-12-30.
- */
 module.exports = function (conf) {
 
     /**
@@ -38,7 +35,7 @@ module.exports = function (conf) {
         port            : 8080,
         colors          : true,
         captureTimeout  : 60000,
-        hostname        : require('os').hostname() + '.codio.io',
+        //hostname        : require('os').hostname() + '.codio.io',
         frameworks      : [
             'jasmine',
             'requirejs'

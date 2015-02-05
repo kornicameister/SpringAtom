@@ -1,30 +1,34 @@
 define(
     [
         './rootView.controller',
-		'./header/headerView.controller'
+        './header/headerView.controller'
     ],
     function rootViewState() {
         "use strict";
+        // TODO make it abstract and proceed
         return {
-            name        : 'sg',
-            abstract    : true,
-            templateUrl : './rootView.tpl.html',
-            controller  : 'RootViewController',
-            controllerAs: 'rvctrl',
-            views       : {
+            name : 'sg',
+            url  : '/',
+            views: {
+                // TODO change file and pckg name
                 content   : {
-                    
+                    templateUrl : 'common/rootView/rootView.tpl.html',
+                    controller  : 'RootViewController',
+                    controllerAs: 'rvctrl'
+                },
+                breadcrumb: {
+                    templateUrl: 'common/rootView/breadcrumb/breadcrumb.tpl.html'
                 },
                 header    : {
-					templateUrl	: './header/headerView.tpl.html',
-					controller	: 'RootViewHeaderController',
-					controllerAs: 'hrctrl'
-				},
+                    templateUrl : 'common/rootView/header/headerView.tpl.html',
+                    controller  : 'RootViewHeaderController',
+                    controllerAs: 'hrctrl'
+                },
                 footer    : {
-					templateUrl	: './footer/footerView.tpl.html'
+                    templateUrl: 'common/rootView/footer/footer.tpl.html'
                 },
                 navigation: {
-                    
+                    templateUrl: 'common/rootView/navigation/navigation.tpl.html'
                 }
             }
         };

@@ -3,7 +3,7 @@ define(
         'angular',
         './stateLabelResolve.factory',
         './stateBuilder.provider',
-        'ngRouter'
+        'angularUiRouter'
     ],
     function stateBuilder(angular, stateLabelResolveService, $stateBuilderProvider) {
         /**

@@ -3,27 +3,29 @@ define(
         'angular',
         'ilib/stateBuilder/stateBuilder.module',
         // module deps
-		'./header/headerView.controller',
+        './header/headerView.controller',
         './rootView.controller',
         './rootView.state'
     ],
-    function (angular, 
-			   stateBuilderModule, 
-			   rootViewHeaderController,
-			   rootViewCtrl, 
-			   rootViewState) {
+    function (angular,
+              stateBuilderModule,
+              rootViewHeaderController,
+              rootViewCtrl,
+              rootViewState) {
         "use strict";
         return angular.module('sg.root-view', ['sg.state-builder'])
             .constant('MODULE_INFO', {
                 name   : 'sg.root-view',
                 version: '0.0.1'
             })
-			.controller('RootViewHeaderController', rootViewHeaderController)
+            // TODO add names to included files in order to loose up the need of defining them here
+            .controller('RootViewHeaderController', rootViewHeaderController)
             .controller('RootViewController', rootViewCtrl)
-            .config(['$stateBuilder', registerRootState]);
+            .config(['$stateBuilderProvider', '$urlRouterProvider', registerRootState]);
 
-        function registerRootState($stateBuilder) {
-            $stateBuilder.state(rootViewState);
+        function registerRootState($stateBuilderProvider, $urlRouterProvider) {
+            $stateBuilderProvider.state(rootViewState);
+            $urlRouterProvider.otherwise(rootViewState.url);
         }
     }
 );

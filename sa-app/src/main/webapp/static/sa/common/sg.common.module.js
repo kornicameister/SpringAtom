@@ -1,9 +1,7 @@
-/**
- * Created by Tomasz on 2015-01-07.
- */
 define(
     [
         'angular',
+        './translate/translate.module.js',
         './rootView/rootView.module',
         './security/security.module'
     ],
@@ -17,13 +15,14 @@ define(
          *
          * that cannot be bound to specific functional part of the application
          *
-		 * @name sg.common module
+         * @name sg.common module
          * @module sg.common
-		 * @requires sg.root-view
+         * @requires sg.root-view
          */
         return angular.module('sg.common', [
             'sg.root-view',
-            'sg.security'
+            'sg.security',
+            'sg.translate'
         ]);
     }
 );
