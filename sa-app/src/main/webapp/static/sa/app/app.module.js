@@ -6,12 +6,6 @@ define(
         './home/home.module'
     ],
     function app(angular) {
-        
-        var viewModules = [
-            'sg.app.index',
-            'sg.app.home'
-        ];
-        
         /**
          * Application module of the <b>springatom</b>.
          * This module contains visible and functional parts of the application later
@@ -27,6 +21,9 @@ define(
          *
          * @module sg.app
          */
-        return angular.module('sg.app', viewModules);
+        return angular.module('sg.app', [
+            'sg.app.index',
+            'sg.app.home'
+        ]);
     }
 );
