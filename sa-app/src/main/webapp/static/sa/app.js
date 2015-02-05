@@ -20,9 +20,10 @@ define(
         'angular',
         'ilib/utils',
         'app/app.module',
-        'common/sg.common.module'
+        'common/sg.common.module',
+        'ilib/stateBuilder/stateBuilder.module'
     ],
-    function app(angular, utils, appModule, commonModule) {
+    function app(angular, utils, appModule, commonModule, stateBuilderModule) {
 
         (function applyGlobalDefaults(window) {
             console.log('Applying global defaults used in configuration');
@@ -46,7 +47,8 @@ define(
             app = angular
                 .module(appName, [
                     utils.getModuleName(appModule),
-                    utils.getModuleName(commonModule)
+                    utils.getModuleName(commonModule),
+                    utils.getModuleName(stateBuilderModule),
                 ])
                 .constant('appName', appName);
 

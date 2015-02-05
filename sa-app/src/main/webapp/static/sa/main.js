@@ -52,7 +52,8 @@
             'restangular'             : 'vendor/restangular/dist/restangular',
             'lodash'                  : 'vendor/lodash/dist/lodash.min',
             'ngMultiSelect'           : 'vendor/isteven-angular-multiselect/angular-multi-select',
-            'angularLocalStorage'     : 'vendor/angular-local-storage/dist/angular-local-storage.min'
+            'angularLocalStorage'     : 'vendor/angular-local-storage/dist/angular-local-storage.min',
+            'parse'                   : '//www.parsecdn.com/js/parse-1.3.4.min.js'
         },
         priority: [
             'angular'
