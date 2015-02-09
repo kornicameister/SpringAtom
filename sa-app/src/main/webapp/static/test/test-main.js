@@ -19,7 +19,7 @@
         'ngAnimate'               : 'vendor/angular-animate/angular-animate',
         'ngBootstrap'             : 'vendor/angular-bootstrap/ui-bootstrap-tpls.min',
         'ngCalendar'              : 'vendor/angular-ui-calendar/src/calendar',
-        'ngRouter'                : 'vendor/angular-ui-router/release/angular-ui-router',
+        'angularUiRouter': 'vendor/angular-ui-router/release/angular-ui-router',
         'ngCookies'               : 'vendor/angular-cookies/angular-cookies.min',
         'ngDialogs'               : 'vendor/angular-dialog-service/dist/dialogs.min',
         'ngDialogsTranslations'   : 'vendor/angular-dialog-service/dist/dialogs-default-translations.min',
@@ -71,7 +71,7 @@
             'ngTranslate'             : ['angular'],
             'ngDialogsTranslations'   : ['angular'],
             'ngSanitize'              : ['angular'],
-            'ngRouter'                : ['angular'],
+            'angularUiRouter': ['angular'],
             'ngCalendar'              : {
                 exports: 'ngCalendar',
                 deps   : [

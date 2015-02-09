@@ -8,7 +8,9 @@
 define(
     [
         'angular',
-        './security.provider'
+        './security.provider',
+        // deps
+        '../state/state.module'
     ],
     function securityModule(angular, securityProvider) {
         "use strict";
@@ -25,17 +27,17 @@ define(
          * to provide an information about application security state.
          * Supports serving security services for states, actions, hyperlinks etc.
          */
-        return angular.module('sg.security', [])
+        return angular.module('sg.security', ['sg.state'])
             .provider('$security', securityProvider)
             .run(['$security', '$rootScope', '$state', setStateSecurity])
             .run(['$security', checkAuthentication]);
 
         function checkAuthentication($security){
             if($security.isOnRunAuthenticationEnabled()){
-                
+
             }
         }
-        
+
         function setStateSecurity($security, $rootScope, $state) {
             if ($security.isStateSecurityEnabled()) {
                 $rootScope.$on('$stateChangeStart', function (event,

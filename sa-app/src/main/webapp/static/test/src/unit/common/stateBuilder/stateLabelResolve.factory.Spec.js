@@ -1,7 +1,7 @@
 define(
     [
         'angularMocks',
-        'common/stateBuilder/stateBuilder.module'
+        'common/state/state.module'
     ],
     function () {
         "use strict";

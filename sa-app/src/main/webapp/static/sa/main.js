@@ -20,13 +20,13 @@
     if (!require) {
         throw new Error('springatom_requireJs_root initialization failed due to missing requireJS');
     }
-    
+
     var paths = {
             'angular'                 : 'vendor/angular/angular.min',
             'ngAnimate'               : 'vendor/angular-animate/angular-animate.min',
             'ngBootstrap'             : 'vendor/angular-bootstrap/ui-bootstrap-tpls.min',
             'ngCalendar'              : 'vendor/angular-ui-calendar/src/calendar',
-            'angularUiRouter'         : 'vendor/angular-ui-router/release/angular-ui-router',
+        'angularUiRouter': 'vendor/angular-ui-router/release/angular-ui-router.min',
             'ngCookies'               : 'vendor/angular-cookies/angular-cookies.min',
             'ngDialogs'               : 'vendor/angular-dialog-service/dist/dialogs.min',
             'ngDialogsTranslations'   : 'vendor/angular-dialog-service/dist/dialogs-default-translations.min',
@@ -50,20 +50,20 @@
             'ngMultiSelect'           : 'vendor/isteven-angular-multiselect/angular-multi-select',
             'angularLocalStorage'     : 'vendor/angular-local-storage/dist/angular-local-storage.min'
         };
-    
+
     paths = (function adjustIfMin(paths){
         var devEnvRegexp = /[localhost|codio]/gi,
             isDevEnvironment = devEnvRegexp.test(document.location.hostname);
-        
+
         for(var key in paths){
             if(isDevEnvironment && paths[key].search('.min') > -1){
-                paths[key] = paths[key].replace('.min',''); 
+                paths[key] = paths[key].replace('.min', '');
             }
         }
-        
+
         return paths;
     }(paths));
-    
+
     require.config({
         baseUrl : '',
         paths   : paths,
