@@ -20,12 +20,9 @@
     if (!require) {
         throw new Error('springatom_requireJs_root initialization failed due to missing requireJS');
     }
-
-    var localhostDev = SA_LOCALHOST_DEV || false;
-    require.config({
-        baseUrl : localhostDev ? '' : '/app/static/sa',
-        paths   : {
-            'angular'                 : 'vendor/angular/angular' + (localhostDev ? '' : 'min'),
+    
+    var paths = {
+            'angular'                 : 'vendor/angular/angular.min',
             'ngAnimate'               : 'vendor/angular-animate/angular-animate.min',
             'ngBootstrap'             : 'vendor/angular-bootstrap/ui-bootstrap-tpls.min',
             'ngCalendar'              : 'vendor/angular-ui-calendar/src/calendar',
@@ -44,7 +41,6 @@
             'bJasny'                  : 'vendor/jasny-bootstrap/dist/js/jasny-bootstrap.min',
             'fullcalendar'            : 'vendor/fullcalendar/fullcalendar.min',
             'jquery'                  : 'vendor/jquery/jquery.min',
-            'jquery-ui'               : 'vendor/jquery-ui/ui/minified/jquery-ui.min',
             'jsface'                  : 'vendor/jsface/jsface',
             'moment'                  : 'vendor/moment/min/moment-with-locales.min',
             'ngGrid'                  : 'vendor/ng-grid/build/ng-grid.min',
@@ -52,8 +48,25 @@
             'restangular'             : 'vendor/restangular/dist/restangular',
             'lodash'                  : 'vendor/lodash/dist/lodash.min',
             'ngMultiSelect'           : 'vendor/isteven-angular-multiselect/angular-multi-select',
-            'angularLocalStorage': 'vendor/angular-local-storage/dist/angular-local-storage.min'
-        },
+            'angularLocalStorage'     : 'vendor/angular-local-storage/dist/angular-local-storage.min'
+        };
+    
+    paths = (function adjustIfMin(paths){
+        var devEnvRegexp = /[localhost|codio]/gi,
+            isDevEnvironment = devEnvRegexp.test(document.location.hostname);
+        
+        for(var key in paths){
+            if(isDevEnvironment && paths[key].search('.min') > -1){
+                paths[key] = paths[key].replace('.min',''); 
+            }
+        }
+        
+        return paths;
+    }(paths));
+    
+    require.config({
+        baseUrl : '',
+        paths   : paths,
         priority: [
             'angular'
         ],
@@ -61,8 +74,7 @@
             'angular'                 : {
                 exports: 'angular',
                 deps   : [
-                    'jquery',
-                    'jquery-ui'
+                    'jquery'
                 ]
             },
             'restangular'             : {

@@ -2,13 +2,15 @@ define(
     [
         'angular',
         // module deps
-        './abstract.state'
+        './abstract.state',
+        // angular deps
+        'common/state/state.module'
     ],
     function (angular,
               abstractViewState) {
         "use strict";
 
-        return angular.module('sg.app.index', ['sg.state'])
+        return angular.module('sg.app.index', [])
             .config(['$stateBuilderProvider', registerRootState]);
 
         function registerRootState($stateBuilderProvider) {

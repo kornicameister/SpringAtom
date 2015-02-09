@@ -27,9 +27,16 @@ define(
          */
         return angular.module('sg.security', [])
             .provider('$security', securityProvider)
-            .run(['$security', '$rootScope', applySecurityConfiguration]);
+            .run(['$security', '$rootScope', '$state', setStateSecurity])
+            .run(['$security', checkAuthentication]);
 
-        function applySecurityConfiguration($security, $rootScope) {
+        function checkAuthentication($security){
+            if($security.isOnRunAuthenticationEnabled()){
+                
+            }
+        }
+        
+        function setStateSecurity($security, $rootScope, $state) {
             if ($security.isStateSecurityEnabled()) {
                 $rootScope.$on('$stateChangeStart', function (event,
                                                               toState,
@@ -37,9 +44,8 @@ define(
                                                               fromState,
                                                               fromStateParams) {
 
-                    if (!_.isUndefined(toState.security) && _.isObject(toState.security)) {
-                        // security defined in state, let's wrap it up
-                        event.preventDefault = true;
+                    if (toState.security && _.isObject(toState.security)) {
+                        event.preventDefault();
                     }
 
                 });

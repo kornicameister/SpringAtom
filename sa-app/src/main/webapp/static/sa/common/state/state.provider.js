@@ -5,7 +5,7 @@ define(
     ],
     function stateBuilderProvider(angular, _) {
         "use strict";
-        return ['$stateProvider', function ($stateProvider) {
+        return ['$stateProvider', '$urlRouterProvider', function ($stateProvider) {
             // private
             var provider = this,
                 stateLabelCache,
@@ -34,7 +34,7 @@ define(
                 // copy into the definition
                 state.name = resolveName(state);
                 state.hasChildren = children.length > 0;
-
+                
                 delete state.children;
 
                 $stateProvider.state(state);
@@ -50,8 +50,8 @@ define(
             };
 
             // services, controllers, run available
-            provider.$get = ['$stateLabelResolve', '$cacheFactory',
-                function ($stateLabelResolve, $cacheFactory) {
+            provider.$get = ['$stateLabelResolve', '$cacheFactory', '$state',
+                function ($stateLabelResolve, $cacheFactory, $state) {
                     if (_.isUndefined(stateLabelCache)) {
                         stateLabelCache = $cacheFactory('stateBuilderProvider.stateLabelCache');
                     }
@@ -66,7 +66,7 @@ define(
                     };
 
                     return service;
-
+                    
                     function cacheStateLabel(state, label) {
                         if (_.isUndefined(label)) {
                             return false;

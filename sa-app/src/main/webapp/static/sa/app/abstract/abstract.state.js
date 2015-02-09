@@ -4,21 +4,12 @@ define(
         "use strict";
         return {
             name    : 'sg',
+            url     : '/sg',
             abstract: true,
             views: {
-                content   : {}, // empty to be redefined by sub states
-                header    : {
-                    templateUrl: 'app/abstract/header/header.tpl.html'
-                },
-                breadcrumb: {
-                    templateUrl: 'app/abstract/breadcrumb/breadcrumb.tpl.html'
-                },
-                footer    : {
-                    templateUrl: 'app/abstract/footer/footer.tpl.html'
-                },
-                navigation: {
-                    templateUrl: 'app/abstract/navigation/navigation.tpl.html'
-                }
+                content   : {}, // main content to be redefined by substates
+                footer    : {}, // extra content in the footer, check footer.directive
+                nav       : {}  // extra content in the navigation, check navigation.directive
             }
         };
     }

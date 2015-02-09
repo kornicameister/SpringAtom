@@ -17,6 +17,6 @@ define(
                     version: '0.0.2'
                 })
                 .factory('$stateLabelResolve', stateLabelResolveService)
-            .provider('$state', $stateBuilderProvider)
+                .provider('$stateBuilder', $stateBuilderProvider)
     }
 );

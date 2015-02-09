@@ -1,6 +1,7 @@
 define(
     [
         'angular',
+        'common/state/state.module',
         // app views
         './abstract/abstract.module',
         './home/home.module'
@@ -22,6 +23,7 @@ define(
          * @module sg.app
          */
         return angular.module('sg.app', [
+            'sg.state',
             'sg.app.index',
             'sg.app.home'
         ]);
