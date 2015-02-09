@@ -1,8 +1,9 @@
 define(
     [
         'angular',
-        './translate/translate.module.js',
-        './security/security.module'
+        './translate/translate.module',
+        './security/security.module',
+        './state/state.module'
     ],
     function sgCommonModule(angular) {
         /**

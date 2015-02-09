@@ -8,7 +8,7 @@ define(
               abstractViewState) {
         "use strict";
 
-        return angular.module('sg.app.index', [])
+        return angular.module('sg.app.index', ['sg.state'])
             .config(['$stateBuilderProvider', registerRootState]);
 
         function registerRootState($stateBuilderProvider) {

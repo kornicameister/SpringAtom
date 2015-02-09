@@ -1,13 +1,13 @@
 define(
     [
         'angularMocks',
-        'ilib/stateBuilder/stateBuilder.module'
+        'common/stateBuilder/stateBuilder.module'
     ],
     function () {
         "use strict";
 
         describe('stateBuilderProvider', function () {
-            beforeEach(angular.mock.module('sg.state-builder'));
+            beforeEach(angular.mock.module('sg.state'));
 
             describe('provider', function () {
                 var stateBuilderProvider,

@@ -2,21 +2,21 @@ define(
     [
         'angular',
         './stateLabelResolve.factory',
-        './stateBuilder.provider',
+        './state.provider',
         'angularUiRouter'
     ],
     function stateBuilder(angular, stateLabelResolveService, $stateBuilderProvider) {
         /**
          *
-         * @module sg.state-builder
+         * @module sg.state
          * @namespace sg
          */
-        return angular.module('sg.state-builder', ['ui.router'])
+        return angular.module('sg.state', ['ui.router'])
                 .constant('MODULE_INFO', {
-                    name   : 'sg.state-builder',
+                name: 'sg.state',
                     version: '0.0.2'
                 })
                 .factory('$stateLabelResolve', stateLabelResolveService)
-                .provider('$stateBuilder', $stateBuilderProvider)
+            .provider('$state', $stateBuilderProvider)
     }
 );

@@ -1,7 +1,7 @@
 define(
     [
         'angularMocks',
-        'ilib/stateBuilder/stateBuilder.module'
+        'common/stateBuilder/stateBuilder.module'
     ],
     function () {
         "use strict";
@@ -10,7 +10,7 @@ define(
             var $stateLabelResolve,
                 labelService;
 
-            beforeEach(angular.mock.module('sg.state-builder', function ($provide) {
+            beforeEach(angular.mock.module('sg.state', function ($provide) {
                 labelService = {
                     getLabel: function () {
                     }
