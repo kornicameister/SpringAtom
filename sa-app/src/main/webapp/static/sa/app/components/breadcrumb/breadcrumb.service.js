@@ -9,53 +9,78 @@ define(
     function breadcrumbService(_, module) {
         "use strict";
 
-        return module.factory('breadcrumbService', ['$rootScope', '$state', '$stateBuilder', service]);
+        return module.factory('breadcrumbService', ['$state', '$stateBuilder', '$q', service]);
 
-        function service($rootScope, $state, $stateBuilder) {
-            var registeredCallbacks = {
-                    onBreadcrumbChange: []
-                },
-                service = {};
+        function service($state, $stateBuilder, $q) {
+            var service = {};
 
             // API
-            service.onBreadcrumbChange = onBreadcrumbChange;
-
-            // listeners
-            $rootScope.$on('$stateChangeSuccess', onStateChangeSuccess);
+            service.newCrumb = newCrumb;
+            service.getBreadcrumbs = getBreadcrumb;
 
             return service;
 
-            function onStateChangeSuccess(event, toState) {
-                var newCrumbs = [],
-                    stateName = toState.name;
+            function getBreadcrumb(state) {
+                return $q(function (resolve) {
+                    var newCrumbs = [],
+                        stateName = state.name,
+                        breadcrumbs = state['breadcrumb'] || [];
 
-                if (toState.breadcrumb) {
-                    _.forEachRight(toState.breadcrumb, function (crumbPath) {
-                        newCrumbs.push(newCrumb(crumbPath, toState));
+                    if (breadcrumbs.length) {
+                        _.forEach(breadcrumbs, function (crumbPath) {
+                            newCrumbs.push(newCrumb(crumbPath, stateName));
+                        });
+                    } else {
+                        var tmp = stateName;
+                        do {
+                            tmp = $state.get(tmp);
+                            if (tmp.abstract) {
+                                break
+                            }
+                            newCrumbs.push(newCrumb(tmp, stateName));
+
+                            tmp = tmp.name;
+                            tmp = tmp.replace(/(\.[^.]*)$/gi, '');
+                        } while (tmp);
+
+                        newCrumbs.reverse();
+                    }
+
+                    // resolve pending promises for label
+                    var prms = [];
+                    _.forEachRight(newCrumbs, function (nc) {
+                        prms.push(nc.label.then(function (label) {
+                            var self = this;
+                            self.label = label;
+                            return self;
+                        }.bind(nc)));
                     });
-                } else {
 
-                }
-
-                _.forEachRight(registeredCallbacks.onBreadcrumbChange, function (func) {
-                    func(_.clone(newCrumbs, true));
-                });
+                    $q.all(prms).then(function (newCrumbs) {
+                        resolve(newCrumbs);
+                    });
+                })
             }
 
-            function newCrumb(stateName, activeState) {
-                var state = $state.get(stateName);
-                if (!!state) {
+            function newCrumb(stateName, activeStateName) {
+                var state;
+
+                if (_.isString(stateName)) {
+                    state = $state.get(stateName);
+                } else {
+                    state = stateName;
+                    stateName = $stateBuilder.getStateName(state);
+                }
+
+                if (!state) {
                     throw new Error('breadcrumbService :: ' + stateName + ' has no corresponding state defined');
                 }
-                return {
-                    label : $stateBuilder.getStateLabel(state),
-                    active: stateName === $stateBuilder.getStateName(activeState)
-                };
-            }
 
-            function onBreadcrumbChange(funcToCall) {
-                registeredCallbacks.onBreadcrumbChange.push(funcToCall);
-                return service;
+                return {
+                    state : state,
+                    label : $stateBuilder.getStateLabel(state),
+                    active: stateName === activeStateName
+                };
             }
         }
     }

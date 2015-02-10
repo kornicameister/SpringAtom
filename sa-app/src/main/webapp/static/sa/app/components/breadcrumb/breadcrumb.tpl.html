@@ -1,10 +1,8 @@
 <header id="sg-breadcrumb">
-    <div class="col-lg-2 container-fluid">
-        <i class="fa fa-car"></i>
-    </div>
     <ol class="breadcrumb">
         <li ng-repeat="crumb in vm.crumbs" ng-class="{active: crumb.active}">
-            {{crumb.label}}
+            <a ui-sref="active.state.name" ng-if="!crumb.active">{{crumb.label}}</a>
+            <span ng-if="crumb.active">{{crumb.label}}</span>
         </li>
     </ol>
 </header>
