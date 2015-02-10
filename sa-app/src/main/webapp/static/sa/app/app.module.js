@@ -23,11 +23,18 @@ define(
          *
          * @module sg.app
          */
-        return angular.module('sg.app', [
+        angular.module('sg.app', [
             'sg.state',
             'sg.app.components',
             'sg.app.index',
             'sg.app.home'
         ]);
+
+        angular.module('sg.app').config(['$statePageTitleProvider', function ($statePageTitleProvider) {
+            "use strict";
+            $statePageTitleProvider.setPageTitleExpression('sgAppPageTitle');
+        }]);
+
+        return angular.module('sg.app');
     }
 );
