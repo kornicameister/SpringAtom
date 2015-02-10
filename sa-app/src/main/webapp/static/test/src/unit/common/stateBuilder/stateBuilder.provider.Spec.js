@@ -104,7 +104,9 @@ define(
 
             describe('service', function () {
                 var stateBuilder,
-                    labelService;
+                    labelService,
+                    rootScope;
+
                 beforeEach(function () {
                     angular.mock.module(function ($provide) {
                         labelService = {
@@ -115,9 +117,12 @@ define(
                             return labelService;
                         });
                     });
-                    angular.mock.inject(function ($stateBuilder) {
+
+                    angular.mock.inject(function ($stateBuilder, $rootScope) {
                         stateBuilder = $stateBuilder;
+                        rootScope = $rootScope;
                     });
+
                 });
 
                 it('should be defined', function () {
@@ -181,81 +186,113 @@ define(
                     var expectedLabel = 'sg.labelService.test';
 
                     it('as string', function () {
-                        var state = {
-                            name : 'a',
-                            label: expectedLabel
-                        };
+                        var actual = undefined,
+                            state = {
+                                name : 'a',
+                                label: expectedLabel
+                            };
 
                         expect(stateBuilder.isLabelResolved(state)).toEqual(false);
-                        expect(stateBuilder.getStateLabel(state)).toEqual(expectedLabel);
+
+                        stateBuilder.getStateLabel(state).then(function (label) {
+                            actual = label;
+                        });
+                        rootScope.$apply();
+                        expect(actual).toEqual(expectedLabel);
+
                         expect(stateBuilder.isLabelResolved(state)).toEqual(true);
                     });
                     it('as function', function () {
-                        var state = {
-                            name : 'a',
-                            label: function () {
-                                return expectedLabel;
-                            }
-                        };
+                        var actual = undefined,
+                            state = {
+                                name : 'a',
+                                label: function () {
+                                    return expectedLabel;
+                                }
+                            };
 
                         spyOn(state, 'label').and.callThrough();
 
                         expect(stateBuilder.isLabelResolved(state)).toEqual(false);
-                        expect(stateBuilder.getStateLabel(state)).toEqual(expectedLabel);
-                        expect(stateBuilder.isLabelResolved(state)).toEqual(true);
 
+                        stateBuilder.getStateLabel(state).then(function (label) {
+                            actual = label;
+                        });
+                        rootScope.$apply();
+                        expect(actual).toEqual(expectedLabel);
+
+                        expect(stateBuilder.isLabelResolved(state)).toEqual(true);
                         expect(state.label.calls.any()).toEqual(true);
                     });
                     it('as DI function', function () {
-                        var state = {
-                            name : 'a',
-                            label: function (labelService) {
-                                return labelService.getLabel();
-                            }
-                        };
+                        var actual = undefined,
+                            state = {
+                                name : 'a',
+                                label: function (labelService) {
+                                    return labelService.getLabel();
+                                }
+                            };
 
                         spyOn(labelService, 'getLabel').and.callFake(function () {
                             return expectedLabel;
                         });
 
                         expect(stateBuilder.isLabelResolved(state)).toEqual(false);
-                        expect(stateBuilder.getStateLabel(state)).toEqual(expectedLabel);
-                        expect(stateBuilder.isLabelResolved(state)).toEqual(true);
 
+                        stateBuilder.getStateLabel(state).then(function (label) {
+                            actual = label;
+                        });
+                        rootScope.$apply();
+                        expect(actual).toEqual(expectedLabel);
+
+                        expect(stateBuilder.isLabelResolved(state)).toEqual(true);
                         expect(labelService.getLabel.calls.any()).toEqual(true);
                     });
                     it('as DI function', function () {
-                        var state = {
-                            name : 'a',
-                            label: function (labelService) {
-                                return labelService.getLabel();
-                            }
-                        };
+                        var actual = undefined,
+                            state = {
+                                name : 'a',
+                                label: function (labelService) {
+                                    return labelService.getLabel();
+                                }
+                            };
 
                         spyOn(labelService, 'getLabel').and.callFake(function () {
                             return expectedLabel;
                         });
 
                         expect(stateBuilder.isLabelResolved(state)).toEqual(false);
-                        expect(stateBuilder.getStateLabel(state)).toEqual(expectedLabel);
-                        expect(stateBuilder.isLabelResolved(state)).toEqual(true);
 
+                        stateBuilder.getStateLabel(state).then(function (label) {
+                            actual = label;
+                        });
+                        rootScope.$apply();
+                        expect(actual).toEqual(expectedLabel);
+
+                        expect(stateBuilder.isLabelResolved(state)).toEqual(true);
                         expect(labelService.getLabel.calls.any()).toEqual(true);
                     });
                     it('as DI [array declaration] function', function () {
-                        var state = {
-                            name : 'a',
-                            label: ['labelService', function (a) {
-                                return a.getLabel();
-                            }]
-                        };
+                        var actual = undefined,
+                            state = {
+                                name : 'a',
+                                label: ['labelService', function (a) {
+                                    return a.getLabel();
+                                }]
+                            };
 
                         spyOn(labelService, 'getLabel').and.callFake(function () {
                             return expectedLabel;
                         });
 
                         expect(stateBuilder.isLabelResolved(state)).toEqual(false);
-                        expect(stateBuilder.getStateLabel(state)).toEqual(expectedLabel);
+
+                        stateBuilder.getStateLabel(state).then(function (label) {
+                            actual = label;
+                        });
+                        rootScope.$apply();
+                        expect(actual).toEqual(expectedLabel);
+
                         expect(stateBuilder.isLabelResolved(state)).toEqual(true);
 
                         expect(labelService.getLabel.calls.any()).toEqual(true);
