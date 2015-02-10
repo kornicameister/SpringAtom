@@ -51,7 +51,8 @@
       "bootstrap"                      : "latest",
       "jasny-bootstrap"                : "latest",
       "jquery"                         : "latest",
-      "font-awesome"                   : "~4.3.0"
+      "font-awesome": "~4.3.0",
+      "require-less": "~0.1.5"
    },
    "devDependencies": {
       "angular-mocks"   : "latest",
