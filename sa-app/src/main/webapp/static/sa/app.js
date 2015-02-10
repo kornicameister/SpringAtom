@@ -35,13 +35,6 @@ define(
             }
         }());
 
-        function bootstrapOnTimeout() {
-            var appName = utils.getModuleName(app);
-            console.log('Bootstrapping application + ' + appName);
-            window.name = 'NG_DEFER_BOOTSTRAP';
-            angular.bootstrap(document, [appName]);
-        }
-
         var appName = 'springatom',
             app = angular
                 .module(appName, [
@@ -52,7 +45,12 @@ define(
 
         return {
             init: function () {
-                setTimeout(bootstrapOnTimeout, 100);
+                setTimeout(function bootstrapOnTimeout() {
+                    var appName = utils.getModuleName(app);
+                    console.log('Bootstrapping application + ' + appName);
+                    window.name = 'NG_DEFER_BOOTSTRAP';
+                    angular.bootstrap(document, [appName]);
+                }, 100);
             }
         }
     }

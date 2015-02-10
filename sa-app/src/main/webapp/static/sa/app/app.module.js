@@ -1,10 +1,11 @@
 define(
     [
         'angular',
+        'less!./app',
         'common/state/state.module',
-        // app views
-        './abstract/abstract.module',
-        './home/home.module'
+        './abstract/abstract.module.wrapper',
+        './home/home.module.wrapper',
+        './components/components.module'
     ],
     function app(angular) {
         /**
@@ -24,6 +25,7 @@ define(
          */
         return angular.module('sg.app', [
             'sg.state',
+            'sg.app.components',
             'sg.app.index',
             'sg.app.home'
         ]);

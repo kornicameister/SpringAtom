@@ -29,7 +29,7 @@
    "dependencies"   : {
       "requirejs"                      : "latest",
       "jsface"                         : "latest",
-      "lodash": "latest",
+      "lodash"      : "latest",
       "animate.css"                    : "latest",
       "normalize-css"                  : "latest",
       "angular"                        : "latest",
@@ -50,15 +50,16 @@
       "isteven-angular-multiselect"    : "latest",
       "bootstrap"                      : "latest",
       "jasny-bootstrap"                : "latest",
-      "jquery"                         : "latest"
+      "jquery"      : "latest",
+      "font-awesome": "~4.3.0"
    },
    "devDependencies": {
       "angular-mocks"   : "latest",
       "angular-scenario": "latest"
    },
    "resolutions"    : {
-      "angular-translate": "~2.5.2",
-      "angular"          : "1.3.11",
+      "angular-translate": "~2.6.0",
+      "angular"          : "1.3.13",
       "jquery"           : ">= 1.9.1"
    }
 }

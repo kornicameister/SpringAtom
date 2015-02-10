@@ -1,5 +1,11 @@
-<nav id="sg-nav" class="navbar navbar-left col-sm-2 navbar-nav ui-spinner" role="navigation">
+<nav id="sg-nav" class="navbar navbar-left col-sm-2 navbar-nav" role="navigation">
     <ul class="nav nav-pills nav-stacked">
-
+        <li ng-repeat="action in vm.navigation">
+            <a id="{{action.id}}" ui-sref="{{action.state}}" role="{{action.type}}">
+                <i ng-show="action.css && action.css.iconClass" ng-class="action.css.iconClass">
+                    {{action.label}}
+                </i>
+            </a>
+        </li>
     </ul>
 </nav>

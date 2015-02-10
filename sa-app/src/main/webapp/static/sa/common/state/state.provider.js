@@ -34,7 +34,7 @@ define(
                 // copy into the definition
                 state.name = resolveName(state);
                 state.hasChildren = children.length > 0;
-                
+
                 delete state.children;
 
                 $stateProvider.state(state);
@@ -50,8 +50,9 @@ define(
             };
 
             // services, controllers, run available
-            provider.$get = ['$stateLabelResolve', '$cacheFactory', '$state',
-                function ($stateLabelResolve, $cacheFactory, $state) {
+            provider.$get = ['$stateLabelResolve', '$cacheFactory', '$state', '$q',
+                function ($stateLabelResolve, $cacheFactory, $state, $q) {
+
                     if (_.isUndefined(stateLabelCache)) {
                         stateLabelCache = $cacheFactory('stateBuilderProvider.stateLabelCache');
                     }
@@ -62,11 +63,31 @@ define(
                         getStateLabel  : getStateLabel,
                         getStateName   : getStateName,
                         getParentState : getParentState,
-                        hasParentState : hasParentState
+                        hasParentState : hasParentState,
+                        getCurrentState: getCurrentState
                     };
 
                     return service;
-                    
+
+                    function isPromise(val) {
+                        return !!val.then;
+                    }
+
+                    function asPromise(val) {
+                        if (isPromise(val)) {
+                            return val;
+                        }
+                        return $q(function (resolve) {
+                            resolve(val);
+                        })
+                    }
+
+                    function getCurrentState() {
+                        return $q(function (resolve) {
+                            resolve(_.clone($state.current));
+                        });
+                    }
+
                     function cacheStateLabel(state, label) {
                         if (_.isUndefined(label)) {
                             return false;
@@ -86,15 +107,28 @@ define(
                     }
 
                     function getStateLabel(state) {
-                        var name = resolveName(state),
-                            label;
-                        if (!service.isLabelResolved(state)) {
-                            label = $stateLabelResolve.resolveLabel(state);
-                            service.cacheStateLabel(state, label);
-                        } else {
-                            label = stateLabelCache.get(name);
+
+                        function _getStateLabel(state) {
+                            return $q(function (resolve) {
+                                var name = resolveName(state);
+                                if (!service.isLabelResolved(state)) {
+                                    asPromise($stateLabelResolve.resolveLabel(state)).then(
+                                        function (label) {
+                                            service.cacheStateLabel(state, label);
+                                            resolve(label);
+                                        }
+                                    )
+                                } else {
+                                    resolve(stateLabelCache.get(name));
+                                }
+                            })
                         }
-                        return label;
+
+                        if (!state) {
+                            return getCurrentState().then(_getStateLabel)
+                        }
+
+                        return _getStateLabel(state);
                     }
 
                     function getStateName(state) {

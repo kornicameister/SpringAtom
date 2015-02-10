@@ -1,0 +1,5 @@
+define(
+    ['./home.state'],
+    function () {
+    }
+);

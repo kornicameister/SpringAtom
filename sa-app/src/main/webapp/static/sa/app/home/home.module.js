@@ -1,18 +1,9 @@
 define(
     [
-        'angular',
-        './home.state'
+        'angular'
     ],
-    function (angular, homeState) {
+    function (angular) {
         "use strict";
-
-        return angular.module('sg.app.home', [])
-            .config(['$stateBuilderProvider','$urlRouterProvider', registerModuleStates]);
-
-        function registerModuleStates($stateBuilderProvider, $urlRouterProvider) {
-            $stateBuilderProvider.state(homeState);
-            
-            $urlRouterProvider.otherwise('/sg/home');
-        }
+        return angular.module('sg.app.home', []);
     }
 );

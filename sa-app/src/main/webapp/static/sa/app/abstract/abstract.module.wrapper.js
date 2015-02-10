@@ -1,0 +1,5 @@
+define(
+    ['./abstract.state'],
+    function () {
+    }
+);

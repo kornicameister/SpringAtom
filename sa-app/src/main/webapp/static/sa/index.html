@@ -23,21 +23,28 @@
     <link rel="stylesheet" media="all" href="vendor/angular-dialog-service/dist/dialogs.min.css">
     <link rel="stylesheet" media="all" href="vendor/ngprogress/ngProgress.css">
     <link rel="stylesheet" media="all" href="vendor/isteven-angular-multiselect/angular-multi-select.css">
-
-    <link rel="stylesheet" media="all" href="assets/css/core.css">
+    <link rel="stylesheet" media="all" href="vendor/font-awesome/css/font-awesome.min.css">
+    
 </head>
 
 <body class="sg-body">
 
-<div id="sg-header" class="sg-header slide" ui-view="header"></div>
+<div class="sg-wrapper">
+    <sg-header></sg-header>
+    <sg-navigation></sg-navigation>
 
-<div class="col-sm-10 sg-content-wrapper container-fluid">
-    <div class="sg-breadcrumb slide" ui-view="breadcrumb"></div>
-    <div class="sg-content slide" ui-view="content"></div>
+    <div class="col-sm-10 container-fluid clearfix">
+        <sg-breadcrumb class="center-block"></sg-breadcrumb>
+        <div class="slide center-block col-sm-12">
+            <div class="well well-lg" ui-view="content">
+                <!-- content goes here -->
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<div id="sg-footer" class="sg-footer slide" ui-view="footer"></div>
-<div id="sg-nav" class="sg-nav slide" role="navigation" ui-view="navigation"></div>
+<sg-footer></sg-footer>
 
 <script type="text/javascript">
     window.SA_LANG = 'pl';

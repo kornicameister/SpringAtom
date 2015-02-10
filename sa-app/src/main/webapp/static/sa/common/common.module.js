@@ -1,8 +1,8 @@
 define(
     [
         'angular',
-        './translate/translate.module',
-        './security/security.module'
+        './security/security.module',
+        './translations/translations'
     ],
     function sgCommonModule(angular) {
         /**
@@ -20,7 +20,7 @@ define(
          */
         return angular.module('sg.common', [
             'sg.security',
-            'sg.translate'
+            'sg.translations'
         ]);
     }
 );
