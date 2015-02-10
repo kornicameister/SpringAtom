@@ -5,7 +5,8 @@ define(
         'common/state/state.module',
         './abstract/abstract.module.wrapper',
         './home/home.module.wrapper',
-        './components/components.module'
+        './components/components.module',
+        './popups/popups.wrapper'
     ],
     function app(angular) {
         /**
@@ -26,6 +27,7 @@ define(
         angular.module('sg.app', [
             'sg.state',
             'sg.app.components',
+            'sg.app.popups',
             'sg.app.index',
             'sg.app.home'
         ]);

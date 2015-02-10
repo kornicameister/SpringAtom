@@ -4,7 +4,8 @@ define(
         './stateLabelResolve.factory',
         './state.provider',
         './state.pageTitle.provider',
-        'angularUiRouter'
+        'angularUiRouter',
+        'angularUiRouterExtras'
     ],
     function stateBuilder(angular, stateLabelResolveService, $stateBuilderProvider, $statePageTitleProvider) {
         /**
@@ -12,7 +13,7 @@ define(
          * @module sg.state
          * @namespace sg
          */
-        return angular.module('sg.state', ['ui.router'])
+        return angular.module('sg.state', ['ui.router', 'ct.ui.router.extras.core'])
             .constant('MODULE_INFO', {
                 name   : 'sg.state',
                 version: '0.0.2'
