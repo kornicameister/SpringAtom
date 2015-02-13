@@ -4,7 +4,8 @@ define(
         // translations
         './pl_PL/common',
         './pl_PL/states',
-        './pl_PL/buttons'
+        './pl_PL/buttons',
+        './pl_PL/dialogs'
     ],
     function (_) {
         "use strict";

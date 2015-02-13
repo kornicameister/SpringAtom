@@ -25,9 +25,9 @@ define(
          * @module sg.app
          */
         angular.module('sg.app', [
+            'sg.app.popups',
             'sg.state',
             'sg.app.components',
-            'sg.app.popups',
             'sg.app.index',
             'sg.app.home'
         ]);

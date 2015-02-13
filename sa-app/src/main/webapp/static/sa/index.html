@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" ng-csp>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="pl"/>
     <meta name="author" content="kornicameister@gmail.com"/>
@@ -9,13 +9,14 @@
 
     <title>{{sgAppPageTitle || '???'}}</title>
 
+    <link rel="stylesheet" media="all" href="vendor/normalize-css/normalize.css">
+    
     <link rel="stylesheet" media="all" href="vendor/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" media="all" href="vendor/bootstrap/dist/css/bootstrap-theme.css">
     <link rel="stylesheet" media="all" href="vendor/jasny-bootstrap/dist/css/jasny-bootstrap.min.css">
     <link rel="stylesheet" media="all" href="vendor/ng-grid/ng-grid.min.css">
     <link rel="stylesheet" media="all" href="vendor/ngprogress/ngProgress.css">
     <link rel="stylesheet" media="all" href="vendor/animate.css/animate.min.css">
-    <link rel="stylesheet" media="all" href="vendor/normalize-css/normalize.css">
     <link rel="stylesheet" media="all" href="vendor/angular/angular-csp.css">
     <link rel="stylesheet" media="all" href="vendor/fullcalendar/fullcalendar.css">
     <link rel="stylesheet" media="all" href="vendor/jasny-bootstrap/dist/css/jasny-bootstrap.min.css">
@@ -30,13 +31,13 @@
 <body class="sg-body">
 
 <div class="sg-wrapper">
-    <sg-header></sg-header>
-    <sg-navigation></sg-navigation>
+    <sg-header ng-cloak></sg-header>
+    <sg-navigation ng-cloak></sg-navigation>
 
     <div class="col-sm-10 container-fluid clearfix">
-        <sg-breadcrumb class="center-block"></sg-breadcrumb>
+        <sg-breadcrumb class="center-block" ng-cloak></sg-breadcrumb>
         <div class="slide center-block col-sm-12">
-            <div class="well well-lg" ui-view="content">
+            <div class="well well-lg" ui-view="content" ng-cloak>
                 <!-- content goes here -->
             </div>
         </div>
@@ -44,7 +45,7 @@
 
 </div>
 
-<sg-footer></sg-footer>
+<sg-footer ng-cloak></sg-footer>
 
 <script type="text/javascript">
     window.SA_LANG = 'pl';

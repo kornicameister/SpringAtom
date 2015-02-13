@@ -3,12 +3,15 @@ define(
         'lodash',
         './header.module',
         // angular dependencies
+        'app/popups/authentication/authenticationPopup.factory',
         'common/state/state.module'
     ],
     function headerController(_, module) {
         "use strict";
 
-        return module.controller('HeaderController', ['$scope', '$interval', '$stateBuilder', ctrl]);
+        return module.controller('HeaderController', 
+                                 ['$scope', '$interval', '$stateBuilder', 'authenticationPopup', ctrl]
+                                );
 
         function AuthenticationListeners() {
         }
@@ -18,7 +21,7 @@ define(
             return false;
         }
 
-        function ctrl($scope, $interval, $stateBuilder) {
+        function ctrl($scope, $interval, $stateBuilder, authenticationPopup) {
 
             AuthenticationListeners.prototype.onLogin = function () {
                 if (notificationPromise) {
@@ -57,7 +60,7 @@ define(
             initialize();
 
             function openLoginDialog() {
-
+                authenticationPopup.openLoginPopup();
             }
 
             function openLogoutDialog() {
