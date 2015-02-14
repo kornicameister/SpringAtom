@@ -10,11 +10,10 @@ define(
         return module.directive('sgHeader', function breadcrumbDirective() {
             return {
                 restrict        : 'E',
-                scope           : {},
                 controller      : 'HeaderController',
                 controllerAs    : 'vm',
                 bindToController: true,
-                transclude      : true,
+                scope: true,
                 templateUrl     : 'app/components/header/header.tpl.html'
             }
         });

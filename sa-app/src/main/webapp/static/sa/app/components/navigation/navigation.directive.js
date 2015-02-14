@@ -9,7 +9,7 @@ define(
         return module.directive('sgNavigation', function breadcrumbDirective() {
             return {
                 restrict   : 'E',
-                transclude : true,
+                scope: true,
                 templateUrl: 'app/components/navigation/navigation.tpl.html'
             }
         });

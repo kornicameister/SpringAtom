@@ -13,6 +13,7 @@ define(
                 controller      : 'BreadcrumbController',
                 controllerAs    : 'vm',
                 bindToController: true,
+                scope: true,
                 templateUrl     : 'app/components/breadcrumb/breadcrumb.tpl.html'
             }
         });

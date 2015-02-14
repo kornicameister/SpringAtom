@@ -39,6 +39,7 @@ define(
                 breadcrumbService.getBreadcrumbs(toState).then(function (crumbs) {
                     vm.crumbs = crumbs;
                 });
+                return true;
             }
         }
     }
