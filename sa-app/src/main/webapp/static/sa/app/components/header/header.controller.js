@@ -1,24 +1,22 @@
 define(
     [
         'lodash',
+        'common/callbacks',
         './header.module',
         // angular dependencies
         'app/popups/authentication/authenticationPopup.factory',
         'common/state/state.module'
     ],
-    function headerController(_, module) {
+    function headerController(_, callbacks, module) {
         "use strict";
 
-        return module.controller('HeaderController', 
-                                 ['$scope', '$interval', '$stateBuilder', 'authenticationPopup', ctrl]
-                                );
+        var onClickWrapper = callbacks.cancelEvent;
+
+        return module.controller('HeaderController',
+            ['$scope', '$interval', '$stateBuilder', 'authenticationPopup', ctrl]
+        );
 
         function AuthenticationListeners() {
-        }
-
-        function onClickWrapper(func) {
-            func();
-            return false;
         }
 
         function ctrl($scope, $interval, $stateBuilder, authenticationPopup) {
@@ -64,7 +62,7 @@ define(
             }
 
             function openLogoutDialog() {
-
+                authenticationPopup.openLogoutDialog();
             }
 
             function initialize() {

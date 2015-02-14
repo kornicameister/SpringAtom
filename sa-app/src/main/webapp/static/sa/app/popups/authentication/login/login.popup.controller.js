@@ -1,51 +1,39 @@
 define(
     [
         'lodash',
+        'common/callbacks',
         '../authentication.popup.module'
     ],
-    function loginPopupController(_, module){
-        
-        return module.controller('LoginPopupController',['$modalInstance', '$scope', ctrl]);
-        
-        function cancelEventWrapper(func, $event){
-            func($event);
-            $event.preventDefault();
-            return false;
-        }
-        
-        function ctrl($modalInstance, $scope){
-            // private
+    function loginPopupController(_, callbacks, module) {
+        var cancelEventWrapper = callbacks.cancelEvent;
+
+        return module.controller('LoginPopupController', ['$modalInstance', ctrl]);
+
+        function ctrl($modalInstance) {
             var vm = this;
-            
+
             vm.username = '';
             vm.password = '';
             vm.forgotPassword = _.wrap(forgotPassword.bind(vm), cancelEventWrapper);
             vm.register = _.wrap(register.bind(vm), cancelEventWrapper);
             vm.login = _.wrap(login.bind(vm), cancelEventWrapper);
             vm.cancel = _.wrap(cancel.bind(vm), cancelEventWrapper);
-            
-            // listeners
-            $scope.$on('$destroy', destroy.bind(vm));
-            
-            function destroy(){
-                
+
+            function forgotPassword() {
+                $modalInstance.close('forgot_password');
             }
-            
-            function forgotPassword($event){
-                
+
+            function register() {
+                $modalInstance.close('register');
             }
-            
-            function register($event){
-                
+
+            function login() {
+                $modalInstance.close('login');
             }
-            
-            function login($event){
-                
-            }
-            
-            function cancel($event){
-                
+
+            function cancel() {
+                $modalInstance.dismiss('cancel');
             }
         }
     }
-)
+);

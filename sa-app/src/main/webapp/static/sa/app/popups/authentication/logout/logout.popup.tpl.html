@@ -1,0 +1,22 @@
+<section role="dialog" ng-cloak="true">
+    <div class="modal-header">
+        <h4 class="modal-title">{{'logout.popup.title'|translate}}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid jumbotron">
+            {{'logout.popup.msg'|translate}}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn-toolbar" style="float:right">
+            <div class="btn-group">
+                <button class="btn btn-primary" ng-click="vm.logout($event)" title="{{'button.logout' | translate}}">
+                    <i class="glyphicon glyphicon-log-in"></i>
+                </button>
+                <button class="btn btn-waring" ng-click="vm.cancel($event)" title="{{'button.cancel' | translate}}">
+                    <i class="glyphicon glyphicon-off"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
