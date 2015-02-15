@@ -10,7 +10,7 @@
     <title>{{sgAppPageTitle || '???'}}</title>
 
     <link rel="stylesheet" media="all" href="vendor/normalize-css/normalize.css">
-    
+
     <link rel="stylesheet" media="all" href="vendor/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" media="all" href="vendor/bootstrap/dist/css/bootstrap-theme.css">
     <link rel="stylesheet" media="all" href="vendor/jasny-bootstrap/dist/css/jasny-bootstrap.min.css">
@@ -30,14 +30,15 @@
 
 <body class="sg-body">
 
+<sg-header ng-cloak="true"></sg-header>
+
 <div class="sg-wrapper">
-    <sg-header ng-cloak></sg-header>
-    <sg-navigation ng-cloak></sg-navigation>
+    <sg-navigation ng-cloak="true"></sg-navigation>
 
     <div class="col-sm-10 container-fluid clearfix">
-        <sg-breadcrumb class="center-block" ng-cloak></sg-breadcrumb>
+        <sg-breadcrumb class="center-block" ng-cloak="true"></sg-breadcrumb>
         <div class="slide center-block col-sm-12">
-            <div class="well well-lg" ui-view="content" ng-cloak>
+            <div class="well well-lg" ui-view="content" ng-cloak="true">
                 <!-- content goes here -->
             </div>
         </div>
@@ -45,7 +46,7 @@
 
 </div>
 
-<sg-footer ng-cloak></sg-footer>
+<sg-footer ng-cloak="true"></sg-footer>
 
 <script type="text/javascript">
     window.SA_LANG = 'pl';

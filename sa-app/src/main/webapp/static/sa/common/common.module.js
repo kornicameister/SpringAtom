@@ -2,7 +2,9 @@ define(
     [
         'angular',
         './security/security.module',
-        './translations/translations'
+        './translations/translations',
+        './components/components.module',
+        './popups/popups.wrapper'
     ],
     function sgCommonModule(angular) {
         /**
@@ -19,6 +21,8 @@ define(
          * @requires sg.root-view
          */
         return angular.module('sg.common', [
+            'sg.popups',
+            'sg.components',
             'sg.security',
             'sg.translations'
         ]);

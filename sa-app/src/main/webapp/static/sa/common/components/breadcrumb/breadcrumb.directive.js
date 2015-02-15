@@ -1,8 +1,7 @@
 define(
     [
         './breadcrumb.module',
-        './breadcrumb.controller',
-        'less!./breadcrumb'
+        './breadcrumb.controller'
     ],
     function breadcrumbDirective(module) {
         "use strict";
@@ -13,8 +12,8 @@ define(
                 controller      : 'BreadcrumbController',
                 controllerAs    : 'vm',
                 bindToController: true,
-                scope: true,
-                templateUrl     : 'app/components/breadcrumb/breadcrumb.tpl.html'
+                scope      : true,
+                templateUrl: 'common/components/breadcrumb/breadcrumb.tpl.html'
             }
         });
     }

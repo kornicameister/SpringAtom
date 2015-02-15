@@ -4,7 +4,7 @@ define(
         'common/callbacks',
         './header.module',
         // angular dependencies
-        'app/popups/authentication/authenticationPopup.factory',
+        'common/popups/authentication/authenticationPopup.factory',
         'common/state/state.module'
     ],
     function headerController(_, callbacks, module) {

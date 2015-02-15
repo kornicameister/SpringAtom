@@ -1,8 +1,7 @@
 define(
     [
         './header.module',
-        './header.controller',
-        'less!./header'
+        './header.controller'
     ],
     function headerDirective(module) {
         'use strict';
@@ -13,8 +12,8 @@ define(
                 controller      : 'HeaderController',
                 controllerAs    : 'vm',
                 bindToController: true,
-                scope: true,
-                templateUrl     : 'app/components/header/header.tpl.html'
+                scope      : true,
+                templateUrl: 'common/components/header/header.tpl.html'
             }
         });
     }

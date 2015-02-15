@@ -1,7 +1,6 @@
 define(
     [
-        './navigation.module',
-        'less!./navigation'
+        './navigation.module'
     ],
     function navigationDirective(module) {
         'use strict';
@@ -9,8 +8,8 @@ define(
         return module.directive('sgNavigation', function breadcrumbDirective() {
             return {
                 restrict   : 'E',
-                scope: true,
-                templateUrl: 'app/components/navigation/navigation.tpl.html'
+                scope      : true,
+                templateUrl: 'common/components/navigation/navigation.tpl.html'
             }
         });
     }

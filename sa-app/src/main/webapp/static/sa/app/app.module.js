@@ -1,12 +1,9 @@
 define(
     [
         'angular',
-        'less!./app',
         'common/state/state.module',
         './abstract/abstract.module.wrapper',
-        './home/home.module.wrapper',
-        './components/components.module',
-        './popups/popups.wrapper'
+        './home/home.module.wrapper'
     ],
     function app(angular) {
         /**
@@ -25,10 +22,9 @@ define(
          * @module sg.app
          */
         angular.module('sg.app', [
-            'sg.app.popups',
             'sg.state',
-            'sg.app.components',
             'sg.app.index',
+            // core view modules of the application
             'sg.app.home'
         ]);
 

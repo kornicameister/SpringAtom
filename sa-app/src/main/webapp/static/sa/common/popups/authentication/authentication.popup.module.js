@@ -3,6 +3,6 @@ define(
         'angular'
     ],
     function(angular){
-        return angular.module('sg.app.popups.authentication',[]);
+        return angular.module('sg.popups.authentication', []);
     }
 );

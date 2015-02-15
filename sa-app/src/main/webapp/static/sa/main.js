@@ -102,7 +102,7 @@
         }
     });
 
-    require(['app'], function bootstrap(app) {
+    require(['app', 'less!assets/less/springatom'], function bootstrap(app) {
         app.init();
     });
 

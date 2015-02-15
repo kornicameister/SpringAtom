@@ -8,10 +8,10 @@ define(
     function popupModule(angular) {
         "use strict";
 
-        return angular.module('sg.app.popups', [
-            'sg.app.popups.dependencies',
+        return angular.module('sg.popups', [
+            'sg.popups.dependencies',
             // actual popups start here
-            'sg.app.popups.authentication'
+            'sg.popups.authentication'
         ])
     }
 );

@@ -2,6 +2,6 @@ define(
     ['angular'],
     function (angular) {
         "use strict";
-        return angular.module('sg.app.components.navigation', [])
+        return angular.module('sg.components.footer', [])
     }
 );

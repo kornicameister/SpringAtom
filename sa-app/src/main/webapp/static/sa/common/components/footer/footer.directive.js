@@ -1,7 +1,6 @@
 define(
     [
-        './footer.module',
-        'less!./footer'
+        './footer.module'
     ],
     function footerDirective(module) {
         'use strict';
@@ -9,7 +8,7 @@ define(
         return module.directive('sgFooter', function breadcrumbDirective() {
             return {
                 restrict   : 'E',
-                templateUrl: 'app/components/footer/footer.tpl.html'
+                templateUrl: 'common/components/footer/footer.tpl.html'
             }
         });
     }
