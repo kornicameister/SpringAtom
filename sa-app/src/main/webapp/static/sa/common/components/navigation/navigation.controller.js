@@ -5,9 +5,9 @@ define(
     ],
     function (_, module) {
         "use strict";
-        return module.controller('NavigationController', ['$rootScope', '$navigation', '$stateBuilder', '$q', navigationController]);
+        return module.controller('NavigationController', ['$rootScope', '$navigation', '$stateHelper', '$q', navigationController]);
 
-        function navigationController($scope, $navigation, $stateBuilder, $q) {
+        function navigationController($scope, $navigation, $stateHelper, $q) {
             var vm = this;
 
             vm.navigation = [];
@@ -17,7 +17,7 @@ define(
             initialize();
 
             function initialize() {
-                return $stateBuilder.getCurrentState().then(navigationFromState);
+                return $stateHelper.getCurrentState().then(navigationFromState);
             }
 
             function navigationFromState(state) {
@@ -25,13 +25,13 @@ define(
                     nav = [];
 
                 _.forEach(navigation, function (n) {
-                    n = $stateBuilder.getState(n);
+                    n = $stateHelper.getState(n);
                     if (n) {
                         nav.push({
                             id    : _.uniqueId('nav_'),
                             state : n.name,
                             type  : 'link',
-                            label : $stateBuilder.getStateLabel(n),
+                            label: $stateHelper.getStateLabel(n),
                             active: n.name === state.name ? 'yes' : 'no'
                         });
                     }

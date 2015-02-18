@@ -9,9 +9,9 @@ define(
     function breadcrumbService(_, module) {
         "use strict";
 
-        return module.factory('breadcrumbService', ['$state', '$stateBuilder', '$q', service]);
+        return module.factory('breadcrumbService', ['$state', '$stateHelper', '$q', service]);
 
-        function service($state, $stateBuilder, $q) {
+        function service($state, $stateHelper, $q) {
             var service = {};
 
             // API
@@ -69,7 +69,7 @@ define(
                     state = $state.get(stateName);
                 } else {
                     state = stateName;
-                    stateName = $stateBuilder.getStateName(state);
+                    stateName = $stateHelper.getStateName(state);
                 }
 
                 if (!state) {
@@ -78,7 +78,7 @@ define(
 
                 return {
                     state : state,
-                    label : $stateBuilder.getStateLabel(state),
+                    label: $stateHelper.getStateLabel(state),
                     active: stateName === activeStateName
                 };
             }

@@ -5,15 +5,15 @@ define(
     ],
     function (module) {
         "use strict";
-        return module.config(['$stateBuilderProvider', '$navigationProvider', function ($stateBuilderProvider,
+        return module.config(['$stateHelperProvider', '$navigationProvider', function ($stateHelperProvider,
                                                                                         $navigationProvider) {
-            $stateBuilderProvider.state({
+            $stateHelperProvider.state({
                 name   : 'sg.about',
                 url    : '/about',
                 resolve: {
                     label: ['$translate', function ($translate) {
                         return $translate('sg.about')
-                    }],  
+                    }],
                 },
                 views  : {
                     'content@': {

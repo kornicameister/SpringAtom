@@ -5,16 +5,16 @@ define(
     ],
     function (module) {
         "use strict";
-        return module.config(['$stateBuilderProvider', '$urlRouterProvider', '$navigationProvider', function ($stateBuilderProvider,
+        return module.config(['$stateHelperProvider', '$urlRouterProvider', '$navigationProvider', function ($stateHelperProvider,
                                                                                                               $urlRouterProvider,
                                                                                                               $navigationProvider) {
-            $stateBuilderProvider.state({
+            $stateHelperProvider.state({
                 name : 'sg.home',
                 url  : '/home',
                 resolve: {
                     label: ['$translate', function ($translate) {
                         return $translate('sg.home')
-                    }],  
+                    }],
                 },
                 views: {
                     'content@': {

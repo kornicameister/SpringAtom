@@ -6,7 +6,7 @@ define(
     function () {
         "use strict";
 
-        describe('stateBuilderProvider', function () {
+        describe('$stateHelperProvider', function () {
             beforeEach(angular.mock.module('sg.state'));
 
             describe('provider', function () {
@@ -14,8 +14,8 @@ define(
                     stateProvider;
 
                 beforeEach(function () {
-                    angular.mock.module(function ($stateBuilderProvider, $stateProvider) {
-                        stateBuilderProvider = $stateBuilderProvider;
+                    angular.mock.module(function ($stateHelperProvider, $stateProvider) {
+                        stateBuilderProvider = $stateHelperProvider;
                         stateProvider = $stateProvider;
                     });
                     angular.mock.inject(function () {
@@ -118,8 +118,8 @@ define(
                         });
                     });
 
-                    angular.mock.inject(function ($stateBuilder, $rootScope) {
-                        stateBuilder = $stateBuilder;
+                    angular.mock.inject(function ($stateHelper, $rootScope) {
+                        stateBuilder = $stateHelper;
                         rootScope = $rootScope;
                     });
 

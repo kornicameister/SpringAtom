@@ -6,9 +6,9 @@ define(
     function breadcrumbController(module) {
         "use strict";
 
-        return module.controller('BreadcrumbController', ['$scope', 'breadcrumbService', '$stateBuilder', ctrl]);
+        return module.controller('BreadcrumbController', ['$scope', 'breadcrumbService', '$stateHelper', ctrl]);
 
-        function ctrl($scope, breadcrumbService, $stateBuilder) {
+        function ctrl($scope, breadcrumbService, $stateHelper) {
             var vm = this;
 
             // API of controller
@@ -25,7 +25,7 @@ define(
             }
 
             function initialize() {
-                $stateBuilder.getCurrentState()
+                $stateHelper.getCurrentState()
                     .then(function (state) {
                         breadcrumbService
                             .getBreadcrumbs(state)

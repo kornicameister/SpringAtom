@@ -13,13 +13,13 @@ define(
         var onClickWrapper = callbacks.cancelEvent;
 
         return module.controller('HeaderController',
-            ['$scope', '$interval', '$stateBuilder', 'authenticationPopup', ctrl]
+            ['$scope', '$interval', '$stateHelper', 'authenticationPopup', ctrl]
         );
 
         function AuthenticationListeners() {
         }
 
-        function ctrl($scope, $interval, $stateBuilder, authenticationPopup) {
+        function ctrl($scope, $interval, $stateHelper, authenticationPopup) {
 
             AuthenticationListeners.prototype.onLogin = function () {
                 if (notificationPromise) {
@@ -66,7 +66,7 @@ define(
             }
 
             function initialize() {
-                $stateBuilder.getStateLabel().then(function (label) {
+                $stateHelper.getStateLabel().then(function (label) {
                     vm.stateTitle = label;
                 })
             }

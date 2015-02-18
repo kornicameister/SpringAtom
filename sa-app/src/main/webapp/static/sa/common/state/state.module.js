@@ -7,7 +7,7 @@ define(
         'angularUiRouter',
         'angularUiRouterExtras'
     ],
-    function stateBuilder(angular, stateLabelResolveService, $stateBuilderProvider, $statePageTitleProvider) {
+    function stateBuilder(angular, stateLabelResolveService, $stateHelperProvider, $statePageTitleProvider) {
         /**
          *
          * @module sg.state
@@ -19,10 +19,10 @@ define(
                 version: '0.0.2'
             })
             .factory('$stateLabelResolve', stateLabelResolveService)
-            .provider('$stateBuilder', $stateBuilderProvider)
+            .provider('$stateHelper', $stateHelperProvider)
             .provider('$statePageTitle', $statePageTitleProvider)
-            .run(['$statePageTitle', '$stateBuilder', '$rootScope', function ($statePageTitle,
-                                                                              $stateBuilder,
+            .run(['$statePageTitle', '$stateHelper', '$rootScope', function ($statePageTitle,
+                                                                             $stateHelper,
                                                                               $rootScope) {
                 "use strict";
 
@@ -33,7 +33,7 @@ define(
                     $rootScope[expression] = $statePageTitle.getDefaultPageTitle() || SA_DEFAULT_PAGE_TITLE;
 
                     $rootScope.$on('$stateChangeSuccess', function (event, toState) {
-                        $stateBuilder.getStateLabel(toState).then(function (label) {
+                        $stateHelper.getStateLabel(toState).then(function (label) {
                             $rootScope[expression] = label;
                             if (!$rootScope.$$phase) {
                                 $rootScope.$apply();

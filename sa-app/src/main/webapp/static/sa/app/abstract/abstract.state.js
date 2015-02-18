@@ -2,8 +2,8 @@ define(
     ['./abstract.module'],
     function rootViewState(module) {
         "use strict";
-        return module.config(['$stateBuilderProvider', function ($stateBuilderProvider) {
-            $stateBuilderProvider.state({
+        return module.config(['$stateHelperProvider', function ($stateHelperProvider) {
+            $stateHelperProvider.state({
                 name    : 'sg',
                 url     : '/sg',
                 abstract: true,
