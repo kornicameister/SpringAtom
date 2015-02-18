@@ -21,13 +21,8 @@ define(
             }
 
             function navigationFromState(state) {
-
-                vm.navigation = [];
-
                 var navigation = $navigation.getNavigation(state),
                     nav = [];
-
-                navigation.unshift(state.name);
 
                 _.forEach(navigation, function (n) {
                     n = $stateBuilder.getState(n);

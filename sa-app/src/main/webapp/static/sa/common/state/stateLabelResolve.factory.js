@@ -32,12 +32,8 @@ define(
                 resolveLabel: resolveLabel
             };
 
-            function resolveLabel(state) {
-                if (!state) {
-                    return undefined;
-                }
-
-                var label = state.label || undefined;
+            function getFromUnresolved(state){
+                var label = state.resolve.label || undefined;
 
                 if (_.isUndefined(label)) {
                     return undefined;
@@ -57,6 +53,30 @@ define(
                 }
 
                 return label;
+            }
+            
+            function getFromResolved(state){
+                state = state.$$state();
+                
+                var globals = state.locals.globals,
+                    label = globals.label;
+
+                return label;
+            }
+            
+            function isLabelResolved(state){
+                if(state.$$state){
+                    state = state.$$state();
+                    return !!state.locals;
+                }
+                return false;
+            }
+            
+            function resolveLabel(state) {
+                if (!state) {
+                    return undefined;
+                }
+                return isLabelResolved(state) ? getFromResolved(state) : getFromUnresolved(state);
             }
         }];
 

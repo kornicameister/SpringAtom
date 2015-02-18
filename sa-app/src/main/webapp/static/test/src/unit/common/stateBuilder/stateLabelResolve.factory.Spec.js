@@ -8,6 +8,7 @@ define(
 
         describe('$stateLabelResolve', function () {
             var $stateLabelResolve,
+                $state,
                 labelService;
 
             beforeEach(angular.mock.module('sg.state', function ($provide) {
@@ -19,8 +20,9 @@ define(
                     return labelService;
                 });
             }));
-            beforeEach(angular.mock.inject(function (_$stateLabelResolve_) {
+            beforeEach(angular.mock.inject(function (_$stateLabelResolve_,_$state_) {
                 $stateLabelResolve = _$stateLabelResolve_;
+                $state = _$state_;
             }));
 
             it('it should have factory defined', function () {
@@ -37,6 +39,8 @@ define(
                 });
             });
 
+            // TODO: fix test, require to provide state transition in order to retrieve the state
+            
             describe('check resolveLabel', function () {
                 it('should return undefined for undefined state', function () {
                     expect($stateLabelResolve.resolveLabel(undefined)).not.toBeDefined();
@@ -56,8 +60,10 @@ define(
                 it('should return string for string defined label', function () {
                     var label = 'Test',
                         state = {
-                            name : '',
-                            label: label
+                            name   : '',
+                            resolve: {
+                                label: label
+                            }
                         };
 
                     expect($stateLabelResolve.resolveLabel(state)).toBeDefined();
@@ -69,8 +75,10 @@ define(
                             return label;
                         },
                         state = {
-                            name : '',
-                            label: labelFunc
+                            name   : '',
+                            resolve: {
+                                label: labelFunc
+                            }
                         };
 
                     spyOn(state, 'label').and.callThrough();
@@ -80,8 +88,8 @@ define(
                     expect(actualLabel).toBeDefined();
                     expect(actualLabel).toEqual(label);
 
-                    expect(state.label).toHaveBeenCalled();
-                    expect(state.label.calls.count()).toEqual(1);
+                    expect(state.resolve.label).toHaveBeenCalled();
+                    expect(state.resolve.label.calls.count()).toEqual(1);
                 });
                 it('should return label for DI defined function', function () {
                     var label = 'Test',

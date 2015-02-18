@@ -11,9 +11,11 @@ define(
             $stateBuilderProvider.state({
                 name : 'sg.home',
                 url  : '/home',
-                label: ['$translate', function ($translate) {
-                    return $translate('sg.home')
-                }],
+                resolve: {
+                    label: ['$translate', function ($translate) {
+                        return $translate('sg.home')
+                    }],  
+                },
                 views: {
                     'content@': {
                         template: '<h1>TEST</h1>'
@@ -22,6 +24,7 @@ define(
             });
 
             $navigationProvider.navigation('sg.home', [
+                'sg.home',
                 'sg.about',
                 'sg.dashboard'
             ]);

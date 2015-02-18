@@ -8,12 +8,14 @@ define(
         return module.config(['$stateBuilderProvider', '$navigationProvider', function ($stateBuilderProvider,
                                                                                         $navigationProvider) {
             $stateBuilderProvider.state({
-                name : 'sg.about',
-                url  : '/about',
-                label: ['$translate', function ($translate) {
-                    return $translate('sg.about')
-                }],
-                views: {
+                name   : 'sg.about',
+                url    : '/about',
+                resolve: {
+                    label: ['$translate', function ($translate) {
+                        return $translate('sg.about')
+                    }],  
+                },
+                views  : {
                     'content@': {
                         template: '<h1>SpringAtom</h1>'
                     }
@@ -22,7 +24,8 @@ define(
 
             $navigationProvider.navigation('sg.about', [
                 'sg.home',
-                'sg.dashboard'
+                'sg.dashboard',
+                'sg.about'
             ]);
         }]);
 
