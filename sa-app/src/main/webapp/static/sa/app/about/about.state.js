@@ -1,33 +1,32 @@
 define(
     [
         './about.module',
-        'common/navigation/navigation.provider'
+        'common/state/state.module'
     ],
     function (module) {
         "use strict";
-        return module.config(['$stateHelperProvider', '$navigationProvider', function ($stateHelperProvider,
-                                                                                        $navigationProvider) {
+        return module.config(['$stateHelperProvider', aboutState]);
+
+        function aboutState($stateHelperProvider) {
             $stateHelperProvider.state({
-                name   : 'sg.about',
-                url    : '/about',
-                resolve: {
+                name     : 'sg.about',
+                url      : '/about',
+                navigator: [
+                    'sg.home',
+                    'sg.dashboard',
+                    'sg.about'
+                ],
+                resolve  : {
                     label: ['$translate', function ($translate) {
                         return $translate('sg.about')
-                    }],
+                    }]
                 },
-                views  : {
+                views    : {
                     'content@': {
                         template: '<h1>SpringAtom</h1>'
                     }
                 }
             });
-
-            $navigationProvider.navigation('sg.about', [
-                'sg.home',
-                'sg.dashboard',
-                'sg.about'
-            ]);
-        }]);
-
+        }
     }
 );

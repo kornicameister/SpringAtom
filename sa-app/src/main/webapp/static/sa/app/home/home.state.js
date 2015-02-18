@@ -1,36 +1,33 @@
 define(
     [
         './home.module',
-        'common/navigation/navigation.provider'
+        'common/state/state.module'
     ],
     function (module) {
         "use strict";
-        return module.config(['$stateHelperProvider', '$urlRouterProvider', '$navigationProvider', function ($stateHelperProvider,
-                                                                                                              $urlRouterProvider,
-                                                                                                              $navigationProvider) {
+        return module.config(['$stateHelperProvider', homeState]);
+
+        function homeState($stateHelperProvider) {
             $stateHelperProvider.state({
-                name : 'sg.home',
-                url  : '/home',
-                resolve: {
+                primary  : true,
+                name     : 'sg.home',
+                url      : '/home',
+                navigator: [
+                    'sg.home',
+                    'sg.about',
+                    'sg.dashboard'
+                ],
+                resolve  : {
                     label: ['$translate', function ($translate) {
                         return $translate('sg.home')
-                    }],
+                    }]
                 },
-                views: {
+                views    : {
                     'content@': {
                         template: '<h1>TEST</h1>'
                     }
                 }
             });
-
-            $navigationProvider.navigation('sg.home', [
-                'sg.home',
-                'sg.about',
-                'sg.dashboard'
-            ]);
-
-            $urlRouterProvider.otherwise('/sg/home');
-        }]);
-
+        }
     }
 );
