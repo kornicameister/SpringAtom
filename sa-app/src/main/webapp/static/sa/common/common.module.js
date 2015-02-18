@@ -4,7 +4,8 @@ define(
         './security/security.module',
         './translations/translations',
         './components/components.module',
-        './popups/popups.wrapper'
+        './popups/popups.wrapper',
+        './directive/directives.module'
     ],
     function sgCommonModule(angular) {
         /**
@@ -24,7 +25,8 @@ define(
             'sg.popups',
             'sg.components',
             'sg.security',
-            'sg.translations'
+            'sg.translations',
+            'sg.directives'
         ]);
     }
 );

@@ -1,11 +1,13 @@
 define(
     [
-        './home.module'
+        './home.module',
+        'common/navigation/navigation.provider'
     ],
     function (module) {
         "use strict";
-        return module.config(['$stateBuilderProvider', '$urlRouterProvider', function ($stateBuilderProvider,
-                                                                                       $urlRouterProvider) {
+        return module.config(['$stateBuilderProvider', '$urlRouterProvider', '$navigationProvider', function ($stateBuilderProvider,
+                                                                                                              $urlRouterProvider,
+                                                                                                              $navigationProvider) {
             $stateBuilderProvider.state({
                 name : 'sg.home',
                 url  : '/home',
@@ -18,6 +20,11 @@ define(
                     }
                 }
             });
+
+            $navigationProvider.navigation('sg.home', [
+                'sg.about',
+                'sg.dashboard'
+            ]);
 
             $urlRouterProvider.otherwise('/sg/home');
         }]);

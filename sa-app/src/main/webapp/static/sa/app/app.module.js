@@ -2,8 +2,10 @@ define(
     [
         'angular',
         'common/state/state.module',
+        'common/navigation/navigation.module',
         './abstract/abstract.module.wrapper',
-        './home/home.module.wrapper'
+        './home/home.module.wrapper',
+        './about/about.module.wrapper'
     ],
     function app(angular) {
         /**
@@ -22,10 +24,12 @@ define(
          * @module sg.app
          */
         angular.module('sg.app', [
+            'sg.navigation',
             'sg.state',
             'sg.app.index',
             // core view modules of the application
-            'sg.app.home'
+            'sg.app.home',
+            'sg.app.about'
         ]);
 
         angular.module('sg.app').config(['$statePageTitleProvider', function ($statePageTitleProvider) {

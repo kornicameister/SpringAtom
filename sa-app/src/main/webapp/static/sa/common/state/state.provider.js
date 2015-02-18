@@ -64,7 +64,8 @@ define(
                         getStateName   : getStateName,
                         getParentState : getParentState,
                         hasParentState : hasParentState,
-                        getCurrentState: getCurrentState
+                        getCurrentState: getCurrentState,
+                        getState       : $state.get
                     };
 
                     return service;

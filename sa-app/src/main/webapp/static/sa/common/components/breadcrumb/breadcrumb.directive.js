@@ -1,20 +1,18 @@
 define(
     [
         './breadcrumb.module',
-        './breadcrumb.controller'
+        './breadcrumb.controller',
+        '../../directive/controllerBoundDirective'
     ],
-    function breadcrumbDirective(module) {
+    function breadcrumbDirective(module, controller, ControllerBoundDirective) {
         "use strict";
 
         return module.directive('sgBreadcrumb', function breadcrumbDirective() {
-            return {
-                restrict        : 'E',
-                controller      : 'BreadcrumbController',
-                controllerAs    : 'vm',
-                bindToController: true,
-                scope      : true,
+            return new ControllerBoundDirective({
+                restrict  : 'E',
+                controller: 'BreadcrumbController',
                 templateUrl: 'common/components/breadcrumb/breadcrumb.tpl.html'
-            }
+            })
         });
     }
 );

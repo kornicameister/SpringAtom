@@ -1,16 +1,18 @@
 define(
     [
-        './navigation.module'
+        './navigation.module',
+        './navigation.controller',
+        '../../directive/controllerBoundDirective'
     ],
-    function navigationDirective(module) {
+    function navigationDirective(module, controller, ControllerBoundDirective) {
         'use strict';
 
         return module.directive('sgNavigation', function breadcrumbDirective() {
-            return {
+            return new ControllerBoundDirective({
                 restrict   : 'E',
-                scope      : true,
+                controller: 'NavigationController',
                 templateUrl: 'common/components/navigation/navigation.tpl.html'
-            }
+            })
         });
     }
 );
