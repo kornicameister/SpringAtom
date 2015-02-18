@@ -2,15 +2,13 @@ define(
     [
         'angular',
         'lodash',
-        './controllerBoundDirective',
-        './unwrapPromise.directive'
+        './controllerBoundDirective'
     ],
-    function directiveModule(angular, _, controllerBoundDirective, unwrapPromiseDirective) {
+    function directiveModule(angular, _, controllerBoundDirective) {
         "use strict";
         var module = angular.module('sg.directives', []);
 
         module.factory('controllerBoundDirective', _.constant(controllerBoundDirective));
-        module.directive('sgUnwrapPromise', unwrapPromiseDirective);
 
         return module;
     }
