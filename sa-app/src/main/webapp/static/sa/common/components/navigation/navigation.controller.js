@@ -1,15 +1,22 @@
 define(
     [
         'lodash',
-        './navigation.module'
+        './navigation.module',
+        '../../callbacks'
     ],
-    function (_, module) {
+    function (_, module, callbacks) {
         "use strict";
-        return module.controller('NavigationController', ['$rootScope', '$navigation', '$stateHelper', '$q', navigationController]);
 
-        function navigationController($scope, $navigation, $stateHelper, $q) {
-            var vm = this;
+        var cancelEvent = callbacks.cancelEvent;
 
+        return module.controller('NavigationController', ['$rootScope', '$navigation', '$stateHelper', '$q', '$previousState', '$translate', navigationController]);
+
+        function navigationController($scope, $navigation, $stateHelper, $q, $previousState, $translate) {
+            var vm = this,
+                previousStateMemo = 'nav.prev.state';
+
+            vm.previousState = undefined;
+            vm.backToPreviousState = _.wrap(backToPreviousState, cancelEvent);
             vm.navigation = [];
 
             $scope.$on('$stateChangeSuccess', onStateChangeSuccess);
@@ -31,7 +38,7 @@ define(
                             id    : _.uniqueId('nav_'),
                             state : n.name,
                             type  : 'link',
-                            label: $stateHelper.getStateLabel(n),
+                            label : $stateHelper.getStateLabel(n),
                             active: n.name === state.name ? 'yes' : 'no'
                         });
                     }
@@ -51,8 +58,25 @@ define(
                 });
             }
 
-            function onStateChangeSuccess(event, state) {
+            function rememberPreviousState(state, fromStateParams) {
+                $previousState.memo(previousStateMemo, state.name, fromStateParams);
+                $stateHelper.getStateLabel(state).then(function (label) {
+                    vm.previousState = {
+                        id   : state.name,
+                        label: label
+                    }
+                })
+            }
+
+            function backToPreviousState() {
+                $previousState.go(previousStateMemo);
+                $previousState.forget(previousStateMemo);
+            }
+
+            function onStateChangeSuccess(event, state, stateParams, fromState, fromStateParams) {
+                "use strict";
                 navigationFromState(state);
+                rememberPreviousState(fromState, fromStateParams);
             }
         }
     }

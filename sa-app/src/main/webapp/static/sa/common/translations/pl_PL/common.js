@@ -1,6 +1,8 @@
 define(
     function () {
         "use strict";
-        return {};
+        return {
+            'goto.state': 'Kliknij aby przejść'
+        };
     }
 );

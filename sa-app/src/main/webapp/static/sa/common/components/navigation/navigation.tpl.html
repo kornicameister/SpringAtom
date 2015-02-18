@@ -1,10 +1,23 @@
 <nav id="sg-nav" class="navbar navbar-left col-sm-2 navbar-nav" role="navigation">
-    <ul class="nav nav-pills nav-stacked">
-        <li ng-repeat="action in vm.navigation">
-            <a id="{{action.id}}" ui-sref="{{action.state}}" ui-sref-active="active" role="{{action.type}}">
-                <i ng-show="action.css && action.css.iconClass" ng-class="action.css.iconClass"></i>
-                {{action.label}}
-            </a>
-        </li>
-    </ul>
+    <div class="container-fluid" ng-if="vm.previousState">
+        <button type="button" class="btn btn-info btn-block" ng-click="vm.backToPreviousState($event)">
+            <i class="glyphicon glyphicon-backward"></i>
+            {{vm.previousState.label}}
+        </button>
+    </div>
+    <div class="container-fluid">
+        <ul class="nav nav-pills nav-stacked">
+            <li ng-repeat="action in vm.navigation">
+                <a id="{{action.id}}"
+                   ui-sref="{{action.state}}"
+                   ui-sref-active="active"
+                   role="{{action.type}}"
+                   data-toggle="tooltip"
+                   title="{{'goto.state'|translate}}">
+                    <i ng-show="action.css && action.css.iconClass" ng-class="action.css.iconClass"></i>
+                    {{action.label}}
+                </a>
+            </li>
+        </ul>
+    </div>
 </nav>
