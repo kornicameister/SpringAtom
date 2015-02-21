@@ -7,13 +7,15 @@ define(
     function loginPopupController(_, callbacks, module) {
         var cancelEventWrapper = callbacks.cancelEvent;
 
-        return module.controller('LoginPopupController', ['$modalInstance', ctrl]);
+        return module.controller('LoginPopupController', ['$modalInstance', 'securityService', ctrl]);
 
-        function ctrl($modalInstance) {
+        function ctrl($modalInstance, securityService) {
             var vm = this;
 
             vm.username = '';
             vm.password = '';
+            vm.rememberMe = false;
+
             vm.forgotPassword = _.wrap(forgotPassword.bind(vm), cancelEventWrapper);
             vm.register = _.wrap(register.bind(vm), cancelEventWrapper);
             vm.login = _.wrap(login.bind(vm), cancelEventWrapper);
@@ -28,7 +30,17 @@ define(
             }
 
             function login() {
-                $modalInstance.close('login');
+                var credentials = {
+                        email   : vm.username,
+                        password: vm.password
+                    },
+                    opts = {
+                        rememberMe: vm.rememberMe
+                    };
+                securityService.login(credentials, opts).then(function () {
+                    "use strict";
+                    $modalInstance.close('login');
+                });
             }
 
             function cancel() {

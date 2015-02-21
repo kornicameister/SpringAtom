@@ -42,9 +42,11 @@
         'ngGrid'               : 'vendor/ng-grid/build/ng-grid.min',
         'ngProgress'           : 'vendor/ngprogress/build/ngProgress.min',
         'restangular'          : 'vendor/restangular/dist/restangular',
-        'lodash'               : 'vendor/lodash/dist/lodash.min',
+        'lodash'             : 'vendor/lodash/lodash.min',
         'ngMultiSelect'        : 'vendor/isteven-angular-multiselect/angular-multi-select',
-        'angularLocalStorage'  : 'vendor/angular-local-storage/dist/angular-local-storage.min'
+        'angularLocalStorage': 'vendor/angular-local-storage/dist/angular-local-storage.min',
+        'firebase'           : 'vendor/firebase/firebase',
+        'angularFire'        : 'vendor/angularfire/dist/angularfire.min'
     };
 
     paths = (function adjustIfMin(paths) {
@@ -76,6 +78,7 @@
                 exports: 'angular',
                 deps: ['jquery']
             },
+            'angularFire'          : ['angular', 'firebase'],
             'restangular'          : ['angular', 'lodash'],
             'angularLocalStorage'  : ['angular'],
             'ngProgress'           : ['angular'],

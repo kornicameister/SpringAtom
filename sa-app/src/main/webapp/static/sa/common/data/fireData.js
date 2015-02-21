@@ -1,0 +1,5 @@
+define(
+    [
+        './fireData.provider'
+    ]
+);

@@ -1,18 +1,14 @@
-/**
- * Created with SpringAtom.
- * User: kornicameister
- * Date: 2015-02-04
- * Time: 11:05 AM
- * To change this template use Tools | Templates.
- */
 define(
     [
         'angular',
         './security.provider',
+        './security.service',
+        './security.authentication',
         // deps
-        '../state/state.module'
+        '../state/state.module',
+        '../resources/user/user.all'
     ],
-    function securityModule(angular, securityProvider) {
+    function securityModule(angular, securityProvider, securityService, securityAuthentication) {
         "use strict";
 
         /**
@@ -27,16 +23,11 @@ define(
          * to provide an information about application security state.
          * Supports serving security services for states, actions, hyperlinks etc.
          */
-        return angular.module('sg.security', ['sg.state'])
+        return angular.module('sg.security', ['sg.state', 'sg.resources.user'])
+            .factory('securityAuthentication', securityAuthentication)
+            .service('securityService', securityService)
             .provider('$security', securityProvider)
-            .run(['$security', '$rootScope', '$state', setStateSecurity])
-            .run(['$security', checkAuthentication]);
-
-        function checkAuthentication($security){
-            if($security.isOnRunAuthenticationEnabled()){
-
-            }
-        }
+            .run(['$security', '$rootScope', '$state', setStateSecurity]);
 
         function setStateSecurity($security, $rootScope, $state) {
             if ($security.isStateSecurityEnabled()) {
@@ -46,7 +37,7 @@ define(
                                                               fromState,
                                                               fromStateParams) {
 
-                    if (toState.security && _.isObject(toState.security)) {
+                    if (toState.security) {
                         event.preventDefault();
                     }
 

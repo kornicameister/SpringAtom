@@ -1,20 +1,20 @@
 /**
-* Created with SpringAtom.
-* User: kornicameister
-* Date: 2015-02-04
-* Time: 11:09 AM
-* To change this template use Tools | Templates.
-*/
+ * Created with SpringAtom.
+ * User: kornicameister
+ * Date: 2015-02-04
+ * Time: 11:09 AM
+ * To change this template use Tools | Templates.
+ */
 define(
     [
         'lodash'
     ],
-    function(_) {
+    function (_) {
         "use strict";
-        return function(){
+        return function () {
             // private
             var self = this,
-                authenticateOnRun = false,
+                otherwiseUrl,
                 stateSecurityEnabled = false;
 
             /**
@@ -24,32 +24,31 @@ define(
              */
             self.enableStateSecurity = enableStateSecurity;
             /**
-             * Enables/disable authentication on run phase.
-             * If set to true, authentication will be verified on <b>run</b> phase of the 
-             * application.
-             * 
-             * @param {@boolean} enable, if undefined assumed to be true
+             * Provides an otherwise url to be routed to if access has been denied for certain state, action etc.
+             *
+             * @param {@string} otherwise url
+             * @type {otherwise}
              */
-            self.enableAuthenticateOnRun = enableAuthenticateOnRun;
+            self.otherwise = otherwise;
 
             // service available
             self.$get = $get;
 
-            function enableStateSecurity(enable){
-                stateSecurityEnabled = enable || true;
-                return self;
-            }
-            
-            function enableAuthenticateOnRun(enable){
-                authenticateOnRun = enable || true;
+            function enableStateSecurity(enable) {
+                stateSecurityEnabled = _.isUndefined(enable) ? true : enable;
                 return self;
             }
 
-            function $get(){
+            function otherwise(url) {
+                otherwiseUrl = url;
+                return self;
+            }
+
+            function $get() {
                 var service = {};
 
                 service.isStateSecurityEnabled = _.constant(stateSecurityEnabled);
-                service.isOnRunAuthenticationEnabled = _.constant(authenticateOnRun);
+                service.getOtherwiseUrl = _.constant(otherwiseUrl);
 
                 return service;
             }

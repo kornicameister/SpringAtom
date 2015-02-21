@@ -1,0 +1,5 @@
+define(
+    [
+        './user/user.resource'
+    ]
+);

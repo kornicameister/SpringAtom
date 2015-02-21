@@ -22,12 +22,13 @@
                         <i class="glyphicon glyphicon-log-in"></i>&nbsp;{{'button.login'|translate}}
                     </a>
                 </li>
-                <dropdown-menu btnLabel="{{!vm.authentication.username}}"
+                <!-- TODO add directive -->
+                <dropdown-menu btnLabel="{{vm.authentication.username}}"
                                btnClass="glyphicon glyphicon-user"
                                ng-if="vm.authentication.authenticated"></dropdown-menu>
                 <li ng-if="vm.authentication.authenticated">
-                    <a title="{{'button.login'|translate}}" login ng-click="vm.openLogoutDialog()">
-                        <i class="glyphicon glyphicon-log-out" title="{{'button.logout'|translate}}"></i>
+                    <a title="{{'button.logout'|translate}}" login ng-click="vm.openLogoutDialog()">
+                        <i class="glyphicon glyphicon-log-out"></i>&nbsp;{{'button.logout'|translate}}
                     </a>
                 </li>
             </ul>

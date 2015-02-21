@@ -3,11 +3,15 @@ define(
         'angular',
         'common/state/state.module',
         'common/navigation/navigation.module',
+        'common/data/fireData',
+        'common/security/security.module',
         './abstract/abstract.module.wrapper',
         './home/home.module.wrapper',
         './about/about.module.wrapper'
     ],
     function app(angular) {
+        "use strict";
+
         /**
          * Application module of the <b>springatom</b>.
          * This module contains visible and functional parts of the application later
@@ -24,18 +28,30 @@ define(
          * @module sg.app
          */
         angular.module('sg.app', [
+            // core to run app
             'sg.navigation',
             'sg.state',
+            'sg.fireData',
+            'sg.security',
+            // abstract root view
             'sg.app.index',
             // core view modules of the application
             'sg.app.home',
             'sg.app.about'
         ]);
 
-        angular.module('sg.app').config(['$statePageTitleProvider', function ($statePageTitleProvider) {
-            "use strict";
-            $statePageTitleProvider.setPageTitleExpression('sgAppPageTitle');
-        }]);
+        angular.module('sg.app')
+            .config(['$statePageTitleProvider', function ($statePageTitleProvider) {
+                $statePageTitleProvider.setPageTitleExpression('sgAppPageTitle');
+            }])
+            .config(['$securityProvider', function ($securityProvider) {
+                $securityProvider
+                    .enableStateSecurity(false)
+                    .otherwise('/sg/accessDenied')
+            }])
+            .config(['$fireDataProvider', function ($fireDataProvider) {
+                $fireDataProvider.setFireUrl('https://springatom.firebaseio.com/');
+            }]);
 
         return angular.module('sg.app');
     }
