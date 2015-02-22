@@ -14,8 +14,8 @@ define(
                 url      : '/home',
                 navigator: [
                     'sg.home',
-                    'sg.about',
-                    'sg.dashboard'
+                    'sg.dashboard',
+                    'sg.about'
                 ],
                 resolve  : {
                     label: ['$translate', function ($translate) {

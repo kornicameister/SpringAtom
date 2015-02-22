@@ -13,7 +13,7 @@ define(
          * @module sg.state
          * @namespace sg
          */
-        return angular.module('sg.state', ['ui.router', 'ct.ui.router.extras.core'])
+        return angular.module('sg.state', ['ui.router', 'ct.ui.router.extras'])
             .constant('MODULE_INFO', {
                 name   : 'sg.state',
                 version: '0.0.2'

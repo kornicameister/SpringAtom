@@ -1,0 +1,5 @@
+define(
+    [
+        './clients.state.js'
+    ]
+);

@@ -1,0 +1,5 @@
+define(
+    [
+        './mechanics.state.js'
+    ]
+);

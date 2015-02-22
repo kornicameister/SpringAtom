@@ -57,7 +57,7 @@ define(
                     });
 
                     $q.all(prms).then(function (newCrumbs) {
-                        resolve(newCrumbs);
+                        resolve(newCrumbs.reverse());
                     });
                 })
             }

@@ -1,7 +1,12 @@
 <header id="sg-breadcrumb">
     <ol class="breadcrumb">
+        <li>
+            <a ui-sref="sg.home">
+                <i class="glyphicon glyphicon-home"></i>
+            </a>
+        </li>
         <li ng-repeat="crumb in vm.crumbs" ng-class="{active: crumb.active}">
-            <a ui-sref="crumb.state" ng-if="!crumb.active">{{crumb.label}}</a>
+            <a ui-sref="{{crumb.state.name}}" ng-if="!crumb.active">{{crumb.label}}</a>
             <span ng-if="crumb.active">{{crumb.label}}</span>
         </li>
     </ol>

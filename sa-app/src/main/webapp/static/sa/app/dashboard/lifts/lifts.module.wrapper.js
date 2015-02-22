@@ -1,0 +1,5 @@
+define(
+    [
+        './lifts.state.js'
+    ]
+);

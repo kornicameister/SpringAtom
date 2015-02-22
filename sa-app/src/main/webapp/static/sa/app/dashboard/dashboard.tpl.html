@@ -1,0 +1,24 @@
+<section class="container-fluid" role="tabpanel">
+    <div class="navbar navbar-default navbar-static-top" role="navigation">
+        <ul class="nav nav-tabs" role="tablist">
+            <li ng-repeat="tab in vm.tabs"
+                class="dashboardTab"
+                ng-class="{active: tab.active}"
+                role="presentation">
+                <a ui-sref="{{tab.state}}"
+                   role="tab"
+                   data-toggle="tab"
+                   aria-controls="{{tab.state}}">{{tab.label}}</a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content container-fluid">
+        <div class="tab-pane"
+             ng-repeat="tab in vm.tabs"
+             id="{{tab.state}}"
+             role="tabpanel"
+             ng-class="{active: tab.active}"
+             ui-view="{{tab.view}}"
+             ng-show="tab.active"></div>
+    </div>
+</section>

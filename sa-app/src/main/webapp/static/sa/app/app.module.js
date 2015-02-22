@@ -1,15 +1,18 @@
 define(
     [
         'angular',
+        'common/utils',
         'common/state/state.module',
         'common/navigation/navigation.module',
         'common/data/fireData',
         'common/security/security.module',
+        // views
         './abstract/abstract.module.wrapper',
         './home/home.module.wrapper',
-        './about/about.module.wrapper'
+        './about/about.module.wrapper',
+        './dashboard/dashboard.module.wrapper'
     ],
-    function app(angular) {
+    function app(angular, utils) {
         "use strict";
 
         /**
@@ -37,10 +40,14 @@ define(
             'sg.app.index',
             // core view modules of the application
             'sg.app.home',
-            'sg.app.about'
+            'sg.app.about',
+            'sg.app.dashboard'
         ]);
 
         angular.module('sg.app')
+            .config(['$stickyStateProvider', function ($stickyStateProvider) {
+                $stickyStateProvider.enableDebug(utils.isDebug());
+            }])
             .config(['$statePageTitleProvider', function ($statePageTitleProvider) {
                 $statePageTitleProvider.setPageTitleExpression('sgAppPageTitle');
             }])

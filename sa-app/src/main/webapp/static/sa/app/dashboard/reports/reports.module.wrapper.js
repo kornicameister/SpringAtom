@@ -1,0 +1,5 @@
+define(
+    [
+        './reports.state.js'
+    ]
+);
