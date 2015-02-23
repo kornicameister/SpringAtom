@@ -1,14 +1,12 @@
 define(
     [
         'angular',
-        'lodash',
-        '../navigation/navigation.provider'
+        'lodash'
     ],
     function stateBuilderProvider(angular, _) {
         "use strict";
-        return ['$stateProvider', '$urlRouterProvider', '$navigationProvider', function ($stateProvider,
-                                                                                         $urlRouterProvider,
-                                                                                         $navigationProvider) {
+        return ['$stateProvider', '$urlRouterProvider', function ($stateProvider,
+                                                                  $urlRouterProvider) {
             var provider = this,
                 stateLabelCache;
 
@@ -30,7 +28,6 @@ define(
                 $stateProvider.state(state);
 
                 checkPrimaryState(state);
-                saveNavigator(state);
 
                 if (children.length) {
                     _.forEachRight(children, function (child) {
@@ -167,12 +164,6 @@ define(
                     $urlRouterProvider.otherwise(savePrimaryState(state));
                     checkPrimaryState = function () {
                     }
-                }
-            }
-
-            function saveNavigator(state) {
-                if (state.navigator) {
-                    $navigationProvider.navigation(resolveName(state), state.navigator);
                 }
             }
         }];

@@ -1,0 +1,5 @@
+define(
+    [
+        './navigation.service'
+    ]
+);

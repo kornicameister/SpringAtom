@@ -38,9 +38,11 @@
         'ngGrid'               : 'vendor/ng-grid/build/ng-grid.min',
         'ngProgress'           : 'vendor/ngprogress/build/ngProgress.min',
         'restangular'          : 'vendor/restangular/dist/restangular',
-        'lodash'               : 'vendor/lodash/dist/lodash.min',
+        'lodash'             : 'vendor/lodash/lodash.min',
         'ngMultiSelect'        : 'vendor/isteven-angular-multiselect/angular-multi-select',
-        'angularLocalStorage'  : 'vendor/angular-local-storage/dist/angular-local-storage.min'
+        'angularLocalStorage': 'vendor/angular-local-storage/dist/angular-local-storage.min',
+        'firebase'           : 'vendor/firebase/firebase',
+        'angularFire'        : 'vendor/angularfire/dist/angularfire'
     };
 
     paths['angularMocks'] = 'vendor/angular-mocks/angular-mocks';
@@ -61,6 +63,7 @@
                 exports: 'angular',
                 deps   : ['jquery', 'jquery-ui']
             },
+            'angularFire': ['angular', 'firebase'],
             'ngMidwayTester'       : ['angular'],
             'angularMocks'         : {deps: ['angular'], exports: 'angular.mock'},
             'angularScenario'      : ['angular', 'angularMocks'],

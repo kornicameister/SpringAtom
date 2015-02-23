@@ -38,7 +38,7 @@ module.exports = function (conf) {
 
     return {
         basePath             : '../',
-        port                 : 8080,
+        port: 8666,
         colors               : true,
         captureTimeout       : 60000,
         frameworks           : [

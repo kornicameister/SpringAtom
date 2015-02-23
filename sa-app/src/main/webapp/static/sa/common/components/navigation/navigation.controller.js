@@ -9,9 +9,9 @@ define(
 
         var cancelEvent = callbacks.cancelEvent;
 
-        return module.controller('NavigationController', ['$rootScope', '$navigation', '$stateHelper', '$q', '$previousState', '$translate', navigationController]);
+        return module.controller('NavigationController', ['$stateHelper', '$navigationService', '$q', '$previousState', navigationController]);
 
-        function navigationController($scope, $navigation, $stateHelper, $q, $previousState, $translate) {
+        function navigationController($stateHelper, $navigationService, $q, $previousState) {
             var vm = this,
                 previousStateMemo = 'nav.prev.state';
 
@@ -19,17 +19,17 @@ define(
             vm.backToPreviousState = _.wrap(backToPreviousState, cancelEvent);
             vm.navigation = [];
 
-            $scope.$on('$stateChangeSuccess', onStateChangeSuccess);
-
             initialize();
 
             function initialize() {
-                return $stateHelper.getCurrentState().then(navigationFromState);
+                $navigationService.onNavigationChange(function (state, navigation) {
+                    navigationFromState(state, navigation);
+                    rememberPreviousState(state);
+                });
             }
 
-            function navigationFromState(state) {
-                var navigation = $navigation.getNavigation(state),
-                    nav = [];
+            function navigationFromState(state, navigation) {
+                var nav = [];
 
                 _.forEach(navigation, function (n) {
                     n = $stateHelper.getState(n);
@@ -58,8 +58,8 @@ define(
                 });
             }
 
-            function rememberPreviousState(state, fromStateParams) {
-                $previousState.memo(previousStateMemo, state.name, fromStateParams);
+            function rememberPreviousState(state) {
+                $previousState.memo(previousStateMemo, state.name);
                 $stateHelper.getStateLabel(state).then(function (label) {
                     vm.previousState = {
                         id   : state.name,
@@ -71,12 +71,6 @@ define(
             function backToPreviousState() {
                 $previousState.go(previousStateMemo);
                 $previousState.forget(previousStateMemo);
-            }
-
-            function onStateChangeSuccess(event, state, stateParams, fromState, fromStateParams) {
-                "use strict";
-                navigationFromState(state);
-                rememberPreviousState(fromState, fromStateParams);
             }
         }
     }
