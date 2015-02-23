@@ -2,6 +2,12 @@ define(
     [
         './dashboard.controller',
         './dashboardTabs.service',
-        './dashboard.state'
+        './dashboard.state',
+        './calendar/calendar.module.wrapper',
+        './cars/cars.module.wrapper',
+        './clients/clients.module.wrapper',
+        './lifts/lifts.module.wrapper',
+        './mechanics/mechanics.module.wrapper',
+        './reports/reports.module.wrapper'
     ]
 );

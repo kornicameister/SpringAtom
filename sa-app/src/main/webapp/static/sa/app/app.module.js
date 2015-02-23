@@ -10,7 +10,8 @@ define(
         './abstract/abstract.module.wrapper',
         './home/home.module.wrapper',
         './about/about.module.wrapper',
-        './dashboard/dashboard.module.wrapper'
+        './dashboard/dashboard.module.wrapper',
+        './admin/admin.module.wrapper'
     ],
     function app(angular, utils) {
         "use strict";
@@ -41,7 +42,8 @@ define(
             // core view modules of the application
             'sg.app.home',
             'sg.app.about',
-            'sg.app.dashboard'
+            'sg.app.dashboard',
+            'sg.app.admin'
         ]);
 
         angular.module('sg.app')
