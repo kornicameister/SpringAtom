@@ -6,80 +6,66 @@ define(
     function (_, module) {
         "use strict";
 
-        return module.service('$navigationService', ['$rootScope', '$q', 'localStorageService', '$stateHelper', $navigationService]);
+        return module.service('$navigationService', ['$q', 'localStorageService', '$stateHelper', $navigationService]);
 
         function passState(func, event, toState) {
             func(toState);
         }
 
-        function $navigationService($scope, $q, localStorageService, $stateHelper) {
+        function $navigationService($q, localStorageService, $stateHelper) {
             var self = this,
-                callbacks = [],
-                listeners = [],
                 allStates,
                 cache;
 
-            self.onNavigationChange = onNavigationChange;
-
-            listeners.push($scope.$on('$stateChangeSuccess', _.wrap(navigationFromState.bind(self), passState)));
-            $scope.$on('$destroy', destroy.bind(self));
+            self.getNavigation = getNavigationStates;
+            self.getSibilingStates = getSibilingStates;
 
             initialize.bind(self)();
+            
+            function getSibilingStates(to, level){
+                level = level || 1;
+                
+                var toName = $stateHelper.getStateName(to),
+                    parentStateName = getParentStateName(toName),
+                    stateName;
+                
+                return _.filter(allStates, function (state) {
+                    if(state.abstract){
+                        return false;
+                    }
+                    stateName = $stateHelper.getStateName(state);
+                    return stateName.replace(parentStateName + '.', '').split('.').length === level;
+                });
+            }
 
-            function navigationFromState(to) {
-                var navigation,
-                    promise = $q(function (resolve) {
-                        resolve(to, navigation);
-                    });
+            function getNavigationStates(to) {
+                var navigation;
 
                 var toName = $stateHelper.getStateName(to);
                 if (cache[toName]) {
                     navigation = cache[toName];
                 } else {
-                    var parentStateName = getParentStateName(toName),
-                        firstLevelStates = getFirstLevelState(parentStateName);
-
-                    _(firstLevelStates).transform(function (state) {
-                        return navigation.push($stateHelper.getStateName(state));
+                    var firstLevelStates = getSibilingStates(to, 1);
+                    cache[toName] = navigation = _.transform(firstLevelStates, function (result, state) {
+                        result.push($stateHelper.getStateName(state));
+                        return true;
                     });
-
-                    cache[toName] = navigation;
                 }
-
-                _.forEachRight(callbacks, function (callback) {
-                    callback.call(promise);
-                })
-            }
-
-            function getFirstLevelState(parentStateName) {
-                var stateName;
-                return _(allStates).filter(function (state) {
-                    stateName = $stateHelper.getStateName(state);
-                    return stateName.replace(parentStateName + '.', '').split('.').length === 1;
-                })
+                
+                localStorageService.set('sg.$navigationServiceCache', cache);
+                
+                return $q(function (resolve) {
+                    resolve(navigation);
+                });
             }
 
             function getParentStateName(name) {
                 return name.replace(/(\.[^.]*)$/gi, '');
             }
 
-            function onNavigationChange(callback) {
-                if (callback) {
-                    callbacks.push(callback);
-                }
-                return self;
-            }
-
-            function destroy() {
-                _.forEachRight(listeners, function (lst) {
-                    lst();
-                });
-            }
-
             function initialize() {
                 localStorageService.set('sg.$navigationServiceCache', cache = {});
                 allStates = $stateHelper.getState();
-                $stateHelper.getCurrentState().then(navigationFromState);
             }
         }
     }
