@@ -1,7 +1,0 @@
-# dont include node related modules in the repo
-test/node_modules/
-# dont include test results in the repo
-test/results/
-
-# ignore libraries
-sa/vendor/
