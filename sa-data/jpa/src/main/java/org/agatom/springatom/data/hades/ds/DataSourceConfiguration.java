@@ -1,18 +1,18 @@
 package org.agatom.springatom.data.hades.ds;
 
 import com.zaxxer.hikari.HikariDataSource;
-import com.zaxxer.hikari.IConnectionCustomizer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanCreationException;
+import org.agatom.springatom.core.annotations.profile.DevProfile;
+import org.agatom.springatom.core.annotations.profile.ProductionProfile;
+import org.agatom.springatom.core.annotations.profile.TestProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import javax.annotation.PreDestroy;
+import javax.sql.DataSource;
 
 /**
  * <p>
@@ -26,55 +26,28 @@ import java.sql.SQLException;
 @Configuration
 @PropertySource(value = "classpath:org/agatom/springatom/data/hades/database.properties")
 public class DataSourceConfiguration {
-    private static final Logger      LOGGER      = LoggerFactory.getLogger(DataSourceConfiguration.class);
-    @Autowired
-    private              Environment environment = null;
+  @Autowired
+  private Environment environment = null;
+  private DataSource  ds          = null;
 
-    @Bean
-    public HikariDataSource dataSource() throws Exception {
-        final HikariDataSource dataSource = new HikariDataSource();
-        try {
-            this.setConnectionProperties(dataSource);
-            this.setPoolProperties(dataSource);
-            this.setCustomizations(dataSource);
-            dataSource.setAutoCommit(Boolean.parseBoolean(this.environment.getProperty("db.hibernate.connection.autocommit")));
-        } catch (Exception exp) {
-            LOGGER.error("Failed to initialized dataSource", exp);
-            throw new BeanCreationException("Failed to initialized dataSource", exp);
-        }
-        return dataSource;
-    }
+  @Bean(name = "dataSource")
+  @DevProfile
+  @ProductionProfile
+  public HikariDataSource hikariDataSource() throws Exception {
+    return (HikariDataSource) (this.ds = new HikariDataSourceProvider(this.environment).getDataSource());
+  }
 
-    private void setConnectionProperties(final HikariDataSource dataSource) {
-        dataSource.setUsername(this.environment.getProperty("db.connection.username"));
-        dataSource.setPassword(this.environment.getProperty("db.connection.password"));
-        dataSource.setJdbcUrl(this.environment.getProperty("db.connection.url"));
-        dataSource.setDriverClassName(this.environment.getProperty("db.connection.driverClassName"));
-        dataSource.setConnectionInitSql(this.environment.getProperty("db.connection.initSql"));
-        dataSource.setConnectionTestQuery(this.environment.getProperty("db.connection.initSql"));
-    }
+  @Bean(name = "dataSource")
+  @TestProfile
+  public EmbeddedDatabase embeddedDatabase() throws Exception {
+    return (EmbeddedDatabase) (this.ds = new EmbeddedDataSourceProvider().getDataSource());
+  }
 
-    private void setPoolProperties(final HikariDataSource dataSource) throws SQLException {
-        dataSource.setLoginTimeout(Integer.parseInt(this.environment.getProperty("db.connection.pool.loginTimeout")));
-        dataSource.setConnectionTimeout(Integer.parseInt(this.environment.getProperty("db.connection.pool.connectionTimeout")));
-        dataSource.setIdleTimeout(Integer.parseInt(this.environment.getProperty("db.connection.pool.maxIdleTime")));
-        dataSource.setMaximumPoolSize(Integer.parseInt(this.environment.getProperty("db.connection.pool.maxPoolSize")));
+  @PreDestroy
+  protected void onDestroy() {
+    if (this.ds != null && this.ds instanceof EmbeddedDatabase) {
+      ((EmbeddedDatabase) this.ds).shutdown();
     }
-
-    private void setCustomizations(final HikariDataSource dataSource) {
-//        dataSource.setMetricsTrackerClassName();
-        dataSource.setConnectionCustomizer(this.getConnectionCustomizer());
-    }
-
-    private IConnectionCustomizer getConnectionCustomizer() {
-        return new IConnectionCustomizer() {
-            @Override
-            public void customize(final Connection connection) throws SQLException {
-                if (LOGGER.isTraceEnabled()) {
-                    LOGGER.trace(String.format("Customizing connection = %s", connection));
-                }
-            }
-        };
-    }
+  }
 
 }

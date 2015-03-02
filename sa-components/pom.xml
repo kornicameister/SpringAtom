@@ -36,12 +36,6 @@
         </dependency>
         <dependency>
             <groupId>org.agatom.springatom</groupId>
-            <artifactId>sa-data</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>import</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.agatom.springatom</groupId>
             <artifactId>sa-data-oid</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

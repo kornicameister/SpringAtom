@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
  * @version 0.0.1
  * @since 0.0.1
  */
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Profile(TestProfile.PROFILE_NAME)
 public @interface TestProfile {

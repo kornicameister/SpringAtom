@@ -2,7 +2,7 @@ package org.agatom.springatom.boot.init.sa.root;
 
 import com.google.common.collect.Sets;
 import org.agatom.springatom.boot.security.SecurityConfiguration;
-import org.agatom.springatom.cmp.ComponentsConfigurations;
+import org.agatom.springatom.cmp.component.ComponentsConfigurations;
 import org.agatom.springatom.core.locale.SMessageSource;
 import org.agatom.springatom.core.om.ObjectMapperConfiguration;
 import org.agatom.springatom.data.hades.JpaModelConfiguration;

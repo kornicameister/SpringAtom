@@ -1,9 +1,9 @@
-package org.agatom.springatom.cmp;
+package org.agatom.springatom.cmp.component;
 
-import org.agatom.springatom.cmp.action.ActionsConfiguration;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.FilterType;
 
 /**
  * <p>
@@ -15,15 +15,11 @@ import org.springframework.context.annotation.Import;
  * @since 0.0.1
  */
 @Configuration
-@Import(
-        value = {
-                ActionsConfiguration.class
-        }
-)
 @ComponentScan(
-        basePackages = {
-                "org.agatom.springatom.cmp.component"
-        }
+    basePackageClasses = ComponentsConfigurations.class,
+    excludeFilters = {
+        @Filter(type = FilterType.ANNOTATION, value = Configuration.class)
+    }
 )
 public class ComponentsConfigurations {
 }
