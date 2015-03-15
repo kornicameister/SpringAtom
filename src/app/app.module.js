@@ -6,12 +6,14 @@ define(
         'common/navigation/navigation.module',
         'common/data/fireData',
         'common/security/security.module',
+        // components & popuos
+        'app/components/index',
         // views
-        './abstract/abstract.module.wrapper',
-        './home/home.module.wrapper',
-        './about/about.module.wrapper',
-        './dashboard/dashboard.module.wrapper',
-        './admin/admin.module.wrapper'
+        'app/abstract/abstract.module.wrapper',
+        'app/home/home.module.wrapper',
+        'app/about/about.module.wrapper',
+        'app/dashboard/dashboard.module.wrapper',
+        'app/admin/admin.module.wrapper'
     ],
     function app(angular, utils) {
         "use strict";
@@ -43,7 +45,9 @@ define(
             'sg.app.home',
             'sg.app.about',
             'sg.app.dashboard',
-            'sg.app.admin'
+            'sg.app.admin',
+            // popups and components
+            'sg.app.components'
         ]);
 
         angular.module('sg.app')
@@ -59,7 +63,7 @@ define(
                     .otherwise('/sg/accessDenied')
             }])
             .config(['$fireDataProvider', function ($fireDataProvider) {
-                $fireDataProvider.setFireUrl('https://springatom.firebaseio.com/');
+                $fireDataProvider.setFireUrl('https://sgatom.firebaseio.com/');
             }]);
 
         return angular.module('sg.app');

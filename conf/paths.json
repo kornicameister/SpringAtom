@@ -1,0 +1,5 @@
+{
+   "SRC_DIR"   : "./src",
+   "DIST_DIR"  : "./build",
+   "VENDOR_LIB": "./vendor"
+}

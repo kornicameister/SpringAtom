@@ -3,8 +3,6 @@ define(
         'angular',
         './security/security.module',
         './translations/translations',
-        './components/components.module',
-        './popups/popups.wrapper',
         './directive/directives.module'
     ],
     function sgCommonModule(angular) {
@@ -22,8 +20,6 @@ define(
          * @requires sg.root-view
          */
         return angular.module('sg.common', [
-            'sg.popups',
-            'sg.components',
             'sg.security',
             'sg.translations',
             'sg.directives'

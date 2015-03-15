@@ -1,6 +1,6 @@
 {
    "name"           : "SpringAtom",
-   "version"        : "0.0.1",
+   "version"        : "0.0.2-alpha",
    "homepage"       : "https://github.com/kornicameister/SpringAtom",
    "repository"     : {
       "type": "git",
@@ -23,49 +23,41 @@
       "**/.*",
       "node_modules",
       "bower_components",
-      "test",
-      "tests"
+      "vendor",
+      "build"
    ],
    "dependencies"   : {
-      "requirejs"                      : "latest",
-      "jsface"                         : "latest",
-      "lodash"                         : "3.3.0",
-      "animate.css"                    : "latest",
-      "normalize-css"                  : "latest",
-      "angular"                        : "latest",
-      "restangular"                    : "latest",
-      "ng-grid"                        : "latest",
-      "ngprogress"                     : "latest",
-      "angular-bootstrap"              : "latest",
-      "angular-ui-router"              : "latest",
-      "angular-ui-calendar"            : "latest",
-      "angular-animate"                : "latest",
-      "angular-moment"                 : "latest",
-      "angular-cookies"                : "latest",
-      "angular-dialog-service"         : "latest",
-      "angular-translate-loader-url"   : "latest",
-      "angular-translate-storage-local": "latest",
-      "angular-translate-handler-log"  : "latest",
-      "angular-local-storage"          : "latest",
-      "isteven-angular-multiselect"    : "latest",
-      "bootstrap"                      : "latest",
-      "jasny-bootstrap"                : "latest",
-      "jquery"                         : "latest",
-      "font-awesome"                   : "~4.3.0",
-      "require-less"                   : "~0.1.5",
-      "firebase"                       : "~2.2.0",
-      "angularfire"                    : "~0.9.2"
+      "jsface"                       : "latest",
+      "lodash"                       : "3.3.0",
+      "animate.css"                  : "3.2.x",
+      "normalize-css"                : "3.0.x",
+      "angular"                      : "1.4.x",
+      "angular-bootstrap"            : "0.12.x",
+      "angular-ui-router"            : "0.2.x",
+      "angular-ui-grid"              : "3.0.x",
+      "angular-ui-calendar"          : "0.9.x",
+      "angular-animate"              : "1.4.x",
+      "angular-moment"               : "0.9.x",
+      "angular-cookies"              : "1.4.x",
+      "angular-dialog-service"       : "5.2.x",
+      "angular-translate"            : "2.6.x",
+      "angular-translate-handler-log": "2.6.x",
+      "angular-local-storage"        : "0.1.x",
+      "ui-router-extras"             : "~0.0.13",
+      "bootstrap"                    : "3.3.x",
+      "jquery"                       : "latest",
+      "font-awesome"                 : "~4.3.0",
+      "firebase"                     : "~2.2.0",
+      "angularfire"                  : "~1.0.0",
+      "requirejs"                    : "2.1.x"
    },
    "devDependencies": {
       "angular-mocks"   : "latest",
-      "angular-scenario": "latest",
-      "ui-router-extras": "~0.0.13"
+      "angular-scenario": "latest"
    },
    "resolutions"    : {
-      "angular-translate": "~2.6.0",
-      "angular"          : ">= 1.0.8",
-      "jquery"           : ">= 1.9.1",
-      "firebase"         : "~2.2.0",
-      "lodash"           : "3.3.0"
+      "angular-bootstrap": "0.12.x",
+      "angular-translate": "2.6.x",
+      "angular"          : "1.4.x"
    }
 }

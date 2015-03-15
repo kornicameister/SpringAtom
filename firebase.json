@@ -1,6 +1,6 @@
 {
-   "firebase": "springatom",
-   "public"  : "src",
+   "firebase": "sgatom",
+   "public"  : "build",
    "headers" : [
       {
          "source" : "**/*.@(eot|otf|ttf|ttc|woff|font.css)",

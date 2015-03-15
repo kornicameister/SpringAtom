@@ -1,5 +1,10 @@
 # build folder
 build/
+tmp/
+
+# nodeModules
+node_modules/
+src/vendor/
 
 # Idea
 .idea/

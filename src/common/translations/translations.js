@@ -3,8 +3,8 @@ define(
         'angular',
         './pl_PL',
         // angular dependencies
-        'ngTranslate',
-        'ngTranslateHandlerLog'
+        'angularTranslate',
+        'angularTranslateLog'
     ],
     function (angular, pl) {
         "use strict";

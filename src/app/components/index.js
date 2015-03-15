@@ -1,0 +1,10 @@
+define(
+    'app/components/index',
+    [
+        'app/components/breadcrumb/index',
+        'app/components/footer/index',
+        'app/components/header/index',
+        'app/components/navigation/index',
+        'app/components/module'
+    ]
+);
