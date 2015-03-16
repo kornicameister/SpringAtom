@@ -79,21 +79,19 @@
 
     function buildSrc() {
         gutil.log('Building src...');
-        return gulpMerge(
-            gulp.src([PATHS.SRC_DIR + '/**/app.js', PATHS.SRC_DIR + '/**/*.module.js'])
-                .pipe(angularFilesort()),
-            gulp.src([
-                PATHS.SRC_DIR + '/**/*.js',
-                '!' + PATHS.SRC_DIR + '/**/app.js',
-                '!' + PATHS.SRC_DIR + '/**/*.module.js'
-            ])
-        ).pipe(concat({
+        var amd = require('amd-optimize');
+        return gulp
+            .src(PATHS.SRC_DIR + '/**/*.js')
+            .pipe(amd('springatom', {
+                configFile            : PATHS.SRC_DIR + '/main.js',
+                findNestedDependencies: true
+            }))
+            .pipe(concat({
                 path: TARGET_JS,
                 stat: {
                     mode: '0666'
                 }
             }))
-            .pipe(ngAnnotate())
             .pipe(stripDebug())
             .pipe(gulp.dest(PATHS.DIST_DIR + '/js')); // save non minified version
     }
@@ -154,8 +152,8 @@
                 quotes: true
             }))
             .pipe(ngHtml2Js({
-                moduleName    : 'sg.app',
-                declareModule :false
+                moduleName   : 'sg.app',
+                declareModule: false
             }))
             .pipe(concat(TARGET_VIEW_JS))
             .pipe(gulp.dest(PATHS.DIST_DIR + '/js'));

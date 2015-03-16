@@ -1,5 +1,0 @@
-define(
-    ['./home.state'],
-    function () {
-    }
-);

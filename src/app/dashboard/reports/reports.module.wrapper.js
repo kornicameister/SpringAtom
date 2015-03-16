@@ -1,5 +1,0 @@
-define(
-    [
-        './reports.state.js'
-    ]
-);

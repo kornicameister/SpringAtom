@@ -1,5 +1,0 @@
-define(
-    [
-        './clients.state.js'
-    ]
-);

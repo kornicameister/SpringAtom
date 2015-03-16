@@ -1,31 +1,15 @@
 define(
+    'common/state/state.module',
     [
         'angular',
-        './stateLabelResolve.factory',
-        './state.provider',
-        './state.pageTitle.provider',
         'angularUiRouter',
         'angularUiRouterExtras'
     ],
-    function stateBuilder(angular, stateLabelResolveService, $stateHelperProvider, $statePageTitleProvider) {
-        /**
-         *
-         * @module sg.state
-         * @namespace sg
-         */
+    function (angular) {
         return angular.module('sg.state', ['ui.router', 'ct.ui.router.extras'])
-            .constant('MODULE_INFO', {
-                name   : 'sg.state',
-                version: '0.0.2'
-            })
-            .factory('$stateLabelResolve', stateLabelResolveService)
-            .provider('$stateHelper', $stateHelperProvider)
-            .provider('$statePageTitle', $statePageTitleProvider)
             .run(['$statePageTitle', '$stateHelper', '$rootScope', function ($statePageTitle,
                                                                              $stateHelper,
                                                                              $rootScope) {
-                "use strict";
-
                 if ($statePageTitle.isPageTitleChangeEnabled()) {
 
                     var expression = $statePageTitle.getPageTitleExpression();
@@ -41,6 +25,6 @@ define(
                         })
                     });
                 }
-            }])
+            }]);
     }
 );

@@ -1,8 +1,9 @@
 define(
+    'app/popups/popup.module',
     [
         'angular',
-        'app/popups/popup.dependencies.js',
-        'app/popups/authentication/authentication.popup.module'
+        'app/popups/popup.dependencies',
+        'app/popups/authentication/index'
     ],
     function popupModule(angular) {
         "use strict";

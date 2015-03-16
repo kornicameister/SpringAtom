@@ -1,5 +1,0 @@
-define(
-    ['./about.state'],
-    function () {
-    }
-);

@@ -1,5 +1,0 @@
-define(
-    [
-        './lifts.state.js'
-    ]
-);

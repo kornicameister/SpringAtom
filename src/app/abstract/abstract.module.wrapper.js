@@ -1,5 +1,0 @@
-define(
-    ['./abstract.state'],
-    function () {
-    }
-);

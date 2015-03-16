@@ -3,7 +3,7 @@ define(
     [
         'app/components/breadcrumb/breadcrumb.module',
         'app/components/breadcrumb/breadcrumb.service',
-        'common/state/state.provider'
+        'common/state/state.stateHelperProvider'
     ],
     function breadcrumbController(module) {
         "use strict";

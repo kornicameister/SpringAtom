@@ -1,0 +1,9 @@
+define(
+    'common/state/state.index',
+    [
+        'common/state/state.module',
+        'common/state/state.pageTitleProvider',
+        'common/state/state.stateHelperProvider',
+        'common/state/stateLabelResolve.factory'
+    ]
+);

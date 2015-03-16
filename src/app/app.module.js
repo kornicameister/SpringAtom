@@ -1,4 +1,5 @@
 define(
+    'app/app.module',
     [
         'angular',
         'common/utils',
@@ -6,14 +7,11 @@ define(
         'common/navigation/navigation.module',
         'common/data/fireData',
         'common/security/security.module',
-        // components & popuos
+        // components & popups
         'app/components/index',
-        // views
-        'app/abstract/abstract.module.wrapper',
-        'app/home/home.module.wrapper',
-        'app/about/about.module.wrapper',
-        'app/dashboard/dashboard.module.wrapper',
-        'app/admin/admin.module.wrapper'
+        'app/popups/index',
+        // view
+        'app/view/index'
     ],
     function app(angular, utils) {
         "use strict";
@@ -33,39 +31,40 @@ define(
          *
          * @module sg.app
          */
-        angular.module('sg.app', [
-            // core to run app
-            'sg.navigation',
-            'sg.state',
-            'sg.fireData',
-            'sg.security',
-            // abstract root view
-            'sg.app.index',
-            // core view modules of the application
-            'sg.app.home',
-            'sg.app.about',
-            'sg.app.dashboard',
-            'sg.app.admin',
-            // popups and components
-            'sg.app.components'
-        ]);
+        return angular
+            .module('sg.app', [
+                // core to run app
+                'sg.navigation',
+                'sg.state',
+                'sg.fireData',
+                'sg.security',
+                // core view modules of the application
+                'sg.app.view',
+                // popups and components
+                'sg.app.components',
+                'sg.app.popups'
+            ])
+            .config(['$stickyStateProvider', configureStickyStates])
+            .config(['$statePageTitleProvider', configureStateTitle])
+            .config(['$securityProvider', configureSecurity])
+            .config(['$fireDataProvider', configureFireData]);
 
-        angular.module('sg.app')
-            .config(['$stickyStateProvider', function ($stickyStateProvider) {
-                $stickyStateProvider.enableDebug(utils.isDebug());
-            }])
-            .config(['$statePageTitleProvider', function ($statePageTitleProvider) {
-                $statePageTitleProvider.setPageTitleExpression('sgAppPageTitle');
-            }])
-            .config(['$securityProvider', function ($securityProvider) {
-                $securityProvider
-                    .enableStateSecurity(false)
-                    .otherwise('/sg/accessDenied')
-            }])
-            .config(['$fireDataProvider', function ($fireDataProvider) {
-                $fireDataProvider.setFireUrl('https://sgatom.firebaseio.com/');
-            }]);
+        function configureFireData($fireDataProvider) {
+            $fireDataProvider.setFireUrl('https://sgatom.firebaseio.com/');
+        }
 
-        return angular.module('sg.app');
+        function configureSecurity($securityProvider) {
+            $securityProvider
+                .enableStateSecurity(false)
+                .otherwise('/sg/accessDenied')
+        }
+
+        function configureStickyStates($stickyStateProvider) {
+            $stickyStateProvider.enableDebug(utils.isDebug());
+        }
+
+        function configureStateTitle($statePageTitleProvider) {
+            $statePageTitleProvider.setPageTitleExpression('sgAppPageTitle');
+        }
     }
 );

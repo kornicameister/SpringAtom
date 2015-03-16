@@ -1,5 +1,0 @@
-define(
-    [
-        './cars.state.js'
-    ]
-);

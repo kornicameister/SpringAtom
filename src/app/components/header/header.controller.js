@@ -4,7 +4,7 @@ define(
         'app/components/header/header.module',
         'lodash',
         'common/callbacks',
-        'common/state/state.provider',
+        'common/state/state.stateHelperProvider',
         'app/popups/authentication/authenticationPopup.factory'
     ],
     function headerController(module, _, callbacks) {

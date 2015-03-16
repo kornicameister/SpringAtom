@@ -1,12 +1,13 @@
 define(
+    'common/state/stateLabelResolve.factory',
     [
-        'angular',
-        'lodash'
+        'lodash',
+        'common/state/state.module'
     ],
-    function (angular, _) {
-        "use strict";
+    function (_, module) {
+        return module.factory('$stateLabelResolve', ['$injector', $stateLabelResolve]);
 
-        return ['$injector', function ($injector) {
+        function $stateLabelResolve($injector) {
             return {
                 /**
                  * Resolves the label of the particular state, i.e. the verbose and reable name
@@ -73,12 +74,11 @@ define(
             }
 
             function resolveLabel(state) {
-                if (!state) {
+                if (!state || state.abstract) {
                     return undefined;
                 }
                 return isLabelResolved(state) ? getFromResolved(state) : getFromUnresolved(state);
             }
-        }];
-
+        }
     }
 );

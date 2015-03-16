@@ -1,5 +1,0 @@
-define(
-    [
-        './mechanics.state.js'
-    ]
-);
