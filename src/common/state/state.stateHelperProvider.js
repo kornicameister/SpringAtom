@@ -1,7 +1,7 @@
 (function () {
-    angular.module('sg.common.state').provider('$stateHelper', ['$stateProvider', '$urlRouterProvider', $stateHelperProvider]);
+    angular.module('sg.common.state').provider('$stateHelper', ['$stateProvider', $stateHelperProvider]);
 
-    function $stateHelperProvider($stateProvider, $urlRouterProvider) {
+    function $stateHelperProvider($stateProvider) {
         var provider = this,
             stateLabelCache;
 
@@ -21,8 +21,6 @@
             delete state.children;
 
             $stateProvider.state(state);
-
-            checkPrimaryState(state);
 
             if (children.length) {
                 _.forEachRight(children, function (child) {
@@ -147,23 +145,6 @@
             }
             if (!state.hasOwnProperty('name') || _.isUndefined(state.name)) {
                 throw new Error('state.name is missing, cannot configure');
-            }
-        }
-
-        function savePrimaryState(state) {
-            var stateName = resolveName(state);
-            return function ($injector) {
-                var $state = $injector.get('$state');
-                state = $state.get(stateName).$$state();
-                return state.url.sourcePath;
-            }
-        }
-
-        function checkPrimaryState(state) {
-            if (state.primary && state.primary === true) {
-                $urlRouterProvider.otherwise(savePrimaryState(state));
-                checkPrimaryState = function () {
-                }
             }
         }
     }

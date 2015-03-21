@@ -1,14 +1,14 @@
 angular.module('sg.common.state', [
     'sg.common.utils',
     'sg.common.log',
-    'ui.router',
+    'ui.router.compat',
     'ct.ui.router.extras'
 ]);
 (function () {
     angular.module('sg.common.state')
         .value('$anchorScroll', angular.noop)
-        .run(['$state', 'DEBUG_MODE', '$log', '$timeout', listStatesIfDebug])
-        .run(['$statePageTitle', '$stateHelper', '$rootScope', sgStateRun]);
+        .run(['$state', 'DEBUG_MODE', '$log', '$timeout', listStatesIfDebug]);
+        //.run(['$statePageTitle', '$stateHelper', '$rootScope', sgStateRun]);
 
     function listStatesIfDebug($state, DEBUG_MODE, $log, $timeout) {
         if (DEBUG_MODE) {
@@ -43,11 +43,12 @@ angular.module('sg.common.state', [
             $rootScope[expression] = $statePageTitle.getDefaultPageTitle() || SA_DEFAULT_PAGE_TITLE;
 
             $rootScope.$on('$stateChangeSuccess', function (event, toState) {
+                debugger;
                 $stateHelper.getStateLabel(toState).then(function (label) {
                     $rootScope[expression] = label;
-                    if (!$rootScope.$$phase) {
-                        $rootScope.$apply();
-                    }
+                    //if (!$rootScope.$$phase) {
+                    //    $rootScope.$apply();
+                    //}
                 })
             });
         }

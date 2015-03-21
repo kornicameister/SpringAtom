@@ -22,7 +22,7 @@ angular.module('sg.app.view.dashboard').config(['$stateHelperProvider', function
             'content@': {
                 controller  : 'DashboardController',
                 controllerAs: 'vm',
-                templateUrl : 'app/dashboard/dashboard.tpl.html'
+                templateUrl : 'app/view/dashboard/dashboard.tpl.html'
             }
         }
     })

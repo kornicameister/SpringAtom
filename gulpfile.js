@@ -20,7 +20,7 @@
     gulp.task('vendor.scripts', getTask('vendor/scripts'));
     gulp.task('vendor.font', getTask('vendor/fonts'));
     gulp.task('vendor.styles', getTask('vendor/styles'));
-    gulp.task('vendor', function(){
+    gulp.task('vendor', function () {
         getTask('vendor/scripts')();
         getTask('vendor/fonts')();
         getTask('vendor/styles')();
@@ -39,9 +39,10 @@
     gulp.task('watch', ['browser-sync'], function () {
         var paths = require('./conf/paths');
 
-        gulp.watch(paths.SRC_DIR + '/**/*.js', ["scripts", browserSync.reload]);
-        gulp.watch(paths.SRC_DIR + '/**/*.tpl.html', ["views", browserSync.reload]);
-        gulp.watch(paths.SRC_DIR + '/index.html', ["index", browserSync.reload]);
+        gulp.watch(paths.SRC_DIR + '/**/*.js', ['scripts', browserSync.reload]);
+        gulp.watch(paths.SRC_DIR + '/**/*.state.js', ['views', browserSync.reload]);
+        gulp.watch(paths.SRC_DIR + '/**/*.tpl.html', ['views', browserSync.reload]);
+        gulp.watch(paths.SRC_DIR + '/index.html', ['index', browserSync.reload]);
         gulp.watch(paths.VENDOR_LIB, ['vendor', browserSync.reload]);
     });
     // tasks

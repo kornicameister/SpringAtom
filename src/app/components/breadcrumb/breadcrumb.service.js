@@ -1,8 +1,9 @@
 (function (module) {
-    module.factory('breadcrumbService', ['$state', '$stateHelper', '$q', service]);
+    module.factory('breadcrumbService', ['$state', '$stateHelper', '$q', 'logger', service]);
 
-    function service($state, $stateHelper, $q) {
-        var service = {};
+    function service($state, $stateHelper, $q, loggerFactory) {
+        var service = {},
+            logger = loggerFactory('breadcrumbService');
 
         // API
         service.newCrumb = newCrumb;
@@ -16,7 +17,15 @@
                     stateName = state.name,
                     breadcrumbs = state['breadcrumb'] || [];
 
+                if (state.abstract) {
+                    logger.warn(_.format('getBreadcrumb(...) called initially with abstract state, state={state}', {
+                        state: stateName
+                    }));
+                    resolve(newCrumb);
+                }
+
                 if (breadcrumbs.length) {
+                    logger.debug(_.format('state {name} has inline breadcrumbs defined, returning it...', {name: stateName}));
                     _.forEach(breadcrumbs, function (crumbPath) {
                         newCrumbs.push(newCrumb(crumbPath, stateName));
                     });
@@ -24,8 +33,8 @@
                     var tmp = stateName;
                     do {
                         tmp = $state.get(tmp);
-                        if (!tmp || tmp.abstract) {
-                            continue;
+                        if ((_.isNull(tmp) || _.isUndefined(tmp)) || tmp.abstract) {
+                            break;
                         }
                         newCrumbs.push(newCrumb(tmp, stateName));
 

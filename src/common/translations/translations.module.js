@@ -12,7 +12,4 @@ angular
         $translateProvider.use(BROWSER_LANGUAGE);
         $translateProvider.useSanitizeValueStrategy('escaped');
         $translateProvider.useMissingTranslationHandlerLog();
-    }])
-    .run(['$log', function ($log) {
-        $log.getInstance('sg.common.translations').debug('sg.common.translations initialized...');
     }]);

@@ -1,7 +1,6 @@
 angular.module('sg.app.view.home')
-    .config(['$stateHelperProvider', function ($stateHelperProvider) {
+    .config(['$stateHelperProvider', '$urlRouterProvider', function ($stateHelperProvider, $urlRouterProvider) {
         $stateHelperProvider.state({
-            primary  : true,
             name     : 'sg.home',
             url      : '/home',
             navigator: [
@@ -20,4 +19,5 @@ angular.module('sg.app.view.home')
                 }
             }
         });
+        $urlRouterProvider.otherwise('/sg/home');
     }]);

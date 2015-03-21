@@ -1,8 +1,5 @@
 angular
-    .module('sg.common.translations.pl', ['sg.common.log'])
-    .run(['$log', function ($log) {
-        $log.getInstance('sg.common.translations.pl').debug('sg.common.translations.pl initialized...');
-    }]);
+    .module('sg.common.translations.pl', ['pascalprecht.translate']);
 (function () {
     angular.module('sg.common.translations.pl').config(['$translateProvider', configureTranslations]);
 
@@ -28,6 +25,7 @@ angular
         return {
             'sg.home'               : 'Strona główna',
             'sg.about'              : 'O SpringAtom',
+            'sg.admin'              : 'Panel administracyjny',
             'sg.dashboard'          : 'Panel sterowania',
             'sg.dashboard.calendar' : 'Kalendarz',
             'sg.dashboard.cars'     : 'Samochody',

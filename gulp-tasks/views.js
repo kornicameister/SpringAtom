@@ -11,7 +11,39 @@ module.exports = function (gulp, plugins, options) {
                 spare : true,
                 quotes: true
             }))
-            .pipe(gulp.dest(distDir))
+            .pipe(plugins.ngHtml2js({
+                moduleName   : 'springatom',
+                declareModule: false
+            }))
+            .pipe(plugins.concat(paths.TARGET_VIEW_JS_FILE))
+            .pipe(plugins.if(
+                production,
+                plugins.sourcemaps.init()
+            ))
+            .pipe(gulp.dest(distDir + '/js'))
+            .pipe(plugins.if(
+                production,
+                plugins.uglify({
+                    mangle          : true,
+                    preserveComments: 'some'
+                })
+            ))
+            .pipe(plugins.if(
+                production,
+                plugins.rename({
+                    suffix: '.min'
+                })
+            ))
+            .pipe(plugins.if(
+                production,
+                plugins.sourcemaps.write('../maps', {
+                    addComment: true
+                })
+            ))
+            .pipe(plugins.if(
+                production,
+                gulp.dest(distDir + '/js')
+            ))
             .pipe(plugins.notify('views task completed'))
     }
 };

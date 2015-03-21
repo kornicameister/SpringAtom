@@ -1,5 +1,5 @@
 (function utilsModule() {
-    angular.module('sg.common.utils', ['sg.common.log'])
+    angular.module('sg.common.utils', [])
         .constant('DEBUG_MODE', isDebug(undefined))
         .service('sgUtils', function () {
             return {
@@ -23,17 +23,16 @@
                 emptyFn      : emptyFn,
                 identityFn   : identityFn
             }
-        })
-        .run(['$log', function ($log) {
-            $log.getInstance('sg.common.utils').debug('sg.common.utils initialized...');
-        }]);
+        });
 
     function urlParams(url) {
         url = url || window.location.href;
         if (!url || (url.indexOf("?") < 0 && url.indexOf("&") < 0)) {
             return {};
         }
-        url = url.substr(0, url.indexOf('#'));
+        if (url.indexOf('#') > -1) {
+            url = url.substr(0, url.indexOf('#'));
+        }
         var params = url.substr(url.indexOf("?") + 1);
         return urlDecode(params);
     }

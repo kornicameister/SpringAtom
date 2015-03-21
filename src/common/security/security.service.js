@@ -1,6 +1,6 @@
 (function () {
     angular.module('sg.common.security')
-        .service('securityService', [ '$rootScope', '$q', 'securityAuthentication', securityService]);
+        .service('securityService', ['$rootScope', '$q', 'securityAuthentication', securityService]);
 
     function securityService($rootScope, $q, securityAuthentication) {
         var service = this,
@@ -35,7 +35,9 @@
             opts = _.defaults(opts, {
                 rememberMe: false
             });
-            return undefined;
+            return $q(function (resolve) {
+                resolve()
+            });
         }
 
         function logout() {

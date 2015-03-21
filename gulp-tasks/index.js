@@ -7,6 +7,7 @@ module.exports = function (gulp, plugins, options) {
     var injection = plugins.merge(
         gulp.src(PATHS.DIST_DIR + '/js/lib.js'),
         gulp.src(PATHS.DIST_DIR + '/js/' + (production ? 'app.min.js' : 'app.js')),
+        gulp.src(PATHS.DIST_DIR + '/js/' + (production ? 'view.min.js' : 'view.js')),
         gulp.src(PATHS.DIST_DIR + '/css/' + (production ? 'lib.min.css' : 'lib.css'))
     );
 

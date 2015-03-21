@@ -19,7 +19,7 @@ angular.module('sg.app.components.navigation').controller('NavigationController'
         vm.backToPreviousState = sgCallbacks.cancelEvent(backToPreviousState.bind(vm));
         vm.navigation = [];
 
-        listeners.push($scope.$on('$stateChangeSuccess', onStateChange.bind(vm)));
+        listeners.push($scope.$on('$stateChangeSuccess', sgCallbacks.skipAbstractState(onStateChange.bind(vm))));
 
         initialize();
 
@@ -29,7 +29,9 @@ angular.module('sg.app.components.navigation').controller('NavigationController'
 
         function onStateChange(event, toState, toStateParams, fromState, fromStateParams) {
             navigationFromState(toState);
-            rememberPreviousState(fromState, fromStateParams);
+            if (!fromState.abstract) {
+                rememberPreviousState(fromState, fromStateParams);
+            }
         }
 
         function navigationFromState(state) {
@@ -76,7 +78,7 @@ angular.module('sg.app.components.navigation').controller('NavigationController'
         }
 
         function backToPreviousState() {
-            if(!$previousState.get(previousStateMemo)){
+            if (!$previousState.get(previousStateMemo)) {
                 return;
             }
             $previousState.go(previousStateMemo);
