@@ -1,9 +1,0 @@
-define(
-    'app/view/dashboard/dashboard.index',
-    [
-        'app/view/dashboard/dashboard.controller',
-        'app/view/dashboard/dashboardTabs.service',
-        'app/view/dashboard/dashboard.state',
-        'app/view/dashboard/dashboard.module'
-    ]
-);

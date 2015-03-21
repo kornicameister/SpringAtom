@@ -1,14 +1,3 @@
-define(
-    'app/view/admin/admin.controller',
-    [
-        'app/view/admin/admin.module'
-    ],
-    function (module) {
-        "use strict";
-        return module.controller('AdminController', [ctrl]);
+angular.module('sg.app.view.admin').controller('AdminController', function () {
 
-        function ctrl() {
-
-        }
-    }
-);
+});

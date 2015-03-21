@@ -1,53 +1,44 @@
-define(
-    'app/popups/authentication/login/login.popup.controller',
-    [
-        'lodash',
-        'common/callbacks',
-        'app/popups/authentication/authentication.popup.module',
-        'common/security/security.service'
-    ],
-    function loginPopupController(_, callbacks, module) {
-        var cancelEventWrapper = callbacks.cancelEvent;
+angular.module('sg.app.popups.authentication').controller('LoginPopupController', [
+    '$modalInstance',
+    'securityService',
+    'sgCallbacks',
+    function ($modalInstance, securityService, sgCallbacks) {
+        var vm = this;
 
-        return module.controller('LoginPopupController', ['$modalInstance', 'securityService', ctrl]);
+        vm.username = '';
+        vm.password = '';
+        vm.rememberMe = false;
 
-        function ctrl($modalInstance, securityService) {
-            var vm = this;
+        vm.forgotPassword = sgCallbacks.cancelEvent(forgotPassword.bind(vm));
+        vm.register = sgCallbacks.cancelEvent(register.bind(vm));
+        vm.login = sgCallbacks.cancelEvent(login.bind(vm));
+        vm.cancel = sgCallbacks.cancelEvent(cancel.bind(vm));
 
-            vm.username = '';
-            vm.password = '';
-            vm.rememberMe = false;
+        function forgotPassword() {
+            $modalInstance.close('forgot_password');
+        }
 
-            vm.forgotPassword = _.wrap(forgotPassword.bind(vm), cancelEventWrapper);
-            vm.register = _.wrap(register.bind(vm), cancelEventWrapper);
-            vm.login = _.wrap(login.bind(vm), cancelEventWrapper);
-            vm.cancel = _.wrap(cancel.bind(vm), cancelEventWrapper);
+        function register() {
+            $modalInstance.close('register');
+        }
 
-            function forgotPassword() {
-                $modalInstance.close('forgot_password');
-            }
+        function login() {
+            var credentials = {
+                    email   : vm.username,
+                    password: vm.password
+                },
+                opts = {
+                    rememberMe: vm.rememberMe
+                };
+            securityService.login(credentials, opts).then(function () {
+                "use strict";
+                $modalInstance.close('login');
+            });
+        }
 
-            function register() {
-                $modalInstance.close('register');
-            }
-
-            function login() {
-                var credentials = {
-                        email   : vm.username,
-                        password: vm.password
-                    },
-                    opts = {
-                        rememberMe: vm.rememberMe
-                    };
-                securityService.login(credentials, opts).then(function () {
-                    "use strict";
-                    $modalInstance.close('login');
-                });
-            }
-
-            function cancel() {
-                $modalInstance.dismiss('cancel');
-            }
+        function cancel() {
+            $modalInstance.dismiss('cancel');
         }
     }
-);
+]);
+

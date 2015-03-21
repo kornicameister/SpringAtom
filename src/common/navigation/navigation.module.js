@@ -1,11 +1,1 @@
-define(
-    [
-        'angular',
-        'angularLocalStorage',
-        '../state/state.module'
-    ],
-    function navigationModule(angular) {
-        "use strict";
-        return angular.module('sg.navigation', ['LocalStorageModule', 'sg.state']);
-    }
-);
+angular.module('sg.common.navigation', ['LocalStorageModule', 'sg.common.state']);

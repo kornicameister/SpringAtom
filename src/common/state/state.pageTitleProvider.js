@@ -1,64 +1,61 @@
-define(
-    'common/state/state.pageTitleProvider',
-    [
-        'lodash',
-        'common/state/state.module'
-    ],
-    function (_, module) {
-        return module.provider('$statePageTitle', $statePageTitleProvider);
+(function () {
+    angular.module('sg.common.state').provider('$statePageTitle', $statePageTitleProvider);
 
-        function $statePageTitleProvider() {
-            // private
-            var self = this,
-                defaultPageTitle,
-                pageTitleExpression,
-                pageTitleChange = false;
-
-            // config available
+    function $statePageTitleProvider() {
+        // private
+        var self = this,
+            defaultPageTitle,
             /**
-             * @description
-             * Enables/disables [depends on param] updating the page title upon state change
-             *
-             * @param enable {@boolean} by default enable is true
-             * @type {enablePageTitleChange}
+             * <b>springatomPageTitle</b> default expression for page title
+             * @private
+             * @type {string}
              */
-            self.enablePageTitleChange = enablePageTitleChange;
-            self.setPageTitleExpression = setPageTitleExpression;
-            self.setDefaultPageTitle = setDefaultPageTitle;
+            pageTitleExpression = 'springatomPageTitle',
+            pageTitleChange = false;
 
-            // API
-            self.$get = function () {
-                var self = {};
+        // config available
+        /**
+         * @description
+         * Enables/disables [depends on param] updating the page title upon state change
+         *
+         * @param enable {@boolean} by default enable is true
+         * @type {enablePageTitleChange}
+         */
+        self.enablePageTitleChange = enablePageTitleChange;
+        self.setPageTitleExpression = setPageTitleExpression;
+        self.setDefaultPageTitle = setDefaultPageTitle;
 
-                self.isPageTitleChangeEnabled = _.constant(pageTitleChange);
-                self.getPageTitleExpression = _.constant(pageTitleExpression);
-                self.getDefaultPageTitle = _.constant(defaultPageTitle);
+        // API
+        self.$get = function () {
+            var self = {};
 
-                return self;
-            };
+            self.isPageTitleChangeEnabled = _.constant(pageTitleChange);
+            self.getPageTitleExpression = _.constant(pageTitleExpression);
+            self.getDefaultPageTitle = _.constant(defaultPageTitle);
 
-            function setDefaultPageTitle(title) {
-                if (!title) {
-                    throw new Error('title is undefined, cannot configure');
-                }
-                defaultPageTitle = title;
-                return self;
+            return self;
+        };
+
+        function setDefaultPageTitle(title) {
+            if (!title) {
+                throw new Error('title is undefined, cannot configure');
             }
-
-            function setPageTitleExpression(title) {
-                if (!title) {
-                    throw new Error('title is undefined, cannot configure');
-                }
-                pageTitleExpression = title;
-                pageTitleChange = !!title;
-                return self;
-            }
-
-            function enablePageTitleChange(enable) {
-                pageTitleChange = enable || true;
-                return self;
-            }
+            defaultPageTitle = title;
+            return self;
         }
 
+        function setPageTitleExpression(title) {
+            if (!title) {
+                throw new Error('title is undefined, cannot configure');
+            }
+            pageTitleExpression = title;
+            pageTitleChange = !!title;
+            return self;
+        }
+
+        function enablePageTitleChange(enable) {
+            pageTitleChange = enable || true;
+            return self;
+        }
     }
-);
+}());

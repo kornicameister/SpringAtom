@@ -1,30 +1,21 @@
-define(
-    'app/popups/authentication/logout/logout.popup.controller',
-    [
-        'common/callbacks',
-        'app/popups/authentication/authentication.popup.module',
-        'common/security/security.service'
-    ],
-    function logoutPopupController(callbacks, module) {
-        var cancelEventWrapper = callbacks.cancelEvent;
+angular.module('sg.app.popups.authentication').controller('LogoutPopupController', [
+    '$modalInstance',
+    'securityService',
+    'sgCallbacks',
+    function ($modalInstance, securityService, sgCallbacks) {
+        var vm = this;
 
-        return module.controller('LogoutPopupController', ['$modalInstance', 'securityService', ctrl]);
+        vm.logout = sgCallbacks.cancelEvent(logout.bind(vm));
+        vm.cancel = sgCallbacks.cancelEvent(cancel.bind(vm));
 
-        function ctrl($modalInstance, securityService) {
-            var vm = this;
+        function logout() {
+            securityService.logout().then(function () {
+                $modalInstance.close('logout');
+            })
+        }
 
-            vm.logout = _.wrap(logout.bind(vm), cancelEventWrapper);
-            vm.cancel = _.wrap(cancel.bind(vm), cancelEventWrapper);
-
-            function logout() {
-                securityService.logout().then(function () {
-                    $modalInstance.close('logout');
-                })
-            }
-
-            function cancel() {
-                $modalInstance.dismiss('cancel');
-            }
+        function cancel() {
+            $modalInstance.dismiss('cancel');
         }
     }
-);
+]);

@@ -26,6 +26,24 @@
       "vendor",
       "build"
    ],
+   "overrides"      : {
+      "angular"            : {
+         "dev" : "angular.js",
+         "prod": "angular.min.js"
+      },
+      "angular-animate"    : {
+         "dev" : "angular-animate.js",
+         "prod": "angular-animate.min.js"
+      },
+      "angular-bootstrap"  : {
+         "dev" : "ui-bootstrap-tpls.js",
+         "prod": "ui-bootstrap-tpls.min.js"
+      },
+      "parse"              : {
+         "dev" : "parse.js",
+         "prod": "parse.min.js"
+      }
+   },
    "dependencies"   : {
       "jsface"                       : "latest",
       "lodash"                       : "3.3.0",
@@ -47,9 +65,9 @@
       "bootstrap"                    : "3.3.x",
       "jquery"                       : "latest",
       "font-awesome"                 : "~4.3.0",
-      "firebase"                     : "~2.2.0",
-      "angularfire"                  : "~1.0.0",
-      "requirejs"                    : "2.1.x"
+      "bowser"                       : "~0.7.2",
+      "parse"                        : "1.3.x",
+      "parse-angular-patch"          : "0.1.x"
    },
    "devDependencies": {
       "angular-mocks"   : "latest",

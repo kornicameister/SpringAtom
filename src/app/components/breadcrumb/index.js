@@ -1,9 +1,0 @@
-define(
-    'app/components/breadcrumb/index',
-    [
-        'app/components/breadcrumb/breadcrumb.service',
-        'app/components/breadcrumb/breadcrumb.controller',
-        'app/components/breadcrumb/breadcrumb.directive',
-        'app/components/breadcrumb/breadcrumb.module'
-    ]
-);

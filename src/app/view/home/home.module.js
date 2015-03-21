@@ -1,13 +1,8 @@
-define(
-    'app/view/home/home.module',
-    [
-        'angular',
-        'common/state/state.module'
-    ],
-    function (angular) {
-        "use strict";
-        return angular.module('sg.app.view.home', [
-            'sg.state'
-        ]);
-    }
-);
+angular
+    .module('sg.app.view.home', [
+        'sg.common.state',
+        'sg.common.log'
+    ])
+    .run(['$log', function ($log) {
+        $log.getInstance('sg.app.view.home').debug('sg.app.view.home initialized...');
+    }]);

@@ -1,14 +1,7 @@
-define(
-    'app/view/dashboard/dashboard.controller',
-    [
-        'lodash',
-        'app/view/dashboard/dashboard.module'
-    ],
-    function dashboardController(_, module) {
-        "use strict";
-        module.controller('DashboardController', ['$scope', '$state', 'tabs', ctrl]);
-
-        function ctrl($scope, $state, tabs) {
+angular.module('sg.app.view.dashboard')
+    .controller('DashboardController', [
+        '$scope', '$state', 'tabs',
+        function ($scope, $state, tabs) {
             var vm = this,
                 listeners = [];
 
@@ -39,5 +32,4 @@ define(
                 }
             }
         }
-    }
-);
+    ]);

@@ -1,48 +1,38 @@
-define(
-    'app/components/breadcrumb/breadcrumb.controller',
-    [
-        'app/components/breadcrumb/breadcrumb.module',
-        'app/components/breadcrumb/breadcrumb.service',
-        'common/state/state.stateHelperProvider'
-    ],
-    function breadcrumbController(module) {
-        "use strict";
+(function (module) {
+    module.controller('BreadcrumbController', ['$scope', 'breadcrumbService', '$stateHelper', ctrl]);
 
-        return module.controller('BreadcrumbController', ['$scope', 'breadcrumbService', '$stateHelper', ctrl]);
+    function ctrl($scope, breadcrumbService, $stateHelper) {
+        var vm = this;
 
-        function ctrl($scope, breadcrumbService, $stateHelper) {
-            var vm = this;
+        // API of controller
+        vm.crumbs = [];
 
-            // API of controller
-            vm.crumbs = [];
+        // listeners
+        $scope.$on('$destroy', destroy);
+        $scope.$on('$stateChangeSuccess', onStateChangeSuccess);
 
-            // listeners
-            $scope.$on('$destroy', destroy);
-            $scope.$on('$stateChangeSuccess', onStateChangeSuccess);
+        initialize();
 
-            initialize();
+        function destroy() {
+            delete vm.crumbs;
+        }
 
-            function destroy() {
-                delete vm.crumbs;
-            }
+        function initialize() {
+            $stateHelper.getCurrentState()
+                .then(function (state) {
+                    breadcrumbService
+                        .getBreadcrumbs(state)
+                        .then(function (crumbs) {
+                            vm.crumbs = crumbs;
+                        })
+                })
+        }
 
-            function initialize() {
-                $stateHelper.getCurrentState()
-                    .then(function (state) {
-                        breadcrumbService
-                            .getBreadcrumbs(state)
-                            .then(function (crumbs) {
-                                vm.crumbs = crumbs;
-                            })
-                    })
-            }
-
-            function onStateChangeSuccess(event, toState) {
-                breadcrumbService.getBreadcrumbs(toState).then(function (crumbs) {
-                    vm.crumbs = crumbs;
-                });
-                return true;
-            }
+        function onStateChangeSuccess(event, toState) {
+            breadcrumbService.getBreadcrumbs(toState).then(function (crumbs) {
+                vm.crumbs = crumbs;
+            });
+            return true;
         }
     }
-);
+}(angular.module('sg.app.components.breadcrumb')));

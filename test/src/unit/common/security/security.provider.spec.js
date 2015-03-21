@@ -6,7 +6,7 @@ define(
     function () {
         describe('$securityProvider', function () {
 
-            beforeEach(angular.mock.module('sg.security'));
+            beforeEach(angular.mock.module('sg.common.security'));
 
             describe('default values', function () {
                 var security;
