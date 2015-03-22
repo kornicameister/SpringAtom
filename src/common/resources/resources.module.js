@@ -1,1 +1,3 @@
-angular.module('sg.common.resources', ['sg.common.data']);
+angular.module('sg.common.resources', [
+    'sg.common.resources.car'
+]);

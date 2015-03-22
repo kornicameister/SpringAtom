@@ -8,7 +8,8 @@ angular
             getButtons(),
             getCommon(),
             getDialogs(),
-            getStates()
+            getStates(),
+            getModelObject()
         ]));
     }
 
@@ -69,4 +70,12 @@ angular
         };
     }
 
+    function getModelObject() {
+        return {
+            // car
+            'model.car.licencePlate': 'Rejestracja',
+            'model.car.vin'         : 'Vin',
+            'model.car.owner'       : 'Właściciel'
+        }
+    }
 }());

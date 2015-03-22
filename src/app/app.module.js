@@ -3,7 +3,7 @@ angular
         'sg.app.view',
         'sg.app.components',
         'sg.app.popups',
-        'angular-growl'
+        'sg.app.vendor'
     ])
     .value('$anchorScroll', angular.noop)
     .config(['$stickyStateProvider', 'DEBUG_MODE', function ($stickyStateProvider, DEBUG_MODE) {

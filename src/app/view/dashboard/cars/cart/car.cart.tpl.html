@@ -1,0 +1,20 @@
+<div id="{{cart.car.id}}" class="car-cart panel panel-default">
+    <div class="panel-heading">
+        <p class="panel-title">{{cart.car.licencePlate}}</p>
+    </div>
+    <div class="panel-body small">
+        <p><span class="text-capitalize">{{'model.car.vin' | translate}}</span>{{cart.car.vinNumber}}</p>
+
+        <p><span class="text-capitalize">{{'model.car.owner' | translate}}</span>{{cart.car.owner}}</p>
+    </div>
+    <style>
+        <!-- TODO move to less-->
+        .car-cart .panel-body span {
+            font-weight : bold;
+        }
+
+        .car-cart .panel-body span:after {
+            content : ': '
+        }
+    </style>
+</div>

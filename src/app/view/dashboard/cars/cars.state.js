@@ -19,7 +19,9 @@ angular.module('sg.app.view.dashboard.cars').config(['$stateHelperProvider', fun
         sticky           : true,
         views            : {
             'cars': {
-                template: 'Cars'
+                templateUrl : 'app/view/dashboard/cars/cars.tpl.html',
+                controllerAs: 'vm',
+                controller  : 'CarsController'
             }
         }
     })

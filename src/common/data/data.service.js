@@ -45,7 +45,7 @@ angular
                 if (!path) {
                     return fireUrl;
                 }
-                return _.startsWith(path, '/') ? path.substring(1) : path;
+                return fireUrl + (_.startsWith(path, '/') ? path.substring(1) : path);
             }
 
             function getNativeResource(path) {

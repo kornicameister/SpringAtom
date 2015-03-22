@@ -1,4 +1,5 @@
 angular.module('sg.app.view.dashboard.cars', [
     'sg.common.state',
-    //'ct.ui.router.extras'
+    'sg.common.resources.car',
+    'ct.ui.router.extras'
 ]);
