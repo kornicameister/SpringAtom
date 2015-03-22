@@ -7,7 +7,7 @@ angular.module('sg.common.state', [
 (function () {
     angular.module('sg.common.state')
         .run(['$state', 'DEBUG_MODE', '$log', '$timeout', listStatesIfDebug])
-        .run(['$statePageTitle', '$stateHelper', '$rootScope', sgStateRun]);
+        .run(['$stateHelper', '$rootScope', 'logger', sgStateRun]);
 
     function listStatesIfDebug($state, DEBUG_MODE, $log, $timeout) {
         if (DEBUG_MODE) {
@@ -28,28 +28,16 @@ angular.module('sg.common.state', [
         }
     }
 
-    /**
-     *
-     * @param $statePageTitle
-     * @param $stateHelper
-     * @param $rootScope
-     */
-    function sgStateRun($statePageTitle, $stateHelper, $rootScope) {
-        if ($statePageTitle.isPageTitleChangeEnabled()) {
-
-            var expression = $statePageTitle.getPageTitleExpression();
-
-            $rootScope[expression] = $statePageTitle.getDefaultPageTitle() || SA_DEFAULT_PAGE_TITLE;
-
-            $rootScope.$on('$stateChangeSuccess', function (event, toState) {
-                debugger;
-                $stateHelper.getStateLabel(toState).then(function (label) {
-                    $rootScope[expression] = label;
-                    //if (!$rootScope.$$phase) {
-                    //    $rootScope.$apply();
-                    //}
-                })
-            });
-        }
+    function sgStateRun($stateHelper, $rootScope, loggerFactory) {
+        var logger = loggerFactory('sg.common.state');
+        $rootScope.$on('$stateChangeSuccess', function (event, toState) {
+            logger.debug(_.format('sgStateRun(state={s})', {s: toState.name}));
+            $stateHelper.getStateLabel(toState).then(function (label) {
+                $rootScope.PAGE_TITLE = label;
+                if (!$rootScope.$$phase) {
+                    $rootScope.$apply();
+                }
+            })
+        });
     }
 }());

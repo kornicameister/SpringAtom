@@ -15,7 +15,7 @@ angular.module('sg.app.view.home')
             },
             views    : {
                 'content@': {
-                    template: '<h1>TEST</h1>'
+                    templateUrl: 'app/view/home/home.tpl.html'
                 }
             }
         });

@@ -14,7 +14,7 @@ angular.module('sg.app.view.about').config(['$stateHelperProvider', function ($s
         },
         views    : {
             'content@': {
-                template: '<h1>SpringAtom</h1>'
+                templateUrl: 'app/view/about/about.tpl.html'
             }
         }
     });

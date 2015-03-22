@@ -1,13 +1,13 @@
 (function (module) {
 
     module.controller('HeaderController',
-        ['$scope', '$interval', '$stateHelper', 'authenticationPopup', 'sgCallbacks', ctrl]
+        ['$scope', '$interval', '$stateHelper', 'authenticationPopup', 'sgCallbacks', 'logger', ctrl]
     );
 
     function AuthenticationListeners() {
     }
 
-    function ctrl($scope, $interval, $stateHelper, authenticationPopup, sgCallbacks) {
+    function ctrl($scope, $interval, $stateHelper, authenticationPopup, sgCallbacks, loggerFactory) {
 
         AuthenticationListeners.prototype.onLogin = function (event, authentication) {
             vm.authentication = authentication;
@@ -27,6 +27,8 @@
         };
 
         var vm = this,
+            logger = loggerFactory('HeaderController'),
+            listeners = [],
             notificationPromise,
             authenticationListeners = new AuthenticationListeners();
 
@@ -40,12 +42,17 @@
         vm.openLogoutDialog = sgCallbacks.cancelEvent(openLogoutDialog.bind(vm));
 
         // listeners
-        $scope.$on('$authentication.login', authenticationListeners.onLogin.bind(vm));
-        $scope.$on('$authentication.logout', authenticationListeners.onLogout.bind(vm));
-        $scope.$on('$destroy', destroy.bind(vm));
+        listeners.push($scope.$on('$authentication.login', authenticationListeners.onLogin.bind(vm)));
+        listeners.push($scope.$on('$authentication.logout', authenticationListeners.onLogout.bind(vm)));
+        listeners.push($scope.$on('$stateChangeSuccess', sgCallbacks.skipAbstractState(onStateChange.bind(vm))));
+        listeners.push($scope.$on('$destroy', destroy.bind(vm)));
 
         // initialize
-        initialize();
+        getStateLabel();
+
+        function onStateChange(event, state) {
+            getStateLabel(state);
+        }
 
         function openLoginDialog() {
             authenticationPopup.openLoginPopup();
@@ -55,8 +62,9 @@
             authenticationPopup.openLogoutPopup();
         }
 
-        function initialize() {
-            $stateHelper.getStateLabel().then(function (label) {
+        function getStateLabel(state) {
+            $stateHelper.getStateLabel(state).then(function (label) {
+                logger.debug(_.format('Retrieved label {l}', {l: label}));
                 vm.stateTitle = label;
             })
         }
@@ -65,6 +73,10 @@
             if (notificationPromise) {
                 $interval.cancel(notificationPromise);
             }
+            logger.debug(_.format('Destroying {d} listeners', {d: listeners.length}));
+            _.forEachRight(listeners, function (lst) {
+                lst();
+            });
         }
     }
 }(angular.module('sg.app.components.header')));

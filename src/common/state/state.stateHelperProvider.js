@@ -89,10 +89,6 @@
             }
 
             function getStateLabel(state) {
-                if (!state || state.abstract) {
-                    return asPromise(state);
-                }
-
                 function _getStateLabel(state) {
                     var defer = $q.defer();
 
