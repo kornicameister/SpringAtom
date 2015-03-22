@@ -6,9 +6,6 @@ angular
         'angular-growl'
     ])
     .value('$anchorScroll', angular.noop)
-    .config(['$locationProvider', function ($locationProvider) {
-        $locationProvider.html5Mode(true);
-    }])
     .config(['$stickyStateProvider', 'DEBUG_MODE', function ($stickyStateProvider, DEBUG_MODE) {
         $stickyStateProvider.enableDebug(DEBUG_MODE);
     }])

@@ -1,7 +1,7 @@
 (function (module) {
 
     module.controller('HeaderController',
-        ['$scope', '$interval', '$stateHelper', 'authenticationPopup', 'sgCallbacks', 'logger', ctrl]
+        ['$scope', '$interval', '$stateHelper', 'authenticationPopup', 'sgCallbacks', 'loggerFactory', ctrl]
     );
 
     function AuthenticationListeners() {

@@ -1,5 +1,5 @@
 (function (module) {
-    module.factory('breadcrumbService', ['$state', '$stateHelper', '$q', 'logger', service]);
+    module.factory('breadcrumbService', ['$state', '$stateHelper', '$q', 'loggerFactory', service]);
 
     function service($state, $stateHelper, $q, loggerFactory) {
         var service = {},

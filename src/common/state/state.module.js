@@ -7,7 +7,7 @@ angular.module('sg.common.state', [
 (function () {
     angular.module('sg.common.state')
         .run(['$state', 'DEBUG_MODE', '$log', '$timeout', listStatesIfDebug])
-        .run(['$stateHelper', '$rootScope', 'logger', sgStateRun]);
+        .run(['$stateHelper', '$rootScope', 'loggerFactory', sgStateRun]);
 
     function listStatesIfDebug($state, DEBUG_MODE, $log, $timeout) {
         if (DEBUG_MODE) {
