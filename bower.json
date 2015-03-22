@@ -27,21 +27,27 @@
       "build"
    ],
    "overrides"      : {
-      "angular"            : {
+      "angular"          : {
          "dev" : "angular.js",
          "prod": "angular.min.js"
       },
-      "angular-animate"    : {
+      "angular-animate"  : {
          "dev" : "angular-animate.js",
          "prod": "angular-animate.min.js"
       },
-      "angular-bootstrap"  : {
+      "angular-bootstrap": {
          "dev" : "ui-bootstrap-tpls.js",
          "prod": "ui-bootstrap-tpls.min.js"
       },
-      "parse"              : {
-         "dev" : "parse.js",
-         "prod": "parse.min.js"
+      "angular-growl-v2" : {
+         "dev" : [
+            "angular-growl.js",
+            "angular-growl.css"
+         ],
+         "prod": [
+            "angular-growl.min.js",
+            "angular-growl.min.css"
+         ]
       }
    },
    "dependencies"   : {
@@ -61,6 +67,7 @@
       "angular-translate"            : "2.6.x",
       "angular-translate-handler-log": "2.6.x",
       "angular-local-storage"        : "0.1.x",
+      "angular-growl-v2"             : "0.7.x",
       "ui-router-extras"             : "~0.0.13",
       "bootstrap"                    : "3.3.x",
       "jquery"                       : "latest",
@@ -71,7 +78,8 @@
    },
    "devDependencies": {
       "angular-mocks"   : "latest",
-      "angular-scenario": "latest"
+      "angular-scenario": "latest",
+      "angular-growl-v2": "~0.7.3"
    },
    "resolutions"    : {
       "angular-bootstrap": "0.12.x",

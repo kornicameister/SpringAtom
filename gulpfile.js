@@ -12,11 +12,12 @@
         options = minimist(process.argv.slice(2), knownOptions);
 
     // tasks
-    gulp.task('default', ['clean', 'vendor', 'scripts', 'views', 'index']);
+    gulp.task('default', ['clean', 'vendor', 'scripts', 'styles', 'views', 'index']);
     gulp.task('clean', getTask('clean'));
     gulp.task('scripts', getTask('scripts'));
     gulp.task('views', getTask('views'));
     gulp.task('index', getTask('index'));
+    gulp.task('styles', getTask('styles'));
     gulp.task('vendor.scripts', getTask('vendor/scripts'));
     gulp.task('vendor.font', getTask('vendor/fonts'));
     gulp.task('vendor.styles', getTask('vendor/styles'));
@@ -42,6 +43,7 @@
         gulp.watch(paths.SRC_DIR + '/**/*.js', ['scripts', browserSync.reload]);
         gulp.watch(paths.SRC_DIR + '/**/*.state.js', ['views', browserSync.reload]);
         gulp.watch(paths.SRC_DIR + '/**/*.tpl.html', ['views', browserSync.reload]);
+        gulp.watch(paths.SRC_DIR + '/**/*.less', ['styles', browserSync.reload]);
         gulp.watch(paths.SRC_DIR + '/index.html', ['index', browserSync.reload]);
         gulp.watch(paths.VENDOR_LIB, ['vendor', browserSync.reload]);
     });

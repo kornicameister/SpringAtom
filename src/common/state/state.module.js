@@ -6,9 +6,8 @@ angular.module('sg.common.state', [
 ]);
 (function () {
     angular.module('sg.common.state')
-        .value('$anchorScroll', angular.noop)
-        .run(['$state', 'DEBUG_MODE', '$log', '$timeout', listStatesIfDebug]);
-        //.run(['$statePageTitle', '$stateHelper', '$rootScope', sgStateRun]);
+        .run(['$state', 'DEBUG_MODE', '$log', '$timeout', listStatesIfDebug])
+        .run(['$statePageTitle', '$stateHelper', '$rootScope', sgStateRun]);
 
     function listStatesIfDebug($state, DEBUG_MODE, $log, $timeout) {
         if (DEBUG_MODE) {

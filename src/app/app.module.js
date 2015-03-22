@@ -2,8 +2,10 @@ angular
     .module('sg.app', [
         'sg.app.view',
         'sg.app.components',
-        'sg.app.popups'
+        'sg.app.popups',
+        'angular-growl'
     ])
+    .value('$anchorScroll', angular.noop)
     .config(['$stickyStateProvider', 'DEBUG_MODE', function ($stickyStateProvider, DEBUG_MODE) {
         $stickyStateProvider.enableDebug(DEBUG_MODE);
     }])

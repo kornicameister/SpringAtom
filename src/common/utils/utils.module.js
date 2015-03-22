@@ -1,6 +1,9 @@
 (function utilsModule() {
     angular.module('sg.common.utils', [])
         .constant('DEBUG_MODE', isDebug(undefined))
+        .run(['$rootScope', 'DEBUG_MODE', function ($scope, isDebug) {
+            $scope['DEBUG_MODE'] = isDebug;
+        }])
         .service('sgUtils', function () {
             return {
                 /**

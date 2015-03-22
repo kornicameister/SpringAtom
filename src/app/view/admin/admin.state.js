@@ -16,7 +16,7 @@ angular.module('sg.app.view.admin').config(['$stateHelperProvider', function ($s
             'content@': {
                 controller  : 'AdminController',
                 controllerAs: 'vm',
-                templateUrl : 'app/admin/admin.tpl.html'
+                templateUrl : 'app/view/admin/admin.tpl.html'
             }
         }
     })
