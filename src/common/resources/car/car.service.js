@@ -15,7 +15,9 @@ angular
                         id          : i,
                         licencePlate: 'E' + i + 'KRZ',
                         vinNumber   : '3N1CB51D82L635711',
-                        owner       : 'Michał ' + i
+                        owner       : 'Michał ' + i,
+                        brand       : 'Some',
+                        model       : 'Nice'
                     })
                 }
                 return tmp;

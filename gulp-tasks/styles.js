@@ -8,7 +8,11 @@ module.exports = function (gulp, plugins, options) {
 
     return function () {
         return gulp
-            .src(paths.SRC_DIR + '/assets/less/**/*.less')
+            .src([
+                paths.SRC_DIR + '/assets/less/**/*.less',
+                paths.SRC_DIR + '/app/**/*.less',
+                paths.SRC_DIR + '/common/**/*.less'
+            ])
             .pipe(plugins.less({
                 paths: [
                     path.join(__dirname, 'less', 'includes')

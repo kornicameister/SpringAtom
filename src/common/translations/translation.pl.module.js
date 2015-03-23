@@ -75,7 +75,8 @@ angular
             // car
             'model.car.licencePlate': 'Rejestracja',
             'model.car.vin'         : 'Vin',
-            'model.car.owner'       : 'Właściciel'
+            'model.car.owner'       : 'Właściciel',
+            'model.car.bm'          : 'Marka/Model'
         }
     }
 }());
