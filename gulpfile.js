@@ -2,8 +2,7 @@
 
     var gulp = require('gulp'),
         plugins = require('gulp-load-plugins')(),
-        minimist = require('minimist'),
-        browserSync = require('browser-sync');
+        minimist = require('minimist');
 
     var knownOptions = {
             string : 'env',
@@ -26,27 +25,8 @@
         getTask('vendor/fonts')();
         getTask('vendor/styles')();
     });
-    gulp.task('browser-sync', function () {
-        var distDir = require('./conf/paths').DIST_DIR;
-        browserSync({
-            server: {
-                baseDir       : distDir,
-                logLevel      : 'debug',
-                logConnections: true,
-                logFileChanges: true
-            }
-        });
-    });
-    gulp.task('watch', ['browser-sync'], function () {
-        var paths = require('./conf/paths');
-
-        gulp.watch(paths.SRC_DIR + '/**/*.js', ['scripts', browserSync.reload]);
-        gulp.watch(paths.SRC_DIR + '/**/*.state.js', ['views', browserSync.reload]);
-        gulp.watch(paths.SRC_DIR + '/**/*.tpl.html', ['views', browserSync.reload]);
-        gulp.watch(paths.SRC_DIR + '/**/*.less', ['styles', browserSync.reload]);
-        gulp.watch(paths.SRC_DIR + '/index.html', ['index', browserSync.reload]);
-        gulp.watch(paths.VENDOR_LIB, ['vendor', browserSync.reload]);
-    });
+    gulp.task('server', getTask('server'));
+    gulp.task('watch', ['server'], getTask('watch'));
     // tasks
 
     function getTask(task) {

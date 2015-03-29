@@ -1,7 +1,7 @@
 module.exports = function (gulp, plugins, options) {
 
     var PATHS = require('../conf/paths'),
-        indexIgnorePath = PATHS.DIST_DIR.replace('.', '') + '/',
+        indexIgnorePath = 'build',
         production = options.env === require('../conf/env').PRODUCTION_MODE;
 
     var injection = plugins.merge(
