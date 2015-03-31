@@ -4,7 +4,8 @@ angular
         return {
             restrict        : 'E',
             scope           : {
-                car: '='        // ensure that any changes from upper scope will be reflected in cart
+                car       : '=',            // ensure that any changes from upper scope will be reflected in cart,
+                selectCart: '&'             // access to the upper level to modify selection of carts
             },
             controller      : 'CarCartController',
             bindToController: true,

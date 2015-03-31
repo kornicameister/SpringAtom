@@ -1,0 +1,21 @@
+{
+	"type": "Collection",
+	"properties": {
+		"brand": {
+			"name": "brand",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "brand",
+			"order": 0
+		},
+		"model": {
+			"name": "model",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "model",
+			"order": 1
+		}
+	}
+}

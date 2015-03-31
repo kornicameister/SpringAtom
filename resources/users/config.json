@@ -1,0 +1,37 @@
+{
+	"type": "UserCollection",
+	"properties": {
+		"details": {
+			"name": "details",
+			"type": "object",
+			"typeLabel": "object",
+			"required": true,
+			"id": "details",
+			"order": 0
+		},
+		"roles": {
+			"name": "roles",
+			"type": "array",
+			"typeLabel": "array",
+			"required": true,
+			"id": "roles",
+			"order": 1
+		},
+		"disabled": {
+			"name": "disabled",
+			"type": "boolean",
+			"typeLabel": "boolean",
+			"required": false,
+			"id": "disabled",
+			"order": 2
+		},
+		"locked": {
+			"name": "locked",
+			"type": "boolean",
+			"typeLabel": "boolean",
+			"required": false,
+			"id": "locked",
+			"order": 3
+		}
+	}
+}

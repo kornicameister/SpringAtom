@@ -13,6 +13,9 @@ angular.module('sg.app.view.dashboard.cars').config(['$stateHelperProvider', fun
         resolve          : {
             label: ['$translate', function ($translate) {
                 return $translate('sg.dashboard.cars')
+            }],
+            cars : ['CarService', function (CarService) {
+                return CarService.findAll();
             }]
         },
         deepStateRedirect: true,

@@ -26,7 +26,6 @@
         getTask('vendor/styles')();
     });
     gulp.task('server', getTask('server'));
-    gulp.task('watch', ['server'], getTask('watch'));
     // tasks
 
     function getTask(task) {

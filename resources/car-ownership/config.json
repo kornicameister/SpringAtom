@@ -1,0 +1,29 @@
+{
+	"type": "Collection",
+	"properties": {
+		"carRef": {
+			"name": "carRef",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "carRef",
+			"order": 0
+		},
+		"userRef": {
+			"name": "userRef",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "userRef",
+			"order": 1
+		},
+		"licencePlate": {
+			"name": "licencePlate",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "licencePlate",
+			"order": 2
+		}
+	}
+}

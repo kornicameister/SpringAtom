@@ -1,0 +1,29 @@
+{
+	"type": "Collection",
+	"properties": {
+		"task": {
+			"name": "task",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "task",
+			"order": 0
+		},
+		"typeRef": {
+			"name": "typeRef",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "typeRef",
+			"order": 1
+		},
+		"appointmentRef": {
+			"name": "appointmentRef",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "appointmentRef",
+			"order": 2
+		}
+	}
+}

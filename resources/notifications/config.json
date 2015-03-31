@@ -1,0 +1,45 @@
+{
+	"type": "Collection",
+	"properties": {
+		"message": {
+			"name": "message",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "message",
+			"order": 0
+		},
+		"userRef": {
+			"name": "userRef",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "userRef",
+			"order": 1
+		},
+		"sent": {
+			"name": "sent",
+			"type": "boolean",
+			"typeLabel": "boolean",
+			"required": true,
+			"id": "sent",
+			"order": 2
+		},
+		"read": {
+			"name": "read",
+			"type": "boolean",
+			"typeLabel": "boolean",
+			"required": true,
+			"id": "read",
+			"order": 3
+		},
+		"details": {
+			"name": "details",
+			"type": "object",
+			"typeLabel": "object",
+			"required": true,
+			"id": "details",
+			"order": 4
+		}
+	}
+}

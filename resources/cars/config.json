@@ -1,0 +1,37 @@
+{
+   "type"      : "Collection",
+   "properties": {
+      "vinNumber"   : {
+         "name"     : "vinNumber",
+         "type"     : "string",
+         "typeLabel": "string",
+         "required" : true,
+         "id"       : "vinNumber",
+         "order"    : 0
+      },
+      "ownershipRef": {
+         "name"     : "ownershipRef",
+         "type"     : "string",
+         "typeLabel": "string",
+         "required" : true,
+         "id"       : "ownershipRef",
+         "order"    : 1
+      },
+      "bmRef"       : {
+         "name"     : "bmRef",
+         "type"     : "string",
+         "typeLabel": "string",
+         "required" : true,
+         "id"       : "bmRef",
+         "order"    : 2
+      },
+      "details"     : {
+         "name"     : "details",
+         "type"     : "object",
+         "typeLabel": "object",
+         "required" : true,
+         "id"       : "details",
+         "order"    : 3
+      }
+   }
+}

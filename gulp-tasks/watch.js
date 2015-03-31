@@ -1,13 +1,15 @@
-module.exports = function(gulp){
-    var browserSync = require('browser-sync');
-    return function(){
-        var paths = require('../conf/paths');
+module.exports = function (gulp, refresh) {
+    var paths = require('../conf/paths');
 
-        gulp.watch(paths.SRC_DIR + '/**/*.js', ['scripts', browserSync.reload]);
-        gulp.watch(paths.SRC_DIR + '/**/*.state.js', ['views', browserSync.reload]);
-        gulp.watch(paths.SRC_DIR + '/**/*.tpl.html', ['views', browserSync.reload]);
-        gulp.watch(paths.SRC_DIR + '/**/*.less', ['styles', browserSync.reload]);
-        gulp.watch(paths.SRC_DIR + '/index.html', ['index', browserSync.reload]);
-        return gulp.watch(paths.VENDOR_LIB, ['vendor', browserSync.reload]);
-    }
+    // set up watchers
+    gulp.watch(paths.SRC_DIR + '/**/*.js', ['scripts']);
+    gulp.watch(paths.SRC_DIR + '/**/*.state.js', ['views']);
+    gulp.watch(paths.SRC_DIR + '/**/*.tpl.html', ['views']);
+    gulp.watch(paths.SRC_DIR + '/**/*.less', ['styles']);
+    gulp.watch(paths.SRC_DIR + '/index.html', ['index']);
+    gulp.watch(paths.VENDOR_LIB, ['vendor']);
+    // set up watchers
+
+    // on changing dist dir, refresh the page
+    return gulp.watch(paths.DIST_DIR + '/**').on('change', refresh.changed);
 };

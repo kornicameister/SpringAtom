@@ -1,7 +1,7 @@
 <section id="appDashboardCars">
     <div class="container-fluid">
         <div class="row">
-            <car-cart car="car" ng-repeat="car in vm.cars"></car-cart>
+            <car-cart car="car" ng-repeat="car in vm.cars" select-cart="vm.selectCart(car)"></car-cart>
         </div>
     </div>
 </section>
