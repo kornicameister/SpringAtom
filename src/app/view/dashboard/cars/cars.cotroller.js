@@ -13,6 +13,7 @@ angular
             // fields
             vm.columnClass = 'col-md-4';
             vm.cars = cars || [];
+            vm.activeCartId = undefined; // control which cart is currently active
 
             // functions
             vm.selectCart = sgCallbacks.cancelEvent(selectCart.bind(vm));
@@ -21,8 +22,13 @@ angular
                 if (!car) {
                     return;
                 }
-                // todo remove it
-                logger.info('Marking cart for car.id=' + car.id);
+                var oldActiveCarId = vm.activeCartId;
+                if (car.id === vm.activeCartId) {
+                    vm.activeCartId = undefined
+                } else {
+                    vm.activeCartId = car.id;
+                }
+                logger.info('Active cart changed from=' + oldActiveCarId + ' to=' + vm.activeCartId);
             }
 
         }

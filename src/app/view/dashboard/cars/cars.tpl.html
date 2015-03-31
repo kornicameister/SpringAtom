@@ -1,7 +1,10 @@
 <section id="appDashboardCars">
     <div class="container-fluid">
         <div class="row">
-            <car-cart car="car" ng-repeat="car in vm.cars" select-cart="vm.selectCart(car)"></car-cart>
+            <car-cart ng-repeat="car in vm.cars"
+                      car="car"
+                      active="car.id === vm.activeCartId"
+                      toggle-active="vm.selectCart(car)"></car-cart>
         </div>
     </div>
 </section>

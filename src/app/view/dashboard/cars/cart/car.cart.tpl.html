@@ -6,7 +6,7 @@
             <p class="panel-title pull-left">{{cart.car.licencePlate}}</p>
 
             <div class="resizer">
-                <span ng-click="cart.toggleActive(event)"
+                <span ng-click="cart.toggleActive()"
                       ng-class="{
                     'glyphicon glyphicon-resize-full': !cart.active,
                     'glyphicon glyphicon-resize-small': cart.active
@@ -19,7 +19,7 @@
             <p><span class="text-capitalize">{{'model.car.bm' | translate}}</span>{{cart.car.brand + ' ' + cart.car.model}}</p>
 
             <div ng-if="cart.active">
-
+                Some more details about the car to be added later
             </div>
         </div>
     </div>

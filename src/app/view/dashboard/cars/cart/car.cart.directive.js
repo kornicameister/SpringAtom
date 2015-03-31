@@ -4,12 +4,17 @@ angular
         return {
             restrict        : 'E',
             scope           : {
-                car       : '=',            // ensure that any changes from upper scope will be reflected in cart,
-                selectCart: '&'             // access to the upper level to modify selection of carts
+                car         : '@',
+                active      : '=',
+                toggleActive: '&'
             },
-            controller      : 'CarCartController',
-            bindToController: true,
+            bindToController: {
+                car         : '=',
+                active      : '=',
+                toggleActive: '&'
+            },
             controllerAs    : 'cart',
+            controller      : angular.noop,
             templateUrl     : 'app/view/dashboard/cars/cart/car.cart.tpl.html'
         }
     });
