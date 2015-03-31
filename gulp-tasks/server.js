@@ -26,6 +26,7 @@ module.exports = function (gulp) {
         app.use(liveReload({port: liveReloadPort}));
         app.use(gzipStatic(distDir));
         app.use(server.handleRequest);
+        app.use(require('morgan')('dev'));
 
         // start up
         app.listen(serverPort, function () {

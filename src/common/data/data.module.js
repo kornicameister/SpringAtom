@@ -1,6 +1,6 @@
-angular
-    .module('sg.common.data', [
-        'firebase',
-        'sg.common.log'
-    ])
-    .constant('DATA_API_URL', 'https://sgatom.firebaseio.com/');
+angular.module('sg.common.data', ['sg.common.log', 'restangular'])
+    .config(function (RestangularProvider) {
+        RestangularProvider.setBaseUrl('/');
+        RestangularProvider.setDefaultHttpFields({cache: true});
+        RestangularProvider.setMethodOverriders(["put", "patch"]);
+    });

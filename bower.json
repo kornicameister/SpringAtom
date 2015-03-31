@@ -73,8 +73,7 @@
       "jquery"                       : "latest",
       "font-awesome"                 : "~4.3.0",
       "bowser"                       : "~0.7.2",
-      "firebase"                     : "~2.2.0",
-      "angularfire"                  : "~1.0.0"
+      "restangular"                  : "1.4.x"
    },
    "devDependencies": {
       "angular-mocks"   : "latest",
@@ -84,6 +83,7 @@
    "resolutions"    : {
       "angular-bootstrap": "0.12.x",
       "angular-translate": "2.6.x",
-      "angular"          : "1.4.x"
+      "angular"          : "1.4.x",
+      "lodash"           : "3.3.0"
    }
 }
