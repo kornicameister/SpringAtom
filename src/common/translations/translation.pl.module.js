@@ -9,7 +9,8 @@ angular
             getCommon(),
             getDialogs(),
             getStates(),
-            getModelObject()
+            getModelObject(),
+            getPlaceholders()
         ]));
     }
 
@@ -19,6 +20,12 @@ angular
             pl = _.merge(pl, tr);
         });
         return pl;
+    }
+
+    function getPlaceholders() {
+        return {
+            'placeholder.search': 'Wyszukaj...'
+        }
     }
 
     function getStates() {
@@ -59,7 +66,8 @@ angular
             'button.login'         : 'Zaloguj się',
             'button.logout'        : 'Wyloguj się',
             'button.register'      : 'Rejestracja',
-            'button.password.reset': 'Resetuj hasło'
+            'button.password.reset': 'Resetuj hasło',
+            'button.search'        : 'Szukaj'
         }
     }
 

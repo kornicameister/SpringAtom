@@ -11,4 +11,15 @@ angular
     }])
     .config(['$compileProvider', 'DEBUG_MODE', function ($compileProvider, DEBUG_MODE) {
         $compileProvider.debugInfoEnabled(DEBUG_MODE);
-    }]);
+    }])
+    .config(function ($urlRouterProvider) {
+        // case insensitive urls
+        $urlRouterProvider.rule(function ($injector, $location) {
+            var path = $location.path(),
+                normalized = path.toLowerCase();
+
+            if (path !== normalized) {
+                return normalized;
+            }
+        });
+    });

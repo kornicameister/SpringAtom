@@ -52,11 +52,7 @@
 
         function getFromResolved(state) {
             state = state.$$state();
-
-            var globals = state.locals.globals,
-                label = globals.label;
-
-            return label;
+            return state.locals.globals.label;
         }
 
         function isLabelResolved(state) {
@@ -68,7 +64,7 @@
         }
 
         function resolveLabel(state) {
-            if (!state || state.abstract) {
+            if (!state || state.url === '^') {
                 return undefined;
             }
             return isLabelResolved(state) ? getFromResolved(state) : getFromUnresolved(state);

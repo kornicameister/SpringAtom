@@ -2,33 +2,30 @@ angular
     .module('sg.app.view.dashboard.cars')
     .controller('CarsController', [
         '$scope',
-        'sgCallbacks',
-        'CarService',
-        'cars',
-        'loggerFactory',
-        function ($scope, sgCallbacks, CarService, cars, loggerFactory) {
-            var vm = this,
-                logger = loggerFactory('CarsController');
-
-            // fields
-            vm.columnClass = 'col-md-4';
-            vm.cars = cars || [];
-            vm.activeCartId = undefined; // control which cart is currently active
+        '$state',
+        function ($scope, $state) {
+            var vm = this;
 
             // functions
-            vm.selectCart = sgCallbacks.cancelEvent(selectCart.bind(vm));
+            vm.onSearch = onCarSearch.bind(vm);
+            vm.goToNewCar = getNavFunction('new-car').bind(vm);
+            vm.goToCarList = getNavFunction('car-list').bind(vm);
 
-            function selectCart(car) {
-                if (!car) {
-                    return;
+            function getNavFunction(action) {
+                switch (action) {
+                    case 'new-car':
+                        return function () {
+                            $state.go('sg.dashboard.cars.new')
+                        };
+                    case 'car-list':
+                        return function () {
+                            $state.go('sg.dashboard.cars.list')
+                        }
                 }
-                var oldActiveCarId = vm.activeCartId;
-                if (car.id === vm.activeCartId) {
-                    vm.activeCartId = undefined
-                } else {
-                    vm.activeCartId = car.id;
-                }
-                logger.info('Active cart changed from=' + oldActiveCarId + ' to=' + vm.activeCartId);
+            }
+
+            function onCarSearch(phrase) {
+                console.log(phrase)
             }
 
         }

@@ -30,10 +30,23 @@
                         newCrumbs.push(newCrumb(crumbPath, stateName));
                     });
                 } else {
+
+                    function shouldCancelLoop(state) {
+                        var nullOrUndefined = (_.isNull(state) || _.isUndefined(state));
+                        if (nullOrUndefined) {
+                            return true;
+                        }
+                        if (state.abstract) {
+                            // verify how many name portions we have
+                            return state.name.split('.').length <= 1;
+                        }
+                        return false;
+                    }
+
                     var tmp = stateName;
                     do {
                         tmp = $state.get(tmp);
-                        if ((_.isNull(tmp) || _.isUndefined(tmp)) || tmp.abstract) {
+                        if (shouldCancelLoop(tmp)) {
                             break;
                         }
                         newCrumbs.push(newCrumb(tmp, stateName));
@@ -76,9 +89,10 @@
             }
 
             return {
-                state : state,
-                label : $stateHelper.getStateLabel(state),
-                active: stateName === activeStateName
+                state    : state,
+                label    : $stateHelper.getStateLabel(state),
+                active   : stateName === activeStateName,
+                navigable: !state.abstract
             };
         }
     }

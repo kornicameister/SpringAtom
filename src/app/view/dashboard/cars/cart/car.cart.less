@@ -1,4 +1,16 @@
+@import (reference) "../../../../../vendor/bootstrap/less/mixins";
+@import (reference) "../../../../../vendor/bootstrap/less/variables";
+
 car-cart {
+
+  + div {
+    .inactive {
+      .make-md-column(4, 30)
+    }
+    .active {
+      .make-md-column(8, 30)
+    }
+  }
 
   .resizer {
     margin-right : 10px;

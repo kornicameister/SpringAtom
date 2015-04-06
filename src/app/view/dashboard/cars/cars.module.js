@@ -1,6 +1,8 @@
 angular.module('sg.app.view.dashboard.cars', [
     'sg.common.state',
-    'sg.common.resources.car',
+    'sg.common.resources',
     'sg.common.callbacks',
-    'ct.ui.router.extras'
+    'sg.app.components.actionBar',
+    // allows to append module specific translations
+    'pascalprecht.translate'
 ]);

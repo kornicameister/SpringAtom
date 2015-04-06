@@ -1,4 +1,4 @@
-<div ng-class="{'col-md-4': !cart.active,'col-md-8':cart.active}">
+<div ng-class="{'inactive': !cart.active,'active':cart.active}">
     <div id="{{cart.car.id}}"
          class="car-cart panel"
          ng-class="{'active panel-primary': cart.active, 'panel-default':!cart.active}">

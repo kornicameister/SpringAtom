@@ -11,6 +11,7 @@ module.exports = function (gulp, plugins, options) {
             .src([
                 paths.SRC_DIR + '/assets/less/**/*.less',
                 paths.SRC_DIR + '/app/**/*.less',
+                paths.SRC_DIR + '/app/**/**/*.less',
                 paths.SRC_DIR + '/common/**/*.less'
             ])
             .pipe(plugins.less({

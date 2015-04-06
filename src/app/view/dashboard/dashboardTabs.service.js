@@ -12,7 +12,7 @@
  */
 angular
     .module('sg.app.view.dashboard')
-    .service('$dashboardTabService', ['$stateHelper', '$q', function ($stateHelper, $q) {
+    .service('dashboardTabService', ['$stateHelper', '$q', function ($stateHelper, $q) {
 
         var self = this;
 
@@ -64,7 +64,8 @@ angular
                             dashboardTabs.push({
                                 state: stateName,
                                 label: $stateHelper.getStateLabel(state),
-                                view : getTabViewName(state)
+                                view : getTabViewName(state),
+                                icon : getTabIcon(state)
                             })
                         });
 
@@ -86,6 +87,14 @@ angular
                     reject(error);
                 }
             });
+        }
+
+        function getTabIcon(tabState) {
+            var iconClass = tabState.iconClass;
+            if (!iconClass) {
+                return ''
+            }
+            return iconClass.replace('fa-', '');
         }
 
         function getTabViewName(tabState) {

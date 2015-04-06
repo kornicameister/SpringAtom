@@ -1,0 +1,6 @@
+<div class="car-list">
+    <car-cart ng-repeat="car in vm.cars"
+              car="car"
+              active="car.id === vm.activeCartId"
+              toggle-active="vm.selectCart(car)"></car-cart>
+</div>

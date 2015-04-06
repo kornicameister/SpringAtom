@@ -1,6 +1,7 @@
 angular.module('sg.app.view.dashboard.calendar').config(['$stateHelperProvider', function ($stateHelperProvider) {
     $stateHelperProvider.state({
         name             : 'sg.dashboard.calendar',
+        iconClass        : 'fa-calendar',
         url              : '/calendar',
         navigator        : [
             'sg.dashboard.calendar',
@@ -15,10 +16,8 @@ angular.module('sg.app.view.dashboard.calendar').config(['$stateHelperProvider',
                 return $translate('sg.dashboard.calendar')
             }]
         },
-        deepStateRedirect: true,
-        sticky           : true,
         views            : {
-            'calendar': {
+            'dashboard': {
                 template: 'Calendar'
             }
         }

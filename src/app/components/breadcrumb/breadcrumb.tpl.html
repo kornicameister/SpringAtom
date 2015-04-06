@@ -6,8 +6,15 @@
             </a>
         </li>
         <li ng-repeat="crumb in vm.crumbs" ng-class="{active: crumb.active}">
-            <a ui-sref="{{crumb.state.name}}" ng-if="!crumb.active">{{crumb.label}}</a>
-            <span ng-if="crumb.active">{{crumb.label}}</span>
+            <span ng-switch="crumb.navigable">
+                <span ng-switch-when="true">
+                    <a ui-sref="{{crumb.state.name}}" ng-if="!crumb.active">{{crumb.label}}</a>
+                    <span ng-if="crumb.active">{{crumb.label}}</span>
+                </span>
+                <span ng-switch-when="false">
+                    ...
+                </span>
+            </span>
         </li>
     </ol>
 </header>

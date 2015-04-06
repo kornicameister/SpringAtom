@@ -1,10 +1,15 @@
 <section id="appDashboardCars">
     <div class="container-fluid">
-        <div class="row">
-            <car-cart ng-repeat="car in vm.cars"
-                      car="car"
-                      active="car.id === vm.activeCartId"
-                      toggle-active="vm.selectCart(car)"></car-cart>
-        </div>
+        <action-bar>
+            <action-item type="search" action="vm.onSearch(text)"></action-item>
+            <action-item type="separator"></action-item>
+            <action-item type="button"
+                         action="vm.goToNewCar()"
+                         label="DASHBOARD_NEW_CAR"></action-item>
+            <action-item type="button"
+                         action="vm.goToCarList()"
+                         label="DASHBOARD_ALL_CARS"></action-item>
+        </action-bar>
     </div>
+    <div ui-view="carDashboardView"></div>
 </section>

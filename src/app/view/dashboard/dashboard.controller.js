@@ -1,35 +1,42 @@
 angular.module('sg.app.view.dashboard')
-    .controller('DashboardController', [
-        '$scope', '$state', 'tabs',
-        function ($scope, $state, tabs) {
-            var vm = this,
-                listeners = [];
+    .controller('DashboardController', function ($scope, $state, tabs) {
+        var vm = this,
+            listeners = [];
 
-            vm.tabs = _.forEach(tabs || [], function (tab) {
-                tab.active = $state.includes(tab.state)
-            });
+        vm.tabs = tabs || [];
+        vm.dashboardTabActive = false;
+        vm.dashboardClick = dashboardClick.bind(vm);
 
-            listeners.push($scope.$on('$destroy', onDestroy.bind(vm)));
-            listeners.push($scope.$on('$stateChangeSuccess', onStateChangeSuccess.bind(vm)));
+        listeners.push($scope.$on('$destroy', onDestroy.bind(vm)));
+        listeners.push($scope.$on('$stateChangeSuccess', onStateChangeSuccess.bind(vm)));
 
-            initialize();
+        initialize();
 
-            function onStateChangeSuccess() {
-                vm.tabs = _.forEach(vm.tabs, function (tab) {
-                    tab.active = $state.includes(tab.state)
-                });
-            }
-
-            function onDestroy() {
-                _.forEach(listeners, function (lst) {
-                    lst();
-                })
-            }
-
-            function initialize() {
-                if (vm.tabs.length) {
-                    $state.go(vm.tabs[0].state)
-                }
-            }
+        function initialize() {
+            onStateChangeSuccess();
         }
-    ]);
+
+        function onStateChangeSuccess() {
+            var anyActive = false;
+            vm.tabs = _.forEach(tabs || [], function (tab) {
+                tab.active = $state.includes(tab.state);
+                if (tab.active) {
+                    anyActive = true;
+                }
+            });
+            vm.dashboardTabActive = anyActive;
+        }
+
+        function dashboardClick(tab) {
+            $state.go(tab.state);
+            return false;
+        }
+
+        function onDestroy() {
+            _.forEach(listeners, function (lst) {
+                lst();
+            })
+        }
+
+    }
+);

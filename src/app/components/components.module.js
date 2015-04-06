@@ -17,5 +17,6 @@ angular.module('sg.app.components', [
     'sg.app.components.breadcrumb',
     'sg.app.components.header',
     'sg.app.components.footer',
-    'sg.app.components.navigation'
+    'sg.app.components.navigation',
+    'sg.app.components.actionBar'
 ]);

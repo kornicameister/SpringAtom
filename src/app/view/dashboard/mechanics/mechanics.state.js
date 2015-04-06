@@ -1,6 +1,7 @@
 angular.module('sg.app.view.dashboard.mechanics').config(['$stateHelperProvider', function ($stateHelperProvider) {
     $stateHelperProvider.state({
         name             : 'sg.dashboard.mechanics',
+        iconClass        : 'fa-wrench',
         url              : '/mechanics',
         navigator        : [
             'sg.dashboard.calendar',
@@ -15,10 +16,8 @@ angular.module('sg.app.view.dashboard.mechanics').config(['$stateHelperProvider'
                 return $translate('sg.dashboard.mechanics')
             }]
         },
-        deepStateRedirect: true,
-        sticky           : true,
         views            : {
-            'mechanics': {
+            'dashboard': {
                 template: 'Mechanics'
             }
         }

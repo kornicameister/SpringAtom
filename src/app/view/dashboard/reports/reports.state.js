@@ -1,8 +1,9 @@
 angular.module('sg.app.view.dashboard.reports').config(['$stateHelperProvider', function ($stateHelperProvider) {
     $stateHelperProvider.state({
-        name             : 'sg.dashboard.reports',
-        url              : '/reports',
-        navigator        : [
+        name     : 'sg.dashboard.reports',
+        iconClass: 'fa-book',
+        url      : '/reports',
+        navigator: [
             'sg.dashboard.calendar',
             'sg.dashboard.cars',
             'sg.dashboard.clients',
@@ -10,15 +11,13 @@ angular.module('sg.app.view.dashboard.reports').config(['$stateHelperProvider', 
             'sg.dashboard.lifts',
             'sg.dashboard.reports'
         ],
-        resolve          : {
+        resolve  : {
             label: ['$translate', function ($translate) {
                 return $translate('sg.dashboard.reports')
             }]
         },
-        deepStateRedirect: true,
-        sticky           : true,
-        views            : {
-            'reports': {
+        views    : {
+            'dashboard': {
                 template: 'Reports'
             }
         }

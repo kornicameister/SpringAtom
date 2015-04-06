@@ -1,6 +1,7 @@
 angular.module('sg.app.view.dashboard.lifts').config(['$stateHelperProvider', function ($stateHelperProvider) {
     $stateHelperProvider.state({
         name             : 'sg.dashboard.lifts',
+        iconClass        : 'fa-arrow-up',
         url              : '/lifts',
         navigator        : [
             'sg.dashboard.calendar',
@@ -15,10 +16,8 @@ angular.module('sg.app.view.dashboard.lifts').config(['$stateHelperProvider', fu
                 return $translate('sg.dashboard.lifts')
             }]
         },
-        deepStateRedirect: true,
-        sticky           : true,
         views            : {
-            'lifts': {
+            'dashboard': {
                 template: 'Lifts'
             }
         }

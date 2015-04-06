@@ -1,24 +1,29 @@
-<section class="container-fluid" role="tabpanel">
-    <div class="navbar navbar-default navbar-static-top" role="navigation">
-        <ul class="nav nav-tabs" role="tablist">
-            <li ng-repeat="tab in vm.tabs"
-                class="dashboardTab"
-                ng-class="{active: tab.active}"
-                role="presentation">
-                <a ui-sref="{{tab.state}}"
-                   role="tab"
-                   data-toggle="tab"
-                   aria-controls="{{tab.state}}">{{tab.label}}</a>
-            </li>
-        </ul>
+<section class="dashboard row">
+    <div class="container-fluid" ng-hide="vm.dashboardTabActive">
+        <div class="col-md-2 center-block">
+            <span class="text-center text-info">
+                {{'DASHBOARD_PICK_TAB_MSG'|translate}}
+            </span>
+        </div>
+        <div class="col-md-10">
+            <div class="dashboard-list container-fluid">
+                <div ng-repeat="tab in vm.tabs"
+                     class="item center-block"
+                     ng-class-even="'item-even'"
+                     ng-class-odd="'item-odd'">
+                    <i class="fa fa-2x fa-adjust fa-{{tab.icon}}"></i>
+                    <span class="pull-right" ng-click="vm.dashboardClick(tab)">{{tab.label}}</span>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="tab-content container-fluid">
-        <div class="tab-pane"
-             ng-repeat="tab in vm.tabs"
-             id="{{tab.state}}"
-             role="tabpanel"
-             ng-class="{active: tab.active}"
-             ui-view="{{tab.view}}"
-             ng-show="tab.active"></div>
+
+    <div ng-show="vm.dashboardTabActive">
+        <div ng-repeat="tab in vm.tabs">
+            <div ng-class="{active: tab.active}"
+                 ui-view="{{tab.view}}"
+                 ng-show="tab.active"></div>
+        </div>
     </div>
+
 </section>

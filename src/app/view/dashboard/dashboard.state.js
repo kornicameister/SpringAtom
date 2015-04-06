@@ -1,4 +1,4 @@
-angular.module('sg.app.view.dashboard').config(['$stateHelperProvider', function state($stateHelperProvider) {
+angular.module('sg.app.view.dashboard').config(function state($stateHelperProvider) {
     $stateHelperProvider.state({
         name     : 'sg.dashboard',
         url      : '/dashboard',
@@ -14,8 +14,8 @@ angular.module('sg.app.view.dashboard').config(['$stateHelperProvider', function
             label: ['$translate', function ($translate) {
                 return $translate('sg.dashboard')
             }],
-            tabs : ['$dashboardTabService', function ($dashboardTabService) {
-                return $dashboardTabService.getDashboardTabs();
+            tabs: ['dashboardTabService', function (dashboardTabService) {
+                return dashboardTabService.getDashboardTabs();
             }]
         },
         views    : {
@@ -26,5 +26,5 @@ angular.module('sg.app.view.dashboard').config(['$stateHelperProvider', function
             }
         }
     })
-}]);
+});
 
