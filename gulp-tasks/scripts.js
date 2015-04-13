@@ -13,6 +13,7 @@ module.exports = function (gulp, plugins, options) {
                     gulp.src(jsSrcDir + '/common/**/*.js'),
                     gulp.src(jsSrcDir + '/springatom.js') // load main file at the end
                 )
+                    .pipe(plugins.wrap('//<%= file.path %>\n\n(function(angular){\n"use strict";\n<%= contents %>\n})(window.angular);'))
                     .pipe(plugins.ngAnnotate())
                     .pipe(plugins.angularFilesort())
             },

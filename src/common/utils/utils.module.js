@@ -1,6 +1,35 @@
 (function utilsModule() {
-    angular.module('sg.common.utils', [])
-        .constant('DEBUG_MODE', isDebug(undefined))
+    angular
+        .module('sg.common.utils', [])
+    /**
+     * @constant
+     * @ngdoc object
+     * @name DEBUG_MODE
+     * @module sg.common.utils
+     * @description
+     *  Takes either <b>true</b> or <b>false</b> as value. If true
+     *  application is considered to run under debug mode
+     * @example
+     *      curl http://my_host/app/?debug/#/
+     *
+     */
+        .constant('DEBUG_MODE', isDebug())
+    /**
+     * @constant
+     * @ngdoc object
+     * @name LOG_LEVEL
+     * @module sg.common.utils
+     * @description
+     *  LOG_LEVEL may take any value, but one of the following are considered:
+     *  <ol>
+     *      <li>info</li>
+     *      <li>debug</li>
+     *      <li>off</li>
+     *  </ol>
+     *  @example
+     *      curl http://my_host/app/?logLevel=info/#/
+     */
+        .constant('LOG_LEVEL', getLogLevel())
         .run(['$rootScope', 'DEBUG_MODE', function ($scope, isDebug) {
             $scope['DEBUG_MODE'] = isDebug;
         }])
@@ -14,7 +43,6 @@
                 getAppUrl    : getAppUrl,
                 getUrlParams : urlParams,
                 urlDecode    : urlDecode,
-                isDebug      : isDebug,
                 now          : now(), // to return actual function
                 /**
                  * Simple utility to retrieve an <b>angular</b> module name
@@ -27,6 +55,25 @@
                 identityFn   : identityFn
             }
         });
+
+    /**
+     * Establishes current log level, at the moment of script being loaded,
+     * If logLevel is not set and debug flag is not set log level is set to <b>info</b>.
+     * Otherwise logLevel get value takes precedence over debug flag.
+     *
+     * @returns {string} log level value
+     * @see isDebug
+     */
+    function getLogLevel() {
+        var url = window.location.href,
+            params = urlParams(url),
+            isDebug = isDebug(url);
+
+        if (params['logLevel']) {
+            return params.logLevel.toLowerCase()
+        }
+        return isDebug ? 'debug' : 'info';
+    }
 
     function urlParams(url) {
         url = url || window.location.href;
@@ -54,10 +101,30 @@
         return obj;
     }
 
-    function isDebug(url) {
-        url = url || window.location.href;
-        var params = urlParams(url);
-        return params['debug'] || false;
+    /**
+     * Determines if application is under <b>debug</b> mode.
+     * Returns <b>true</b> if param <i>debug</i> is defined among request parameters
+     * and have one of the following values : [true,1,yes], otherwise debug mode
+     * is considered to be false
+     *
+     * @returns {boolean} true if debug mode enabled, false otherwise
+     */
+    function isDebug() {
+        var params = urlParams(window.location.href),
+            value;
+        if (params['debug']) {
+            value = params['debug'];
+            if (value) {
+                value = value.toLowerCase();
+                switch (value) {
+                    case '1':
+                    case 'true':
+                    case 'yes':
+                        return true
+                }
+            }
+        }
+        return false;
     }
 
     function getAppUrl() {

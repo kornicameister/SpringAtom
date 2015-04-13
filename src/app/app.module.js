@@ -6,20 +6,31 @@ angular
         'sg.app.vendor'
     ])
     .value('$anchorScroll', angular.noop)
-    .config(['$stickyStateProvider', 'DEBUG_MODE', function ($stickyStateProvider, DEBUG_MODE) {
-        $stickyStateProvider.enableDebug(DEBUG_MODE);
-    }])
-    .config(['$compileProvider', 'DEBUG_MODE', function ($compileProvider, DEBUG_MODE) {
-        $compileProvider.debugInfoEnabled(DEBUG_MODE);
-    }])
-    .config(function ($urlRouterProvider) {
-        // case insensitive urls
-        $urlRouterProvider.rule(function ($injector, $location) {
-            var path = $location.path(),
-                normalized = path.toLowerCase();
+    .config(configureStickyState)
+    .config(configureCompileProvider)
+    .config(configureUrlRouter)
+    .config(configureGrowl);
 
-            if (path !== normalized) {
-                return normalized;
-            }
-        });
+function configureGrowl(growlProvider, $httpProvider) {
+    $httpProvider.responseInterceptors.push(growlProvider.serverMessagesInterceptor);
+}
+
+function configureUrlRouter($urlRouterProvider) {
+    // case insensitive urls
+    $urlRouterProvider.rule(function ($injector, $location) {
+        var path = $location.path(),
+            normalized = path.toLowerCase();
+
+        if (path !== normalized) {
+            return normalized;
+        }
     });
+}
+
+function configureCompileProvider($compileProvider, DEBUG_MODE) {
+    $compileProvider.debugInfoEnabled(DEBUG_MODE);
+}
+
+function configureStickyState($stickyStateProvider, DEBUG_MODE) {
+    $stickyStateProvider.enableDebug(DEBUG_MODE);
+}
