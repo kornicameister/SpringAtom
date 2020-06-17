@@ -116,7 +116,7 @@
         <tomcat.version>8.0.15</tomcat.version>
         <guava.version>18.0</guava.version>
         <castor.version>1.2</castor.version>
-        <xercesImpl.version>2.11.0</xercesImpl.version>
+        <xercesImpl.version>2.12.0</xercesImpl.version>
         <joor.version>0.9.4</joor.version>
         <aopalliance.version>1.0</aopalliance.version>
         <javax.validation-api.version>1.1.0.Final</javax.validation-api.version>
