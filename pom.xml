@@ -82,7 +82,7 @@
         <spring.version>4.1.2.RELEASE</spring.version>
         <spring-binding.version>2.4.1.RELEASE</spring-binding.version>
         <spring-security.version>5.3.3.RELEASE</spring-security.version>
-        <spring-data-commons.version>1.9.1.RELEASE</spring-data-commons.version>
+        <spring-data-commons.version>1.13.13.RELEASE</spring-data-commons.version>
         <spring-data-rest-webmvc.version>2.2.1.RELEASE</spring-data-rest-webmvc.version>
         <spring.hateoas.version>0.16.0.RELEASE</spring.hateoas.version>
         <!-- spring -->
