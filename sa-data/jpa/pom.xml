@@ -12,7 +12,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <mysql-connector-java.version>5.1.31</mysql-connector-java.version>
+        <mysql-connector-java.version>8.0.16</mysql-connector-java.version>
         <hibernate.version>4.3.6.Final</hibernate.version>
         <hibernate.annotations.version>3.5.6-Final</hibernate.annotations.version>
         <hibernate.validator.version>5.1.2.Final</hibernate.validator.version>
